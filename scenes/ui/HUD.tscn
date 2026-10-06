@@ -1,0 +1,378 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/hud_v20.gd" id="1_hud"]
+[ext_resource type="Script" path="res://scripts/virtual_joystick.gd" id="2_joy"]
+
+[sub_resource type="StyleBoxFlat" id="Style_panel"]
+bg_color = Color(0.035, 0.035, 0.03, 0.86)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.47, 0.36, 0.20, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="HUD" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopLeft" type="PanelContainer" parent="Root"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 10.0
+offset_right = 365.0
+offset_bottom = 116.0
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="Stats" type="VBoxContainer" parent="Root/TopLeft"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="PlayerLabel" type="Label" parent="Root/TopLeft/Stats"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.89, 0.76, 1)
+theme_override_font_sizes/font_size = 18
+text = "황혼의 기사  Lv.35"
+
+[node name="HPBar" type="ProgressBar" parent="Root/TopLeft"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 39.0
+offset_right = 340.0
+offset_bottom = 56.0
+value = 80.0
+show_percentage = false
+
+[node name="MPBar" type="ProgressBar" parent="Root/TopLeft"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 61.0
+offset_right = 340.0
+offset_bottom = 78.0
+value = 65.0
+show_percentage = false
+
+[node name="GoldLabel" type="Label" parent="Root/TopLeft"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 83.0
+offset_right = 340.0
+offset_bottom = 103.0
+theme_override_colors/font_color = Color(0.87, 0.77, 0.57, 1)
+text = "HP / MP / 아데나"
+
+[node name="TopRight" type="HBoxContainer" parent="Root"]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -230.0
+offset_top = 14.0
+offset_right = -14.0
+offset_bottom = 62.0
+theme_override_constants/separation = 8
+mouse_filter = 1
+
+[node name="InventoryButton" type="Button" parent="Root/TopRight" groups=["hud_button"]]
+custom_minimum_size = Vector2(104, 48)
+layout_mode = 2
+text = "인벤"
+
+[node name="MenuButton" type="Button" parent="Root/TopRight" groups=["hud_button"]]
+custom_minimum_size = Vector2(104, 48)
+layout_mode = 2
+text = "≡ 메뉴"
+
+[node name="MapLabel" type="Label" parent="Root"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -245.0
+offset_top = 18.0
+offset_right = 245.0
+offset_bottom = 48.0
+theme_override_colors/font_color = Color(0.96, 0.89, 0.72, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "아덴 월드"
+horizontal_alignment = 1
+
+[node name="TargetPanel" type="PanelContainer" parent="Root"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -190.0
+offset_top = 58.0
+offset_right = 190.0
+offset_bottom = 112.0
+theme_override_styles/panel = SubResource("Style_panel")
+
+[node name="TargetVBox" type="VBoxContainer" parent="Root/TargetPanel"]
+layout_mode = 2
+
+[node name="TargetLabel" type="Label" parent="Root/TargetPanel/TargetVBox"]
+layout_mode = 2
+text = "대상"
+horizontal_alignment = 1
+
+[node name="TargetHP" type="ProgressBar" parent="Root/TargetPanel/TargetVBox"]
+custom_minimum_size = Vector2(340, 12)
+layout_mode = 2
+value = 100.0
+show_percentage = false
+
+[node name="RightControls" type="VBoxContainer" parent="Root"]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -132.0
+offset_top = -244.0
+offset_right = -18.0
+offset_bottom = -18.0
+theme_override_constants/separation = 8
+mouse_filter = 1
+
+[node name="PotionButton" type="Button" parent="Root/RightControls" groups=["hud_button"]]
+custom_minimum_size = Vector2(112, 54)
+layout_mode = 2
+text = "물약"
+
+[node name="AutoButton" type="Button" parent="Root/RightControls" groups=["hud_button"]]
+custom_minimum_size = Vector2(112, 62)
+layout_mode = 2
+text = "AUTO"
+
+[node name="AttackButton" type="Button" parent="Root/RightControls" groups=["hud_button"]]
+custom_minimum_size = Vector2(112, 92)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "공격"
+
+[node name="VirtualJoystick" type="Control" parent="Root"]
+layout_mode = 0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 22.0
+offset_top = -202.0
+offset_right = 202.0
+offset_bottom = -22.0
+mouse_filter = 0
+script = ExtResource("2_joy")
+
+[node name="ExpBar" type="ProgressBar" parent="Root"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -310.0
+offset_top = -24.0
+offset_right = 310.0
+offset_bottom = -10.0
+value = 25.0
+show_percentage = false
+
+[node name="MessageLabel" type="Label" parent="Root"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = 190.0
+offset_right = 320.0
+offset_bottom = 226.0
+theme_override_colors/font_color = Color(1, 0.89, 0.62, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="LogPanel" type="PanelContainer" parent="Root"]
+layout_mode = 0
+offset_left = 224.0
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -130.0
+offset_right = 625.0
+offset_bottom = -34.0
+theme_override_styles/panel = SubResource("Style_panel")
+mouse_filter = 2
+
+[node name="LogLabel" type="RichTextLabel" parent="Root/LogPanel"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 14
+text = ""
+
+[node name="InventoryPanel" type="PanelContainer" parent="Root"]
+layout_mode = 0
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -390.0
+offset_top = -265.0
+offset_right = -18.0
+offset_bottom = 265.0
+theme_override_styles/panel = SubResource("Style_panel")
+mouse_filter = 1
+
+[node name="InventoryMargin" type="MarginContainer" parent="Root/InventoryPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="InventoryVBox" type="VBoxContainer" parent="Root/InventoryPanel/InventoryMargin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Root/InventoryPanel/InventoryMargin/InventoryVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "인벤토리"
+
+[node name="InventoryScroll" type="ScrollContainer" parent="Root/InventoryPanel/InventoryMargin/InventoryVBox"]
+custom_minimum_size = Vector2(340, 420)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InventoryList" type="VBoxContainer" parent="Root/InventoryPanel/InventoryMargin/InventoryVBox/InventoryScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseInventory" type="Button" parent="Root/InventoryPanel/InventoryMargin/InventoryVBox" groups=["hud_button"]]
+layout_mode = 2
+text = "닫기"
+
+[node name="MapPanel" type="PanelContainer" parent="Root"]
+layout_mode = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -340.0
+offset_top = -300.0
+offset_right = 340.0
+offset_bottom = 300.0
+theme_override_styles/panel = SubResource("Style_panel")
+mouse_filter = 1
+
+[node name="MapMargin" type="MarginContainer" parent="Root/MapPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="MapVBox" type="VBoxContainer" parent="Root/MapPanel/MapMargin"]
+layout_mode = 2
+
+[node name="MapTitle" type="Label" parent="Root/MapPanel/MapMargin/MapVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "월드맵 · 25개 지역"
+horizontal_alignment = 1
+
+[node name="MapScroll" type="ScrollContainer" parent="Root/MapPanel/MapMargin/MapVBox"]
+custom_minimum_size = Vector2(620, 480)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MapList" type="VBoxContainer" parent="Root/MapPanel/MapMargin/MapVBox/MapScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseMap" type="Button" parent="Root/MapPanel/MapMargin/MapVBox" groups=["hud_button"]]
+layout_mode = 2
+text = "닫기"
+
+[node name="MenuPanel" type="PanelContainer" parent="Root"]
+layout_mode = 0
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -315.0
+offset_top = 72.0
+offset_right = -18.0
+offset_bottom = 686.0
+theme_override_styles/panel = SubResource("Style_panel")
+mouse_filter = 1
+
+[node name="MenuMargin" type="MarginContainer" parent="Root/MenuPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="MenuVBox" type="VBoxContainer" parent="Root/MenuPanel/MenuMargin"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MenuTitle" type="Label" parent="Root/MenuPanel/MenuMargin/MenuVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "메뉴"
+horizontal_alignment = 1
+
+[node name="CharacterButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 44)
+layout_mode = 2
+text = "캐릭터 / 장비"
+
+[node name="TransformButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 44)
+layout_mode = 2
+text = "변신"
+
+[node name="DollButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 44)
+layout_mode = 2
+text = "마법인형"
+
+[node name="RelicButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 44)
+layout_mode = 2
+text = "성물"
+
+[node name="ItemDBButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 44)
+layout_mode = 2
+text = "아이템 정보"
+
+[node name="WorldMapButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 48)
+layout_mode = 2
+text = "월드맵"
+
+[node name="SaveButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 48)
+layout_mode = 2
+text = "저장하기"
+
+[node name="LoadButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 48)
+layout_mode = 2
+text = "불러오기"
+
+[node name="CloseButton" type="Button" parent="Root/MenuPanel/MenuMargin/MenuVBox" groups=["hud_button"]]
+custom_minimum_size = Vector2(255, 48)
+layout_mode = 2
+text = "닫기"

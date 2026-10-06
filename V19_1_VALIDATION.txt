@@ -1,0 +1,21 @@
+Twilight Offline RPG V19.1 FIXED validation
+Date: 2026-10-06
+Godot: 4.7.2.stable.official.ed1daf0bf
+
+Validation performed:
+- Godot editor parse/import: PASS
+- Integer division warning regression check: PASS
+- built-in function name collision warning regression check: PASS
+- Transform catalog -> equip -> AnimatedSprite2D directional frames: PASS
+- Magic doll catalog -> equip -> companion directional frames: PASS
+- Relic catalog -> equip -> relic visible: PASS
+- Item catalog -> acquire/equip -> inventory/slot/effective attack: PASS
+- Runtime ERROR check for functional test: PASS
+- Asset res:// references checked: 2,989; missing: 0
+- Maps: 25
+- Catalog counts: transform 413, doll 166, relic 144, item 2,129
+- Directional sheets: 137
+
+GitHub Actions functional validation run:
+https://github.com/zoog136-hash/-/actions/runs/37453352115
+Conclusion: success

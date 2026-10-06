@@ -1,0 +1,34 @@
+Twilight Knight Offline RPG V20 LINEAGE HUD - Validation
+Date: 2026-10-06
+Engine: Godot 4.7.2 stable official ed1daf0bf
+
+Reference layout:
+- assets/original_sheets/reference_ui.jpg
+
+V20 gameplay HUD:
+- Character portrait / level / HP / MP / combat stats
+- Quick potion + acceleration item counters
+- Buff row
+- Quest / party / selected-target panel
+- Top-right shop / bag / skill / quest / menu buttons
+- Center map name + target HP panel
+- Right-side SELF / target / AUTO / attack controls
+- Bottom EXP / system buttons / skill slots / consumable slots
+
+Godot 4.7.2 CI validation:
+- Editor import + GDScript parse: PASS
+- V20 HUD root creation: PASS
+- Legacy always-visible HUD hidden: PASS
+- AUTO ON display: PASS
+- Target name + HP display: PASS
+- Target clear: PASS
+- Quick item counts: PASS
+- Quest progress update: PASS
+- V19.2 Android catalog touch selection regression: PASS
+- V19.3 catalog paging regression: PASS
+
+Existing full data retained:
+- 25 maps
+- transformations / magic dolls / relics / items catalog data
+- extracted catalog images and directional art
+- character / monster / UI sheets

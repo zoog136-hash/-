@@ -1,0 +1,21 @@
+Twilight Offline RPG V19.3 PAGING FIXED
+
+Changes:
+- Catalog pagination added: first / previous / page / next / last
+- Page size: 40 records
+- Search results are paginated
+- Android touch row selection retained
+- Existing equip/apply logic retained
+
+Catalog counts:
+{'변신': 413, '마법인형': 166, '성물': 144, '아이템': 2129}
+
+Godot 4.7.2 automated regression tests:
+- Project import/parse: PASS
+- V19.1 equipment functional test: PASS
+- V19.2 Android touch selection test: PASS
+- V19.3 paging test: PASS
+  transformation 413 => 11 pages
+  magic doll 166 => 5 pages
+  relic 144 => 4 pages
+  item 2129 => 54 pages

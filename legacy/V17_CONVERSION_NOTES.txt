@@ -1,0 +1,13 @@
+Source: twilight_offline_v17.html
+Target: Godot 4.x native project
+
+Data preserved:
+- game_db_v17.json: item 470 / monster 163 / skill 258 / doll 184 / transform 184 / relic 195
+- maps_v17.json: Aden world + Tower of Oman floors 1-10 (11 maps total)
+- extracted source assets: player.jpg, ghost.png, bug.png, world.png
+- original V17 HTML retained under reference/
+
+Implemented natively in scripts/main.gd:
+movement, click pathfinding, 4-way AStarGrid2D, collision, combat, auto hunt,
+monster AI, drops, inventory, equipment, enhancement, stats, quest, map travel,
+catalogs, shop, skills, save/load, full menu and HUD.

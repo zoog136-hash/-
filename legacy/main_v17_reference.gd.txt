@@ -1,0 +1,1089 @@
+extends Node2D
+
+const VIEW_SIZE := Vector2(1280, 720)
+const SAVE_PATH := "user://twilight_v17_save.json"
+const QUEST_GOAL := 9
+const QUEST_GOLD := 1500
+const QUEST_XP := 300
+const STAT_KEYS := ["STR", "DEX", "CON", "INT", "WIS", "CHA"]
+const STAT_BASE := {"STR":16, "DEX":12, "CON":16, "INT":8, "WIS":9, "CHA":8}
+const GEAR_SLOTS := {
+	"weapon":"무기", "helmet":"투구", "tshirt":"티셔츠", "body":"갑옷", "cloak":"망토",
+	"gaiters":"각반", "shoulder":"견갑", "gloves":"장갑", "boots":"신발", "shield":"방패/가더",
+	"necklace":"목걸이", "earring":"귀걸이", "ring1":"반지1", "ring2":"반지2", "belt":"벨트",
+	"bracelet":"팔찌", "badge":"휘장", "seal":"인장", "crystal":"수정", "catalyst":"카탈리스트", "rune":"룬"
+}
+const RARITY_PRICE := {"일반":100, "고급":500, "희귀":2500, "영웅":12000, "전설":60000, "신화":250000, "유일":1000000}
+
+var rng := RandomNumberGenerator.new()
+var game_db: Dictionary = {}
+var maps: Array = []
+var maps_by_id: Dictionary = {}
+var items: Array = []
+var monsters_db: Array = []
+var skills_db: Array = []
+var items_by_name: Dictionary = {}
+
+var player := {
+	"pos": Vector2(0,0), "r":15.0, "speed":190.0, "level":35, "xp":100, "xp_need":1400,
+	"hp":1832.0, "max_hp":1832, "mp":315.0, "max_mp":375, "attack":38, "def":17,
+	"gold":12000, "auto":false, "atk_cd":0.0, "auto_cd":0.0
+}
+var inventory := {"HP 물약":100, "강력 HP 물약":14, "축복받은 HP 물약":10, "낡은 장검":1, "초록 잎":200}
+var equipped := {}
+var enhance_levels := {}
+var stat_allocation := {"STR":0,"DEX":0,"CON":0,"INT":0,"WIS":0,"CHA":0}
+var gear_sets: Array = [null, null]
+var quest_kills := 0
+var quest_rewarded := false
+var monsters: Array = []
+var drops: Array = []
+var selected_monster = null
+var combat_log: Array[String] = []
+var touch_dir := {"up":false,"down":false,"left":false,"right":false}
+var click_path: Array[Vector2] = []
+var map_positions := {}
+var active_map_id := "aden_world"
+var active_map: Dictionary = {}
+var world_size := Vector2(8192, 4224)
+var camera_offset := Vector2.ZERO
+var astar: AStarGrid2D
+var save_clock := 0.0
+var game_paused := false
+var hero_class := "기사"
+
+var player_tex: Texture2D
+var ghost_tex: Texture2D
+var bug_tex: Texture2D
+var world_tex: Texture2D
+
+# UI
+var ui_layer: CanvasLayer
+var hp_bar: ProgressBar
+var mp_bar: ProgressBar
+var exp_bar: ProgressBar
+var name_label: Label
+var level_label: Label
+var gold_label: Label
+var map_label: Label
+var quest_label: Label
+var target_panel: Panel
+var target_label: Label
+var target_hp: ProgressBar
+var auto_button: Button
+var log_label: RichTextLabel
+var inventory_panel: Panel
+var inventory_list: VBoxContainer
+var modal_panel: Panel
+var modal_title: Label
+var modal_list: VBoxContainer
+var menu_panel: Panel
+var menu_grid: GridContainer
+var message_label: Label
+var message_clock := 0.0
+
+func _ready() -> void:
+	rng.randomize()
+	load_v17_data()
+	load_assets()
+	init_equipment()
+	build_ui()
+	set_map(active_map_id, Vector2.ZERO, false)
+	spawn_initial_monsters()
+	try_load_save()
+	log_line("OFFLINE V17 · Godot 변환 프로젝트 시작")
+	queue_redraw()
+
+func load_v17_data() -> void:
+	game_db = JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json"))
+	maps = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps_v17.json"))
+	items = game_db.get("아이템", [])
+	monsters_db = game_db.get("몬스터", [])
+	skills_db = game_db.get("스킬", [])
+	for it in items:
+		items_by_name[str(it.get("name", ""))] = it
+	for m in maps:
+		maps_by_id[str(m.get("id", ""))] = m
+
+func load_assets() -> void:
+	player_tex = load("res://assets/player.jpg")
+	ghost_tex = load("res://assets/ghost.png")
+	bug_tex = load("res://assets/bug.png")
+	world_tex = load("res://assets/world.png")
+
+func init_equipment() -> void:
+	for k in GEAR_SLOTS.keys(): equipped[k] = ""
+	equipped["transform"] = ""
+	equipped["doll"] = ""
+	equipped["relic"] = ""
+
+func set_map(id: String, desired_pos := Vector2.ZERO, remember := true) -> void:
+	if remember and player.pos != Vector2.ZERO:
+		map_positions[active_map_id] = [player.pos.x, player.pos.y]
+	active_map_id = id
+	click_path.clear()
+	selected_monster = null
+	monsters.clear()
+	drops.clear()
+	if id == "forest":
+		active_map = {}
+		world_size = Vector2(2560, 1440)
+		astar = null
+		var remembered = map_positions.get(id, null)
+		if desired_pos != Vector2.ZERO:
+			player.pos = desired_pos
+		elif remembered is Array and remembered.size() >= 2:
+			player.pos = Vector2(float(remembered[0]), float(remembered[1]))
+		else:
+			player.pos = Vector2(1280, 720)
+	else:
+		active_map = maps_by_id.get(id, maps_by_id.get("aden_world", {}))
+		var tile := int(active_map.get("tile_size_world", 32))
+		world_size = Vector2(int(active_map.get("width", 1))*tile, int(active_map.get("height", 1))*tile)
+		build_astar()
+		var remembered = map_positions.get(id, null)
+		if desired_pos != Vector2.ZERO and can_occupy(desired_pos, 10.0):
+			player.pos = desired_pos
+		elif remembered is Array and remembered.size() >= 2 and can_occupy(Vector2(float(remembered[0]), float(remembered[1])), 10.0):
+			player.pos = Vector2(float(remembered[0]), float(remembered[1]))
+		else:
+			player.pos = map_spawn_position()
+	camera_offset = camera_for(player.pos)
+	if is_instance_valid(map_label): map_label.text = map_display_name()
+	spawn_initial_monsters()
+	if id == "forest" and not quest_rewarded and quest_kills < QUEST_GOAL:
+		spawn_quest_goblins(4)
+	queue_redraw()
+
+func map_display_name() -> String:
+	if active_map_id == "forest": return "황혼의 숲"
+	return str(active_map.get("name", active_map_id))
+
+func map_spawn_position() -> Vector2:
+	var tile := int(active_map.get("tile_size_world", 32))
+	var ns = active_map.get("navigation_spawn", {})
+	if ns is Dictionary and ns.has("column") and ns.has("row"):
+		var p := Vector2((int(ns.column)+0.5)*tile, (int(ns.row)+0.5)*tile)
+		if can_occupy(p, 8): return p
+	var w := int(active_map.get("width", 1))
+	var h := int(active_map.get("height", 1))
+	for r in range(h):
+		for c in range(w):
+			var p := Vector2((c+0.5)*tile, (r+0.5)*tile)
+			if can_occupy(p, 8): return p
+	return Vector2(tile*2, tile*2)
+
+func build_astar() -> void:
+	astar = AStarGrid2D.new()
+	var w := int(active_map.get("width", 1))
+	var h := int(active_map.get("height", 1))
+	var tile := int(active_map.get("tile_size_world", 32))
+	astar.region = Rect2i(0, 0, w, h)
+	astar.cell_size = Vector2(tile, tile)
+	astar.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	astar.update()
+	var collision: Array = active_map.get("collision", [])
+	for r in range(h):
+		for c in range(w):
+			var idx := r*w+c
+			if idx >= collision.size() or int(collision[idx]) != 0:
+				astar.set_point_solid(Vector2i(c,r), true)
+
+func can_occupy(pos: Vector2, radius := 14.0) -> bool:
+	if active_map_id == "forest":
+		return pos.x-radius >= 36 and pos.y-radius >= 36 and pos.x+radius <= world_size.x-36 and pos.y+radius <= world_size.y-36
+	var tile := int(active_map.get("tile_size_world", 32))
+	var w := int(active_map.get("width", 1))
+	var h := int(active_map.get("height", 1))
+	var collision: Array = active_map.get("collision", [])
+	var pts := [pos, pos+Vector2(radius,0), pos+Vector2(-radius,0), pos+Vector2(0,radius), pos+Vector2(0,-radius)]
+	for p in pts:
+		var c := int(floor(p.x/tile))
+		var r := int(floor(p.y/tile))
+		if c < 0 or r < 0 or c >= w or r >= h: return false
+		var idx := r*w+c
+		if idx >= collision.size() or int(collision[idx]) != 0: return false
+	return true
+
+func line_clear(a: Vector2, b: Vector2) -> bool:
+	var d := a.distance_to(b)
+	if d <= 1: return true
+	var n := max(1, int(ceil(d/16.0)))
+	for i in range(1, n):
+		if not can_occupy(a.lerp(b, float(i)/n), 6): return false
+	return true
+
+func world_to_cell(p: Vector2) -> Vector2i:
+	var tile := int(active_map.get("tile_size_world", 32))
+	return Vector2i(int(floor(p.x/tile)), int(floor(p.y/tile)))
+
+func cell_to_world(c: Vector2i) -> Vector2:
+	var tile := int(active_map.get("tile_size_world", 32))
+	return Vector2((c.x+0.5)*tile, (c.y+0.5)*tile)
+
+func path_to(world_target: Vector2) -> void:
+	if active_map_id == "forest" or astar == null:
+		click_path = [world_target] if can_occupy(world_target, player.r) else []
+		return
+	var start := world_to_cell(player.pos)
+	var goal := closest_walkable_cell(world_to_cell(world_target))
+	if goal.x < 0: return
+	var ids := astar.get_id_path(start, goal)
+	click_path.clear()
+	for id in ids:
+		click_path.append(cell_to_world(id))
+	if click_path.size() > 0: click_path.pop_front()
+
+func closest_walkable_cell(goal: Vector2i) -> Vector2i:
+	if astar != null and astar.is_in_boundsv(goal) and not astar.is_point_solid(goal): return goal
+	for rad in range(1, 9):
+		for y in range(goal.y-rad, goal.y+rad+1):
+			for x in range(goal.x-rad, goal.x+rad+1):
+				var c := Vector2i(x,y)
+				if astar != null and astar.is_in_boundsv(c) and not astar.is_point_solid(c): return c
+	return Vector2i(-1,-1)
+
+func move_toward_pos(current: Vector2, target: Vector2, speed: float, delta: float, radius := 14.0) -> Vector2:
+	var v := target-current
+	var d := v.length()
+	if d < 0.01: return current
+	var step := min(d, speed*delta)
+	var dir := v/d
+	var next := current+dir*step
+	if can_occupy(next, radius): return next
+	var xnext := Vector2(next.x, current.y)
+	if can_occupy(xnext, radius): return xnext
+	var ynext := Vector2(current.x, next.y)
+	if can_occupy(ynext, radius): return ynext
+	return current
+
+func _physics_process(delta: float) -> void:
+	message_clock = max(0.0, message_clock-delta)
+	if message_clock <= 0 and is_instance_valid(message_label): message_label.visible = false
+	if game_paused:
+		update_ui()
+		return
+	player.atk_cd = max(0.0, float(player.atk_cd)-delta)
+	player.auto_cd = max(0.0, float(player.auto_cd)-delta)
+	var dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	dir += Vector2((1 if touch_dir.right else 0)-(1 if touch_dir.left else 0), (1 if touch_dir.down else 0)-(1 if touch_dir.up else 0))
+	if dir.length() > 0.05:
+		dir = dir.normalized()
+		player.auto = false
+		click_path.clear()
+		var next := player.pos + dir*float(player.speed)*db_bonus().speed*delta
+		if can_occupy(next, player.r): player.pos = next
+		else:
+			var nx := Vector2(next.x, player.pos.y)
+			var ny := Vector2(player.pos.x, next.y)
+			if can_occupy(nx, player.r): player.pos = nx
+			elif can_occupy(ny, player.r): player.pos = ny
+	elif click_path.size() > 0 and not bool(player.auto):
+		var goal := click_path[0]
+		player.pos = move_toward_pos(player.pos, goal, float(player.speed)*db_bonus().speed, delta, player.r)
+		if player.pos.distance_to(goal) < 8: click_path.pop_front()
+	if Input.is_action_just_pressed("attack"): attack()
+	if Input.is_action_just_pressed("auto_hunt"): toggle_auto()
+	if Input.is_action_just_pressed("open_menu"): toggle_menu()
+	if Input.is_action_just_pressed("character"): open_character()
+	if Input.is_action_just_pressed("inventory"): toggle_inventory()
+	if Input.is_key_pressed(KEY_ESCAPE): close_all_panels()
+	auto_hunt(delta)
+	update_monsters(delta)
+	update_drops(delta)
+	while monsters.size() < 10:
+		spawn_random_monster()
+	camera_offset = camera_for(player.pos)
+	save_clock += delta
+	if save_clock > 12.0:
+		save_clock = 0.0
+		save_game(true)
+	update_ui()
+	queue_redraw()
+
+func camera_for(p: Vector2) -> Vector2:
+	return Vector2(clamp(p.x-VIEW_SIZE.x/2.0, 0.0, max(0.0, world_size.x-VIEW_SIZE.x)), clamp(p.y-VIEW_SIZE.y/2.0, 0.0, max(0.0, world_size.y-VIEW_SIZE.y)))
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and not ui_blocks_world(event.position):
+		var wp := event.position + camera_offset
+		var picked = pick_monster(wp)
+		if picked != null:
+			selected_monster = picked
+			if player.pos.distance_to(picked.pos) > 72: path_to(picked.pos)
+		else:
+			selected_monster = null
+			player.auto = false
+			path_to(wp)
+		update_ui()
+
+func ui_blocks_world(p: Vector2) -> bool:
+	if modal_panel.visible or menu_panel.visible: return true
+	if inventory_panel.visible and inventory_panel.get_global_rect().has_point(p): return true
+	return false
+
+func pick_monster(p: Vector2):
+	var best = null
+	var best_d := 999999.0
+	for m in monsters:
+		var d := Vector2(m.pos).distance_to(p)
+		if d < 48 and d < best_d:
+			best = m; best_d = d
+	return best
+
+func spawn_initial_monsters() -> void:
+	monsters.clear()
+	for i in range(12): spawn_random_monster()
+
+func get_monster_template() -> Dictionary:
+	var eligible: Array = []
+	for m in monsters_db:
+		if int(m.get("lv",1)) <= max(8, int(player.level)*3): eligible.append(m)
+	if eligible.is_empty(): return monsters_db[0] if not monsters_db.is_empty() else {"name":"고스트","lv":1,"hp":50,"atk":4,"xp":20}
+	return eligible[rng.randi_range(0, eligible.size()-1)]
+
+func safe_spawn(near := Vector2.ZERO, min_d := 220.0, max_d := 700.0) -> Vector2:
+	if near == Vector2.ZERO: near = player.pos
+	for i in range(90):
+		var a := rng.randf_range(0.0, TAU)
+		var r := rng.randf_range(min_d, max_d)
+		var p := near + Vector2(cos(a), sin(a))*r
+		p.x = clamp(p.x, 48.0, world_size.x-48.0)
+		p.y = clamp(p.y, 48.0, world_size.y-48.0)
+		if can_occupy(p, 14) and p.distance_to(player.pos) > min_d: return p
+	return map_spawn_position()
+
+func spawn_random_monster() -> void:
+	var d := get_monster_template()
+	spawn_monster(safe_spawn(), d)
+
+func spawn_monster(pos: Vector2, d: Dictionary) -> void:
+	monsters.append({
+		"pos":pos, "name":str(d.get("name","고스트")), "level":int(d.get("lv",1)),
+		"hp":float(d.get("hp",60)), "max_hp":float(d.get("hp",60)), "attack":int(d.get("atk",5)),
+		"def":int(d.get("def",0)), "speed":float(d.get("speed",60)), "atk_cd":rng.randf(), "hit":0.0,
+		"xp":int(d.get("xp",35)), "drop":d.get("drop", [])
+	})
+
+func spawn_quest_goblins(count := 4) -> void:
+	var goblin: Dictionary = {}
+	for m in monsters_db:
+		if "고블린" in str(m.get("name","")):
+			goblin = m; break
+	if goblin.is_empty(): return
+	for i in range(count): spawn_monster(safe_spawn(player.pos, 150, 420), goblin)
+	log_line("퀘스트 고블린 %d마리 등장" % count)
+
+func update_monsters(delta: float) -> void:
+	for m in monsters:
+		m.atk_cd = float(m.atk_cd)-delta
+		m.hit = max(0.0, float(m.hit)-delta)
+		var mp := Vector2(m.pos)
+		var d := mp.distance_to(player.pos)
+		if d < 220:
+			if d > 58 or not line_clear(mp, player.pos):
+				m.pos = move_toward_pos(mp, player.pos, float(m.speed), delta, 12)
+			elif float(m.atk_cd) <= 0:
+				player.hp = float(player.hp)-max(1, int(m.attack)-effective_def())
+				m.atk_cd = 1.1
+				if float(player.hp) <= 0:
+					on_player_death()
+
+func on_player_death() -> void:
+	player.auto = false
+	player.hp = effective_max_hp()
+	player.mp = effective_max_mp()
+	player.pos = map_spawn_position() if active_map_id != "forest" else Vector2(1280,720)
+	message("사망 처리 · 시작 위치로 이동")
+	log_line("캐릭터가 쓰러졌습니다")
+
+func auto_hunt(delta: float) -> void:
+	if not bool(player.auto): return
+	var t = selected_monster
+	if t == null or not monsters.has(t) or player.pos.distance_to(Vector2(t.pos)) > 900:
+		t = nearest_monster(900)
+		selected_monster = t
+	if t == null: return
+	var d := player.pos.distance_to(Vector2(t.pos))
+	if d > 54:
+		if active_map_id != "forest" and astar != null and click_path.is_empty(): path_to(Vector2(t.pos))
+		if click_path.size() > 0:
+			var goal := click_path[0]
+			player.pos = move_toward_pos(player.pos, goal, float(player.speed)*db_bonus().speed, delta, player.r)
+			if player.pos.distance_to(goal) < 8: click_path.pop_front()
+		else:
+			player.pos = move_toward_pos(player.pos, Vector2(t.pos), float(player.speed)*db_bonus().speed, delta, player.r)
+	elif float(player.auto_cd) <= 0:
+		attack()
+		player.auto_cd = 0.55 / max(0.1, transform_attack_speed())
+
+func nearest_monster(max_dist := 99999.0):
+	var best = null
+	var bd := max_dist
+	for m in monsters:
+		var d := player.pos.distance_to(Vector2(m.pos))
+		if d < bd:
+			best = m; bd = d
+	return best
+
+func transform_attack_speed() -> float:
+	var name := str(equipped.get("transform", ""))
+	if name == "": return 1.0
+	for t in game_db.get("변신", []):
+		if str(t.get("name","")) == name:
+			return 1.0 + float(t.get("attackSpeed",0))/100.0
+	return 1.0
+
+func attack() -> void:
+	if float(player.atk_cd) > 0: return
+	player.atk_cd = 0.42 / max(0.1, transform_attack_speed())
+	var t = selected_monster
+	if t == null or not monsters.has(t) or player.pos.distance_to(Vector2(t.pos)) >= 82 or not line_clear(player.pos, Vector2(t.pos)):
+		t = nearest_monster(82)
+	if t == null:
+		log_line("공격 범위에 대상이 없습니다")
+		return
+	selected_monster = t
+	var dmg := roll_local_physical(t)
+	t.hp = float(t.hp)-dmg
+	t.hit = 0.12
+	log_line("%s에게 %d 피해" % [str(t.name), dmg])
+	if float(t.hp) <= 0: kill_monster(t)
+
+func kill_monster(m) -> void:
+	update_quest_on_kill(m)
+	gain_xp(int(m.get("xp",35)))
+	var drop := roll_drop(m)
+	log_line("%s 처치: 경험치 %d%s" % [str(m.name), int(m.get("xp",35)), (" · "+str(drop.item)+" 드랍") if not drop.is_empty() else ""])
+	if not drop.is_empty():
+		drops.append({"pos":Vector2(m.pos), "item":str(drop.item), "amount":int(drop.amount), "grade":str(drop.grade), "life":24.0})
+	monsters.erase(m)
+	if selected_monster == m: selected_monster = null
+
+func roll_drop(m: Dictionary) -> Dictionary:
+	var r := rng.randf()
+	if r < 0.38:
+		return {"item":"아데나","amount":8+rng.randi_range(0,17)+int(m.level),"grade":"일반"}
+	if r < 0.62:
+		return {"item":"HP 물약","amount":1,"grade":item_grade("HP 물약")}
+	var arr = m.get("drop", [])
+	if r < 0.86 and arr is Array and not arr.is_empty():
+		var name := str(arr[rng.randi_range(0, arr.size()-1)])
+		return {"item":name,"amount":1,"grade":item_grade(name)}
+	return {}
+
+func update_drops(delta: float) -> void:
+	var remove: Array = []
+	for d in drops:
+		d.life = float(d.life)-delta
+		if float(d.life) <= 0:
+			remove.append(d)
+		elif player.pos.distance_to(Vector2(d.pos)) < 28:
+			pickup_drop(d); remove.append(d)
+	for d in remove: drops.erase(d)
+
+func pickup_drop(d: Dictionary) -> void:
+	var name := str(d.item); var amount := int(d.amount)
+	if name == "아데나": player.gold = int(player.gold)+amount
+	inventory[name] = int(inventory.get(name,0))+amount
+	log_line("%s x%d 획득" % [name, amount])
+
+func gain_xp(n: int) -> void:
+	var bonus := db_bonus()
+	n = int(floor(n*(1.0+float(bonus.xp))))
+	player.xp = int(player.xp)+n
+	while int(player.xp) >= int(player.xp_need):
+		player.xp = int(player.xp)-int(player.xp_need)
+		player.level = int(player.level)+1
+		player.xp_need = int(floor(int(player.xp_need)*1.28))
+		player.max_hp = int(player.max_hp)+22
+		player.max_mp = int(player.max_mp)+7
+		player.attack = int(player.attack)+4
+		player.def = int(player.def)+1
+		player.hp = effective_max_hp(); player.mp = effective_max_mp()
+		message("레벨 업! Lv.%d" % int(player.level))
+		log_line("레벨 %d 달성" % int(player.level))
+
+func update_quest_on_kill(m: Dictionary) -> void:
+	if quest_rewarded or not ("고블린" in str(m.name)): return
+	quest_kills = min(QUEST_GOAL, quest_kills+1)
+	if quest_kills >= QUEST_GOAL:
+		quest_rewarded = true
+		player.gold = int(player.gold)+QUEST_GOLD
+		gain_xp(QUEST_XP)
+		message("퀘스트 완료! 아데나 +%d / EXP +%d" % [QUEST_GOLD, QUEST_XP])
+		log_line("메인 퀘스트 완료")
+	elif active_map_id == "forest":
+		var remain := 0
+		for x in monsters:
+			if "고블린" in str(x.name): remain += 1
+		if remain < 2: spawn_quest_goblins(4)
+
+func item_grade(name: String) -> String:
+	return str(item_record(name).get("grade", "일반"))
+
+func item_record(name: String) -> Dictionary:
+	return items_by_name.get(name, {})
+
+func gear_slot_for_item(o: Dictionary) -> String:
+	if o.is_empty(): return ""
+	if str(o.get("slot","")) == "weapon": return "weapon"
+	var t := str(o.get("type",""))
+	var map := {"투구":"helmet","티셔츠":"tshirt","갑옷":"body","망토":"cloak","각반":"gaiters","견갑":"shoulder","장갑":"gloves","신발":"boots","방패":"shield","가더":"shield","방패/가더":"shield","목걸이":"necklace","귀걸이":"earring","벨트":"belt","팔찌":"bracelet","휘장":"badge","인장":"seal","수정":"crystal","카탈리스트":"catalyst","룬":"rune"}
+	if t == "반지": return "ring1" if str(equipped.ring1) == "" else ("ring2" if str(equipped.ring2) == "" else "ring1")
+	if map.has(t): return str(map[t])
+	if str(o.get("slot","")) == "armor": return "body"
+	if str(o.get("slot","")) == "accessory": return "necklace"
+	return ""
+
+func db_bonus() -> Dictionary:
+	var b := {"atk":0,"def":0,"xp":0.0,"hp_pct":0.0,"hp_flat":0,"speed":1.0,"hit":0}
+	for slot in equipped.keys():
+		if slot in ["transform","doll","relic"]: continue
+		var name := str(equipped[slot])
+		if name == "": continue
+		var o := item_record(name)
+		b.atk += int(o.get("atk",0)); b.def += int(o.get("def",0)); b.hit += int(o.get("hit",0))
+		b.xp += float(o.get("xp",0.0)); b.hp_pct += float(o.get("hpPct",0.0)); b.hp_flat += int(o.get("hpFlat",0))
+		if o.has("speed"): b.speed *= float(o.speed)
+		var lv := int(enhance_levels.get(name,0))
+		if slot == "weapon": b.atk += lv*2
+		else: b.def += int(floor((lv+1)/2.0))
+	for cat in ["변신","마법인형","성물"]:
+		var key := "transform" if cat == "변신" else ("doll" if cat == "마법인형" else "relic")
+		var chosen := str(equipped.get(key,""))
+		if chosen == "": continue
+		for o in game_db.get(cat, []):
+			if str(o.get("name","")) == chosen:
+				b.atk += int(o.get("atk",0)); b.def += int(o.get("def",0)); b.hit += int(o.get("hit",0))
+				b.xp += float(o.get("xp",0.0)); b.hp_flat += int(o.get("hpFlat",0)); b.hp_pct += float(o.get("hpPct",0.0))
+				if o.has("speed"): b.speed *= float(o.speed)
+	return b
+
+func stat_equipment() -> Dictionary:
+	var out := {"STR":0,"DEX":0,"CON":0,"INT":0,"WIS":0,"CHA":0}
+	for slot in equipped.keys():
+		var o := item_record(str(equipped[slot]))
+		if o.is_empty(): continue
+		var opts = o.get("sourceOptions", [])
+		if opts is Array:
+			for line in opts:
+				var s := str(line).strip_edges().to_upper()
+				for k in STAT_KEYS:
+					if s.begins_with(k+" +"):
+						out[k] += int(s.replace(k+" +", "").strip_edges())
+	return out
+
+func character_stats() -> Dictionary:
+	var gear := stat_equipment()
+	var s := {}
+	for k in STAT_KEYS: s[k] = int(STAT_BASE[k])+int(stat_allocation[k])+int(gear[k])
+	return s
+
+func stat_points() -> int:
+	var spent := 0
+	for k in STAT_KEYS: spent += int(stat_allocation[k])
+	return max(0, int(player.level)-1-spent)
+
+func effective_attack() -> int:
+	return int(player.attack)+int(db_bonus().atk)+int(floor((int(character_stats().STR)-16)*1.5))
+
+func effective_def() -> int:
+	return int(player.def)+int(db_bonus().def)+int(floor((int(character_stats().DEX)-12)/2.0))
+
+func effective_max_hp() -> int:
+	var b := db_bonus()
+	return max(1, int(floor((int(player.max_hp)+int(b.hp_flat))*(1.0+float(b.hp_pct))))) + max(0,int(character_stats().CON)-16)*25
+
+func effective_max_mp() -> int:
+	return int(player.max_mp)+max(0,int(character_stats().WIS)-9)*12
+
+func local_derived() -> Dictionary:
+	var s := character_stats(); var b := db_bonus()
+	return {
+		"hit":75+int(floor(int(player.level)/3.0))+int(floor((int(s.STR)-16)/2.0))+int(b.hit),
+		"crit":min(30,2+int(floor((int(s.STR)-16)/5.0))), "er":int(floor(int(s.DEX)/3.0)),
+		"mr":int(floor(int(player.level)/2.0))+int(s.WIS)*2, "magic":max(0,int(s.INT)-8)*2,
+		"mp_discount":min(30,max(0,int(s.INT)-8)), "hp_tick":max(1,int(floor(int(s.CON)/4.0))),
+		"mp_tick":max(1,int(floor(int(s.WIS)/5.0))), "potion":max(0,int(s.CON)-16),
+		"weight":1500+int(s.CON)*100, "capacity":10+int(s.CHA)*2
+	}
+
+func roll_local_physical(target: Dictionary) -> int:
+	var d := local_derived()
+	var chance := clamp(float(d.hit)-int(target.level)*0.25, 65.0, 99.0)
+	if rng.randf_range(0,100) >= chance: return 0
+	var damage := max(1, effective_attack()-rng.randi_range(0,4)-int(target.def))
+	if rng.randf_range(0,100) < int(d.crit): damage = int(floor(damage*1.5))
+	return damage
+
+func equip_item(name: String) -> void:
+	if int(inventory.get(name,0)) <= 0: return
+	var o := item_record(name)
+	var slot := gear_slot_for_item(o)
+	if slot == "": message("장착할 수 없는 아이템입니다"); return
+	equipped[slot] = name
+	player.hp = min(float(player.hp), float(effective_max_hp()))
+	player.mp = min(float(player.mp), float(effective_max_mp()))
+	message(name+" 장착")
+	save_game(true)
+	refresh_inventory()
+
+func use_inventory_item(name: String) -> void:
+	var o := item_record(name)
+	if int(o.get("heal",0)) <= 0: return
+	if int(inventory.get(name,0)) <= 0: return
+	if float(player.hp) >= effective_max_hp(): message("HP가 이미 가득합니다"); return
+	inventory[name] = int(inventory[name])-1
+	var bonus := 1.0+float(local_derived().potion)/100.0
+	var heal := int(floor(int(o.heal)*bonus))
+	player.hp = min(float(effective_max_hp()), float(player.hp)+heal)
+	log_line(name+" 사용")
+	message("HP +%d" % heal)
+	refresh_inventory()
+
+func enhance_item(slot: String) -> void:
+	var name := str(equipped.get(slot,""))
+	if name == "": return
+	var lv := int(enhance_levels.get(name,0))
+	var cost := 1000*(lv+1)*(lv+1)
+	if int(player.gold) < cost: message("아데나가 부족합니다"); return
+	player.gold = int(player.gold)-cost
+	enhance_levels[name] = lv+1
+	message("%s +%d 강화" % [name,lv+1])
+	save_game(true)
+	open_equipment_panel()
+
+func allocate_stat(k: String) -> void:
+	if not (k in STAT_KEYS) or stat_points() <= 0 or int(stat_allocation[k]) >= 99: return
+	stat_allocation[k] = int(stat_allocation[k])+1
+	open_character("stats")
+	save_game(true)
+
+func reset_stats() -> void:
+	for k in STAT_KEYS: stat_allocation[k] = 0
+	open_character("stats")
+	save_game(true)
+
+func use_skill(s: Dictionary) -> void:
+	var mp_cost := int(s.get("mp",0))
+	if float(player.mp) < mp_cost: message("MP가 부족합니다"); return
+	var effect := str(s.get("effect",""))
+	if effect == "damage":
+		var t = selected_monster if selected_monster != null else nearest_monster(float(s.get("range",80)))
+		if t == null or player.pos.distance_to(Vector2(t.pos)) > float(s.get("range",80)) or not line_clear(player.pos,Vector2(t.pos)):
+			message("대상이 너무 멉니다"); return
+		player.mp = float(player.mp)-mp_cost
+		var dmg := max(1, int(s.get("power",20))+int(floor(effective_attack()*0.35))-int(t.def))
+		t.hp = float(t.hp)-dmg; log_line("%s → %s %d 피해" % [str(s.get("name","스킬")),str(t.name),dmg])
+		if float(t.hp)<=0: kill_monster(t)
+	elif effect == "heal":
+		player.mp = float(player.mp)-mp_cost; player.hp=min(float(effective_max_hp()),float(player.hp)+int(s.get("heal",40)))
+	elif effect == "teleport":
+		player.mp = float(player.mp)-mp_cost; player.pos=safe_spawn()
+	else:
+		message("이 스킬은 V17 DB 열람용입니다")
+
+func toggle_auto() -> void:
+	player.auto = not bool(player.auto)
+	click_path.clear()
+	if is_instance_valid(auto_button): auto_button.text = "AUTO\nON" if player.auto else "AUTO"
+	message("자동사냥 ON" if player.auto else "자동사냥 OFF")
+
+# ---------------- Drawing ----------------
+func _draw() -> void:
+	draw_set_transform(-camera_offset)
+	if active_map_id == "forest": draw_forest()
+	else: draw_imported_map()
+	for d in drops: draw_drop(d)
+	for m in monsters: draw_monster(m)
+	draw_player()
+	draw_set_transform(Vector2.ZERO)
+
+func draw_forest() -> void:
+	if world_tex:
+		draw_texture_rect(world_tex, Rect2(Vector2.ZERO, world_size), false)
+	else:
+		draw_rect(Rect2(Vector2.ZERO,world_size), Color("#1b311c"))
+
+func draw_imported_map() -> void:
+	var tile := int(active_map.get("tile_size_world",32))
+	var w := int(active_map.get("width",1)); var h := int(active_map.get("height",1))
+	var terrain: Array = active_map.get("terrain",[])
+	var c0 := max(0,int(floor(camera_offset.x/tile))-1); var c1 := min(w-1,int(ceil((camera_offset.x+VIEW_SIZE.x)/tile))+1)
+	var r0 := max(0,int(floor(camera_offset.y/tile))-1); var r1 := min(h-1,int(ceil((camera_offset.y+VIEW_SIZE.y)/tile))+1)
+	for r in range(r0,r1+1):
+		for c in range(c0,c1+1):
+			var idx:=r*w+c; var t:=int(terrain[idx]) if idx<terrain.size() else 0
+			var col := Color("#223729")
+			if t==0: col=Color("#080b09")
+			elif t==2: col=Color("#352f29")
+			elif t==3: col=Color("#173449")
+			elif t==4: col=Color("#6b5940")
+			draw_rect(Rect2(c*tile,r*tile,tile+1,tile+1),col)
+	var collision: Array = active_map.get("collision",[])
+	for r in range(r0,r1+1):
+		for c in range(c0,c1+1):
+			var idx:=r*w+c
+			if idx<collision.size() and int(collision[idx])!=0:
+				draw_rect(Rect2(c*tile+2,r*tile+2,tile-4,tile-4),Color(0.08,0.07,0.06,0.45))
+
+func draw_player() -> void:
+	draw_ellipse_shadow(player.pos, 23, 8, Color(0,0,0,0.45))
+	if player_tex:
+		draw_texture_rect(player_tex, Rect2(player.pos-Vector2(34,94),Vector2(68,100)), false)
+	else:
+		draw_circle(player.pos-Vector2(0,28),22,Color("#d6bd83"))
+	var maxhp:=effective_max_hp(); var maxmp:=effective_max_mp()
+	draw_rect(Rect2(player.pos.x-31,player.pos.y-105,62,6),Color("#111111"))
+	draw_rect(Rect2(player.pos.x-30,player.pos.y-104,60*clamp(float(player.hp)/maxhp,0,1),4),Color("#c92d27"))
+	draw_rect(Rect2(player.pos.x-30,player.pos.y-98,60*clamp(float(player.mp)/maxmp,0,1),3),Color("#3587cc"))
+
+func draw_monster(m: Dictionary) -> void:
+	var p:=Vector2(m.pos)
+	draw_ellipse_shadow(p,18,6,Color(0,0,0,0.35))
+	var tex := bug_tex if ("버그" in str(m.name) or "고블린" in str(m.name) or "오크" in str(m.name)) else ghost_tex
+	if tex:
+		draw_texture_rect(tex,Rect2(p-Vector2(28,72),Vector2(56,72)),false)
+	else: draw_circle(p-Vector2(0,24),18,Color("#b8c0b7"))
+	if selected_monster == m:
+		draw_arc(p-Vector2(0,18),34,0,TAU,32,Color("#f0d47f"),2)
+	var ratio:=clamp(float(m.hp)/max(1.0,float(m.max_hp)),0,1)
+	draw_rect(Rect2(p.x-28,p.y-82,56,5),Color("#15203a"))
+	draw_rect(Rect2(p.x-27,p.y-81,54*ratio,3),Color("#db3430"))
+
+func draw_drop(d: Dictionary) -> void:
+	var p:=Vector2(d.pos); var col:=rarity_color(str(d.grade))
+	draw_line(p-Vector2(0,30),p+Vector2(0,4),Color(col,0.55),2)
+	draw_circle(p,6,col)
+
+func draw_ellipse_shadow(center: Vector2, rx: float, ry: float, color: Color) -> void:
+	var pts:=PackedVector2Array()
+	for i in range(25):
+		var a:=TAU*i/24.0; pts.append(center+Vector2(cos(a)*rx,sin(a)*ry))
+	draw_colored_polygon(pts,color)
+
+func rarity_color(g: String) -> Color:
+	var cols={"일반":"#dddddd","고급":"#67d77e","희귀":"#66a8ff","영웅":"#c56cff","전설":"#ff8a45","신화":"#ff4c76","유일":"#f7df58"}
+	return Color(str(cols.get(g,"#dddddd")))
+
+# ---------------- UI ----------------
+func build_ui() -> void:
+	ui_layer=CanvasLayer.new(); add_child(ui_layer)
+	var hud:=Panel.new(); hud.position=Vector2(10,10); hud.size=Vector2(350,92); ui_layer.add_child(hud); panel_style(hud)
+	var portrait:=Button.new(); portrait.text="⚔"; portrait.position=Vector2(8,8); portrait.size=Vector2(74,74); portrait.pressed.connect(func(): open_character()); hud.add_child(portrait); button_style(portrait)
+	name_label=Label.new(); name_label.text="그림자검객"; name_label.position=Vector2(92,7); name_label.size=Vector2(170,22); hud.add_child(name_label)
+	level_label=Label.new(); level_label.position=Vector2(268,7); level_label.size=Vector2(70,22); hud.add_child(level_label)
+	hp_bar=ProgressBar.new(); hp_bar.position=Vector2(92,31); hp_bar.size=Vector2(246,18); hp_bar.show_percentage=false; hud.add_child(hp_bar)
+	mp_bar=ProgressBar.new(); mp_bar.position=Vector2(92,53); mp_bar.size=Vector2(246,16); mp_bar.show_percentage=false; hud.add_child(mp_bar)
+	var stats:=Label.new(); stats.position=Vector2(92,72); stats.size=Vector2(246,18); stats.add_theme_font_size_override("font_size",10); stats.name="Stats"; hud.add_child(stats)
+
+	var quest:=Panel.new(); quest.position=Vector2(12,160); quest.size=Vector2(330,118); ui_layer.add_child(quest); panel_style(quest)
+	var qt:=Label.new(); qt.text="퀘스트 · 메인"; qt.position=Vector2(12,8); qt.size=Vector2(290,24); qt.add_theme_color_override("font_color",Color("#e9d7aa")); quest.add_child(qt)
+	quest_label=Label.new(); quest_label.position=Vector2(12,38); quest_label.size=Vector2(300,68); quest_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; quest.add_child(quest_label)
+
+	map_label=Label.new(); map_label.position=Vector2(910,94); map_label.size=Vector2(250,24); map_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT; ui_layer.add_child(map_label)
+	var map_btn:=Button.new(); map_btn.text="지도"; map_btn.position=Vector2(1170,88); map_btn.size=Vector2(92,38); map_btn.pressed.connect(open_map_panel); ui_layer.add_child(map_btn); button_style(map_btn)
+
+	var menu_btn:=Button.new(); menu_btn.text="☰"; menu_btn.position=Vector2(1210,12); menu_btn.size=Vector2(54,48); menu_btn.pressed.connect(toggle_menu); ui_layer.add_child(menu_btn); button_style(menu_btn)
+
+	target_panel=Panel.new(); target_panel.position=Vector2(505,310); target_panel.size=Vector2(270,48); target_panel.visible=false; ui_layer.add_child(target_panel); panel_style(target_panel)
+	target_label=Label.new(); target_label.position=Vector2(8,3); target_label.size=Vector2(254,18); target_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; target_panel.add_child(target_label)
+	target_hp=ProgressBar.new(); target_hp.position=Vector2(12,26); target_hp.size=Vector2(246,12); target_hp.show_percentage=false; target_panel.add_child(target_hp)
+
+	var pad:=Panel.new(); pad.position=Vector2(18,520); pad.size=Vector2(150,150); ui_layer.add_child(pad); panel_style(pad,0.45)
+	make_hold_button(pad,"▲",Rect2(54,8,42,42),"up")
+	make_hold_button(pad,"▼",Rect2(54,100,42,42),"down")
+	make_hold_button(pad,"◀",Rect2(8,54,42,42),"left")
+	make_hold_button(pad,"▶",Rect2(100,54,42,42),"right")
+
+	var atk:=Button.new(); atk.text="⚔\n공격"; atk.position=Vector2(1155,560); atk.size=Vector2(92,92); atk.pressed.connect(attack); ui_layer.add_child(atk); button_style(atk)
+	auto_button=Button.new(); auto_button.text="AUTO"; auto_button.position=Vector2(1058,575); auto_button.size=Vector2(76,68); auto_button.pressed.connect(toggle_auto); ui_layer.add_child(auto_button); button_style(auto_button)
+	var pot:=Button.new(); pot.text="물약"; pot.position=Vector2(964,586); pot.size=Vector2(76,56); pot.pressed.connect(use_best_potion); ui_layer.add_child(pot); button_style(pot)
+	var invb:=Button.new(); invb.text="인벤"; invb.position=Vector2(876,586); invb.size=Vector2(76,56); invb.pressed.connect(toggle_inventory); ui_layer.add_child(invb); button_style(invb)
+
+	var exp_panel:=Panel.new(); exp_panel.position=Vector2(0,670); exp_panel.size=Vector2(350,50); ui_layer.add_child(exp_panel); panel_style(exp_panel)
+	exp_bar=ProgressBar.new(); exp_bar.position=Vector2(10,24); exp_bar.size=Vector2(330,12); exp_bar.show_percentage=false; exp_panel.add_child(exp_bar)
+	gold_label=Label.new(); gold_label.position=Vector2(10,3); gold_label.size=Vector2(330,20); exp_panel.add_child(gold_label)
+
+	log_label=RichTextLabel.new(); log_label.position=Vector2(180,560); log_label.size=Vector2(520,102); log_label.bbcode_enabled=true; log_label.fit_content=false; log_label.scroll_active=false; ui_layer.add_child(log_label)
+
+	message_label=Label.new(); message_label.position=Vector2(420,90); message_label.size=Vector2(440,40); message_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER; message_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER; message_label.visible=false; ui_layer.add_child(message_label)
+	message_label.add_theme_color_override("font_color",Color("#ffe2a2")); message_label.add_theme_font_size_override("font_size",16)
+
+	build_inventory_panel()
+	build_modal_panel()
+	build_menu_panel()
+	update_ui()
+
+func build_inventory_panel() -> void:
+	inventory_panel=Panel.new(); inventory_panel.position=Vector2(930,90); inventory_panel.size=Vector2(330,430); inventory_panel.visible=false; ui_layer.add_child(inventory_panel); panel_style(inventory_panel)
+	var title:=Label.new(); title.text="인벤토리"; title.position=Vector2(12,10); title.size=Vector2(250,25); inventory_panel.add_child(title)
+	var close:=Button.new(); close.text="×"; close.position=Vector2(286,8); close.size=Vector2(34,28); close.pressed.connect(func(): inventory_panel.visible=false); inventory_panel.add_child(close); button_style(close)
+	var scroll:=ScrollContainer.new(); scroll.position=Vector2(8,44); scroll.size=Vector2(314,378); inventory_panel.add_child(scroll)
+	inventory_list=VBoxContainer.new(); inventory_list.size_flags_horizontal=Control.SIZE_EXPAND_FILL; scroll.add_child(inventory_list)
+
+func build_modal_panel() -> void:
+	modal_panel=Panel.new(); modal_panel.position=Vector2(250,70); modal_panel.size=Vector2(780,580); modal_panel.visible=false; ui_layer.add_child(modal_panel); panel_style(modal_panel)
+	modal_title=Label.new(); modal_title.position=Vector2(16,12); modal_title.size=Vector2(680,30); modal_title.add_theme_font_size_override("font_size",20); modal_title.add_theme_color_override("font_color",Color("#f1ddb0")); modal_panel.add_child(modal_title)
+	var close:=Button.new(); close.text="×"; close.position=Vector2(730,10); close.size=Vector2(38,32); close.pressed.connect(close_modal); modal_panel.add_child(close); button_style(close)
+	var scroll:=ScrollContainer.new(); scroll.position=Vector2(16,55); scroll.size=Vector2(748,508); modal_panel.add_child(scroll)
+	modal_list=VBoxContainer.new(); modal_list.size_flags_horizontal=Control.SIZE_EXPAND_FILL; scroll.add_child(modal_list)
+
+func build_menu_panel() -> void:
+	menu_panel=Panel.new(); menu_panel.position=Vector2(745,68); menu_panel.size=Vector2(520,480); menu_panel.visible=false; ui_layer.add_child(menu_panel); panel_style(menu_panel)
+	var title:=Label.new(); title.text="전체 메뉴"; title.position=Vector2(14,12); title.size=Vector2(450,28); title.add_theme_font_size_override("font_size",18); menu_panel.add_child(title)
+	menu_grid=GridContainer.new(); menu_grid.columns=4; menu_grid.position=Vector2(12,52); menu_grid.size=Vector2(496,414); menu_panel.add_child(menu_grid)
+	var entries=[
+		["캐릭터",func():open_character()],["인벤토리",func():toggle_inventory()],["변신",func():open_catalog("변신")],["마법인형",func():open_catalog("마법인형")],
+		["성물",func():open_catalog("성물")],["스킬",func():open_skills()],["컬렉션",func():open_collection()],["월드 지도",func():open_map_panel()],
+		["상점",func():open_shop()],["퀘스트",func():open_quest_panel()],["장비 강화",func():open_equipment_panel()],["외형 선택",func():open_appearance()],
+		["전투 기록",func():open_combat_log()],["저장",func():save_game(false)],["불러오기",func():load_game(false)],["설정",func():open_settings()]
+	]
+	for e in entries:
+		var b:=Button.new(); b.text=e[0]; b.custom_minimum_size=Vector2(118,88); b.pressed.connect(e[1]); menu_grid.add_child(b); button_style(b)
+
+func make_hold_button(parent: Control, text: String, rect: Rect2, key: String) -> void:
+	var b:=Button.new(); b.text=text; b.position=rect.position; b.size=rect.size; parent.add_child(b); button_style(b)
+	b.button_down.connect(func(): touch_dir[key]=true)
+	b.button_up.connect(func(): touch_dir[key]=false)
+
+func panel_style(c: Control, alpha := 0.92) -> void:
+	var sb:=StyleBoxFlat.new(); sb.bg_color=Color(0.035,0.04,0.035,alpha); sb.border_color=Color("#8a6b3d"); sb.set_border_width_all(1); sb.corner_radius_top_left=4; sb.corner_radius_top_right=4; sb.corner_radius_bottom_left=4; sb.corner_radius_bottom_right=4; c.add_theme_stylebox_override("panel",sb)
+
+func button_style(b: Button) -> void:
+	var sb:=StyleBoxFlat.new(); sb.bg_color=Color("#201a12"); sb.border_color=Color("#81663c"); sb.set_border_width_all(1); sb.corner_radius_top_left=3; sb.corner_radius_top_right=3; sb.corner_radius_bottom_left=3; sb.corner_radius_bottom_right=3; b.add_theme_stylebox_override("normal",sb); b.add_theme_color_override("font_color",Color("#e4d2aa"))
+
+func update_ui() -> void:
+	if not is_instance_valid(hp_bar): return
+	var mh:=effective_max_hp(); var mm:=effective_max_mp()
+	hp_bar.max_value=mh; hp_bar.value=clamp(float(player.hp),0,mh)
+	mp_bar.max_value=mm; mp_bar.value=clamp(float(player.mp),0,mm)
+	exp_bar.max_value=max(1,int(player.xp_need)); exp_bar.value=int(player.xp)
+	level_label.text="Lv.%d" % int(player.level)
+	var tname:=str(equipped.get("transform","")); name_label.text=tname if tname!="" else hero_class
+	var stats_label:=name_label.get_parent().get_node("Stats") as Label
+	stats_label.text="ATK %d   AC %d   HIT %d" % [effective_attack(),-effective_def(),int(local_derived().hit)]
+	gold_label.text="EXP %.4f%%    %d 아데나" % [100.0*int(player.xp)/max(1.0,float(player.xp_need)),int(player.gold)]
+	map_label.text=map_display_name()
+	quest_label.text="[메인] 몬스터의 세력 다툼\n고블린 처치 %d/%d\n%s" % [quest_kills,QUEST_GOAL,"완료" if quest_rewarded else "보상: 아데나 1,500 / EXP 300"]
+	if selected_monster != null and monsters.has(selected_monster):
+		target_panel.visible=true; target_label.text="Lv.%d  %s" % [int(selected_monster.level),str(selected_monster.name)]
+		target_hp.max_value=max(1,float(selected_monster.max_hp)); target_hp.value=max(0,float(selected_monster.hp))
+	else: target_panel.visible=false
+	auto_button.text="AUTO\nON" if bool(player.auto) else "AUTO"
+	log_label.text="\n".join(combat_log.slice(0,min(6,combat_log.size())))
+
+func clear_container(v: Node) -> void:
+	for c in v.get_children(): c.queue_free()
+
+func refresh_inventory() -> void:
+	if not is_instance_valid(inventory_list): return
+	clear_container(inventory_list)
+	var names:=inventory.keys(); names.sort()
+	for name in names:
+		var amount:=int(inventory[name])
+		if amount<=0: continue
+		var row:=HBoxContainer.new(); row.custom_minimum_size=Vector2(290,38); inventory_list.add_child(row)
+		var lab:=Label.new(); lab.text="%s  x%d" % [name,amount]; lab.size_flags_horizontal=Control.SIZE_EXPAND_FILL; var o:=item_record(str(name)); lab.add_theme_color_override("font_color",rarity_color(str(o.get("grade","일반")))); row.add_child(lab)
+		if int(o.get("heal",0))>0:
+			var use:=Button.new(); use.text="사용"; use.pressed.connect(func(n=name): use_inventory_item(str(n))); row.add_child(use); button_style(use)
+		elif gear_slot_for_item(o)!="":
+			var eq:=Button.new(); eq.text="장착"; eq.pressed.connect(func(n=name): equip_item(str(n))); row.add_child(eq); button_style(eq)
+
+func toggle_inventory() -> void:
+	menu_panel.visible=false
+	inventory_panel.visible=not inventory_panel.visible
+	if inventory_panel.visible: refresh_inventory()
+
+func set_modal(title: String) -> void:
+	menu_panel.visible=false; inventory_panel.visible=false; modal_title.text=title; clear_container(modal_list); modal_panel.visible=true; game_paused=true
+
+func close_modal() -> void:
+	modal_panel.visible=false; game_paused=false
+
+func close_all_panels() -> void:
+	modal_panel.visible=false; menu_panel.visible=false; inventory_panel.visible=false; game_paused=false
+
+func toggle_menu() -> void:
+	if modal_panel.visible: close_modal()
+	menu_panel.visible=not menu_panel.visible
+	inventory_panel.visible=false
+
+func modal_heading(text: String) -> void:
+	var l:=Label.new(); l.text=text; l.add_theme_font_size_override("font_size",17); l.add_theme_color_override("font_color",Color("#e7c982")); l.custom_minimum_size=Vector2(700,34); modal_list.add_child(l)
+
+func modal_text(text: String) -> void:
+	var l:=Label.new(); l.text=text; l.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART; l.custom_minimum_size=Vector2(700,30); modal_list.add_child(l)
+
+func modal_button(text: String, callback: Callable) -> Button:
+	var b:=Button.new(); b.text=text; b.custom_minimum_size=Vector2(700,38); b.pressed.connect(callback); modal_list.add_child(b); button_style(b); return b
+
+func open_character(tab := "gear") -> void:
+	set_modal("캐릭터 · "+("장비 정보" if tab=="gear" else "스탯 정보"))
+	var tabs:=HBoxContainer.new(); modal_list.add_child(tabs)
+	var g:=Button.new(); g.text="장비 정보"; g.pressed.connect(func():open_character("gear")); tabs.add_child(g); button_style(g)
+	var s:=Button.new(); s.text="스탯 정보"; s.pressed.connect(func():open_character("stats")); tabs.add_child(s); button_style(s)
+	if tab=="gear":
+		modal_heading("Lv.%d  %s" % [int(player.level), str(equipped.transform) if str(equipped.transform)!="" else hero_class])
+		for slot in GEAR_SLOTS.keys():
+			var name:=str(equipped[slot]); modal_text("%-8s : %s  %s" % [str(GEAR_SLOTS[slot]), name if name!="" else "미장착", ("+%d" % int(enhance_levels.get(name,0))) if name!="" else ""])
+		modal_button("인벤토리 열기",func(): close_modal(); toggle_inventory())
+	else:
+		modal_heading("보너스 잔여 %d" % stat_points())
+		var stats:=character_stats(); var gear:=stat_equipment()
+		for k in STAT_KEYS:
+			var row:=HBoxContainer.new(); row.custom_minimum_size=Vector2(700,42); modal_list.add_child(row)
+			var l:=Label.new(); l.text="%s   %d   (기본 %d + 배분 %d + 장비 %d)" % [k,int(stats[k]),int(STAT_BASE[k]),int(stat_allocation[k]),int(gear[k])]; l.size_flags_horizontal=Control.SIZE_EXPAND_FILL; row.add_child(l)
+			var b:=Button.new(); b.text="+"; b.disabled=stat_points()<=0; b.pressed.connect(func(key=k): allocate_stat(str(key))); row.add_child(b); button_style(b)
+		modal_button("배분 초기화",reset_stats)
+	var d:=local_derived(); modal_heading("스탯 상세 능력")
+	modal_text("근거리 대미지 %d · 명중 %d · 치명타 %d%% · AC %d · ER %d · MR %d" % [effective_attack(),int(d.hit),int(d.crit),-effective_def(),int(d.er),int(d.mr)])
+	modal_text("Max HP %d · Max MP %d · HP회복 %d/5초 · MP회복 %d/5초 · 물약 +%d%%" % [effective_max_hp(),effective_max_mp(),int(d.hp_tick),int(d.mp_tick),int(d.potion)])
+
+func open_catalog(cat: String) -> void:
+	set_modal(cat+" 도감")
+	var arr: Array = game_db.get(cat,[])
+	modal_text("V17 DB: %d개 항목" % arr.size())
+	var shown:=0
+	for o in arr:
+		if shown>=100: break
+		var name:=str(o.get("name","")); if name=="": continue
+		var row:=HBoxContainer.new(); row.custom_minimum_size=Vector2(700,38); modal_list.add_child(row)
+		var l:=Label.new(); l.text=name+"  "+str(o.get("grade",o.get("rarity",""))); l.size_flags_horizontal=Control.SIZE_EXPAND_FILL; row.add_child(l)
+		var b:=Button.new(); b.text="적용"; b.pressed.connect(func(n=name,c=cat): apply_catalog(str(c),str(n))); row.add_child(b); button_style(b)
+		shown+=1
+
+func apply_catalog(cat: String, name: String) -> void:
+	var key:="transform" if cat=="변신" else ("doll" if cat=="마법인형" else "relic")
+	equipped[key]=name; message(name+" 적용"); save_game(true); open_catalog(cat)
+
+func open_skills() -> void:
+	set_modal("스킬")
+	modal_text("V17 스킬 DB %d개" % skills_db.size())
+	var shown:=0
+	for s in skills_db:
+		if shown>=80: break
+		var name:=str(s.get("name","")); if name=="": continue
+		var row:=HBoxContainer.new(); row.custom_minimum_size=Vector2(700,38); modal_list.add_child(row)
+		var l:=Label.new(); l.text="%s  MP %d" % [name,int(s.get("mp",0))]; l.size_flags_horizontal=Control.SIZE_EXPAND_FILL; row.add_child(l)
+		var b:=Button.new(); b.text="사용"; b.pressed.connect(func(sk=s): use_skill(sk)); row.add_child(b); button_style(b); shown+=1
+
+func open_collection() -> void:
+	set_modal("컬렉션")
+	modal_heading("V17 데이터 컬렉션")
+	for cat in ["아이템","변신","마법인형","성물","스킬","몬스터"]: modal_text("%s : %d개" % [cat, game_db.get(cat,[]).size()])
+	modal_text("Godot 변환본에서는 도감 데이터를 그대로 포함하고, 선택한 변신/인형/성물 효과를 전투 보너스에 반영합니다.")
+
+func open_map_panel() -> void:
+	set_modal("월드 지도")
+	modal_button("황혼의 숲",func(): close_modal(); set_map("forest"))
+	for m in maps:
+		var id:=str(m.get("id","")); var text:=str(m.get("name",id))+"  ·  "+str(m.get("width",0))+"×"+str(m.get("height",0))
+		modal_button(text,func(mid=id): close_modal(); set_map(str(mid)))
+
+func open_shop() -> void:
+	set_modal("상점")
+	modal_text("보유 아데나: %d" % int(player.gold))
+	var shown:=0
+	for o in items:
+		if shown>=60: break
+		var name:=str(o.get("name","")); var grade:=str(o.get("grade","일반")); if name=="아데나" or name=="": continue
+		var price:=int(RARITY_PRICE.get(grade,100)); var row:=HBoxContainer.new(); row.custom_minimum_size=Vector2(700,38); modal_list.add_child(row)
+		var l:=Label.new(); l.text="%s [%s]  %d A" % [name,grade,price]; l.size_flags_horizontal=Control.SIZE_EXPAND_FILL; l.add_theme_color_override("font_color",rarity_color(grade)); row.add_child(l)
+		var b:=Button.new(); b.text="구매"; b.pressed.connect(func(n=name,p=price): buy_item(str(n),int(p))); row.add_child(b); button_style(b); shown+=1
+
+func buy_item(name: String, price: int) -> void:
+	if int(player.gold)<price: message("아데나가 부족합니다"); return
+	player.gold=int(player.gold)-price; inventory[name]=int(inventory.get(name,0))+1; message(name+" 구매"); save_game(true); open_shop()
+
+func open_quest_panel() -> void:
+	set_modal("퀘스트")
+	modal_heading("[메인] 몬스터의 세력 다툼")
+	modal_text("고블린 처치 %d/%d · 상태: %s" % [quest_kills,QUEST_GOAL,"완료" if quest_rewarded else "진행중"])
+	modal_text("보상: 아데나 %d / EXP %d" % [QUEST_GOLD,QUEST_XP])
+	modal_button("황혼의 숲으로 이동",func(): close_modal(); set_map("forest"))
+	modal_button("고블린 추가 소환",func(): spawn_quest_goblins(4))
+
+func open_equipment_panel() -> void:
+	set_modal("장비 / 강화")
+	for slot in GEAR_SLOTS.keys():
+		var name:=str(equipped[slot]); if name=="": continue
+		var lv:=int(enhance_levels.get(name,0)); var cost:=1000*(lv+1)*(lv+1)
+		var row:=HBoxContainer.new(); row.custom_minimum_size=Vector2(700,40); modal_list.add_child(row)
+		var l:=Label.new(); l.text="%s · %s +%d" % [str(GEAR_SLOTS[slot]),name,lv]; l.size_flags_horizontal=Control.SIZE_EXPAND_FILL; row.add_child(l)
+		var b:=Button.new(); b.text="강화 %d A" % cost; b.pressed.connect(func(sl=slot): enhance_item(str(sl))); row.add_child(b); button_style(b)
+	if modal_list.get_child_count()<=0: modal_text("장착 장비가 없습니다. 인벤토리에서 장착하세요.")
+
+func open_appearance() -> void:
+	set_modal("외형 선택")
+	for c in ["기사","군주","요정","마법사","다크엘프","투사","암흑기사","신성검사","광전사","사신","뇌신","마검사"]:
+		modal_button(c,func(n=c): hero_class=str(n); equipped.transform=""; message(str(n)+" 외형 선택"); save_game(true); close_modal())
+
+func open_combat_log() -> void:
+	set_modal("전투 기록")
+	for line in combat_log: modal_text(line)
+
+func open_settings() -> void:
+	set_modal("설정")
+	modal_button("저장",func(): save_game(false))
+	modal_button("불러오기",func(): load_game(false))
+	modal_button("세이브 파일 초기화",reset_save)
+	modal_text("세이브 위치: user://twilight_v17_save.json")
+
+func use_best_potion() -> void:
+	var best_name:=""; var best_heal:=0
+	for o in items:
+		var name:=str(o.get("name","")); var heal:=int(o.get("heal",0))
+		if heal>best_heal and int(inventory.get(name,0))>0: best_name=name; best_heal=heal
+	if best_name=="": message("HP 물약이 없습니다")
+	else: use_inventory_item(best_name)
+
+func log_line(text: String) -> void:
+	combat_log.push_front("• "+text)
+	if combat_log.size()>30: combat_log.resize(30)
+
+func message(text: String) -> void:
+	message_label.text=text; message_label.visible=true; message_clock=1.8
+
+# ---------------- Save / Load ----------------
+func make_save_data() -> Dictionary:
+	return {
+		"version":17,"map_id":active_map_id,"map_positions":map_positions,
+		"player":{"x":player.pos.x,"y":player.pos.y,"level":player.level,"xp":player.xp,"xp_need":player.xp_need,"hp":player.hp,"max_hp":player.max_hp,"mp":player.mp,"max_mp":player.max_mp,"attack":player.attack,"def":player.def,"gold":player.gold},
+		"inventory":inventory,"equipped":equipped,"enhance_levels":enhance_levels,"stat_allocation":stat_allocation,"gear_sets":gear_sets,
+		"quest_kills":quest_kills,"quest_rewarded":quest_rewarded,"hero_class":hero_class
+	}
+
+func save_game(quiet := false) -> void:
+	var f:=FileAccess.open(SAVE_PATH,FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(make_save_data()))
+		if not quiet: message("저장 완료")
+	else: message("저장 실패")
+
+func try_load_save() -> void:
+	if FileAccess.file_exists(SAVE_PATH): load_game(true)
+
+func load_game(quiet := false) -> void:
+	if not FileAccess.file_exists(SAVE_PATH):
+		if not quiet: message("저장 파일이 없습니다")
+		return
+	var d=JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
+	if not (d is Dictionary): message("저장 데이터 오류"); return
+	var p:Dictionary=d.get("player",{})
+	for k in ["level","xp","xp_need","max_hp","max_mp","attack","def","gold"]:
+		if p.has(k): player[k]=int(p[k])
+	for k in ["hp","mp"]:
+		if p.has(k): player[k]=float(p[k])
+	inventory=d.get("inventory",inventory); equipped=d.get("equipped",equipped); enhance_levels=d.get("enhance_levels",{})
+	stat_allocation=d.get("stat_allocation",stat_allocation); gear_sets=d.get("gear_sets",[null,null]); quest_kills=int(d.get("quest_kills",0)); quest_rewarded=bool(d.get("quest_rewarded",false)); hero_class=str(d.get("hero_class","기사")); map_positions=d.get("map_positions",{})
+	var pos:=Vector2(float(p.get("x",0)),float(p.get("y",0)))
+	set_map(str(d.get("map_id","aden_world")),pos,false)
+	player.hp=min(float(player.hp),float(effective_max_hp())); player.mp=min(float(player.mp),float(effective_max_mp()))
+	if not quiet: message("불러오기 완료")
+	refresh_inventory(); update_ui()
+
+func reset_save() -> void:
+	if FileAccess.file_exists(SAVE_PATH): DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
+	message("세이브 파일 삭제 완료")

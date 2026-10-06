@@ -1,0 +1,11 @@
+V20.1 duplicate global class fix
+
+Fixed Godot 4.7.2 parse errors caused by V19 backup scripts being left with .gd extensions.
+Renamed backup scripts to .gd.bak so Godot does not register duplicate class_name declarations.
+
+Expected unique global classes:
+- TwilightHUD
+- TwilightMonster
+- TwilightPlayer
+- TwilightWorld
+- TwilightVirtualJoystick

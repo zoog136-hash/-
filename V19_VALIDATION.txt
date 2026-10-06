@@ -1,0 +1,48 @@
+황혼의 기사 · Offline RPG V19 Full Native 검증
+================================================
+
+검증일: 2026-10-06
+대상 엔진: Godot 4.7.2 stable
+
+[실제 Godot 엔진 검증]
+- GitHub Actions에서 공식 Godot 4.7.2 stable Linux x86_64 실행
+- --headless --editor 프로젝트 파싱: PASS
+- Main.tscn headless 기동: PASS
+- GDScript Parse Error: 0
+- Failed to load script: 0
+- Node not found / Invalid call 검출: 0
+- GitHub Actions run id: 37449858970
+
+[V17 자원 복원 검증]
+- HTML data:image 발생: 2,313건
+- 고유 임베디드 이미지: 2,307개
+- 매핑 누락: 0개
+- 최종 Godot 프로젝트 이미지 파일: 2,360개
+  - PNG: 2,215
+  - WebP: 137
+  - JPEG: 8
+- 인벤/도감 이미지: 2,165개
+- 방향 아트: 변신 78 / 마법인형 59
+- 원본 hero sheet: 1536x1024
+- 원본 monster sheet: 1536x1024
+- 원본 UI reference sheet: 1536x872
+
+[상세 데이터]
+- 변신: 413
+- 마법인형: 166
+- 성물: 144
+- 아이템: 2,129
+- 맵: 25
+
+[파일/데이터 검사]
+- 전체 프로젝트 파일: 2,383개 (검증 보고서 교체 전 기준)
+- JSON parse: PASS
+- catalog image_path 존재 검사: PASS
+- directional art path 존재 검사: PASS
+- map image_path 존재 검사: PASS
+- map collision 배열 크기 검사: PASS
+- 이미지 디코드/verify: PASS
+- GDScript ':=' Variant 추론 문법: 0개
+
+주의:
+실제 Android GPU/터치/화면 비율은 기기에서 한 번 더 실행 확인이 필요합니다.

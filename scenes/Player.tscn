@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
+[sub_resource type="CapsuleShape2D" id="Capsule_player"]
+radius = 15.0
+height = 42.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_player")
+collision_layer = 1
+collision_mask = 3
+
+[node name="ClassSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -46)
+centered = true
+
+[node name="TransformSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -55)
+visible = false
+centered = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("Capsule_player")
+position = Vector2(0, 1)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 8.0
+target_desired_distance = 16.0
+radius = 16.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -32)
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+limit_smoothed = true

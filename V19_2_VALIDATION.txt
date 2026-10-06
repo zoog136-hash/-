@@ -1,0 +1,28 @@
+황혼의 기사 · Offline RPG V19.2 FIXED 검증
+================================================
+
+검증일: 2026-10-06
+대상 엔진: Godot 4.7.2 stable
+
+[수정된 오류]
+- albino12.png: JPEG 데이터가 .png 확장자로 저장됨 -> 실제 PNG로 변환
+- faith4.png: JPEG 데이터가 .png 확장자로 저장됨 -> 실제 PNG로 변환
+- Android ItemList 터치 시 첫 항목만 유지되는 문제 -> native InputEventScreenTouch 행 선택 처리 추가
+
+[Godot 4.7.2 자동 회귀 테스트]
+- 프로젝트 import / GDScript parse: PASS
+- 기존 V19.1 변신/인형/성물/아이템 장착 기능: PASS
+- 변신 3번째 행 native touch 선택: PASS
+- 마법인형 3번째 행 native touch 선택: PASS
+- 성물 3번째 행 native touch 선택: PASS
+- 아이템 3번째 행 native touch 선택: PASS
+- GitHub Actions run id: 37457644083
+
+[풀 프로젝트 파일 검사]
+- 이미지: 2,360개
+- 이미지 디코드 오류: 0
+- 파일 확장자/실제 이미지 시그니처 불일치: 0
+- 맵: 25개
+- 맵 image_path 누락: 0
+
+중요: 이전 V19.1 폴더에 덮어쓰지 말고 새 폴더로 압축 해제 후 project.godot을 새로 Import 권장.

@@ -1,13 +1,15 @@
 ; Engine configuration file.
-; Twilight Offline RPG V17 FINAL
-; Godot 4.x / Android mobile / PC / 16:9 landscape
-
+; Twilight Knight Offline RPG V20 Lineage-style HUD
 config_version=5
 
 [application]
-config/name="황혼의 기사 · Offline RPG V17 FINAL"
-run/main_scene="res://main.tscn"
+config/name="황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+run/main_scene="res://Main.tscn"
+config/features=PackedStringArray("4.7")
 run/max_fps=60
+
+[debug]
+gdscript/warnings/treat_warnings_as_errors=false
 
 [display]
 window/size/viewport_width=1280
@@ -26,7 +28,6 @@ textures/default_filters/use_nearest_mipmap_filter=false
 textures/default_filters/use_nearest_mipmap_filter.mobile=false
 
 [input_devices]
-buffering/agile_event_flushing=true
 pointing/emulate_mouse_from_touch=false
 pointing/emulate_touch_from_mouse=true
 
@@ -39,12 +40,11 @@ attack={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":32)]}
 toggle_auto={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":84)]}
 open_inventory={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":73)]}
 open_menu={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":77)]}
-open_map={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":4194309)]}
+open_map={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":9)]}
 quick_potion={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":81)]}
 save_game={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":4194332)]}
 load_game={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":4194336)]}
-next_map={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":93)]}
-prev_map={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":91)]}
+toggle_collision_debug={"deadzone":0.2,"events":[Object(InputEventKey,"physical_keycode":4194330)]}
 
 [physics]
 common/physics_ticks_per_second=60
