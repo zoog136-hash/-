@@ -639,7 +639,12 @@ func set_character_state(value: Dictionary) -> void:
 	var class_index_value: int = clampi(int(value.get("class_index", 0)), 0, 3)
 	_update_v20_portrait(class_index_value)
 	if v20_stat_text != null:
-		v20_stat_text.text = "⚔ %d    ◈ %d    ✦ 24    ⚡ 5" % [int(value.get("attack", 0)), int(value.get("defense", 0))]
+		v20_stat_text.text = "⚔ %d   ◎ %d   AC %d   MR %d" % [
+			int(value.get("melee_damage", value.get("attack", 0))),
+			int(value.get("melee_accuracy", 0)),
+			int(value.get("ac", -int(value.get("defense", 0)))),
+			int(value.get("mr", 0))
+		]
 
 func _update_v20_portrait(class_index_value: int) -> void:
 	if v20_portrait == null:
