@@ -1,34 +1,34 @@
 extends Node2D
 
-const SAVE_PATH := "user://twilight_v17_save.json"
-const VIEW := Vector2(1280, 720)
-const JOY_CENTER := Vector2(105, 585)
-const ATTACK_CENTER := Vector2(1195, 605)
-const AUTO_CENTER := Vector2(1083, 626)
+const SAVE_PATH = "user://twilight_v17_save.json"
+const VIEW = Vector2(1280, 720)
+const JOY_CENTER = Vector2(105, 585)
+const ATTACK_CENTER = Vector2(1195, 605)
+const AUTO_CENTER = Vector2(1083, 626)
 
-var player_pos := Vector2(640, 380)
-var player_speed := 235.0
-var player_hp := 640
-var player_max_hp := 640
-var player_mp := 185
-var player_max_mp := 185
-var player_level := 55
-var player_exp := 37
-var player_gold := 125430
-var attack_power := 37
-var defense := 22
-var stats := {"STR":18,"DEX":15,"CON":17,"INT":11,"WIS":13,"CHA":10}
+var player_pos = Vector2(640, 380)
+var player_speed = 235.0
+var player_hp = 640
+var player_max_hp = 640
+var player_mp = 185
+var player_max_mp = 185
+var player_level = 55
+var player_exp = 37
+var player_gold = 125430
+var attack_power = 37
+var defense = 22
+var stats = {"STR":18,"DEX":15,"CON":17,"INT":11,"WIS":13,"CHA":10}
 
-var auto_hunt := false
-var attack_cooldown := 0.0
-var damage_tick := 0.0
-var message := ""
-var message_time := 0.0
+var auto_hunt = false
+var attack_cooldown = 0.0
+var damage_tick = 0.0
+var message = ""
+var message_time = 0.0
 var current_target = null
 
 var monsters: Array = []
 var drops: Array = []
-var inventory := {
+var inventory = {
 	"빨간 물약": 126,
 	"초록 물약": 42,
 	"귀환 주문서": 18,
@@ -36,12 +36,12 @@ var inventory := {
 	"가죽 갑옷": 1
 }
 
-var joystick_touch := -1
-var joystick_vector := Vector2.ZERO
-var joystick_knob := JOY_CENTER
-var status_open := false
-var menu_open := false
-var inventory_open := false
+var joystick_touch = -1
+var joystick_vector = Vector2.ZERO
+var joystick_knob = JOY_CENTER
+var status_open = false
+var menu_open = false
+var inventory_open = false
 
 func _ready():
 	randomize()
@@ -63,7 +63,7 @@ func _process(delta):
 	queue_redraw()
 
 func _handle_keyboard(delta):
-	var dir := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if joystick_vector.length() > 0.05:
 		dir = joystick_vector
 
@@ -112,8 +112,8 @@ func _to_view(screen_pos: Vector2) -> Vector2:
 	return get_viewport().get_canvas_transform().affine_inverse() * screen_pos
 
 func _set_joystick(p: Vector2):
-	var delta := p - JOY_CENTER
-	var radius := 58.0
+	var delta = p - JOY_CENTER
+	var radius = 58.0
 	if delta.length() > radius:
 		delta = delta.normalized() * radius
 	joystick_knob = JOY_CENTER + delta
@@ -163,9 +163,9 @@ func _handle_tap(p: Vector2):
 
 func _spawn_monsters(count: int):
 	monsters.clear()
-	var names := ["오크 전사","해골 병사","늑대인간","다크 엘프","가고일"]
+	var names = ["오크 전사","해골 병사","늑대인간","다크 엘프","가고일"]
 	for i in range(count):
-		var max_hp := randi_range(70, 140)
+		var max_hp = randi_range(70, 140)
 		monsters.append({
 			"name": names[randi() % names.size()],
 			"level": randi_range(48, 58),
@@ -216,7 +216,7 @@ func _update_auto_hunt(delta):
 
 func _nearest_alive_monster():
 	var best = null
-	var best_dist := INF
+	var best_dist = INF
 	for m in monsters:
 		if int(m["hp"]) <= 0:
 			continue
@@ -240,7 +240,7 @@ func _attack_nearest():
 func _attack_target(target):
 	if attack_cooldown > 0.0 or int(target["hp"]) <= 0:
 		return
-	var dmg := attack_power + randi_range(-5, 8)
+	var dmg = attack_power + randi_range(-5, 8)
 	target["hp"] = max(0, int(target["hp"]) - max(1, dmg))
 	attack_cooldown = 0.52
 	if int(target["hp"]) <= 0:
@@ -249,15 +249,15 @@ func _attack_target(target):
 func _on_monster_killed(monster):
 	player_exp += int(monster["exp"])
 	player_gold += int(monster["gold"])
-	var item_names := ["빨간 물약","초록 물약","철 화살","가죽 장갑","아데나 주머니"]
-	var item := item_names[randi() % item_names.size()]
+	var item_names = ["빨간 물약","초록 물약","철 화살","가죽 장갑","아데나 주머니"]
+	var item = item_names[randi() % item_names.size()]
 	drops.append({"pos": monster["pos"], "name": item})
 	monster["respawn"] = 2.8
 	_show_message("%s 처치  +%d 아데나" % [monster["name"], int(monster["gold"])])
 	_check_level_up()
 
 func _respawn_monster(m):
-	var max_hp := randi_range(75, 145)
+	var max_hp = randi_range(75, 145)
 	m["pos"] = Vector2(randf_range(330, 1180), randf_range(150, 570))
 	m["max_hp"] = max_hp
 	m["hp"] = max_hp
@@ -271,7 +271,7 @@ func _respawn_player():
 	_show_message("마을에서 부활했습니다.")
 
 func _check_level_up():
-	var need := _exp_need()
+	var need = _exp_need()
 	while player_exp >= need:
 		player_exp -= need
 		player_level += 1
@@ -297,7 +297,7 @@ func _collect_nearby_drops():
 			_show_message("%s 획득" % item_name)
 
 func _use_potion():
-	var count := int(inventory.get("빨간 물약", 0))
+	var count = int(inventory.get("빨간 물약", 0))
 	if count <= 0:
 		_show_message("빨간 물약이 없습니다.")
 		return
@@ -335,7 +335,7 @@ func save_game():
 		"stats":stats,
 		"inventory":inventory
 	}
-	var f := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	var f = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if f:
 		f.store_string(JSON.stringify(data))
 		_show_message("저장 완료")
@@ -344,7 +344,7 @@ func load_game():
 	if not FileAccess.file_exists(SAVE_PATH):
 		_show_message("저장 데이터가 없습니다.")
 		return
-	var f := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	var f = FileAccess.open(SAVE_PATH, FileAccess.READ)
 	if not f:
 		return
 	var data = JSON.parse_string(f.get_as_text())
@@ -390,8 +390,8 @@ func _draw_world():
 	draw_circle(Vector2(780,260), 70, Color(0.10,0.18,0.24,0.65))
 	draw_circle(Vector2(930,510), 84, Color(0.09,0.17,0.11,0.70))
 	for i in range(12):
-		var px := 350.0 + float((i * 79) % 820)
-		var py := 155.0 + float((i * 131) % 430)
+		var px = 350.0 + float((i * 79) % 820)
+		var py = 155.0 + float((i * 131) % 430)
 		draw_circle(Vector2(px,py), 18, Color(0.08,0.14,0.07,0.9))
 
 func _draw_drops():
@@ -405,10 +405,10 @@ func _draw_monsters():
 		if int(m["hp"]) <= 0:
 			continue
 		var p: Vector2 = m["pos"]
-		var selected := m == current_target
+		var selected = m == current_target
 		draw_circle(p, 17, Color("#7b2c22"))
 		draw_circle(p, 22, Color("#d5b46a") if selected else Color("#4c3428"), false, 2)
-		var ratio := float(m["hp"]) / float(m["max_hp"])
+		var ratio = float(m["hp"]) / float(m["max_hp"])
 		draw_rect(Rect2(p + Vector2(-25,-34), Vector2(50,6)), Color("#180a09"))
 		draw_rect(Rect2(p + Vector2(-25,-34), Vector2(50.0*ratio,6)), Color("#d52d28"))
 		draw_string(ThemeDB.fallback_font, p + Vector2(-38,-42), "%s Lv.%d" % [m["name"], int(m["level"])], HORIZONTAL_ALIGNMENT_CENTER, 76, 10, Color("#eee1c3"))
@@ -471,19 +471,19 @@ func _draw_touch_controls():
 
 func _draw_bottom_ui():
 	draw_rect(Rect2(0,662,1280,58), Color(0.025,0.025,0.02,0.92))
-	var ratio := float(player_exp) / float(_exp_need())
+	var ratio = float(player_exp) / float(_exp_need())
 	draw_rect(Rect2(10,704,260,7), Color("#201c15"))
 	draw_rect(Rect2(10,704,260*ratio,7), Color("#e7a62d"))
 	draw_string(ThemeDB.fallback_font, Vector2(12,687), "EXP %d / %d" % [player_exp,_exp_need()], HORIZONTAL_ALIGNMENT_LEFT, 250, 11, Color("#e7d6ab"))
 
 	for i in range(6):
-		var r := Rect2(430 + i*63, 667, 56, 48)
+		var r = Rect2(430 + i*63, 667, 56, 48)
 		draw_rect(r, Color("#0d141a"))
 		draw_rect(r, Color("#80653b"), false, 1)
 		draw_string(ThemeDB.fallback_font, r.position + Vector2(0,21), str(i+1), HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 12, Color("#d7c59d"))
 		draw_string(ThemeDB.fallback_font, r.position + Vector2(0,39), ["베기","강타","방패","질주","집중","귀환"][i], HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 8, Color("#a8c8e8"))
 
-	var potion_rect := Rect2(1180,515,82,58)
+	var potion_rect = Rect2(1180,515,82,58)
 	draw_rect(potion_rect, Color("#1a1110"))
 	draw_rect(potion_rect, Color("#8a6842"), false, 1)
 	draw_string(ThemeDB.fallback_font, potion_rect.position + Vector2(0,24), "물약", HORIZONTAL_ALIGNMENT_CENTER, 82, 13, Color("#ff8c8c"))
@@ -497,7 +497,7 @@ func _draw_panels():
 		draw_string(ThemeDB.fallback_font, Vector2(382,160), "Lv.%d  황혼의 기사" % player_level, HORIZONTAL_ALIGNMENT_LEFT, 500, 17, Color.WHITE)
 		draw_string(ThemeDB.fallback_font, Vector2(382,190), "HP %d/%d   MP %d/%d" % [player_hp,player_max_hp,player_mp,player_max_mp], HORIZONTAL_ALIGNMENT_LEFT, 500, 14, Color("#d7d7d7"))
 		draw_string(ThemeDB.fallback_font, Vector2(382,222), "ATK %d    AC %d" % [attack_power,defense], HORIZONTAL_ALIGNMENT_LEFT, 500, 14, Color("#e2cc98"))
-		var y := 265
+		var y = 265
 		for key in ["STR","DEX","CON","INT","WIS","CHA"]:
 			draw_string(ThemeDB.fallback_font, Vector2(395,y), "%s   %d" % [key,int(stats[key])], HORIZONTAL_ALIGNMENT_LEFT, 160, 15, Color("#efdfb4"))
 			y += 34
@@ -513,7 +513,7 @@ func _draw_panels():
 		draw_rect(Rect2(895,84,365,520), Color(0.025,0.028,0.025,0.97))
 		draw_rect(Rect2(895,84,365,520), Color("#9b7943"), false, 2)
 		draw_string(ThemeDB.fallback_font, Vector2(915,118), "인벤토리", HORIZONTAL_ALIGNMENT_LEFT, 300, 20, Color("#ead7ae"))
-		var y2 := 152
+		var y2 = 152
 		for k in inventory.keys():
 			draw_rect(Rect2(915,y2-22,320,34), Color(0.08,0.08,0.07,0.7))
 			draw_string(ThemeDB.fallback_font, Vector2(925,y2), str(k), HORIZONTAL_ALIGNMENT_LEFT, 220, 13, Color("#e2e2e2"))
@@ -523,15 +523,15 @@ func _draw_panels():
 	if menu_open:
 		draw_rect(Rect2(965,80,295,230), Color(0.025,0.025,0.02,0.97))
 		draw_rect(Rect2(965,80,295,230), Color("#8e6d3d"), false, 2)
-		var items := ["인벤토리","캐릭터/장비","저장하기","불러오기"]
+		var items = ["인벤토리","캐릭터/장비","저장하기","불러오기"]
 		for i in range(items.size()):
-			var rr := Rect2(975,86+i*52,280,46)
+			var rr = Rect2(975,86+i*52,280,46)
 			draw_rect(rr, Color("#17130e"))
 			draw_rect(rr, Color("#5e4a2d"), false, 1)
 			draw_string(ThemeDB.fallback_font, rr.position + Vector2(14,29), items[i], HORIZONTAL_ALIGNMENT_LEFT, 250, 14, Color("#e5d1a4"))
 
 	if current_target != null and int(current_target["hp"]) > 0:
-		var r := float(current_target["hp"])/float(current_target["max_hp"])
+		var r = float(current_target["hp"])/float(current_target["max_hp"])
 		draw_rect(Rect2(550,315,180,10), Color("#202020"))
 		draw_rect(Rect2(550,315,180*r,10), Color("#c92525"))
 		draw_string(ThemeDB.fallback_font, Vector2(550,306), str(current_target["name"]), HORIZONTAL_ALIGNMENT_CENTER, 180, 11, Color("#f3e4c8"))
