@@ -27,7 +27,8 @@ jobs:
           test -f /tmp/v19fix/project/test_v19.gd
           cp .v19fixtest/player_fixed.gd /tmp/v19fix/project/scripts/player.gd
           cp .v19fixtest/hud_v19_2.gd /tmp/v19fix/project/scripts/hud.gd
-          cp .v19fixtest/test_touch.gd /tmp/v19fix/project/test_touch.gd\n          cp .v19fixtest/test_paging.gd /tmp/v19fix/project/test_paging.gd
+          cp .v19fixtest/test_touch.gd /tmp/v19fix/project/test_touch.gd
+          cp .v19fixtest/test_paging.gd /tmp/v19fix/project/test_paging.gd
 
       - name: Download Godot 4.7.2 stable
         shell: bash
