@@ -1,0 +1,152 @@
+name: V20.2 Stats Step2 Test
+
+on:
+  push:
+    branches: [v20-2-stats-step2]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-stats-step2
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create stat allocation test
+        shell: bash
+        run: |
+          cat > test_stats_step2.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              var hud: Node = world.get_node("HUD")
+              check(hud.stat_buttons.size() == 6, "six stat buttons exist")
+
+              # Award schedule.
+              check(world._stat_points_for_level_up(39) == 0, "Lv39 no point")
+              check(world._stat_points_for_level_up(40) == 1, "Lv40 point")
+              check(world._stat_points_for_level_up(41) == 0, "Lv41 no point")
+              check(world._stat_points_for_level_up(50) == 1, "Lv50 point")
+              check(world._stat_points_for_level_up(51) == 1, "Lv51 point")
+              check(world._stat_points_for_level_up(75) == 1, "Lv75 point")
+
+              # Actual level-up path: 39 -> 40.
+              world.level = 39
+              world.experience = world.exp_need
+              world.stat_points = 0
+              world._check_level_up()
+              check(world.level == 40, "actual level up reaches 40")
+              check(world.stat_points == 1, "actual level up awards point")
+
+              # Actual UI button signal path for every attribute.
+              var baseline: Dictionary = {
+                  "STR": world.str_stat,
+                  "DEX": world.dex_stat,
+                  "CON": world.con_stat,
+                  "INT": world.int_stat,
+                  "WIS": world.wis_stat,
+                  "CHA": world.cha_stat
+              }
+              for stat_name: String in ["STR","DEX","CON","INT","WIS","CHA"]:
+                  world.stat_points = 1
+                  world._update_hud()
+                  hud.open_character()
+                  await process_frame
+                  var button: Button = hud.stat_buttons[stat_name] as Button
+                  check(button != null, stat_name + " button")
+                  check(not button.disabled, stat_name + " enabled with point")
+                  button.pressed.emit()
+                  var current_value: int = 0
+                  match stat_name:
+                      "STR": current_value = world.str_stat
+                      "DEX": current_value = world.dex_stat
+                      "CON": current_value = world.con_stat
+                      "INT": current_value = world.int_stat
+                      "WIS": current_value = world.wis_stat
+                      "CHA": current_value = world.cha_stat
+                  check(current_value == int(baseline[stat_name]) + 1, stat_name + " increments itself")
+                  baseline[stat_name] = current_value
+                  check(world.stat_points == 0, stat_name + " consumes one point")
+                  world._update_hud()
+                  check(button.disabled, stat_name + " disables at zero points")
+
+              # No allocation when no points remain.
+              var str_before: int = world.str_stat
+              world.stat_points = 0
+              world._on_stat_increase_requested("STR")
+              check(world.str_stat == str_before, "cannot spend without points")
+
+              # Save/load allocated values.
+              world.stat_points = 3
+              world._save_game(true)
+              var saved_str: int = world.str_stat
+              world.str_stat = 1
+              world.stat_points = 0
+              world._load_game(true)
+              check(world.str_stat == saved_str, "allocated STR persists")
+              check(world.stat_points == 3, "remaining points persist")
+
+              if failures.is_empty():
+                  print("V20.2 STATS STEP2 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run stat allocation test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_stats_step2.gd 2>&1 | tee /tmp/stats.log
+          grep -q "V20.2 STATS STEP2 PASS" /tmp/stats.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/stats.log; then
+            exit 1
+          fi
