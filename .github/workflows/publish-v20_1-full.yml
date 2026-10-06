@@ -1,0 +1,60 @@
+name: Publish V20.1 Full Project
+
+on:
+  push:
+    branches: [v20-hud-test]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download verified V20.1 package
+        shell: bash
+        env:
+          V20_URL: "https://sdmntprjapaneast.oaiusercontent.com/files/00000000-0308-8209-b43b-ca381c47c4cf/raw?se=2026-10-06T23%3A15%3A53Z&sp=r&sv=2026-02-06&sr=b&scid=7a67a1d5-a334-5b5b-b8ef-18cd472d3bbf&skoid=03727f49-62d3-42ac-8350-1c0e6559d238&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-06T22%3A53%3A01Z&ske=2026-10-07T22%3A53%3A01Z&sks=b&skv=2026-02-06&sig=hzqnTFdYUvq3C5wvWIHHFdFrsqu%2B6TpZugzGc0XpljE%3D"
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 --retry-delay 2 "$V20_URL" -o /tmp/v20_1.zip
+          echo "c4bcaf610221a59cc6c1d9e75244446023156f1c08c77c1274f2b2db9c397bc9  /tmp/v20_1.zip" | sha256sum -c -
+          unzip -tq /tmp/v20_1.zip
+
+      - name: Replace main with V20.1 full project
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/v20_1
+          mkdir -p /tmp/v20_1
+          unzip -q /tmp/v20_1.zip -d /tmp/v20_1
+          SRC="/tmp/v20_1/twilight_v20_lineage_hud"
+          test -f "$SRC/project.godot"
+          test -f "$SRC/scripts/hud_v20.gd"
+          test -f "$SRC/V20_1_FIX.txt"
+          test "$(find "$SRC" -type f | wc -l)" -ge 2394
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$SRC"/. .
+          test "$(find . -type f ! -path './.git/*' | wc -l)" -ge 2394
+          test ! -f scripts/hud_v19_backup.gd
+          test -f scripts/hud_v19_backup.gd.bak
+
+      - name: Commit and push main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "ChatGPT Godot Builder"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git status --short | head -100
+          git commit -m "V20.1 classfix full project - Godot 4.7.2"
+          git push origin HEAD:main
