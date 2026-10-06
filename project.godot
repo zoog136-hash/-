@@ -1,20 +1,15 @@
 ; Engine configuration file.
-; Twilight Offline RPG V16
+; Twilight Offline RPG V17
 ; Godot 4.x / Android mobile / 16:9 landscape
-;
-; This file is generated for the V16 mobile project.
-; Edit from Project > Project Settings when possible.
 
 config_version=5
 
 [application]
-
-config/name="황혼의 기사 · Offline RPG V16"
+config/name="황혼의 기사 · Offline RPG V17"
 run/main_scene="res://main.tscn"
 run/max_fps=60
 
 [display]
-
 window/size/viewport_width=1280
 window/size/viewport_height=720
 window/size/window_width_override=1280
@@ -25,20 +20,17 @@ window/handheld/orientation=0
 window/energy_saving/keep_screen_on=true
 
 [rendering]
-
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/default_filters/use_nearest_mipmap_filter=false
 textures/default_filters/use_nearest_mipmap_filter.mobile=false
 
 [input_devices]
-
 buffering/agile_event_flushing=true
 pointing/emulate_mouse_from_touch=true
 pointing/emulate_touch_from_mouse=true
 
 [input]
-
 move_left={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode":65), Object(InputEventKey,"physical_keycode":4194311)]
@@ -63,14 +55,6 @@ toggle_auto={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode":84)]
 }
-self_target={
-"deadzone": 0.2,
-"events": []
-}
-target_lock={
-"deadzone": 0.2,
-"events": []
-}
 open_inventory={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode":73)]
@@ -78,10 +62,6 @@ open_inventory={
 open_menu={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode":77)]
-}
-open_map={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":4194309)]
 }
 quick_potion={
 "deadzone": 0.2,
@@ -95,39 +75,6 @@ load_game={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"physical_keycode":4194336)]
 }
-pause_game={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":80)]
-}
-skill_1={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":49)]
-}
-skill_2={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":50)]
-}
-skill_3={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":51)]
-}
-skill_4={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":52)]
-}
-skill_5={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":53)]
-}
-skill_6={
-"deadzone": 0.2,
-"events": [Object(InputEventKey,"physical_keycode":54)]
-}
 
 [physics]
-
 common/physics_ticks_per_second=60
-
-[debug]
-
-settings/fps/force_fps=0
