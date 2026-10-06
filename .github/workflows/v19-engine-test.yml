@@ -25,6 +25,7 @@ jobs:
           mkdir -p /tmp/v19fix
           tar -xzf /tmp/v19fix.tar.gz -C /tmp/v19fix
           test -f /tmp/v19fix/project/test_v19.gd
+          cp .v19fixtest/player_fixed.gd /tmp/v19fix/project/scripts/player.gd
 
       - name: Download Godot 4.7.2 stable
         shell: bash
@@ -53,7 +54,7 @@ jobs:
           set -o pipefail
           "$GODOT_BIN" --headless --path /tmp/v19fix/project --script res://test_v19.gd 2>&1 | tee /tmp/test.log
           grep -q "V19.1 FUNCTION TEST PASS" /tmp/test.log
-          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found" /tmp/test.log; then
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/test.log; then
             echo "Functional test failed"
             exit 1
           fi
