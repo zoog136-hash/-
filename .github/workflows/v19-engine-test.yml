@@ -1,4 +1,4 @@
-name: V19.3 Godot 4.7.2 Functional Test
+name: V20 Godot 4.7.2 HUD Test
 
 on:
   push:
@@ -29,6 +29,9 @@ jobs:
           cp .v19fixtest/hud_v19_2.gd /tmp/v19fix/project/scripts/hud.gd
           cp .v19fixtest/test_touch.gd /tmp/v19fix/project/test_touch.gd
           cp .v19fixtest/test_paging.gd /tmp/v19fix/project/test_paging.gd
+          base64 -d .v20test/hud_v20.gz.b64 | gzip -d > /tmp/v19fix/project/scripts/hud_v20.gd
+          sed -i 's#res://scripts/hud.gd#res://scripts/hud_v20.gd#' /tmp/v19fix/project/scenes/ui/HUD.tscn
+          cp .v20test/test_v20.gd /tmp/v19fix/project/test_v20.gd
 
       - name: Download Godot 4.7.2 stable
         shell: bash
@@ -83,5 +86,17 @@ jobs:
           grep -q "V19.3 PAGING TEST PASS" /tmp/paging.log
           if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/paging.log; then
             echo "Paging test failed"
+            exit 1
+          fi
+
+
+      - name: Run V20 gameplay HUD test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path /tmp/v19fix/project --script res://test_v20.gd 2>&1 | tee /tmp/v20.log
+          grep -q "V20 HUD TEST PASS" /tmp/v20.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/v20.log; then
+            echo "V20 HUD test failed"
             exit 1
           fi
