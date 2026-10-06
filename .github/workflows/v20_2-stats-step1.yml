@@ -1,0 +1,116 @@
+name: V20.2 Stats Step1 Test
+
+on:
+  push:
+    branches: [v20-2-stats-step1]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-stats-step1
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse full project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create stats test
+        shell: bash
+        run: |
+          cat > test_stats_step1.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+
+              check(world.str_stat == 18, "STR default")
+              check(world.dex_stat == 12, "DEX default")
+              check(world.con_stat == 16, "CON default")
+              check(world.int_stat == 8, "INT default")
+              check(world.wis_stat == 10, "WIS default")
+              check(world.cha_stat == 9, "CHA default")
+              check(world.stat_points == 0, "stat points default")
+
+              var stats: Dictionary = world._character_stats_snapshot()
+              for key: String in ["str","dex","con","int","wis","cha","stat_points","melee_damage","melee_accuracy","ranged_damage","ranged_accuracy","magic_damage","magic_accuracy","ac","dg","er","mr","damage_reduction"]:
+                  check(stats.has(key), "snapshot key " + key)
+
+              check(int(stats["melee_accuracy"]) == 63, "melee accuracy calculation")
+              check(int(stats["ac"]) == -19, "AC calculation")
+              check(int(stats["mr"]) == 65, "MR calculation")
+
+              world._update_hud()
+              var hud: Node = world.get_node("HUD")
+              check(int(hud.character_state.get("str", 0)) == 18, "HUD STR state")
+              check(int(hud.character_state.get("melee_accuracy", 0)) == 63, "HUD accuracy state")
+              check(int(hud.character_state.get("ac", 0)) == -19, "HUD AC state")
+
+              world._save_game(true)
+              world.str_stat = 1
+              world.dex_stat = 1
+              world.wis_stat = 1
+              world.stat_points = 99
+              world._load_game(true)
+              check(world.str_stat == 18, "STR save/load")
+              check(world.dex_stat == 12, "DEX save/load")
+              check(world.wis_stat == 10, "WIS save/load")
+              check(world.stat_points == 0, "stat point save/load")
+
+              if failures.is_empty():
+                  print("V20.2 STATS STEP1 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run stats step1
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_stats_step1.gd 2>&1 | tee /tmp/stats.log
+          grep -q "V20.2 STATS STEP1 PASS" /tmp/stats.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/stats.log; then
+            exit 1
+          fi
