@@ -1,0 +1,181 @@
+name: V20.1 Full Debug Sweep
+
+on:
+  push:
+    branches: [v20-1-debug]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Static project integrity checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,re,json,sys
+          root='.'
+          classes={}
+          missing=[]
+          refs=[]
+          for dp,_,fs in os.walk(root):
+              if '/.git' in dp or '/.godot' in dp: continue
+              for fn in fs:
+                  p=os.path.join(dp,fn)
+                  rp=p[2:] if p.startswith('./') else p
+                  if fn.endswith('.gd'):
+                      txt=open(p,encoding='utf-8',errors='ignore').read()
+                      for m in re.finditer(r'(?m)^class_name\s+([A-Za-z_][A-Za-z0-9_]*)',txt):
+                          classes.setdefault(m.group(1),[]).append(rp)
+                  if fn.endswith(('.gd','.tscn','.tres','.json','.godot')):
+                      try: txt=open(p,encoding='utf-8',errors='ignore').read()
+                      except: continue
+                      refs += [(rp,x) for x in re.findall(r'res://[^"\'\s,)\]]+',txt)]
+          dup={k:v for k,v in classes.items() if len(v)>1}
+          if dup:
+              print('DUPLICATE CLASS_NAME',dup)
+              sys.exit(1)
+          for src,ref in refs:
+              rel=ref[6:]
+              if not os.path.exists(rel):
+                  # ignore runtime/user paths and generated import internals
+                  if not rel.startswith('.godot/'):
+                      missing.append((src,ref))
+          print('GLOBAL_CLASSES',classes)
+          print('RESOURCE_REFS',len(refs),'MISSING',len(missing))
+          if missing:
+              for x in missing[:100]: print('MISSING',x)
+              sys.exit(1)
+          for jp in ['data/maps_v18.json','data/game_db_v17.json','data/catalog_v19.json','data/catalog_image_index_v19.json','data/directional_art_v19.json']:
+              with open(jp,encoding='utf-8') as f: json.load(f)
+              print('JSON OK',jp)
+          PY
+
+      - name: Download Godot 4.7.2 stable
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Import and parse full project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/editor.log; then
+            echo "EDITOR/PARSE ERRORS FOUND"
+            exit 1
+          fi
+
+      - name: Create runtime smoke test
+        shell: bash
+        run: |
+          cat > debug_smoke.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main.tscn loads")
+              if packed == null:
+                  quit(1)
+                  return
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              await process_frame
+
+              check(world.get_node_or_null("Player") != null, "Player node")
+              check(world.get_node_or_null("HUD") != null, "HUD node")
+              check(world.get_node_or_null("Monsters") != null, "Monsters root")
+              check(world.get_node_or_null("MapRoot/Background") != null, "Map background")
+              check(world.maps.size() >= 25, "25+ maps loaded")
+              check(not world.catalog_db.is_empty(), "catalog database loaded")
+              check(not world.game_db.is_empty(), "game database loaded")
+
+              var hud: Node = world.get_node("HUD")
+              check(hud.get_node_or_null("Root/V20GameplayHUD") != null, "V20 gameplay HUD")
+              for category: String in ["변신","마법인형","성물","아이템"]:
+                  var rows: Array = world.catalog_db.get(category, []) as Array
+                  check(rows.size() > 0, category + " catalog non-empty")
+                  hud.open_catalog(category)
+                  await process_frame
+                  check(hud.catalog_filtered_results.size() == rows.size(), category + " catalog all rows exposed")
+                  check(hud._catalog_page_count() >= 1, category + " page count valid")
+                  if hud._catalog_page_count() > 1:
+                      var before: int = hud.catalog_page
+                      hud._catalog_next_page()
+                      check(hud.catalog_page == before + 1, category + " next-page works")
+                      hud._catalog_first_page()
+
+              var map_failures: Array[String] = []
+              for map_value: Variant in world.maps:
+                  if not (map_value is Dictionary):
+                      continue
+                  var map_data: Dictionary = map_value as Dictionary
+                  var map_id: String = str(map_data.get("id",""))
+                  world._set_map(map_id, false)
+                  await process_frame
+                  await process_frame
+                  if world.active_map_id != map_id:
+                      map_failures.append(map_id + ": active id mismatch")
+                  var image_path: String = str(map_data.get("image_path",""))
+                  if image_path != "" and not ResourceLoader.exists(image_path):
+                      map_failures.append(map_id + ": missing " + image_path)
+                  if world.map_background.texture == null:
+                      map_failures.append(map_id + ": null background texture")
+                  check(world.astar != null, map_id + " astar")
+                  check(world.player.global_position.x >= 0.0 and world.player.global_position.y >= 0.0, map_id + " player position")
+              check(map_failures.is_empty(), "map sweep: " + str(map_failures))
+
+              world._save_game(true)
+              check(FileAccess.file_exists(world.SAVE_PATH), "save file created")
+              world._load_game(true)
+              await process_frame
+
+              # Let spawned monsters and HUD process for a short runtime window.
+              for _i: int in range(120):
+                  await process_frame
+
+              if failures.is_empty():
+                  print("V20.1 FULL DEBUG PASS")
+                  quit(0)
+              else:
+                  print("V20.1 FULL DEBUG FAILURES: ", failures)
+                  quit(1)
+          GD
+
+      - name: Run runtime debug sweep
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://debug_smoke.gd 2>&1 | tee /tmp/runtime.log
+          grep -q "V20.1 FULL DEBUG PASS" /tmp/runtime.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/runtime.log; then
+            echo "RUNTIME ERRORS FOUND"
+            exit 1
+          fi
