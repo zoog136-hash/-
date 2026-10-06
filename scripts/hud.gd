@@ -539,7 +539,24 @@ func _refresh_character_panel() -> void:
 	var weapon_name: String = _equipped_name(equipped_items.get("weapon", {}))
 	var armor_name: String = _equipped_name(equipped_items.get("armor", {}))
 	var accessory_name: String = _equipped_name(equipped_items.get("accessory", {}))
-	character_info.text = "[font_size=22][b]%s[/b][/font_size]\nLv.%d\n\nHP %d / %d\nMP %d / %d\n공격력 %d   방어력 %d\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s\n\n변신/인형은 4방향 4프레임 시트를 실제 AnimatedSprite2D로 재생합니다." % [CLASS_NAMES[class_index], int(character_state.get("level", 1)), int(character_state.get("hp", 0)), int(character_state.get("max_hp", 0)), int(character_state.get("mp", 0)), int(character_state.get("max_mp", 0)), int(character_state.get("attack", 0)), int(character_state.get("defense", 0)), transform_name, doll_name, relic_name, weapon_name, armor_name, accessory_name]
+	var core_stats: String = "STR %d   DEX %d   CON %d\nINT %d   WIS %d   CHA %d" % [
+		int(character_state.get("str", 0)), int(character_state.get("dex", 0)), int(character_state.get("con", 0)),
+		int(character_state.get("int", 0)), int(character_state.get("wis", 0)), int(character_state.get("cha", 0))
+	]
+	var combat_stats: String = "근거리 대미지 %d   명중 %d\n원거리 대미지 %d   명중 %d\n마법 대미지 %d   명중 %d\nAC %d   DG %d   ER %d   MR %d\n대미지 리덕션 %d" % [
+		int(character_state.get("melee_damage", 0)), int(character_state.get("melee_accuracy", 0)),
+		int(character_state.get("ranged_damage", 0)), int(character_state.get("ranged_accuracy", 0)),
+		int(character_state.get("magic_damage", 0)), int(character_state.get("magic_accuracy", 0)),
+		int(character_state.get("ac", 0)), int(character_state.get("dg", 0)),
+		int(character_state.get("er", 0)), int(character_state.get("mr", 0)),
+		int(character_state.get("damage_reduction", 0))
+	]
+	character_info.text = "[font_size=22][b]%s[/b][/font_size]\nLv.%d   남은 스탯 %d\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
+		CLASS_NAMES[class_index], int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
+		int(character_state.get("hp", 0)), int(character_state.get("max_hp", 0)),
+		int(character_state.get("mp", 0)), int(character_state.get("max_mp", 0)),
+		core_stats, combat_stats, transform_name, doll_name, relic_name, weapon_name, armor_name, accessory_name
+	]
 
 func _equipped_name(value: Variant) -> String:
 	if value is Dictionary:
