@@ -54,6 +54,17 @@ var mp: int = 315
 var max_mp: int = 375
 var attack_power: int = 42
 var defense: int = 19
+
+# V20.2 Step 1: Lineage-style core attributes.
+# These are persisted and displayed now; hit/miss combat logic is added in the next step.
+var str_stat: int = 18
+var dex_stat: int = 12
+var con_stat: int = 16
+var int_stat: int = 8
+var wis_stat: int = 10
+var cha_stat: int = 9
+var stat_points: int = 0
+
 var gold: int = 12000
 var inventory: Dictionary = {"HP 물약":100, "강력 HP 물약":14, "축복받은 HP 물약":10, "낡은 장검":1, "초록 잎":200}
 
@@ -531,12 +542,18 @@ func _update_hud() -> void:
 		hud.call("set_quick_items", inventory)
 	if hud.has_method("set_quest_progress"):
 		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
-	hud.set_character_state({
-		"class_index": class_index,
-		"level": level, "hp": hp, "max_hp": _effective_max_hp(), "mp": mp, "max_mp": max_mp,
-		"attack": _effective_attack(), "defense": _effective_defense(), "equipped": equipped_catalog,
-		"equipped_items": equipped_items
-	})
+	var character_state: Dictionary = _character_stats_snapshot()
+	character_state["class_index"] = class_index
+	character_state["level"] = level
+	character_state["hp"] = hp
+	character_state["max_hp"] = _effective_max_hp()
+	character_state["mp"] = mp
+	character_state["max_mp"] = max_mp
+	character_state["attack"] = _effective_attack()
+	character_state["defense"] = _effective_defense()
+	character_state["equipped"] = equipped_catalog
+	character_state["equipped_items"] = equipped_items
+	hud.set_character_state(character_state)
 
 func _save_game(quiet: bool) -> void:
 	var data: Dictionary = {
@@ -551,6 +568,13 @@ func _save_game(quiet: bool) -> void:
 		"max_mp": max_mp,
 		"attack": attack_power,
 		"defense": defense,
+		"str": str_stat,
+		"dex": dex_stat,
+		"con": con_stat,
+		"int": int_stat,
+		"wis": wis_stat,
+		"cha": cha_stat,
+		"stat_points": stat_points,
 		"gold": gold,
 		"inventory": inventory,
 		"class_index": class_index,
@@ -583,6 +607,13 @@ func _load_game(quiet: bool) -> void:
 	max_mp = int(data.get("max_mp", max_mp))
 	attack_power = int(data.get("attack", attack_power))
 	defense = int(data.get("defense", defense))
+	str_stat = int(data.get("str", str_stat))
+	dex_stat = int(data.get("dex", dex_stat))
+	con_stat = int(data.get("con", con_stat))
+	int_stat = int(data.get("int", int_stat))
+	wis_stat = int(data.get("wis", wis_stat))
+	cha_stat = int(data.get("cha", cha_stat))
+	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
 	gold = int(data.get("gold", gold))
 	quest_kills = clampi(int(data.get("quest_kills", quest_kills)), 0, QUEST_GOAL)
 	var inventory_value: Variant = data.get("inventory", inventory)
@@ -767,6 +798,68 @@ func _all_equipped_records() -> Array[Dictionary]:
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(item_value as Dictionary)
 	return records
+
+func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
+	var delta: int = value - baseline
+	if delta <= 0:
+		return 0
+	return int(floor(float(delta) / divisor))
+
+func _melee_damage_stat() -> int:
+	return _effective_attack() + _stat_step_bonus(str_stat, 10, 2.0)
+
+func _melee_accuracy_stat() -> int:
+	return level + str_stat + 10
+
+func _ranged_damage_stat() -> int:
+	return attack_power + _stat_step_bonus(dex_stat, 10, 2.0)
+
+func _ranged_accuracy_stat() -> int:
+	return level + dex_stat + 5
+
+func _magic_damage_stat() -> int:
+	return 5 + _stat_step_bonus(int_stat, 8, 2.0)
+
+func _magic_accuracy_stat() -> int:
+	return level + int_stat
+
+func _effective_ac() -> int:
+	var dex_ac_bonus: int = _stat_step_bonus(dex_stat, 10, 3.0)
+	return -(_effective_defense() + dex_ac_bonus)
+
+func _effective_dg() -> int:
+	return _stat_step_bonus(dex_stat, 10, 4.0)
+
+func _effective_er() -> int:
+	return _stat_step_bonus(dex_stat, 10, 2.0)
+
+func _effective_mr() -> int:
+	return 10 + level + wis_stat * 2
+
+func _damage_reduction_stat() -> int:
+	return 0
+
+func _character_stats_snapshot() -> Dictionary:
+	return {
+		"str": str_stat,
+		"dex": dex_stat,
+		"con": con_stat,
+		"int": int_stat,
+		"wis": wis_stat,
+		"cha": cha_stat,
+		"stat_points": stat_points,
+		"melee_damage": _melee_damage_stat(),
+		"melee_accuracy": _melee_accuracy_stat(),
+		"ranged_damage": _ranged_damage_stat(),
+		"ranged_accuracy": _ranged_accuracy_stat(),
+		"magic_damage": _magic_damage_stat(),
+		"magic_accuracy": _magic_accuracy_stat(),
+		"ac": _effective_ac(),
+		"dg": _effective_dg(),
+		"er": _effective_er(),
+		"mr": _effective_mr(),
+		"damage_reduction": _damage_reduction_stat()
+	}
 
 func _effective_attack() -> int:
 	var bonus: float = 0.0
