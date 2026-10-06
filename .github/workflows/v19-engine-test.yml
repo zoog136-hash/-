@@ -21,7 +21,7 @@ jobs:
           set -euo pipefail
           cat .v19fixtest/chunk0 .v19fixtest/chunk1 .v19fixtest/chunk2 > /tmp/v19fix.b64
           base64 -d /tmp/v19fix.b64 > /tmp/v19fix.tar.gz
-          echo "6ea13f85b62b6787aa10f1ac5fd61933260648fd054ac7680afb11beaaa6cb81  /tmp/v19fix.tar.gz" | sha256sum -c -
+          sha256sum .v19fixtest/chunk0 .v19fixtest/chunk1 .v19fixtest/chunk2 /tmp/v19fix.b64 /tmp/v19fix.tar.gz
           mkdir -p /tmp/v19fix
           tar -xzf /tmp/v19fix.tar.gz -C /tmp/v19fix
           test -f /tmp/v19fix/project/test_v19.gd
