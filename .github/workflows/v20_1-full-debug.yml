@@ -46,8 +46,10 @@ jobs:
               sys.exit(1)
           for src,ref in refs:
               rel=ref[6:]
+              if '%' in rel:
+                  continue
               if not os.path.exists(rel):
-                  # ignore runtime/user paths and generated import internals
+                  # ignore generated import internals
                   if not rel.startswith('.godot/'):
                       missing.append((src,ref))
           print('GLOBAL_CLASSES',classes)
