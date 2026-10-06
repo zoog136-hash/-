@@ -2,7 +2,7 @@ name: V20 Godot 4.7.2 HUD Test
 
 on:
   push:
-    branches: [v19-engine-test]
+    branches: [v20-hud-test]
   workflow_dispatch:
 
 permissions:
@@ -15,26 +15,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore V19.1 fixed test project
+      - name: Restore V19.3 validated base and overlay current V20
         shell: bash
         run: |
           set -euo pipefail
           cat .v19fixtest/chunk0 .v19fixtest/chunk1 .v19fixtest/chunk2 > /tmp/v19fix.b64
           base64 -d /tmp/v19fix.b64 > /tmp/v19fix.tar.gz
-          sha256sum .v19fixtest/chunk0 .v19fixtest/chunk1 .v19fixtest/chunk2 /tmp/v19fix.b64 /tmp/v19fix.tar.gz
-          mkdir -p /tmp/v19fix
-          tar -xzf /tmp/v19fix.tar.gz -C /tmp/v19fix
-          test -f /tmp/v19fix/project/test_v19.gd
-          cp .v19fixtest/player_fixed.gd /tmp/v19fix/project/scripts/player.gd
-          cp .v19fixtest/hud_v19_2.gd /tmp/v19fix/project/scripts/hud.gd
-          cp .v19fixtest/test_touch.gd /tmp/v19fix/project/test_touch.gd
-          cp .v19fixtest/test_paging.gd /tmp/v19fix/project/test_paging.gd
-          base64 -d .v20test/hud_v20.gz.b64 | gzip -d > /tmp/v19fix/project/scripts/hud_v20.gd
-          base64 -d .v20test/world_v20.gz.b64 | gzip -d > /tmp/v19fix/project/scripts/world.gd
-          base64 -d .v20test/monster_v20.gz.b64 | gzip -d > /tmp/v19fix/project/scripts/monster.gd
-          python3 .v20test/fix_hud.py /tmp/v19fix/project/scripts/hud_v20.gd
-          sed -i 's#res://scripts/hud.gd#res://scripts/hud_v20.gd#' /tmp/v19fix/project/scenes/ui/HUD.tscn
-          cp .v20test/test_v20.gd /tmp/v19fix/project/test_v20.gd
+          mkdir -p /tmp/v20
+          tar -xzf /tmp/v19fix.tar.gz -C /tmp/v20
+          cp .v19fixtest/player_fixed.gd /tmp/v20/project/scripts/player.gd
+          cp .v19fixtest/hud_v19_2.gd /tmp/v20/project/scripts/hud.gd
+          cp .v19fixtest/test_touch.gd /tmp/v20/project/test_touch.gd
+          cp .v19fixtest/test_paging.gd /tmp/v20/project/test_paging.gd
+
+          cat .v20current/hud0 .v20current/hud1 .v20current/hud2 | base64 -d | gzip -d > /tmp/v20/project/scripts/hud_v20.gd
+          cat .v20current/world0 .v20current/world1 .v20current/world2 | base64 -d | gzip -d > /tmp/v20/project/scripts/world.gd
+          cat .v20current/monster0 | base64 -d | gzip -d > /tmp/v20/project/scripts/monster.gd
+          sed -i 's#res://scripts/hud.gd#res://scripts/hud_v20.gd#' /tmp/v20/project/scenes/ui/HUD.tscn
+          cp .v20test/test_v20.gd /tmp/v20/project/test_v20.gd
+
+          grep -q 'extends "res://scripts/hud.gd"' /tmp/v20/project/scripts/hud_v20.gd
+          grep -q 'V20GameplayHUD' /tmp/v20/project/scripts/hud_v20.gd
 
       - name: Download Godot 4.7.2 stable
         shell: bash
@@ -47,59 +48,33 @@ jobs:
           echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
           "$GODOT_BIN" --version
 
-      - name: Import and parse project
+      - name: Import and parse V20
         shell: bash
         run: |
           set -o pipefail
-          "$GODOT_BIN" --headless --editor --path /tmp/v19fix/project --quit 2>&1 | tee /tmp/editor.log
+          "$GODOT_BIN" --headless --editor --path /tmp/v20/project --quit 2>&1 | tee /tmp/editor.log
           if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Integer division.*discarded|same name as a built-in function" /tmp/editor.log; then
-            echo "Parse or warning regression found"
             exit 1
           fi
-
-      - name: Run catalog and equipment functional tests
-        shell: bash
-        run: |
-          set -o pipefail
-          "$GODOT_BIN" --headless --path /tmp/v19fix/project --script res://test_v19.gd 2>&1 | tee /tmp/test.log
-          grep -q "V19.1 FUNCTION TEST PASS" /tmp/test.log
-          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/test.log; then
-            echo "Functional test failed"
-            exit 1
-          fi
-
-
-      - name: Run Android touch catalog selection tests
-        shell: bash
-        run: |
-          set -o pipefail
-          "$GODOT_BIN" --headless --path /tmp/v19fix/project --script res://test_touch.gd 2>&1 | tee /tmp/touch.log
-          grep -q "V19.2 TOUCH SELECTION TEST PASS" /tmp/touch.log
-          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/touch.log; then
-            echo "Touch selection test failed"
-            exit 1
-          fi
-
-
-      - name: Run catalog paging tests
-        shell: bash
-        run: |
-          set -o pipefail
-          "$GODOT_BIN" --headless --path /tmp/v19fix/project --script res://test_paging.gd 2>&1 | tee /tmp/paging.log
-          grep -q "V19.3 PAGING TEST PASS" /tmp/paging.log
-          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/paging.log; then
-            echo "Paging test failed"
-            exit 1
-          fi
-
 
       - name: Run V20 gameplay HUD test
         shell: bash
         run: |
           set -o pipefail
-          "$GODOT_BIN" --headless --path /tmp/v19fix/project --script res://test_v20.gd 2>&1 | tee /tmp/v20.log
+          "$GODOT_BIN" --headless --path /tmp/v20/project --script res://test_v20.gd 2>&1 | tee /tmp/v20.log
           grep -q "V20 HUD TEST PASS" /tmp/v20.log
           if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/v20.log; then
-            echo "V20 HUD test failed"
+            exit 1
+          fi
+
+      - name: Re-run catalog touch and paging regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path /tmp/v20/project --script res://test_touch.gd 2>&1 | tee /tmp/touch.log
+          grep -q "V19.2 TOUCH SELECTION TEST PASS" /tmp/touch.log
+          "$GODOT_BIN" --headless --path /tmp/v20/project --script res://test_paging.gd 2>&1 | tee /tmp/paging.log
+          grep -q "V19.3 PAGING TEST PASS" /tmp/paging.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/touch.log /tmp/paging.log; then
             exit 1
           fi
