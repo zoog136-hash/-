@@ -107,10 +107,9 @@ func _input(event):
 		_handle_tap(_to_view(event.position))
 
 func _to_view(screen_pos: Vector2) -> Vector2:
-	var screen_size := get_viewport_rect().size
-	if screen_size.x <= 0.0 or screen_size.y <= 0.0:
-		return screen_pos
-	return Vector2(screen_pos.x * VIEW.x / screen_size.x, screen_pos.y * VIEW.y / screen_size.y)
+	# Convert real screen/touch coordinates through Godot's stretch/letterbox transform.
+	# This keeps mobile touch hitboxes aligned on wide or tall Android displays.
+	return get_viewport().get_canvas_transform().affine_inverse() * screen_pos
 
 func _set_joystick(p: Vector2):
 	var delta := p - JOY_CENTER
