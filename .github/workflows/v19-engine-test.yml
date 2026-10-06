@@ -1,0 +1,67 @@
+name: V19 Godot 4.7.2 Engine Test
+
+on:
+  push:
+    branches: [v19-engine-test]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  godot-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore V19 test project
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .v19test/chunk0 .v19test/chunk1 .v19test/chunk2 > /tmp/v19.b64
+          base64 -d /tmp/v19.b64 > /tmp/v19_test_payload.tar.gz
+          echo "46f095c708ead56732573b588f21ccc17f7ca1e552993ae5510965626d616491  /tmp/v19_test_payload.tar.gz" | sha256sum -c -
+          mkdir -p /tmp/v19
+          tar -xzf /tmp/v19_test_payload.tar.gz -C /tmp/v19
+          test -f /tmp/v19/project/project.godot
+          test -f /tmp/v19/project/Main.tscn
+          find /tmp/v19/project -maxdepth 3 -type f | sort
+
+      - name: Download Godot 4.7.2 stable
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project in Godot editor
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path /tmp/v19/project --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|ERROR:.*(parse|script)" /tmp/editor.log; then
+            echo "Godot editor parse validation failed"
+            exit 1
+          fi
+
+      - name: Boot main scene
+        shell: bash
+        run: |
+          set +e
+          timeout 8s "$GODOT_BIN" --headless --path /tmp/v19/project 2>&1 | tee /tmp/runtime.log
+          STATUS=${PIPESTATUS[0]}
+          set -e
+          if [ "$STATUS" -ne 0 ] && [ "$STATUS" -ne 124 ]; then
+            echo "Godot runtime exited with $STATUS"
+            exit "$STATUS"
+          fi
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found" /tmp/runtime.log; then
+            echo "Godot runtime validation found errors"
+            exit 1
+          fi
+          echo "V19 main scene booted without detected GDScript/node errors."
