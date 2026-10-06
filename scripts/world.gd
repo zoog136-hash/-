@@ -104,7 +104,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event is InputEventScreenTouch:
 		var touch_event: InputEventScreenTouch = event
 		if touch_event.pressed:
-			_set_click_destination(get_global_mouse_position())
+			# Android touch events carry real viewport coordinates. Mouse emulation is
+			# disabled in project.godot, so get_global_mouse_position() may be stale.
+			var world_touch_position: Vector2 = get_viewport().get_canvas_transform().affine_inverse() * touch_event.position
+			_set_click_destination(world_touch_position)
 
 func _load_data() -> void:
 	var maps_text: String = FileAccess.get_file_as_string(MAPS_PATH)
