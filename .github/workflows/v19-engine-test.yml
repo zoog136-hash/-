@@ -29,7 +29,8 @@ jobs:
           cp .v19fixtest/hud_v19_2.gd /tmp/v19fix/project/scripts/hud.gd
           cp .v19fixtest/test_touch.gd /tmp/v19fix/project/test_touch.gd
           cp .v19fixtest/test_paging.gd /tmp/v19fix/project/test_paging.gd
-          base64 -d .v20test/hud_v20.gz.b64 | gzip -d > /tmp/v19fix/project/scripts/hud_v20.gd\n          python3 .v20test/fix_hud.py /tmp/v19fix/project/scripts/hud_v20.gd
+          base64 -d .v20test/hud_v20.gz.b64 | gzip -d > /tmp/v19fix/project/scripts/hud_v20.gd
+          python3 .v20test/fix_hud.py /tmp/v19fix/project/scripts/hud_v20.gd
           sed -i 's#res://scripts/hud.gd#res://scripts/hud_v20.gd#' /tmp/v19fix/project/scenes/ui/HUD.tscn
           cp .v20test/test_v20.gd /tmp/v19fix/project/test_v20.gd
 
