@@ -160,6 +160,7 @@ func _connect_signals() -> void:
 	hud.load_pressed.connect(func() -> void: _load_game(false))
 	hud.catalog_equip_requested.connect(_equip_catalog)
 	hud.class_selected.connect(_on_class_selected)
+	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
 	if not maps_by_id.has(map_id):
@@ -495,6 +496,39 @@ func _on_player_hit(damage_value: int) -> void:
 		hud.show_message("사망 후 부활했습니다")
 	_update_hud()
 
+func _stat_points_for_level_up(new_level: int) -> int:
+	# Provisional Lineage-style growth rule, isolated for later balance changes.
+	if new_level > 50:
+		return 1
+	if new_level >= 5 and new_level % 5 == 0:
+		return 1
+	return 0
+
+func _on_stat_increase_requested(stat_name: String) -> void:
+	if stat_points <= 0:
+		hud.show_message("남은 스탯 포인트가 없습니다")
+		return
+	match stat_name:
+		"STR":
+			str_stat += 1
+		"DEX":
+			dex_stat += 1
+		"CON":
+			con_stat += 1
+		"INT":
+			int_stat += 1
+		"WIS":
+			wis_stat += 1
+		"CHA":
+			cha_stat += 1
+		_:
+			return
+	stat_points -= 1
+	hud.show_message("%s +1 · 남은 포인트 %d" % [stat_name, stat_points])
+	hud.append_log("스탯 투자 · %s +1" % stat_name)
+	_update_hud()
+	_save_game(true)
+
 func _check_level_up() -> void:
 	while experience >= exp_need:
 		experience -= exp_need
@@ -506,7 +540,13 @@ func _check_level_up() -> void:
 		mp = max_mp
 		attack_power += 2
 		defense += 1
-		hud.show_message("레벨 업! Lv.%d" % level)
+		var awarded_points: int = _stat_points_for_level_up(level)
+		stat_points += awarded_points
+		if awarded_points > 0:
+			hud.show_message("레벨 업! Lv.%d · 스탯 포인트 +%d" % [level, awarded_points])
+			hud.append_log("Lv.%d 달성 · 스탯 포인트 +%d" % [level, awarded_points])
+		else:
+			hud.show_message("레벨 업! Lv.%d" % level)
 
 func _use_potion() -> void:
 	var potion: String = "HP 물약"
