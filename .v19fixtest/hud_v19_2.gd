@@ -46,7 +46,15 @@ var catalog_detail: RichTextLabel
 var catalog_equip_button: Button
 var catalog_category: String = "변신"
 var catalog_results: Array = []
+var catalog_filtered_results: Array = []
 var selected_catalog_record: Dictionary = {}
+var catalog_page: int = 0
+var catalog_page_size: int = 40
+var catalog_page_label: Label
+var catalog_first_button: Button
+var catalog_prev_button: Button
+var catalog_next_button: Button
+var catalog_last_button: Button
 var character_panel: PanelContainer
 var character_preview: TextureRect
 var character_info: RichTextLabel
@@ -257,8 +265,12 @@ func _build_catalog_panel() -> void:
 	var body: HBoxContainer = HBoxContainer.new()
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(body)
+	var left: VBoxContainer = VBoxContainer.new()
+	left.custom_minimum_size = Vector2(430, 465)
+	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body.add_child(left)
 	catalog_list = ItemList.new()
-	catalog_list.custom_minimum_size = Vector2(430, 465)
+	catalog_list.custom_minimum_size = Vector2(430, 410)
 	catalog_list.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	catalog_list.select_mode = ItemList.SELECT_SINGLE
 	catalog_list.allow_reselect = true
@@ -266,7 +278,39 @@ func _build_catalog_panel() -> void:
 	catalog_list.item_selected.connect(_on_catalog_item_selected)
 	catalog_list.item_clicked.connect(_on_catalog_item_clicked)
 	catalog_list.gui_input.connect(_on_catalog_list_gui_input)
-	body.add_child(catalog_list)
+	left.add_child(catalog_list)
+	var pager: HBoxContainer = HBoxContainer.new()
+	pager.custom_minimum_size = Vector2(430, 46)
+	pager.alignment = BoxContainer.ALIGNMENT_CENTER
+	pager.add_theme_constant_override("separation", 6)
+	left.add_child(pager)
+	catalog_first_button = Button.new()
+	catalog_first_button.text = "처음"
+	catalog_first_button.custom_minimum_size = Vector2(66, 40)
+	catalog_first_button.pressed.connect(_catalog_first_page)
+	pager.add_child(catalog_first_button)
+	catalog_prev_button = Button.new()
+	catalog_prev_button.text = "◀"
+	catalog_prev_button.custom_minimum_size = Vector2(52, 40)
+	catalog_prev_button.pressed.connect(_catalog_prev_page)
+	pager.add_child(catalog_prev_button)
+	catalog_page_label = Label.new()
+	catalog_page_label.text = "1 / 1"
+	catalog_page_label.custom_minimum_size = Vector2(100, 40)
+	catalog_page_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	catalog_page_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	catalog_page_label.add_theme_font_size_override("font_size", 17)
+	pager.add_child(catalog_page_label)
+	catalog_next_button = Button.new()
+	catalog_next_button.text = "▶"
+	catalog_next_button.custom_minimum_size = Vector2(52, 40)
+	catalog_next_button.pressed.connect(_catalog_next_page)
+	pager.add_child(catalog_next_button)
+	catalog_last_button = Button.new()
+	catalog_last_button.text = "끝"
+	catalog_last_button.custom_minimum_size = Vector2(66, 40)
+	catalog_last_button.pressed.connect(_catalog_last_page)
+	pager.add_child(catalog_last_button)
 	var right: VBoxContainer = VBoxContainer.new()
 	right.custom_minimum_size = Vector2(500, 465)
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -294,14 +338,12 @@ func _build_catalog_panel() -> void:
 	right.add_child(close)
 
 func _refresh_catalog_list(filter_text: String) -> void:
-	catalog_list.clear()
-	catalog_results.clear()
+	catalog_filtered_results.clear()
 	selected_catalog_record = {}
 	catalog_preview.texture = null
 	catalog_detail.text = ""
 	var source: Array = catalog_data.get(catalog_category, []) as Array
 	var query: String = filter_text.strip_edges().to_lower()
-	var total_matches: int = 0
 	for value: Variant in source:
 		if not (value is Dictionary):
 			continue
@@ -309,18 +351,69 @@ func _refresh_catalog_list(filter_text: String) -> void:
 		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", ""))).to_lower()
 		if query != "" and search_text.find(query) < 0:
 			continue
-		total_matches += 1
-		if catalog_results.size() >= 300:
-			continue
+		catalog_filtered_results.append(record)
+	catalog_page = 0
+	_apply_catalog_page()
+
+func _catalog_page_count() -> int:
+	if catalog_filtered_results.is_empty():
+		return 1
+	return int(ceil(float(catalog_filtered_results.size()) / float(catalog_page_size)))
+
+func _apply_catalog_page() -> void:
+	catalog_list.clear()
+	catalog_results.clear()
+	selected_catalog_record = {}
+	catalog_preview.texture = null
+	catalog_detail.text = ""
+	var page_count: int = _catalog_page_count()
+	catalog_page = clampi(catalog_page, 0, page_count - 1)
+	var start_index: int = catalog_page * catalog_page_size
+	var end_index: int = mini(start_index + catalog_page_size, catalog_filtered_results.size())
+	for source_index: int in range(start_index, end_index):
+		var record: Dictionary = catalog_filtered_results[source_index] as Dictionary
 		catalog_results.append(record)
 		catalog_list.add_item("[%s] %s" % [str(record.get("grade", "")), str(record.get("name", ""))])
-	catalog_count.text = "%d개 / 표시 %d" % [total_matches, catalog_results.size()]
+	var visible_start: int = 0 if catalog_filtered_results.is_empty() else start_index + 1
+	var visible_end: int = 0 if catalog_filtered_results.is_empty() else end_index
+	catalog_count.text = "%d개 · %d-%d" % [catalog_filtered_results.size(), visible_start, visible_end]
+	catalog_page_label.text = "%d / %d" % [catalog_page + 1, page_count]
+	catalog_first_button.disabled = catalog_page <= 0
+	catalog_prev_button.disabled = catalog_page <= 0
+	catalog_next_button.disabled = catalog_page >= page_count - 1
+	catalog_last_button.disabled = catalog_page >= page_count - 1
 	catalog_equip_button.visible = true
 	catalog_equip_button.text = "획득 / 장착" if catalog_category == "아이템" else "장착"
 	catalog_equip_button.disabled = catalog_results.is_empty()
 	if catalog_results.size() > 0:
 		catalog_list.select(0)
 		_on_catalog_item_selected(0)
+
+func _catalog_first_page() -> void:
+	if catalog_page == 0:
+		return
+	catalog_page = 0
+	_apply_catalog_page()
+
+func _catalog_prev_page() -> void:
+	if catalog_page <= 0:
+		return
+	catalog_page -= 1
+	_apply_catalog_page()
+
+func _catalog_next_page() -> void:
+	var page_count: int = _catalog_page_count()
+	if catalog_page >= page_count - 1:
+		return
+	catalog_page += 1
+	_apply_catalog_page()
+
+func _catalog_last_page() -> void:
+	var last_page: int = _catalog_page_count() - 1
+	if catalog_page == last_page:
+		return
+	catalog_page = last_page
+	_apply_catalog_page()
 
 func _on_catalog_item_clicked(index: int, _at_position: Vector2, _mouse_button_index: int) -> void:
 	_select_catalog_index(index)
