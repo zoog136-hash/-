@@ -13,6 +13,7 @@ signal save_pressed
 signal load_pressed
 signal catalog_equip_requested(category: String, record: Dictionary)
 signal class_selected(index: int)
+signal stat_increase_requested(stat_name: String)
 
 @onready var hp_bar: ProgressBar = $Root/TopLeft/HPBar
 @onready var mp_bar: ProgressBar = $Root/TopLeft/MPBar
@@ -58,6 +59,7 @@ var catalog_last_button: Button
 var character_panel: PanelContainer
 var character_preview: TextureRect
 var character_info: RichTextLabel
+var stat_buttons: Dictionary = {}
 var character_state: Dictionary = {}
 
 const CLASS_NAMES: Array[String] = ["전사", "마법사", "궁수", "암살자"]
@@ -472,46 +474,74 @@ func _build_character_panel() -> void:
 	character_panel = PanelContainer.new()
 	character_panel.name = "CharacterPanel"
 	character_panel.set_anchors_preset(Control.PRESET_CENTER)
-	character_panel.offset_left = -390.0
-	character_panel.offset_top = -270.0
-	character_panel.offset_right = 390.0
-	character_panel.offset_bottom = 270.0
+	character_panel.offset_left = -430.0
+	character_panel.offset_top = -300.0
+	character_panel.offset_right = 430.0
+	character_panel.offset_bottom = 300.0
 	character_panel.z_index = 110
 	character_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	$Root.add_child(character_panel)
+
 	var root: VBoxContainer = VBoxContainer.new()
-	root.add_theme_constant_override("separation", 10)
+	root.add_theme_constant_override("separation", 8)
 	character_panel.add_child(root)
+
 	var title: Label = Label.new()
-	title.text = "캐릭터 / 장비"
+	title.text = "캐릭터 / 스테이터스 / 장비"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 24)
 	root.add_child(title)
+
 	var body: HBoxContainer = HBoxContainer.new()
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	root.add_child(body)
+
 	var left: VBoxContainer = VBoxContainer.new()
-	left.custom_minimum_size = Vector2(310, 0)
+	left.custom_minimum_size = Vector2(325, 0)
+	left.add_theme_constant_override("separation", 7)
 	body.add_child(left)
+
 	character_preview = TextureRect.new()
-	character_preview.custom_minimum_size = Vector2(300, 230)
+	character_preview.custom_minimum_size = Vector2(315, 200)
 	character_preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	character_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	left.add_child(character_preview)
+
 	var class_grid: GridContainer = GridContainer.new()
 	class_grid.columns = 2
 	left.add_child(class_grid)
 	for index: int in range(4):
-		var button: Button = Button.new()
-		button.text = CLASS_NAMES[index]
-		button.custom_minimum_size = Vector2(145, 48)
-		button.pressed.connect(func() -> void: class_selected.emit(index))
-		class_grid.add_child(button)
+		var class_button: Button = Button.new()
+		class_button.text = CLASS_NAMES[index]
+		class_button.custom_minimum_size = Vector2(152, 42)
+		class_button.pressed.connect(func() -> void: class_selected.emit(index))
+		class_grid.add_child(class_button)
+
+	var stat_title: Label = Label.new()
+	stat_title.text = "스탯 포인트 투자"
+	stat_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	stat_title.add_theme_font_size_override("font_size", 17)
+	left.add_child(stat_title)
+
+	var stat_grid: GridContainer = GridContainer.new()
+	stat_grid.columns = 2
+	stat_grid.add_theme_constant_override("h_separation", 6)
+	stat_grid.add_theme_constant_override("v_separation", 6)
+	left.add_child(stat_grid)
+	for stat_name: String in ["STR", "DEX", "CON", "INT", "WIS", "CHA"]:
+		var stat_button: Button = Button.new()
+		stat_button.text = stat_name + " +"
+		stat_button.custom_minimum_size = Vector2(152, 40)
+		stat_button.pressed.connect(func() -> void: stat_increase_requested.emit(stat_name))
+		stat_grid.add_child(stat_button)
+		stat_buttons[stat_name] = stat_button
+
 	character_info = RichTextLabel.new()
 	character_info.bbcode_enabled = true
 	character_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	character_info.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_child(character_info)
+
 	var close: Button = Button.new()
 	close.text = "닫기"
 	close.custom_minimum_size = Vector2(0, 44)
@@ -524,6 +554,13 @@ func open_character() -> void:
 	_refresh_character_panel()
 
 func _refresh_character_panel() -> void:
+	var available_points: int = maxi(0, int(character_state.get("stat_points", 0)))
+	for stat_key: Variant in stat_buttons.keys():
+		var stat_button_value: Variant = stat_buttons.get(stat_key)
+		if stat_button_value is Button:
+			var stat_button: Button = stat_button_value as Button
+			stat_button.disabled = available_points <= 0
+			stat_button.tooltip_text = "남은 스탯 포인트 %d" % available_points
 	var class_index: int = clampi(int(character_state.get("class_index", 0)), 0, 3)
 	var path: String = CLASS_SHEETS[class_index]
 	if ResourceLoader.exists(path):
@@ -551,7 +588,7 @@ func _refresh_character_panel() -> void:
 		int(character_state.get("er", 0)), int(character_state.get("mr", 0)),
 		int(character_state.get("damage_reduction", 0))
 	]
-	character_info.text = "[font_size=22][b]%s[/b][/font_size]\nLv.%d   남은 스탯 %d\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
+	character_info.text = "[font_size=22][b]%s[/b][/font_size]\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
 		CLASS_NAMES[class_index], int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
 		int(character_state.get("hp", 0)), int(character_state.get("max_hp", 0)),
 		int(character_state.get("mp", 0)), int(character_state.get("max_mp", 0)),
