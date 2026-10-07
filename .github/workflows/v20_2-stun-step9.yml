@@ -112,10 +112,10 @@ jobs:
               world.player.velocity = Vector2(100, 0)
               world.player.apply_stun(0.30)
               check(world.player.is_stunned(), "player enters stun")
-              world.player._physics_process(0.10)
               check(world.player.velocity == Vector2.ZERO, "stunned player velocity zero")
+              world.player._tick_stun(0.10)
               check(world.player.is_stunned(), "player still stunned before duration")
-              world.player._physics_process(0.25)
+              world.player._tick_stun(0.25)
               check(not world.player.is_stunned(), "player stun expires")
 
               # Monster stun freezes AI and expires.
@@ -126,9 +126,10 @@ jobs:
               monster.player_hit.connect(func(_a: TwilightMonster, _d: int, _t: String) -> void:
                   hit_state["count"] = int(hit_state["count"]) + 1
               )
-              monster._physics_process(0.10)
               check(int(hit_state["count"]) == 0, "stunned monster cannot attack")
-              monster._physics_process(0.25)
+              monster._tick_stun(0.10)
+              check(monster.is_stunned(), "monster still stunned before duration")
+              monster._tick_stun(0.25)
               check(not monster.is_stunned(), "monster stun expires")
 
               # Shock Stun actual cast: high accuracy guarantees a practical 95% cap path.
