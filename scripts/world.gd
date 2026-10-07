@@ -503,9 +503,30 @@ func _roll_drop(position_value: Vector2) -> void:
 	timer.timeout.connect(label.queue_free)
 	hud.show_message("획득: " + item_name)
 
-func _on_player_hit(damage_value: int) -> void:
+func _monster_hit_chance(attacker: TwilightMonster) -> float:
+	if attacker == null:
+		return 0.05
+	var target_ac_abs: int = absi(_effective_ac())
+	var chance_percent: float = 75.0 + float(attacker.melee_accuracy - target_ac_abs) * 0.7
+	return clampf(chance_percent / 100.0, 0.05, 0.95)
+
+func _roll_monster_hit(attacker: TwilightMonster) -> bool:
+	return rng.randf() < _monster_hit_chance(attacker)
+
+func _on_player_hit(attacker: TwilightMonster, damage_value: int) -> void:
+	if attacker == null or not is_instance_valid(attacker):
+		return
+	var hit_chance: float = _monster_hit_chance(attacker)
+	if not _roll_monster_hit(attacker):
+		player.show_miss()
+		hud.append_log("%s 공격 MISS · 명중 %d / 내 AC %d / %.1f%%" % [
+			attacker.monster_name, attacker.melee_accuracy, _effective_ac(), hit_chance * 100.0
+		])
+		return
 	var reduced: int = maxi(1, damage_value - int(_effective_defense() * 0.28))
 	hp = maxi(0, hp - reduced)
+	player.show_received_damage(reduced)
+	hud.append_log("%s에게 %d 피해 · 피격률 %.1f%%" % [attacker.monster_name, reduced, hit_chance * 100.0])
 	if hp <= 0:
 		hp = _effective_max_hp()
 		mp = max_mp
