@@ -523,10 +523,12 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int) -> void:
 			attacker.monster_name, attacker.melee_accuracy, _effective_ac(), hit_chance * 100.0
 		])
 		return
-	var reduced: int = maxi(1, damage_value - int(_effective_defense() * 0.28))
+	var reduced: int = _physical_damage_after_reduction(damage_value)
 	hp = maxi(0, hp - reduced)
 	player.show_received_damage(reduced)
-	hud.append_log("%s에게 %d 피해 · 피격률 %.1f%%" % [attacker.monster_name, reduced, hit_chance * 100.0])
+	hud.append_log("%s에게 %d 피해 · 피격률 %.1f%% · 리덕션 %d" % [
+		attacker.monster_name, reduced, hit_chance * 100.0, _damage_reduction_stat()
+	])
 	if hp <= 0:
 		hp = _effective_max_hp()
 		mp = max_mp
@@ -916,8 +918,25 @@ func _effective_er() -> int:
 func _effective_mr() -> int:
 	return 10 + level + wis_stat * 2
 
-func _damage_reduction_stat() -> int:
+func _record_damage_reduction(record: Dictionary) -> int:
+	if record.has("damage_reduction"):
+		return maxi(0, int(record.get("damage_reduction", 0)))
+	if record.has("damageReduction"):
+		return maxi(0, int(record.get("damageReduction", 0)))
+	if record.has("reduction"):
+		return maxi(0, int(record.get("reduction", 0)))
+	if record.has("리덕션"):
+		return maxi(0, int(record.get("리덕션", 0)))
 	return 0
+
+func _damage_reduction_stat() -> int:
+	var total: int = 0
+	for record: Dictionary in _all_equipped_records():
+		total += _record_damage_reduction(record)
+	return maxi(0, total)
+
+func _physical_damage_after_reduction(raw_damage: int) -> int:
+	return maxi(1, raw_damage - _damage_reduction_stat())
 
 func _character_stats_snapshot() -> Dictionary:
 	return {
