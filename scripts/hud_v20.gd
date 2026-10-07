@@ -503,7 +503,7 @@ func _build_v20_bottom_bar() -> void:
 		button.add_theme_font_size_override("font_size", 10)
 		button.add_theme_stylebox_override("normal", _button_style(0.20, 3))
 		button.add_theme_stylebox_override("pressed", _button_style(0.65, 3))
-		button.pressed.connect(func() -> void: show_message("%s 기능" % str(data[1])))
+		button.pressed.connect(_show_named_system_message.bind(str(data[1])))
 		sys.add_child(button)
 
 	# Skill quick slots. Keep combat skills here; potion/AUTO already have
@@ -537,7 +537,7 @@ func _build_v20_bottom_bar() -> void:
 		slot.add_theme_font_size_override("font_size", 10)
 		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
 		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		slot.pressed.connect(func() -> void: combat_skill_pressed.emit(skill_id))
+		slot.pressed.connect(_emit_combat_skill.bind(skill_id))
 		skills.add_child(slot)
 
 	# Consumable quick slots bottom-right.
@@ -569,7 +569,7 @@ func _build_v20_bottom_bar() -> void:
 			slot.text = "0"
 			slot.tooltip_text = item_name
 			v20_quick_item_buttons[item_name] = slot
-			slot.pressed.connect(func() -> void: quick_item_pressed.emit(item_name))
+			slot.pressed.connect(_emit_quick_item.bind(item_name))
 		else:
 			slot.text = "귀환"
 			slot.tooltip_text = "현재 지역 시작 지점으로 귀환"
@@ -602,6 +602,15 @@ func _build_v20_message_and_log() -> void:
 	log_new.add_theme_color_override("default_color", Color(0.94, 0.92, 0.85, 0.92))
 	log_panel_new.add_child(log_new)
 	log_label = log_new
+
+func _show_named_system_message(label_text: String) -> void:
+	show_message("%s 기능" % label_text)
+
+func _emit_combat_skill(skill_id: String) -> void:
+	combat_skill_pressed.emit(skill_id)
+
+func _emit_quick_item(item_name: String) -> void:
+	quick_item_pressed.emit(item_name)
 
 func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> void:
 	super.update_player(level, hp, max_hp, mp, max_mp, experience_value, exp_need, gold)
