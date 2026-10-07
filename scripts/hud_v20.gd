@@ -1,6 +1,7 @@
 extends "res://scripts/hud.gd"
 
 const LineageSideUI = preload("res://scripts/ui/lineage_side_ui.gd")
+const LineageInventoryUI = preload("res://scripts/ui/lineage_inventory_ui.gd")
 
 # V20 gameplay HUD overlay inspired by classic mobile MMORPG layouts.
 # Keeps the V19 catalog/inventory/map panels and replaces only the always-visible combat HUD.
@@ -25,6 +26,7 @@ var v20_skill_container: HBoxContainer
 var v20_self_button: Button
 var v20_quickslot_buttons: Array[Button] = []
 var lineage_side_ui: TwilightSideUI
+var lineage_inventory_ui: TwilightInventoryUI
 
 const V20_CLASS_SHEETS: Array[String] = [
 	"res://assets/sprites/classes/warrior.png",
@@ -75,6 +77,7 @@ func _build_v20_gameplay_hud() -> void:
 	_build_v20_bottom_bar()
 	_build_v20_message_and_log()
 	_build_lineage_side_ui()
+	_build_lineage_inventory_ui()
 
 	_update_v20_portrait(0)
 	set_quick_items({"HP 물약": 100, "강력 HP 물약": 14, "축복받은 HP 물약": 10, "초록 잎": 200})
@@ -88,12 +91,51 @@ func _build_lineage_side_ui() -> void:
 	$Root.add_child(lineage_side_ui)
 	lineage_side_ui.set_character_state(character_state)
 
+func _build_lineage_inventory_ui() -> void:
+	lineage_inventory_ui = LineageInventoryUI.new() as TwilightInventoryUI
+	lineage_inventory_ui.name = "LineageInventoryUI"
+	lineage_inventory_ui.item_activate_requested.connect(func(item_name: String) -> void: inventory_item_activated.emit(item_name))
+	lineage_inventory_ui.quickslot_requested.connect(_register_inventory_quickslot)
+	$Root.add_child(lineage_inventory_ui)
+	lineage_inventory_ui.set_catalog_data(catalog_data, item_image_index)
+	lineage_inventory_ui.set_character_state(character_state)
+
+func _register_inventory_quickslot(item_name: String) -> void:
+	_open_quickslot_picker("item", item_name, item_name)
+
+func toggle_inventory() -> void:
+	var target: bool = true
+	if lineage_inventory_ui != null and lineage_inventory_ui.inventory_panel != null:
+		target = not lineage_inventory_ui.inventory_panel.visible
+	_hide_aux_panels()
+	if lineage_side_ui != null:
+		lineage_side_ui.hide_all()
+	if lineage_inventory_ui != null:
+		if target:
+			lineage_inventory_ui.show_inventory()
+		else:
+			lineage_inventory_ui.hide_inventory()
+
+func refresh_inventory(inventory_value: Dictionary) -> void:
+	super.refresh_inventory(inventory_value)
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.set_inventory(inventory_value)
+
+func set_catalog_data(value: Dictionary, image_index: Dictionary) -> void:
+	super.set_catalog_data(value, image_index)
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.set_catalog_data(value, image_index)
+
 func toggle_menu() -> void:
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.hide_inventory()
 	_hide_aux_panels()
 	if lineage_side_ui != null:
 		lineage_side_ui.toggle_menu()
 
 func open_character() -> void:
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.hide_inventory()
 	_hide_aux_panels()
 	if lineage_side_ui != null:
 		lineage_side_ui.show_character(character_state)
@@ -784,6 +826,8 @@ func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if lineage_side_ui != null:
 		lineage_side_ui.set_character_state(value)
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.set_character_state(value)
 	var job_image_path: String = str(value.get("job_image_path", ""))
 	if job_image_path != "" and ResourceLoader.exists(job_image_path):
 		var job_texture: Texture2D = load(job_image_path) as Texture2D
