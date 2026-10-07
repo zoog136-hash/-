@@ -19,7 +19,7 @@ signal load_pressed
 signal catalog_equip_requested(category: String, record: Dictionary)
 signal class_selected(index: int)
 signal stat_increase_requested(stat_name: String)
-signal job_class_selected(class_name: String)
+signal job_class_selected(job_name: String)
 signal job_skill_pressed(skill_name: String)
 signal shop_buy_requested(item_name: String, price: int)
 signal inventory_item_activated(item_name: String)
@@ -181,11 +181,11 @@ func _rebuild_job_class_buttons() -> void:
 		if not (value is Dictionary):
 			continue
 		var profile: Dictionary = value as Dictionary
-		var class_name: String = str(profile.get("name", ""))
-		if class_name == "":
+		var job_name: String = str(profile.get("name", ""))
+		if job_name == "":
 			continue
 		var button: Button = Button.new()
-		button.text = class_name
+		button.text = job_name
 		button.custom_minimum_size = Vector2(98, 36)
 		button.toggle_mode = true
 		button.tooltip_text = "%s · 주무기 %s · 주스탯 %s" % [
@@ -193,9 +193,9 @@ func _rebuild_job_class_buttons() -> void:
 			str(profile.get("weapon", "")),
 			str(profile.get("primary_stat", ""))
 		]
-		button.pressed.connect(_emit_job_class.bind(class_name))
+		button.pressed.connect(_emit_job_class.bind(job_name))
 		grid.add_child(button)
-		job_class_buttons[class_name] = button
+		job_class_buttons[job_name] = button
 	_refresh_job_class_selection()
 
 func _refresh_job_class_selection() -> void:
@@ -205,17 +205,17 @@ func _refresh_job_class_selection() -> void:
 		if value is Button:
 			(value as Button).button_pressed = str(key) == current_job
 
-func _emit_job_class(class_name: String) -> void:
-	job_class_selected.emit(class_name)
+func _emit_job_class(job_name: String) -> void:
+	job_class_selected.emit(job_name)
 
 func _emit_job_skill(skill_name: String) -> void:
 	job_skill_pressed.emit(skill_name)
 
-func _job_profile(class_name: String) -> Dictionary:
+func _job_profile(job_name: String) -> Dictionary:
 	for value: Variant in job_classes:
 		if value is Dictionary:
 			var profile: Dictionary = value as Dictionary
-			if str(profile.get("name", "")) == class_name:
+			if str(profile.get("name", "")) == job_name:
 				return profile
 	return {}
 
