@@ -1,0 +1,163 @@
+name: V20.2 Monster Hit Step4 Test
+
+on:
+  push:
+    branches: [v20-2-monster-hit-step4]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-monster-hit-step4
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create monster hit test
+        shell: bash
+        run: |
+          cat > test_monster_hit_step4.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+
+              var low: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(low)
+              low.setup({"name":"고스트","lv":1,"hp":50,"atk":7,"def":0,"xp":35,"speed":64}, world.player, world, null)
+              check(low.melee_accuracy == 13, "low monster accuracy")
+              check(approx(world._monster_hit_chance(low), 0.708), "low monster vs default AC")
+
+              var mid: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(mid)
+              mid.setup({"name":"바포메트","lv":45,"hp":1700,"atk":92,"def":17,"xp":1350,"speed":66}, world.player, world, null)
+              check(mid.melee_accuracy == 78, "mid monster accuracy")
+              check(approx(world._monster_hit_chance(mid), 0.95), "mid monster chance caps 95")
+
+              var high: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(high)
+              high.setup({"name":"종말의 지배자","lv":194,"hp":50176,"atk":476,"def":68,"xp":10688,"speed":63}, world.player, world, null)
+              check(high.melee_accuracy == 323, "high monster accuracy")
+              check(approx(world._monster_hit_chance(high), 0.95), "high monster chance caps 95")
+
+              # Better AC must reduce incoming hit chance.
+              world.defense = 100
+              world.dex_stat = 12
+              check(world._effective_ac() == -100, "test AC -100")
+              check(approx(world._monster_hit_chance(low), 0.141), "low monster reduced by AC")
+              check(approx(world._monster_hit_chance(mid), 0.596), "mid monster reduced by AC")
+
+              world.defense = 220
+              check(world._effective_ac() == -220, "test AC -220")
+              check(approx(world._monster_hit_chance(low), 0.05), "incoming chance floors 5")
+
+              # Restore ordinary defense and verify both random outcomes occur.
+              world.defense = 19
+              world.dex_stat = 12
+              world.rng.seed = 424242
+              var hits: int = 0
+              var misses: int = 0
+              for _i: int in range(300):
+                  if world._roll_monster_hit(low):
+                      hits += 1
+                  else:
+                      misses += 1
+              check(hits > 180 and hits < 240, "low monster hit distribution plausible")
+              check(misses > 0, "monster can MISS")
+
+              # Callback: MISS leaves HP unchanged, HIT reduces HP.
+              world.hp = 1000
+              world.max_hp = 1000
+              world.defense = 220
+              world.rng.seed = 7
+              var hp_before_miss: int = world.hp
+              world._on_player_hit(low, low.attack_power)
+              check(world.hp == hp_before_miss, "MISS leaves player HP unchanged")
+
+              world.defense = 0
+              world.dex_stat = 10
+              low.melee_accuracy = 999
+              world.rng.seed = 7
+              var hp_before_hit: int = world.hp
+              world._on_player_hit(low, 20)
+              check(world.hp < hp_before_hit, "HIT reduces player HP")
+
+              # Step3 outgoing player hit-vs-AC remains intact.
+              world.level = 35
+              world.str_stat = 18
+              check(world._melee_accuracy_stat() == 63, "player melee accuracy regression")
+              check(low.armor_class == -11, "monster AC regression")
+              check(approx(world._melee_hit_chance(low), 0.95), "player outgoing hit regression")
+
+              # Player feedback methods exist and are callable.
+              world.player.show_miss()
+              world.player.show_received_damage(12)
+              await process_frame
+
+              if failures.is_empty():
+                  print("V20.2 MONSTER HIT STEP4 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run monster hit test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_monster_hit_step4.gd 2>&1 | tee /tmp/monsterhit.log
+          grep -q "V20.2 MONSTER HIT STEP4 PASS" /tmp/monsterhit.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/monsterhit.log; then
+            exit 1
+          fi
