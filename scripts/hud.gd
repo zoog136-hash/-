@@ -4,6 +4,7 @@ class_name TwilightHUD
 signal move_vector_changed(value: Vector2)
 signal attack_pressed
 signal bleed_skill_pressed
+signal combat_skill_pressed(skill_id: String)
 signal auto_pressed
 signal potion_pressed
 signal inventory_pressed
