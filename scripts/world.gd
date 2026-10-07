@@ -149,6 +149,7 @@ func _connect_signals() -> void:
 	player.attack_requested.connect(_attack)
 	player.auto_toggled.connect(_on_auto_toggled)
 	player.poison_tick.connect(_on_player_poison_tick)
+	player.bleed_tick.connect(_on_player_bleed_tick)
 	hud.move_vector_changed.connect(player.set_touch_vector)
 	hud.attack_pressed.connect(_attack)
 	hud.auto_pressed.connect(func() -> void: player.set_auto_enabled(not player.auto_enabled))
@@ -395,6 +396,63 @@ func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
 	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
+
+func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
+	if player.is_feared():
+		hud.show_message("공포 상태에서는 행동할 수 없습니다")
+		return false
+	if player.is_stunned():
+		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if player.is_silenced():
+		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if target == null or not is_instance_valid(target) or target.dead:
+		hud.show_message("출혈 대상이 없습니다")
+		return false
+	if mp < mp_cost:
+		hud.show_message("MP가 부족합니다")
+		return false
+	if player.global_position.distance_to(target.global_position) > 90.0:
+		hud.show_message("출혈 베기 사거리 밖입니다")
+		return false
+	mp = maxi(0, mp - mp_cost)
+	selected_monster = target
+	player.pulse_attack()
+	var hit_chance: float = _melee_hit_chance(target)
+	if not _roll_melee_hit(target):
+		target.show_miss()
+		hud.append_log("%s MISS · 근거리 명중 %d / AC %d / %.1f%%" % [
+			skill_name, _melee_accuracy_stat(), target.armor_class, hit_chance * 100.0
+		])
+		_update_hud()
+		_update_target_hud()
+		return false
+	var damage: int = maxi(1, power + _stat_step_bonus(str_stat, 10, 2.0) + rng.randi_range(-4, 6))
+	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
+	var critical: bool = rng.randf() < critical_chance
+	if critical:
+		damage = _critical_damage(damage)
+	target.take_damage(damage, critical)
+	if target.dead:
+		_update_hud()
+		_update_target_hud()
+		return false
+	var bleed_chance: float = _player_bleed_chance(target)
+	var bleeding: bool = rng.randf() < bleed_chance
+	if bleeding:
+		target.apply_bleed(bleed_duration, tick_damage, tick_interval)
+		hud.append_log("%s 성공 · %s %.1f초 출혈 · %d 피해/%.2f초 · 적중률 %.1f%%" % [
+			skill_name, target.monster_name, bleed_duration, tick_damage, tick_interval, bleed_chance * 100.0
+		])
+	else:
+		target.show_status_text("BLEED RESIST")
+		hud.append_log("%s 출혈 실패 · 적중 %d / 내성 %d / %.1f%%" % [
+			skill_name, _bleed_accuracy_stat(), target.bleed_resistance, bleed_chance * 100.0
+		])
+	_update_hud()
+	_update_target_hud()
+	return bleeding
 
 func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_duration: float = 6.0, tick_damage: int = 12, tick_interval: float = 1.0, skill_name: String = "포이즌") -> bool:
 	if player.is_feared():
@@ -868,9 +926,28 @@ func _on_player_poison_tick(damage_value: int) -> void:
 		mp = max_mp
 		gold = maxi(0, gold - 500)
 		player.clear_poison()
+		player.clear_bleed()
 		player.global_position = _spawn_position()
 		player.clear_click_path()
 		hud.show_message("독 피해로 사망 후 부활했습니다")
+	_update_hud()
+
+func _on_player_bleed_tick(damage_value: int) -> void:
+	if damage_value <= 0 or hp <= 0:
+		return
+	var bleed_damage: int = maxi(1, damage_value)
+	hp = maxi(0, hp - bleed_damage)
+	player.show_bleed_damage(bleed_damage)
+	hud.append_log("출혈 피해 %d" % bleed_damage)
+	if hp <= 0:
+		hp = _effective_max_hp()
+		mp = max_mp
+		gold = maxi(0, gold - 500)
+		player.clear_poison()
+		player.clear_bleed()
+		player.global_position = _spawn_position()
+		player.clear_click_path()
+		hud.show_message("출혈 피해로 사망 후 부활했습니다")
 	_update_hud()
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
@@ -1008,11 +1085,30 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			hud.append_log("%s 독 저항 성공 · 내성 %d · %.1f%%" % [
 				attacker.monster_name, _poison_resistance_stat(), poison_chance * 100.0
 			])
+	if hp > 0 and normalized_type == "melee" and attacker.bleed_duration > 0.0 and attacker.bleed_accuracy > 0 and attacker.bleed_tick_damage > 0:
+		var bleed_chance: float = _status_effect_chance(
+			attacker.bleed_accuracy,
+			attacker.monster_level,
+			_bleed_resistance_stat(),
+			level
+		)
+		if rng.randf() < bleed_chance:
+			player.apply_bleed(attacker.bleed_duration, attacker.bleed_tick_damage, attacker.bleed_tick_interval)
+			hud.append_log("%s 출혈 적중 · %.1f초 · %d 피해/%.2f초 · 내 출혈 내성 %d · %.1f%%" % [
+				attacker.monster_name, attacker.bleed_duration, attacker.bleed_tick_damage,
+				attacker.bleed_tick_interval, _bleed_resistance_stat(), bleed_chance * 100.0
+			])
+		else:
+			player.show_status_text("BLEED RESIST")
+			hud.append_log("%s 출혈 저항 성공 · 내성 %d · %.1f%%" % [
+				attacker.monster_name, _bleed_resistance_stat(), bleed_chance * 100.0
+			])
 	if hp <= 0:
 		hp = _effective_max_hp()
 		mp = max_mp
 		gold = maxi(0, gold - 500)
 		player.clear_poison()
+		player.clear_bleed()
 		player.global_position = _spawn_position()
 		player.clear_click_path()
 		hud.show_message("사망 후 부활했습니다")
@@ -1581,6 +1677,40 @@ func _player_poison_chance(target: TwilightMonster) -> float:
 		target.monster_level
 	)
 
+func _record_bleed_accuracy(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"bleed_accuracy",
+		record.get("bleedAccuracy", record.get("출혈 적중", record.get("출혈 적중률", 0)))
+	)))
+
+func _record_bleed_resistance(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"bleed_resistance",
+		record.get("bleedResistance", record.get("bleed_resist", record.get("출혈 내성", record.get("출혈 저항", 0))))
+	)))
+
+func _bleed_accuracy_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(str_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_bleed_accuracy(record)
+	return clampi(total, 0, 100)
+
+func _bleed_resistance_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_bleed_resistance(record)
+	return clampi(total, 0, 100)
+
+func _player_bleed_chance(target: TwilightMonster) -> float:
+	if target == null:
+		return 0.05
+	return _status_effect_chance(
+		_bleed_accuracy_stat(),
+		level,
+		target.bleed_resistance,
+		target.monster_level
+	)
+
 func _status_effect_chance(attacker_accuracy: int, attacker_level: int, defender_resistance: int, defender_level: int) -> float:
 	var chance_percent: float = 50.0 + float(attacker_accuracy - defender_resistance)
 	chance_percent += float(attacker_level - defender_level) * 0.5
@@ -1706,6 +1836,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"fear_resistance": _fear_resistance_stat(),
 		"poison_accuracy": _poison_accuracy_stat(),
 		"poison_resistance": _poison_resistance_stat(),
+		"bleed_accuracy": _bleed_accuracy_stat(),
+		"bleed_resistance": _bleed_resistance_stat(),
 		"ac": _effective_ac(),
 		"dg": _effective_dg(),
 		"er": _effective_er(),
