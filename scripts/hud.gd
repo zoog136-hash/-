@@ -379,7 +379,6 @@ func refresh_inventory(inventory: Dictionary) -> void:
 		if path != "" and ResourceLoader.exists(path):
 			use_button.icon = load(path) as Texture2D
 			use_button.expand_icon = false
-			use_button.icon_max_width = 36
 			use_button.add_theme_constant_override("icon_max_width", 36)
 		use_button.pressed.connect(_on_inventory_item_tapped.bind(item_name))
 		row.add_child(use_button)
