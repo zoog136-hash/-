@@ -148,6 +148,7 @@ func _load_data() -> void:
 func _connect_signals() -> void:
 	player.attack_requested.connect(_attack)
 	player.auto_toggled.connect(_on_auto_toggled)
+	player.poison_tick.connect(_on_player_poison_tick)
 	hud.move_vector_changed.connect(player.set_touch_vector)
 	hud.attack_pressed.connect(_attack)
 	hud.auto_pressed.connect(func() -> void: player.set_auto_enabled(not player.auto_enabled))
@@ -394,6 +395,53 @@ func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
 	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
+
+func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_duration: float = 6.0, tick_damage: int = 12, tick_interval: float = 1.0, skill_name: String = "포이즌") -> bool:
+	if player.is_feared():
+		hud.show_message("공포 상태에서는 행동할 수 없습니다")
+		return false
+	if player.is_stunned():
+		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if player.is_silenced():
+		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if target == null or not is_instance_valid(target) or target.dead:
+		hud.show_message("독 대상이 없습니다")
+		return false
+	if mp < mp_cost:
+		hud.show_message("MP가 부족합니다")
+		return false
+	if player.global_position.distance_to(target.global_position) > 300.0:
+		hud.show_message("포이즌 사거리 밖입니다")
+		return false
+	mp = maxi(0, mp - mp_cost)
+	selected_monster = target
+	player.pulse_attack()
+	var magic_hit_chance: float = _player_magic_hit_chance(target)
+	if rng.randf() >= magic_hit_chance:
+		target.show_miss()
+		hud.append_log("%s MISS · 마법 명중 %d / MR %d / %.1f%%" % [
+			skill_name, _magic_accuracy_stat(), target.magic_resistance, magic_hit_chance * 100.0
+		])
+		_update_hud()
+		_update_target_hud()
+		return false
+	var poison_chance: float = _player_poison_chance(target)
+	var poisoned: bool = rng.randf() < poison_chance
+	if poisoned:
+		target.apply_poison(poison_duration, tick_damage, tick_interval)
+		hud.append_log("%s 성공 · %s %.1f초 중독 · %d 피해/%.1f초 · 적중률 %.1f%%" % [
+			skill_name, target.monster_name, poison_duration, tick_damage, tick_interval, poison_chance * 100.0
+		])
+	else:
+		target.show_status_text("POISON RESIST")
+		hud.append_log("%s 실패 · 독 적중 %d / 내성 %d / %.1f%%" % [
+			skill_name, _poison_accuracy_stat(), target.poison_resistance, poison_chance * 100.0
+		])
+	_update_hud()
+	_update_target_hud()
+	return poisoned
 
 func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration: float = 2.5, skill_name: String = "피어") -> bool:
 	if player.is_stunned():
@@ -808,6 +856,23 @@ func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee
 func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee") -> bool:
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
+func _on_player_poison_tick(damage_value: int) -> void:
+	if damage_value <= 0 or hp <= 0:
+		return
+	var poison_damage: int = maxi(1, damage_value)
+	hp = maxi(0, hp - poison_damage)
+	player.show_poison_damage(poison_damage)
+	hud.append_log("독 피해 %d" % poison_damage)
+	if hp <= 0:
+		hp = _effective_max_hp()
+		mp = max_mp
+		gold = maxi(0, gold - 500)
+		player.clear_poison()
+		player.global_position = _spawn_position()
+		player.clear_click_path()
+		hud.show_message("독 피해로 사망 후 부활했습니다")
+	_update_hud()
+
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
 	if attacker == null or not is_instance_valid(attacker):
 		return
@@ -925,10 +990,29 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			hud.append_log("%s 공포 저항 성공 · 내성 %d · %.1f%%" % [
 				attacker.monster_name, _fear_resistance_stat(), fear_chance * 100.0
 			])
+	if hp > 0 and attacker.poison_duration > 0.0 and attacker.poison_accuracy > 0 and attacker.poison_tick_damage > 0:
+		var poison_chance: float = _status_effect_chance(
+			attacker.poison_accuracy,
+			attacker.monster_level,
+			_poison_resistance_stat(),
+			level
+		)
+		if rng.randf() < poison_chance:
+			player.apply_poison(attacker.poison_duration, attacker.poison_tick_damage, attacker.poison_tick_interval)
+			hud.append_log("%s 독 적중 · %.1f초 · %d 피해/%.1f초 · 내 독 내성 %d · %.1f%%" % [
+				attacker.monster_name, attacker.poison_duration, attacker.poison_tick_damage,
+				attacker.poison_tick_interval, _poison_resistance_stat(), poison_chance * 100.0
+			])
+		else:
+			player.show_status_text("POISON RESIST")
+			hud.append_log("%s 독 저항 성공 · 내성 %d · %.1f%%" % [
+				attacker.monster_name, _poison_resistance_stat(), poison_chance * 100.0
+			])
 	if hp <= 0:
 		hp = _effective_max_hp()
 		mp = max_mp
 		gold = maxi(0, gold - 500)
+		player.clear_poison()
 		player.global_position = _spawn_position()
 		player.clear_click_path()
 		hud.show_message("사망 후 부활했습니다")
@@ -1463,6 +1547,40 @@ func _player_fear_chance(target: TwilightMonster) -> float:
 		target.monster_level
 	)
 
+func _record_poison_accuracy(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"poison_accuracy",
+		record.get("poisonAccuracy", record.get("독 적중", record.get("중독 적중", 0)))
+	)))
+
+func _record_poison_resistance(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"poison_resistance",
+		record.get("poisonResistance", record.get("poison_resist", record.get("독 내성", record.get("중독 내성", 0))))
+	)))
+
+func _poison_accuracy_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_poison_accuracy(record)
+	return clampi(total, 0, 100)
+
+func _poison_resistance_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_poison_resistance(record)
+	return clampi(total, 0, 100)
+
+func _player_poison_chance(target: TwilightMonster) -> float:
+	if target == null:
+		return 0.05
+	return _status_effect_chance(
+		_poison_accuracy_stat(),
+		level,
+		target.poison_resistance,
+		target.monster_level
+	)
+
 func _status_effect_chance(attacker_accuracy: int, attacker_level: int, defender_resistance: int, defender_level: int) -> float:
 	var chance_percent: float = 50.0 + float(attacker_accuracy - defender_resistance)
 	chance_percent += float(attacker_level - defender_level) * 0.5
@@ -1586,6 +1704,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"hold_resistance": _hold_resistance_stat(),
 		"fear_accuracy": _fear_accuracy_stat(),
 		"fear_resistance": _fear_resistance_stat(),
+		"poison_accuracy": _poison_accuracy_stat(),
+		"poison_resistance": _poison_resistance_stat(),
 		"ac": _effective_ac(),
 		"dg": _effective_dg(),
 		"er": _effective_er(),
