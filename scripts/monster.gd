@@ -2,7 +2,7 @@ extends CharacterBody2D
 class_name TwilightMonster
 
 signal died(monster: TwilightMonster)
-signal player_hit(damage: int)
+signal player_hit(attacker: TwilightMonster, damage: int)
 signal selected(monster: TwilightMonster)
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -17,6 +17,7 @@ var armor_class: int = -10
 var hp: int = 100
 var max_hp: int = 100
 var attack_power: int = 8
+var melee_accuracy: int = 12
 var move_speed: float = 90.0
 var exp_reward: int = 25
 var gold_reward: int = 40
@@ -40,6 +41,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	max_hp = maxi(30, int(record.get("hp", record.get("HP", 100))))
 	hp = max_hp
 	attack_power = maxi(3, int(record.get("atk", record.get("attack", record.get("공격력", 8)))))
+	var default_accuracy: int = monster_level + 10 + int(round(float(attack_power) * 0.25))
+	melee_accuracy = maxi(1, int(record.get("accuracy", record.get("hit", record.get("명중", default_accuracy)))))
 	exp_reward = maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
 	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
@@ -74,7 +77,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		if attack_cooldown <= 0.0:
 			attack_cooldown = 1.25
-			player_hit.emit(attack_power)
+			player_hit.emit(self, attack_power)
 		return
 	if distance > 760.0:
 		velocity = Vector2.ZERO
