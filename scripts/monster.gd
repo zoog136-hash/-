@@ -11,6 +11,9 @@ signal selected(monster: TwilightMonster)
 @onready var hp_bar: ProgressBar = $HPBar
 
 var monster_name: String = "몬스터"
+var monster_level: int = 1
+var defense_value: int = 0
+var armor_class: int = -10
 var hp: int = 100
 var max_hp: int = 100
 var attack_power: int = 8
@@ -28,13 +31,19 @@ var dead: bool = false
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
 	monster_name = str(record.get("name", "몬스터"))
+	monster_level = maxi(1, int(record.get("lv", record.get("level", 1))))
+	defense_value = maxi(0, int(record.get("def", record.get("defense", record.get("방어력", 0)))))
+	var default_ac: int = -(10 + monster_level + defense_value * 2)
+	armor_class = int(record.get("ac", record.get("AC", default_ac)))
+	if armor_class > 0:
+		armor_class = -armor_class
 	max_hp = maxi(30, int(record.get("hp", record.get("HP", 100))))
 	hp = max_hp
-	attack_power = maxi(3, int(record.get("attack", record.get("공격력", 8))))
-	exp_reward = maxi(10, int(record.get("exp", record.get("경험치", int(float(max_hp) / 4.0)))))
+	attack_power = maxi(3, int(record.get("atk", record.get("attack", record.get("공격력", 8)))))
+	exp_reward = maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
 	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
-	move_speed = 70.0 + float(mini(70, int(float(max_hp) / 10.0)))
+	move_speed = float(record.get("speed", 70.0 + float(mini(70, int(float(max_hp) / 10.0)))))
 	target_player = player_ref
 	world_controller = world_ref
 	sprite.texture = texture
@@ -45,7 +54,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			var desired: float = 72.0 if largest > 100.0 else 56.0
 			var scale_value: float = desired / largest
 			sprite.scale = Vector2(scale_value, scale_value)
-	name_label.text = monster_name
+	name_label.text = "Lv.%d %s" % [monster_level, monster_name]
 	hp_bar.max_value = max_hp
 	hp_bar.value = hp
 	navigation_agent.path_desired_distance = 8.0
@@ -104,6 +113,25 @@ func take_damage(amount: int) -> void:
 	if hp <= 0:
 		dead = true
 		died.emit(self)
+
+func show_miss() -> void:
+	if dead:
+		return
+	var label: Label = Label.new()
+	label.text = "MISS"
+	label.position = Vector2(-36.0, -88.0)
+	label.add_theme_font_size_override("font_size", 19)
+	label.add_theme_color_override("font_color", Color(0.78, 0.86, 1.0, 1.0))
+	label.add_theme_color_override("font_outline_color", Color(0.04, 0.08, 0.14, 1.0))
+	label.add_theme_constant_override("outline_size", 4)
+	label.z_index = 30
+	add_child(label)
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(label, "position", label.position + Vector2(0.0, -30.0), 0.50)
+	tween.tween_property(label, "modulate:a", 0.0, 0.50)
+	tween.set_parallel(false)
+	tween.tween_callback(label.queue_free)
 
 func _show_damage_number(amount: int) -> void:
 	var label: Label = Label.new()
