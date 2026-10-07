@@ -138,12 +138,38 @@ func _load_data() -> void:
 	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
+	_merge_local_consumables_into_catalog()
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
 		catalog_image_index = image_index_value as Dictionary
 	var directional_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(DIRECTIONAL_PATH))
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
+
+func _merge_local_consumables_into_catalog() -> void:
+	var catalog_items_value: Variant = catalog_db.get("아이템", [])
+	if not (catalog_items_value is Array):
+		catalog_db["아이템"] = []
+	var catalog_items: Array = catalog_db.get("아이템", []) as Array
+	var seen_names: Dictionary = {}
+	for value: Variant in catalog_items:
+		if value is Dictionary:
+			var record: Dictionary = value as Dictionary
+			seen_names[str(record.get("name", ""))] = true
+
+	for value: Variant in item_db:
+		if not (value is Dictionary):
+			continue
+		var record: Dictionary = value as Dictionary
+		var slot: String = str(record.get("slot", "")).strip_edges().to_lower()
+		if slot != "consumable" and slot != "currency":
+			continue
+		var item_name: String = str(record.get("name", "")).strip_edges()
+		if item_name == "" or seen_names.has(item_name):
+			continue
+		catalog_items.append(record.duplicate(true))
+		seen_names[item_name] = true
+	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
 	player.attack_requested.connect(_attack)
