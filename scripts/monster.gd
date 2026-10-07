@@ -50,6 +50,13 @@ var poison_tick_damage: int = 0
 var poison_tick_interval: float = 1.0
 var poison_remaining: float = 0.0
 var poison_tick_clock: float = 0.0
+var bleed_accuracy: int = 0
+var bleed_resistance: int = 0
+var bleed_duration: float = 0.0
+var bleed_tick_damage: int = 0
+var bleed_tick_interval: float = 0.75
+var bleed_remaining: float = 0.0
+var bleed_tick_clock: float = 0.0
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
@@ -109,6 +116,12 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	poison_duration = maxf(0.0, float(record.get("poison_duration", record.get("독 지속시간", 0.0))))
 	poison_tick_damage = maxi(0, int(record.get("poison_tick_damage", record.get("독 피해", 0))))
 	poison_tick_interval = maxf(0.1, float(record.get("poison_tick_interval", record.get("독 주기", 1.0))))
+	var default_bleed_resistance: int = 5 + int(floor(float(monster_level) / 10.0))
+	bleed_accuracy = clampi(int(record.get("bleed_accuracy", record.get("출혈 적중", 0))), 0, 100)
+	bleed_resistance = clampi(int(record.get("bleed_resistance", record.get("bleed_resist", record.get("출혈 내성", default_bleed_resistance)))), 0, 100)
+	bleed_duration = maxf(0.0, float(record.get("bleed_duration", record.get("출혈 지속시간", 0.0))))
+	bleed_tick_damage = maxi(0, int(record.get("bleed_tick_damage", record.get("출혈 피해", 0))))
+	bleed_tick_interval = maxf(0.1, float(record.get("bleed_tick_interval", record.get("출혈 주기", 0.75))))
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
@@ -141,6 +154,7 @@ func _physics_process(delta: float) -> void:
 	_tick_hold(delta)
 	_tick_fear(delta)
 	_tick_poison(delta)
+	_tick_bleed(delta)
 	if dead:
 		velocity = Vector2.ZERO
 		return
@@ -241,6 +255,43 @@ func clear_poison() -> void:
 	poison_remaining = 0.0
 	poison_tick_clock = 0.0
 	poison_tick_damage = 0
+
+func _tick_bleed(delta: float) -> void:
+	if dead or bleed_remaining <= 0.0 or bleed_tick_damage <= 0:
+		return
+	var active_delta: float = minf(delta, bleed_remaining)
+	bleed_remaining = maxf(0.0, bleed_remaining - delta)
+	bleed_tick_clock -= active_delta
+	while bleed_tick_clock <= 0.0 and bleed_tick_damage > 0 and not dead:
+		take_damage(bleed_tick_damage, false)
+		bleed_tick_clock += bleed_tick_interval
+	if bleed_remaining <= 0.0 or dead:
+		bleed_tick_clock = 0.0
+		if not dead:
+			bleed_tick_damage = 0
+
+func is_bleeding() -> bool:
+	return bleed_remaining > 0.0 and bleed_tick_damage > 0 and not dead
+
+func apply_bleed(duration: float, damage: int, interval: float = 0.75) -> void:
+	if dead:
+		return
+	var safe_duration: float = maxf(0.0, duration)
+	var safe_interval: float = maxf(0.1, interval)
+	var was_bleeding: bool = is_bleeding()
+	bleed_remaining = maxf(bleed_remaining, safe_duration)
+	bleed_tick_damage = maxi(bleed_tick_damage, maxi(1, damage))
+	bleed_tick_interval = safe_interval
+	if not was_bleeding or bleed_tick_clock <= 0.0:
+		bleed_tick_clock = safe_interval
+	else:
+		bleed_tick_clock = minf(bleed_tick_clock, safe_interval)
+	show_status_text("BLEED")
+
+func clear_bleed() -> void:
+	bleed_remaining = 0.0
+	bleed_tick_clock = 0.0
+	bleed_tick_damage = 0
 
 func _tick_fear(delta: float) -> void:
 	fear_remaining = maxf(0.0, fear_remaining - delta)
