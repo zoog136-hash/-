@@ -1,0 +1,179 @@
+name: V20.2 DG ER Step6 Test
+
+on:
+  push:
+    branches: [v20-2-dg-er-step6]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-dg-er-step6
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create DG ER test
+        shell: bash
+        run: |
+          cat > test_dg_er_step6.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              # Direct formula isolation: same accuracy/AC, only DG/ER changes.
+              check(approx(world._physical_hit_chance(80, -60, 0), 0.89), "base physical chance")
+              check(approx(world._physical_hit_chance(80, -60, 10), 0.79), "DG/ER 10 subtracts 10 points")
+              check(approx(world._physical_hit_chance(80, -60, 20), 0.69), "DG/ER 20 subtracts 20 points")
+              check(approx(world._physical_hit_chance(1, -500, 999), 0.05), "hit floor 5")
+              check(approx(world._physical_hit_chance(999, 0, 0), 0.95), "hit cap 95")
+
+              # DEX-derived values.
+              world.dex_stat = 10
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              check(world._effective_dg() == 0, "DEX10 DG baseline")
+              check(world._effective_er() == 0, "DEX10 ER baseline")
+
+              world.dex_stat = 30
+              check(world._effective_dg() == 5, "DEX30 gives DG5")
+              check(world._effective_er() == 10, "DEX30 gives ER10")
+
+              # Equipment aliases stack.
+              world.dex_stat = 10
+              world.equipped_items["armor"] = {"name":"DG armor", "DG":4}
+              world.equipped_items["accessory"] = {"name":"ER ring", "er":7}
+              world.equipped_catalog["성물"] = {"name":"evasion relic", "근거리 회피력":3, "원거리 회피력":2}
+              check(world._effective_dg() == 7, "equipment DG aliases stack")
+              check(world._effective_er() == 9, "equipment ER aliases stack")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+
+              var melee: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(melee)
+              melee.setup({"name":"근거리 테스트","lv":20,"hp":100,"atk":40,"def":5,"xp":10,"speed":60}, world.player, world, null)
+              check(melee.attack_type == "melee", "legacy monster defaults melee")
+              check(melee.melee_accuracy == 40, "melee accuracy formula")
+
+              var ranged: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(ranged)
+              ranged.setup({
+                  "name":"원거리 테스트","lv":20,"hp":100,"atk":40,"def":5,"xp":10,"speed":60,
+                  "attack_type":"ranged","ranged_accuracy":55
+              }, world.player, world, null)
+              check(ranged.attack_type == "ranged", "ranged attack type")
+              check(ranged.ranged_accuracy == 55, "ranged accuracy key")
+              check(world._monster_accuracy_for_attack_type(ranged, "ranged") == 55, "ranged accuracy selected")
+              check(world._monster_accuracy_for_attack_type(melee, "melee") == 40, "melee accuracy selected")
+
+              # Same attacker accuracy: DG affects melee, ER affects ranged separately.
+              world.defense = 40
+              world.dex_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{"DG":10}, "accessory":{"ER":20}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              melee.melee_accuracy = 80
+              ranged.ranged_accuracy = 80
+              var melee_chance: float = world._monster_hit_chance(melee, "melee")
+              var ranged_chance: float = world._monster_hit_chance(ranged, "ranged")
+              check(approx(melee_chance, world._physical_hit_chance(80, world._effective_ac(), 10)), "melee uses DG")
+              check(approx(ranged_chance, world._physical_hit_chance(80, world._effective_ac(), 20)), "ranged uses ER")
+              check(ranged_chance < melee_chance, "higher ER lowers ranged chance more")
+
+              # Changing only ER must not change melee chance.
+              var melee_before: float = melee_chance
+              world.equipped_items["accessory"] = {"ER":40}
+              var melee_after: float = world._monster_hit_chance(melee, "melee")
+              var ranged_after: float = world._monster_hit_chance(ranged, "ranged")
+              check(approx(melee_before, melee_after), "ER does not affect melee")
+              check(ranged_after < ranged_chance, "ER lowers ranged only")
+
+              # Changing only DG must not change ranged chance.
+              var ranged_before_dg: float = ranged_after
+              world.equipped_items["armor"] = {"DG":30}
+              var ranged_after_dg: float = world._monster_hit_chance(ranged, "ranged")
+              check(approx(ranged_before_dg, ranged_after_dg), "DG does not affect ranged")
+
+              # Reduction remains independent.
+              world.equipped_items["weapon"] = {"damage_reduction":8}
+              check(world._physical_damage_after_reduction(30) == 22, "damage reduction preserved")
+              var chance_before_reduction: float = world._monster_hit_chance(melee, "melee")
+              world.equipped_items["weapon"] = {"damage_reduction":18}
+              check(approx(chance_before_reduction, world._monster_hit_chance(melee, "melee")), "reduction does not change hit chance")
+
+              # Attack signal uses the new type argument.
+              var signal_fired: bool = false
+              var signal_type: String = ""
+              ranged.player_hit.connect(func(_attacker: TwilightMonster, _damage: int, kind: String) -> void:
+                  signal_fired = true
+                  signal_type = kind
+              )
+              ranged.player_hit.emit(ranged, 12, ranged.attack_type)
+              check(signal_fired, "typed player_hit signal fires")
+              check(signal_type == "ranged", "signal carries ranged type")
+
+              if failures.is_empty():
+                  print("V20.2 DG ER STEP6 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run DG ER test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_dg_er_step6.gd 2>&1 | tee /tmp/dger.log
+          grep -q "V20.2 DG ER STEP6 PASS" /tmp/dger.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/dger.log; then
+            exit 1
+          fi
