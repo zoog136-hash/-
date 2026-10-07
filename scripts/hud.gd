@@ -19,6 +19,7 @@ signal load_pressed
 signal catalog_equip_requested(category: String, record: Dictionary)
 signal class_selected(index: int)
 signal stat_increase_requested(stat_name: String)
+signal shop_buy_requested(item_name: String, price: int)
 
 @onready var hp_bar: ProgressBar = $Root/TopLeft/HPBar
 @onready var mp_bar: ProgressBar = $Root/TopLeft/MPBar
@@ -66,6 +67,9 @@ var character_preview: TextureRect
 var character_info: RichTextLabel
 var stat_buttons: Dictionary = {}
 var character_state: Dictionary = {}
+var utility_panel: PanelContainer
+var utility_title: Label
+var utility_body: VBoxContainer
 
 const CLASS_NAMES: Array[String] = ["전사", "마법사", "궁수", "암살자"]
 const CLASS_SHEETS: Array[String] = [
@@ -95,12 +99,14 @@ func _ready() -> void:
 	$Root/MapPanel/MapMargin/MapVBox/CloseMap.pressed.connect(toggle_map)
 	_build_catalog_panel()
 	_build_character_panel()
+	_build_utility_panel()
 	target_panel.visible = false
 	inventory_panel.visible = false
 	map_panel.visible = false
 	menu_panel.visible = false
 	catalog_panel.visible = false
 	character_panel.visible = false
+	utility_panel.visible = false
 	_apply_theme()
 
 func _process(delta: float) -> void:
@@ -174,6 +180,8 @@ func _hide_aux_panels() -> void:
 		catalog_panel.visible = false
 	if character_panel != null:
 		character_panel.visible = false
+	if utility_panel != null:
+		utility_panel.visible = false
 
 func toggle_inventory() -> void:
 	var target: bool = not inventory_panel.visible
@@ -558,6 +566,110 @@ func open_character() -> void:
 	character_panel.visible = true
 	_refresh_character_panel()
 
+func _build_utility_panel() -> void:
+	utility_panel = PanelContainer.new()
+	utility_panel.name = "UtilityPanel"
+	utility_panel.set_anchors_preset(Control.PRESET_CENTER)
+	utility_panel.offset_left = -330.0
+	utility_panel.offset_top = -285.0
+	utility_panel.offset_right = 330.0
+	utility_panel.offset_bottom = 285.0
+	utility_panel.z_index = 135
+	utility_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	$Root.add_child(utility_panel)
+
+	var root: VBoxContainer = VBoxContainer.new()
+	root.add_theme_constant_override("separation", 10)
+	utility_panel.add_child(root)
+
+	utility_title = Label.new()
+	utility_title.text = "기능"
+	utility_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	utility_title.add_theme_font_size_override("font_size", 24)
+	root.add_child(utility_title)
+
+	var scroll: ScrollContainer = ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(620, 460)
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(scroll)
+
+	utility_body = VBoxContainer.new()
+	utility_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	utility_body.add_theme_constant_override("separation", 8)
+	scroll.add_child(utility_body)
+
+	var close: Button = Button.new()
+	close.text = "닫기"
+	close.custom_minimum_size = Vector2(0, 44)
+	close.pressed.connect(func() -> void: utility_panel.visible = false)
+	root.add_child(close)
+
+func _open_utility_panel(title_text: String) -> void:
+	_hide_aux_panels()
+	utility_title.text = title_text
+	_clear_children(utility_body)
+	utility_panel.visible = true
+
+func _utility_add_text(text_value: String) -> void:
+	var label: RichTextLabel = RichTextLabel.new()
+	label.bbcode_enabled = true
+	label.fit_content = true
+	label.scroll_active = false
+	label.custom_minimum_size = Vector2(590, 0)
+	label.add_theme_font_size_override("normal_font_size", 17)
+	label.text = text_value
+	utility_body.add_child(label)
+
+func _utility_add_action(label_text: String, action: Callable) -> void:
+	var button: Button = Button.new()
+	button.text = label_text
+	button.custom_minimum_size = Vector2(0, 48)
+	button.pressed.connect(action)
+	utility_body.add_child(button)
+
+func open_shop() -> void:
+	_open_utility_panel("상점")
+	_utility_add_text("[font_size=20][b]잡화 상점[/b][/font_size]\n보유 아데나: [color=#f2c66d]%d[/color]\n필요한 소모품을 구매할 수 있습니다." % int(character_state.get("gold", 0)))
+	for shop_data: Array in [
+		["HP 물약", 50],
+		["강력 HP 물약", 180],
+		["축복받은 HP 물약", 450],
+		["초록 잎", 100]
+	]:
+		var item_name: String = str(shop_data[0])
+		var price: int = int(shop_data[1])
+		_utility_add_action("%s  ·  %d 아데나  [구매]" % [item_name, price], _emit_shop_buy.bind(item_name, price))
+
+func _emit_shop_buy(item_name: String, price: int) -> void:
+	shop_buy_requested.emit(item_name, price)
+
+func open_skills() -> void:
+	_open_utility_panel("스킬")
+	_utility_add_text("[font_size=20][b]전투 스킬[/b][/font_size]\n\n공격 · 기본 근접 공격\n출혈 · 지속 출혈 피해\n스턴 · 일정 시간 행동 불가\n독 · 지속 독 피해\n침묵 · 마법 사용 방해\n홀드 · 이동 제한\n공포 · 강제 이탈\n마법 · 원거리 마법 공격\n\n하단 퀵슬롯에서 즉시 사용할 수 있습니다.")
+
+func open_quest_info() -> void:
+	_open_utility_panel("퀘스트")
+	var current: int = int(character_state.get("quest_kills", 0))
+	var goal: int = maxi(1, int(character_state.get("quest_goal", 9)))
+	_utility_add_text("[font_size=20][b]메인 퀘스트[/b][/font_size]\n몬스터의 세력 다툼\n\n몬스터 처치: [color=#f2c66d]%d / %d[/color]\n\n사냥으로 목표 수량을 채우면 진행도가 갱신됩니다." % [current, goal])
+
+func open_macro_info() -> void:
+	_open_utility_panel("매크로 / 자동사냥")
+	_utility_add_text("현재 로컬 자동사냥 기능을 제어합니다.\nAUTO를 켜면 도달 가능한 몬스터를 찾아 이동하고 공격합니다.")
+	_utility_add_action("AUTO 전환", func() -> void: auto_pressed.emit())
+
+func open_chat_info() -> void:
+	_open_utility_panel("채팅 / 기록")
+	_utility_add_text("이 프로젝트는 서버 없는 로컬 싱글플레이 게임입니다.\n외부 채팅 서버 대신 화면 전투 로그와 시스템 메시지를 사용합니다.")
+
+func open_settings_info() -> void:
+	_open_utility_panel("설정 / 관리")
+	_utility_add_text("게임 데이터 관리와 주요 화면을 바로 열 수 있습니다.")
+	_utility_add_action("게임 저장", func() -> void: save_pressed.emit())
+	_utility_add_action("게임 불러오기", func() -> void: load_pressed.emit())
+	_utility_add_action("월드맵 열기", func() -> void: map_pressed.emit())
+	_utility_add_action("캐릭터 / 스탯 열기", open_character)
+
 func _refresh_character_panel() -> void:
 	var available_points: int = maxi(0, int(character_state.get("stat_points", 0)))
 	for stat_key: Variant in stat_buttons.keys():
@@ -578,9 +690,9 @@ func _refresh_character_panel() -> void:
 	var transform_name: String = _equipped_name(equipped.get("변신", {}))
 	var doll_name: String = _equipped_name(equipped.get("마법인형", {}))
 	var relic_name: String = _equipped_name(equipped.get("성물", {}))
-	var weapon_name: String = _equipped_name(equipped_items.get("weapon", {}))
-	var armor_name: String = _equipped_name(equipped_items.get("armor", {}))
-	var accessory_name: String = _equipped_name(equipped_items.get("accessory", {}))
+	var weapon_name: String = _equipped_detail(equipped_items.get("weapon", {}))
+	var armor_name: String = _equipped_detail(equipped_items.get("armor", {}))
+	var accessory_name: String = _equipped_detail(equipped_items.get("accessory", {}))
 	var core_stats: String = "STR %d   DEX %d   CON %d\nINT %d   WIS %d   CHA %d" % [
 		int(character_state.get("str", 0)), int(character_state.get("dex", 0)), int(character_state.get("con", 0)),
 		int(character_state.get("int", 0)), int(character_state.get("wis", 0)), int(character_state.get("cha", 0))
@@ -612,6 +724,31 @@ func _equipped_name(value: Variant) -> String:
 		if not record.is_empty():
 			return str(record.get("name", "없음"))
 	return "없음"
+
+func _equipped_detail(value: Variant) -> String:
+	if not (value is Dictionary):
+		return "없음"
+	var record: Dictionary = value as Dictionary
+	if record.is_empty():
+		return "없음"
+	var parts: PackedStringArray = PackedStringArray()
+	parts.append(str(record.get("name", "장비")))
+	var grade: String = str(record.get("grade", "")).strip_edges()
+	if grade != "":
+		parts.append(grade)
+	var atk_value: int = int(record.get("atk", 0))
+	var def_value: int = int(record.get("def", 0))
+	var hit_value: int = int(record.get("hit", 0))
+	var hp_value: int = int(record.get("hpFlat", 0))
+	if atk_value != 0:
+		parts.append("공격 %+d" % atk_value)
+	if def_value != 0:
+		parts.append("방어 %+d" % def_value)
+	if hit_value != 0:
+		parts.append("명중 %+d" % hit_value)
+	if hp_value != 0:
+		parts.append("HP %+d" % hp_value)
+	return " · ".join(parts)
 
 func _emit_map_selected(map_id: String) -> void:
 	map_selected.emit(map_id)
