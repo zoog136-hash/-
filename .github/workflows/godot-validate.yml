@@ -1,0 +1,29 @@
+name: Godot Validate
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          ./Godot_v4.7.2-stable_linux.x86_64 --version
+
+      - name: Import and parse project
+        run: |
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit
+
+      - name: Boot main scene
+        run: |
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 30
