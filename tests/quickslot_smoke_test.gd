@@ -21,6 +21,8 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 
+	world.call("_on_job_class_selected", "기사")
+	await process_frame
 	world.call("_ensure_quickslots_seeded")
 	var quickslots_value: Variant = world.get("quickslots")
 	if not (quickslots_value is Array):
