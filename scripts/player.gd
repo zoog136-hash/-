@@ -32,6 +32,7 @@ var transform_active: bool = false
 var transform_bob_clock: float = 0.0
 var stun_remaining: float = 0.0
 var silence_remaining: float = 0.0
+var hold_remaining: float = 0.0
 var base_move_speed: float = 210.0
 
 func _ready() -> void:
@@ -47,6 +48,7 @@ func _physics_process(delta: float) -> void:
 	transform_bob_clock += delta
 	_tick_stun(delta)
 	_tick_silence(delta)
+	_tick_hold(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
@@ -58,6 +60,14 @@ func _physics_process(delta: float) -> void:
 		attack_requested.emit()
 	if Input.is_action_just_pressed("toggle_auto"):
 		set_auto_enabled(not auto_enabled)
+
+	if is_held():
+		velocity = Vector2.ZERO
+		touch_vector = Vector2.ZERO
+		clear_click_path()
+		move_and_slide()
+		_update_visual(delta)
+		return
 
 	if movement_locked:
 		velocity = Vector2.ZERO
@@ -286,6 +296,19 @@ func _show_combat_text(text_value: String, color_value: Color, start_position: V
 	tween.tween_property(label, "modulate:a", 0.0, 0.55)
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
+
+func _tick_hold(delta: float) -> void:
+	hold_remaining = maxf(0.0, hold_remaining - delta)
+
+func is_held() -> bool:
+	return hold_remaining > 0.0
+
+func apply_hold(duration: float) -> void:
+	hold_remaining = maxf(hold_remaining, maxf(0.0, duration))
+	velocity = Vector2.ZERO
+	touch_vector = Vector2.ZERO
+	clear_click_path()
+	show_status_text("HOLD")
 
 func _tick_silence(delta: float) -> void:
 	silence_remaining = maxf(0.0, silence_remaining - delta)
