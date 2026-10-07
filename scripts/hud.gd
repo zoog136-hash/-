@@ -41,8 +41,10 @@ signal self_mode_changed(enabled: bool)
 @onready var message_label: Label = $Root/MessageLabel
 @onready var log_label: RichTextLabel = $Root/LogPanel/LogLabel
 @onready var inventory_panel: PanelContainer = $Root/InventoryPanel
+@onready var inventory_scroll: ScrollContainer = $Root/InventoryPanel/InventoryMargin/InventoryVBox/InventoryScroll
 @onready var inventory_list: VBoxContainer = $Root/InventoryPanel/InventoryMargin/InventoryVBox/InventoryScroll/InventoryList
 @onready var map_panel: PanelContainer = $Root/MapPanel
+@onready var map_scroll: ScrollContainer = $Root/MapPanel/MapMargin/MapVBox/MapScroll
 @onready var map_list: VBoxContainer = $Root/MapPanel/MapMargin/MapVBox/MapScroll/MapList
 @onready var menu_panel: PanelContainer = $Root/MenuPanel
 @onready var joystick: TwilightVirtualJoystick = $Root/VirtualJoystick
@@ -91,7 +93,9 @@ var stat_buttons: Dictionary = {}
 var character_state: Dictionary = {}
 var utility_panel: PanelContainer
 var utility_title: Label
+var utility_scroll: ScrollContainer
 var utility_body: VBoxContainer
+var class_scroll: ScrollContainer
 var last_inventory_tap_item: String = ""
 var last_inventory_tap_ms: int = 0
 var enhancement_scroll_name: String = ""
@@ -101,6 +105,10 @@ var quickslot_entries: Array = []
 var job_classes: Array = []
 var job_skills: Array = []
 var job_class_buttons: Dictionary = {}
+var catalog_touch_active: bool = false
+var catalog_touch_dragged: bool = false
+var catalog_touch_start: Vector2 = Vector2.ZERO
+const CATALOG_TOUCH_DRAG_THRESHOLD: float = 10.0
 
 const CLASS_NAMES: Array[String] = ["전사", "마법사", "궁수", "암살자"]
 const EQUIPMENT_SLOT_DISPLAY: Array = [
@@ -140,6 +148,7 @@ func _ready() -> void:
 	_build_catalog_panel()
 	_build_character_panel()
 	_build_utility_panel()
+	_configure_touch_scrolling()
 	target_panel.visible = false
 	inventory_panel.visible = false
 	map_panel.visible = false
@@ -154,6 +163,47 @@ func _process(delta: float) -> void:
 		message_time -= delta
 		if message_time <= 0.0:
 			message_label.text = ""
+
+func _configure_scroll_container(scroll: ScrollContainer) -> void:
+	if scroll == null:
+		return
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.scroll_deadzone = 8
+	scroll.mouse_filter = Control.MOUSE_FILTER_STOP
+
+func _set_scroll_branch_mouse_pass(node: Node) -> void:
+	if node is Control:
+		var control: Control = node as Control
+		# Interactive children still receive taps/clicks, but PASS lets their drag
+		# events bubble up to the parent ScrollContainer on Android.
+		control.mouse_filter = Control.MOUSE_FILTER_PASS
+	for child: Node in node.get_children():
+		_set_scroll_branch_mouse_pass(child)
+
+func _on_scroll_content_child_entered(node: Node) -> void:
+	_set_scroll_branch_mouse_pass(node)
+
+func _wire_scroll_content(content: Control) -> void:
+	if content == null:
+		return
+	content.mouse_filter = Control.MOUSE_FILTER_PASS
+	if not content.child_entered_tree.is_connected(_on_scroll_content_child_entered):
+		content.child_entered_tree.connect(_on_scroll_content_child_entered)
+	for child: Node in content.get_children():
+		_set_scroll_branch_mouse_pass(child)
+
+func _configure_touch_scrolling() -> void:
+	_configure_scroll_container(inventory_scroll)
+	_configure_scroll_container(map_scroll)
+	_configure_scroll_container(utility_scroll)
+	_configure_scroll_container(class_scroll)
+	_wire_scroll_content(inventory_list)
+	_wire_scroll_content(map_list)
+	_wire_scroll_content(utility_body)
+	var class_grid: GridContainer = character_panel.find_child("JobClassGrid", true, false) as GridContainer
+	if class_grid != null:
+		_wire_scroll_content(class_grid)
 
 func _apply_theme() -> void:
 	var buttons: Array[Node] = get_tree().get_nodes_in_group("hud_button")
@@ -700,15 +750,38 @@ func _on_catalog_item_clicked(index: int, _at_position: Vector2, _mouse_button_i
 	_select_catalog_index(index)
 
 func _on_catalog_list_gui_input(event: InputEvent) -> void:
-	# Android does not always emit ItemList.item_selected when mouse emulation is disabled.
-	# Handle native touch explicitly so every visible row can be selected.
+	# On Android a touch-down must not be accepted immediately: doing so prevents
+	# ItemList from ever receiving the following drag. Select only on touch release
+	# when the gesture stayed below the drag threshold.
 	if event is InputEventScreenTouch:
 		var touch_event: InputEventScreenTouch = event
 		if touch_event.pressed:
+			catalog_touch_active = true
+			catalog_touch_dragged = false
+			catalog_touch_start = touch_event.position
+			return
+		if not catalog_touch_active:
+			return
+		var should_select: bool = not catalog_touch_dragged and catalog_touch_start.distance_to(touch_event.position) < CATALOG_TOUCH_DRAG_THRESHOLD
+		catalog_touch_active = false
+		catalog_touch_dragged = false
+		if should_select:
 			var touch_index: int = catalog_list.get_item_at_position(touch_event.position, true)
 			if touch_index >= 0:
 				_select_catalog_index(touch_index)
 				catalog_list.accept_event()
+	elif event is InputEventScreenDrag:
+		var drag_event: InputEventScreenDrag = event
+		if not catalog_touch_active:
+			catalog_touch_active = true
+			catalog_touch_start = drag_event.position - drag_event.relative
+		if not catalog_touch_dragged and catalog_touch_start.distance_to(drag_event.position) >= CATALOG_TOUCH_DRAG_THRESHOLD:
+			catalog_touch_dragged = true
+		if catalog_touch_dragged:
+			var scroll_bar: VScrollBar = catalog_list.get_v_scroll_bar()
+			if scroll_bar != null:
+				scroll_bar.value = clampf(scroll_bar.value - drag_event.relative.y, scroll_bar.min_value, scroll_bar.max_value)
+			catalog_list.accept_event()
 	elif event is InputEventMouseButton:
 		var mouse_event: InputEventMouseButton = event
 		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
@@ -794,7 +867,7 @@ func _build_character_panel() -> void:
 	job_title.add_theme_font_size_override("font_size", 16)
 	left.add_child(job_title)
 
-	var class_scroll: ScrollContainer = ScrollContainer.new()
+	class_scroll = ScrollContainer.new()
 	class_scroll.custom_minimum_size = Vector2(315, 166)
 	class_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	left.add_child(class_scroll)
@@ -864,15 +937,15 @@ func _build_utility_panel() -> void:
 	utility_title.add_theme_font_size_override("font_size", 24)
 	root.add_child(utility_title)
 
-	var scroll: ScrollContainer = ScrollContainer.new()
-	scroll.custom_minimum_size = Vector2(620, 460)
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	root.add_child(scroll)
+	utility_scroll = ScrollContainer.new()
+	utility_scroll.custom_minimum_size = Vector2(620, 460)
+	utility_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(utility_scroll)
 
 	utility_body = VBoxContainer.new()
 	utility_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	utility_body.add_theme_constant_override("separation", 8)
-	scroll.add_child(utility_body)
+	utility_scroll.add_child(utility_body)
 
 	var close: Button = Button.new()
 	close.text = "닫기"
