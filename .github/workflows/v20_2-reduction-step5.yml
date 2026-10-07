@@ -1,0 +1,143 @@
+name: V20.2 Reduction Step5 Test
+
+on:
+  push:
+    branches: [v20-2-reduction-step5]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-reduction-step5
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create reduction test
+        shell: bash
+        run: |
+          cat > test_reduction_step5.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              # No structured reduction in current catalog/equipment by default.
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              check(world._damage_reduction_stat() == 0, "default reduction zero")
+
+              # AC/defense must no longer reduce damage after a confirmed HIT.
+              world.defense = 0
+              var low_ac_damage: int = world._physical_damage_after_reduction(40)
+              world.defense = 220
+              var high_ac_damage: int = world._physical_damage_after_reduction(40)
+              check(low_ac_damage == 40, "raw hit damage with AC 0")
+              check(high_ac_damage == 40, "AC does not reduce confirmed hit damage")
+              check(world._effective_ac() <= -220, "defense still improves AC")
+
+              # Supported reduction keys all work.
+              world.equipped_items["armor"] = {"name":"테스트 갑옷", "damage_reduction":7, "def":20}
+              check(world._damage_reduction_stat() == 7, "damage_reduction key")
+              check(world._physical_damage_after_reduction(40) == 33, "damage reduction subtracts from hit")
+
+              world.equipped_items["accessory"] = {"name":"테스트 장신구", "reduction":3}
+              check(world._damage_reduction_stat() == 10, "multiple reductions stack")
+              check(world._physical_damage_after_reduction(40) == 30, "stacked reduction applies")
+
+              world.equipped_catalog["성물"] = {"name":"테스트 성물", "리덕션":5}
+              check(world._damage_reduction_stat() == 15, "Korean reduction key")
+              check(world._physical_damage_after_reduction(10) == 1, "minimum hit damage one")
+
+              # Snapshot/HUD receives the separated value.
+              var snapshot: Dictionary = world._character_stats_snapshot()
+              check(int(snapshot.get("damage_reduction", -1)) == 15, "snapshot reduction")
+              check(int(snapshot.get("ac", 0)) == world._effective_ac(), "snapshot AC remains separate")
+
+              # Incoming hit chance still depends on AC, not reduction.
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              var attacker: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(attacker)
+              attacker.setup({"name":"테스트 몬스터","lv":20,"hp":100,"atk":40,"def":5,"xp":10,"speed":60}, world.player, world, null)
+
+              world.defense = 20
+              var chance_ac20: float = world._monster_hit_chance(attacker)
+              world.defense = 100
+              var chance_ac100: float = world._monster_hit_chance(attacker)
+              check(chance_ac100 < chance_ac20, "better AC lowers hit chance")
+
+              var chance_before_reduction: float = world._monster_hit_chance(attacker)
+              world.equipped_items["weapon"] = {"name":"리덕션 무기", "damageReduction":20}
+              var chance_after_reduction: float = world._monster_hit_chance(attacker)
+              check(approx(chance_before_reduction, chance_after_reduction), "reduction does not affect hit chance")
+
+              # Step3 player hit-vs-monster AC regression.
+              world.level = 35
+              world.str_stat = 18
+              check(world._melee_accuracy_stat() == 63, "player accuracy preserved")
+              check(world._melee_hit_chance(attacker) >= 0.05, "outgoing hit system preserved")
+
+              if failures.is_empty():
+                  print("V20.2 REDUCTION STEP5 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run reduction separation test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_reduction_step5.gd 2>&1 | tee /tmp/reduction.log
+          grep -q "V20.2 REDUCTION STEP5 PASS" /tmp/reduction.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/reduction.log; then
+            exit 1
+          fi
