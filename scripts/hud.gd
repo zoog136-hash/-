@@ -580,7 +580,7 @@ func _refresh_character_panel() -> void:
 		int(character_state.get("str", 0)), int(character_state.get("dex", 0)), int(character_state.get("con", 0)),
 		int(character_state.get("int", 0)), int(character_state.get("wis", 0)), int(character_state.get("cha", 0))
 	]
-	var combat_stats: String = "근거리 대미지 %d   명중 %d   치명타 %d%%\n원거리 대미지 %d   명중 %d   치명타 %d%%\n마법 대미지 %d   명중 %d   치명타 %d%%\nAC %d   DG %d   ER %d   MR %d\n대미지 리덕션 %d   치명타 저항 %d%%\n스턴 적중 %d   스턴 내성 %d\n침묵 적중 %d   침묵 내성 %d" % [
+	var combat_stats: String = "근거리 대미지 %d   명중 %d   치명타 %d%%\n원거리 대미지 %d   명중 %d   치명타 %d%%\n마법 대미지 %d   명중 %d   치명타 %d%%\nAC %d   DG %d   ER %d   MR %d\n대미지 리덕션 %d   치명타 저항 %d%%\n스턴 적중 %d   스턴 내성 %d\n침묵 적중 %d   침묵 내성 %d\n홀드 적중 %d   홀드 내성 %d" % [
 		int(character_state.get("melee_damage", 0)), int(character_state.get("melee_accuracy", 0)), int(character_state.get("melee_critical", 0)),
 		int(character_state.get("ranged_damage", 0)), int(character_state.get("ranged_accuracy", 0)), int(character_state.get("ranged_critical", 0)),
 		int(character_state.get("magic_damage", 0)), int(character_state.get("magic_accuracy", 0)), int(character_state.get("magic_critical", 0)),
@@ -588,7 +588,8 @@ func _refresh_character_panel() -> void:
 		int(character_state.get("er", 0)), int(character_state.get("mr", 0)),
 		int(character_state.get("damage_reduction", 0)), int(character_state.get("critical_resistance", 0)),
 		int(character_state.get("stun_accuracy", 0)), int(character_state.get("stun_resistance", 0)),
-		int(character_state.get("silence_accuracy", 0)), int(character_state.get("silence_resistance", 0))
+		int(character_state.get("silence_accuracy", 0)), int(character_state.get("silence_resistance", 0)),
+		int(character_state.get("hold_accuracy", 0)), int(character_state.get("hold_resistance", 0))
 	]
 	character_info.text = "[font_size=22][b]%s[/b][/font_size]\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
 		CLASS_NAMES[class_index], int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
