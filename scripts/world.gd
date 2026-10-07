@@ -325,9 +325,6 @@ func _merge_local_consumables_into_catalog() -> void:
 		if not (value is Dictionary):
 			continue
 		var record: Dictionary = value as Dictionary
-		var slot: String = str(record.get("slot", "")).strip_edges().to_lower()
-		if slot != "consumable" and slot != "currency":
-			continue
 		var item_name: String = str(record.get("name", "")).strip_edges()
 		if item_name == "" or seen_names.has(item_name):
 			continue
@@ -1553,15 +1550,26 @@ func _scroll_mode(scroll_name: String) -> String:
 	return "normal"
 
 func _on_inventory_item_activated(item_name: String) -> void:
-	var kind: String = _scroll_kind(item_name)
-	if kind == "":
-		hud.show_message("이 아이템은 더블클릭 사용 대상이 아닙니다")
-		return
 	if int(inventory.get(item_name, 0)) <= 0:
-		hud.show_message("주문서가 없습니다")
+		hud.show_message("아이템이 없습니다")
 		return
-	var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name))
-	hud.call("open_enhancement", item_name, candidates)
+	var kind: String = _scroll_kind(item_name)
+	if kind != "":
+		var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name))
+		hud.call("open_enhancement", item_name, candidates)
+		return
+	var record: Dictionary = _find_catalog_item_record(item_name)
+	if record.is_empty():
+		hud.show_message("아이템 DB에서 정보를 찾을 수 없습니다")
+		return
+	var equip_slot: String = _equipment_slot_base(record)
+	if equip_slot != "":
+		_equip_or_acquire_item(record, false)
+		return
+	if str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0:
+		_use_healing_item(item_name, int(record.get("heal", 0)))
+		return
+	hud.show_message("이 아이템은 직접 사용할 수 없습니다")
 
 func _enhancement_kind_for_record(record: Dictionary) -> String:
 	if record.is_empty():
@@ -1642,13 +1650,16 @@ func _roll_enhancement_gain(mode: String, current_level: int) -> int:
 	return 1
 
 func _find_catalog_item_record(item_name: String) -> Dictionary:
-	var source: Array = catalog_db.get("아이템", []) as Array
-	for value: Variant in source:
-		if not (value is Dictionary):
+	var sources: Array = [catalog_db.get("아이템", []), item_db]
+	for source_value: Variant in sources:
+		if not (source_value is Array):
 			continue
-		var record: Dictionary = value as Dictionary
-		if str(record.get("name", "")) == item_name:
-			return record
+		for value: Variant in source_value as Array:
+			if not (value is Dictionary):
+				continue
+			var record: Dictionary = value as Dictionary
+			if str(record.get("name", "")) == item_name:
+				return record
 	return {}
 
 func _safe_enhancement_level(kind: String) -> int:
@@ -2593,9 +2604,10 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	hud.append_log("%s 적용 · %s" % [category, str(record.get("name", ""))])
 	_update_hud()
 
-func _equip_or_acquire_item(record: Dictionary) -> void:
+func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -> void:
 	var item_name: String = str(record.get("name", "아이템"))
-	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+	if add_to_inventory:
+		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
 	var source_slot: String = str(record.get("slot", ""))
 	if source_slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
