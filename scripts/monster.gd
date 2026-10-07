@@ -97,7 +97,7 @@ func _physics_process(delta: float) -> void:
 	if dead or not is_instance_valid(target_player):
 		velocity = Vector2.ZERO
 		return
-	stun_remaining = maxf(0.0, stun_remaining - delta)
+	_tick_stun(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -139,6 +139,9 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func _tick_stun(delta: float) -> void:
+	stun_remaining = maxf(0.0, stun_remaining - delta)
 
 func is_stunned() -> bool:
 	return stun_remaining > 0.0
