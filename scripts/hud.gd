@@ -225,7 +225,7 @@ func refresh_maps(maps: Array) -> void:
 		var button: Button = Button.new()
 		button.text = map_name
 		button.custom_minimum_size = Vector2(0, 44)
-		button.pressed.connect(func() -> void: map_selected.emit(map_id))
+		button.pressed.connect(_emit_map_selected.bind(map_id))
 		map_list.add_child(button)
 
 func open_catalog(category: String) -> void:
@@ -519,7 +519,7 @@ func _build_character_panel() -> void:
 		var class_button: Button = Button.new()
 		class_button.text = CLASS_NAMES[index]
 		class_button.custom_minimum_size = Vector2(152, 42)
-		class_button.pressed.connect(func() -> void: class_selected.emit(index))
+		class_button.pressed.connect(_emit_class_selected.bind(index))
 		class_grid.add_child(class_button)
 
 	var stat_title: Label = Label.new()
@@ -537,7 +537,7 @@ func _build_character_panel() -> void:
 		var stat_button: Button = Button.new()
 		stat_button.text = stat_name + " +"
 		stat_button.custom_minimum_size = Vector2(152, 40)
-		stat_button.pressed.connect(func() -> void: stat_increase_requested.emit(stat_name))
+		stat_button.pressed.connect(_emit_stat_increase.bind(stat_name))
 		stat_grid.add_child(stat_button)
 		stat_buttons[stat_name] = stat_button
 
@@ -613,6 +613,16 @@ func _equipped_name(value: Variant) -> String:
 			return str(record.get("name", "없음"))
 	return "없음"
 
+func _emit_map_selected(map_id: String) -> void:
+	map_selected.emit(map_id)
+
+func _emit_class_selected(index: int) -> void:
+	class_selected.emit(index)
+
+func _emit_stat_increase(stat_name: String) -> void:
+	stat_increase_requested.emit(stat_name)
+
 func _clear_children(node: Node) -> void:
 	for child: Node in node.get_children():
+		node.remove_child(child)
 		child.queue_free()
