@@ -117,7 +117,7 @@ func _physics_process(delta: float) -> void:
 	var ui_visible: bool = distance <= 420.0
 	name_label.visible = ui_visible
 	hp_bar.visible = ui_visible
-	var effective_attack_type: String = "melee" if attack_type == "magic" and is_silenced() else attack_type
+	var effective_attack_type: String = current_attack_type()
 	var attack_range: float = 280.0 if effective_attack_type == "magic" else (220.0 if effective_attack_type == "ranged" else 58.0)
 	if distance <= attack_range:
 		velocity = Vector2.ZERO
@@ -149,6 +149,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func current_attack_type() -> String:
+	if attack_type == "magic" and is_silenced():
+		return "melee"
+	return attack_type
 
 func _tick_silence(delta: float) -> void:
 	silence_remaining = maxf(0.0, silence_remaining - delta)
