@@ -62,6 +62,18 @@ var catalog_first_button: Button
 var catalog_prev_button: Button
 var catalog_next_button: Button
 var catalog_last_button: Button
+var item_filter_panel: VBoxContainer
+var item_slot_buttons: Dictionary = {}
+var item_grade_buttons: Dictionary = {}
+var item_slot_filter: String = "weapon"
+var item_grade_filter: String = "전체"
+
+const ITEM_SLOT_FILTERS: Array = [
+	["weapon", "무기"],
+	["armor", "방어구"],
+	["accessory", "악세사리"]
+]
+const ITEM_GRADE_ORDER: Array[String] = ["전체", "일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
 var character_panel: PanelContainer
 var character_preview: TextureRect
 var character_info: RichTextLabel
@@ -241,6 +253,13 @@ func open_catalog(category: String) -> void:
 	catalog_category = category
 	catalog_title.text = "%s 도감" % category
 	catalog_search.text = ""
+	if category == "아이템":
+		item_slot_filter = "weapon"
+		item_grade_filter = "전체"
+		item_filter_panel.visible = true
+		_refresh_item_filter_controls()
+	else:
+		item_filter_panel.visible = false
 	catalog_panel.visible = true
 	_refresh_catalog_list("")
 
@@ -274,6 +293,38 @@ func _build_catalog_panel() -> void:
 	catalog_count.custom_minimum_size = Vector2(170, 0)
 	top.add_child(catalog_count)
 	root.add_child(top)
+
+	item_filter_panel = VBoxContainer.new()
+	item_filter_panel.add_theme_constant_override("separation", 6)
+	root.add_child(item_filter_panel)
+
+	var slot_row: HBoxContainer = HBoxContainer.new()
+	slot_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	slot_row.add_theme_constant_override("separation", 6)
+	item_filter_panel.add_child(slot_row)
+	for slot_data: Array in ITEM_SLOT_FILTERS:
+		var slot_id: String = str(slot_data[0])
+		var slot_label: String = str(slot_data[1])
+		var slot_button: Button = Button.new()
+		slot_button.text = slot_label
+		slot_button.custom_minimum_size = Vector2(150, 40)
+		slot_button.toggle_mode = true
+		slot_button.pressed.connect(_set_item_slot_filter.bind(slot_id))
+		slot_row.add_child(slot_button)
+		item_slot_buttons[slot_id] = slot_button
+
+	var grade_row: HBoxContainer = HBoxContainer.new()
+	grade_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	grade_row.add_theme_constant_override("separation", 4)
+	item_filter_panel.add_child(grade_row)
+	for grade_name: String in ITEM_GRADE_ORDER:
+		var grade_button: Button = Button.new()
+		grade_button.text = grade_name
+		grade_button.custom_minimum_size = Vector2(90, 36)
+		grade_button.toggle_mode = true
+		grade_button.pressed.connect(_set_item_grade_filter.bind(grade_name))
+		grade_row.add_child(grade_button)
+		item_grade_buttons[grade_name] = grade_button
 
 	var body: HBoxContainer = HBoxContainer.new()
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -361,12 +412,58 @@ func _refresh_catalog_list(filter_text: String) -> void:
 		if not (value is Dictionary):
 			continue
 		var record: Dictionary = value as Dictionary
+		if catalog_category == "아이템":
+			if str(record.get("slot", "")) != item_slot_filter:
+				continue
+			if item_grade_filter != "전체" and str(record.get("grade", "")) != item_grade_filter:
+				continue
 		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", ""))).to_lower()
 		if query != "" and search_text.find(query) < 0:
 			continue
 		catalog_filtered_results.append(record)
 	catalog_page = 0
 	_apply_catalog_page()
+
+func _set_item_slot_filter(slot_id: String) -> void:
+	if item_slot_filter == slot_id:
+		_refresh_item_filter_controls()
+		return
+	item_slot_filter = slot_id
+	item_grade_filter = "전체"
+	_refresh_item_filter_controls()
+	_refresh_catalog_list(catalog_search.text)
+
+func _set_item_grade_filter(grade_name: String) -> void:
+	item_grade_filter = grade_name
+	_refresh_item_filter_controls()
+	_refresh_catalog_list(catalog_search.text)
+
+func _refresh_item_filter_controls() -> void:
+	for slot_key: Variant in item_slot_buttons.keys():
+		var slot_button_value: Variant = item_slot_buttons.get(slot_key)
+		if slot_button_value is Button:
+			var slot_button: Button = slot_button_value as Button
+			slot_button.button_pressed = str(slot_key) == item_slot_filter
+
+	var available_grades: Dictionary = {}
+	var source: Array = catalog_data.get("아이템", []) as Array
+	for value: Variant in source:
+		if not (value is Dictionary):
+			continue
+		var record: Dictionary = value as Dictionary
+		if str(record.get("slot", "")) != item_slot_filter:
+			continue
+		available_grades[str(record.get("grade", ""))] = true
+
+	if item_grade_filter != "전체" and not available_grades.has(item_grade_filter):
+		item_grade_filter = "전체"
+	for grade_key: Variant in item_grade_buttons.keys():
+		var grade_button_value: Variant = item_grade_buttons.get(grade_key)
+		if grade_button_value is Button:
+			var grade_button: Button = grade_button_value as Button
+			var grade_name: String = str(grade_key)
+			grade_button.visible = grade_name == "전체" or available_grades.has(grade_name)
+			grade_button.button_pressed = grade_name == item_grade_filter
 
 func _catalog_page_count() -> int:
 	if catalog_filtered_results.is_empty():
@@ -389,7 +486,11 @@ func _apply_catalog_page() -> void:
 		catalog_list.add_item("[%s] %s" % [str(record.get("grade", "")), str(record.get("name", ""))])
 	var visible_start: int = 0 if catalog_filtered_results.is_empty() else start_index + 1
 	var visible_end: int = 0 if catalog_filtered_results.is_empty() else end_index
-	catalog_count.text = "%d개 · %d-%d" % [catalog_filtered_results.size(), visible_start, visible_end]
+	var filter_label: String = ""
+	if catalog_category == "아이템":
+		var slot_label: String = _item_slot_label(item_slot_filter)
+		filter_label = "%s · %s · " % [slot_label, item_grade_filter]
+	catalog_count.text = "%s%d개 · %d-%d" % [filter_label, catalog_filtered_results.size(), visible_start, visible_end]
 	catalog_page_label.text = "%d / %d" % [catalog_page + 1, page_count]
 	catalog_first_button.disabled = catalog_page <= 0
 	catalog_prev_button.disabled = catalog_page <= 0
@@ -749,6 +850,12 @@ func _equipped_detail(value: Variant) -> String:
 	if hp_value != 0:
 		parts.append("HP %+d" % hp_value)
 	return " · ".join(parts)
+
+func _item_slot_label(slot_id: String) -> String:
+	for slot_data: Array in ITEM_SLOT_FILTERS:
+		if str(slot_data[0]) == slot_id:
+			return str(slot_data[1])
+	return slot_id
 
 func _emit_map_selected(map_id: String) -> void:
 	map_selected.emit(map_id)
