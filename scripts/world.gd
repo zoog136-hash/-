@@ -813,9 +813,12 @@ func _attack() -> void:
 	if player.is_stunned() or player.is_feared():
 		return
 	var target: TwilightMonster = selected_monster
-	if not is_instance_valid(target) or target.dead \
-	or player.global_position.distance_to(target.global_position) > 105.0 \
-	or not _has_line_of_sight_world(player.global_position, target.global_position):
+	var target_usable: bool = is_instance_valid(target) and not target.dead
+	if target_usable:
+		target_usable = player.global_position.distance_to(target.global_position) <= 105.0
+	if target_usable:
+		target_usable = _has_line_of_sight_world(player.global_position, target.global_position)
+	if not target_usable:
 		target = _nearest_visible_monster(105.0)
 	if target == null:
 		hud.show_message("공격 범위에 보이는 대상이 없습니다")
@@ -971,13 +974,18 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		selected_monster = null
 	if monster == auto_target:
 		auto_target = null
+	if monster.get_parent() == monsters_root:
+		monsters_root.remove_child(monster)
 	monster.queue_free()
 	_update_hud()
 	call_deferred("_ensure_monster_count")
 
 func _ensure_monster_count() -> void:
-	var alive: int = monsters_root.get_child_count()
-	if alive < 8:
+	var alive: int = 0
+	for child: Node in monsters_root.get_children():
+		if child is TwilightMonster and not (child as TwilightMonster).dead:
+			alive += 1
+	if alive < 9:
 		_spawn_monsters(9 - alive)
 
 func _roll_drop(monster: TwilightMonster) -> void:
