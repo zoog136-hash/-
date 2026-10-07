@@ -20,6 +20,8 @@ signal catalog_equip_requested(category: String, record: Dictionary)
 signal class_selected(index: int)
 signal stat_increase_requested(stat_name: String)
 signal shop_buy_requested(item_name: String, price: int)
+signal inventory_item_activated(item_name: String)
+signal enhancement_requested(scroll_name: String, target_name: String)
 
 @onready var hp_bar: ProgressBar = $Root/TopLeft/HPBar
 @onready var mp_bar: ProgressBar = $Root/TopLeft/MPBar
@@ -85,6 +87,11 @@ var character_state: Dictionary = {}
 var utility_panel: PanelContainer
 var utility_title: Label
 var utility_body: VBoxContainer
+var last_inventory_tap_item: String = ""
+var last_inventory_tap_ms: int = 0
+var enhancement_scroll_name: String = ""
+var enhancement_candidates: Array = []
+var enhancement_selected_index: int = -1
 
 const CLASS_NAMES: Array[String] = ["전사", "마법사", "궁수", "암살자"]
 const CLASS_SHEETS: Array[String] = [
@@ -220,22 +227,34 @@ func refresh_inventory(inventory: Dictionary) -> void:
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
 	for item_value: Variant in names:
 		var item_name: String = str(item_value)
-		var row: HBoxContainer = HBoxContainer.new()
-		row.custom_minimum_size = Vector2(0, 42)
-		var icon: TextureRect = TextureRect.new()
-		icon.custom_minimum_size = Vector2(36, 36)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var amount: int = int(inventory.get(item_name, 0))
+		if amount <= 0:
+			continue
+		var row: Button = Button.new()
+		row.custom_minimum_size = Vector2(0, 44)
+		row.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		row.text = "%s   x%d" % [item_name, amount]
+		row.tooltip_text = "빠르게 두 번 누르면 사용 / 강화"
+		row.add_theme_font_size_override("font_size", 17)
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var path: String = str(images.get(item_name, ""))
 		if path != "" and ResourceLoader.exists(path):
-			icon.texture = load(path) as Texture2D
-		row.add_child(icon)
-		var label: Label = Label.new()
-		label.text = "%s   x%d" % [item_name, int(inventory.get(item_name, 0))]
-		label.add_theme_font_size_override("font_size", 17)
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(label)
+			row.icon = load(path) as Texture2D
+			row.expand_icon = false
+		row.icon_max_width = 36
+		row.add_theme_constant_override("icon_max_width", 36)
+		row.pressed.connect(_on_inventory_item_tapped.bind(item_name))
 		inventory_list.add_child(row)
+
+func _on_inventory_item_tapped(item_name: String) -> void:
+	var now_ms: int = Time.get_ticks_msec()
+	if last_inventory_tap_item == item_name and now_ms - last_inventory_tap_ms <= 450:
+		last_inventory_tap_item = ""
+		last_inventory_tap_ms = 0
+		inventory_item_activated.emit(item_name)
+		return
+	last_inventory_tap_item = item_name
+	last_inventory_tap_ms = now_ms
 
 func refresh_maps(maps: Array) -> void:
 	_clear_children(map_list)
@@ -731,6 +750,62 @@ func _utility_add_action(label_text: String, action: Callable) -> void:
 	button.pressed.connect(action)
 	utility_body.add_child(button)
 
+func open_enhancement(scroll_name: String, candidates: Array) -> void:
+	enhancement_scroll_name = scroll_name
+	enhancement_candidates = candidates.duplicate(true)
+	enhancement_selected_index = 0 if enhancement_candidates.size() > 0 else -1
+	_open_utility_panel("장비 강화")
+	_render_enhancement_panel()
+
+func _render_enhancement_panel() -> void:
+	_clear_children(utility_body)
+	_utility_add_text("[font_size=20][b]%s[/b][/font_size]\n강화할 장비를 선택하세요. 강화 주문서는 시도 시 1장 소모됩니다." % enhancement_scroll_name)
+	if enhancement_candidates.is_empty():
+		_utility_add_text("[color=#d98b72]강화 가능한 장비가 없습니다.[/color]\n인벤토리 또는 장착 장비를 확인하세요.")
+		return
+
+	for index: int in range(enhancement_candidates.size()):
+		var data: Dictionary = enhancement_candidates[index] as Dictionary
+		var selected_mark: String = "▶ " if index == enhancement_selected_index else ""
+		var equipped_mark: String = " [장착]" if bool(data.get("equipped", false)) else ""
+		var button: Button = Button.new()
+		button.text = "%s%s%s  +%d" % [selected_mark, str(data.get("name", "")), equipped_mark, int(data.get("level", 0))]
+		button.custom_minimum_size = Vector2(0, 42)
+		button.pressed.connect(_select_enhancement_candidate.bind(index))
+		utility_body.add_child(button)
+
+	if enhancement_selected_index < 0 or enhancement_selected_index >= enhancement_candidates.size():
+		return
+	var selected: Dictionary = enhancement_candidates[enhancement_selected_index] as Dictionary
+	var safe_text: String = "안전강화 +%d" % int(selected.get("safe_level", 0))
+	if int(selected.get("safe_level", 0)) <= 0:
+		safe_text = "안전강화 없음"
+	var detail: String = "[b]%s +%d → +%d[/b]\n%s\n성공 [color=#7edb83]%.1f%%[/color]   유지 %.1f%%   소실 [color=#e86f61]%.1f%%[/color]\n성공 시: [color=#f2c66d]%s[/color]" % [
+		str(selected.get("name", "")),
+		int(selected.get("level", 0)),
+		int(selected.get("level", 0)) + 1,
+		safe_text,
+		float(selected.get("success_chance", 0.0)),
+		float(selected.get("no_change_chance", 0.0)),
+		float(selected.get("destroy_chance", 0.0)),
+		str(selected.get("bonus_text", "능력치 상승"))
+	]
+	_utility_add_text(detail)
+	var enhance_button: Button = Button.new()
+	enhance_button.text = "강화 시도"
+	enhance_button.custom_minimum_size = Vector2(0, 52)
+	enhance_button.pressed.connect(_emit_enhancement_requested.bind(str(selected.get("name", ""))))
+	utility_body.add_child(enhance_button)
+
+func _select_enhancement_candidate(index: int) -> void:
+	if index < 0 or index >= enhancement_candidates.size():
+		return
+	enhancement_selected_index = index
+	_render_enhancement_panel()
+
+func _emit_enhancement_requested(target_name: String) -> void:
+	enhancement_requested.emit(enhancement_scroll_name, target_name)
+
 func open_shop() -> void:
 	_open_utility_panel("상점")
 	_utility_add_text("[font_size=20][b]잡화 상점[/b][/font_size]\n보유 아데나: [color=#f2c66d]%d[/color]\n필요한 소모품을 구매할 수 있습니다." % int(character_state.get("gold", 0)))
@@ -738,7 +813,10 @@ func open_shop() -> void:
 		["HP 물약", 50],
 		["강력 HP 물약", 180],
 		["축복받은 HP 물약", 450],
-		["초록 잎", 100]
+		["초록 잎", 100],
+		["무기 마법 주문서 (각인)", 25000],
+		["갑옷 마법 주문서 (각인)", 18000],
+		["장신구 마법 주문서 (각인)", 35000]
 	]:
 		var item_name: String = str(shop_data[0])
 		var price: int = int(shop_data[1])
@@ -836,7 +914,11 @@ func _equipped_detail(value: Variant) -> String:
 	if record.is_empty():
 		return "없음"
 	var parts: PackedStringArray = PackedStringArray()
-	parts.append(str(record.get("name", "장비")))
+	var enhance_level: int = int(record.get("enhance_level", 0))
+	var display_name: String = str(record.get("name", "장비"))
+	if enhance_level > 0:
+		display_name = "+%d %s" % [enhance_level, display_name]
+	parts.append(display_name)
 	var grade: String = str(record.get("grade", "")).strip_edges()
 	if grade != "":
 		parts.append(grade)
