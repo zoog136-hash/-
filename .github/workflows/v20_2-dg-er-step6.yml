@@ -150,15 +150,14 @@ jobs:
               check(approx(chance_before_reduction, world._monster_hit_chance(melee, "melee")), "reduction does not change hit chance")
 
               # Attack signal uses the new type argument.
-              var signal_fired: bool = false
-              var signal_type: String = ""
+              var signal_state: Dictionary = {"fired": false, "type": ""}
               ranged.player_hit.connect(func(_attacker: TwilightMonster, _damage: int, kind: String) -> void:
-                  signal_fired = true
-                  signal_type = kind
+                  signal_state["fired"] = true
+                  signal_state["type"] = kind
               )
               ranged.player_hit.emit(ranged, 12, ranged.attack_type)
-              check(signal_fired, "typed player_hit signal fires")
-              check(signal_type == "ranged", "signal carries ranged type")
+              check(bool(signal_state["fired"]), "typed player_hit signal fires")
+              check(str(signal_state["type"]) == "ranged", "signal carries ranged type")
 
               if failures.is_empty():
                   print("V20.2 DG ER STEP6 PASS")
