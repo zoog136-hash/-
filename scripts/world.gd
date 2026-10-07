@@ -29,6 +29,8 @@ var skills_db: Array = []
 var job_classes: Array = []
 var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
+var active_item_buffs: Dictionary = {}
+var item_use_cooldowns: Dictionary = {}
 var quickslots: Array = []
 var self_mode_enabled: bool = false
 var auto_buff_check_timer: float = 0.0
@@ -176,6 +178,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
+	_tick_item_buffs(delta)
 	_run_auto_buff_quickslots(delta)
 	save_timer += delta
 	if save_timer >= 30.0:
@@ -1342,6 +1345,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
+	reduced = _pve_damage_after_item_buffs(reduced)
 	hp = maxi(0, hp - reduced)
 	player.show_received_damage(reduced, critical)
 	if normalized_type == "magic":
@@ -1566,10 +1570,167 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if equip_slot != "":
 		_equip_or_acquire_item(record, false)
 		return
+	if _is_timed_buff_item(record):
+		_use_timed_item_buff(record)
+		return
 	if str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0:
 		_use_healing_item(item_name, int(record.get("heal", 0)))
 		return
 	hud.show_message("이 아이템은 직접 사용할 수 없습니다")
+
+func _first_number(text: String) -> int:
+	var digits: String = ""
+	for index: int in range(text.length()):
+		var ch: String = text.substr(index, 1)
+		if ch >= "0" and ch <= "9":
+			digits += ch
+		elif digits != "":
+			break
+	return int(digits) if digits != "" else 0
+
+func _description_time_seconds(desc: String, label: String) -> float:
+	for raw_segment: String in desc.split("·"):
+		var segment: String = raw_segment.strip_edges()
+		if not segment.begins_with(label):
+			continue
+		var tail: String = segment.trim_prefix(label).strip_edges()
+		var amount: int = _first_number(tail)
+		if amount <= 0:
+			return 0.0
+		if tail.find("시간") >= 0:
+			return float(amount * 3600)
+		if tail.find("분") >= 0:
+			return float(amount * 60)
+		return float(amount)
+	return 0.0
+
+func _timed_item_buff_from_record(record: Dictionary) -> Dictionary:
+	var desc: String = str(record.get("desc", "")).strip_edges()
+	var duration: float = _description_time_seconds(desc, "지속 시간")
+	if duration <= 0.0:
+		return {}
+	var buff: Dictionary = {"remaining":duration, "duration":duration, "desc":desc}
+	var cooldown: float = _description_time_seconds(desc, "쿨타임")
+	if cooldown > 0.0:
+		buff["cooldown"] = cooldown
+	for raw_segment: String in desc.split("·"):
+		var segment: String = raw_segment.strip_edges()
+		var value: int = _first_number(segment)
+		if value <= 0:
+			continue
+		if segment.begins_with("Max HP"):
+			buff["hp_flat"] = value
+		elif segment.begins_with("스턴 내성"):
+			buff["stun_resistance"] = value
+		elif segment.begins_with("PVE 대미지 리덕션"):
+			buff["pve_damage_reduction"] = value
+		elif segment.begins_with("PVP 대미지 리덕션"):
+			buff["pvp_damage_reduction"] = value
+		elif segment.begins_with("PVE 대미지 감소"):
+			buff["pve_damage_reduction_pct"] = value
+		elif segment.begins_with("PVP 대미지 감소"):
+			buff["pvp_damage_reduction_pct"] = value
+		elif segment.begins_with("대미지 리덕션"):
+			buff["damage_reduction"] = value
+		elif segment.begins_with("근거리 대미지"):
+			buff["melee_damage"] = value
+		elif segment.begins_with("원거리 대미지"):
+			buff["ranged_damage"] = value
+		elif segment.begins_with("SP"):
+			buff["sp"] = value
+		elif segment.begins_with("근거리 명중"):
+			buff["melee_accuracy"] = value
+		elif segment.begins_with("원거리 명중"):
+			buff["ranged_accuracy"] = value
+		elif segment.begins_with("마법 명중"):
+			buff["magic_accuracy"] = value
+		elif segment.begins_with("공격 속도"):
+			buff["attack_speed"] = value
+		elif segment.begins_with("이동 속도"):
+			buff["move_speed"] = value
+	return buff
+
+func _is_timed_buff_item(record: Dictionary) -> bool:
+	return not _timed_item_buff_from_record(record).is_empty()
+
+func _active_item_buff_total(key: String) -> int:
+	var total: int = 0
+	for value: Variant in active_item_buffs.values():
+		if value is Dictionary:
+			total += int((value as Dictionary).get(key, 0))
+	return total
+
+func _format_seconds_short(seconds: float) -> String:
+	var whole: int = maxi(0, int(ceil(seconds)))
+	if whole >= 3600:
+		return "%d시간 %d분" % [whole / 3600, (whole % 3600) / 60]
+	if whole >= 60:
+		return "%d분 %d초" % [whole / 60, whole % 60]
+	return "%d초" % whole
+
+func _use_timed_item_buff(record: Dictionary) -> bool:
+	var item_name: String = str(record.get("name", ""))
+	var buff: Dictionary = _timed_item_buff_from_record(record)
+	if item_name == "" or buff.is_empty():
+		return false
+	if int(inventory.get(item_name, 0)) <= 0:
+		hud.show_message("%s이(가) 없습니다" % item_name)
+		return false
+	var cooldown_left: float = float(item_use_cooldowns.get(item_name, 0.0))
+	if cooldown_left > 0.0:
+		hud.show_message("%s 재사용 대기 %s" % [item_name, _format_seconds_short(cooldown_left)])
+		return false
+	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
+	active_item_buffs[item_name] = buff
+	var cooldown: float = float(buff.get("cooldown", 0.0))
+	if cooldown > 0.0:
+		item_use_cooldowns[item_name] = cooldown
+	hp = mini(hp, _effective_max_hp())
+	hud.refresh_inventory(inventory)
+	hud.show_message("%s 사용 · %s" % [item_name, _format_seconds_short(float(buff.get("duration", 0.0)))])
+	hud.append_log("%s 버프 활성화 · %s" % [item_name, str(record.get("desc", ""))])
+	_update_hud()
+	return true
+
+func _tick_item_buffs(delta: float) -> void:
+	var changed: bool = false
+	var expired: Array[String] = []
+	for key_value: Variant in active_item_buffs.keys():
+		var key: String = str(key_value)
+		var value: Variant = active_item_buffs.get(key, {})
+		if not (value is Dictionary):
+			expired.append(key)
+			continue
+		var buff: Dictionary = value as Dictionary
+		buff["remaining"] = maxf(0.0, float(buff.get("remaining", 0.0)) - delta)
+		active_item_buffs[key] = buff
+		if float(buff.get("remaining", 0.0)) <= 0.0:
+			expired.append(key)
+	for key: String in expired:
+		active_item_buffs.erase(key)
+		changed = true
+		hud.append_log("%s 버프 종료" % key)
+	var cooldown_finished: Array[String] = []
+	for key_value: Variant in item_use_cooldowns.keys():
+		var key: String = str(key_value)
+		var left: float = maxf(0.0, float(item_use_cooldowns.get(key, 0.0)) - delta)
+		if left <= 0.0:
+			cooldown_finished.append(key)
+		else:
+			item_use_cooldowns[key] = left
+	for key: String in cooldown_finished:
+		item_use_cooldowns.erase(key)
+	if changed:
+		hp = mini(hp, _effective_max_hp())
+		_refresh_speed_modifiers()
+		_update_hud()
+
+func _combined_active_buffs() -> Dictionary:
+	var result: Dictionary = active_skill_buffs.duplicate(true)
+	for key_value: Variant in active_item_buffs.keys():
+		var key: String = str(key_value)
+		result[key] = active_item_buffs[key]
+	return result
 
 func _enhancement_kind_for_record(record: Dictionary) -> String:
 	if record.is_empty():
@@ -1903,6 +2064,9 @@ func _use_quick_item(item_name: String) -> void:
 	if record.is_empty():
 		hud.show_message("아이템 DB에서 정보를 찾을 수 없습니다")
 		return
+	if _is_timed_buff_item(record):
+		_use_timed_item_buff(record)
+		return
 	if str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0:
 		_use_healing_item(item_name, int(record.get("heal", 0)))
 		return
@@ -1976,7 +2140,7 @@ func _update_hud() -> void:
 	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
 	if hud.has_method("set_quickslot_state"):
-		hud.call("set_quickslot_state", quickslots, inventory, active_skill_buffs, self_mode_enabled)
+		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
 		hud.call("set_quickslot_entries", quickslots)
 
@@ -2006,6 +2170,8 @@ func _save_game(quiet: bool) -> void:
 		"job_class": job_class,
 		"quickslots": quickslots,
 		"self_mode_enabled": self_mode_enabled,
+		"active_item_buffs": active_item_buffs,
+		"item_use_cooldowns": item_use_cooldowns,
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
@@ -2064,6 +2230,10 @@ func _load_game(quiet: bool) -> void:
 	if quickslots_value is Array:
 		quickslots = quickslots_value as Array
 	self_mode_enabled = bool(data.get("self_mode_enabled", self_mode_enabled))
+	var item_buffs_value: Variant = data.get("active_item_buffs", {})
+	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
+	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
+	item_use_cooldowns = item_cooldowns_value as Dictionary if item_cooldowns_value is Dictionary else {}
 	_normalize_quickslots()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
@@ -2281,7 +2451,7 @@ func _update_job_skillbar() -> void:
 	if hud.has_method("set_job_skillbar"):
 		hud.call("set_job_skillbar", _quickbar_job_skills())
 	if hud.has_method("set_quickslot_state"):
-		hud.call("set_quickslot_state", quickslots, inventory, active_skill_buffs, self_mode_enabled)
+		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
 
 func _normalize_quickslots() -> void:
 	while quickslots.size() < 8:
@@ -2358,14 +2528,13 @@ func _use_quickslot_item(item_name: String) -> void:
 		hud.show_message("%s이(가) 없습니다" % item_name)
 		_update_hud()
 		return
-	match item_name:
-		"HP 물약", "강력 HP 물약", "축복받은 HP 물약":
-			_use_quick_item(item_name)
-		_:
-			if _scroll_kind(item_name) != "":
-				_on_inventory_item_activated(item_name)
-			else:
-				hud.show_message("아직 직접 사용 효과가 없는 소모품입니다")
+	var record: Dictionary = _find_catalog_item_record(item_name)
+	if _scroll_kind(item_name) != "":
+		_on_inventory_item_activated(item_name)
+	elif not record.is_empty() and (_is_timed_buff_item(record) or str(record.get("slot", "")) == "consumable"):
+		_use_quick_item(item_name)
+	else:
+		hud.show_message("DB 설명에 직접 사용 효과가 없는 아이템입니다")
 
 func _on_self_mode_changed(enabled: bool) -> void:
 	self_mode_enabled = enabled
@@ -3081,7 +3250,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _ranged_normal_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0)
+	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0) + _active_item_buff_total("ranged_damage")
 
 func _record_move_speed_multiplier(record: Dictionary) -> float:
 	var value: float = float(record.get("speed", 1.0))
@@ -3099,12 +3268,14 @@ func _effective_move_speed_multiplier() -> float:
 	var multiplier: float = 1.0
 	for record: Dictionary in _all_equipped_records():
 		multiplier *= _record_move_speed_multiplier(record)
+	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
 	return clampf(multiplier, 0.5, 2.5)
 
 func _effective_attack_speed_bonus_percent() -> float:
 	var total: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
+	total += float(_active_item_buff_total("attack_speed"))
 	return maxf(0.0, total)
 
 func _effective_attack_speed_multiplier() -> float:
@@ -3125,22 +3296,22 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(str_stat, 10, 2.0)
+	return _effective_attack() + _stat_step_bonus(str_stat, 10, 2.0) + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
-	return level + str_stat + 10 + _equipment_enhancement_level("weapon")
+	return level + str_stat + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return attack_power + _stat_step_bonus(dex_stat, 10, 2.0) + _equipment_enhancement_level("weapon")
+	return attack_power + _stat_step_bonus(dex_stat, 10, 2.0) + _equipment_enhancement_level("weapon") + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
-	return level + dex_stat + 5 + _equipment_enhancement_level("weapon")
+	return level + dex_stat + 5 + _equipment_enhancement_level("weapon") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(int_stat, 8, 2.0)
+	return 5 + _stat_step_bonus(int_stat, 8, 2.0) + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
-	return level + int_stat
+	return level + int_stat + _active_item_buff_total("magic_accuracy")
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -3200,6 +3371,7 @@ func _stun_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
+	total += _active_item_buff_total("stun_resistance")
 	return clampi(total, 0, 100)
 
 func _record_silence_accuracy(record: Dictionary) -> int:
@@ -3463,7 +3635,15 @@ func _damage_reduction_stat() -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_damage_reduction(record)
+	total += _active_item_buff_total("damage_reduction")
 	return maxi(0, total)
+
+func _pve_damage_after_item_buffs(raw_damage: int) -> int:
+	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction"))
+	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct"), 0, 90)
+	if percent > 0:
+		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
+	return reduced
 
 func _physical_damage_after_reduction(raw_damage: int) -> int:
 	return maxi(1, raw_damage - _damage_reduction_stat())
@@ -3540,6 +3720,7 @@ func _effective_max_hp() -> int:
 		percent_bonus += float(record.get("hpPct", 0.0))
 	flat_bonus += float(_equipment_enhancement_max(ACCESSORY_EQUIPMENT_SLOTS) * 20)
 	flat_bonus += float(_active_skill_buff_total("hp"))
+	flat_bonus += float(_active_item_buff_total("hp_flat"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
 func _experience_multiplier() -> float:
