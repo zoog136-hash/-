@@ -6,6 +6,7 @@ signal quickslot_requested(item_name: String)
 
 const GOLD := Color(0.82, 0.68, 0.40, 1.0)
 const GOLD_BRIGHT := Color(0.98, 0.81, 0.42, 1.0)
+const GOLD_SOFT := Color(0.68, 0.55, 0.32, 1.0)
 const TEXT := Color(0.94, 0.90, 0.82, 1.0)
 const TEXT_DIM := Color(0.68, 0.66, 0.60, 1.0)
 const PANEL := Color(0.023, 0.025, 0.028, 0.97)
@@ -304,13 +305,13 @@ func _refresh_inventory_grid() -> void:
 		button.add_theme_font_size_override("font_size", 11)
 		button.add_theme_color_override("font_color", TEXT)
 		button.add_theme_stylebox_override("normal", _slot_style(item_name == selected_item))
-		button.add_theme_stylebox_override("hover", _style(Color(0.095,0.083,0.052,1), GOLD_SOFT(), 2, 1))
+		button.add_theme_stylebox_override("hover", _style(Color(0.095,0.083,0.052,1), GOLD_SOFT, 2, 1))
 		button.add_theme_stylebox_override("pressed", _style(Color(0.14,0.105,0.05,1), GOLD_BRIGHT, 2, 2))
 		var path := str(images.get(item_name, ""))
 		if path != "" and ResourceLoader.exists(path):
 			button.icon = load(path) as Texture2D
 			button.expand_icon = true
-			button.icon_max_width = 42
+			button.add_theme_constant_override("icon_max_width", 42)
 		button.pressed.connect(_select_item.bind(item_name))
 		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		item_grid.add_child(button)
@@ -327,9 +328,6 @@ func _refresh_inventory_grid() -> void:
 		empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		empty.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		item_grid.add_child(empty)
-
-func GOLD_SOFT() -> Color:
-	return Color(0.68, 0.55, 0.32, 1.0)
 
 func _slot_style(selected: bool) -> StyleBoxFlat:
 	if selected:
