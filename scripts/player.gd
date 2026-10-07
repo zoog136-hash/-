@@ -3,6 +3,7 @@ class_name TwilightPlayer
 
 signal attack_requested
 signal auto_toggled(enabled: bool)
+signal poison_tick(damage: int)
 
 @export var move_speed: float = 210.0
 @export var click_move_speed: float = 225.0
@@ -36,6 +37,10 @@ var hold_remaining: float = 0.0
 var fear_remaining: float = 0.0
 var fear_source_position: Vector2 = Vector2.ZERO
 var fear_move_multiplier: float = 0.82
+var poison_remaining: float = 0.0
+var poison_tick_interval: float = 1.0
+var poison_tick_clock: float = 0.0
+var poison_tick_damage: int = 0
 var base_move_speed: float = 210.0
 
 func _ready() -> void:
@@ -53,6 +58,7 @@ func _physics_process(delta: float) -> void:
 	_tick_silence(delta)
 	_tick_hold(delta)
 	_tick_fear(delta)
+	_tick_poison(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
@@ -309,6 +315,43 @@ func _show_combat_text(text_value: String, color_value: Color, start_position: V
 	tween.tween_property(label, "modulate:a", 0.0, 0.55)
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
+
+func _tick_poison(delta: float) -> void:
+	if poison_remaining <= 0.0 or poison_tick_damage <= 0:
+		return
+	var active_delta: float = minf(delta, poison_remaining)
+	poison_remaining = maxf(0.0, poison_remaining - delta)
+	poison_tick_clock -= active_delta
+	while poison_tick_clock <= 0.0 and poison_tick_damage > 0:
+		poison_tick.emit(poison_tick_damage)
+		poison_tick_clock += poison_tick_interval
+	if poison_remaining <= 0.0:
+		poison_tick_clock = 0.0
+		poison_tick_damage = 0
+
+func is_poisoned() -> bool:
+	return poison_remaining > 0.0 and poison_tick_damage > 0
+
+func apply_poison(duration: float, damage: int, interval: float = 1.0) -> void:
+	var safe_duration: float = maxf(0.0, duration)
+	var safe_interval: float = maxf(0.1, interval)
+	var was_poisoned: bool = is_poisoned()
+	poison_remaining = maxf(poison_remaining, safe_duration)
+	poison_tick_damage = maxi(poison_tick_damage, maxi(1, damage))
+	poison_tick_interval = safe_interval
+	if not was_poisoned or poison_tick_clock <= 0.0:
+		poison_tick_clock = safe_interval
+	else:
+		poison_tick_clock = minf(poison_tick_clock, safe_interval)
+	show_status_text("POISON")
+
+func clear_poison() -> void:
+	poison_remaining = 0.0
+	poison_tick_clock = 0.0
+	poison_tick_damage = 0
+
+func show_poison_damage(amount: int) -> void:
+	_show_combat_text("POISON " + str(amount), Color(0.48, 0.92, 0.38, 1.0), Vector2(-54.0, -118.0))
 
 func _tick_fear(delta: float) -> void:
 	fear_remaining = maxf(0.0, fear_remaining - delta)
