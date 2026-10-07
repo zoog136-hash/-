@@ -19,6 +19,7 @@ var v20_target_name: Label
 var v20_target_hp: ProgressBar
 var v20_target_panel: PanelContainer
 var v20_status_name: Label
+var v20_skill_container: HBoxContainer
 
 const V20_CLASS_SHEETS: Array[String] = [
 	"res://assets/sprites/classes/warrior.png",
@@ -516,39 +517,16 @@ func _build_v20_bottom_bar() -> void:
 		button.pressed.connect(_show_named_system_message.bind(str(data[1])))
 		sys.add_child(button)
 
-	# Skill quick slots. Keep combat skills here; potion/AUTO already have
-	# dedicated controls elsewhere in the HUD.
+	# Job skill quick slots.
 	var skill_panel: PanelContainer = PanelContainer.new()
 	skill_panel.add_theme_stylebox_override("panel", _panel_style(0.86, 5))
 	skill_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_place(skill_panel, 446.0, 637.0, 892.0, 716.0)
 	v20_layer.add_child(skill_panel)
-	var skills: HBoxContainer = HBoxContainer.new()
-	skills.add_theme_constant_override("separation", 5)
-	skill_panel.add_child(skills)
-	var skill_defs: Array = [
-		["res://assets/ui/attack.png", "공격", "attack"],
-		["res://assets/ui/fire.png", "출혈", "bleed"],
-		["res://assets/ui/energy.png", "스턴", "stun"],
-		["res://assets/ui/rune.png", "독", "poison"],
-		["res://assets/ui/wind.png", "침묵", "silence"],
-		["res://assets/ui/heal.png", "홀드", "hold"],
-		["res://assets/ui/eye.png", "공포", "fear"],
-		["res://assets/ui/skill.png", "마법", "magic"]
-	]
-	for skill_data: Array in skill_defs:
-		var slot: Button = Button.new()
-		var skill_id: String = str(skill_data[2])
-		slot.custom_minimum_size = Vector2(50.0, 66.0)
-		slot.text = str(skill_data[1])
-		slot.tooltip_text = str(skill_data[1])
-		slot.icon = _load_texture(str(skill_data[0]))
-		slot.expand_icon = true
-		slot.add_theme_font_size_override("font_size", 10)
-		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
-		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		slot.pressed.connect(_emit_combat_skill.bind(skill_id))
-		skills.add_child(slot)
+	v20_skill_container = HBoxContainer.new()
+	v20_skill_container.add_theme_constant_override("separation", 5)
+	skill_panel.add_child(v20_skill_container)
+	set_job_skillbar([])
 
 	# Consumable quick slots bottom-right.
 	var item_panel: PanelContainer = PanelContainer.new()
@@ -624,6 +602,51 @@ func _show_named_system_message(label_text: String) -> void:
 		_:
 			show_message("%s 기능" % label_text)
 
+func set_job_skillbar(skills_value: Array) -> void:
+	if v20_skill_container == null:
+		return
+	_clear_children(v20_skill_container)
+	if skills_value.is_empty():
+		var attack_slot: Button = Button.new()
+		attack_slot.custom_minimum_size = Vector2(50.0, 66.0)
+		attack_slot.text = "공격"
+		attack_slot.icon = _load_texture("res://assets/ui/attack.png")
+		attack_slot.expand_icon = true
+		attack_slot.add_theme_font_size_override("font_size", 10)
+		attack_slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
+		attack_slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
+		attack_slot.pressed.connect(func() -> void: attack_pressed.emit())
+		v20_skill_container.add_child(attack_slot)
+		return
+	for index: int in range(mini(8, skills_value.size())):
+		var value: Variant = skills_value[index]
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		var skill_name: String = str(skill.get("name", "스킬"))
+		var slot: Button = Button.new()
+		slot.custom_minimum_size = Vector2(50.0, 66.0)
+		slot.text = skill_name.left(4)
+		slot.tooltip_text = "%s · %s · MP %d" % [skill_name, str(skill.get("type", "")), int(skill.get("mp", 0))]
+		slot.icon = _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
+		slot.expand_icon = true
+		slot.add_theme_font_size_override("font_size", 9)
+		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
+		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
+		slot.pressed.connect(_emit_job_skill.bind(skill_name))
+		v20_skill_container.add_child(slot)
+
+func _skill_icon(effect: String, type_text: String) -> Texture2D:
+	if effect == "heal":
+		return _load_texture("res://assets/ui/heal.png")
+	if effect == "damage":
+		return _load_texture("res://assets/ui/attack.png")
+	if effect.find("Buff") >= 0 or type_text == "버프":
+		return _load_texture("res://assets/ui/rune.png")
+	if effect == "teleport" or type_text == "이동":
+		return _load_texture("res://assets/ui/wind.png")
+	return _load_texture("res://assets/ui/skill.png")
+
 func _emit_combat_skill(skill_id: String) -> void:
 	combat_skill_pressed.emit(skill_id)
 
@@ -664,8 +687,16 @@ func clear_target() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
-	var class_index_value: int = clampi(int(value.get("class_index", 0)), 0, 3)
-	_update_v20_portrait(class_index_value)
+	var job_image_path: String = str(value.get("job_image_path", ""))
+	if job_image_path != "" and ResourceLoader.exists(job_image_path):
+		var job_texture: Texture2D = load(job_image_path) as Texture2D
+		if job_texture != null and v20_portrait != null:
+			v20_portrait.texture = job_texture
+	else:
+		var class_index_value: int = clampi(int(value.get("class_index", 0)), 0, 3)
+		_update_v20_portrait(class_index_value)
+	if v20_status_name != null:
+		v20_status_name.text = "황혼의 기사 · %s" % str(value.get("job_class", "기사"))
 	if v20_stat_text != null:
 		var stat_points_value: int = maxi(0, int(value.get("stat_points", 0)))
 		v20_stat_text.text = "⚔ %d   ◎ %d   AC %d   MR %d%s" % [
