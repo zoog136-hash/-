@@ -129,7 +129,7 @@ jobs:
               doomed.died.connect(func(_m: TwilightMonster) -> void:
                   death_state["count"] = int(death_state["count"]) + 1
               )
-              doomed.apply_poison(2.0, 25, 1.0)
+              doomed.apply_poison(2.0, 35, 1.0)
               doomed._tick_poison(1.0)
               check(doomed.dead, "poison can kill monster")
               check(int(death_state["count"]) == 1, "poison death emits died")
