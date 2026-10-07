@@ -2234,7 +2234,8 @@ func _load_game(quiet: bool) -> void:
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
 	item_use_cooldowns = item_cooldowns_value as Dictionary if item_cooldowns_value is Dictionary else {}
-	_normalize_quickslots()
+	_sanitize_quickslots_for_current_job()
+	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
 	var equipped_value: Variant = data.get("equipped_catalog", equipped_catalog)
@@ -2387,6 +2388,8 @@ func _on_job_class_selected(job_name: String) -> void:
 		_apply_transform_visual(record)
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
+	_prune_active_skill_buffs_for_current_job()
+	_sanitize_quickslots_for_current_job()
 	_refresh_speed_modifiers()
 	_update_job_skillbar()
 	hud.show_message("직업 변경: %s" % job_class)
@@ -2455,6 +2458,50 @@ func _update_job_skillbar() -> void:
 	if hud.has_method("set_quickslot_state"):
 		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
 
+func _sanitize_quickslots_for_current_job() -> bool:
+	_normalize_quickslots()
+	var changed: bool = false
+	for index: int in range(quickslots.size()):
+		var value: Variant = quickslots[index]
+		if not (value is Dictionary):
+			quickslots[index] = {}
+			changed = true
+			continue
+		var entry: Dictionary = value as Dictionary
+		if entry.is_empty() or str(entry.get("kind", "")) != "skill":
+			continue
+		var skill_name: String = str(entry.get("id", ""))
+		var skill: Dictionary = _skill_record(skill_name)
+		if skill.is_empty() or _is_passive_skill(skill):
+			quickslots[index] = {}
+			changed = true
+			continue
+		var skill_class: String = str(skill.get("class", "공용"))
+		if skill_class != "공용" and skill_class != job_class:
+			quickslots[index] = {}
+			changed = true
+	return changed
+
+func _prune_active_skill_buffs_for_current_job() -> bool:
+	var changed: bool = false
+	var remove_names: Array[String] = []
+	for key_value: Variant in active_skill_buffs.keys():
+		var skill_name: String = str(key_value)
+		var skill: Dictionary = _skill_record(skill_name)
+		if skill.is_empty() or _is_passive_skill(skill):
+			remove_names.append(skill_name)
+			continue
+		var skill_class: String = str(skill.get("class", "공용"))
+		if skill_class != "공용" and skill_class != job_class:
+			remove_names.append(skill_name)
+	for skill_name: String in remove_names:
+		active_skill_buffs.erase(skill_name)
+		changed = true
+	if changed:
+		hp = mini(hp, _effective_max_hp())
+		_refresh_speed_modifiers()
+	return changed
+
 func _normalize_quickslots() -> void:
 	while quickslots.size() < 8:
 		quickslots.append({})
@@ -2462,7 +2509,7 @@ func _normalize_quickslots() -> void:
 		quickslots.pop_back()
 
 func _ensure_quickslots_seeded() -> void:
-	_normalize_quickslots()
+	_sanitize_quickslots_for_current_job()
 	var has_any: bool = false
 	for value: Variant in quickslots:
 		if value is Dictionary and not (value as Dictionary).is_empty():

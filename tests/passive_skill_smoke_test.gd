@@ -77,6 +77,41 @@ func _run() -> void:
 	if active_skill.is_empty() or bool(world.call("_is_passive_skill", active_skill)):
 		_fail("에너지 볼트 should remain active")
 
+	# Old saves can contain a skill that later became passive, or skills from another job.
+	world.call("_on_job_class_selected", "요정")
+	world.set("quickslots", [
+		{"kind":"skill","id":"멘탈 포커스"},
+		{"kind":"skill","id":"기사의 수호 5"},
+		{"kind":"skill","id":"에너지 볼트"},
+		{"kind":"item","id":"HP 물약"},
+		{}, {}, {}, {}
+	])
+	world.call("_sanitize_quickslots_for_current_job")
+	var cleaned: Array = world.get("quickslots") as Array
+	if not (cleaned[0] as Dictionary).is_empty():
+		_fail("legacy passive quickslot was not cleared")
+	if not (cleaned[1] as Dictionary).is_empty():
+		_fail("wrong-job active skill quickslot was not cleared")
+	if str((cleaned[2] as Dictionary).get("id","")) != "에너지 볼트":
+		_fail("valid common active skill was incorrectly cleared")
+	if str((cleaned[3] as Dictionary).get("id","")) != "HP 물약":
+		_fail("item quickslot was incorrectly cleared")
+
+	# Active buffs from the previous class must not leak after a class change.
+	world.set("active_skill_buffs", {
+		"기사의 수호 5":{"remaining":60.0,"def":6},
+		"실드":{"remaining":60.0,"def":3},
+		"멘탈 포커스":{"remaining":60.0,"atk":4}
+	})
+	world.call("_prune_active_skill_buffs_for_current_job")
+	var pruned_buffs: Dictionary = world.get("active_skill_buffs") as Dictionary
+	if pruned_buffs.has("기사의 수호 5"):
+		_fail("previous-job active buff leaked into new class")
+	if pruned_buffs.has("멘탈 포커스"):
+		_fail("passive skill remained in active buff dictionary")
+	if not pruned_buffs.has("실드"):
+		_fail("valid common active buff was incorrectly removed")
+
 	world.queue_free()
 	await process_frame
 	_finish()
