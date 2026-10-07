@@ -2501,6 +2501,7 @@ func _prune_active_skill_buffs_for_current_job() -> bool:
 		changed = true
 	if changed:
 		hp = mini(hp, _effective_max_hp())
+		player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 		_refresh_speed_modifiers()
 	return changed
 

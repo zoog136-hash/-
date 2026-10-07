@@ -115,6 +115,15 @@ func _run() -> void:
 	if not pruned_buffs.has("실드"):
 		_fail("valid common active buff was incorrectly removed")
 
+	# Removing a previous-class speed buff must also reset the runtime speed multiplier.
+	world.call("_on_job_class_selected", "기사")
+	world.set("active_skill_buffs", {"기사의 가속 7":{"remaining":60.0,"speed":1.115}})
+	var speed_player: Node = world.get("player") as Node
+	speed_player.call("set_skill_speed_multiplier", 1.115)
+	world.call("_on_job_class_selected", "요정")
+	if abs(float(speed_player.get("skill_speed_multiplier")) - 1.0) > 0.001:
+		_fail("class change removed speed buff data but left player runtime speed active")
+
 	# Restored active speed buffs must re-apply their runtime multiplier after load.
 	world.set("active_skill_buffs", {"헤이스트":{"remaining":120.0,"speed":1.15}})
 	var player_node: Node = world.get("player") as Node
