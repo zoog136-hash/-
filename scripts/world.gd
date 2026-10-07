@@ -176,6 +176,10 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	active_map = maps_by_id[map_id] as Dictionary
 	tile_size = int(active_map.get("tile_size_world", 32))
 	world_size = Vector2(float(int(active_map.get("width", 1)) * tile_size), float(int(active_map.get("height", 1)) * tile_size))
+	player.camera.limit_left = 0
+	player.camera.limit_top = 0
+	player.camera.limit_right = maxi(1, int(world_size.x))
+	player.camera.limit_bottom = maxi(1, int(world_size.y))
 	_clear_monsters()
 	_clear_drops()
 	_build_astar()
@@ -184,6 +188,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	_apply_map_background()
 	if not keep_position or not _is_walkable_world(player.global_position):
 		player.global_position = _spawn_position()
+	player.camera.reset_smoothing()
 	player.clear_click_path()
 	selected_monster = null
 	auto_target = null
@@ -1000,6 +1005,7 @@ func _respawn_player(message_text: String) -> void:
 	gold = maxi(0, gold - 500)
 	player.clear_status_effects()
 	player.global_position = _spawn_position()
+	player.camera.reset_smoothing()
 	selected_monster = null
 	auto_target = null
 	hud.clear_target()
@@ -1278,6 +1284,7 @@ func _return_to_spawn() -> void:
 	player.set_auto_enabled(false)
 	player.clear_click_path()
 	player.global_position = _spawn_position()
+	player.camera.reset_smoothing()
 	selected_monster = null
 	auto_target = null
 	hud.clear_target()
@@ -1410,6 +1417,7 @@ func _load_game(quiet: bool) -> void:
 			var saved_position: Vector2 = Vector2(float(position_array[0]), float(position_array[1]))
 			if _is_walkable_world(saved_position):
 				player.global_position = saved_position
+				player.camera.reset_smoothing()
 	_update_hud()
 	if not quiet:
 		hud.show_message("불러오기 완료")
