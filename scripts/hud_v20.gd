@@ -20,6 +20,8 @@ var v20_target_hp: ProgressBar
 var v20_target_panel: PanelContainer
 var v20_status_name: Label
 var v20_skill_container: HBoxContainer
+var v20_self_button: Button
+var v20_quickslot_buttons: Array[Button] = []
 
 const V20_CLASS_SHEETS: Array[String] = [
 	"res://assets/sprites/classes/warrior.png",
@@ -420,16 +422,19 @@ func _build_v20_target() -> void:
 	map_panel_small.add_child(v20_map_name)
 
 func _build_v20_right_controls() -> void:
-	var self_button: Button = Button.new()
-	self_button.text = "SELF"
-	self_button.add_theme_font_size_override("font_size", 16)
-	self_button.add_theme_color_override("font_color", Color(0.94, 0.90, 0.82, 1.0))
-	self_button.add_theme_stylebox_override("normal", _round_button_style(0.68, 38, Color(0.75, 0.72, 0.61, 0.9)))
-	self_button.add_theme_stylebox_override("pressed", _round_button_style(0.92, 38, Color(0.96, 0.82, 0.45, 1.0)))
-	_place(self_button, 1035.0, 367.0, 1109.0, 441.0)
-	self_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	self_button.pressed.connect(func() -> void: show_message("SELF 대상"))
-	v20_layer.add_child(self_button)
+	v20_self_button = Button.new()
+	v20_self_button.text = "SELF"
+	v20_self_button.toggle_mode = true
+	v20_self_button.button_pressed = false
+	v20_self_button.tooltip_text = "ON: 수동 SELF 모드 / OFF: 퀵슬롯 버프 자동 재사용"
+	v20_self_button.add_theme_font_size_override("font_size", 16)
+	v20_self_button.add_theme_color_override("font_color", Color(0.94, 0.90, 0.82, 1.0))
+	v20_self_button.add_theme_stylebox_override("normal", _round_button_style(0.68, 38, Color(0.75, 0.72, 0.61, 0.9)))
+	v20_self_button.add_theme_stylebox_override("pressed", _round_button_style(0.92, 38, Color(0.96, 0.82, 0.45, 1.0)))
+	_place(v20_self_button, 1035.0, 367.0, 1109.0, 441.0)
+	v20_self_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	v20_self_button.pressed.connect(_toggle_self_mode)
+	v20_layer.add_child(v20_self_button)
 
 	var target_button: Button = Button.new()
 	target_button.text = "대상"
@@ -469,12 +474,23 @@ func _build_v20_right_controls() -> void:
 	attack.pressed.connect(func() -> void: attack_pressed.emit())
 	v20_layer.add_child(attack)
 
+func _toggle_self_mode() -> void:
+	if v20_self_button == null:
+		return
+	var enabled: bool = v20_self_button.button_pressed
+	v20_self_button.text = "SELF\nON" if enabled else "SELF"
+	self_mode_changed.emit(enabled)
+	if enabled:
+		show_message("SELF ON · 버프 자동 재사용 OFF")
+	else:
+		show_message("SELF OFF · 버프 자동 재사용 ON")
+
 func _build_v20_bottom_bar() -> void:
 	# EXP panel bottom-left.
 	var exp_panel: PanelContainer = PanelContainer.new()
 	exp_panel.add_theme_stylebox_override("panel", _panel_style(0.82, 6))
 	exp_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(exp_panel, 8.0, 674.0, 248.0, 716.0)
+	_place(exp_panel, 8.0, 676.0, 248.0, 718.0)
 	v20_layer.add_child(exp_panel)
 	var exp_box: VBoxContainer = VBoxContainer.new()
 	exp_box.add_theme_constant_override("separation", 1)
@@ -496,7 +512,7 @@ func _build_v20_bottom_bar() -> void:
 	var sys_panel: PanelContainer = PanelContainer.new()
 	sys_panel.add_theme_stylebox_override("panel", _panel_style(0.82, 5))
 	sys_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(sys_panel, 257.0, 650.0, 430.0, 716.0)
+	_place(sys_panel, 257.0, 654.0, 430.0, 718.0)
 	v20_layer.add_child(sys_panel)
 	var sys: HBoxContainer = HBoxContainer.new()
 	sys.add_theme_constant_override("separation", 4)
@@ -517,52 +533,31 @@ func _build_v20_bottom_bar() -> void:
 		button.pressed.connect(_show_named_system_message.bind(str(data[1])))
 		sys.add_child(button)
 
-	# Job skill quick slots.
-	var skill_panel: PanelContainer = PanelContainer.new()
-	skill_panel.add_theme_stylebox_override("panel", _panel_style(0.86, 5))
-	skill_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(skill_panel, 446.0, 637.0, 892.0, 716.0)
-	v20_layer.add_child(skill_panel)
+	# Unified 8-slot bar for both skills and consumables.
+	var quick_panel: PanelContainer = PanelContainer.new()
+	quick_panel.add_theme_stylebox_override("panel", _panel_style(0.86, 5))
+	quick_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Lowered slightly compared with the previous bar.
+	_place(quick_panel, 446.0, 648.0, 1268.0, 718.0)
+	v20_layer.add_child(quick_panel)
 	v20_skill_container = HBoxContainer.new()
-	v20_skill_container.add_theme_constant_override("separation", 5)
-	skill_panel.add_child(v20_skill_container)
-	set_job_skillbar([])
-
-	# Consumable quick slots bottom-right.
-	var item_panel: PanelContainer = PanelContainer.new()
-	item_panel.add_theme_stylebox_override("panel", _panel_style(0.86, 5))
-	item_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(item_panel, 902.0, 638.0, 1268.0, 716.0)
-	v20_layer.add_child(item_panel)
-	var items: HBoxContainer = HBoxContainer.new()
-	items.add_theme_constant_override("separation", 5)
-	item_panel.add_child(items)
-	var item_defs: Array = [
-		["res://assets/ui/potionRed.png", "HP 물약"],
-		["res://assets/ui/potionGreen.png", "강력 HP 물약"],
-		["res://assets/ui/potionPurple.png", "축복받은 HP 물약"],
-		["res://assets/ui/return.png", "귀환"]
-	]
-	for item_index: int in range(item_defs.size()):
-		var data: Array = item_defs[item_index] as Array
+	v20_skill_container.add_theme_constant_override("separation", 4)
+	quick_panel.add_child(v20_skill_container)
+	v20_quickslot_buttons.clear()
+	for index: int in range(8):
 		var slot: Button = Button.new()
-		slot.custom_minimum_size = Vector2(82.0, 66.0)
-		slot.icon = _load_texture(str(data[0]))
-		slot.expand_icon = true
-		slot.add_theme_font_size_override("font_size", 11)
+		slot.custom_minimum_size = Vector2(98.0, 64.0)
+		slot.text = str(index + 1)
+		slot.tooltip_text = "%d번 퀵슬롯 · 스킬/소모품 등록 가능" % (index + 1)
+		slot.add_theme_font_size_override("font_size", 9)
 		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
 		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		if item_index < 3:
-			var item_name: String = str(data[1])
-			slot.text = "0"
-			slot.tooltip_text = item_name
-			v20_quick_item_buttons[item_name] = slot
-			slot.pressed.connect(_emit_quick_item.bind(item_name))
-		else:
-			slot.text = "귀환"
-			slot.tooltip_text = "현재 지역 시작 지점으로 귀환"
-			slot.pressed.connect(func() -> void: return_pressed.emit())
-		items.add_child(slot)
+		slot.pressed.connect(_emit_quickslot.bind(index))
+		v20_skill_container.add_child(slot)
+		v20_quickslot_buttons.append(slot)
+
+func _emit_quickslot(slot_index: int) -> void:
+	quickslot_pressed.emit(slot_index)
 
 func _build_v20_message_and_log() -> void:
 	var message: Label = Label.new()
@@ -603,38 +598,72 @@ func _show_named_system_message(label_text: String) -> void:
 			show_message("%s 기능" % label_text)
 
 func set_job_skillbar(skills_value: Array) -> void:
-	if v20_skill_container == null:
+	# Backward-compatible fallback. World now owns the configurable quickslots.
+	if quickslot_entries.is_empty() and not skills_value.is_empty():
+		var seeded: Array = []
+		for index: int in range(mini(8, skills_value.size())):
+			var skill: Dictionary = skills_value[index] as Dictionary
+			seeded.append({"kind":"skill", "id":str(skill.get("name", ""))})
+		set_quickslot_entries(seeded)
+
+func set_quickslot_entries(entries: Array) -> void:
+	super.set_quickslot_entries(entries)
+	_render_quickslots({}, {})
+
+func set_quickslot_state(entries: Array, inventory: Dictionary, active_buffs: Dictionary, self_enabled: bool) -> void:
+	super.set_quickslot_entries(entries)
+	if v20_self_button != null:
+		v20_self_button.button_pressed = self_enabled
+		v20_self_button.text = "SELF\nON" if self_enabled else "SELF"
+	_render_quickslots(inventory, active_buffs)
+
+func _render_quickslots(inventory: Dictionary, active_buffs: Dictionary) -> void:
+	if v20_quickslot_buttons.is_empty():
 		return
-	_clear_children(v20_skill_container)
-	if skills_value.is_empty():
-		var attack_slot: Button = Button.new()
-		attack_slot.custom_minimum_size = Vector2(50.0, 66.0)
-		attack_slot.text = "공격"
-		attack_slot.icon = _load_texture("res://assets/ui/attack.png")
-		attack_slot.expand_icon = true
-		attack_slot.add_theme_font_size_override("font_size", 10)
-		attack_slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
-		attack_slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		attack_slot.pressed.connect(func() -> void: attack_pressed.emit())
-		v20_skill_container.add_child(attack_slot)
-		return
-	for index: int in range(mini(8, skills_value.size())):
-		var value: Variant = skills_value[index]
-		if not (value is Dictionary):
+	for index: int in range(v20_quickslot_buttons.size()):
+		var button: Button = v20_quickslot_buttons[index]
+		button.icon = null
+		button.text = str(index + 1)
+		button.tooltip_text = "%d번 퀵슬롯 · 비어 있음" % (index + 1)
+		if index >= quickslot_entries.size() or not (quickslot_entries[index] is Dictionary):
 			continue
-		var skill: Dictionary = value as Dictionary
-		var skill_name: String = str(skill.get("name", "스킬"))
-		var slot: Button = Button.new()
-		slot.custom_minimum_size = Vector2(50.0, 66.0)
-		slot.text = skill_name.left(4)
-		slot.tooltip_text = "%s · %s · MP %d" % [skill_name, str(skill.get("type", "")), int(skill.get("mp", 0))]
-		slot.icon = _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
-		slot.expand_icon = true
-		slot.add_theme_font_size_override("font_size", 9)
-		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
-		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		slot.pressed.connect(_emit_job_skill.bind(skill_name))
-		v20_skill_container.add_child(slot)
+		var entry: Dictionary = quickslot_entries[index] as Dictionary
+		if entry.is_empty():
+			continue
+		var kind: String = str(entry.get("kind", ""))
+		var entry_id: String = str(entry.get("id", ""))
+		if kind == "skill":
+			var skill: Dictionary = _job_skill_by_name(entry_id)
+			if skill.is_empty():
+				button.text = entry_id.left(5)
+				button.tooltip_text = "현재 직업에서 사용할 수 없는 스킬"
+				continue
+			var is_buff: bool = str(skill.get("effect", "")).find("Buff") >= 0
+			var active_text: String = " · ACTIVE" if active_buffs.has(entry_id) else ""
+			button.text = entry_id.left(5)
+			button.icon = _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
+			button.expand_icon = true
+			button.tooltip_text = "%s · %s · MP %d%s" % [
+				entry_id, str(skill.get("type", "")), int(skill.get("mp", 0)),
+				(" · SELF OFF시 자동 재사용" if is_buff else "") + active_text
+			]
+		elif kind == "item":
+			var count: int = int(inventory.get(entry_id, 0))
+			button.text = "%s\nx%d" % [entry_id.left(4), count]
+			var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
+			var path: String = str(images.get(entry_id, ""))
+			if path != "" and ResourceLoader.exists(path):
+				button.icon = load(path) as Texture2D
+				button.expand_icon = true
+			button.tooltip_text = "%s · 보유 %d" % [entry_id, count]
+
+func _job_skill_by_name(skill_name: String) -> Dictionary:
+	for value: Variant in job_skills:
+		if value is Dictionary:
+			var skill: Dictionary = value as Dictionary
+			if str(skill.get("name", "")) == skill_name:
+				return skill
+	return {}
 
 func _skill_icon(effect: String, type_text: String) -> Texture2D:
 	if effect == "heal":
