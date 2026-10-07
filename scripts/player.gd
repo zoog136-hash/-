@@ -454,6 +454,17 @@ func apply_stun(duration: float) -> void:
 func show_status_text(text_value: String) -> void:
 	_show_combat_text(text_value, Color(0.93, 0.78, 0.30, 1.0), Vector2(-45.0, -136.0))
 
+func clear_status_effects() -> void:
+	stun_remaining = 0.0
+	silence_remaining = 0.0
+	hold_remaining = 0.0
+	fear_remaining = 0.0
+	clear_poison()
+	clear_bleed()
+	velocity = Vector2.ZERO
+	touch_vector = Vector2.ZERO
+	clear_click_path()
+
 func set_auto_enabled(enabled: bool) -> void:
 	auto_enabled = enabled
 	auto_toggled.emit(enabled)
