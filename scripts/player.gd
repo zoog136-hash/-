@@ -30,6 +30,7 @@ var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
 var attack_clock: float = 0.0
 var transform_active: bool = false
 var transform_bob_clock: float = 0.0
+var stun_remaining: float = 0.0
 var base_move_speed: float = 210.0
 
 func _ready() -> void:
