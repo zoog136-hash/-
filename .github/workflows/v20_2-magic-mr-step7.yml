@@ -1,0 +1,201 @@
+name: V20.2 Magic MR Step7 Test
+
+on:
+  push:
+    branches: [v20-2-magic-mr-step7]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-magic-mr-step7
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create magic MR test
+        shell: bash
+        run: |
+          cat > test_magic_mr_step7.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              # Base magic stats.
+              world.level = 35
+              world.int_stat = 8
+              world.wis_stat = 10
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              check(world._magic_accuracy_stat() == 43, "player magic accuracy baseline")
+              check(world._magic_damage_stat() == 5, "player magic damage baseline")
+              check(world._effective_mr() == 65, "player MR baseline")
+
+              # MR equipment aliases.
+              world.equipped_items["armor"] = {"MR":7}
+              world.equipped_items["accessory"] = {"mr":3}
+              world.equipped_catalog["성물"] = {"마법 방어력":5}
+              check(world._effective_mr() == 80, "MR equipment aliases stack")
+
+              # Magic formula ignores AC/DG/ER.
+              check(approx(world._magic_hit_chance(80, 60), 0.89), "magic formula baseline")
+              check(approx(world._magic_hit_chance(20, 200), 0.05), "magic floor 5")
+              check(approx(world._magic_hit_chance(500, 0), 0.95), "magic cap 95")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+
+              var magic_monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(magic_monster)
+              magic_monster.setup({
+                  "name":"마법 테스트","lv":20,"hp":500,"atk":40,"def":5,"xp":10,"speed":60,
+                  "attack_type":"magic"
+              }, world.player, world, null)
+              check(magic_monster.attack_type == "magic", "magic attack type")
+              check(magic_monster.magic_accuracy == 38, "monster magic accuracy default")
+              check(magic_monster.magic_resistance == 35, "monster MR default")
+              check(world._monster_accuracy_for_attack_type(magic_monster, "magic") == 38, "magic accuracy selected")
+
+              # Incoming magic uses MR.
+              world.level = 35
+              world.wis_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              var incoming_base: float = world._monster_hit_chance(magic_monster, "magic")
+              check(approx(incoming_base, 0.561), "incoming magic vs MR65")
+
+              # AC/DG/ER changes must not alter magic chance.
+              world.defense = 250
+              world.dex_stat = 60
+              world.equipped_items["armor"] = {"DG":50, "ER":50}
+              var incoming_after_physical_defense: float = world._monster_hit_chance(magic_monster, "magic")
+              check(approx(incoming_base, incoming_after_physical_defense), "AC DG ER do not affect magic")
+
+              # WIS/MR lowers magic hit chance.
+              world.wis_stat = 30
+              var incoming_high_mr: float = world._monster_hit_chance(magic_monster, "magic")
+              check(incoming_high_mr < incoming_base, "higher MR lowers magic hit chance")
+
+              # Physical reduction must not reduce magic damage after a confirmed hit.
+              world.equipped_items["weapon"] = {"damage_reduction":999}
+              world.hp = 1000
+              world.max_hp = 1000
+              world.wis_stat = 10
+              magic_monster.magic_accuracy = 999
+              world.rng.seed = 1234
+              var hp_before_magic: int = world.hp
+              world._on_player_hit(magic_monster, 40, "magic")
+              check(world.hp == hp_before_magic - 40, "physical reduction does not reduce magic hit")
+
+              # Physical attacks still use reduction.
+              var physical_monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(physical_monster)
+              physical_monster.setup({
+                  "name":"물리 테스트","lv":20,"hp":500,"atk":40,"def":5,"xp":10,"speed":60,
+                  "attack_type":"melee","melee_accuracy":999
+              }, world.player, world, null)
+              world.hp = 1000
+              world.rng.seed = 1234
+              world._on_player_hit(physical_monster, 40, "melee")
+              check(world.hp == 999, "physical reduction remains separate with minimum 1")
+
+              # Player outgoing magic uses monster MR.
+              world.level = 35
+              world.int_stat = 8
+              magic_monster.magic_resistance = 35
+              check(approx(world._player_magic_hit_chance(magic_monster), 0.806), "player magic vs monster MR")
+
+              magic_monster.magic_resistance = 120
+              check(world._player_magic_hit_chance(magic_monster) < 0.30, "high monster MR lowers player magic chance")
+
+              # Cast path: MP cost, range, and successful damage path.
+              magic_monster.magic_resistance = 0
+              magic_monster.hp = 500
+              magic_monster.global_position = world.player.global_position + Vector2(100, 0)
+              world.mp = 100
+              world.level = 200
+              world.int_stat = 50
+              world.rng.seed = 42
+              var hp_before_cast: int = magic_monster.hp
+              var cast_result: bool = world._cast_magic_attack(magic_monster, 26, 3, "에너지 볼트")
+              check(world.mp == 97, "magic cast consumes MP")
+              check(cast_result, "magic cast hits with capped high chance seed")
+              check(magic_monster.hp < hp_before_cast, "magic cast damages target")
+
+              # Insufficient MP rejects without changing target HP.
+              world.mp = 0
+              var hp_before_no_mp: int = magic_monster.hp
+              var no_mp_result: bool = world._cast_magic_attack(magic_monster, 26, 3, "에너지 볼트")
+              check(not no_mp_result, "insufficient MP rejects cast")
+              check(magic_monster.hp == hp_before_no_mp, "no MP causes no damage")
+
+              # Step6 physical regression.
+              world.dex_stat = 30
+              check(world._effective_dg() >= 5, "DG preserved")
+              check(world._effective_er() >= 10, "ER preserved")
+
+              if failures.is_empty():
+                  print("V20.2 MAGIC MR STEP7 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run magic MR test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_magic_mr_step7.gd 2>&1 | tee /tmp/magicmr.log
+          grep -q "V20.2 MAGIC MR STEP7 PASS" /tmp/magicmr.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/magicmr.log; then
+            exit 1
+          fi
