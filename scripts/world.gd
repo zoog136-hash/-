@@ -419,9 +419,14 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 		_update_target_hud()
 		return false
 	var damage: int = maxi(1, power + _magic_damage_stat() + rng.randi_range(-4, 6))
-	target.take_damage(damage)
-	hud.append_log("%s 적중 · %s에게 %d 마법 피해 · %.1f%%" % [
-		skill_name, target.monster_name, damage, hit_chance * 100.0
+	var critical_chance: float = _critical_chance(_player_critical_rate("magic"), target.critical_resistance)
+	var critical: bool = rng.randf() < critical_chance
+	if critical:
+		damage = _critical_damage(damage)
+	target.take_damage(damage, critical)
+	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
+		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
+		hit_chance * 100.0, critical_chance * 100.0
 	])
 	_update_hud()
 	_update_target_hud()
@@ -456,8 +461,15 @@ func _attack() -> void:
 		_update_target_hud()
 		return
 	var damage: int = maxi(1, _melee_damage_stat() + rng.randi_range(-6, 9))
-	target.take_damage(damage)
-	hud.append_log("%s에게 %d 피해 · 명중률 %.1f%%" % [target.monster_name, damage, hit_chance * 100.0])
+	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
+	var critical: bool = rng.randf() < critical_chance
+	if critical:
+		damage = _critical_damage(damage)
+	target.take_damage(damage, critical)
+	hud.append_log("%s에게 %d 피해%s · 명중 %.1f%% · 치명타 %.1f%%" % [
+		target.monster_name, damage, " CRITICAL" if critical else "",
+		hit_chance * 100.0, critical_chance * 100.0
+	])
 	_update_target_hud()
 
 func _run_auto_hunt() -> void:
@@ -608,19 +620,26 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 				hit_chance * 100.0
 			])
 		return
-	var reduced: int = maxi(1, damage_value) if normalized_type == "magic" else _physical_damage_after_reduction(damage_value)
+	var attacker_critical_rate: int = attacker.critical_rate_for_type(normalized_type)
+	var critical_chance: float = _critical_chance(attacker_critical_rate, _critical_resistance_stat())
+	var critical: bool = rng.randf() < critical_chance
+	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
+	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	hp = maxi(0, hp - reduced)
-	player.show_received_damage(reduced)
+	player.show_received_damage(reduced, critical)
 	if normalized_type == "magic":
-		hud.append_log("%s에게 %d 마법 피해 · 피격률 %.1f%% · MR %d" % [
-			attacker.monster_name, reduced, hit_chance * 100.0, _effective_mr()
+		hud.append_log("%s에게 %d 마법 피해%s · 피격률 %.1f%% · 치명타 %.1f%% · MR %d" % [
+			attacker.monster_name, reduced, " CRITICAL" if critical else "",
+			hit_chance * 100.0, critical_chance * 100.0, _effective_mr()
 		])
 	else:
-		hud.append_log("%s에게 %d 피해 · %s 피격률 %.1f%% · 리덕션 %d" % [
+		hud.append_log("%s에게 %d 피해%s · %s 피격률 %.1f%% · 치명타 %.1f%% · 리덕션 %d" % [
 			attacker.monster_name,
 			reduced,
+			" CRITICAL" if critical else "",
 			"원거리" if normalized_type == "ranged" else "근거리",
 			hit_chance * 100.0,
+			critical_chance * 100.0,
 			_damage_reduction_stat()
 		])
 	if hp <= 0:
@@ -999,6 +1018,54 @@ func _magic_damage_stat() -> int:
 func _magic_accuracy_stat() -> int:
 	return level + int_stat
 
+func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
+	var total: int = 0
+	if record.has("crit"):
+		total += int(record.get("crit", 0))
+	if record.has("critical_rate"):
+		total += int(record.get("critical_rate", 0))
+	if record.has("치명타"):
+		total += int(record.get("치명타", 0))
+	match attack_type:
+		"ranged":
+			total += int(record.get("ranged_crit", record.get("rangedCrit", record.get("원거리 치명타", 0))))
+		"magic":
+			total += int(record.get("magic_crit", record.get("magicCrit", record.get("마법 치명타", 0))))
+		_:
+			total += int(record.get("melee_crit", record.get("meleeCrit", record.get("근거리 치명타", 0))))
+	return total
+
+func _record_critical_resistance(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"critical_resistance",
+		record.get("criticalResistance", record.get("crit_resist", record.get("치명타 저항", record.get("치명타 내성", 0))))
+	)))
+
+func _player_critical_rate(attack_type: String) -> int:
+	var base: int = 2
+	match attack_type:
+		"ranged":
+			base += _stat_step_bonus(dex_stat, 16, 5.0)
+		"magic":
+			base += _stat_step_bonus(int_stat, 16, 5.0)
+		_:
+			base += _stat_step_bonus(str_stat, 16, 5.0)
+	for record: Dictionary in _all_equipped_records():
+		base += _record_critical_bonus(record, attack_type)
+	return clampi(base, 0, 50)
+
+func _critical_resistance_stat() -> int:
+	var total: int = 0
+	for record: Dictionary in _all_equipped_records():
+		total += _record_critical_resistance(record)
+	return clampi(total, 0, 50)
+
+func _critical_chance(attacker_critical_rate: int, defender_critical_resistance: int) -> float:
+	return clampf(float(attacker_critical_rate - defender_critical_resistance) / 100.0, 0.0, 0.50)
+
+func _critical_damage(raw_damage: int) -> int:
+	return maxi(1, int(round(float(raw_damage) * 1.5)))
+
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(dex_stat, 10, 3.0)
 	return -(_effective_defense() + dex_ac_bonus)
@@ -1083,6 +1150,10 @@ func _character_stats_snapshot() -> Dictionary:
 		"ranged_accuracy": _ranged_accuracy_stat(),
 		"magic_damage": _magic_damage_stat(),
 		"magic_accuracy": _magic_accuracy_stat(),
+		"melee_critical": _player_critical_rate("melee"),
+		"ranged_critical": _player_critical_rate("ranged"),
+		"magic_critical": _player_critical_rate("magic"),
+		"critical_resistance": _critical_resistance_stat(),
 		"ac": _effective_ac(),
 		"dg": _effective_dg(),
 		"er": _effective_er(),
