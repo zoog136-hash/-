@@ -503,31 +503,61 @@ func _roll_drop(position_value: Vector2) -> void:
 	timer.timeout.connect(label.queue_free)
 	hud.show_message("획득: " + item_name)
 
-func _monster_hit_chance(attacker: TwilightMonster) -> float:
+func _physical_hit_chance(attacker_accuracy: int, target_ac: int, avoidance: int) -> float:
+	var base_percent: float = 75.0 + float(attacker_accuracy - absi(target_ac)) * 0.7
+	var final_percent: float = base_percent - float(maxi(0, avoidance))
+	return clampf(final_percent / 100.0, 0.05, 0.95)
+
+func _avoidance_for_attack_type(attack_type: String) -> int:
+	return _effective_er() if attack_type == "ranged" else _effective_dg()
+
+func _monster_accuracy_for_attack_type(attacker: TwilightMonster, attack_type: String) -> int:
+	if attacker == null:
+		return 0
+	return attacker.ranged_accuracy if attack_type == "ranged" else attacker.melee_accuracy
+
+func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee") -> float:
 	if attacker == null:
 		return 0.05
-	var target_ac_abs: int = absi(_effective_ac())
-	var chance_percent: float = 75.0 + float(attacker.melee_accuracy - target_ac_abs) * 0.7
-	return clampf(chance_percent / 100.0, 0.05, 0.95)
+	var normalized_type: String = "ranged" if attack_type == "ranged" else "melee"
+	return _physical_hit_chance(
+		_monster_accuracy_for_attack_type(attacker, normalized_type),
+		_effective_ac(),
+		_avoidance_for_attack_type(normalized_type)
+	)
 
-func _roll_monster_hit(attacker: TwilightMonster) -> bool:
-	return rng.randf() < _monster_hit_chance(attacker)
+func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee") -> bool:
+	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
-func _on_player_hit(attacker: TwilightMonster, damage_value: int) -> void:
+func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
 	if attacker == null or not is_instance_valid(attacker):
 		return
-	var hit_chance: float = _monster_hit_chance(attacker)
-	if not _roll_monster_hit(attacker):
+	var normalized_type: String = "ranged" if attack_type == "ranged" else "melee"
+	var accuracy: int = _monster_accuracy_for_attack_type(attacker, normalized_type)
+	var avoidance: int = _avoidance_for_attack_type(normalized_type)
+	var hit_chance: float = _monster_hit_chance(attacker, normalized_type)
+	if not _roll_monster_hit(attacker, normalized_type):
 		player.show_miss()
-		hud.append_log("%s 공격 MISS · 명중 %d / 내 AC %d / %.1f%%" % [
-			attacker.monster_name, attacker.melee_accuracy, _effective_ac(), hit_chance * 100.0
+		var evasion_name: String = "ER" if normalized_type == "ranged" else "DG"
+		hud.append_log("%s 공격 MISS · %s 명중 %d / 내 AC %d / %s %d / %.1f%%" % [
+			attacker.monster_name,
+			"원거리" if normalized_type == "ranged" else "근거리",
+			accuracy,
+			_effective_ac(),
+			evasion_name,
+			avoidance,
+			hit_chance * 100.0
 		])
 		return
 	var reduced: int = _physical_damage_after_reduction(damage_value)
 	hp = maxi(0, hp - reduced)
 	player.show_received_damage(reduced)
-	hud.append_log("%s에게 %d 피해 · 피격률 %.1f%% · 리덕션 %d" % [
-		attacker.monster_name, reduced, hit_chance * 100.0, _damage_reduction_stat()
+	hud.append_log("%s에게 %d 피해 · %s 피격률 %.1f%% · 리덕션 %d" % [
+		attacker.monster_name,
+		reduced,
+		"원거리" if normalized_type == "ranged" else "근거리",
+		hit_chance * 100.0,
+		_damage_reduction_stat()
 	])
 	if hp <= 0:
 		hp = _effective_max_hp()
@@ -909,11 +939,35 @@ func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(dex_stat, 10, 3.0)
 	return -(_effective_defense() + dex_ac_bonus)
 
+func _record_dg(record: Dictionary) -> int:
+	if record.has("dg"):
+		return maxi(0, int(record.get("dg", 0)))
+	if record.has("DG"):
+		return maxi(0, int(record.get("DG", 0)))
+	if record.has("근거리 회피력"):
+		return maxi(0, int(record.get("근거리 회피력", 0)))
+	return 0
+
+func _record_er(record: Dictionary) -> int:
+	if record.has("er"):
+		return maxi(0, int(record.get("er", 0)))
+	if record.has("ER"):
+		return maxi(0, int(record.get("ER", 0)))
+	if record.has("원거리 회피력"):
+		return maxi(0, int(record.get("원거리 회피력", 0)))
+	return 0
+
 func _effective_dg() -> int:
-	return _stat_step_bonus(dex_stat, 10, 4.0)
+	var total: int = _stat_step_bonus(dex_stat, 10, 4.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_dg(record)
+	return maxi(0, total)
 
 func _effective_er() -> int:
-	return _stat_step_bonus(dex_stat, 10, 2.0)
+	var total: int = _stat_step_bonus(dex_stat, 10, 2.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_er(record)
+	return maxi(0, total)
 
 func _effective_mr() -> int:
 	return 10 + level + wis_stat * 2
