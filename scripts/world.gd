@@ -75,7 +75,13 @@ var inventory: Dictionary = {
 	"초록 잎":200,
 	"무기 마법 주문서 (각인)":5,
 	"갑옷 마법 주문서 (각인)":5,
-	"장신구 마법 주문서 (각인)":3
+	"장신구 마법 주문서 (각인)":3,
+	"축복받은 무기 마법 주문서 (각인)":2,
+	"축복받은 갑옷 마법 주문서 (각인)":2,
+	"장인의 무기 마법 주문서 (각인)":1,
+	"장인의 갑옷 마법 주문서 (각인)":1,
+	"오림의 장신구 마법 주문서 (각인)":2,
+	"축복받은 오림의 장신구 마법 주문서 (각인)":1
 }
 
 func _ready() -> void:
@@ -183,7 +189,13 @@ func _merge_local_consumables_into_catalog() -> void:
 	var enhancement_scrolls: Array[Dictionary] = [
 		{"name":"무기 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"무기 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
 		{"name":"갑옷 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"방어구 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
-		{"name":"장신구 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"장신구 강화에 사용. 실패 시 장비 소실 가능"}
+		{"name":"장신구 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"장신구 강화에 사용. 실패 시 장비 소실 가능"},
+		{"name":"축복받은 무기 마법 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"성공 시 강화 단계가 +1~+3 상승할 수 있는 무기 주문서"},
+		{"name":"축복받은 갑옷 마법 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"성공 시 강화 단계가 +1~+3 상승할 수 있는 방어구 주문서"},
+		{"name":"장인의 무기 마법 주문서 (각인)", "grade":"영웅", "type":"강화주문서", "slot":"consumable", "desc":"+9 무기 강화. 실패해도 장비가 소실되지 않음"},
+		{"name":"장인의 갑옷 마법 주문서 (각인)", "grade":"영웅", "type":"강화주문서", "slot":"consumable", "desc":"+7~+8 방어구 강화. 실패해도 장비가 소실되지 않음"},
+		{"name":"오림의 장신구 마법 주문서 (각인)", "grade":"영웅", "type":"강화주문서", "slot":"consumable", "desc":"실패 시 장신구가 유지되거나 강화 단계가 1 하락"},
+		{"name":"축복받은 오림의 장신구 마법 주문서 (각인)", "grade":"전설", "type":"강화주문서", "slot":"consumable", "desc":"실패해도 장신구 강화 단계가 유지됨"}
 	]
 	for scroll_record: Dictionary in enhancement_scrolls:
 		var scroll_name: String = str(scroll_record.get("name", ""))
@@ -1363,6 +1375,17 @@ func _scroll_kind(scroll_name: String) -> String:
 		return "accessory"
 	return ""
 
+func _scroll_mode(scroll_name: String) -> String:
+	if scroll_name.find("축복받은 오림") >= 0:
+		return "blessed_orim"
+	if scroll_name.find("오림") >= 0:
+		return "orim"
+	if scroll_name.find("장인의") >= 0:
+		return "craftsman"
+	if scroll_name.find("축복받은") >= 0:
+		return "blessed"
+	return "normal"
+
 func _on_inventory_item_activated(item_name: String) -> void:
 	var kind: String = _scroll_kind(item_name)
 	if kind == "":
@@ -1371,10 +1394,10 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("주문서가 없습니다")
 		return
-	var candidates: Array = _enhancement_candidates(kind)
+	var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name))
 	hud.call("open_enhancement", item_name, candidates)
 
-func _enhancement_candidates(kind: String) -> Array:
+func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 	var result: Array = []
 	var names: Array = inventory.keys()
 	names.sort()
@@ -1386,9 +1409,12 @@ func _enhancement_candidates(kind: String) -> Array:
 		if record.is_empty() or str(record.get("slot", "")) != kind:
 			continue
 		var level_value: int = int(enhancement_levels.get(item_name, 0))
-		var chance: Dictionary = _enhancement_chance(kind, level_value)
+		if not _enhancement_level_allowed(kind, mode, level_value):
+			continue
+		var chance: Dictionary = _enhancement_chance(kind, level_value, mode)
 		if float(chance.get("success", 0.0)) <= 0.0:
 			continue
+		var max_gain: int = 3 if mode == "blessed" and level_value <= 2 else (2 if mode == "blessed" and level_value <= 5 else 1)
 		result.append({
 			"name": item_name,
 			"level": level_value,
@@ -1396,10 +1422,46 @@ func _enhancement_candidates(kind: String) -> Array:
 			"success_chance": float(chance.get("success", 0.0)),
 			"no_change_chance": float(chance.get("no_change", 0.0)),
 			"destroy_chance": float(chance.get("destroy", 0.0)),
-			"bonus_text": _enhancement_bonus_text(kind, level_value + 1),
+			"decrease_chance": float(chance.get("decrease", 0.0)),
+			"gain_text": _enhancement_gain_text(mode, level_value),
+			"bonus_text": _enhancement_bonus_text(kind, level_value + max_gain),
 			"equipped": _is_item_equipped(item_name)
 		})
 	return result
+
+func _enhancement_level_allowed(kind: String, mode: String, current_level: int) -> bool:
+	if mode == "craftsman":
+		if kind == "weapon":
+			return current_level == 9
+		if kind == "armor":
+			return current_level == 7 or current_level == 8
+		return false
+	if mode == "orim" or mode == "blessed_orim":
+		return kind == "accessory" and current_level >= 0 and current_level <= 7
+	return current_level >= 0 and current_level <= 20
+
+func _enhancement_gain_text(mode: String, current_level: int) -> String:
+	if mode != "blessed":
+		return "+1"
+	if current_level <= 2:
+		return "+1 / +2 / +3"
+	if current_level <= 5:
+		return "+1 / +2"
+	return "+1"
+
+func _roll_enhancement_gain(mode: String, current_level: int) -> int:
+	if mode != "blessed":
+		return 1
+	var roll: float = rng.randf_range(0.0, 100.0)
+	if current_level <= 2:
+		if roll < 33.3334:
+			return 1
+		if roll < 66.6667:
+			return 2
+		return 3
+	if current_level <= 5:
+		return 1 if roll < 50.0 else 2
+	return 1
 
 func _find_catalog_item_record(item_name: String) -> Dictionary:
 	var source: Array = catalog_db.get("아이템", []) as Array
@@ -1420,11 +1482,33 @@ func _safe_enhancement_level(kind: String) -> int:
 		_:
 			return 0
 
-func _enhancement_chance(kind: String, current_level: int) -> Dictionary:
+func _enhancement_chance(kind: String, current_level: int, mode: String = "normal") -> Dictionary:
+	if mode == "craftsman":
+		if kind == "weapon" and current_level == 9:
+			return {"success": 0.6, "no_change": 99.4, "destroy": 0.0, "decrease": 0.0}
+		if kind == "armor" and (current_level == 7 or current_level == 8):
+			return {"success": 2.5, "no_change": 97.5, "destroy": 0.0, "decrease": 0.0}
+		return {"success": 0.0, "no_change": 0.0, "destroy": 0.0, "decrease": 0.0}
+
+	if mode == "orim" or mode == "blessed_orim":
+		var orim_success: Array[float] = [45.0, 35.0, 25.0, 20.0, 10.0, 5.0, 3.5, 2.0]
+		var orim_no_change: Array[float] = [55.0, 60.0, 65.0, 65.0, 75.0, 75.0, 76.5, 78.0]
+		var orim_decrease: Array[float] = [0.0, 5.0, 10.0, 15.0, 15.0, 20.0, 20.0, 20.0]
+		if current_level < 0 or current_level >= orim_success.size():
+			return {"success": 0.0, "no_change": 0.0, "destroy": 0.0, "decrease": 0.0}
+		var success_value: float = orim_success[current_level]
+		if mode == "blessed_orim":
+			return {"success": success_value, "no_change": 100.0 - success_value, "destroy": 0.0, "decrease": 0.0}
+		return {
+			"success": success_value,
+			"no_change": orim_no_change[current_level],
+			"destroy": 0.0,
+			"decrease": orim_decrease[current_level]
+		}
+
 	var success: float = 0.0
 	var no_change: float = 0.0
 	var destroy: float = 0.0
-
 	if kind == "weapon":
 		if current_level <= 5:
 			success = 100.0
@@ -1479,7 +1563,7 @@ func _enhancement_chance(kind: String, current_level: int) -> Dictionary:
 			success = accessory_success[current_level]
 			destroy = 100.0 - success
 
-	return {"success": success, "no_change": no_change, "destroy": destroy}
+	return {"success": success, "no_change": no_change, "destroy": destroy, "decrease": 0.0}
 
 func _enhancement_bonus_text(kind: String, target_level: int) -> String:
 	match kind:
@@ -1500,6 +1584,7 @@ func _is_item_equipped(item_name: String) -> bool:
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	var kind: String = _scroll_kind(scroll_name)
+	var mode: String = _scroll_mode(scroll_name)
 	if kind == "":
 		hud.show_message("강화 주문서가 올바르지 않습니다")
 		return
@@ -1516,9 +1601,13 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		return
 
 	var current_level: int = int(enhancement_levels.get(target_name, 0))
-	var chance: Dictionary = _enhancement_chance(kind, current_level)
+	if not _enhancement_level_allowed(kind, mode, current_level):
+		hud.show_message("현재 강화 단계에는 이 주문서를 사용할 수 없습니다")
+		return
+	var chance: Dictionary = _enhancement_chance(kind, current_level, mode)
 	var success_chance: float = float(chance.get("success", 0.0))
 	var no_change_chance: float = float(chance.get("no_change", 0.0))
+	var decrease_chance: float = float(chance.get("decrease", 0.0))
 	if success_chance <= 0.0:
 		hud.show_message("더 이상 강화할 수 없습니다")
 		return
@@ -1527,26 +1616,41 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	if int(inventory.get(scroll_name, 0)) <= 0:
 		inventory.erase(scroll_name)
 
+	var result_type: String = "maintain"
+	var result_level: int = current_level
 	var roll: float = rng.randf_range(0.0, 100.0)
 	if roll < success_chance:
-		enhancement_levels[target_name] = current_level + 1
-		hud.show_message("강화 성공! +%d %s" % [current_level + 1, target_name])
-		hud.append_log("강화 성공 · +%d %s" % [current_level + 1, target_name])
+		var gain: int = _roll_enhancement_gain(mode, current_level)
+		result_level = mini(21, current_level + gain)
+		enhancement_levels[target_name] = result_level
+		result_type = "success"
+		hud.show_message("강화 성공! +%d %s" % [result_level, target_name])
+		hud.append_log("강화 성공 · +%d %s" % [result_level, target_name])
 	elif roll < success_chance + no_change_chance:
 		hud.show_message("강화 실패 · 장비 변화 없음")
 		hud.append_log("강화 실패(유지) · +%d %s" % [current_level, target_name])
+	elif roll < success_chance + no_change_chance + decrease_chance:
+		result_level = maxi(0, current_level - 1)
+		enhancement_levels[target_name] = result_level
+		result_type = "decrease"
+		hud.show_message("강화 실패 · +%d → +%d 하락" % [current_level, result_level])
+		hud.append_log("강화 실패(하락) · %s +%d → +%d" % [target_name, current_level, result_level])
 	else:
 		_destroy_enhancement_target(target_name)
+		result_type = "destroy"
+		result_level = 0
 		hud.show_message("강화 실패 · %s 소실" % target_name)
 		hud.append_log("강화 실패(소실) · +%d %s" % [current_level, target_name])
 
+	if hud.has_method("show_enhancement_result"):
+		hud.call("show_enhancement_result", result_type, target_name, current_level, result_level)
 	hp = mini(hp, _effective_max_hp())
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	_save_game(true)
 
 	if int(inventory.get(scroll_name, 0)) > 0:
-		var remaining_candidates: Array = _enhancement_candidates(kind)
+		var remaining_candidates: Array = _enhancement_candidates(kind, mode)
 		hud.call("open_enhancement", scroll_name, remaining_candidates)
 	else:
 		hud.call("open_enhancement", scroll_name, [])
