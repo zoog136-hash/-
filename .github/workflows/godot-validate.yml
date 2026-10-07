@@ -185,6 +185,17 @@ jobs:
           fi
           grep -q "MOBILE_SCROLL_SMOKE_OK" godot-mobile-scroll-smoke.log
 
+      - name: Viewport touch and mouse routing
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-input-tests"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/input_routing_test.gd 2>&1 | tee godot-input-routing.log
+          if grep -E "SCRIPT ERROR:|ERROR:|INPUT FAIL:|INPUT_ROUTING_FAILED" godot-input-routing.log; then
+            exit 1
+          fi
+          grep -q "INPUT_ROUTING_OK" godot-input-routing.log
+
       - name: Playable field world tests
         shell: bash
         run: |
@@ -244,5 +255,6 @@ jobs:
           name: twilight-world-review-${{ github.sha }}
           path: |
             ${{ runner.temp }}/twilight-render/**/world-regions-review/*.png
+            ${{ runner.temp }}/twilight-render/**/world-regions-review/*.json
             godot-*.log
           if-no-files-found: error

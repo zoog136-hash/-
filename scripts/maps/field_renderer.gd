@@ -269,7 +269,9 @@ func _process(delta: float) -> void:
 		var size: Vector2 = sprite.get_meta("visual_size",Vector2(80,140)) as Vector2
 		var p: Vector2 = player.global_position
 		var behind: bool = p.y < sprite.position.y + 16 and p.y > sprite.position.y - size.y*.83 and absf(p.x-sprite.position.x)<size.x*.34
-		sprite.modulate.a = move_toward(sprite.modulate.a,float(field.data["foreground"]["fade_alpha"]) if behind else 1.0,delta*4)
+		var target_alpha: float = float(field.data["foreground"]["fade_alpha"]) if behind else 1.0
+		if not is_equal_approx(sprite.modulate.a,target_alpha):
+			sprite.modulate.a = move_toward(sprite.modulate.a,target_alpha,delta*4)
 
 func refresh_visible() -> void:
 	var viewport: Viewport = get_viewport()
@@ -316,10 +318,11 @@ func _load_chunk(key: Vector2i) -> void:
 			accent.kind = kind
 			accent.accent = Color(str(record.get("color",field.data.get("render_style",{}).get("accent","8abed4"))))
 			accent.stone = Color(str(field.data.get("render_style",{}).get("prop_tint","817e89")))
+			accent.stone_texture = terrain
 			accent.position = COORD.array_vector(record["position"])
 			accent.scale = Vector2.ONE*float(record.get("scale",1.0))
 			accent.set_meta("prop_kind",kind)
-			accent.set_meta("visual_size",Vector2(110,160)*accent.scale)
+			accent.set_meta("visual_size",LANDMARK.VISUAL_SIZES.get(kind,Vector2(110,160))*accent.scale)
 			if kind in ["crystal","obelisk","arch","banner"]:
 				accent.set_meta("occluder",true)
 			if kind in ["rubble","rune"]:

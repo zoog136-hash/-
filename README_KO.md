@@ -113,3 +113,11 @@ T/AUTO 자동사냥, 클릭/터치·WASD·조이스틱, 미니맵 이동, F7 충
 - 맵 데이터 형식: `docs/WORLD_REGION_SCHEMA.md`
 - 전체 검증: `python3 tools/test_project.py --godot /path/to/godot`
 - 실제 게임 화면 캡처: `godot --path . --script res://tests/capture_regions.gd`
+
+## 조작과 지역 아트 보완
+
+조이스틱 밖으로 드래그할 때 방향이 틀어지는 오류와 앱 포커스 상실/화면 숨김 후 이동 입력이
+남는 오류를 수정했다. 멀티터치 공격과 PC 마우스를 포함한 실제 GUI 입력 399항목을 검사한다.
+제단·성문·수정·깃발 등 지역 장식에 석재 질감과 입체 표현을 적용했다.
+GL 캡처 검사는 실제 자동사냥 성능 기록과 `performance.json`도 생성한다.
+변경 내용·검사 범위·실기기 검증 한계는 `docs/INPUT_AND_LANDMARK_POLISH.md`에 정리했다.
