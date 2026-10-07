@@ -863,24 +863,6 @@ func _on_player_poison_tick(damage_value: int) -> void:
 	hp = maxi(0, hp - poison_damage)
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
-	if hp > 0 and attacker.poison_duration > 0.0 and attacker.poison_accuracy > 0 and attacker.poison_tick_damage > 0:
-		var poison_chance: float = _status_effect_chance(
-			attacker.poison_accuracy,
-			attacker.monster_level,
-			_poison_resistance_stat(),
-			level
-		)
-		if rng.randf() < poison_chance:
-			player.apply_poison(attacker.poison_duration, attacker.poison_tick_damage, attacker.poison_tick_interval)
-			hud.append_log("%s 독 적중 · %.1f초 · %d 피해/%.1f초 · 내 독 내성 %d · %.1f%%" % [
-				attacker.monster_name, attacker.poison_duration, attacker.poison_tick_damage,
-				attacker.poison_tick_interval, _poison_resistance_stat(), poison_chance * 100.0
-			])
-		else:
-			player.show_status_text("POISON RESIST")
-			hud.append_log("%s 독 저항 성공 · 내성 %d · %.1f%%" % [
-				attacker.monster_name, _poison_resistance_stat(), poison_chance * 100.0
-			])
 	if hp <= 0:
 		hp = _effective_max_hp()
 		mp = max_mp
@@ -1007,6 +989,24 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			player.show_status_text("FEAR RESIST")
 			hud.append_log("%s 공포 저항 성공 · 내성 %d · %.1f%%" % [
 				attacker.monster_name, _fear_resistance_stat(), fear_chance * 100.0
+			])
+	if hp > 0 and attacker.poison_duration > 0.0 and attacker.poison_accuracy > 0 and attacker.poison_tick_damage > 0:
+		var poison_chance: float = _status_effect_chance(
+			attacker.poison_accuracy,
+			attacker.monster_level,
+			_poison_resistance_stat(),
+			level
+		)
+		if rng.randf() < poison_chance:
+			player.apply_poison(attacker.poison_duration, attacker.poison_tick_damage, attacker.poison_tick_interval)
+			hud.append_log("%s 독 적중 · %.1f초 · %d 피해/%.1f초 · 내 독 내성 %d · %.1f%%" % [
+				attacker.monster_name, attacker.poison_duration, attacker.poison_tick_damage,
+				attacker.poison_tick_interval, _poison_resistance_stat(), poison_chance * 100.0
+			])
+		else:
+			player.show_status_text("POISON RESIST")
+			hud.append_log("%s 독 저항 성공 · 내성 %d · %.1f%%" % [
+				attacker.monster_name, _poison_resistance_stat(), poison_chance * 100.0
 			])
 	if hp <= 0:
 		hp = _effective_max_hp()
