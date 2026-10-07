@@ -33,6 +33,9 @@ var transform_bob_clock: float = 0.0
 var stun_remaining: float = 0.0
 var silence_remaining: float = 0.0
 var hold_remaining: float = 0.0
+var fear_remaining: float = 0.0
+var fear_source_position: Vector2 = Vector2.ZERO
+var fear_move_multiplier: float = 0.82
 var base_move_speed: float = 210.0
 
 func _ready() -> void:
@@ -49,6 +52,7 @@ func _physics_process(delta: float) -> void:
 	_tick_stun(delta)
 	_tick_silence(delta)
 	_tick_hold(delta)
+	_tick_fear(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
@@ -56,7 +60,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		_update_visual(delta)
 		return
-	if Input.is_action_just_pressed("attack"):
+	if Input.is_action_just_pressed("attack") and not is_feared():
 		attack_requested.emit()
 	if Input.is_action_just_pressed("toggle_auto"):
 		set_auto_enabled(not auto_enabled)
@@ -66,6 +70,15 @@ func _physics_process(delta: float) -> void:
 		touch_vector = Vector2.ZERO
 		clear_click_path()
 		move_and_slide()
+		_update_visual(delta)
+		return
+
+	if is_feared():
+		touch_vector = Vector2.ZERO
+		clear_click_path()
+		velocity = _fear_velocity()
+		move_and_slide()
+		_update_facing(velocity)
 		_update_visual(delta)
 		return
 
@@ -296,6 +309,25 @@ func _show_combat_text(text_value: String, color_value: Color, start_position: V
 	tween.tween_property(label, "modulate:a", 0.0, 0.55)
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
+
+func _tick_fear(delta: float) -> void:
+	fear_remaining = maxf(0.0, fear_remaining - delta)
+
+func is_feared() -> bool:
+	return fear_remaining > 0.0
+
+func apply_fear(duration: float, source_position: Vector2) -> void:
+	fear_remaining = maxf(fear_remaining, maxf(0.0, duration))
+	fear_source_position = source_position
+	touch_vector = Vector2.ZERO
+	clear_click_path()
+	show_status_text("FEAR")
+
+func _fear_velocity() -> Vector2:
+	var away: Vector2 = global_position - fear_source_position
+	if away.length_squared() < 0.01:
+		away = Vector2.RIGHT
+	return away.normalized() * move_speed * fear_move_multiplier
 
 func _tick_hold(delta: float) -> void:
 	hold_remaining = maxf(0.0, hold_remaining - delta)
