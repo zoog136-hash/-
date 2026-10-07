@@ -39,12 +39,12 @@ var max_slots: int = 104
 const CATEGORIES := ["전체", "장비", "소모품", "기타"]
 const GRADE_COLORS := {
 	"일반": Color(0.62, 0.64, 0.66, 1.0),
-	"고급": Color(0.32, 0.78, 0.38, 1.0),
-	"희귀": Color(0.28, 0.58, 0.98, 1.0),
-	"영웅": Color(0.70, 0.36, 0.94, 1.0),
-	"전설": Color(0.98, 0.56, 0.18, 1.0),
-	"신화": Color(0.94, 0.24, 0.28, 1.0),
-	"유일": Color(1.0, 0.82, 0.24, 1.0)
+	"고급": Color(0.30, 0.78, 0.38, 1.0),
+	"희귀": Color(0.25, 0.56, 0.98, 1.0),
+	"영웅": Color(0.92, 0.20, 0.20, 1.0),
+	"전설": Color(0.66, 0.28, 0.96, 1.0),
+	"신화": Color(1.0, 0.76, 0.20, 1.0),
+	"유일": Color(0.16, 1.0, 0.68, 1.0)
 }
 
 func _ready() -> void:
@@ -314,9 +314,13 @@ func _refresh_inventory_grid() -> void:
 		button.custom_minimum_size = Vector2(96, 88)
 		var grade := str(record.get("grade", "일반"))
 		var equipped := _is_item_equipped(item_name)
-		var equip_mark := "E  " if equipped else ""
-		button.text = "%s%s\nx%d" % [equip_mark, _short_name(item_name), amount]
-		button.tooltip_text = "%s%s" % [item_name, " · 장착 중" if equipped else ""]
+		var equip_mark := "E " if equipped else ""
+		var level := _enhance_level(item_name)
+		var level_mark := "+%d " % level if level > 0 else ""
+		var badges := _status_badges(record, item_name)
+		var badge_mark := badges + " " if badges != "" else ""
+		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(item_name), amount]
+		button.tooltip_text = "%s%s%s" % [_enhanced_display_name(record, item_name), " · 장착 중" if equipped else "", _status_tooltip(record, item_name)]
 		button.add_theme_font_size_override("font_size", 11)
 		button.add_theme_color_override("font_color", TEXT)
 		button.add_theme_color_override("font_hover_color", Color.WHITE)
@@ -345,22 +349,92 @@ func _refresh_inventory_grid() -> void:
 		empty.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		item_grid.add_child(empty)
 
+func _enhance_level(item_name: String) -> int:
+	var levels: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
+	return maxi(0, int(levels.get(item_name, 0)))
+
+func _bless_state(record: Dictionary, item_name: String) -> String:
+	var explicit := str(record.get("bless_state", "")).to_lower()
+	if explicit in ["blessed", "축복"]:
+		return "blessed"
+	if explicit in ["cursed", "저주"]:
+		return "cursed"
+	if bool(record.get("blessed", false)) or item_name.find("축복받은") >= 0:
+		return "blessed"
+	if bool(record.get("cursed", false)) or item_name.find("저주받은") >= 0:
+		return "cursed"
+	return "normal"
+
+func _is_engraved(record: Dictionary, item_name: String) -> bool:
+	return bool(record.get("engraved", false)) or item_name.find("(각인)") >= 0 or item_name.find("각인") >= 0
+
+func _status_badges(record: Dictionary, item_name: String) -> String:
+	var badges := PackedStringArray()
+	var state := _bless_state(record, item_name)
+	if state == "blessed":
+		badges.append("✦")
+	elif state == "cursed":
+		badges.append("☠")
+	if _is_engraved(record, item_name):
+		badges.append("◆")
+	return " ".join(badges)
+
+func _enhanced_display_name(record: Dictionary, item_name: String) -> String:
+	var level := _enhance_level(item_name)
+	var prefix := "+%d " % level if level > 0 else ""
+	var badges := _status_badges(record, item_name)
+	return "%s%s%s" % [prefix, badges + " " if badges != "" else "", item_name]
+
+func _status_tooltip(record: Dictionary, item_name: String) -> String:
+	var parts := PackedStringArray()
+	var state := _bless_state(record, item_name)
+	if state == "blessed":
+		parts.append("축복")
+	elif state == "cursed":
+		parts.append("저주")
+	if _is_engraved(record, item_name):
+		parts.append("각인")
+	return (" · " + " · ".join(parts)) if not parts.is_empty() else ""
+
 func _grade_color(grade: String) -> Color:
 	return GRADE_COLORS.get(grade, GRADE_COLORS["일반"]) as Color
 
+func _grade_background(grade: String, selected: bool = false) -> Color:
+	var color := _grade_color(grade)
+	var strength := 0.22 if selected else 0.13
+	return Color(
+		lerpf(SLOT_BG.r, color.r, strength),
+		lerpf(SLOT_BG.g, color.g, strength),
+		lerpf(SLOT_BG.b, color.b, strength),
+		0.99
+	)
+
+func _apply_grade_glow(style: StyleBoxFlat, grade: String, selected: bool = false) -> StyleBoxFlat:
+	var color := _grade_color(grade)
+	var is_high_grade := grade in ["영웅", "전설", "신화", "유일"]
+	if is_high_grade:
+		style.shadow_color = Color(color.r, color.g, color.b, 0.48 if selected else 0.28)
+		style.shadow_size = 7 if selected else 4
+		style.shadow_offset = Vector2.ZERO
+	if grade == "유일":
+		style.shadow_color = Color(0.16, 1.0, 0.68, 0.70 if selected else 0.46)
+		style.shadow_size = 10 if selected else 7
+	return style
+
 func _slot_style_for_grade(grade: String, selected: bool) -> StyleBoxFlat:
 	var color := _grade_color(grade)
-	if selected:
-		return _style(Color(0.13,0.10,0.05,1), color.lightened(0.16), 2, 3)
-	return _style(SLOT_BG, color, 2, 2)
+	var style := _style(_grade_background(grade, selected), color.lightened(0.14) if selected else color, 2, 3 if selected else 2)
+	return _apply_grade_glow(style, grade, selected)
 
 func _slot_hover_style(grade: String) -> StyleBoxFlat:
 	var color := _grade_color(grade)
-	return _style(Color(0.095,0.083,0.052,1), color.lightened(0.10), 2, 2)
+	var style := _style(_grade_background(grade, true), color.lightened(0.14), 2, 3)
+	return _apply_grade_glow(style, grade, true)
 
 func _slot_pressed_style(grade: String) -> StyleBoxFlat:
 	var color := _grade_color(grade)
-	return _style(Color(0.14,0.105,0.05,1), color.lightened(0.18), 2, 3)
+	var style := _style(_grade_background(grade, true), color.lightened(0.20), 2, 3)
+	return _apply_grade_glow(style, grade, true)
 
 func _is_item_equipped(item_name: String) -> bool:
 	var equipped_items: Dictionary = character_state.get("equipped_items", {}) as Dictionary
@@ -411,9 +485,13 @@ func _refresh_detail(item_name: String) -> void:
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))
 	var equipped := _is_item_equipped(item_name)
-	detail_name.text = item_name
+	var enhance_level := _enhance_level(item_name)
+	var bless_state := _bless_state(record, item_name)
+	var engraved := _is_engraved(record, item_name)
+	detail_name.text = _enhanced_display_name(record, item_name)
 	detail_grade.text = "%s%s · 보유 %d" % [grade, " · 장착중" if equipped else "", amount]
 	detail_grade.add_theme_color_override("font_color", _grade_color(grade))
+	detail_name.add_theme_color_override("font_color", _grade_color(grade))
 	detail_type.text = "%s%s%s" % [item_type, (" · " + slot) if slot != "" else "", " · E" if equipped else ""]
 
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
@@ -421,6 +499,16 @@ func _refresh_detail(item_name: String) -> void:
 	detail_icon.texture = load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null
 
 	var lines := PackedStringArray()
+	if enhance_level > 0:
+		lines.append("[color=#ffd36a][b]강화 +%d[/b][/color]" % enhance_level)
+	if bless_state == "blessed":
+		lines.append("[color=#ffe77a]✦ 축복 아이템[/color]")
+	elif bless_state == "cursed":
+		lines.append("[color=#d76cff]☠ 저주 아이템[/color]")
+	if engraved:
+		lines.append("[color=#86d7ff]◆ 각인 아이템[/color]")
+	if enhance_level > 0 or bless_state != "normal" or engraved:
+		lines.append("")
 	var desc := str(record.get("desc", "")).strip_edges()
 	if desc != "":
 		lines.append("[color=#d8c9aa]%s[/color]" % desc)
