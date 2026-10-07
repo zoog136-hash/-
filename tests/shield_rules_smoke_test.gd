@@ -32,26 +32,26 @@ func _run() -> void:
 	var bow: Dictionary = {"name":"테스트 활","type":"활","slot":"weapon"}
 	var sword: Dictionary = {"name":"테스트 검","type":"한손검","slot":"weapon"}
 
-	world.set("equipped_items", {"weapon":sword,"armor":{},"shield":{},"accessory":{}})
+	world.set("equipped_items", {"weapon":sword,"armor":{},"offhand":{},"accessory":{}})
 	if not bool(world.call("_can_equip_offhand", shield)):
 		_fail("one-handed sword should allow shield")
-	world.set("equipped_items", {"weapon":bow,"armor":{},"shield":{},"accessory":{}})
+	world.set("equipped_items", {"weapon":bow,"armor":{},"offhand":{},"accessory":{}})
 	if bool(world.call("_can_equip_offhand", shield)):
 		_fail("bow should block shield")
 	if not bool(world.call("_can_equip_offhand", guarder)):
 		_fail("guarder should remain compatible with bow")
 
-	world.set("equipped_items", {"weapon":bow,"armor":{},"shield":shield,"accessory":{}})
+	world.set("equipped_items", {"weapon":bow,"armor":{},"offhand":shield,"accessory":{}})
 	world.call("_enforce_shield_weapon_compatibility", true)
 	var equipped: Dictionary = world.get("equipped_items") as Dictionary
-	var offhand: Variant = equipped.get("shield", {})
+	var offhand: Variant = equipped.get("offhand", {})
 	if not (offhand is Dictionary) or not (offhand as Dictionary).is_empty():
 		_fail("incompatible shield should auto-unequip")
 
-	world.set("equipped_items", {"weapon":bow,"armor":{},"shield":guarder,"accessory":{}})
+	world.set("equipped_items", {"weapon":bow,"armor":{},"offhand":guarder,"accessory":{}})
 	world.call("_enforce_shield_weapon_compatibility", true)
 	equipped = world.get("equipped_items") as Dictionary
-	offhand = equipped.get("shield", {})
+	offhand = equipped.get("offhand", {})
 	if not (offhand is Dictionary) or (offhand as Dictionary).is_empty():
 		_fail("guarder should not auto-unequip with bow")
 
