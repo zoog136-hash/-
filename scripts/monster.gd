@@ -70,6 +70,10 @@ var repath_cooldown: float = 0.0
 var path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
 var dead: bool = false
+var home_position: Vector2 = Vector2.ZERO
+var spawn_region_id: String = ""
+var roaming_radius: float = 180.0
+var roam_clock: float = 0.0
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
 	monster_name = str(record.get("name", "몬스터"))
@@ -191,7 +195,13 @@ func _physics_process(delta: float) -> void:
 		if absf(velocity.x) > 1.0:
 			sprite.flip_h = velocity.x < 0.0
 		return
-	if distance <= attack_range:
+	# Avoid line sampling to every distant monster on every physics tick.
+	var has_sight: bool = distance <= attack_range and world_controller._has_line_of_sight_world(global_position,target_player.global_position)
+	var field_active: bool = world_controller.field_map != null
+	if field_active and (world_controller.field_map.is_safe(target_player.global_position) or distance > 550.0 or target_player.global_position.distance_to(home_position) > 1050.0):
+		_roam_field(delta)
+		return
+	if distance <= attack_range and has_sight:
 		velocity = Vector2.ZERO
 		if attack_cooldown <= 0.0:
 			attack_cooldown = 1.25
@@ -214,7 +224,10 @@ func _physics_process(delta: float) -> void:
 			path = result
 			path_index = 0
 
-	var move_target: Vector2 = target_player.global_position
+	if path.is_empty() or path_index >= path.size():
+		velocity = Vector2.ZERO
+		return
+	var move_target: Vector2 = path[path_index]
 	if path_index < path.size():
 		move_target = path[path_index]
 		if global_position.distance_to(move_target) < 10.0:
@@ -222,10 +235,32 @@ func _physics_process(delta: float) -> void:
 			if path_index < path.size():
 				move_target = path[path_index]
 	var direction: Vector2 = global_position.direction_to(move_target)
-	velocity = direction * move_speed
+	velocity = direction * minf(move_speed,global_position.distance_to(move_target)/maxf(delta,.001))
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func _roam_field(delta: float) -> void:
+	if is_held():
+		velocity = Vector2.ZERO
+		return
+	roam_clock -= delta
+	if roam_clock <= 0.0:
+		roam_clock = world_controller.rng.randf_range(3.5,7.0)
+		var angle: float = world_controller.rng.randf_range(0.0,TAU)
+		var goal: Vector2 = home_position + Vector2.from_angle(angle)*world_controller.rng.randf_range(30.0,roaming_radius)
+		path = world_controller.find_world_path(global_position,goal)
+		path_index = 0
+	while path_index < path.size() and global_position.distance_to(path[path_index]) < 8:
+		path_index += 1
+	if path_index >= path.size():
+		velocity = Vector2.ZERO
+		return
+	var direction: Vector2 = global_position.direction_to(path[path_index])
+	velocity = direction * minf(move_speed*.48,global_position.distance_to(path[path_index])/maxf(delta,.001))
+	move_and_slide()
+	if absf(velocity.x)>1:
+		sprite.flip_h = velocity.x<0
 
 func _tick_poison(delta: float) -> void:
 	if dead or poison_remaining <= 0.0 or poison_tick_damage <= 0:

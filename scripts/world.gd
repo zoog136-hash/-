@@ -8,6 +8,25 @@ const CATALOG_PATH: String = "res://data/catalog_v19.json"
 const CATALOG_IMAGE_INDEX_PATH: String = "res://data/catalog_image_index_v19.json"
 const DIRECTIONAL_PATH: String = "res://data/directional_art_v19.json"
 const MONSTER_SCENE: PackedScene = preload("res://scenes/Monster.tscn")
+const FIELD_PATH: String = "res://data/maps/aden_field.json"
+const COORD = preload("res://scripts/maps/world_coordinates.gd")
+const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
+const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
+const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
+const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
+
+var field_map: PlayableField = null
+var field_renderer: FieldRenderer = null
+var field_physics: StaticBody2D = null
+var field_population: FieldPopulation = null
+var field_minimap: FieldMinimap = null
+var portal_cooldown: float = 2.0
+var auto_repath_timer: float = 0.0
+var auto_last_position: Vector2 = Vector2.ZERO
+var auto_stuck_time: float = 0.0
+var region_id: String = ""
+var return_gate: Node2D = null
+var return_gate_position: Vector2 = Vector2.INF
 
 @onready var map_background: Sprite2D = $MapRoot/Background
 @onready var collision_tiles: TileMapLayer = $MapRoot/CollisionTiles
@@ -159,10 +178,18 @@ var inventory: Dictionary = {
 }
 
 func _ready() -> void:
+	# Apply after resource import. A project-level custom_font is loaded before
+	# first import on clean checkouts and would report a missing font loader.
+	var korean_font := FontVariation.new()
+	korean_font.base_font = load("res://assets/fonts/NotoSansKR.ttf") as Font
+	korean_font.variation_opentype = {"wght":500.0}
+	ThemeDB.get_default_theme().default_font = korean_font
+	ThemeDB.fallback_font = korean_font
 	rng.randomize()
 	_load_data()
 	_connect_signals()
 	_setup_collision_tileset()
+	_setup_field_services()
 	hud.refresh_maps(maps)
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	hud.set_job_data(job_classes, skills_db)
@@ -176,6 +203,14 @@ func _ready() -> void:
 	hud.append_log("V20 · 모바일 MMORPG HUD / 전투 화면 개선")
 
 func _process(delta: float) -> void:
+	portal_cooldown = maxf(0.0, portal_cooldown - delta)
+	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
+	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
+		auto_stuck_time += delta
+	else:
+		auto_stuck_time = 0.0
+	auto_last_position = player.global_position
+	_update_field_triggers()
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_item_buffs(delta)
@@ -201,6 +236,8 @@ func _process(delta: float) -> void:
 		_load_game(false)
 	if Input.is_action_just_pressed("toggle_collision_debug"):
 		collision_debug = not collision_debug
+		if field_map != null:
+			_build_collision_debug_tiles()
 		collision_tiles.visible = collision_debug
 		hud.show_message("충돌 타일 표시 %s" % ("ON" if collision_debug else "OFF"))
 	_update_target_hud()
@@ -209,13 +246,13 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mouse_event: InputEventMouseButton = event
 		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
-			_set_click_destination(get_global_mouse_position())
+			_set_click_destination(COORD.screen_to_world(get_viewport(), mouse_event.position))
 	elif event is InputEventScreenTouch:
 		var touch_event: InputEventScreenTouch = event
 		if touch_event.pressed:
 			# Android touch events carry real viewport coordinates. Mouse emulation is
 			# disabled in project.godot, so get_global_mouse_position() may be stale.
-			var world_touch_position: Vector2 = get_viewport().get_canvas_transform().affine_inverse() * touch_event.position
+			var world_touch_position: Vector2 = COORD.screen_to_world(get_viewport(), touch_event.position)
 			_set_click_destination(world_touch_position)
 
 func _load_data() -> void:
@@ -223,6 +260,14 @@ func _load_data() -> void:
 	var maps_value: Variant = JSON.parse_string(maps_text)
 	if maps_value is Array:
 		maps = maps_value as Array
+	# Replace only the Aden entry; preserve every existing map ID and data path.
+	var field_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIELD_PATH))
+	if field_value is Dictionary:
+		var definition: Dictionary = field_value as Dictionary
+		for index: int in range(maps.size()):
+			if str(maps[index].get("id", "")) == str(definition["map_id"]):
+				maps[index] = {"id":definition["map_id"],"name":definition["map_name"],"field_definition":definition,
+					"width":int(definition["bounds"][2])/32,"height":int(definition["bounds"][3])/32,"tile_size_world":32}
 	for map_value: Variant in maps:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
@@ -388,6 +433,19 @@ func _connect_signals() -> void:
 func _set_map(map_id: String, keep_position: bool) -> void:
 	if not maps_by_id.has(map_id):
 		return
+	field_population.configure(self, null)
+	if is_instance_valid(return_gate):
+		remove_child(return_gate)
+		return_gate.queue_free()
+	return_gate = null
+	return_gate_position = Vector2.INF
+	for old_node: Node in [field_renderer, field_physics]:
+		if is_instance_valid(old_node):
+			remove_child(old_node)
+			old_node.queue_free()
+	field_renderer = null
+	field_physics = null
+	field_map = null
 	active_map_id = map_id
 	active_map = maps_by_id[map_id] as Dictionary
 	tile_size = int(active_map.get("tile_size_world", 32))
@@ -398,19 +456,58 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	player.camera.limit_bottom = maxi(1, int(world_size.y))
 	_clear_monsters()
 	_clear_drops()
-	_build_astar()
-	_build_static_collisions()
-	_build_collision_debug_tiles()
-	_apply_map_background()
+	for shape: Node in map_collision.get_children():
+		map_collision.remove_child(shape)
+		shape.queue_free()
+	if active_map.has("field_definition"):
+		field_map = FIELD_SCRIPT.new()
+		field_map.configure(active_map["field_definition"])
+		astar = field_map.astar
+		field_physics = field_map.build_physics(self)
+		map_background.texture = null
+		map_background.visible = false
+		collision_tiles.clear()
+		if collision_debug:
+			_build_collision_debug_tiles()
+		player.collision_mask = 4
+		var settings: Dictionary = field_map.data["camera"]
+		player.camera.zoom = Vector2.ONE * float(settings["zoom"])
+		player.camera.position = COORD.array_vector(settings["offset"])
+		player.camera.position_smoothing_speed = float(settings["follow_speed"])
+	else:
+		_build_astar()
+		_build_static_collisions()
+		_build_collision_debug_tiles()
+		_apply_map_background()
+		map_background.visible = true
+		player.collision_mask = 3
+		# Small legacy maps still fill the viewport at their existing dimensions.
+		var fit_zoom: float = maxf(1.0,maxf(get_viewport_rect().size.x/world_size.x,get_viewport_rect().size.y/world_size.y))
+		player.camera.zoom = Vector2.ONE * fit_zoom
+		player.camera.position = Vector2(0,-32)
 	if not keep_position or not _is_walkable_world(player.global_position):
 		player.global_position = _spawn_position()
+	player.velocity = Vector2.ZERO
+	player.set_touch_vector(Vector2.ZERO)
 	player.camera.reset_smoothing()
+	player.camera.force_update_scroll()
 	player.clear_click_path()
 	selected_monster = null
 	auto_target = null
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
-	_spawn_monsters(9)
+	if field_map != null:
+		field_renderer = FIELD_RENDERER.new()
+		field_renderer.name = "FieldRenderer"
+		add_child(field_renderer)
+		field_renderer.configure(field_map, player)
+		field_population.configure(self, field_map)
+	else:
+		_spawn_monsters(9)
+	field_minimap.configure(self, field_map)
+	portal_cooldown = 2.0
+	region_id = ""
+	auto_repath_timer = 0.0
 	hud.show_message(str(active_map.get("name", active_map_id)))
 
 func _apply_map_background() -> void:
@@ -483,6 +580,13 @@ func _setup_collision_tileset() -> void:
 
 func _build_collision_debug_tiles() -> void:
 	collision_tiles.clear()
+	if field_map != null:
+		if collision_debug:
+			for y: int in range(field_map.height):
+				for x: int in range(field_map.width):
+					if astar.is_point_solid(Vector2i(x,y)):
+						collision_tiles.set_cell(Vector2i(x,y),0,Vector2i.ZERO,0)
+		return
 	var width: int = int(active_map.get("width", 1))
 	var height: int = int(active_map.get("height", 1))
 	var collision: Array = active_map.get("collision", []) as Array
@@ -493,6 +597,8 @@ func _build_collision_debug_tiles() -> void:
 				collision_tiles.set_cell(Vector2i(column, row), 0, Vector2i.ZERO, 0)
 
 func _spawn_position() -> Vector2:
+	if field_map != null:
+		return field_map.cell_to_world(field_map.nearest_cell(COORD.array_vector(field_map.data["spawn_position"])))
 	var spawn_value: Variant = active_map.get("navigation_spawn", {})
 	if spawn_value is Dictionary:
 		var spawn: Dictionary = spawn_value as Dictionary
@@ -504,9 +610,13 @@ func _spawn_position() -> Vector2:
 	return _random_walkable_position(Vector2.ZERO, 0.0, 999999.0)
 
 func _cell_to_world(cell: Vector2i) -> Vector2:
+	if field_map != null:
+		return field_map.cell_to_world(cell)
 	return Vector2((cell.x + 0.5) * tile_size, (cell.y + 0.5) * tile_size)
 
 func _world_to_cell(position_value: Vector2) -> Vector2i:
+	if field_map != null:
+		return field_map.world_to_cell(position_value)
 	return Vector2i(int(floor(position_value.x / tile_size)), int(floor(position_value.y / tile_size)))
 
 func _is_walkable_world(position_value: Vector2) -> bool:
@@ -518,6 +628,8 @@ func _is_walkable_world(position_value: Vector2) -> bool:
 	return not astar.is_point_solid(cell)
 
 func find_world_path(from_position: Vector2, to_position: Vector2) -> PackedVector2Array:
+	if field_map != null:
+		return field_map.path(from_position, to_position)
 	var result: PackedVector2Array = PackedVector2Array()
 	if astar == null:
 		return result
@@ -542,8 +654,18 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	return origin
 
 func _set_click_destination(target: Vector2) -> void:
+	if field_map != null:
+		for npc: Dictionary in field_map.data["npc_spawn"]:
+			var npc_position: Vector2 = COORD.array_vector(npc["position"])
+			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
+				if str(npc["role"]) == "shop":
+					hud.open_shop()
+				else:
+					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허")
+				return
 	var path: PackedVector2Array = find_world_path(player.global_position, target)
 	if path.size() > 0:
+		player.set_auto_enabled(false)
 		player.set_click_path(path, target)
 
 func _spawn_monsters(count: int) -> void:
@@ -1095,7 +1217,13 @@ func _run_auto_hunt() -> void:
 		if player.is_held():
 			player.clear_click_path()
 			return
-		if player.click_path.is_empty() or player.path_index >= player.click_path.size():
+		if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
+			auto_repath_timer = 0.65
+			if auto_stuck_time > 2.0:
+				auto_target = null
+				player.clear_click_path()
+				auto_stuck_time = 0.0
+				return
 			var path: PackedVector2Array = find_world_path(player.global_position, auto_target.global_position)
 			if path.is_empty():
 				auto_target = _nearest_reachable_monster(99999.0)
@@ -1122,6 +1250,8 @@ func _nearest_monster(max_distance: float) -> TwilightMonster:
 	return best
 
 func _has_line_of_sight_world(from_position: Vector2, to_position: Vector2) -> bool:
+	if field_map != null:
+		return field_map.line_clear(from_position, to_position)
 	if astar == null:
 		return false
 	var start: Vector2i = _world_to_cell(from_position)
@@ -1190,6 +1320,8 @@ func _update_target_hud() -> void:
 		hud.clear_target()
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	if field_map != null:
+		field_population.release(monster)
 	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier())))
 	experience += gained_experience
 	gold += monster.gold_reward
@@ -1210,6 +1342,8 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	call_deferred("_ensure_monster_count")
 
 func _ensure_monster_count() -> void:
+	if field_map != null:
+		return
 	var alive: int = 0
 	for child: Node in monsters_root.get_children():
 		if child is TwilightMonster and not (child as TwilightMonster).dead:
@@ -1315,6 +1449,8 @@ func _on_player_bleed_tick(damage_value: int) -> void:
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
 	if attacker == null or not is_instance_valid(attacker):
+		return
+	if field_map != null and field_map.is_safe(player.global_position):
 		return
 	var normalized_type: String = attack_type
 	if normalized_type != "ranged" and normalized_type != "magic":
@@ -2147,6 +2283,7 @@ func _update_hud() -> void:
 func _save_game(quiet: bool) -> void:
 	var data: Dictionary = {
 		"map_id": active_map_id,
+		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
 		"position": [player.global_position.x, player.global_position.y],
 		"level": level,
 		"experience": experience,
@@ -2261,7 +2398,8 @@ func _load_game(quiet: bool) -> void:
 		map_id = active_map_id
 	_set_map(map_id, false)
 	var position_value: Variant = data.get("position", [])
-	if position_value is Array:
+	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
+	if position_value is Array and compatible_layout:
 		var position_array: Array = position_value as Array
 		if position_array.size() >= 2:
 			var saved_position: Vector2 = Vector2(float(position_array[0]), float(position_array[1]))
@@ -3890,3 +4028,106 @@ func _update_companion(delta: float) -> void:
 		companion_sprite.position.y = -26.0 + sin(Time.get_ticks_msec() / 180.0) * 2.0
 	if relic_sprite.visible:
 		relic_sprite.global_position = player.global_position + Vector2(42.0, -64.0 + sin(Time.get_ticks_msec() / 420.0) * 4.0)
+
+# Playable-field services: renderer, physics, population and HUD remain separate.
+func _setup_field_services() -> void:
+	y_sort_enabled = true
+	monsters_root.y_sort_enabled = true
+	monsters_root.z_index = 0
+	player.z_index = 0
+	$Companion.z_index = 0
+	field_population = FIELD_POPULATION.new()
+	field_population.name = "FieldPopulation"
+	add_child(field_population)
+	field_population.set_process(false)
+	field_minimap = FIELD_MINIMAP.new()
+	field_minimap.name = "FieldMinimap"
+	hud.get_node("Root").add_child(field_minimap)
+	field_minimap.set_anchors_preset(Control.PRESET_TOP_RIGHT)
+	field_minimap.offset_left = -238
+	field_minimap.offset_right = -16
+	field_minimap.offset_top = 100
+	field_minimap.offset_bottom = 291
+	field_minimap.z_index = 36
+
+func _update_field_triggers() -> void:
+	if field_map == null:
+		if return_gate_position.is_finite() and portal_cooldown <= 0 and not player.auto_enabled and player.global_position.distance_to(return_gate_position) < 55:
+			portal_cooldown = 2.0
+			call_deferred("_return_from_field_gate")
+		return
+	var region: Dictionary = field_map.region_at(player.global_position)
+	if str(region["id"]) != region_id:
+		region_id = str(region["id"])
+		hud.set_map_name(str(region["name"]) + (" · 안전 지역" if str(region["type"])=="safe" else " · 아덴"))
+	if portal_cooldown > 0.0 or player.auto_enabled:
+		return
+	for portal: Dictionary in field_map.data["portal"]:
+		if player.global_position.distance_to(COORD.array_vector(portal["position"])) < float(portal["radius"]):
+			portal_cooldown = 2.0
+			call_deferred("use_field_portal",str(portal["id"]))
+			break
+
+func use_field_portal(portal_id: String) -> bool:
+	if field_map == null:
+		return false
+	for portal: Dictionary in field_map.data["portal"]:
+		if str(portal["id"]) != portal_id:
+			continue
+		var target_map: String = str(portal["target_map"])
+		if not maps_by_id.has(target_map):
+			return false
+		player.set_auto_enabled(false)
+		player.clear_click_path()
+		player.velocity = Vector2.ZERO
+		player.set_touch_vector(Vector2.ZERO)
+		selected_monster = null
+		auto_target = null
+		if target_map != active_map_id:
+			_set_map(target_map,false)
+			_place_return_gate()
+		elif portal.has("target_position"):
+			var cell: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
+			if cell.x < 0:
+				return false
+			player.global_position = field_map.cell_to_world(cell)
+		player.camera.reset_smoothing()
+		player.camera.force_update_scroll()
+		if field_renderer != null:
+			field_renderer.refresh_visible()
+		portal_cooldown = 2.0
+		hud.show_message(str(portal["name"]))
+		return true
+	return false
+
+func _place_return_gate() -> void:
+	var path: PackedVector2Array = find_world_path(player.global_position,player.global_position+Vector2(192,0))
+	if path.is_empty():
+		return
+	return_gate_position = path[path.size()-1]
+	if return_gate_position.distance_to(player.global_position) < 85:
+		return_gate_position = Vector2.INF
+		return
+	return_gate = Node2D.new()
+	return_gate.name = "AdenReturnPortal"
+	return_gate.position = return_gate_position
+	add_child(return_gate)
+	var line := Line2D.new()
+	line.width = 4
+	line.default_color = Color("8bddd0")
+	for i: int in range(49):
+		line.add_point(Vector2(cos(TAU*i/48.0)*50,sin(TAU*i/48.0)*28))
+	return_gate.add_child(line)
+	var label := Label.new()
+	label.text = "아덴으로 귀환"
+	label.position = Vector2(-65,-72)
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return_gate.add_child(label)
+
+func _return_from_field_gate() -> void:
+	_set_map("aden_world",false)
+	var cell: Vector2i = field_map.nearest_cell(Vector2(10640,5440))
+	player.global_position = field_map.cell_to_world(cell)
+	player.camera.reset_smoothing()
+	player.camera.force_update_scroll()
+	field_renderer.refresh_visible()

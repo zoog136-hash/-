@@ -51,6 +51,7 @@ var skill_speed_multiplier: float = 1.0
 var equipment_move_speed_multiplier: float = 1.0
 var attack_speed_multiplier: float = 1.0
 var attack_visual_duration: float = 0.42
+var physics_delta: float = 1.0 / 60.0
 
 func _ready() -> void:
 	base_move_speed = move_speed
@@ -61,6 +62,7 @@ func _ready() -> void:
 	camera.enabled = true
 
 func _physics_process(delta: float) -> void:
+	physics_delta = delta
 	attack_clock = maxf(0.0, attack_clock - delta)
 	transform_bob_clock += delta
 	_tick_stun(delta)
@@ -110,6 +112,8 @@ func _physics_process(delta: float) -> void:
 		manual = touch_vector
 
 	if manual.length_squared() > 0.01:
+		if auto_enabled:
+			set_auto_enabled(false)
 		clear_click_path()
 		velocity = manual.normalized() * move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
 	else:
@@ -124,13 +128,15 @@ func _click_path_velocity() -> Vector2:
 		return Vector2.ZERO
 	var next_point: Vector2 = click_path[path_index]
 	var distance: float = global_position.distance_to(next_point)
-	if distance <= 10.0:
+	while distance <= 5.0:
 		path_index += 1
 		if path_index >= click_path.size():
 			return Vector2.ZERO
 		next_point = click_path[path_index]
+		distance = global_position.distance_to(next_point)
 	var direction: Vector2 = global_position.direction_to(next_point)
-	return direction * click_move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
+	var speed: float = click_move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
+	return direction * minf(speed, distance / maxf(physics_delta, 0.001))
 
 func _update_facing(motion: Vector2) -> void:
 	if motion.length_squared() < 1.0:
