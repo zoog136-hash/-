@@ -879,21 +879,22 @@ func _nearest_monster(max_distance: float) -> TwilightMonster:
 	return best
 
 func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
-	var candidates: Array[TwilightMonster] = []
+	var best: TwilightMonster = null
+	var best_distance: float = max_distance
 	for node: Node in monsters_root.get_children():
-		if node is TwilightMonster:
-			var monster: TwilightMonster = node
-			if monster.dead:
-				continue
-			if player.global_position.distance_to(monster.global_position) <= max_distance:
-				candidates.append(monster)
-	candidates.sort_custom(func(a: TwilightMonster, b: TwilightMonster) -> bool:
-		return player.global_position.distance_squared_to(a.global_position) < player.global_position.distance_squared_to(b.global_position)
-	)
-	for monster: TwilightMonster in candidates:
-		if not find_world_path(player.global_position, monster.global_position).is_empty():
-			return monster
-	return null
+		if not (node is TwilightMonster):
+			continue
+		var monster: TwilightMonster = node
+		if monster.dead:
+			continue
+		var distance: float = player.global_position.distance_to(monster.global_position)
+		if distance >= best_distance:
+			continue
+		if find_world_path(player.global_position, monster.global_position).is_empty():
+			continue
+		best_distance = distance
+		best = monster
+	return best
 
 func _select_monster(monster: TwilightMonster) -> void:
 	selected_monster = monster
@@ -1335,11 +1336,15 @@ func _save_game(quiet: bool) -> void:
 		"quest_kills": quest_kills
 	}
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify(data))
-		file.close()
+	if file == null:
 		if not quiet:
-			hud.show_message("저장 완료")
+			hud.show_message("저장 실패")
+		hud.append_log("저장 파일을 열 수 없습니다")
+		return
+	file.store_string(JSON.stringify(data))
+	file.close()
+	if not quiet:
+		hud.show_message("저장 완료")
 
 func _load_game(quiet: bool) -> void:
 	if not FileAccess.file_exists(SAVE_PATH):
@@ -1348,17 +1353,20 @@ func _load_game(quiet: bool) -> void:
 		return
 	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
 	if not (value is Dictionary):
+		if not quiet:
+			hud.show_message("저장 데이터가 손상되었습니다")
+		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
-	level = int(data.get("level", level))
-	experience = int(data.get("experience", data.get("exp", experience)))
-	exp_need = int(data.get("exp_need", exp_need))
+	level = maxi(1, int(data.get("level", level)))
+	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
+	exp_need = maxi(1, int(data.get("exp_need", exp_need)))
 	hp = int(data.get("hp", hp))
-	max_hp = int(data.get("max_hp", max_hp))
+	max_hp = maxi(1, int(data.get("max_hp", max_hp)))
 	mp = int(data.get("mp", mp))
-	max_mp = int(data.get("max_mp", max_mp))
-	attack_power = int(data.get("attack", attack_power))
-	defense = int(data.get("defense", defense))
+	max_mp = maxi(0, int(data.get("max_mp", max_mp)))
+	attack_power = maxi(1, int(data.get("attack", attack_power)))
+	defense = maxi(0, int(data.get("defense", defense)))
 	str_stat = int(data.get("str", str_stat))
 	dex_stat = int(data.get("dex", dex_stat))
 	con_stat = int(data.get("con", con_stat))
@@ -1366,7 +1374,7 @@ func _load_game(quiet: bool) -> void:
 	wis_stat = int(data.get("wis", wis_stat))
 	cha_stat = int(data.get("cha", cha_stat))
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
-	gold = int(data.get("gold", gold))
+	gold = maxi(0, int(data.get("gold", gold)))
 	quest_kills = clampi(int(data.get("quest_kills", quest_kills)), 0, QUEST_GOAL)
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
@@ -1381,8 +1389,11 @@ func _load_game(quiet: bool) -> void:
 	if equipped_items_value is Dictionary:
 		equipped_items = equipped_items_value as Dictionary
 	_restore_equipped_visuals()
-	hp = mini(hp, _effective_max_hp())
+	hp = clampi(hp, 0, _effective_max_hp())
+	mp = clampi(mp, 0, max_mp)
 	var map_id: String = str(data.get("map_id", active_map_id))
+	if not maps_by_id.has(map_id):
+		map_id = active_map_id
 	_set_map(map_id, false)
 	var position_value: Variant = data.get("position", [])
 	if position_value is Array:
