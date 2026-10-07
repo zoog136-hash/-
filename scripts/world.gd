@@ -1540,6 +1540,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.show_message("강화 실패 · %s 소실" % target_name)
 		hud.append_log("강화 실패(소실) · +%d %s" % [current_level, target_name])
 
+	hp = mini(hp, _effective_max_hp())
 	hud.refresh_inventory(inventory)
 	_update_hud()
 	_save_game(true)
