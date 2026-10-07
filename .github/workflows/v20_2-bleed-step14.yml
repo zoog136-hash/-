@@ -1,0 +1,311 @@
+name: V20.2 Bleed Step14 Test
+
+on:
+  push:
+    branches: [v20-2-bleed-step14]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-bleed-step14
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create bleed test
+        shell: bash
+        run: |
+          cat > test_bleed_step14.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.level = 35
+              world.str_stat = 16
+              world.con_stat = 16
+
+              check(world._bleed_accuracy_stat() == 7, "base bleed accuracy")
+              check(world._bleed_resistance_stat() == 7, "base bleed resistance")
+
+              world.equipped_items["weapon"] = {"bleed_accuracy":8}
+              world.equipped_catalog["성물"] = {"출혈 적중":5}
+              world.equipped_items["armor"] = {"bleed_resistance":6}
+              world.equipped_items["accessory"] = {"출혈 저항":4}
+              check(world._bleed_accuracy_stat() == 20, "bleed accuracy stacks")
+              check(world._bleed_resistance_stat() == 17, "bleed resistance stacks")
+
+              var snapshot: Dictionary = world._character_stats_snapshot()
+              check(int(snapshot.get("bleed_accuracy", -1)) == 20, "snapshot bleed accuracy")
+              check(int(snapshot.get("bleed_resistance", -1)) == 17, "snapshot bleed resistance")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+
+              var monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(monster)
+              monster.setup({
+                  "name":"출혈 테스트","lv":20,"hp":1000,"atk":40,"def":5,"xp":10,"speed":60,
+                  "bleed_accuracy":25,"bleed_resistance":14,"bleed_duration":4.5,
+                  "bleed_tick_damage":9,"bleed_tick_interval":0.75
+              }, world.player, world, null)
+              check(monster.bleed_accuracy == 25, "monster bleed accuracy")
+              check(monster.bleed_resistance == 14, "monster bleed resistance")
+              check(approx(monster.bleed_duration, 4.5), "monster bleed duration")
+              check(monster.bleed_tick_damage == 9, "monster bleed tick damage")
+              check(approx(monster.bleed_tick_interval, 0.75), "monster bleed interval")
+
+              # Direct monster bleed ticks.
+              monster.apply_bleed(2.25, 9, 0.75)
+              check(monster.is_bleeding(), "monster enters bleed")
+              var hp0: int = monster.hp
+              monster._tick_bleed(0.50)
+              check(monster.hp == hp0, "no bleed before interval")
+              monster._tick_bleed(0.25)
+              check(monster.hp == hp0 - 9, "bleed first tick")
+              monster._tick_bleed(0.75)
+              check(monster.hp == hp0 - 18, "bleed second tick")
+
+              # Reapplication keeps stronger bleed and refreshes duration.
+              monster.apply_bleed(5.0, 15, 0.75)
+              check(monster.bleed_tick_damage == 15, "stronger bleed replaces tick damage")
+              check(monster.bleed_remaining >= 5.0 - 0.001, "bleed duration refreshes")
+
+              # Poison and bleed coexist independently.
+              monster.clear_poison()
+              monster.clear_bleed()
+              monster.hp = 1000
+              monster.apply_poison(3.0, 11, 1.0)
+              monster.apply_bleed(3.0, 7, 0.75)
+              var coexist_hp: int = monster.hp
+              monster._tick_poison(1.0)
+              monster._tick_bleed(0.75)
+              check(monster.hp == coexist_hp - 18, "poison and bleed both deal damage")
+              check(monster.is_poisoned() and monster.is_bleeding(), "poison and bleed coexist")
+
+              # Bleed can kill and emits died.
+              var death_state: Dictionary = {"count":0}
+              var doomed: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(doomed)
+              doomed.setup({"name":"출혈 사망","lv":1,"hp":30,"atk":3,"def":0,"xp":1}, world.player, world, null)
+              doomed.died.connect(func(_m: TwilightMonster) -> void:
+                  death_state["count"] = int(death_state["count"]) + 1
+              )
+              doomed.apply_bleed(1.0, 35, 0.75)
+              doomed._tick_bleed(0.75)
+              check(doomed.dead, "bleed can kill monster")
+              check(int(death_state["count"]) == 1, "bleed death emits died")
+
+              # Actual Bleeding Slash: melee hit then bleed check.
+              world.level = 100
+              world.str_stat = 50
+              world.mp = 1000
+              world.equipped_items = {
+                  "weapon":{"bleed_accuracy":100},
+                  "armor":{},
+                  "accessory":{}
+              }
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.player.global_position = Vector2.ZERO
+              monster.global_position = Vector2(50, 0)
+              monster.monster_level = 1
+              monster.armor_class = -1
+              monster.bleed_resistance = 0
+              monster.clear_bleed()
+              monster.clear_poison()
+              monster.dead = false
+              monster.hp = 5000
+              monster.max_hp = 5000
+              check(approx(world._player_bleed_chance(monster), 0.95), "player bleed chance cap")
+              var bleed_success: bool = false
+              for seed_value: int in range(1, 120):
+                  world.rng.seed = seed_value
+                  world.mp = 1000
+                  monster.clear_bleed()
+                  monster.dead = false
+                  monster.hp = 5000
+                  if world._cast_bleed_skill(monster, 6, 28, 4.5, 9, 0.75, "출혈 베기"):
+                      bleed_success = true
+                      break
+              check(bleed_success, "Bleeding Slash can succeed")
+              check(monster.is_bleeding(), "Bleeding Slash applies bleed")
+              check(world.mp == 994, "Bleeding Slash consumes MP")
+              var cast_hp: int = monster.hp
+              monster._tick_bleed(0.75)
+              check(monster.hp == cast_hp - 9, "Bleeding Slash DOT ticks")
+
+              # Player bleed signal reduces world HP.
+              world.hp = 500
+              world.max_hp = 500
+              world.player.clear_bleed()
+              world.player.apply_bleed(2.0, 13, 0.75)
+              check(world.player.is_bleeding(), "player enters bleed")
+              var player_hp0: int = world.hp
+              world.player._tick_bleed(0.75)
+              check(world.hp == player_hp0 - 13, "player bleed signal damages world HP")
+
+              # Player poison and bleed stack independently.
+              world.hp = 500
+              world.player.clear_poison()
+              world.player.clear_bleed()
+              world.player.apply_poison(3.0, 10, 1.0)
+              world.player.apply_bleed(3.0, 8, 0.75)
+              var stacked_hp: int = world.hp
+              world.player._tick_poison(1.0)
+              world.player._tick_bleed(0.75)
+              check(world.hp == stacked_hp - 18, "player poison and bleed stack")
+              check(world.player.is_poisoned() and world.player.is_bleeding(), "player DOT states coexist")
+
+              # Bleed does not block normal actions.
+              world.player.global_position = Vector2.ZERO
+              monster.global_position = Vector2(50, 0)
+              monster.dead = false
+              monster.hp = 5000
+              monster.armor_class = -1
+              world.level = 200
+              world.str_stat = 50
+              world.selected_monster = monster
+              world.rng.seed = 1
+              var action_hp: int = monster.hp
+              world._attack()
+              check(monster.hp < action_hp, "bleed does not block normal attack")
+
+              # Incoming bleed must be melee-only.
+              world.player.clear_bleed()
+              world.player.clear_poison()
+              world.hp = 5000
+              world.max_hp = 5000
+              world.level = 1
+              world.con_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 100
+              monster.melee_accuracy = 999
+              monster.ranged_accuracy = 999
+              monster.melee_critical_rate = 0
+              monster.ranged_critical_rate = 0
+              monster.stun_duration = 0.0
+              monster.silence_duration = 0.0
+              monster.hold_duration = 0.0
+              monster.fear_duration = 0.0
+              monster.poison_duration = 0.0
+              monster.bleed_accuracy = 100
+              monster.bleed_duration = 3.0
+              monster.bleed_tick_damage = 17
+              monster.bleed_tick_interval = 0.75
+
+              world.rng.seed = 1
+              world._on_player_hit(monster, 10, "ranged")
+              check(not world.player.is_bleeding(), "ranged attack cannot apply bleed")
+
+              var incoming_success: bool = false
+              for seed_value: int in range(1, 120):
+                  world.player.clear_bleed()
+                  world.hp = 5000
+                  world.rng.seed = seed_value
+                  world._on_player_hit(monster, 10, "melee")
+                  if world.player.is_bleeding():
+                      incoming_success = true
+                      break
+              check(incoming_success, "melee monster bleed can affect player")
+              check(world.player.bleed_tick_damage == 17, "incoming bleed damage stored")
+              var before_incoming_tick: int = world.hp
+              world.player._tick_bleed(0.75)
+              check(world.hp == before_incoming_tick - 17, "incoming bleed ticks damage")
+
+              # Bleed death respawns and clears poison + bleed.
+              world.hp = 5
+              world.max_hp = 500
+              world.player.clear_poison()
+              world.player.clear_bleed()
+              world.player.apply_poison(5.0, 1, 1.0)
+              world.player.apply_bleed(2.0, 20, 0.75)
+              world.player._tick_bleed(0.75)
+              check(world.hp == world._effective_max_hp(), "bleed death respawns at full HP")
+              check(not world.player.is_bleeding(), "bleed clears on death")
+              check(not world.player.is_poisoned(), "poison also clears on bleed death")
+
+              # High bleed resistance floors chance.
+              world.equipped_items["armor"] = {"bleed_resistance":100}
+              monster.bleed_accuracy = 5
+              check(approx(
+                  world._status_effect_chance(monster.bleed_accuracy, monster.monster_level, world._bleed_resistance_stat(), world.level),
+                  0.05
+              ), "high bleed resistance reaches floor")
+
+              # Regression.
+              check(world._poison_accuracy_stat() >= 0, "poison preserved")
+              check(world._fear_accuracy_stat() >= 0, "fear preserved")
+              check(world._hold_accuracy_stat() >= 0, "hold preserved")
+              check(world._silence_accuracy_stat() >= 0, "silence preserved")
+              check(world._stun_accuracy_stat() >= 0, "stun preserved")
+              check(world._critical_damage(100) == 150, "critical preserved")
+              check(world._effective_mr() > 0, "MR preserved")
+
+              if failures.is_empty():
+                  print("V20.2 BLEED STEP14 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run bleed test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_bleed_step14.gd 2>&1 | tee /tmp/bleed.log
+          grep -q "V20.2 BLEED STEP14 PASS" /tmp/bleed.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/bleed.log; then
+            exit 1
+          fi
