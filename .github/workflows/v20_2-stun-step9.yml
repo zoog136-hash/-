@@ -1,0 +1,225 @@
+name: V20.2 Stun Step9 Test
+
+on:
+  push:
+    branches: [v20-2-stun-step9]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-stun-step9
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create stun test
+        shell: bash
+        run: |
+          cat > test_stun_step9.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.str_stat = 18
+              world.con_stat = 16
+              world.level = 35
+
+              # Base player stun stats.
+              check(world._stun_accuracy_stat() == 7, "base stun accuracy")
+              check(world._stun_resistance_stat() == 7, "base stun resistance")
+
+              # Equipment aliases.
+              world.equipped_items["weapon"] = {"stun_accuracy":8}
+              world.equipped_catalog["성물"] = {"스턴 적중":5}
+              world.equipped_items["armor"] = {"stun_resistance":6}
+              world.equipped_items["accessory"] = {"스턴 내성":4}
+              check(world._stun_accuracy_stat() == 20, "stun accuracy equipment stacks")
+              check(world._stun_resistance_stat() == 17, "stun resistance equipment stacks")
+
+              # Generic status-effect formula.
+              check(approx(world._status_effect_chance(20, 35, 10, 20), 0.675), "status chance level and stats")
+              check(approx(world._status_effect_chance(0, 1, 100, 100), 0.05), "status floor 5")
+              check(approx(world._status_effect_chance(100, 100, 0, 1), 0.95), "status cap 95")
+
+              var snapshot: Dictionary = world._character_stats_snapshot()
+              check(int(snapshot.get("stun_accuracy", -1)) == 20, "snapshot stun accuracy")
+              check(int(snapshot.get("stun_resistance", -1)) == 17, "snapshot stun resistance")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+              var monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(monster)
+              monster.setup({
+                  "name":"스턴 테스트","lv":20,"hp":100000,"atk":40,"def":5,"xp":10,"speed":60,
+                  "stun_accuracy":25,"stun_resistance":14,"stun_duration":1.5
+              }, world.player, world, null)
+              check(monster.stun_accuracy == 25, "monster stun accuracy")
+              check(monster.stun_resistance == 14, "monster stun resistance")
+              check(approx(monster.stun_duration, 1.5), "monster stun duration")
+
+              # Player stun freezes movement/action state and expires.
+              world.player.velocity = Vector2(100, 0)
+              world.player.apply_stun(0.30)
+              check(world.player.is_stunned(), "player enters stun")
+              world.player._physics_process(0.10)
+              check(world.player.velocity == Vector2.ZERO, "stunned player velocity zero")
+              check(world.player.is_stunned(), "player still stunned before duration")
+              world.player._physics_process(0.25)
+              check(not world.player.is_stunned(), "player stun expires")
+
+              # Monster stun freezes AI and expires.
+              monster.global_position = world.player.global_position + Vector2(30, 0)
+              monster.apply_stun(0.30)
+              check(monster.is_stunned(), "monster enters stun")
+              var hit_state: Dictionary = {"count":0}
+              monster.player_hit.connect(func(_a: TwilightMonster, _d: int, _t: String) -> void:
+                  hit_state["count"] = int(hit_state["count"]) + 1
+              )
+              monster._physics_process(0.10)
+              check(int(hit_state["count"]) == 0, "stunned monster cannot attack")
+              monster._physics_process(0.25)
+              check(not monster.is_stunned(), "monster stun expires")
+
+              # Shock Stun actual cast: high accuracy guarantees a practical 95% cap path.
+              world.level = 100
+              world.str_stat = 50
+              world.mp = 1000
+              world.equipped_items = {
+                  "weapon":{"stun_accuracy":100},
+                  "armor":{},
+                  "accessory":{}
+              }
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 1
+              monster.armor_class = -1
+              monster.stun_resistance = 0
+              monster.stun_remaining = 0.0
+              monster.hp = 100000
+              monster.max_hp = 100000
+              monster.global_position = world.player.global_position + Vector2(50, 0)
+              check(approx(world._player_stun_chance(monster), 0.95), "player stun chance cap")
+              var shock_success: bool = false
+              for seed_value: int in range(1, 80):
+                  world.rng.seed = seed_value
+                  world.mp = 1000
+                  monster.stun_remaining = 0.0
+                  if world._cast_stun_skill(monster, 10, 10, 2.0, "쇼크 스턴"):
+                      shock_success = true
+                      break
+              check(shock_success, "Shock Stun can succeed")
+              check(monster.is_stunned(), "Shock Stun applies monster stun")
+              check(world.mp == 990, "Shock Stun consumes MP")
+
+              # Stunned player blocks direct attack path.
+              var hp_before_blocked_attack: int = monster.hp
+              world.selected_monster = monster
+              world.player.apply_stun(1.0)
+              world._attack()
+              check(monster.hp == hp_before_blocked_attack, "stun blocks direct attack")
+
+              # Incoming monster stun after a successful hit.
+              world.player.stun_remaining = 0.0
+              world.hp = 5000
+              world.max_hp = 5000
+              world.level = 1
+              world.con_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 100
+              monster.melee_accuracy = 999
+              monster.melee_critical_rate = 0
+              monster.stun_accuracy = 100
+              monster.stun_duration = 1.25
+              var incoming_success: bool = false
+              for seed_value: int in range(1, 80):
+                  world.player.stun_remaining = 0.0
+                  world.hp = 5000
+                  world.rng.seed = seed_value
+                  world._on_player_hit(monster, 10, "melee")
+                  if world.player.is_stunned():
+                      incoming_success = true
+                      break
+              check(incoming_success, "monster stun can affect player")
+              check(world.player.stun_remaining > 0.0, "incoming stun duration stored")
+
+              # High resistance suppresses a lower stun accuracy.
+              world.equipped_items["armor"] = {"stun_resistance":100}
+              monster.stun_accuracy = 5
+              check(approx(
+                  world._status_effect_chance(monster.stun_accuracy, monster.monster_level, world._stun_resistance_stat(), world.level),
+                  0.05
+              ), "high stun resistance reaches floor")
+
+              # Step8 critical and Step7 MR regressions.
+              check(world._critical_damage(100) == 150, "critical system preserved")
+              check(world._effective_mr() > 0, "MR system preserved")
+              check(world._effective_dg() >= 0 and world._effective_er() >= 0, "DG ER preserved")
+
+              if failures.is_empty():
+                  print("V20.2 STUN STEP9 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run stun test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_stun_step9.gd 2>&1 | tee /tmp/stun.log
+          grep -q "V20.2 STUN STEP9 PASS" /tmp/stun.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/stun.log; then
+            exit 1
+          fi
