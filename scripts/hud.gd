@@ -5,8 +5,11 @@ signal move_vector_changed(value: Vector2)
 signal attack_pressed
 signal bleed_skill_pressed
 signal combat_skill_pressed(skill_id: String)
+signal target_pressed
 signal auto_pressed
 signal potion_pressed
+signal quick_item_pressed(item_name: String)
+signal return_pressed
 signal inventory_pressed
 signal menu_pressed
 signal map_pressed
