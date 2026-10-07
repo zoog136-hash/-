@@ -37,6 +37,12 @@ var hold_accuracy: int = 0
 var hold_resistance: int = 0
 var hold_duration: float = 0.0
 var hold_remaining: float = 0.0
+var fear_accuracy: int = 0
+var fear_resistance: int = 0
+var fear_duration: float = 0.0
+var fear_remaining: float = 0.0
+var fear_source_position: Vector2 = Vector2.ZERO
+var fear_move_multiplier: float = 0.82
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
@@ -86,6 +92,10 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	hold_accuracy = clampi(int(record.get("hold_accuracy", record.get("홀드 적중", 0))), 0, 100)
 	hold_resistance = clampi(int(record.get("hold_resistance", record.get("hold_resist", record.get("홀드 내성", default_hold_resistance)))), 0, 100)
 	hold_duration = maxf(0.0, float(record.get("hold_duration", record.get("홀드 지속시간", 0.0))))
+	var default_fear_resistance: int = 5 + int(floor(float(monster_level) / 10.0))
+	fear_accuracy = clampi(int(record.get("fear_accuracy", record.get("공포 적중", 0))), 0, 100)
+	fear_resistance = clampi(int(record.get("fear_resistance", record.get("fear_resist", record.get("공포 내성", default_fear_resistance)))), 0, 100)
+	fear_duration = maxf(0.0, float(record.get("fear_duration", record.get("공포 지속시간", 0.0))))
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
@@ -116,6 +126,7 @@ func _physics_process(delta: float) -> void:
 	_tick_stun(delta)
 	_tick_silence(delta)
 	_tick_hold(delta)
+	_tick_fear(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -128,6 +139,19 @@ func _physics_process(delta: float) -> void:
 	hp_bar.visible = ui_visible
 	var effective_attack_type: String = current_attack_type()
 	var attack_range: float = 280.0 if effective_attack_type == "magic" else (220.0 if effective_attack_type == "ranged" else 58.0)
+	if is_feared():
+		if is_held():
+			velocity = Vector2.ZERO
+			path = PackedVector2Array()
+			path_index = 0
+			return
+		velocity = _fear_velocity()
+		path = PackedVector2Array()
+		path_index = 0
+		move_and_slide()
+		if absf(velocity.x) > 1.0:
+			sprite.flip_h = velocity.x < 0.0
+		return
 	if distance <= attack_range:
 		velocity = Vector2.ZERO
 		if attack_cooldown <= 0.0:
@@ -163,6 +187,28 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func _tick_fear(delta: float) -> void:
+	fear_remaining = maxf(0.0, fear_remaining - delta)
+
+func is_feared() -> bool:
+	return fear_remaining > 0.0
+
+func apply_fear(duration: float, source_position: Vector2) -> void:
+	if dead:
+		return
+	fear_remaining = maxf(fear_remaining, maxf(0.0, duration))
+	fear_source_position = source_position
+	velocity = Vector2.ZERO
+	path = PackedVector2Array()
+	path_index = 0
+	show_status_text("FEAR")
+
+func _fear_velocity() -> Vector2:
+	var away: Vector2 = global_position - fear_source_position
+	if away.length_squared() < 0.01:
+		away = Vector2.RIGHT
+	return away.normalized() * move_speed * fear_move_multiplier
 
 func _tick_hold(delta: float) -> void:
 	hold_remaining = maxf(0.0, hold_remaining - delta)
