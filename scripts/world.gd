@@ -29,6 +29,9 @@ var skills_db: Array = []
 var job_classes: Array = []
 var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
+var quickslots: Array = []
+var self_mode_enabled: bool = false
+var auto_buff_check_timer: float = 0.0
 var catalog_db: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
@@ -109,6 +112,7 @@ func _ready() -> void:
 	_set_map(active_map_id, false)
 	_load_game(true)
 	_ensure_job_class_visual()
+	_ensure_quickslots_seeded()
 	_update_job_skillbar()
 	_update_hud()
 	hud.append_log("V20 · 모바일 MMORPG HUD / 전투 화면 개선")
@@ -116,6 +120,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
+	_run_auto_buff_quickslots(delta)
 	save_timer += delta
 	if save_timer >= 30.0:
 		save_timer = 0.0
@@ -250,6 +255,9 @@ func _connect_signals() -> void:
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.job_class_selected.connect(_on_job_class_selected)
 	hud.job_skill_pressed.connect(_cast_job_skill)
+	hud.quickslot_pressed.connect(_on_quickslot_pressed)
+	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
+	hud.self_mode_changed.connect(_on_self_mode_changed)
 	hud.shop_buy_requested.connect(_buy_shop_item)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
 	hud.enhancement_requested.connect(_attempt_enhancement)
@@ -1809,6 +1817,10 @@ func _update_hud() -> void:
 	character_state["quest_kills"] = quest_kills
 	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
+	if hud.has_method("set_quickslot_state"):
+		hud.call("set_quickslot_state", quickslots, inventory, active_skill_buffs, self_mode_enabled)
+	elif hud.has_method("set_quickslot_entries"):
+		hud.call("set_quickslot_entries", quickslots)
 
 func _save_game(quiet: bool) -> void:
 	var data: Dictionary = {
@@ -1834,6 +1846,8 @@ func _save_game(quiet: bool) -> void:
 		"inventory": inventory,
 		"class_index": class_index,
 		"job_class": job_class,
+		"quickslots": quickslots,
+		"self_mode_enabled": self_mode_enabled,
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
@@ -1887,6 +1901,11 @@ func _load_game(quiet: bool) -> void:
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
 		job_class = "기사"
+	var quickslots_value: Variant = data.get("quickslots", quickslots)
+	if quickslots_value is Array:
+		quickslots = quickslots_value as Array
+	self_mode_enabled = bool(data.get("self_mode_enabled", self_mode_enabled))
+	_normalize_quickslots()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
 	var equipped_value: Variant = data.get("equipped_catalog", equipped_catalog)
@@ -2080,8 +2099,134 @@ func _quickbar_job_skills() -> Array:
 	return result
 
 func _update_job_skillbar() -> void:
+	_ensure_quickslots_seeded()
 	if hud.has_method("set_job_skillbar"):
 		hud.call("set_job_skillbar", _quickbar_job_skills())
+	if hud.has_method("set_quickslot_state"):
+		hud.call("set_quickslot_state", quickslots, inventory, active_skill_buffs, self_mode_enabled)
+
+func _normalize_quickslots() -> void:
+	while quickslots.size() < 8:
+		quickslots.append({})
+	while quickslots.size() > 8:
+		quickslots.pop_back()
+
+func _ensure_quickslots_seeded() -> void:
+	_normalize_quickslots()
+	var has_any: bool = false
+	for value: Variant in quickslots:
+		if value is Dictionary and not (value as Dictionary).is_empty():
+			has_any = true
+			break
+	if has_any:
+		return
+	var defaults: Array = _quickbar_job_skills()
+	var slot_index: int = 0
+	for value: Variant in defaults:
+		if slot_index >= 5:
+			break
+		if value is Dictionary:
+			var skill: Dictionary = value as Dictionary
+			quickslots[slot_index] = {"kind":"skill", "id":str(skill.get("name", ""))}
+			slot_index += 1
+	for item_name: String in ["HP 물약", "강력 HP 물약", "축복받은 HP 물약"]:
+		if slot_index >= 8:
+			break
+		quickslots[slot_index] = {"kind":"item", "id":item_name}
+		slot_index += 1
+
+func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, entry_id: String) -> void:
+	if slot_index < 0 or slot_index >= 8:
+		return
+	_normalize_quickslots()
+	if entry_kind == "skill":
+		var skill: Dictionary = _skill_record(entry_id)
+		if skill.is_empty():
+			hud.show_message("등록할 스킬을 찾을 수 없습니다")
+			return
+		var skill_class: String = str(skill.get("class", "공용"))
+		if skill_class != "공용" and skill_class != job_class:
+			hud.show_message("%s 직업에서는 사용할 수 없는 스킬입니다" % job_class)
+			return
+	elif entry_kind == "item":
+		if int(inventory.get(entry_id, 0)) <= 0:
+			hud.show_message("보유하지 않은 아이템입니다")
+			return
+	else:
+		return
+	quickslots[slot_index] = {"kind":entry_kind, "id":entry_id}
+	_update_hud()
+	_save_game(true)
+
+func _on_quickslot_pressed(slot_index: int) -> void:
+	if slot_index < 0 or slot_index >= quickslots.size():
+		return
+	var value: Variant = quickslots[slot_index]
+	if not (value is Dictionary):
+		return
+	var entry: Dictionary = value as Dictionary
+	if entry.is_empty():
+		hud.show_message("빈 퀵슬롯입니다")
+		return
+	var kind: String = str(entry.get("kind", ""))
+	var entry_id: String = str(entry.get("id", ""))
+	if kind == "skill":
+		_cast_job_skill(entry_id)
+	elif kind == "item":
+		_use_quickslot_item(entry_id)
+
+func _use_quickslot_item(item_name: String) -> void:
+	if int(inventory.get(item_name, 0)) <= 0:
+		hud.show_message("%s이(가) 없습니다" % item_name)
+		_update_hud()
+		return
+	match item_name:
+		"HP 물약", "강력 HP 물약", "축복받은 HP 물약":
+			_use_quick_item(item_name)
+		_:
+			if _scroll_kind(item_name) != "":
+				_on_inventory_item_activated(item_name)
+			else:
+				hud.show_message("아직 직접 사용 효과가 없는 소모품입니다")
+
+func _on_self_mode_changed(enabled: bool) -> void:
+	self_mode_enabled = enabled
+	auto_buff_check_timer = 0.0
+	_update_hud()
+	_save_game(true)
+
+func _is_buff_skill(skill: Dictionary) -> bool:
+	var effect: String = str(skill.get("effect", ""))
+	return effect in ["atkBuff", "defBuff", "hpBuff", "speedBuff"]
+
+func _run_auto_buff_quickslots(delta: float) -> void:
+	if self_mode_enabled:
+		return
+	auto_buff_check_timer = maxf(0.0, auto_buff_check_timer - delta)
+	if auto_buff_check_timer > 0.0:
+		return
+	auto_buff_check_timer = 0.8
+	if player.is_stunned() or player.is_feared() or player.is_silenced():
+		return
+	for value: Variant in quickslots:
+		if not (value is Dictionary):
+			continue
+		var entry: Dictionary = value as Dictionary
+		if str(entry.get("kind", "")) != "skill":
+			continue
+		var skill_name: String = str(entry.get("id", ""))
+		if skill_name == "" or active_skill_buffs.has(skill_name):
+			continue
+		var skill: Dictionary = _skill_record(skill_name)
+		if skill.is_empty() or not _is_buff_skill(skill):
+			continue
+		var skill_class: String = str(skill.get("class", "공용"))
+		if skill_class != "공용" and skill_class != job_class:
+			continue
+		if mp < maxi(0, int(skill.get("mp", 0))):
+			continue
+		_cast_job_buff_skill(skill)
+		break
 
 func _skill_record(skill_name: String) -> Dictionary:
 	for value: Variant in skills_db:
