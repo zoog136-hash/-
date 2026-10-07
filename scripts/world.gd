@@ -2541,9 +2541,10 @@ func _ensure_quickslots_seeded() -> void:
 			quickslots[slot_index] = {"kind":"item", "id":item_name}
 			slot_index += 1
 		return
-	if not sanitized_changed:
+	if not sanitized_changed and skill_count > 0:
 		return
 	# A class/passive migration may clear only skill entries while leaving item slots.
+	# Legacy item-only quickbars also need current-job active skills restored.
 	# Refill empty positions with valid active skills without overwriting user items.
 	var defaults: Array = _quickbar_job_skills()
 	for value: Variant in defaults:
