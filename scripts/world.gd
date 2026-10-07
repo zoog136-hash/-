@@ -386,6 +386,47 @@ func _clear_drops() -> void:
 	for child: Node in drops_root.get_children():
 		child.queue_free()
 
+func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
+	var chance_percent: float = 75.0 + float(attacker_magic_accuracy - maxi(0, target_mr)) * 0.7
+	return clampf(chance_percent / 100.0, 0.05, 0.95)
+
+func _player_magic_hit_chance(target: TwilightMonster) -> float:
+	if target == null:
+		return 0.05
+	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
+
+func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill_name: String = "마법") -> bool:
+	if target == null or not is_instance_valid(target) or target.dead:
+		hud.show_message("마법 대상이 없습니다")
+		return false
+	if mp < mp_cost:
+		hud.show_message("MP가 부족합니다")
+		return false
+	var max_range: float = 360.0
+	if player.global_position.distance_to(target.global_position) > max_range:
+		hud.show_message("마법 사거리 밖입니다")
+		return false
+	mp = maxi(0, mp - mp_cost)
+	selected_monster = target
+	player.pulse_attack()
+	var hit_chance: float = _player_magic_hit_chance(target)
+	if rng.randf() >= hit_chance:
+		target.show_miss()
+		hud.append_log("%s MISS · 마법 명중 %d / MR %d / %.1f%%" % [
+			skill_name, _magic_accuracy_stat(), target.magic_resistance, hit_chance * 100.0
+		])
+		_update_hud()
+		_update_target_hud()
+		return false
+	var damage: int = maxi(1, power + _magic_damage_stat() + rng.randi_range(-4, 6))
+	target.take_damage(damage)
+	hud.append_log("%s 적중 · %s에게 %d 마법 피해 · %.1f%%" % [
+		skill_name, target.monster_name, damage, hit_chance * 100.0
+	])
+	_update_hud()
+	_update_target_hud()
+	return true
+
 func _melee_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
@@ -514,14 +555,25 @@ func _avoidance_for_attack_type(attack_type: String) -> int:
 func _monster_accuracy_for_attack_type(attacker: TwilightMonster, attack_type: String) -> int:
 	if attacker == null:
 		return 0
-	return attacker.ranged_accuracy if attack_type == "ranged" else attacker.melee_accuracy
+	match attack_type:
+		"magic":
+			return attacker.magic_accuracy
+		"ranged":
+			return attacker.ranged_accuracy
+		_:
+			return attacker.melee_accuracy
 
 func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee") -> float:
 	if attacker == null:
 		return 0.05
-	var normalized_type: String = "ranged" if attack_type == "ranged" else "melee"
+	var normalized_type: String = attack_type
+	if normalized_type != "ranged" and normalized_type != "magic":
+		normalized_type = "melee"
+	var accuracy: int = _monster_accuracy_for_attack_type(attacker, normalized_type)
+	if normalized_type == "magic":
+		return _magic_hit_chance(accuracy, _effective_mr())
 	return _physical_hit_chance(
-		_monster_accuracy_for_attack_type(attacker, normalized_type),
+		accuracy,
 		_effective_ac(),
 		_avoidance_for_attack_type(normalized_type)
 	)
@@ -532,33 +584,45 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
 	if attacker == null or not is_instance_valid(attacker):
 		return
-	var normalized_type: String = "ranged" if attack_type == "ranged" else "melee"
+	var normalized_type: String = attack_type
+	if normalized_type != "ranged" and normalized_type != "magic":
+		normalized_type = "melee"
 	var accuracy: int = _monster_accuracy_for_attack_type(attacker, normalized_type)
-	var avoidance: int = _avoidance_for_attack_type(normalized_type)
 	var hit_chance: float = _monster_hit_chance(attacker, normalized_type)
 	if not _roll_monster_hit(attacker, normalized_type):
 		player.show_miss()
-		var evasion_name: String = "ER" if normalized_type == "ranged" else "DG"
-		hud.append_log("%s 공격 MISS · %s 명중 %d / 내 AC %d / %s %d / %.1f%%" % [
-			attacker.monster_name,
-			"원거리" if normalized_type == "ranged" else "근거리",
-			accuracy,
-			_effective_ac(),
-			evasion_name,
-			avoidance,
-			hit_chance * 100.0
-		])
+		if normalized_type == "magic":
+			hud.append_log("%s 마법 MISS · 마법 명중 %d / 내 MR %d / %.1f%%" % [
+				attacker.monster_name, accuracy, _effective_mr(), hit_chance * 100.0
+			])
+		else:
+			var avoidance: int = _avoidance_for_attack_type(normalized_type)
+			var evasion_name: String = "ER" if normalized_type == "ranged" else "DG"
+			hud.append_log("%s 공격 MISS · %s 명중 %d / 내 AC %d / %s %d / %.1f%%" % [
+				attacker.monster_name,
+				"원거리" if normalized_type == "ranged" else "근거리",
+				accuracy,
+				_effective_ac(),
+				evasion_name,
+				avoidance,
+				hit_chance * 100.0
+			])
 		return
-	var reduced: int = _physical_damage_after_reduction(damage_value)
+	var reduced: int = maxi(1, damage_value) if normalized_type == "magic" else _physical_damage_after_reduction(damage_value)
 	hp = maxi(0, hp - reduced)
 	player.show_received_damage(reduced)
-	hud.append_log("%s에게 %d 피해 · %s 피격률 %.1f%% · 리덕션 %d" % [
-		attacker.monster_name,
-		reduced,
-		"원거리" if normalized_type == "ranged" else "근거리",
-		hit_chance * 100.0,
-		_damage_reduction_stat()
-	])
+	if normalized_type == "magic":
+		hud.append_log("%s에게 %d 마법 피해 · 피격률 %.1f%% · MR %d" % [
+			attacker.monster_name, reduced, hit_chance * 100.0, _effective_mr()
+		])
+	else:
+		hud.append_log("%s에게 %d 피해 · %s 피격률 %.1f%% · 리덕션 %d" % [
+			attacker.monster_name,
+			reduced,
+			"원거리" if normalized_type == "ranged" else "근거리",
+			hit_chance * 100.0,
+			_damage_reduction_stat()
+		])
 	if hp <= 0:
 		hp = _effective_max_hp()
 		mp = max_mp
@@ -969,8 +1033,20 @@ func _effective_er() -> int:
 		total += _record_er(record)
 	return maxi(0, total)
 
+func _record_mr(record: Dictionary) -> int:
+	if record.has("mr"):
+		return maxi(0, int(record.get("mr", 0)))
+	if record.has("MR"):
+		return maxi(0, int(record.get("MR", 0)))
+	if record.has("마법 방어력"):
+		return maxi(0, int(record.get("마법 방어력", 0)))
+	return 0
+
 func _effective_mr() -> int:
-	return 10 + level + wis_stat * 2
+	var total: int = 10 + level + wis_stat * 2
+	for record: Dictionary in _all_equipped_records():
+		total += _record_mr(record)
+	return maxi(0, total)
 
 func _record_damage_reduction(record: Dictionary) -> int:
 	if record.has("damage_reduction"):
