@@ -1,0 +1,244 @@
+name: V20.2 Silence Step10 Test
+
+on:
+  push:
+    branches: [v20-2-silence-step10]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-silence-step10
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create silence test
+        shell: bash
+        run: |
+          cat > test_silence_step10.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.level = 35
+              world.int_stat = 16
+              world.wis_stat = 16
+
+              # Base silence stats and equipment aliases.
+              check(world._silence_accuracy_stat() == 7, "base silence accuracy")
+              check(world._silence_resistance_stat() == 7, "base silence resistance")
+              world.equipped_items["weapon"] = {"silence_accuracy":8}
+              world.equipped_catalog["성물"] = {"침묵 적중":5}
+              world.equipped_items["armor"] = {"silence_resistance":6}
+              world.equipped_items["accessory"] = {"침묵 내성":4}
+              check(world._silence_accuracy_stat() == 20, "silence accuracy stacks")
+              check(world._silence_resistance_stat() == 17, "silence resistance stacks")
+
+              var snapshot: Dictionary = world._character_stats_snapshot()
+              check(int(snapshot.get("silence_accuracy", -1)) == 20, "snapshot silence accuracy")
+              check(int(snapshot.get("silence_resistance", -1)) == 17, "snapshot silence resistance")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+              var monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(monster)
+              monster.setup({
+                  "name":"침묵 테스트","lv":20,"hp":100000,"atk":40,"def":5,"xp":10,"speed":60,
+                  "attack_type":"magic","silence_accuracy":25,"silence_resistance":14,"silence_duration":1.5,
+                  "mr":0
+              }, world.player, world, null)
+              check(monster.silence_accuracy == 25, "monster silence accuracy")
+              check(monster.silence_resistance == 14, "monster silence resistance")
+              check(approx(monster.silence_duration, 1.5), "monster silence duration")
+              check(monster.current_attack_type() == "magic", "normal magic monster uses magic")
+
+              # Silence state does not freeze movement; it only changes casting behavior.
+              world.player.apply_silence(0.30)
+              check(world.player.is_silenced(), "player enters silence")
+              check(not world.player.is_stunned(), "silence does not stun")
+              world.player._tick_silence(0.10)
+              check(world.player.is_silenced(), "player silence persists")
+              world.player._tick_silence(0.25)
+              check(not world.player.is_silenced(), "player silence expires")
+
+              monster.apply_silence(0.30)
+              check(monster.is_silenced(), "monster enters silence")
+              check(monster.current_attack_type() == "melee", "silenced magic monster falls back to melee")
+              monster._tick_silence(0.35)
+              check(not monster.is_silenced(), "monster silence expires")
+              check(monster.current_attack_type() == "magic", "monster magic returns after silence")
+
+              # Player Silence cast: high status + magic accuracy, low target MR/resistance.
+              world.level = 100
+              world.int_stat = 50
+              world.mp = 1000
+              world.equipped_items = {
+                  "weapon":{"silence_accuracy":100},
+                  "armor":{},
+                  "accessory":{}
+              }
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 1
+              monster.magic_resistance = 0
+              monster.silence_resistance = 0
+              monster.silence_remaining = 0.0
+              monster.global_position = world.player.global_position + Vector2(100, 0)
+              check(approx(world._player_silence_chance(monster), 0.95), "player silence chance cap")
+              var silence_success: bool = false
+              for seed_value: int in range(1, 80):
+                  world.rng.seed = seed_value
+                  world.mp = 1000
+                  monster.silence_remaining = 0.0
+                  if world._cast_silence_skill(monster, 8, 3.0, "사일런스"):
+                      silence_success = true
+                      break
+              check(silence_success, "Silence skill can succeed")
+              check(monster.is_silenced(), "Silence applies to monster")
+              check(world.mp == 992, "Silence consumes MP")
+
+              # Silence blocks magic and active stun skill, but not normal attack.
+              world.player.apply_silence(2.0)
+              world.mp = 1000
+              monster.hp = 100000
+              monster.dead = false
+              monster.global_position = world.player.global_position + Vector2(50, 0)
+              var hp_before_magic: int = monster.hp
+              var mp_before_magic: int = world.mp
+              var magic_result: bool = world._cast_magic_attack(monster, 30, 3, "에너지 볼트")
+              check(not magic_result, "silence blocks magic")
+              check(world.mp == mp_before_magic, "blocked magic consumes no MP")
+              check(monster.hp == hp_before_magic, "blocked magic causes no damage")
+
+              var stun_result: bool = world._cast_stun_skill(monster, 20, 10, 2.0, "쇼크 스턴")
+              check(not stun_result, "silence blocks active stun skill")
+              check(world.mp == mp_before_magic, "blocked stun consumes no MP")
+
+              # Normal attack is still allowed while silenced.
+              world.level = 200
+              world.str_stat = 50
+              monster.armor_class = -1
+              monster.hp = 100000
+              world.selected_monster = monster
+              world.rng.seed = 1
+              var hp_before_normal: int = monster.hp
+              world._attack()
+              check(monster.hp < hp_before_normal, "silence allows normal attack")
+
+              # Auto hunt path is not gated by silence.
+              monster.hp = 100000
+              monster.dead = false
+              monster.global_position = world.player.global_position + Vector2(50, 0)
+              world.auto_target = monster
+              world.auto_attack_timer = 0.0
+              world.rng.seed = 2
+              var hp_before_auto: int = monster.hp
+              world._run_auto_hunt()
+              check(monster.hp < hp_before_auto, "silence allows auto normal attack")
+
+              # Incoming monster silence after a confirmed hit.
+              world.player.silence_remaining = 0.0
+              world.player.stun_remaining = 0.0
+              world.hp = 5000
+              world.max_hp = 5000
+              world.level = 1
+              world.wis_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 100
+              monster.melee_accuracy = 999
+              monster.melee_critical_rate = 0
+              monster.stun_duration = 0.0
+              monster.silence_accuracy = 100
+              monster.silence_duration = 1.25
+              var incoming_success: bool = false
+              for seed_value: int in range(1, 100):
+                  world.player.silence_remaining = 0.0
+                  world.hp = 5000
+                  world.rng.seed = seed_value
+                  world._on_player_hit(monster, 10, "melee")
+                  if world.player.is_silenced():
+                      incoming_success = true
+                      break
+              check(incoming_success, "monster silence can affect player")
+              check(world.player.silence_remaining > 0.0, "incoming silence duration stored")
+
+              # High resistance floors status chance.
+              world.equipped_items["armor"] = {"silence_resistance":100}
+              monster.silence_accuracy = 5
+              check(approx(
+                  world._status_effect_chance(monster.silence_accuracy, monster.monster_level, world._silence_resistance_stat(), world.level),
+                  0.05
+              ), "high silence resistance reaches floor")
+
+              # Regression: stun/critical/MR remain intact.
+              check(world._stun_accuracy_stat() >= 0, "stun system preserved")
+              check(world._critical_damage(100) == 150, "critical preserved")
+              check(world._effective_mr() > 0, "MR preserved")
+
+              if failures.is_empty():
+                  print("V20.2 SILENCE STEP10 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run silence test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_silence_step10.gd 2>&1 | tee /tmp/silence.log
+          grep -q "V20.2 SILENCE STEP10 PASS" /tmp/silence.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/silence.log; then
+            exit 1
+          fi
