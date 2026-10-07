@@ -780,8 +780,9 @@ func _skill_target(max_distance: float) -> TwilightMonster:
 	var target: TwilightMonster = selected_monster
 	if is_instance_valid(target) and not target.dead:
 		if player.global_position.distance_to(target.global_position) <= max_distance:
-			return target
-	return _nearest_monster(max_distance)
+			if _has_line_of_sight_world(player.global_position, target.global_position):
+				return target
+	return _nearest_visible_monster(max_distance)
 
 func _cast_bleed_from_hud() -> void:
 	# Backward-compatible signal used by older HUD revisions.
@@ -812,10 +813,12 @@ func _attack() -> void:
 	if player.is_stunned() or player.is_feared():
 		return
 	var target: TwilightMonster = selected_monster
-	if not is_instance_valid(target) or target.dead or player.global_position.distance_to(target.global_position) > 105.0:
-		target = _nearest_monster(105.0)
+	if not is_instance_valid(target) or target.dead \
+	or player.global_position.distance_to(target.global_position) > 105.0 \
+	or not _has_line_of_sight_world(player.global_position, target.global_position):
+		target = _nearest_visible_monster(105.0)
 	if target == null:
-		hud.show_message("공격 범위에 대상이 없습니다")
+		hud.show_message("공격 범위에 보이는 대상이 없습니다")
 		return
 	selected_monster = target
 	player.pulse_attack()
@@ -851,7 +854,7 @@ func _run_auto_hunt() -> void:
 		return
 	selected_monster = auto_target
 	var distance: float = player.global_position.distance_to(auto_target.global_position)
-	if distance <= 95.0:
+	if distance <= 95.0 and _has_line_of_sight_world(player.global_position, auto_target.global_position):
 		player.clear_click_path()
 		if auto_attack_timer <= 0.0:
 			auto_attack_timer = 0.72
@@ -884,6 +887,45 @@ func _nearest_monster(max_distance: float) -> TwilightMonster:
 			if distance < best_distance:
 				best_distance = distance
 				best = monster
+	return best
+
+func _has_line_of_sight_world(from_position: Vector2, to_position: Vector2) -> bool:
+	if astar == null:
+		return false
+	var start: Vector2i = _world_to_cell(from_position)
+	var goal: Vector2i = _world_to_cell(to_position)
+	if not astar.is_in_boundsv(start) or not astar.is_in_boundsv(goal):
+		return false
+	var delta: Vector2i = goal - start
+	var steps: int = maxi(absi(delta.x), absi(delta.y))
+	if steps <= 1:
+		return true
+	for step: int in range(1, steps):
+		var t: float = float(step) / float(steps)
+		var cell: Vector2i = Vector2i(
+			roundi(lerpf(float(start.x), float(goal.x), t)),
+			roundi(lerpf(float(start.y), float(goal.y), t))
+		)
+		if astar.is_in_boundsv(cell) and astar.is_point_solid(cell):
+			return false
+	return true
+
+func _nearest_visible_monster(max_distance: float) -> TwilightMonster:
+	var best: TwilightMonster = null
+	var best_distance: float = max_distance
+	for node: Node in monsters_root.get_children():
+		if not (node is TwilightMonster):
+			continue
+		var monster: TwilightMonster = node
+		if monster.dead:
+			continue
+		var distance: float = player.global_position.distance_to(monster.global_position)
+		if distance >= best_distance:
+			continue
+		if not _has_line_of_sight_world(player.global_position, monster.global_position):
+			continue
+		best_distance = distance
+		best = monster
 	return best
 
 func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
@@ -953,6 +995,7 @@ func _roll_drop(monster: TwilightMonster) -> void:
 	if item_name.is_empty():
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+	hud.refresh_inventory(inventory)
 	var label: Label = Label.new()
 	label.text = "◆ " + item_name
 	label.position = monster.global_position + Vector2(-45, -28)
@@ -1274,6 +1317,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
 	hp = mini(effective_max_hp, hp + maxi(1, heal_amount))
+	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
 	_update_hud()
 
