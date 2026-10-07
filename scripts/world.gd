@@ -918,7 +918,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	quest_kills = mini(QUEST_GOAL, quest_kills + 1)
 	if hud.has_method("set_quest_progress"):
 		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
-	_roll_drop(monster.global_position)
+	_roll_drop(monster)
 	_check_level_up()
 	if monster == selected_monster:
 		selected_monster = null
@@ -933,19 +933,24 @@ func _ensure_monster_count() -> void:
 	if alive < 8:
 		_spawn_monsters(9 - alive)
 
-func _roll_drop(position_value: Vector2) -> void:
-	if item_db.is_empty():
+func _roll_drop(monster: TwilightMonster) -> void:
+	if monster == null or not is_instance_valid(monster):
 		return
 	if rng.randf() > 0.72:
 		return
-	var record_value: Variant = item_db[rng.randi_range(0, item_db.size() - 1)]
-	var item_name: String = "아이템"
-	if record_value is Dictionary:
-		item_name = str(record_value.get("name", item_name))
+	var item_name: String = ""
+	if not monster.drop_items.is_empty():
+		item_name = monster.drop_items[rng.randi_range(0, monster.drop_items.size() - 1)]
+	elif not item_db.is_empty():
+		var record_value: Variant = item_db[rng.randi_range(0, item_db.size() - 1)]
+		if record_value is Dictionary:
+			item_name = str(record_value.get("name", ""))
+	if item_name.is_empty():
+		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
 	var label: Label = Label.new()
 	label.text = "◆ " + item_name
-	label.position = position_value + Vector2(-45, -28)
+	label.position = monster.global_position + Vector2(-45, -28)
 	label.add_theme_color_override("font_color", Color("f5d66f"))
 	drops_root.add_child(label)
 	var timer: SceneTreeTimer = get_tree().create_timer(4.0)
