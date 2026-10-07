@@ -655,7 +655,13 @@ func _render_quickslots(inventory: Dictionary, active_buffs: Dictionary) -> void
 			if path != "" and ResourceLoader.exists(path):
 				button.icon = load(path) as Texture2D
 				button.expand_icon = true
-			button.tooltip_text = "%s · 보유 %d" % [entry_id, count]
+			var item_active_text: String = ""
+			if active_buffs.has(entry_id):
+				var buff_value: Variant = active_buffs.get(entry_id, {})
+				if buff_value is Dictionary:
+					var remaining: int = maxi(0, int(ceil(float((buff_value as Dictionary).get("remaining", 0.0)))))
+					item_active_text = " · ACTIVE %d:%02d" % [remaining / 60, remaining % 60]
+			button.tooltip_text = "%s · 보유 %d%s" % [entry_id, count, item_active_text]
 
 func _job_skill_by_name(skill_name: String) -> Dictionary:
 	for value: Variant in job_skills:
