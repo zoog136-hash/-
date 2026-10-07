@@ -696,7 +696,7 @@ func set_character_state(value: Dictionary) -> void:
 		var class_index_value: int = clampi(int(value.get("class_index", 0)), 0, 3)
 		_update_v20_portrait(class_index_value)
 	if v20_status_name != null:
-		v20_status_name.text = "황혼의 기사 · %s" % str(value.get("job_class", "기사"))
+		v20_status_name.text = "황혼의 %s" % str(value.get("job_class", "기사"))
 	if v20_stat_text != null:
 		var stat_points_value: int = maxi(0, int(value.get("stat_points", 0)))
 		v20_stat_text.text = "⚔ %d   ◎ %d   AC %d   MR %d%s" % [
