@@ -30,6 +30,7 @@ var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
 var attack_clock: float = 0.0
 var transform_active: bool = false
 var transform_bob_clock: float = 0.0
+var stun_remaining: float = 0.0
 var base_move_speed: float = 210.0
 
 func _ready() -> void:
@@ -43,6 +44,14 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	attack_clock = maxf(0.0, attack_clock - delta)
 	transform_bob_clock += delta
+	_tick_stun(delta)
+	if is_stunned():
+		velocity = Vector2.ZERO
+		touch_vector = Vector2.ZERO
+		clear_click_path()
+		move_and_slide()
+		_update_visual(delta)
+		return
 	if Input.is_action_just_pressed("attack"):
 		attack_requested.emit()
 	if Input.is_action_just_pressed("toggle_auto"):
@@ -276,11 +285,29 @@ func _show_combat_text(text_value: String, color_value: Color, start_position: V
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
 
+func _tick_stun(delta: float) -> void:
+	stun_remaining = maxf(0.0, stun_remaining - delta)
+
+func is_stunned() -> bool:
+	return stun_remaining > 0.0
+
+func apply_stun(duration: float) -> void:
+	stun_remaining = maxf(stun_remaining, maxf(0.0, duration))
+	velocity = Vector2.ZERO
+	touch_vector = Vector2.ZERO
+	clear_click_path()
+	show_status_text("STUN")
+
+func show_status_text(text_value: String) -> void:
+	_show_combat_text(text_value, Color(0.93, 0.78, 0.30, 1.0), Vector2(-45.0, -136.0))
+
 func set_auto_enabled(enabled: bool) -> void:
 	auto_enabled = enabled
 	auto_toggled.emit(enabled)
 
 func pulse_attack() -> void:
+	if is_stunned():
+		return
 	attack_clock = 0.42
 	if not transform_active:
 		class_sprite.animation = "attack"
