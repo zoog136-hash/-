@@ -30,6 +30,24 @@ func _aim(world: TwilightWorld, point: Vector2) -> void:
 	world.player.camera.force_update_scroll()
 	world.field_renderer.refresh_visible()
 
+func _validate_cache(renderer: FieldRenderer) -> void:
+	if renderer.landmark_cache == null:
+		return
+	var pixels: Image = renderer.landmark_cache.get_texture().get_image()
+	if pixels == null or pixels.is_empty():
+		push_error("Landmark cache has no rendered pixels")
+		failed = true
+		return
+	for key: String in renderer.landmark_textures:
+		var texture: AtlasTexture = renderer.landmark_textures[key]
+		var cell: Image = pixels.get_region(Rect2i(texture.region))
+		if cell.get_used_rect().size.y < 8:
+			push_error("Empty baked landmark: "+key)
+			failed = true
+	if renderer.landmark_cache.render_target_update_mode != SubViewport.UPDATE_DISABLED:
+		push_error("Landmark atlas continues rendering after its initial frame")
+		failed = true
+
 func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) -> Dictionary:
 	world.rng.seed = 20261008
 	world._set_map(map_id,false)
@@ -56,7 +74,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 			physics_ms.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)*1000.0)
 			peak_calls = maxi(peak_calls,int(Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)))
 			distance += previous.distance_to(world.player.global_position)
-		if i%30 == 0:
+		if i>=30 and i%30 == 0:
 			var awake: int = 0
 			for monster: TwilightMonster in world.monsters_root.get_children():
 				if monster.is_physics_processing():
@@ -90,6 +108,8 @@ func _run() -> void:
 	for id: String in ["oman_01","oman_10","domination_summit","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05","albino_01","albino_02","albino_03","albino_04","faith_01","faith_04"]:
 		world.rng.seed = 20261008
 		world._set_map(id,false)
+		if world.field_renderer.landmark_cache != null:
+			print("LANDMARK_CACHE ",id," cells=",world.field_renderer.landmark_textures.size()," size=",world.field_renderer.landmark_cache.size)
 		world.field_population.set_process(false)
 		for monster: TwilightMonster in world.monsters_root.get_children():
 			monster.set_physics_process(false)
@@ -102,6 +122,8 @@ func _run() -> void:
 				if i>6:
 					timing.append(float(Time.get_ticks_usec()-start)/1000.0)
 			await _save_view(directory,id+"-"+review)
+			if review == "entrance":
+				_validate_cache(world.field_renderer)
 			print("REGION_CAPTURE ",id," ",review," calls=",Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)," props=",world.field_renderer.visible_props)
 		if DETAIL_KINDS.has(id):
 			for record: Dictionary in world.field_map.data["props"]:

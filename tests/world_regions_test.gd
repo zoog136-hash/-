@@ -52,6 +52,8 @@ func _run() -> void:
 		check(world.player.camera.zoom==Vector2.ONE*.78,id+" gameplay camera scale")
 		check(world.field_minimap.field==field and world.field_minimap.bounds==field.bounds,id+" minimap updates")
 		check(world.field_renderer.chunks.size()<25 and world.field_renderer.visible_props<650,id+" scenery streaming bound")
+		var cache: SubViewport = world.field_renderer.landmark_cache
+		check(cache != null and cache.size.x*cache.size.y*4 <= 5*1024*1024,id+" active-map art cache stays within 5 MiB")
 		var count: int = 0
 		for region: Dictionary in field.data["monster_spawn"]:
 			count += int(region["max_count"])
@@ -155,7 +157,10 @@ func _run() -> void:
 		file.close()
 		world._load_game(true)
 		check(world.active_map_id==id and world.player.global_position.distance_to(world._spawn_position())<1,id+" obsolete map position migrates to safe entry")
+		var old_cache: WeakRef = weakref(world.field_renderer.landmark_cache)
 		check(world.use_field_portal("aden_return") and world.active_map_id=="aden_world",id+" real intermap return portal")
+		await process_frame
+		check(old_cache.get_ref()==null,id+" leaving region releases its render cache")
 		check(world.field_map != null and world.field_minimap.field==world.field_map,id+" world services refresh after portal")
 		print("REGION CHECKED ",id)
 	if prefix.is_empty():
