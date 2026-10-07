@@ -30,6 +30,7 @@ var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
 var equipped_items: Dictionary = {"weapon": {}, "armor": {}, "accessory": {}}
+var enhancement_levels: Dictionary = {}
 var class_index: int = 0
 var companion_velocity: Vector2 = Vector2.ZERO
 var active_map: Dictionary = {}
@@ -66,7 +67,16 @@ var cha_stat: int = 9
 var stat_points: int = 0
 
 var gold: int = 12000
-var inventory: Dictionary = {"HP 물약":100, "강력 HP 물약":14, "축복받은 HP 물약":10, "낡은 장검":1, "초록 잎":200}
+var inventory: Dictionary = {
+	"HP 물약":100,
+	"강력 HP 물약":14,
+	"축복받은 HP 물약":10,
+	"낡은 장검":1,
+	"초록 잎":200,
+	"무기 마법 주문서 (각인)":5,
+	"갑옷 마법 주문서 (각인)":5,
+	"장신구 마법 주문서 (각인)":3
+}
 
 func _ready() -> void:
 	rng.randomize()
@@ -169,6 +179,18 @@ func _merge_local_consumables_into_catalog() -> void:
 			continue
 		catalog_items.append(record.duplicate(true))
 		seen_names[item_name] = true
+
+	var enhancement_scrolls: Array[Dictionary] = [
+		{"name":"무기 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"무기 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
+		{"name":"갑옷 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"방어구 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
+		{"name":"장신구 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"장신구 강화에 사용. 실패 시 장비 소실 가능"}
+	]
+	for scroll_record: Dictionary in enhancement_scrolls:
+		var scroll_name: String = str(scroll_record.get("name", ""))
+		if seen_names.has(scroll_name):
+			continue
+		catalog_items.append(scroll_record.duplicate(true))
+		seen_names[scroll_name] = true
 	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
@@ -195,6 +217,8 @@ func _connect_signals() -> void:
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
 	hud.shop_buy_requested.connect(_buy_shop_item)
+	hud.inventory_item_activated.connect(_on_inventory_item_activated)
+	hud.enhancement_requested.connect(_attempt_enhancement)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
 	if not maps_by_id.has(map_id):
@@ -1330,6 +1354,236 @@ func _select_nearest_target() -> void:
 	_select_monster(target)
 	hud.show_message("대상 선택: %s" % target.monster_name)
 
+func _scroll_kind(scroll_name: String) -> String:
+	if scroll_name.find("무기 마법 주문서") >= 0:
+		return "weapon"
+	if scroll_name.find("갑옷 마법 주문서") >= 0:
+		return "armor"
+	if scroll_name.find("장신구 마법 주문서") >= 0:
+		return "accessory"
+	return ""
+
+func _on_inventory_item_activated(item_name: String) -> void:
+	var kind: String = _scroll_kind(item_name)
+	if kind == "":
+		hud.show_message("이 아이템은 더블클릭 사용 대상이 아닙니다")
+		return
+	if int(inventory.get(item_name, 0)) <= 0:
+		hud.show_message("주문서가 없습니다")
+		return
+	var candidates: Array = _enhancement_candidates(kind)
+	hud.call("open_enhancement", item_name, candidates)
+
+func _enhancement_candidates(kind: String) -> Array:
+	var result: Array = []
+	var names: Array = inventory.keys()
+	names.sort()
+	for value: Variant in names:
+		var item_name: String = str(value)
+		if int(inventory.get(item_name, 0)) <= 0:
+			continue
+		var record: Dictionary = _find_catalog_item_record(item_name)
+		if record.is_empty() or str(record.get("slot", "")) != kind:
+			continue
+		var level_value: int = int(enhancement_levels.get(item_name, 0))
+		var chance: Dictionary = _enhancement_chance(kind, level_value)
+		if float(chance.get("success", 0.0)) <= 0.0:
+			continue
+		result.append({
+			"name": item_name,
+			"level": level_value,
+			"safe_level": _safe_enhancement_level(kind),
+			"success_chance": float(chance.get("success", 0.0)),
+			"no_change_chance": float(chance.get("no_change", 0.0)),
+			"destroy_chance": float(chance.get("destroy", 0.0)),
+			"bonus_text": _enhancement_bonus_text(kind, level_value + 1),
+			"equipped": _is_item_equipped(item_name)
+		})
+	return result
+
+func _find_catalog_item_record(item_name: String) -> Dictionary:
+	var source: Array = catalog_db.get("아이템", []) as Array
+	for value: Variant in source:
+		if not (value is Dictionary):
+			continue
+		var record: Dictionary = value as Dictionary
+		if str(record.get("name", "")) == item_name:
+			return record
+	return {}
+
+func _safe_enhancement_level(kind: String) -> int:
+	match kind:
+		"weapon":
+			return 6
+		"armor":
+			return 4
+		_:
+			return 0
+
+func _enhancement_chance(kind: String, current_level: int) -> Dictionary:
+	var success: float = 0.0
+	var no_change: float = 0.0
+	var destroy: float = 0.0
+
+	if kind == "weapon":
+		if current_level <= 5:
+			success = 100.0
+		elif current_level <= 8:
+			success = 33.3
+			destroy = 66.7
+		elif current_level == 9:
+			success = 0.6
+			no_change = 32.4
+			destroy = 67.0
+		elif current_level == 10:
+			success = 0.8
+			no_change = 32.5
+			destroy = 66.7
+		elif current_level <= 20:
+			success = 0.7
+			no_change = 32.4
+			destroy = 66.9
+	elif kind == "armor":
+		if current_level <= 3:
+			success = 100.0
+		elif current_level == 4:
+			success = 25.0
+			destroy = 75.0
+		elif current_level == 5:
+			success = 20.0
+			destroy = 80.0
+		elif current_level == 6:
+			success = 16.7
+			destroy = 83.3
+		elif current_level == 7:
+			success = 14.3
+			destroy = 85.7
+		elif current_level == 8:
+			success = 12.5
+			destroy = 87.5
+		elif current_level == 9:
+			success = 0.3
+			no_change = 10.8
+			destroy = 88.9
+		elif current_level == 10:
+			success = 0.3
+			no_change = 9.8
+			destroy = 89.9
+		elif current_level <= 20:
+			success = 0.2
+			no_change = 8.9
+			destroy = 90.9
+	elif kind == "accessory":
+		var accessory_success: Array[float] = [75.0, 65.0, 55.0, 45.0, 35.0, 25.0, 15.0, 5.0]
+		if current_level >= 0 and current_level < accessory_success.size():
+			success = accessory_success[current_level]
+			destroy = 100.0 - success
+
+	return {"success": success, "no_change": no_change, "destroy": destroy}
+
+func _enhancement_bonus_text(kind: String, target_level: int) -> String:
+	match kind:
+		"weapon":
+			return "추가 대미지 +%d · 명중 +%d" % [target_level, target_level]
+		"armor":
+			return "AC -%d" % target_level
+		"accessory":
+			return "Max HP +%d · 방어 +%d" % [target_level * 20, int(floor(float(target_level) / 2.0))]
+	return "능력치 상승"
+
+func _is_item_equipped(item_name: String) -> bool:
+	for slot: String in ["weapon", "armor", "accessory"]:
+		var value: Variant = equipped_items.get(slot, {})
+		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
+			return true
+	return false
+
+func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
+	var kind: String = _scroll_kind(scroll_name)
+	if kind == "":
+		hud.show_message("강화 주문서가 올바르지 않습니다")
+		return
+	if int(inventory.get(scroll_name, 0)) <= 0:
+		hud.show_message("강화 주문서가 부족합니다")
+		return
+	if int(inventory.get(target_name, 0)) <= 0:
+		hud.show_message("강화할 장비가 없습니다")
+		return
+
+	var target_record: Dictionary = _find_catalog_item_record(target_name)
+	if target_record.is_empty() or str(target_record.get("slot", "")) != kind:
+		hud.show_message("이 주문서로 강화할 수 없는 장비입니다")
+		return
+
+	var current_level: int = int(enhancement_levels.get(target_name, 0))
+	var chance: Dictionary = _enhancement_chance(kind, current_level)
+	var success_chance: float = float(chance.get("success", 0.0))
+	var no_change_chance: float = float(chance.get("no_change", 0.0))
+	if success_chance <= 0.0:
+		hud.show_message("더 이상 강화할 수 없습니다")
+		return
+
+	inventory[scroll_name] = int(inventory.get(scroll_name, 0)) - 1
+	if int(inventory.get(scroll_name, 0)) <= 0:
+		inventory.erase(scroll_name)
+
+	var roll: float = rng.randf_range(0.0, 100.0)
+	if roll < success_chance:
+		enhancement_levels[target_name] = current_level + 1
+		hud.show_message("강화 성공! +%d %s" % [current_level + 1, target_name])
+		hud.append_log("강화 성공 · +%d %s" % [current_level + 1, target_name])
+	elif roll < success_chance + no_change_chance:
+		hud.show_message("강화 실패 · 장비 변화 없음")
+		hud.append_log("강화 실패(유지) · +%d %s" % [current_level, target_name])
+	else:
+		_destroy_enhancement_target(target_name)
+		hud.show_message("강화 실패 · %s 소실" % target_name)
+		hud.append_log("강화 실패(소실) · +%d %s" % [current_level, target_name])
+
+	hud.refresh_inventory(inventory)
+	_update_hud()
+	_save_game(true)
+
+	if int(inventory.get(scroll_name, 0)) > 0:
+		var remaining_candidates: Array = _enhancement_candidates(kind)
+		hud.call("open_enhancement", scroll_name, remaining_candidates)
+	else:
+		hud.call("open_enhancement", scroll_name, [])
+
+func _destroy_enhancement_target(item_name: String) -> void:
+	var remaining: int = int(inventory.get(item_name, 0)) - 1
+	if remaining > 0:
+		inventory[item_name] = remaining
+	else:
+		inventory.erase(item_name)
+	enhancement_levels.erase(item_name)
+	for slot: String in ["weapon", "armor", "accessory"]:
+		var value: Variant = equipped_items.get(slot, {})
+		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
+			equipped_items[slot] = {}
+
+func _equipment_enhancement_level(slot: String) -> int:
+	var value: Variant = equipped_items.get(slot, {})
+	if not (value is Dictionary):
+		return 0
+	var record: Dictionary = value as Dictionary
+	if record.is_empty():
+		return 0
+	return int(enhancement_levels.get(str(record.get("name", "")), 0))
+
+func _equipped_items_snapshot() -> Dictionary:
+	var result: Dictionary = {}
+	for slot: String in ["weapon", "armor", "accessory"]:
+		var value: Variant = equipped_items.get(slot, {})
+		if value is Dictionary:
+			var record: Dictionary = (value as Dictionary).duplicate(true)
+			if not record.is_empty():
+				record["enhance_level"] = int(enhancement_levels.get(str(record.get("name", "")), 0))
+			result[slot] = record
+		else:
+			result[slot] = {}
+	return result
+
 func _buy_shop_item(item_name: String, price: int) -> void:
 	var safe_price: int = maxi(0, price)
 	if safe_price <= 0:
@@ -1418,7 +1672,8 @@ func _update_hud() -> void:
 	character_state["attack"] = _effective_attack()
 	character_state["defense"] = _effective_defense()
 	character_state["equipped"] = equipped_catalog
-	character_state["equipped_items"] = equipped_items
+	character_state["equipped_items"] = _equipped_items_snapshot()
+	character_state["enhancement_levels"] = enhancement_levels
 	character_state["gold"] = gold
 	character_state["quest_kills"] = quest_kills
 	character_state["quest_goal"] = QUEST_GOAL
@@ -1449,6 +1704,7 @@ func _save_game(quiet: bool) -> void:
 		"class_index": class_index,
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
+		"enhancement_levels": enhancement_levels,
 		"quest_kills": quest_kills
 	}
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -1504,6 +1760,9 @@ func _load_game(quiet: bool) -> void:
 	var equipped_items_value: Variant = data.get("equipped_items", equipped_items)
 	if equipped_items_value is Dictionary:
 		equipped_items = equipped_items_value as Dictionary
+	var enhancement_value: Variant = data.get("enhancement_levels", enhancement_levels)
+	if enhancement_value is Dictionary:
+		enhancement_levels = enhancement_value as Dictionary
 	_restore_equipped_visuals()
 	hp = clampi(hp, 0, _effective_max_hp())
 	mp = clampi(mp, 0, max_mp)
@@ -1690,13 +1949,13 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + _stat_step_bonus(str_stat, 10, 2.0)
 
 func _melee_accuracy_stat() -> int:
-	return level + str_stat + 10
+	return level + str_stat + 10 + _equipment_enhancement_level("weapon")
 
 func _ranged_damage_stat() -> int:
-	return attack_power + _stat_step_bonus(dex_stat, 10, 2.0)
+	return attack_power + _stat_step_bonus(dex_stat, 10, 2.0) + _equipment_enhancement_level("weapon")
 
 func _ranged_accuracy_stat() -> int:
-	return level + dex_stat + 5
+	return level + dex_stat + 5 + _equipment_enhancement_level("weapon")
 
 func _magic_damage_stat() -> int:
 	return 5 + _stat_step_bonus(int_stat, 8, 2.0)
@@ -2072,13 +2331,15 @@ func _effective_attack() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("atk", 0.0))
-	return attack_power + int(round(bonus))
+	return attack_power + int(round(bonus)) + _equipment_enhancement_level("weapon")
 
 func _effective_defense() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("def", 0.0))
-	return defense + int(round(bonus))
+	var armor_enhance: int = _equipment_enhancement_level("armor")
+	var accessory_enhance: int = int(floor(float(_equipment_enhancement_level("accessory")) / 2.0))
+	return defense + int(round(bonus)) + armor_enhance + accessory_enhance
 
 func _effective_max_hp() -> int:
 	var flat_bonus: float = 0.0
@@ -2086,6 +2347,7 @@ func _effective_max_hp() -> int:
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
+	flat_bonus += float(_equipment_enhancement_level("accessory") * 20)
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
 func _experience_multiplier() -> float:
