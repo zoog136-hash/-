@@ -100,3 +100,16 @@ V17 HTML 안에 포함되어 있던 실제 게임 자원을 추출해 V18의 God
 - 기존 Android 도감 터치 선택 회귀 테스트: PASS
 - 기존 도감 페이지 이동 회귀 테스트: PASS
 - 상세 기록: `V20_VALIDATION.txt`
+
+## 전체 플레이어블 월드
+
+아덴과 기존 25개 맵 ID를 보존한 채 오만 10층 → 지배 정상 → 에스카로스 5구역 →
+알비노 4구역 → 신념 4층을 실제 충돌/경로/사냥터/포탈이 있는 큰 지역으로 확장했다.
+Godot 4.7.2에서 `project.godot`를 열고 F5로 실행한다. 기존 맵 메뉴에서 모든 지역으로 이동하거나
+아덴의 오만 입구와 각 지역의 `이전 지역 / 다음 지역 / 아덴 귀환` 이동진을 이용한다.
+T/AUTO 자동사냥, 클릭/터치·WASD·조이스틱, 미니맵 이동, F7 충돌 표시와 기존 저장을 유지한다.
+
+- 변경 기록과 한계: `docs/WORLD_REGIONS_CHANGELOG.md`
+- 맵 데이터 형식: `docs/WORLD_REGION_SCHEMA.md`
+- 전체 검증: `python3 tools/test_project.py --godot /path/to/godot`
+- 실제 게임 화면 캡처: `godot --path . --script res://tests/capture_regions.gd`

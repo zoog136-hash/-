@@ -198,7 +198,7 @@ func region_at(p: Vector2) -> Dictionary:
 	for region: Dictionary in data.get("regions", []):
 		if p.distance_to(COORD.array_vector(region["center"])) <= float(region["radius"]):
 			return region
-	return {"id":"frontier", "name":"아덴 변경", "type":"combat"}
+	return {"id":"frontier", "name":str(data.get("map_name", "아덴 변경")), "type":"combat"}
 
 func is_safe(p: Vector2) -> bool:
 	return str(region_at(p).get("type", "")) == "safe"

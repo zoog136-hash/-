@@ -2,7 +2,7 @@ name: Godot Validate
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'codex/world-regions-*']
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -195,3 +195,53 @@ jobs:
             exit 1
           fi
           grep -q "FIELD_WORLD_OK" godot-field-world.log
+
+      - name: All playable world regions
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-region-tests"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_regions_test.gd 2>&1 | tee godot-world-regions.log
+          if grep -E "SCRIPT ERROR:|ERROR:|REGION FAIL:|WORLD_REGIONS_FAILED" godot-world-regions.log; then
+            exit 1
+          fi
+          grep -q "WORLD_REGIONS_OK" godot-world-regions.log
+
+      - name: Region portal chain and camera limits
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-portal-tests"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_region_portals_test.gd 2>&1 | tee godot-region-portals.log
+          if grep -E "SCRIPT ERROR:|ERROR:|PORTAL FAIL:|WORLD_REGION_PORTALS_FAILED" godot-region-portals.log; then
+            exit 1
+          fi
+          grep -q "WORLD_REGION_PORTALS_OK" godot-region-portals.log
+
+      - name: Install virtual GL display
+        run: |
+          if ! command -v xvfb-run >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          fi
+
+      - name: Render actual region gameplay
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-render"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s "-screen 0 1280x720x24" ./Godot_v4.7.2-stable_linux.x86_64 --path . --script res://tests/capture_regions.gd 2>&1 | tee godot-region-render.log
+          if grep -E "SCRIPT ERROR:|ERROR:" godot-region-render.log; then
+            exit 1
+          fi
+          grep -q "REGION_CAPTURE_DIRECTORY" godot-region-render.log
+
+      - name: Upload gameplay renders and validation logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-world-review-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/twilight-render/**/world-regions-review/*.png
+            godot-*.log
+          if-no-files-found: error

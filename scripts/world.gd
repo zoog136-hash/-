@@ -9,6 +9,7 @@ const CATALOG_IMAGE_INDEX_PATH: String = "res://data/catalog_image_index_v19.jso
 const DIRECTIONAL_PATH: String = "res://data/directional_art_v19.json"
 const MONSTER_SCENE: PackedScene = preload("res://scenes/Monster.tscn")
 const FIELD_PATH: String = "res://data/maps/aden_field.json"
+const FIELD_INDEX_PATH: String = "res://data/maps/field_index.json"
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
@@ -268,6 +269,16 @@ func _load_data() -> void:
 			if str(maps[index].get("id", "")) == str(definition["map_id"]):
 				maps[index] = {"id":definition["map_id"],"name":definition["map_name"],"field_definition":definition,
 					"width":int(definition["bounds"][2])/32,"height":int(definition["bounds"][3])/32,"tile_size_world":32}
+	# Only lightweight metadata is resident for other regions. Load their geometry
+	# when entering; do not retain 24 full worlds or their textures in the map menu.
+	if FileAccess.file_exists(FIELD_INDEX_PATH):
+		var field_index: Variant = JSON.parse_string(FileAccess.get_file_as_string(FIELD_INDEX_PATH))
+		if field_index is Array:
+			for entry: Dictionary in field_index:
+				for index: int in range(maps.size()):
+					if str(maps[index].get("id", "")) == str(entry["map_id"]):
+						maps[index] = {"id":entry["map_id"],"name":entry["map_name"],"field_path":entry["path"],
+							"width":int(entry["bounds"][2])/32,"height":int(entry["bounds"][3])/32,"tile_size_world":32}
 	for map_value: Variant in maps:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
@@ -433,6 +444,15 @@ func _connect_signals() -> void:
 func _set_map(map_id: String, keep_position: bool) -> void:
 	if not maps_by_id.has(map_id):
 		return
+	# Validate before releasing the current playable world.
+	var requested_map: Dictionary = maps_by_id[map_id] as Dictionary
+	var requested_field: Dictionary = requested_map.get("field_definition", {})
+	if requested_map.has("field_path"):
+		var loaded_field: Variant = JSON.parse_string(FileAccess.get_file_as_string(str(requested_map["field_path"])))
+		if not (loaded_field is Dictionary) or str(loaded_field.get("map_id", "")) != map_id:
+			push_error("Invalid playable field: " + map_id)
+			return
+		requested_field = loaded_field as Dictionary
 	field_population.configure(self, null)
 	if is_instance_valid(return_gate):
 		remove_child(return_gate)
@@ -459,9 +479,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	for shape: Node in map_collision.get_children():
 		map_collision.remove_child(shape)
 		shape.queue_free()
-	if active_map.has("field_definition"):
+	if not requested_field.is_empty():
 		field_map = FIELD_SCRIPT.new()
-		field_map.configure(active_map["field_definition"])
+		field_map.configure(requested_field)
 		astar = field_map.astar
 		field_physics = field_map.build_physics(self)
 		map_background.texture = null
@@ -661,7 +681,7 @@ func _set_click_destination(target: Vector2) -> void:
 				if str(npc["role"]) == "shop":
 					hud.open_shop()
 				else:
-					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허")
+					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
 	var path: PackedVector2Array = find_world_path(player.global_position, target)
 	if path.size() > 0:
@@ -4059,7 +4079,7 @@ func _update_field_triggers() -> void:
 	var region: Dictionary = field_map.region_at(player.global_position)
 	if str(region["id"]) != region_id:
 		region_id = str(region["id"])
-		hud.set_map_name(str(region["name"]) + (" · 안전 지역" if str(region["type"])=="safe" else " · 아덴"))
+		hud.set_map_name(str(region["name"]) + (" · 안전 지역" if str(region["type"])=="safe" else " · " + str(field_map.data.get("short_name", "아덴"))))
 	if portal_cooldown > 0.0 or player.auto_enabled:
 		return
 	for portal: Dictionary in field_map.data["portal"]:
@@ -4085,7 +4105,12 @@ func use_field_portal(portal_id: String) -> bool:
 		auto_target = null
 		if target_map != active_map_id:
 			_set_map(target_map,false)
-			_place_return_gate()
+			if field_map == null:
+				_place_return_gate()
+			elif portal.has("target_position"):
+				var landing: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
+				if landing.x >= 0:
+					player.global_position = field_map.cell_to_world(landing)
 		elif portal.has("target_position"):
 			var cell: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
 			if cell.x < 0:

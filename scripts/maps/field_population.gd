@@ -35,10 +35,24 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if record.is_empty():
 		push_error("Unknown field monster: " + name_value)
 		return
+	# Optional regional variants reuse existing art/drop tables without mutating DB.
+	var variant: Dictionary = region.get("variants", {}).get(name_value, {})
+	if not variant.is_empty():
+		record = record.duplicate(true)
+		var old_level: float = maxf(1.0, float(record.get("lv", 1)))
+		var new_level: int = int(variant.get("level", old_level))
+		var ratio: float = clampf(float(new_level) / old_level, .6, 2.2)
+		record["lv"] = new_level
+		record["hp"] = int(float(record.get("hp", 100)) * ratio)
+		record["atk"] = int(float(record.get("atk", 10)) * sqrt(ratio))
+		# DB name is preserved for texture resolution; display name is set afterwards.
 	var monster: TwilightMonster = world.MONSTER_SCENE.instantiate()
 	world.monsters_root.add_child(monster)
 	monster.global_position = p
 	monster.setup(record,world.player,world,world._monster_texture(record))
+	if variant.has("name"):
+		monster.monster_name = str(variant["name"])
+		monster.name_label.text = "Lv.%d %s" % [monster.monster_level, monster.monster_name]
 	# Keep names readable at the field's wider camera zoom.
 	monster.name_label.add_theme_font_size_override("font_size",17)
 	monster.name_label.add_theme_color_override("font_color",Color("fff0cc"))

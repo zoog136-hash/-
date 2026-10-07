@@ -4,6 +4,7 @@ class_name FieldRenderer
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const GROUND_SHADER = preload("res://assets/maps/aden/ground.gdshader")
 const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
+const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 # Atlas regions are measured from the generated source, not assumed to be a grid.
 const REGIONS: Dictionary = {
 	"oak":Rect2(0,0,390,388), "oak2":Rect2(390,0,273,388),
@@ -26,7 +27,7 @@ var chunks: Dictionary = {}
 var ground: Node2D
 var terrain_root: Node2D
 var stream_clock: float = 0.0
-var faded: Array[Sprite2D] = []
+var faded: Array[Node2D] = []
 var visible_props: int = 0
 var chunk_size: float = 1024.0
 
@@ -64,6 +65,7 @@ func _polygon(points: PackedVector2Array, index: int, alpha: float = 1.0) -> Pol
 	material.set_shader_parameter("terrain", terrain)
 	material.set_shader_parameter("material_index", float(index))
 	material.set_shader_parameter("opacity", alpha)
+	_style_material(material)
 	poly.material = material
 	ground.add_child(poly)
 	return poly
@@ -88,24 +90,32 @@ func _road(points: Array, width: float, index: int, alpha: float) -> void:
 	material.set_shader_parameter("material_index",float(index))
 	material.set_shader_parameter("opacity",alpha)
 	material.set_shader_parameter("edge_fade",true)
+	_style_material(material)
 	line.material = material
 	ground.add_child(line)
 
 func _build_ground() -> void:
 	_select_layer("Ground")
-	_polygon(_box_points(field.bounds),0)
+	_polygon(_box_points(field.bounds),int(field.data["background"].get("base_material",0)))
+	for surface: Dictionary in field.data.get("surfaces", []):
+		var a: Array = surface["rect"]
+		var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
+		var poly: Polygon2D = _polygon(_box_points(box),int(surface.get("material",2)))
+		if surface.has("tint"):
+			poly.modulate = Color(str(surface["tint"]))
 	_select_layer("Road")
 	# Soft multiple road shoulders blend earth into vegetation.
 	for road: Dictionary in field.data["roads"]:
 		for shoulder: int in [48,28,12,0]:
-			_road(road["points"],float(road["width"])+shoulder*2,1,.16 if shoulder>0 else .94)
+			_road(road["points"],float(road["width"])+shoulder*2,int(road.get("material",1)),(.16 if shoulder>0 else .94)*float(road.get("opacity",1.0)))
 	# Courtyards and farming plots use separate material layers.
 	_select_layer("GroundDetail")
-	_courtyard(Rect2(820,3480,1380,1280))
-	_courtyard(Rect2(7430,2240,950,990))
-	_courtyard(Rect2(10120,1150,770,870))
-	for row: int in range(9):
-		_road([[880,4900+row*38],[1820,4900+row*38]],22,1,.8)
+	if int(field.data.get("schema_version",1)) == 1:
+		_courtyard(Rect2(820,3480,1380,1280))
+		_courtyard(Rect2(7430,2240,950,990))
+		_courtyard(Rect2(10120,1150,770,870))
+		for row: int in range(9):
+			_road([[880,4900+row*38],[1820,4900+row*38]],22,1,.8)
 	_select_layer("Water")
 	for water: Dictionary in field.data["water"]:
 		var points := PackedVector2Array()
@@ -122,12 +132,16 @@ func _build_ground() -> void:
 		bank_material.shader = GROUND_SHADER
 		bank_material.set_shader_parameter("terrain",terrain)
 		bank_material.set_shader_parameter("material_index",1.0)
+		_style_material(bank_material)
 		bank.material = bank_material
 		ground.add_child(bank)
 		var poly := Polygon2D.new()
 		poly.polygon = points
 		var material := ShaderMaterial.new()
 		material.shader = WATER_SHADER
+		if water.has("deep_color"):
+			material.set_shader_parameter("deep_color",Color(str(water["deep_color"])))
+			material.set_shader_parameter("shallow_color",Color(str(water["shallow_color"])))
 		poly.material = material
 		ground.add_child(poly)
 	_select_layer("Bridge")
@@ -136,6 +150,17 @@ func _build_ground() -> void:
 		var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
 		_polygon(_box_points(box.grow(15)),1)
 		_polygon(_box_points(box),2)
+		if box.size.y > box.size.x:
+			for x: float in [box.position.x,box.end.x]:
+				var rail := Line2D.new()
+				rail.points = PackedVector2Array([Vector2(x,box.position.y),Vector2(x,box.end.y)])
+				rail.width = 15
+				rail.default_color = Color("aaa38b")
+				ground.add_child(rail)
+				for y: int in range(int(box.position.y),int(box.end.y),52):
+					var block: Polygon2D = _polygon(_box_points(Rect2(x-11,y,20,49)),2)
+					block.modulate = Color(.68,.68,.62,1)
+			continue
 		for y: float in [box.position.y,box.end.y]:
 			var shadow := Polygon2D.new()
 			shadow.polygon = _box_points(Rect2(box.position.x,y+9,box.size.x,14))
@@ -151,6 +176,33 @@ func _build_ground() -> void:
 				block.modulate = Color(.68,.68,.62,1)
 				var cap: Polygon2D = _polygon(_box_points(Rect2(x,y-15,49,7)),2)
 				cap.modulate = Color(1.15,1.12,.98,1)
+	_select_layer("Wall")
+	for shape: Dictionary in field.data["collision"]:
+		if str(shape["kind"]) not in ["dungeon_wall","fortress_wall"]:
+			continue
+		var a: Array = shape["rect"]
+		var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
+		var stone_color := Color(str(field.data.get("render_style",{}).get("wall_tint","55505e")))
+		var wall: Polygon2D = _polygon(_box_points(box),2)
+		wall.modulate = stone_color
+		var rim := Line2D.new()
+		rim.points = _box_points(box)
+		rim.closed = true
+		rim.width = 8
+		rim.default_color = stone_color.lightened(.14)
+		ground.add_child(rim)
+		var shade := Line2D.new()
+		shade.points = PackedVector2Array([Vector2(box.position.x,box.end.y-5),Vector2(box.end.x,box.end.y-5)])
+		shade.width = 14
+		shade.default_color = Color(0,0,0,.38)
+		ground.add_child(shade)
+
+func _style_material(material: ShaderMaterial) -> void:
+	var style: Dictionary = field.data.get("render_style",{})
+	material.set_shader_parameter("wild_ground",bool(style.get("wild_ground",true)))
+	material.set_shader_parameter("palette",Color(str(style.get("palette","ffffff"))))
+	material.set_shader_parameter("saturation",float(style.get("saturation",1.0)))
+	material.set_shader_parameter("brightness_lift",float(style.get("brightness_lift",0.0)))
 
 func _courtyard(box: Rect2) -> void:
 	for radius: float in [1.13,1.05,1.0]:
@@ -206,10 +258,10 @@ func _process(delta: float) -> void:
 	if stream_clock <= 0.0:
 		stream_clock = .15
 		refresh_visible()
-	for sprite: Sprite2D in faded:
+	for sprite: Node2D in faded:
 		if not is_instance_valid(sprite):
 			continue
-		var size: Vector2 = sprite.texture.get_size()*sprite.scale.abs()
+		var size: Vector2 = sprite.get_meta("visual_size",Vector2(80,140)) as Vector2
 		var p: Vector2 = player.global_position
 		var behind: bool = p.y < sprite.position.y + 16 and p.y > sprite.position.y - size.y*.83 and absf(p.x-sprite.position.x)<size.x*.34
 		sprite.modulate.a = move_toward(sprite.modulate.a,float(field.data["foreground"]["fade_alpha"]) if behind else 1.0,delta*4)
@@ -242,7 +294,7 @@ func refresh_visible() -> void:
 	visible_props = 0
 	for node: Node2D in chunks.values():
 		visible_props += node.get_child_count()
-		for sprite: Sprite2D in node.get_children():
+		for sprite: Node2D in node.get_children():
 			if sprite.has_meta("occluder"):
 				faded.append(sprite)
 
@@ -254,6 +306,21 @@ func _load_chunk(key: Vector2i) -> void:
 	chunks[key] = node
 	for record: Dictionary in buckets[key]:
 		var kind: String = str(record["kind"])
+		if not textures.has(kind):
+			var accent: FieldLandmark = LANDMARK.new()
+			accent.kind = kind
+			accent.accent = Color(str(record.get("color",field.data.get("render_style",{}).get("accent","8abed4"))))
+			accent.stone = Color(str(field.data.get("render_style",{}).get("prop_tint","817e89")))
+			accent.position = COORD.array_vector(record["position"])
+			accent.scale = Vector2.ONE*float(record.get("scale",1.0))
+			accent.set_meta("prop_kind",kind)
+			accent.set_meta("visual_size",Vector2(110,160)*accent.scale)
+			if kind in ["crystal","obelisk","arch","banner"]:
+				accent.set_meta("occluder",true)
+			if kind in ["rubble","rune"]:
+				accent.z_index = -8
+			node.add_child(accent)
+			continue
 		var sprite := Sprite2D.new()
 		sprite.texture = textures[kind]
 		sprite.set_meta("prop_kind",kind)
@@ -262,9 +329,12 @@ func _load_chunk(key: Vector2i) -> void:
 		sprite.offset = Vector2(0,-tex_size.y*.46)
 		var scale_value: float = float(HEIGHTS[kind])*float(record["scale"])/tex_size.y
 		sprite.scale = Vector2.ONE*scale_value
+		sprite.set_meta("visual_size",tex_size*sprite.scale.abs())
 		sprite.flip_h = bool(record.get("flip",false))
 		var tint: float = .93 + fmod(sprite.position.x*.007+sprite.position.y*.011,.12)
 		sprite.modulate = Color(tint,tint,tint,1)
+		if field.data.has("render_style"):
+			sprite.modulate *= Color(str(field.data["render_style"].get("prop_tint","ffffff")))
 		if kind in ["oak","oak2","pine","birch","house","tower","market","pillar"]:
 			sprite.set_meta("occluder",true)
 		if kind in ["grass","bush"]:

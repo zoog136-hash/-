@@ -34,8 +34,14 @@ func _draw() -> void:
 	draw_style_box(_panel(),Rect2(Vector2.ZERO,size))
 	draw_rect(area,Color("202e27"))
 	var font: Font = get_theme_default_font()
-	draw_string(font,Vector2(10,18),"ADEN  /  WORLD" if field != null else "REGION  /  MAP",HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("decfae"))
+	var heading: String = str(field.data.get("minimap",{}).get("title","ADEN  /  WORLD")) if field != null else "REGION  /  MAP"
+	draw_string(font,Vector2(10,18),heading.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("decfae"))
 	if field != null:
+		for surface: Dictionary in field.data.get("surfaces",[]):
+			var a: Array = surface["rect"]
+			var top: Vector2 = _point(Vector2(float(a[0]),float(a[1])))
+			var end: Vector2 = _point(Vector2(float(a[0])+float(a[2]),float(a[1])+float(a[3])))
+			draw_rect(Rect2(top,end-top),Color("56565b"))
 		for region: Dictionary in field.data["regions"]:
 			var p: Vector2 = _point(COORD.array_vector(region["center"]))
 			var r: float = float(region["radius"])/bounds.size.x*area.size.x
@@ -46,7 +52,7 @@ func _draw() -> void:
 			var points := PackedVector2Array()
 			for p: Array in water["polygon"]:
 				points.append(_point(COORD.array_vector(p)))
-			draw_colored_polygon(points,Color("4c7e84"))
+			draw_colored_polygon(points,Color(str(water.get("shallow_color","4c7e84"))))
 		for road: Dictionary in field.data["roads"]:
 			var points := PackedVector2Array()
 			for p: Array in road["points"]:
