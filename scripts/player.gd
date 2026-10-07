@@ -251,6 +251,29 @@ func clear_click_path() -> void:
 	click_path = PackedVector2Array()
 	path_index = 0
 
+func show_miss() -> void:
+	_show_combat_text("MISS", Color(0.78, 0.86, 1.0, 1.0), Vector2(-38.0, -112.0))
+
+func show_received_damage(amount: int) -> void:
+	_show_combat_text(str(amount), Color(1.0, 0.38, 0.32, 1.0), Vector2(-28.0, -112.0))
+
+func _show_combat_text(text_value: String, color_value: Color, start_position: Vector2) -> void:
+	var label: Label = Label.new()
+	label.text = text_value
+	label.position = start_position
+	label.add_theme_font_size_override("font_size", 20)
+	label.add_theme_color_override("font_color", color_value)
+	label.add_theme_color_override("font_outline_color", Color(0.04, 0.04, 0.05, 1.0))
+	label.add_theme_constant_override("outline_size", 4)
+	label.z_index = 40
+	add_child(label)
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(label, "position", label.position + Vector2(0.0, -34.0), 0.55)
+	tween.tween_property(label, "modulate:a", 0.0, 0.55)
+	tween.set_parallel(false)
+	tween.tween_callback(label.queue_free)
+
 func set_auto_enabled(enabled: bool) -> void:
 	auto_enabled = enabled
 	auto_toggled.emit(enabled)
