@@ -13,6 +13,7 @@ var v20_map_name: Label
 var v20_quest_text: RichTextLabel
 var v20_potion_count: Label
 var v20_leaf_count: Label
+var v20_quick_item_buttons: Dictionary = {}
 var v20_auto_button: Button
 var v20_target_name: Label
 var v20_target_hp: ProgressBar
@@ -69,7 +70,7 @@ func _build_v20_gameplay_hud() -> void:
 	_build_v20_message_and_log()
 
 	_update_v20_portrait(0)
-	set_quick_items({"HP 물약": 100, "초록 잎": 200})
+	set_quick_items({"HP 물약": 100, "강력 HP 물약": 14, "축복받은 HP 물약": 10, "초록 잎": 200})
 	set_quest_progress(0, 9)
 
 func _panel_style(alpha: float = 0.88, radius: int = 6, border: Color = Color(0.52, 0.40, 0.22, 0.95)) -> StyleBoxFlat:
@@ -429,7 +430,7 @@ func _build_v20_right_controls() -> void:
 	target_button.add_theme_stylebox_override("pressed", _round_button_style(0.92, 38, Color(0.96, 0.82, 0.45, 1.0)))
 	_place(target_button, 1148.0, 390.0, 1222.0, 464.0)
 	target_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	target_button.pressed.connect(func() -> void: show_message("가까운 몬스터를 공격 버튼으로 선택"))
+	target_button.pressed.connect(func() -> void: target_pressed.emit())
 	v20_layer.add_child(target_button)
 
 	v20_auto_button = Button.new()
@@ -549,27 +550,30 @@ func _build_v20_bottom_bar() -> void:
 	items.add_theme_constant_override("separation", 5)
 	item_panel.add_child(items)
 	var item_defs: Array = [
-		["res://assets/ui/potionRed.png", "100"],
-		["res://assets/ui/potionGreen.png", "14"],
-		["res://assets/ui/potionPurple.png", "10"],
+		["res://assets/ui/potionRed.png", "HP 물약"],
+		["res://assets/ui/potionGreen.png", "강력 HP 물약"],
+		["res://assets/ui/potionPurple.png", "축복받은 HP 물약"],
 		["res://assets/ui/return.png", "귀환"]
 	]
 	for item_index: int in range(item_defs.size()):
 		var data: Array = item_defs[item_index] as Array
 		var slot: Button = Button.new()
 		slot.custom_minimum_size = Vector2(82.0, 66.0)
-		slot.text = str(data[1])
 		slot.icon = _load_texture(str(data[0]))
 		slot.expand_icon = true
 		slot.add_theme_font_size_override("font_size", 11)
 		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
 		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		if item_index == 0:
-			slot.pressed.connect(func() -> void: potion_pressed.emit())
-		elif item_index == 3:
-			slot.pressed.connect(func() -> void: map_pressed.emit())
+		if item_index < 3:
+			var item_name: String = str(data[1])
+			slot.text = "0"
+			slot.tooltip_text = item_name
+			v20_quick_item_buttons[item_name] = slot
+			slot.pressed.connect(func() -> void: quick_item_pressed.emit(item_name))
 		else:
-			slot.pressed.connect(func() -> void: show_message("퀵 아이템 사용"))
+			slot.text = "귀환"
+			slot.tooltip_text = "현재 지역 시작 지점으로 귀환"
+			slot.pressed.connect(func() -> void: return_pressed.emit())
 		items.add_child(slot)
 
 func _build_v20_message_and_log() -> void:
@@ -662,6 +666,10 @@ func set_quick_items(inventory: Dictionary) -> void:
 		v20_potion_count.text = str(int(inventory.get("HP 물약", 0)))
 	if v20_leaf_count != null:
 		v20_leaf_count.text = str(int(inventory.get("초록 잎", 0)))
+	for item_name: String in v20_quick_item_buttons:
+		var button: Button = v20_quick_item_buttons[item_name] as Button
+		if button != null:
+			button.text = str(int(inventory.get(item_name, 0)))
 
 func set_quest_progress(current: int, goal: int) -> void:
 	if v20_quest_text == null:
