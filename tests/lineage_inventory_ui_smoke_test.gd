@@ -26,7 +26,7 @@ func _run() -> void:
 			{"name":"HP 물약","grade":"일반","type":"소모품","slot":"consumable","desc":"HP 55 회복","heal":55,"weight":3}
 		]
 	}, {"아이템":{}})
-	ui.call("set_character_state", {"gold":2131928, "equipped_items":{"weapon":{"name":"낡은 장검"}}})
+	ui.call("set_character_state", {"gold":2131928, "equipped_items":{"weapon":{"name":"낡은 장검"}}, "enhancement_levels":{"낡은 장검":7}})
 	ui.call("set_inventory", {"낡은 장검":1,"HP 물약":119})
 	ui.call("show_inventory")
 	await process_frame
@@ -47,13 +47,17 @@ func _run() -> void:
 	var sword_slot: Button = slot_buttons.get("낡은 장검") as Button
 	if sword_slot == null or not sword_slot.text.begins_with("E"):
 		_fail("equipped item is missing E marker")
+	if sword_slot == null or sword_slot.text.find("+7") < 0:
+		_fail("enhancement level is missing from slot")
 
 	ui.call("_select_item", "낡은 장검")
 	await process_frame
 	var detail_name: Label = ui.get("detail_name") as Label
 	var detail_text: RichTextLabel = ui.get("detail_text") as RichTextLabel
-	if detail_name == null or detail_name.text != "낡은 장검":
+	if detail_name == null or detail_name.text.find("낡은 장검") < 0:
 		_fail("selected item name not shown")
+	if detail_name == null or detail_name.text.find("+7") < 0:
+		_fail("enhancement level not shown in detail name")
 	if detail_text == null or detail_text.text.find("공격력") < 0:
 		_fail("weapon detail stats not shown")
 	if detail_text == null or detail_text.text.find("무게") < 0:
@@ -65,9 +69,31 @@ func _run() -> void:
 	if equipped_action == null or equipped_action.text != "장착 중":
 		_fail("equipped item action state mismatch")
 	var normal_color: Color = ui.call("_grade_color", "일반")
+	var hero_color: Color = ui.call("_grade_color", "영웅")
+	var legend_color: Color = ui.call("_grade_color", "전설")
+	var myth_color: Color = ui.call("_grade_color", "신화")
 	var unique_color: Color = ui.call("_grade_color", "유일")
 	if normal_color == unique_color:
 		_fail("grade colors are not differentiated")
+	if hero_color.r <= hero_color.b or hero_color.r <= hero_color.g:
+		_fail("hero grade must be red dominant")
+	if legend_color.b <= legend_color.r:
+		_fail("legend grade must be purple dominant")
+	if myth_color.r < 0.9 or myth_color.g < 0.6:
+		_fail("myth grade must be gold")
+	if unique_color.g < 0.9 or unique_color.b < 0.5:
+		_fail("unique grade must be bright emerald")
+	var unique_style: StyleBoxFlat = ui.call("_slot_style_for_grade", "유일", true)
+	if unique_style.shadow_size < 7:
+		_fail("unique grade must have strong glow")
+	if unique_style.shadow_color.g <= unique_style.shadow_color.r:
+		_fail("unique glow must be emerald/green dominant")
+	if str(ui.call("_bless_state", {"blessed":true}, "테스트")) != "blessed":
+		_fail("explicit blessed flag not recognized")
+	if str(ui.call("_bless_state", {"cursed":true}, "테스트")) != "cursed":
+		_fail("explicit cursed flag not recognized")
+	if not bool(ui.call("_is_engraved", {}, "무기 마법 주문서 (각인)")):
+		_fail("engraved name marker not recognized")
 
 	ui.call("_activate_selected")
 	if activated_item != "낡은 장검":
