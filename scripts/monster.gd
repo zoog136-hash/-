@@ -21,6 +21,10 @@ var melee_accuracy: int = 12
 var ranged_accuracy: int = 12
 var magic_accuracy: int = 12
 var magic_resistance: int = 10
+var melee_critical_rate: int = 5
+var ranged_critical_rate: int = 5
+var magic_critical_rate: int = 5
+var critical_resistance: int = 0
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
@@ -52,6 +56,11 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	magic_accuracy = maxi(1, int(record.get("magic_accuracy", record.get("마법 명중", default_magic_accuracy))))
 	var default_mr: int = 10 + monster_level + defense_value
 	magic_resistance = maxi(0, int(record.get("mr", record.get("MR", record.get("마법 방어력", default_mr)))))
+	var generic_critical: int = maxi(0, int(record.get("crit", record.get("critical_rate", record.get("치명타", 5)))))
+	melee_critical_rate = clampi(int(record.get("melee_crit", record.get("근거리 치명타", generic_critical))), 0, 50)
+	ranged_critical_rate = clampi(int(record.get("ranged_crit", record.get("원거리 치명타", generic_critical))), 0, 50)
+	magic_critical_rate = clampi(int(record.get("magic_crit", record.get("마법 치명타", generic_critical))), 0, 50)
+	critical_resistance = clampi(int(record.get("critical_resistance", record.get("crit_resist", record.get("치명타 저항", 0)))), 0, 50)
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
@@ -117,12 +126,21 @@ func _physics_process(delta: float) -> void:
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
 
-func take_damage(amount: int) -> void:
+func critical_rate_for_type(kind: String) -> int:
+	match kind:
+		"ranged":
+			return ranged_critical_rate
+		"magic":
+			return magic_critical_rate
+		_:
+			return melee_critical_rate
+
+func take_damage(amount: int, critical: bool = false) -> void:
 	if dead:
 		return
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
-	_show_damage_number(amount)
+	_show_damage_number(amount, critical)
 	var tween: Tween = create_tween()
 	tween.tween_property(sprite, "modulate", Color(1.0, 0.35, 0.35, 1.0), 0.05)
 	tween.tween_property(sprite, "modulate", Color.WHITE, 0.10)
@@ -149,12 +167,12 @@ func show_miss() -> void:
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
 
-func _show_damage_number(amount: int) -> void:
+func _show_damage_number(amount: int, critical: bool = false) -> void:
 	var label: Label = Label.new()
-	label.text = str(amount)
+	label.text = ("CRIT " + str(amount)) if critical else str(amount)
 	label.position = Vector2(-28.0, -88.0)
-	label.add_theme_font_size_override("font_size", 20)
-	label.add_theme_color_override("font_color", Color(1.0, 0.77, 0.28, 1.0))
+	label.add_theme_font_size_override("font_size", 24 if critical else 20)
+	label.add_theme_color_override("font_color", Color(1.0, 0.40, 0.18, 1.0) if critical else Color(1.0, 0.77, 0.28, 1.0))
 	label.add_theme_color_override("font_outline_color", Color(0.12, 0.03, 0.01, 1.0))
 	label.add_theme_constant_override("outline_size", 4)
 	label.z_index = 30
