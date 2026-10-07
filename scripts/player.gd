@@ -44,7 +44,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	attack_clock = maxf(0.0, attack_clock - delta)
 	transform_bob_clock += delta
-	stun_remaining = maxf(0.0, stun_remaining - delta)
+	_tick_stun(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
@@ -284,6 +284,9 @@ func _show_combat_text(text_value: String, color_value: Color, start_position: V
 	tween.tween_property(label, "modulate:a", 0.0, 0.55)
 	tween.set_parallel(false)
 	tween.tween_callback(label.queue_free)
+
+func _tick_stun(delta: float) -> void:
+	stun_remaining = maxf(0.0, stun_remaining - delta)
 
 func is_stunned() -> bool:
 	return stun_remaining > 0.0
