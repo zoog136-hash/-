@@ -62,6 +62,33 @@ const JOB_PRIMARY_STAT: Dictionary = {
 	"신성검사":"STR / WIS", "광전사":"STR / CON", "사신":"STR",
 	"뇌신":"STR", "마검사":"STR / INT"
 }
+const JOB_ALLOWED_WEAPONS: Dictionary = {
+	"기사": ["단검", "한손검", "양손검", "창", "그레이트소드"],
+	"군주": ["단검", "한손검", "양손검", "창"],
+	"요정": ["단검", "한손검", "활"],
+	"마법사": ["단검", "지팡이"],
+	"다크엘프": ["단검", "이도류", "크로우"],
+	"총사": ["라이플", "핸드캐넌"],
+	"투사": ["체인소드", "창"],
+	"암흑기사": ["한손검", "양손검", "그레이트소드"],
+	"신성검사": ["한손검", "마검"],
+	"광전사": ["도끼", "창", "양손검", "그레이트소드"],
+	"사신": ["사이드"],
+	"뇌신": ["창", "건틀렛"],
+	"마검사": ["마검", "그레이트소드"]
+}
+const WEAPON_TYPE_ALIASES: Dictionary = {
+	"체인 소드":"체인소드", "체인소드":"체인소드",
+	"핸드 캐넌":"핸드캐넌", "핸드캐넌":"핸드캐넌",
+	"룬소드":"마검", "마검":"마검",
+	"그레이트 소드":"그레이트소드", "그레이트소드":"그레이트소드"
+}
+const WEAPON_BASE_ATTACK_SPEED: Dictionary = {
+	"단검":32.0, "한손검":22.0, "양손검":12.0, "그레이트소드":8.0,
+	"창":17.0, "도끼":14.0, "지팡이":18.0, "이도류":26.0, "크로우":28.0,
+	"사이드":20.0, "체인소드":18.0, "마검":21.0, "건틀렛":24.0,
+	"활":24.0, "라이플":18.0, "핸드캐넌":10.0
+}
 
 var level: int = 35
 var experience: int = 100
@@ -88,6 +115,8 @@ var inventory: Dictionary = {
 	"HP 물약":100,
 	"강력 HP 물약":14,
 	"축복받은 HP 물약":10,
+	"화살":500,
+	"총알":300,
 	"낡은 장검":1,
 	"초록 잎":200,
 	"무기 마법 주문서 (각인)":5,
@@ -175,9 +204,14 @@ func _load_data() -> void:
 	monster_db = game_db.get("몬스터", []) as Array
 	item_db = game_db.get("아이템", []) as Array
 	skills_db = game_db.get("스킬", []) as Array
+	_ensure_ammo_items()
+	_enrich_weapon_records(item_db)
 	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
+	var catalog_items_value: Variant = catalog_db.get("아이템", [])
+	if catalog_items_value is Array:
+		_enrich_weapon_records(catalog_items_value as Array)
 	_merge_local_consumables_into_catalog()
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
@@ -186,6 +220,68 @@ func _load_data() -> void:
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
 	_build_job_classes()
+
+func _ensure_ammo_items() -> void:
+	var names: Dictionary = {}
+	for value: Variant in item_db:
+		if value is Dictionary:
+			names[str((value as Dictionary).get("name", ""))] = true
+	var ammo_records: Array[Dictionary] = [
+		{"name":"화살", "grade":"일반", "type":"탄약", "slot":"consumable", "desc":"활 일반 공격 시 1개 소모"},
+		{"name":"총알", "grade":"일반", "type":"탄약", "slot":"consumable", "desc":"라이플/핸드 캐넌 일반 공격 시 1개 소모"}
+	]
+	for record: Dictionary in ammo_records:
+		var item_name: String = str(record.get("name", ""))
+		if names.has(item_name):
+			continue
+		item_db.append(record.duplicate(true))
+		names[item_name] = true
+	game_db["아이템"] = item_db
+
+func _weapon_grade_speed_bonus(grade: String) -> float:
+	match grade:
+		"유일": return 6.0
+		"신화": return 5.0
+		"전설": return 4.0
+		"영웅": return 3.0
+		"희귀": return 2.0
+		"고급": return 1.0
+		_: return 0.0
+
+func _weapon_name_speed_variation(item_name: String) -> float:
+	var signature: int = 0
+	for index: int in range(item_name.length()):
+		signature = (signature + item_name.unicode_at(index) * (index + 1)) % 10007
+	return float(signature % 401) / 100.0
+
+func _enrich_weapon_records(records: Array) -> void:
+	for index: int in range(records.size()):
+		var value: Variant = records[index]
+		if not (value is Dictionary):
+			continue
+		var record: Dictionary = value as Dictionary
+		if str(record.get("slot", "")).strip_edges().to_lower() != "weapon":
+			continue
+		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
+		var intrinsic_speed: float = float(WEAPON_BASE_ATTACK_SPEED.get(weapon_type, 15.0))
+		intrinsic_speed += _weapon_grade_speed_bonus(str(record.get("grade", "")))
+		intrinsic_speed += _weapon_name_speed_variation(str(record.get("name", "")))
+		record["weaponTypeKey"] = weapon_type
+		record["attackKind"] = _weapon_attack_kind_from_type(weapon_type)
+		record["attackRangeCells"] = _weapon_range_cells_from_type(weapon_type)
+		record["ammo"] = _weapon_ammo_from_type(weapon_type)
+		record["weaponAttackSpeed"] = intrinsic_speed
+		var meta: String = "무기 공속 +%.2f%% · %s · 사거리 %d칸" % [
+			intrinsic_speed,
+			"원거리" if str(record["attackKind"]) == "ranged" else "근거리",
+			int(record["attackRangeCells"])
+		]
+		if str(record["ammo"]) != "":
+			meta += " · 탄약 %s" % str(record["ammo"])
+		var desc: String = str(record.get("desc", ""))
+		if desc.find("무기 공속 +") < 0:
+			record["desc"] = meta if desc == "" else desc + " · " + meta
+		records[index] = record
 
 func _merge_local_consumables_into_catalog() -> void:
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
@@ -907,37 +1003,48 @@ func _attack() -> void:
 		return
 	if auto_attack_timer > 0.0:
 		return
+	var attack_kind: String = _current_attack_kind()
 	var target: TwilightMonster = selected_monster
 	var target_usable: bool = is_instance_valid(target) and not target.dead
 	if target_usable:
-		target_usable = player.global_position.distance_to(target.global_position) <= 105.0
+		target_usable = _target_in_current_weapon_range(target)
 	if target_usable:
 		target_usable = _has_line_of_sight_world(player.global_position, target.global_position)
 	if not target_usable:
-		target = _nearest_visible_monster(105.0)
+		target = _nearest_visible_monster_in_weapon_range()
 	if target == null:
-		hud.show_message("공격 범위에 보이는 대상이 없습니다")
+		hud.show_message("무기 사거리 안에 보이는 대상이 없습니다")
+		return
+	if not _consume_weapon_ammo():
+		auto_attack_timer = 1.0
 		return
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
 	player.pulse_attack()
-	var hit_chance: float = _melee_hit_chance(target)
-	if not _roll_melee_hit(target):
+	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
+	if rng.randf() >= hit_chance:
 		target.show_miss()
-		hud.append_log("%s 공격 MISS · 명중 %d / AC %d / %.1f%%" % [
-			target.monster_name, _melee_accuracy_stat(), target.armor_class, hit_chance * 100.0
+		var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
+		hud.append_log("%s %s 공격 MISS · 명중 %d / AC %d / %.1f%%" % [
+			target.monster_name,
+			"원거리" if attack_kind == "ranged" else "근거리",
+			accuracy, target.armor_class, hit_chance * 100.0
 		])
 		_update_target_hud()
 		return
-	var damage: int = maxi(1, _melee_damage_stat() + rng.randi_range(-6, 9))
-	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
+	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
+	var damage: int = maxi(1, damage_stat + rng.randi_range(-6, 9))
+	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _critical_damage(damage)
 	target.take_damage(damage, critical)
-	hud.append_log("%s에게 %d 피해%s · 명중 %.1f%% · 치명타 %.1f%%" % [
-		target.monster_name, damage, " CRITICAL" if critical else "",
-		hit_chance * 100.0, critical_chance * 100.0
+	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
+		target.monster_name, damage,
+		"원거리" if attack_kind == "ranged" else "근거리",
+		" CRITICAL" if critical else "",
+		_current_attack_range_cells(),
+		critical_chance * 100.0
 	])
 	_update_target_hud()
 
@@ -953,7 +1060,7 @@ func _run_auto_hunt() -> void:
 		return
 	selected_monster = auto_target
 	var distance: float = player.global_position.distance_to(auto_target.global_position)
-	if distance <= 95.0 and _has_line_of_sight_world(player.global_position, auto_target.global_position):
+	if _target_in_current_weapon_range(auto_target) and _has_line_of_sight_world(player.global_position, auto_target.global_position):
 		player.clear_click_path()
 		if auto_attack_timer <= 0.0:
 			_attack()
@@ -1899,6 +2006,7 @@ func _load_game(quiet: bool) -> void:
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
 		inventory = inventory_value as Dictionary
+	_ensure_inventory_ammo_defaults()
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
@@ -1919,6 +2027,7 @@ func _load_game(quiet: bool) -> void:
 	var enhancement_value: Variant = data.get("enhancement_levels", enhancement_levels)
 	if enhancement_value is Dictionary:
 		enhancement_levels = enhancement_value as Dictionary
+	_enforce_weapon_class_compatibility(true)
 	_restore_equipped_visuals()
 	hp = clampi(hp, 0, _effective_max_hp())
 	mp = clampi(mp, 0, max_mp)
@@ -1962,10 +2071,22 @@ func _build_job_classes() -> void:
 			"transform_name": str(transform_record.get("name", "")),
 			"image_path": str(transform_record.get("image_path", "")),
 			"source_id": str(transform_record.get("sourceId", "")),
-			"weapon": _job_weapon_hint(transform_record),
+			"weapon": _job_weapon_text(job_name),
 			"role": _job_role_from_skills(job_name),
 			"primary_stat": str(JOB_PRIMARY_STAT.get(job_name, ""))
 		})
+
+func _job_weapon_text(job_name: String) -> String:
+	var allowed_value: Variant = JOB_ALLOWED_WEAPONS.get(job_name, [])
+	if not (allowed_value is Array):
+		return "공용"
+	var allowed: Array = allowed_value as Array
+	var labels: PackedStringArray = PackedStringArray()
+	for value: Variant in allowed:
+		var weapon_type: String = str(value)
+		if not labels.has(weapon_type):
+			labels.append(weapon_type)
+	return ", ".join(labels) if not labels.is_empty() else "공용"
 
 func _job_weapon_hint(transform_record: Dictionary) -> String:
 	var weapons: PackedStringArray = PackedStringArray()
@@ -2043,6 +2164,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	if not record.is_empty():
 		equipped_catalog["변신"] = record.duplicate(true)
 		_apply_transform_visual(record)
+	_enforce_weapon_class_compatibility(false)
 	_refresh_speed_modifiers()
 	_update_job_skillbar()
 	hud.show_message("직업 변경: %s" % job_class)
@@ -2433,6 +2555,13 @@ func _equip_or_acquire_item(record: Dictionary) -> void:
 	var item_name: String = str(record.get("name", "아이템"))
 	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
 	var slot: String = str(record.get("slot", ""))
+	if slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
+		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
+		hud.show_message("%s 클래스는 %s 무기를 착용할 수 없습니다" % [job_class, weapon_type])
+		hud.append_log("착용 제한 · %s / %s · 아이템은 인벤토리에 보관" % [job_class, item_name])
+		hud.refresh_inventory(inventory)
+		_update_hud()
+		return
 	if slot == "weapon" or slot == "armor" or slot == "accessory":
 		var old_max_hp: int = _effective_max_hp()
 		equipped_items[slot] = record.duplicate(true)
@@ -2559,6 +2688,152 @@ func _all_equipped_records() -> Array[Dictionary]:
 			records.append(item_value as Dictionary)
 	return records
 
+func _normalized_weapon_type(raw_type: String) -> String:
+	var value: String = raw_type.strip_edges()
+	if WEAPON_TYPE_ALIASES.has(value):
+		return str(WEAPON_TYPE_ALIASES[value])
+	return value
+
+func _weapon_attack_kind_from_type(weapon_type: String) -> String:
+	return "ranged" if weapon_type in ["활", "라이플", "핸드캐넌"] else "melee"
+
+func _weapon_range_cells_from_type(weapon_type: String) -> int:
+	match weapon_type:
+		"사이드", "창":
+			return 3
+		"체인소드":
+			return 5
+		"라이플", "핸드캐넌":
+			return 8
+		"활":
+			return 10
+		_:
+			return 1
+
+func _weapon_ammo_from_type(weapon_type: String) -> String:
+	if weapon_type == "활":
+		return "화살"
+	if weapon_type in ["라이플", "핸드캐넌"]:
+		return "총알"
+	return ""
+
+func _equipped_weapon_record() -> Dictionary:
+	var value: Variant = equipped_items.get("weapon", {})
+	if value is Dictionary:
+		return value as Dictionary
+	return {}
+
+func _weapon_allowed_for_job(record: Dictionary, target_job: String) -> bool:
+	if record.is_empty():
+		return true
+	var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
+	var allowed_value: Variant = JOB_ALLOWED_WEAPONS.get(target_job, [])
+	if not (allowed_value is Array):
+		return false
+	return (allowed_value as Array).has(weapon_type)
+
+func _enforce_weapon_class_compatibility(quiet: bool = false) -> void:
+	var weapon: Dictionary = _equipped_weapon_record()
+	if weapon.is_empty() or _weapon_allowed_for_job(weapon, job_class):
+		return
+	var item_name: String = str(weapon.get("name", "무기"))
+	equipped_items["weapon"] = {}
+	_refresh_speed_modifiers()
+	if not quiet:
+		hud.show_message("클래스 변경으로 %s 장착 해제" % item_name)
+	hud.append_log("%s 착용 불가 · %s 장착 해제" % [job_class, item_name])
+
+func _current_weapon_type() -> String:
+	return _normalized_weapon_type(str(_equipped_weapon_record().get("type", "")))
+
+func _current_attack_kind() -> String:
+	var weapon: Dictionary = _equipped_weapon_record()
+	if weapon.has("attackKind"):
+		return str(weapon.get("attackKind", "melee"))
+	return _weapon_attack_kind_from_type(_current_weapon_type())
+
+func _current_attack_range_cells() -> int:
+	var weapon: Dictionary = _equipped_weapon_record()
+	if weapon.has("attackRangeCells"):
+		return maxi(1, int(weapon.get("attackRangeCells", 1)))
+	return _weapon_range_cells_from_type(_current_weapon_type())
+
+func _weapon_cell_distance(target: TwilightMonster) -> int:
+	if target == null:
+		return 999999
+	var from_cell: Vector2i = _world_to_cell(player.global_position)
+	var to_cell: Vector2i = _world_to_cell(target.global_position)
+	var delta: Vector2i = to_cell - from_cell
+	return maxi(absi(delta.x), absi(delta.y))
+
+func _target_in_current_weapon_range(target: TwilightMonster) -> bool:
+	return target != null and _weapon_cell_distance(target) <= _current_attack_range_cells()
+
+func _nearest_visible_monster_in_weapon_range() -> TwilightMonster:
+	var best: TwilightMonster = null
+	var best_distance: float = INF
+	var range_cells: int = _current_attack_range_cells()
+	for node: Node in monsters_root.get_children():
+		if not (node is TwilightMonster):
+			continue
+		var monster: TwilightMonster = node
+		if monster.dead or _weapon_cell_distance(monster) > range_cells:
+			continue
+		if not _has_line_of_sight_world(player.global_position, monster.global_position):
+			continue
+		var distance: float = player.global_position.distance_to(monster.global_position)
+		if distance < best_distance:
+			best_distance = distance
+			best = monster
+	return best
+
+func _current_ammo_name() -> String:
+	var weapon: Dictionary = _equipped_weapon_record()
+	if weapon.has("ammo"):
+		return str(weapon.get("ammo", ""))
+	return _weapon_ammo_from_type(_current_weapon_type())
+
+func _weapon_intrinsic_attack_speed_percent(record: Dictionary) -> float:
+	if record.is_empty():
+		return 0.0
+	if record.has("weaponAttackSpeed"):
+		return maxf(0.0, float(record.get("weaponAttackSpeed", 0.0)))
+	var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
+	return maxf(0.0, float(WEAPON_BASE_ATTACK_SPEED.get(weapon_type, 15.0)))
+
+func _ensure_inventory_ammo_defaults() -> void:
+	if not inventory.has("화살"):
+		inventory["화살"] = 500
+	if not inventory.has("총알"):
+		inventory["총알"] = 300
+
+func _consume_weapon_ammo() -> bool:
+	var ammo_name: String = _current_ammo_name()
+	if ammo_name == "":
+		return true
+	var count: int = int(inventory.get(ammo_name, 0))
+	if count <= 0:
+		hud.show_message("%s이(가) 없습니다 · AUTO OFF" % ammo_name)
+		hud.append_log("탄약 부족 · %s" % ammo_name)
+		if player.auto_enabled:
+			player.set_auto_enabled(false)
+		_update_hud()
+		return false
+	inventory[ammo_name] = count - 1
+	_update_hud()
+	return true
+
+func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> float:
+	if target == null:
+		return 0.05
+	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
+	var target_ac_abs: int = absi(target.armor_class)
+	var chance_percent: float = 75.0 + float(accuracy - target_ac_abs) * 0.7
+	return clampf(chance_percent / 100.0, 0.05, 0.95)
+
+func _ranged_normal_damage_stat() -> int:
+	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0)
+
 func _record_move_speed_multiplier(record: Dictionary) -> float:
 	var value: float = float(record.get("speed", 1.0))
 	if value <= 0.0:
@@ -2567,6 +2842,8 @@ func _record_move_speed_multiplier(record: Dictionary) -> float:
 
 func _record_attack_speed_percent(record: Dictionary) -> float:
 	var value: float = float(record.get("attackSpeed", record.get("attack_speed", 0.0)))
+	if str(record.get("slot", "")) == "weapon":
+		value += _weapon_intrinsic_attack_speed_percent(record)
 	return maxf(0.0, value)
 
 func _effective_move_speed_multiplier() -> float:
@@ -2980,7 +3257,14 @@ func _character_stats_snapshot() -> Dictionary:
 		"damage_reduction": _damage_reduction_stat(),
 		"attack_speed_bonus": _effective_attack_speed_bonus_percent(),
 		"move_speed_bonus": (_effective_move_speed_multiplier() - 1.0) * 100.0,
-		"attack_interval": _normal_attack_interval()
+		"attack_interval": _normal_attack_interval(),
+		"weapon_type": _current_weapon_type() if _current_weapon_type() != "" else "맨손",
+		"weapon_attack_kind": _current_attack_kind(),
+		"weapon_range_cells": _current_attack_range_cells(),
+		"weapon_attack_speed": _weapon_intrinsic_attack_speed_percent(_equipped_weapon_record()),
+		"weapon_ammo": _current_ammo_name(),
+		"weapon_ammo_count": int(inventory.get(_current_ammo_name(), 0)) if _current_ammo_name() != "" else -1,
+		"allowed_weapons": _job_weapon_text(job_class)
 	}
 
 func _effective_attack() -> int:

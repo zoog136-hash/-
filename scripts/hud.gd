@@ -1099,11 +1099,23 @@ func _refresh_character_panel() -> void:
 		int(character_state.get("poison_accuracy", 0)), int(character_state.get("poison_resistance", 0)),
 		int(character_state.get("bleed_accuracy", 0)), int(character_state.get("bleed_resistance", 0))
 	]
-	var profile_text: String = "역할 %s · 주무기 %s · 주스탯 %s\n대표 신화 변신: %s" % [
+	var ammo_text: String = "없음"
+	var ammo_name: String = str(character_state.get("weapon_ammo", ""))
+	if ammo_name != "":
+		ammo_text = "%s x%d" % [ammo_name, int(character_state.get("weapon_ammo_count", 0))]
+	var weapon_rule_text: String = "%s · %s · 사거리 %d칸 · 무기공속 +%.2f%% · 탄약 %s" % [
+		str(character_state.get("weapon_type", "맨손")),
+		"원거리" if str(character_state.get("weapon_attack_kind", "melee")) == "ranged" else "근거리",
+		int(character_state.get("weapon_range_cells", 1)),
+		float(character_state.get("weapon_attack_speed", 0.0)),
+		ammo_text
+	]
+	var profile_text: String = "역할 %s · 착용가능 %s · 주스탯 %s\n대표 신화 변신: %s\n현재 무기규칙: %s" % [
 		str(profile.get("role", "")),
-		str(profile.get("weapon", "")),
+		str(character_state.get("allowed_weapons", profile.get("weapon", ""))),
 		str(profile.get("primary_stat", "")),
-		str(profile.get("transform_name", ""))
+		str(profile.get("transform_name", "")),
+		weapon_rule_text
 	]
 	character_info.text = "[font_size=22][b]%s[/b][/font_size]\n%s\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
 		current_job, profile_text, int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
@@ -1146,6 +1158,13 @@ func _equipped_detail(value: Variant) -> String:
 		parts.append("명중 %+d" % hit_value)
 	if hp_value != 0:
 		parts.append("HP %+d" % hp_value)
+	if str(record.get("slot", "")) == "weapon":
+		parts.append("%s" % ("원거리" if str(record.get("attackKind", "melee")) == "ranged" else "근거리"))
+		parts.append("사거리 %d칸" % int(record.get("attackRangeCells", 1)))
+		parts.append("무기공속 +%.2f%%" % float(record.get("weaponAttackSpeed", 0.0)))
+		var ammo_name: String = str(record.get("ammo", ""))
+		if ammo_name != "":
+			parts.append("탄약 %s" % ammo_name)
 	return " · ".join(parts)
 
 func _item_filter_group(record: Dictionary) -> String:
