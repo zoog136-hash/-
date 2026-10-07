@@ -103,6 +103,15 @@ var job_skills: Array = []
 var job_class_buttons: Dictionary = {}
 
 const CLASS_NAMES: Array[String] = ["전사", "마법사", "궁수", "암살자"]
+const EQUIPMENT_SLOT_DISPLAY: Array = [
+	["weapon","무기"], ["offhand","보조무기"], ["helmet","투구"], ["tshirt","티셔츠"],
+	["body","갑옷"], ["pants","하의"], ["cloak","망토"], ["belt","벨트"],
+	["earring1","귀걸이1"], ["earring2","귀걸이2"], ["ring1","반지1"], ["ring2","반지2"],
+	["seal1","인장1"], ["seal2","인장2"], ["gaiters","각반"], ["boots","신발"],
+	["gloves","장갑"], ["bracelet","팔찌"], ["necklace","목걸이"], ["badge","휘장"],
+	["crystal","수정"], ["catalyst","카탈리스트"], ["rune","룬"]
+]
+
 const CLASS_SHEETS: Array[String] = [
 	"res://assets/sprites/classes/warrior.png",
 	"res://assets/sprites/classes/mage.png",
@@ -1077,10 +1086,12 @@ func _refresh_character_panel() -> void:
 	var transform_name: String = _equipped_name(equipped.get("변신", {}))
 	var doll_name: String = _equipped_name(equipped.get("마법인형", {}))
 	var relic_name: String = _equipped_name(equipped.get("성물", {}))
-	var weapon_name: String = _equipped_detail(equipped_items.get("weapon", {}))
-	var armor_name: String = _equipped_detail(equipped_items.get("armor", {}))
-	var shield_name: String = _equipped_detail(equipped_items.get("shield", {}))
-	var accessory_name: String = _equipped_detail(equipped_items.get("accessory", {}))
+	var equipment_lines: PackedStringArray = PackedStringArray()
+	for slot_data: Array in EQUIPMENT_SLOT_DISPLAY:
+		var slot_key: String = str(slot_data[0])
+		var slot_label: String = str(slot_data[1])
+		equipment_lines.append("%s: %s" % [slot_label, _equipped_detail(equipped_items.get(slot_key, {}))])
+	var equipment_text: String = "\n".join(equipment_lines)
 	var core_stats: String = "STR %d   DEX %d   CON %d\nINT %d   WIS %d   CHA %d" % [
 		int(character_state.get("str", 0)), int(character_state.get("dex", 0)), int(character_state.get("con", 0)),
 		int(character_state.get("int", 0)), int(character_state.get("wis", 0)), int(character_state.get("cha", 0))
@@ -1119,11 +1130,11 @@ func _refresh_character_panel() -> void:
 		str(profile.get("transform_name", "")),
 		weapon_rule_text, shield_rule_text
 	]
-	character_info.text = "[font_size=22][b]%s[/b][/font_size]\n%s\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n방패/가더: %s\n장신구: %s" % [
+	character_info.text = "[font_size=22][b]%s[/b][/font_size]\n%s\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n%s" % [
 		current_job, profile_text, int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
 		int(character_state.get("hp", 0)), int(character_state.get("max_hp", 0)),
 		int(character_state.get("mp", 0)), int(character_state.get("max_mp", 0)),
-		core_stats, combat_stats, transform_name, doll_name, relic_name, weapon_name, armor_name, shield_name, accessory_name
+		core_stats, combat_stats, equipment_text
 	]
 
 func _equipped_name(value: Variant) -> String:
@@ -1176,6 +1187,8 @@ func _item_filter_group(record: Dictionary) -> String:
 
 	if slot == "weapon" or slot == "armor" or slot == "accessory":
 		return slot
+	if slot in ["earring", "belt", "bracelet", "badge", "seal", "crystal", "catalyst", "rune", "necklace"]:
+		return "accessory"
 	if slot == "consumable":
 		return "consumable"
 	if slot == "material":

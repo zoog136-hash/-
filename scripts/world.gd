@@ -36,7 +36,12 @@ var catalog_db: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
-var equipped_items: Dictionary = {"weapon": {}, "armor": {}, "shield": {}, "accessory": {}}
+var equipped_items: Dictionary = {
+	"weapon": {}, "offhand": {}, "helmet": {}, "tshirt": {}, "body": {}, "pants": {}, "cloak": {},
+	"belt": {}, "earring1": {}, "earring2": {}, "ring1": {}, "ring2": {}, "seal1": {}, "seal2": {},
+	"gaiters": {}, "boots": {}, "gloves": {}, "bracelet": {}, "necklace": {}, "badge": {},
+	"crystal": {}, "catalyst": {}, "rune": {}
+}
 var enhancement_levels: Dictionary = {}
 var class_index: int = 0
 var companion_velocity: Vector2 = Vector2.ZERO
@@ -91,6 +96,25 @@ const WEAPON_BASE_ATTACK_SPEED: Dictionary = {
 }
 
 const SHIELD_COMPATIBLE_WEAPONS: Array[String] = ["단검", "한손검", "지팡이", "마검"]
+const EQUIPMENT_SLOT_ORDER: Array[String] = [
+	"weapon", "offhand", "helmet", "tshirt", "body", "pants", "cloak", "belt",
+	"earring1", "earring2", "ring1", "ring2", "seal1", "seal2", "gaiters",
+	"boots", "gloves", "bracelet", "necklace", "badge", "crystal", "catalyst", "rune"
+]
+const ARMOR_EQUIPMENT_SLOTS: Array[String] = [
+	"offhand", "helmet", "tshirt", "body", "pants", "cloak", "gaiters", "boots", "gloves"
+]
+const ACCESSORY_EQUIPMENT_SLOTS: Array[String] = [
+	"belt", "earring1", "earring2", "ring1", "ring2", "seal1", "seal2",
+	"bracelet", "necklace", "badge", "crystal", "catalyst", "rune"
+]
+const EQUIPMENT_SLOT_LABELS: Dictionary = {
+	"weapon":"무기", "offhand":"보조무기", "helmet":"투구", "tshirt":"티셔츠", "body":"갑옷",
+	"pants":"하의", "cloak":"망토", "belt":"벨트", "earring1":"귀걸이1", "earring2":"귀걸이2",
+	"ring1":"반지1", "ring2":"반지2", "seal1":"인장1", "seal2":"인장2", "gaiters":"각반",
+	"boots":"신발", "gloves":"장갑", "bracelet":"팔찌", "necklace":"목걸이", "badge":"휘장",
+	"crystal":"수정", "catalyst":"카탈리스트", "rune":"룬"
+}
 
 var level: int = 35
 var experience: int = 100
@@ -142,6 +166,7 @@ func _ready() -> void:
 	hud.set_job_data(job_classes, skills_db)
 	_set_map(active_map_id, false)
 	_load_game(true)
+	_normalize_equipment_slots()
 	_ensure_job_class_visual()
 	_ensure_quickslots_seeded()
 	_update_job_skillbar()
@@ -1717,7 +1742,7 @@ func _enhancement_bonus_text(kind: String, target_level: int) -> String:
 	return "능력치 상승"
 
 func _is_item_equipped(item_name: String) -> bool:
-	for slot: String in ["weapon", "armor", "shield", "accessory"]:
+	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
 			return true
@@ -1803,7 +1828,7 @@ func _destroy_enhancement_target(item_name: String) -> void:
 	else:
 		inventory.erase(item_name)
 	enhancement_levels.erase(item_name)
-	for slot: String in ["weapon", "armor", "shield", "accessory"]:
+	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
 			equipped_items[slot] = {}
@@ -1819,7 +1844,7 @@ func _equipment_enhancement_level(slot: String) -> int:
 
 func _equipped_items_snapshot() -> Dictionary:
 	var result: Dictionary = {}
-	for slot: String in ["weapon", "armor", "shield", "accessory"]:
+	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary:
 			var record: Dictionary = (value as Dictionary).duplicate(true)
@@ -2029,6 +2054,7 @@ func _load_game(quiet: bool) -> void:
 	var enhancement_value: Variant = data.get("enhancement_levels", enhancement_levels)
 	if enhancement_value is Dictionary:
 		enhancement_levels = enhancement_value as Dictionary
+	_normalize_equipment_slots()
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
@@ -2558,24 +2584,24 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 func _equip_or_acquire_item(record: Dictionary) -> void:
 	var item_name: String = str(record.get("name", "아이템"))
 	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
-	var slot: String = str(record.get("slot", ""))
-	if slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
+	var source_slot: String = str(record.get("slot", ""))
+	if source_slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
 		hud.show_message("%s 클래스는 %s 무기를 착용할 수 없습니다" % [job_class, weapon_type])
 		hud.append_log("착용 제한 · %s / %s · 아이템은 인벤토리에 보관" % [job_class, item_name])
 		hud.refresh_inventory(inventory)
 		_update_hud()
 		return
-	var equip_slot: String = slot
+	var equip_slot: String = _equipment_slot_for_record(record)
 	if _is_offhand_record(record):
-		equip_slot = "shield"
+		equip_slot = "offhand"
 		if not _can_equip_offhand(record):
 			hud.show_message("%s 무기에는 방패를 착용할 수 없습니다" % _current_weapon_type())
 			hud.append_log("방패 착용 불가 · %s + %s" % [_current_weapon_type(), item_name])
 			hud.refresh_inventory(inventory)
-			_update_hud()
-			return
-	if equip_slot in ["weapon", "armor", "shield", "accessory"]:
+		_update_hud()
+		return
+	if equip_slot != "" and EQUIPMENT_SLOT_ORDER.has(equip_slot):
 		var old_max_hp: int = _effective_max_hp()
 		equipped_items[equip_slot] = record.duplicate(true)
 		if equip_slot == "weapon":
@@ -2585,8 +2611,9 @@ func _equip_or_acquire_item(record: Dictionary) -> void:
 		if new_max_hp > old_max_hp:
 			hp += new_max_hp - old_max_hp
 		hp = mini(hp, new_max_hp)
-		hud.show_message("아이템 장착: %s" % item_name)
-		hud.append_log("%s 슬롯 장착 · %s" % [equip_slot, item_name])
+		var slot_label: String = str(EQUIPMENT_SLOT_LABELS.get(equip_slot, equip_slot))
+		hud.show_message("%s 장착: %s" % [slot_label, item_name])
+		hud.append_log("%s 슬롯 장착 · %s" % [slot_label, item_name])
 	else:
 		hud.show_message("아이템 획득: %s" % item_name)
 		hud.append_log("인벤토리 획득 · %s" % item_name)
@@ -2697,7 +2724,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
 			records.append(value as Dictionary)
-	for slot: String in ["weapon", "armor", "shield", "accessory"]:
+	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(item_value as Dictionary)
@@ -2732,6 +2759,130 @@ func _weapon_ammo_from_type(weapon_type: String) -> String:
 		return "총알"
 	return ""
 
+func _equipment_slot_base(record: Dictionary) -> String:
+	if record.is_empty():
+		return ""
+	var item_type: String = str(record.get("type", "")).strip_edges()
+	var source_slot: String = str(record.get("slot", "")).strip_edges().to_lower()
+	if source_slot == "weapon":
+		return "weapon"
+	match item_type:
+		"방패", "가더", "방패/가더":
+			return "offhand"
+		"투구":
+			return "helmet"
+		"티셔츠":
+			return "tshirt"
+		"갑옷":
+			return "body"
+		"하의":
+			return "pants"
+		"망토":
+			return "cloak"
+		"벨트":
+			return "belt"
+		"귀걸이":
+			return "earring"
+		"반지":
+			return "ring"
+		"인장":
+			return "seal"
+		"각반":
+			return "gaiters"
+		"신발":
+			return "boots"
+		"장갑":
+			return "gloves"
+		"팔찌":
+			return "bracelet"
+		"목걸이":
+			return "necklace"
+		"휘장":
+			return "badge"
+		"수정":
+			return "crystal"
+		"카탈리스트":
+			return "catalyst"
+		"룬":
+			return "rune"
+	match source_slot:
+		"earring": return "earring"
+		"belt": return "belt"
+		"bracelet": return "bracelet"
+		"badge": return "badge"
+		"seal": return "seal"
+		"crystal": return "crystal"
+		"catalyst": return "catalyst"
+		"rune": return "rune"
+		"necklace": return "necklace"
+		"armor": return "body"
+		"accessory": return "necklace"
+	return ""
+
+func _choose_multi_equipment_slot(base_slot: String, container: Dictionary = {}) -> String:
+	var source: Dictionary = equipped_items if container.is_empty() else container
+	var options: Array[String] = []
+	match base_slot:
+		"earring": options = ["earring1", "earring2"]
+		"ring": options = ["ring1", "ring2"]
+		"seal": options = ["seal1", "seal2"]
+		_: return base_slot
+	for slot_name: String in options:
+		var value: Variant = source.get(slot_name, {})
+		if not (value is Dictionary) or (value as Dictionary).is_empty():
+			return slot_name
+	return options[0]
+
+func _equipment_slot_for_record(record: Dictionary) -> String:
+	return _choose_multi_equipment_slot(_equipment_slot_base(record))
+
+func _empty_equipment_slots() -> Dictionary:
+	var result: Dictionary = {}
+	for slot_name: String in EQUIPMENT_SLOT_ORDER:
+		result[slot_name] = {}
+	return result
+
+func _place_migrated_equipment(container: Dictionary, record: Dictionary, preferred_slot: String = "") -> void:
+	if record.is_empty():
+		return
+	var target_slot: String = preferred_slot if EQUIPMENT_SLOT_ORDER.has(preferred_slot) else ""
+	if target_slot == "":
+		var base_slot: String = _equipment_slot_base(record)
+		target_slot = _choose_multi_equipment_slot(base_slot, container)
+	if target_slot == "" or not EQUIPMENT_SLOT_ORDER.has(target_slot):
+		return
+	var current: Variant = container.get(target_slot, {})
+	if current is Dictionary and not (current as Dictionary).is_empty():
+		var base_slot: String = _equipment_slot_base(record)
+		if base_slot in ["earring", "ring", "seal"]:
+			target_slot = _choose_multi_equipment_slot(base_slot, container)
+	container[target_slot] = record.duplicate(true)
+
+func _normalize_equipment_slots() -> void:
+	var old_items: Dictionary = equipped_items
+	var normalized: Dictionary = _empty_equipment_slots()
+	for slot_name: String in EQUIPMENT_SLOT_ORDER:
+		var direct_value: Variant = old_items.get(slot_name, {})
+		if direct_value is Dictionary and not (direct_value as Dictionary).is_empty():
+			normalized[slot_name] = (direct_value as Dictionary).duplicate(true)
+	for legacy_slot: String in ["shield", "armor", "accessory", "earring", "ring", "seal"]:
+		var legacy_value: Variant = old_items.get(legacy_slot, {})
+		if legacy_value is Dictionary and not (legacy_value as Dictionary).is_empty():
+			_place_migrated_equipment(normalized, legacy_value as Dictionary)
+	equipped_items = normalized
+
+func _equipment_enhancement_total(slots: Array[String]) -> int:
+	var total: int = 0
+	for slot_name: String in slots:
+		total += _equipment_enhancement_level(slot_name)
+	return total
+
+func _equipment_enhancement_max(slots: Array[String]) -> int:
+	var highest: int = 0
+	for slot_name: String in slots:
+		highest = maxi(highest, _equipment_enhancement_level(slot_name))
+	return highest
+
 func _offhand_kind(record: Dictionary) -> String:
 	if record.is_empty():
 		return ""
@@ -2765,14 +2916,14 @@ func _can_equip_offhand(record: Dictionary) -> bool:
 	return _current_weapon_supports_shield()
 
 func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
-	var offhand_value: Variant = equipped_items.get("shield", {})
+	var offhand_value: Variant = equipped_items.get("offhand", {})
 	if not (offhand_value is Dictionary):
 		return
 	var offhand: Dictionary = offhand_value as Dictionary
 	if offhand.is_empty() or _offhand_kind(offhand) != "shield" or _current_weapon_supports_shield():
 		return
 	var offhand_name: String = str(offhand.get("name", "방패"))
-	equipped_items["shield"] = {}
+	equipped_items["offhand"] = {}
 	if not quiet:
 		hud.show_message("현재 무기와 방패를 함께 착용할 수 없어 방패가 해제되었습니다")
 	hud.append_log("방패 자동 해제 · %s / 무기 %s" % [offhand_name, _current_weapon_type()])
@@ -3326,7 +3477,7 @@ func _character_stats_snapshot() -> Dictionary:
 		"weapon_ammo_count": int(inventory.get(_current_ammo_name(), 0)) if _current_ammo_name() != "" else -1,
 		"allowed_weapons": _job_weapon_text(job_class),
 		"shield_compatible": _current_weapon_supports_shield(),
-		"offhand_kind": _offhand_kind(equipped_items.get("shield", {}) as Dictionary) if equipped_items.get("shield", {}) is Dictionary else ""
+		"offhand_kind": _offhand_kind(equipped_items.get("offhand", {}) as Dictionary) if equipped_items.get("offhand", {}) is Dictionary else ""
 	}
 
 func _effective_attack() -> int:
@@ -3339,8 +3490,8 @@ func _effective_defense() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("def", 0.0))
-	var armor_enhance: int = _equipment_enhancement_level("armor") + _equipment_enhancement_level("shield")
-	var accessory_enhance: int = int(floor(float(_equipment_enhancement_level("accessory")) / 2.0))
+	var armor_enhance: int = _equipment_enhancement_total(ARMOR_EQUIPMENT_SLOTS)
+	var accessory_enhance: int = int(floor(float(_equipment_enhancement_total(ACCESSORY_EQUIPMENT_SLOTS)) / 2.0))
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def")
 
 func _effective_max_hp() -> int:
@@ -3349,7 +3500,7 @@ func _effective_max_hp() -> int:
 	for record: Dictionary in _all_equipped_records():
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
-	flat_bonus += float(_equipment_enhancement_level("accessory") * 20)
+	flat_bonus += float(_equipment_enhancement_max(ACCESSORY_EQUIPMENT_SLOTS) * 20)
 	flat_bonus += float(_active_skill_buff_total("hp"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
