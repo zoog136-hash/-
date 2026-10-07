@@ -62,6 +62,7 @@ var move_speed: float = 90.0
 var exp_reward: int = 25
 var gold_reward: int = 40
 var grade: String = "일반"
+var drop_items: Array[String] = []
 var target_player: TwilightPlayer = null
 var world_controller: Node = null
 var attack_cooldown: float = 0.0
@@ -128,6 +129,13 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	exp_reward = maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
 	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
+	drop_items.clear()
+	var drop_value: Variant = record.get("drop", [])
+	if drop_value is Array:
+		for item_value: Variant in drop_value as Array:
+			var item_name: String = str(item_value)
+			if not item_name.is_empty():
+				drop_items.append(item_name)
 	move_speed = float(record.get("speed", 70.0 + float(mini(70, int(float(max_hp) / 10.0)))))
 	target_player = player_ref
 	world_controller = world_ref
