@@ -153,6 +153,7 @@ func _connect_signals() -> void:
 	hud.move_vector_changed.connect(player.set_touch_vector)
 	hud.attack_pressed.connect(_attack)
 	hud.bleed_skill_pressed.connect(_cast_bleed_from_hud)
+	hud.combat_skill_pressed.connect(_cast_combat_skill_from_hud)
 	hud.auto_pressed.connect(func() -> void: player.set_auto_enabled(not player.auto_enabled))
 	hud.potion_pressed.connect(_use_potion)
 	hud.inventory_pressed.connect(_open_inventory)
@@ -360,15 +361,22 @@ func _monster_texture(record: Dictionary) -> Texture2D:
 func _random_walkable_position(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
 	var width: int = int(active_map.get("width", 1))
 	var height: int = int(active_map.get("height", 1))
+	var require_reachable: bool = near != Vector2.ZERO
+	var origin_cell: Vector2i = Vector2i.ZERO
+	if require_reachable:
+		origin_cell = _nearest_walkable_cell(_world_to_cell(near))
 	for _attempt: int in range(700):
 		var cell: Vector2i = Vector2i(rng.randi_range(0, maxi(0, width - 1)), rng.randi_range(0, maxi(0, height - 1)))
 		if astar != null and not astar.is_point_solid(cell):
 			var position_value: Vector2 = _cell_to_world(cell)
-			if near == Vector2.ZERO:
+			if not require_reachable:
 				return position_value
 			var distance: float = position_value.distance_to(near)
-			if distance >= min_distance and distance <= max_distance:
-				return position_value
+			if distance < min_distance or distance > max_distance:
+				continue
+			if astar.get_id_path(origin_cell, cell).is_empty():
+				continue
+			return position_value
 	return _spawn_position_fallback()
 
 func _spawn_position_fallback() -> Vector2:
@@ -757,11 +765,37 @@ func _melee_hit_chance(target: TwilightMonster) -> float:
 func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
 
-func _cast_bleed_from_hud() -> void:
+func _skill_target(max_distance: float) -> TwilightMonster:
 	var target: TwilightMonster = selected_monster
-	if not is_instance_valid(target) or target.dead:
-		target = _nearest_monster(90.0)
-	_cast_bleed_skill(target)
+	if is_instance_valid(target) and not target.dead:
+		if player.global_position.distance_to(target.global_position) <= max_distance:
+			return target
+	return _nearest_monster(max_distance)
+
+func _cast_bleed_from_hud() -> void:
+	# Backward-compatible signal used by older HUD revisions.
+	_cast_bleed_skill(_skill_target(90.0))
+
+func _cast_combat_skill_from_hud(skill_id: String) -> void:
+	match skill_id:
+		"attack":
+			_attack()
+		"bleed":
+			_cast_bleed_skill(_skill_target(90.0))
+		"stun":
+			_cast_stun_skill(_skill_target(90.0))
+		"poison":
+			_cast_poison_skill(_skill_target(300.0))
+		"silence":
+			_cast_silence_skill(_skill_target(320.0))
+		"hold":
+			_cast_hold_skill(_skill_target(280.0))
+		"fear":
+			_cast_fear_skill(_skill_target(300.0))
+		"magic":
+			_cast_magic_attack(_skill_target(360.0), 26, 3, "에너지 볼트")
+		_:
+			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
 	if player.is_stunned() or player.is_feared():
@@ -799,8 +833,10 @@ func _run_auto_hunt() -> void:
 		player.clear_click_path()
 		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
-		auto_target = _nearest_monster(99999.0)
+		auto_target = _nearest_reachable_monster(99999.0)
 	if auto_target == null:
+		selected_monster = null
+		player.clear_click_path()
 		return
 	selected_monster = auto_target
 	var distance: float = player.global_position.distance_to(auto_target.global_position)
@@ -815,6 +851,14 @@ func _run_auto_hunt() -> void:
 			return
 		if player.click_path.is_empty() or player.path_index >= player.click_path.size():
 			var path: PackedVector2Array = find_world_path(player.global_position, auto_target.global_position)
+			if path.is_empty():
+				auto_target = _nearest_reachable_monster(99999.0)
+				if auto_target == null:
+					selected_monster = null
+					player.clear_click_path()
+					return
+				selected_monster = auto_target
+				path = find_world_path(player.global_position, auto_target.global_position)
 			player.set_click_path(path, auto_target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
@@ -830,6 +874,23 @@ func _nearest_monster(max_distance: float) -> TwilightMonster:
 				best_distance = distance
 				best = monster
 	return best
+
+func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
+	var candidates: Array[TwilightMonster] = []
+	for node: Node in monsters_root.get_children():
+		if node is TwilightMonster:
+			var monster: TwilightMonster = node
+			if monster.dead:
+				continue
+			if player.global_position.distance_to(monster.global_position) <= max_distance:
+				candidates.append(monster)
+	candidates.sort_custom(func(a: TwilightMonster, b: TwilightMonster) -> bool:
+		return player.global_position.distance_squared_to(a.global_position) < player.global_position.distance_squared_to(b.global_position)
+	)
+	for monster: TwilightMonster in candidates:
+		if not find_world_path(player.global_position, monster.global_position).is_empty():
+			return monster
+	return null
 
 func _select_monster(monster: TwilightMonster) -> void:
 	selected_monster = monster
