@@ -535,16 +535,6 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int) -> void:
 		player.clear_click_path()
 		hud.show_message("사망 후 부활했습니다")
 	_update_hud()
-	var reduced: int = maxi(1, damage_value - int(_effective_defense() * 0.28))
-	hp = maxi(0, hp - reduced)
-	if hp <= 0:
-		hp = _effective_max_hp()
-		mp = max_mp
-		gold = maxi(0, gold - 500)
-		player.global_position = _spawn_position()
-		player.clear_click_path()
-		hud.show_message("사망 후 부활했습니다")
-	_update_hud()
 
 func _stat_points_for_level_up(new_level: int) -> int:
 	# Provisional Lineage-style growth rule, isolated for later balance changes.
