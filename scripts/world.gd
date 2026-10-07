@@ -25,6 +25,10 @@ var maps_by_id: Dictionary = {}
 var game_db: Dictionary = {}
 var monster_db: Array = []
 var item_db: Array = []
+var skills_db: Array = []
+var job_classes: Array = []
+var job_class: String = "기사"
+var active_skill_buffs: Dictionary = {}
 var catalog_db: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
@@ -45,6 +49,16 @@ var save_timer: float = 0.0
 var collision_debug: bool = false
 var quest_kills: int = 0
 const QUEST_GOAL: int = 9
+const JOB_CLASS_ORDER: Array[String] = [
+	"기사", "군주", "요정", "마법사", "다크엘프", "총사", "투사",
+	"암흑기사", "신성검사", "광전사", "사신", "뇌신", "마검사"
+]
+const JOB_PRIMARY_STAT: Dictionary = {
+	"기사":"STR", "군주":"STR / CHA", "요정":"DEX", "마법사":"INT / WIS",
+	"다크엘프":"STR / DEX", "총사":"DEX", "투사":"STR", "암흑기사":"STR",
+	"신성검사":"STR / WIS", "광전사":"STR / CON", "사신":"STR",
+	"뇌신":"STR", "마검사":"STR / INT"
+}
 
 var level: int = 35
 var experience: int = 100
@@ -91,13 +105,17 @@ func _ready() -> void:
 	_setup_collision_tileset()
 	hud.refresh_maps(maps)
 	hud.set_catalog_data(catalog_db, catalog_image_index)
+	hud.set_job_data(job_classes, skills_db)
 	_set_map(active_map_id, false)
 	_load_game(true)
+	_ensure_job_class_visual()
+	_update_job_skillbar()
 	_update_hud()
 	hud.append_log("V20 · 모바일 MMORPG HUD / 전투 화면 개선")
 
 func _process(delta: float) -> void:
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
+	_tick_skill_buffs(delta)
 	save_timer += delta
 	if save_timer >= 30.0:
 		save_timer = 0.0
@@ -151,6 +169,7 @@ func _load_data() -> void:
 		game_db = db_value as Dictionary
 	monster_db = game_db.get("몬스터", []) as Array
 	item_db = game_db.get("아이템", []) as Array
+	skills_db = game_db.get("스킬", []) as Array
 	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
@@ -161,6 +180,7 @@ func _load_data() -> void:
 	var directional_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(DIRECTIONAL_PATH))
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
+	_build_job_classes()
 
 func _merge_local_consumables_into_catalog() -> void:
 	var catalog_items_value: Variant = catalog_db.get("아이템", [])
@@ -228,6 +248,8 @@ func _connect_signals() -> void:
 	hud.catalog_equip_requested.connect(_equip_catalog)
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
+	hud.job_class_selected.connect(_on_job_class_selected)
+	hud.job_skill_pressed.connect(_cast_job_skill)
 	hud.shop_buy_requested.connect(_buy_shop_item)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
 	hud.enhancement_requested.connect(_attempt_enhancement)
@@ -1769,6 +1791,10 @@ func _update_hud() -> void:
 		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
 	var character_state: Dictionary = _character_stats_snapshot()
 	character_state["class_index"] = class_index
+	character_state["job_class"] = job_class
+	var job_profile: Dictionary = _job_profile(job_class)
+	character_state["job_image_path"] = str(job_profile.get("image_path", ""))
+	character_state["job_transform_name"] = str(job_profile.get("transform_name", ""))
 	character_state["level"] = level
 	character_state["hp"] = hp
 	character_state["max_hp"] = _effective_max_hp()
@@ -1807,6 +1833,7 @@ func _save_game(quiet: bool) -> void:
 		"gold": gold,
 		"inventory": inventory,
 		"class_index": class_index,
+		"job_class": job_class,
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
@@ -1857,6 +1884,9 @@ func _load_game(quiet: bool) -> void:
 	if inventory_value is Dictionary:
 		inventory = inventory_value as Dictionary
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
+	job_class = str(data.get("job_class", job_class))
+	if not JOB_CLASS_ORDER.has(job_class):
+		job_class = "기사"
 	player.set_class_index(class_index)
 	player.clear_status_effects()
 	var equipped_value: Variant = data.get("equipped_catalog", equipped_catalog)
@@ -1883,10 +1913,343 @@ func _load_game(quiet: bool) -> void:
 			if _is_walkable_world(saved_position):
 				player.global_position = saved_position
 				player.camera.reset_smoothing()
+	_update_job_skillbar()
 	_update_hud()
 	if not quiet:
 		hud.show_message("불러오기 완료")
 
+
+func _build_job_classes() -> void:
+	job_classes.clear()
+	var transforms: Array = catalog_db.get("변신", []) as Array
+	for class_name: String in JOB_CLASS_ORDER:
+		var transform_record: Dictionary = {}
+		for value: Variant in transforms:
+			if not (value is Dictionary):
+				continue
+			var record: Dictionary = value as Dictionary
+			if str(record.get("grade", "")) != "신화":
+				continue
+			var transform_name: String = str(record.get("name", ""))
+			if transform_name.begins_with("신화-" + class_name):
+				transform_record = record
+				break
+		if transform_record.is_empty():
+			continue
+		job_classes.append({
+			"name": class_name,
+			"transform_name": str(transform_record.get("name", "")),
+			"image_path": str(transform_record.get("image_path", "")),
+			"source_id": str(transform_record.get("sourceId", "")),
+			"weapon": _job_weapon_hint(transform_record),
+			"role": _job_role_from_skills(class_name),
+			"primary_stat": str(JOB_PRIMARY_STAT.get(class_name, ""))
+		})
+
+func _job_weapon_hint(transform_record: Dictionary) -> String:
+	var weapons: PackedStringArray = PackedStringArray()
+	var options: Array = transform_record.get("sourceOptions", []) as Array
+	for option_value: Variant in options:
+		var option: String = str(option_value)
+		var marker_index: int = option.find(" 추가 대미지")
+		if marker_index <= 0:
+			continue
+		var weapon_name: String = option.substr(0, marker_index).strip_edges()
+		if weapon_name != "" and not weapons.has(weapon_name):
+			weapons.append(weapon_name)
+	return ", ".join(weapons) if not weapons.is_empty() else "공용"
+
+func _job_role_from_skills(class_name: String) -> String:
+	var attack_count: int = 0
+	var heal_count: int = 0
+	var buff_count: int = 0
+	for value: Variant in skills_db:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		if str(skill.get("class", "")) != class_name:
+			continue
+		var effect: String = str(skill.get("effect", ""))
+		if effect == "damage":
+			attack_count += 1
+		elif effect == "heal":
+			heal_count += 1
+		elif effect.find("Buff") >= 0:
+			buff_count += 1
+	if heal_count >= 3:
+		return "공격 / 회복"
+	if buff_count > attack_count:
+		return "전투 / 강화"
+	return "공격 / 전투"
+
+func _job_profile(class_name: String) -> Dictionary:
+	for value: Variant in job_classes:
+		if value is Dictionary:
+			var profile: Dictionary = value as Dictionary
+			if str(profile.get("name", "")) == class_name:
+				return profile
+	return {}
+
+func _job_transform_record(class_name: String) -> Dictionary:
+	var profile: Dictionary = _job_profile(class_name)
+	var target_name: String = str(profile.get("transform_name", ""))
+	if target_name == "":
+		return {}
+	var transforms: Array = catalog_db.get("변신", []) as Array
+	for value: Variant in transforms:
+		if value is Dictionary:
+			var record: Dictionary = value as Dictionary
+			if str(record.get("name", "")) == target_name:
+				return record
+	return {}
+
+func _ensure_job_class_visual() -> void:
+	var current_transform: Variant = equipped_catalog.get("변신", {})
+	if current_transform is Dictionary and not (current_transform as Dictionary).is_empty():
+		return
+	var record: Dictionary = _job_transform_record(job_class)
+	if record.is_empty():
+		return
+	equipped_catalog["변신"] = record.duplicate(true)
+	_apply_transform_visual(record)
+
+func _on_job_class_selected(class_name: String) -> void:
+	if not JOB_CLASS_ORDER.has(class_name):
+		return
+	job_class = class_name
+	var record: Dictionary = _job_transform_record(job_class)
+	if not record.is_empty():
+		equipped_catalog["변신"] = record.duplicate(true)
+		_apply_transform_visual(record)
+	_update_job_skillbar()
+	hud.show_message("직업 변경: %s" % job_class)
+	hud.append_log("%s 클래스 적용 · 대표 신화 변신 %s" % [job_class, str(record.get("name", ""))])
+	_update_hud()
+	_save_game(true)
+
+func _job_skills(include_common: bool = true) -> Array:
+	var result: Array = []
+	for value: Variant in skills_db:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		var skill_class: String = str(skill.get("class", "공용"))
+		if skill_class == job_class or (include_common and skill_class == "공용"):
+			result.append(skill)
+	return result
+
+func _skill_grade_weight(grade: String) -> int:
+	match grade:
+		"신화": return 5
+		"전설": return 4
+		"영웅": return 3
+		"희귀": return 2
+		"고급": return 1
+		_: return 0
+
+func _quickbar_job_skills() -> Array:
+	var class_skills: Array = []
+	var common_skills: Array = []
+	for value: Variant in skills_db:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		var effect: String = str(skill.get("effect", ""))
+		if effect not in ["damage", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport"]:
+			continue
+		var skill_class: String = str(skill.get("class", "공용"))
+		if skill_class == job_class:
+			class_skills.append(skill)
+		elif skill_class == "공용":
+			common_skills.append(skill)
+	class_skills.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return _skill_grade_weight(str(a.get("grade", "일반"))) > _skill_grade_weight(str(b.get("grade", "일반")))
+	)
+	common_skills.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return _skill_grade_weight(str(a.get("grade", "일반"))) > _skill_grade_weight(str(b.get("grade", "일반")))
+	)
+	var result: Array = []
+	for skill: Dictionary in class_skills:
+		if result.size() >= 8:
+			break
+		result.append(skill)
+	for skill: Dictionary in common_skills:
+		if result.size() >= 8:
+			break
+		result.append(skill)
+	return result
+
+func _update_job_skillbar() -> void:
+	if hud.has_method("set_job_skillbar"):
+		hud.call("set_job_skillbar", _quickbar_job_skills())
+
+func _skill_record(skill_name: String) -> Dictionary:
+	for value: Variant in skills_db:
+		if value is Dictionary:
+			var skill: Dictionary = value as Dictionary
+			if str(skill.get("name", "")) == skill_name:
+				return skill
+	return {}
+
+func _cast_job_skill(skill_name: String) -> void:
+	var skill: Dictionary = _skill_record(skill_name)
+	if skill.is_empty():
+		hud.show_message("스킬 정보를 찾을 수 없습니다")
+		return
+	var skill_class: String = str(skill.get("class", "공용"))
+	if skill_class != "공용" and skill_class != job_class:
+		hud.show_message("%s 전용 스킬입니다" % skill_class)
+		return
+	if player.is_stunned() or player.is_feared():
+		hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
+		return
+	if player.is_silenced() and int(skill.get("mp", 0)) > 0:
+		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
+		return
+	var effect: String = str(skill.get("effect", "utility"))
+	match effect:
+		"damage":
+			_cast_job_damage_skill(skill)
+		"heal":
+			_cast_job_heal_skill(skill)
+		"atkBuff", "defBuff", "hpBuff", "speedBuff":
+			_cast_job_buff_skill(skill)
+		"teleport":
+			_cast_job_teleport_skill(skill)
+		_:
+			if not _spend_skill_mp(skill):
+				return
+			hud.show_message("%s 사용" % skill_name)
+			hud.append_log("%s · %s 보조 스킬 사용" % [job_class, skill_name])
+			_update_hud()
+
+func _spend_skill_mp(skill: Dictionary) -> bool:
+	var mp_cost: int = maxi(0, int(skill.get("mp", 0)))
+	if mp < mp_cost:
+		hud.show_message("MP가 부족합니다")
+		return false
+	mp -= mp_cost
+	return true
+
+func _cast_job_damage_skill(skill: Dictionary) -> void:
+	var max_range: float = maxf(80.0, float(skill.get("range", 120)))
+	var target: TwilightMonster = _skill_target(max_range)
+	if target == null:
+		hud.show_message("공격 대상이 없습니다")
+		return
+	if not _spend_skill_mp(skill):
+		return
+	selected_monster = target
+	player.pulse_attack()
+	var skill_class: String = str(skill.get("class", "공용"))
+	var ranged_style: bool = job_class == "요정" or job_class == "총사"
+	var magic_style: bool = job_class == "마법사" or skill_class == "마법사" or (skill_class == "공용" and max_range >= 250.0)
+	var hit_chance: float = _melee_hit_chance(target)
+	var stat_damage: int = _melee_damage_stat()
+	var crit_rate: int = _player_critical_rate("melee")
+	if magic_style:
+		hit_chance = _player_magic_hit_chance(target)
+		stat_damage = _magic_damage_stat()
+		crit_rate = _player_critical_rate("magic")
+	elif ranged_style:
+		stat_damage = _ranged_damage_stat()
+		crit_rate = _player_critical_rate("ranged")
+		hit_chance = clampf(_melee_hit_chance(target) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
+	if rng.randf() >= hit_chance:
+		target.show_miss()
+		hud.append_log("%s MISS · %.1f%%" % [str(skill.get("name", "")), hit_chance * 100.0])
+		_update_hud()
+		return
+	var power: int = maxi(1, int(skill.get("power", 20)))
+	var damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+	var critical_chance: float = _critical_chance(crit_rate, target.critical_resistance)
+	var critical: bool = rng.randf() < critical_chance
+	if critical:
+		damage = _critical_damage(damage)
+	target.take_damage(damage, critical)
+	hud.append_log("%s · %s에게 %d 피해%s" % [
+		str(skill.get("name", "")), target.monster_name, damage, " CRITICAL" if critical else ""
+	])
+	_update_hud()
+	_update_target_hud()
+
+func _cast_job_heal_skill(skill: Dictionary) -> void:
+	if not _spend_skill_mp(skill):
+		return
+	var amount: int = maxi(1, int(skill.get("heal", 40)) + int_stat * 2)
+	hp = mini(_effective_max_hp(), hp + amount)
+	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), amount])
+	hud.append_log("%s 회복 · HP +%d" % [str(skill.get("name", "")), amount])
+	_update_hud()
+
+func _cast_job_buff_skill(skill: Dictionary) -> void:
+	if not _spend_skill_mp(skill):
+		return
+	var duration: float = maxf(5.0, float(skill.get("duration", 60.0)))
+	var speed_value: float = float(skill.get("speed", 1.0))
+	active_skill_buffs[str(skill.get("name", "버프"))] = {
+		"remaining": duration,
+		"atk": int(skill.get("atk", 0)),
+		"def": int(skill.get("def", 0)),
+		"hp": int(skill.get("hpFlat", 0)),
+		"speed": speed_value
+	}
+	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
+	hp = mini(_effective_max_hp(), hp + maxi(0, int(skill.get("hpFlat", 0))))
+	hud.show_message("%s 활성화" % str(skill.get("name", "")))
+	hud.append_log("%s 버프 · %.0f초" % [str(skill.get("name", "")), duration])
+	_update_hud()
+
+func _cast_job_teleport_skill(skill: Dictionary) -> void:
+	if not _spend_skill_mp(skill):
+		return
+	for _attempt: int in range(60):
+		var candidate: Vector2 = player.global_position + Vector2(rng.randf_range(-700.0, 700.0), rng.randf_range(-500.0, 500.0))
+		if _is_walkable_world(candidate):
+			player.global_position = candidate
+			player.clear_click_path()
+			player.camera.reset_smoothing()
+			hud.show_message("%s" % str(skill.get("name", "텔레포트")))
+			_update_hud()
+			return
+	hud.show_message("이동 가능한 위치를 찾지 못했습니다")
+
+func _active_skill_buff_total(key: String) -> int:
+	var total: int = 0
+	for value: Variant in active_skill_buffs.values():
+		if value is Dictionary:
+			total += int((value as Dictionary).get(key, 0))
+	return total
+
+func _active_skill_speed_multiplier() -> float:
+	var multiplier: float = 1.0
+	for value: Variant in active_skill_buffs.values():
+		if value is Dictionary:
+			multiplier = maxf(multiplier, float((value as Dictionary).get("speed", 1.0)))
+	return multiplier
+
+func _tick_skill_buffs(delta: float) -> void:
+	if active_skill_buffs.is_empty():
+		return
+	var expired: Array[String] = []
+	for key_value: Variant in active_skill_buffs.keys():
+		var key: String = str(key_value)
+		var value: Variant = active_skill_buffs.get(key, {})
+		if not (value is Dictionary):
+			expired.append(key)
+			continue
+		var buff: Dictionary = value as Dictionary
+		buff["remaining"] = float(buff.get("remaining", 0.0)) - delta
+		active_skill_buffs[key] = buff
+		if float(buff.get("remaining", 0.0)) <= 0.0:
+			expired.append(key)
+	if expired.is_empty():
+		return
+	for key: String in expired:
+		active_skill_buffs.erase(key)
+	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
+	hp = mini(hp, _effective_max_hp())
+	_update_hud()
 
 func _on_class_selected(value: int) -> void:
 	class_index = clampi(value, 0, 3)
@@ -2436,7 +2799,7 @@ func _effective_attack() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("atk", 0.0))
-	return attack_power + int(round(bonus)) + _equipment_enhancement_level("weapon")
+	return attack_power + int(round(bonus)) + _equipment_enhancement_level("weapon") + _active_skill_buff_total("atk")
 
 func _effective_defense() -> int:
 	var bonus: float = 0.0
@@ -2444,7 +2807,7 @@ func _effective_defense() -> int:
 		bonus += float(record.get("def", 0.0))
 	var armor_enhance: int = _equipment_enhancement_level("armor")
 	var accessory_enhance: int = int(floor(float(_equipment_enhancement_level("accessory")) / 2.0))
-	return defense + int(round(bonus)) + armor_enhance + accessory_enhance
+	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def")
 
 func _effective_max_hp() -> int:
 	var flat_bonus: float = 0.0
@@ -2453,6 +2816,7 @@ func _effective_max_hp() -> int:
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
 	flat_bonus += float(_equipment_enhancement_level("accessory") * 20)
+	flat_bonus += float(_active_skill_buff_total("hp"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
 func _experience_multiplier() -> float:
