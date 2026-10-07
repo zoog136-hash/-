@@ -55,6 +55,33 @@ func _run() -> void:
 	if not found:
 		_fail("local DB weapon is missing from enhancement candidates")
 
+	# Enhancement scroll double-click must open enhancement flow and not equip/use the scroll.
+	world.call("_on_inventory_item_activated", "무기 마법 주문서 (각인)")
+	var hud_node: Node = world.get("hud") as Node
+	if str(hud_node.get("enhancement_scroll_name")) != "무기 마법 주문서 (각인)":
+		_fail("enhancement scroll double-click did not open enhancement UI")
+
+	# Consumable double-click must use the item using its DB heal value.
+	world.set("hp", 100)
+	inv = world.get("inventory") as Dictionary
+	var potion_before: int = int(inv.get("HP 물약", 0))
+	world.call("_on_inventory_item_activated", "HP 물약")
+	inv = world.get("inventory") as Dictionary
+	if int(inv.get("HP 물약", 0)) != potion_before - 1:
+		_fail("consumable double-click did not consume exactly one item")
+	if int(world.get("hp")) != 155:
+		_fail("consumable double-click did not apply DB heal value 55")
+
+	# Quickslot consumable use must use the same DB value.
+	world.set("hp", 100)
+	var quick_before: int = int(inv.get("강력 HP 물약", 0))
+	world.call("_use_quick_item", "강력 HP 물약")
+	inv = world.get("inventory") as Dictionary
+	if int(inv.get("강력 HP 물약", 0)) != quick_before - 1:
+		_fail("quickslot consumable did not consume exactly one item")
+	if int(world.get("hp")) != 220:
+		_fail("quickslot consumable did not apply DB heal value 120")
+
 	world.queue_free()
 	await process_frame
 	_finish()

@@ -1899,15 +1899,14 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
-	match item_name:
-		"HP 물약":
-			_use_healing_item(item_name, 320)
-		"강력 HP 물약":
-			_use_healing_item(item_name, 650)
-		"축복받은 HP 물약":
-			_use_healing_item(item_name, 1100)
-		_:
-			hud.show_message("사용할 수 없는 퀵 아이템입니다")
+	var record: Dictionary = _find_catalog_item_record(item_name)
+	if record.is_empty():
+		hud.show_message("아이템 DB에서 정보를 찾을 수 없습니다")
+		return
+	if str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0:
+		_use_healing_item(item_name, int(record.get("heal", 0)))
+		return
+	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	if int(inventory.get(item_name, 0)) <= 0:

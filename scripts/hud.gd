@@ -372,7 +372,7 @@ func refresh_inventory(inventory: Dictionary) -> void:
 		var use_button: Button = Button.new()
 		use_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		use_button.text = "%s   x%d" % [item_name, amount]
-		use_button.tooltip_text = "빠르게 두 번 누르면 사용 / 강화"
+		use_button.tooltip_text = "장비: 더블클릭 장착 / 강화 주문서: 더블클릭 강화 / 소모품: 더블클릭 사용"
 		use_button.add_theme_font_size_override("font_size", 17)
 		use_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var path: String = str(images.get(item_name, ""))
