@@ -29,6 +29,9 @@ func _run() -> void:
 
 	var shield: Dictionary = {"name":"테스트 방패","type":"방패","slot":"armor","def":5}
 	var guarder: Dictionary = {"name":"테스트 가더","type":"가더","slot":"armor","def":2}
+	var catalog_shield: Dictionary = {"name":"마신의 방패","type":"방패/가더","slot":"offhand","def":5}
+	var catalog_guarder: Dictionary = {"name":"샌드웜의 가더","type":"방패/가더","slot":"offhand","def":2}
+	var catalog_focus: Dictionary = {"name":"마나 수정구","type":"방패/가더","slot":"offhand","def":1}
 	var bow: Dictionary = {"name":"테스트 활","type":"활","slot":"weapon"}
 	var sword: Dictionary = {"name":"테스트 검","type":"한손검","slot":"weapon"}
 
@@ -40,6 +43,18 @@ func _run() -> void:
 		_fail("bow should block shield")
 	if not bool(world.call("_can_equip_offhand", guarder)):
 		_fail("guarder should remain compatible with bow")
+	if str(world.call("_offhand_kind", catalog_shield)) != "shield":
+		_fail("generic catalog shield should be classified as shield by name")
+	if bool(world.call("_can_equip_offhand", catalog_shield)):
+		_fail("generic catalog shield should be blocked by bow")
+	if str(world.call("_offhand_kind", catalog_guarder)) != "guarder":
+		_fail("generic catalog guarder should be classified as guarder by name")
+	if not bool(world.call("_can_equip_offhand", catalog_guarder)):
+		_fail("generic catalog guarder should remain compatible with bow")
+	if str(world.call("_offhand_kind", catalog_focus)) != "offhand":
+		_fail("generic catalog focus should remain a neutral offhand")
+	if not bool(world.call("_can_equip_offhand", catalog_focus)):
+		_fail("neutral catalog offhand should remain compatible with bow")
 
 	world.set("equipped_items", {"weapon":bow,"armor":{},"offhand":shield,"accessory":{}})
 	world.call("_enforce_shield_weapon_compatibility", true)

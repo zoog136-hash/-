@@ -2915,10 +2915,12 @@ func _offhand_kind(record: Dictionary) -> String:
 	var item_name: String = str(record.get("name", "")).strip_edges()
 	if item_type == "가더" or item_name.find("가더") >= 0:
 		return "guarder"
-	if item_type == "방패" or item_name.find("방패") >= 0:
+	if item_type == "방패" or item_name.find("방패") >= 0 or item_name.find("실드") >= 0 or item_name.find("쉴드") >= 0:
 		return "shield"
 	if item_type == "방패/가더":
-		return "guarder"
+		# The catalog groups shields, guarders and class-specific offhands together.
+		# Only items whose names are clearly shields should inherit shield restrictions.
+		return "offhand"
 	return ""
 
 func _is_offhand_record(record: Dictionary) -> bool:
@@ -2936,7 +2938,7 @@ func _can_equip_offhand(record: Dictionary) -> bool:
 	var kind: String = _offhand_kind(record)
 	if kind == "":
 		return false
-	if kind == "guarder":
+	if kind == "guarder" or kind == "offhand":
 		return true
 	return _current_weapon_supports_shield()
 
