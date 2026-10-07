@@ -86,7 +86,7 @@ func _process(delta: float) -> void:
 	if save_timer >= 30.0:
 		save_timer = 0.0
 		_save_game(true)
-	if player.auto_enabled:
+	if player.auto_enabled and not player.is_stunned():
 		_run_auto_hunt()
 	_update_companion(delta)
 	if Input.is_action_just_pressed("open_inventory"):
@@ -395,7 +395,61 @@ func _player_magic_hit_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
 
+func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 10, stun_duration: float = 2.0, skill_name: String = "쇼크 스턴") -> bool:
+	if player.is_stunned():
+		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if target == null or not is_instance_valid(target) or target.dead:
+		hud.show_message("스턴 대상이 없습니다")
+		return false
+	if mp < mp_cost:
+		hud.show_message("MP가 부족합니다")
+		return false
+	if player.global_position.distance_to(target.global_position) > 90.0:
+		hud.show_message("쇼크 스턴 사거리 밖입니다")
+		return false
+	mp = maxi(0, mp - mp_cost)
+	selected_monster = target
+	player.pulse_attack()
+	var hit_chance: float = _melee_hit_chance(target)
+	if not _roll_melee_hit(target):
+		target.show_miss()
+		hud.append_log("%s MISS · 근거리 명중 %d / AC %d / %.1f%%" % [
+			skill_name, _melee_accuracy_stat(), target.armor_class, hit_chance * 100.0
+		])
+		_update_hud()
+		_update_target_hud()
+		return false
+	var damage: int = maxi(1, power + _stat_step_bonus(str_stat, 10, 2.0) + rng.randi_range(-4, 6))
+	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
+	var critical: bool = rng.randf() < critical_chance
+	if critical:
+		damage = _critical_damage(damage)
+	target.take_damage(damage, critical)
+	if target.dead:
+		_update_hud()
+		_update_target_hud()
+		return false
+	var stun_chance: float = _player_stun_chance(target)
+	var stunned: bool = rng.randf() < stun_chance
+	if stunned:
+		target.apply_stun(stun_duration)
+		hud.append_log("%s 성공 · %s %.1f초 스턴 · 적중률 %.1f%%" % [
+			skill_name, target.monster_name, stun_duration, stun_chance * 100.0
+		])
+	else:
+		target.show_status_text("STUN RESIST")
+		hud.append_log("%s 스턴 실패 · 적중 %d / 내성 %d / %.1f%%" % [
+			skill_name, _stun_accuracy_stat(), target.stun_resistance, stun_chance * 100.0
+		])
+	_update_hud()
+	_update_target_hud()
+	return stunned
+
 func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill_name: String = "마법") -> bool:
+	if player.is_stunned():
+		hud.show_message("스턴 상태에서는 마법을 사용할 수 없습니다")
+		return false
 	if target == null or not is_instance_valid(target) or target.dead:
 		hud.show_message("마법 대상이 없습니다")
 		return false
@@ -444,6 +498,8 @@ func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
 
 func _attack() -> void:
+	if player.is_stunned():
+		return
 	var target: TwilightMonster = selected_monster
 	if not is_instance_valid(target) or target.dead or player.global_position.distance_to(target.global_position) > 105.0:
 		target = _nearest_monster(105.0)
@@ -473,6 +529,9 @@ func _attack() -> void:
 	_update_target_hud()
 
 func _run_auto_hunt() -> void:
+	if player.is_stunned():
+		player.clear_click_path()
+		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		auto_target = _nearest_monster(99999.0)
 	if auto_target == null:
@@ -642,6 +701,23 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			critical_chance * 100.0,
 			_damage_reduction_stat()
 		])
+	if hp > 0 and attacker.stun_duration > 0.0 and attacker.stun_accuracy > 0:
+		var stun_chance: float = _status_effect_chance(
+			attacker.stun_accuracy,
+			attacker.monster_level,
+			_stun_resistance_stat(),
+			level
+		)
+		if rng.randf() < stun_chance:
+			player.apply_stun(attacker.stun_duration)
+			hud.append_log("%s 스턴 적중 · %.1f초 · 내 스턴 내성 %d · %.1f%%" % [
+				attacker.monster_name, attacker.stun_duration, _stun_resistance_stat(), stun_chance * 100.0
+			])
+		else:
+			player.show_status_text("STUN RESIST")
+			hud.append_log("%s 스턴 저항 성공 · 내성 %d · %.1f%%" % [
+				attacker.monster_name, _stun_resistance_stat(), stun_chance * 100.0
+			])
 	if hp <= 0:
 		hp = _effective_max_hp()
 		mp = max_mp
@@ -1054,6 +1130,45 @@ func _player_critical_rate(attack_type: String) -> int:
 		base += _record_critical_bonus(record, attack_type)
 	return clampi(base, 0, 50)
 
+func _record_stun_accuracy(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"stun_accuracy",
+		record.get("stunAccuracy", record.get("스턴 적중", record.get("스턴 적중률", 0)))
+	)))
+
+func _record_stun_resistance(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"stun_resistance",
+		record.get("stunResistance", record.get("stun_resist", record.get("스턴 내성", record.get("스턴 저항", 0))))
+	)))
+
+func _stun_accuracy_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(str_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_stun_accuracy(record)
+	return clampi(total, 0, 100)
+
+func _stun_resistance_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_stun_resistance(record)
+	return clampi(total, 0, 100)
+
+func _status_effect_chance(attacker_accuracy: int, attacker_level: int, defender_resistance: int, defender_level: int) -> float:
+	var chance_percent: float = 50.0 + float(attacker_accuracy - defender_resistance)
+	chance_percent += float(attacker_level - defender_level) * 0.5
+	return clampf(chance_percent / 100.0, 0.05, 0.95)
+
+func _player_stun_chance(target: TwilightMonster) -> float:
+	if target == null:
+		return 0.05
+	return _status_effect_chance(
+		_stun_accuracy_stat(),
+		level,
+		target.stun_resistance,
+		target.monster_level
+	)
+
 func _critical_resistance_stat() -> int:
 	var total: int = 0
 	for record: Dictionary in _all_equipped_records():
@@ -1154,6 +1269,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"ranged_critical": _player_critical_rate("ranged"),
 		"magic_critical": _player_critical_rate("magic"),
 		"critical_resistance": _critical_resistance_stat(),
+		"stun_accuracy": _stun_accuracy_stat(),
+		"stun_resistance": _stun_resistance_stat(),
 		"ac": _effective_ac(),
 		"dg": _effective_dg(),
 		"er": _effective_er(),
