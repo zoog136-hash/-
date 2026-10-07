@@ -251,6 +251,16 @@ func _build_v20_status() -> void:
 	_place(v20_stat_text, 101.0, 78.0, 349.0, 100.0)
 	content.add_child(v20_stat_text)
 
+	# The portrait itself is the character/status shortcut.
+	var portrait_button: Button = Button.new()
+	portrait_button.name = "CharacterShortcut"
+	portrait_button.flat = true
+	portrait_button.tooltip_text = "캐릭터 / 장비 / 스탯"
+	portrait_button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_place(portrait_button, 6.0, 5.0, 92.0, 99.0)
+	portrait_button.pressed.connect(open_character)
+	content.add_child(portrait_button)
+
 	gold_label = Label.new()
 	gold_label.visible = false
 	content.add_child(gold_label)
@@ -341,16 +351,16 @@ func _build_v20_top_menu() -> void:
 	row.add_theme_constant_override("separation", 4)
 	panel.add_child(row)
 	var shop: Button = _top_menu_button("res://assets/ui/shop.png", "상점")
-	shop.pressed.connect(func() -> void: show_message("상점 기능은 준비중"))
+	shop.pressed.connect(open_shop)
 	row.add_child(shop)
 	var bag: Button = _top_menu_button("res://assets/ui/bag.png", "가방")
 	bag.pressed.connect(func() -> void: inventory_pressed.emit())
 	row.add_child(bag)
 	var skill: Button = _top_menu_button("res://assets/ui/skill.png", "스킬")
-	skill.pressed.connect(func() -> void: show_message("스킬 창은 다음 단계에서 확장"))
+	skill.pressed.connect(open_skills)
 	row.add_child(skill)
 	var quest: Button = _top_menu_button("res://assets/ui/quest.png", "퀘스트")
-	quest.pressed.connect(func() -> void: show_message("메인 퀘스트 추적 중"))
+	quest.pressed.connect(open_quest_info)
 	row.add_child(quest)
 	var menu: Button = _top_menu_button("res://assets/ui/menu.png", "메뉴")
 	menu.pressed.connect(func() -> void: menu_pressed.emit())
@@ -604,7 +614,15 @@ func _build_v20_message_and_log() -> void:
 	log_label = log_new
 
 func _show_named_system_message(label_text: String) -> void:
-	show_message("%s 기능" % label_text)
+	match label_text:
+		"매크로":
+			open_macro_info()
+		"채팅":
+			open_chat_info()
+		"설정":
+			open_settings_info()
+		_:
+			show_message("%s 기능" % label_text)
 
 func _emit_combat_skill(skill_id: String) -> void:
 	combat_skill_pressed.emit(skill_id)
@@ -649,11 +667,13 @@ func set_character_state(value: Dictionary) -> void:
 	var class_index_value: int = clampi(int(value.get("class_index", 0)), 0, 3)
 	_update_v20_portrait(class_index_value)
 	if v20_stat_text != null:
-		v20_stat_text.text = "⚔ %d   ◎ %d   AC %d   MR %d" % [
+		var stat_points_value: int = maxi(0, int(value.get("stat_points", 0)))
+		v20_stat_text.text = "⚔ %d   ◎ %d   AC %d   MR %d%s" % [
 			int(value.get("melee_damage", value.get("attack", 0))),
 			int(value.get("melee_accuracy", 0)),
 			int(value.get("ac", -int(value.get("defense", 0)))),
-			int(value.get("mr", 0))
+			int(value.get("mr", 0)),
+			("   SP %d" % stat_points_value) if stat_points_value > 0 else ""
 		]
 
 func _update_v20_portrait(class_index_value: int) -> void:
