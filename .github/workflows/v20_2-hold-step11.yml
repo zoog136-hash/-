@@ -1,0 +1,286 @@
+name: V20.2 Hold Step11 Test
+
+on:
+  push:
+    branches: [v20-2-hold-step11]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-hold-step11
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create hold test
+        shell: bash
+        run: |
+          cat > test_hold_step11.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.level = 35
+              world.dex_stat = 16
+              world.con_stat = 16
+
+              # Base hold stats.
+              check(world._hold_accuracy_stat() == 7, "base hold accuracy")
+              check(world._hold_resistance_stat() == 7, "base hold resistance")
+
+              # Equipment aliases.
+              world.equipped_items["weapon"] = {"hold_accuracy":8}
+              world.equipped_catalog["성물"] = {"홀드 적중":5}
+              world.equipped_items["armor"] = {"hold_resistance":6}
+              world.equipped_items["accessory"] = {"속박 내성":4}
+              check(world._hold_accuracy_stat() == 20, "hold accuracy stacks")
+              check(world._hold_resistance_stat() == 17, "hold resistance stacks")
+
+              var snapshot: Dictionary = world._character_stats_snapshot()
+              check(int(snapshot.get("hold_accuracy", -1)) == 20, "snapshot hold accuracy")
+              check(int(snapshot.get("hold_resistance", -1)) == 17, "snapshot hold resistance")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+              var monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(monster)
+              monster.setup({
+                  "name":"홀드 테스트","lv":20,"hp":100000,"atk":40,"def":5,"xp":10,"speed":60,
+                  "hold_accuracy":25,"hold_resistance":14,"hold_duration":1.5,"mr":0
+              }, world.player, world, null)
+              check(monster.hold_accuracy == 25, "monster hold accuracy")
+              check(monster.hold_resistance == 14, "monster hold resistance")
+              check(approx(monster.hold_duration, 1.5), "monster hold duration")
+
+              # Player hold state: movement vectors/path cleared, but no stun/silence.
+              world.player.velocity = Vector2(100, 0)
+              world.player.touch_vector = Vector2(1, 0)
+              world.player.click_path = PackedVector2Array([Vector2(100,100)])
+              world.player.path_index = 0
+              world.player.apply_hold(0.30)
+              check(world.player.is_held(), "player enters hold")
+              check(not world.player.is_stunned(), "hold is not stun")
+              check(not world.player.is_silenced(), "hold is not silence")
+              check(world.player.velocity == Vector2.ZERO, "hold clears velocity")
+              check(world.player.touch_vector == Vector2.ZERO, "hold clears touch movement")
+              check(world.player.click_path.is_empty(), "hold clears click path")
+              world.player._tick_hold(0.10)
+              check(world.player.is_held(), "hold persists before duration")
+              world.player._tick_hold(0.25)
+              check(not world.player.is_held(), "hold expires")
+
+              # Monster hold state clears movement/path but does not stun/silence.
+              monster.velocity = Vector2(100, 0)
+              monster.path = PackedVector2Array([Vector2(50,50)])
+              monster.path_index = 0
+              monster.apply_hold(0.30)
+              check(monster.is_held(), "monster enters hold")
+              check(not monster.is_stunned(), "monster hold is not stun")
+              check(not monster.is_silenced(), "monster hold is not silence")
+              check(monster.velocity == Vector2.ZERO, "monster hold clears velocity")
+              check(monster.path.is_empty(), "monster hold clears path")
+              monster._tick_hold(0.35)
+              check(not monster.is_held(), "monster hold expires")
+
+              # Actual Hold cast.
+              world.level = 100
+              world.dex_stat = 50
+              world.int_stat = 50
+              world.mp = 1000
+              world.equipped_items = {
+                  "weapon":{"hold_accuracy":100},
+                  "armor":{},
+                  "accessory":{}
+              }
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 1
+              monster.magic_resistance = 0
+              monster.hold_resistance = 0
+              monster.hold_remaining = 0.0
+              monster.global_position = world.player.global_position + Vector2(100, 0)
+              check(approx(world._player_hold_chance(monster), 0.95), "player hold chance cap")
+              var hold_success: bool = false
+              for seed_value: int in range(1, 80):
+                  world.rng.seed = seed_value
+                  world.mp = 1000
+                  monster.hold_remaining = 0.0
+                  if world._cast_hold_skill(monster, 8, 2.5, "홀드"):
+                      hold_success = true
+                      break
+              check(hold_success, "Hold skill can succeed")
+              check(monster.is_held(), "Hold applies to monster")
+              check(world.mp == 992, "Hold consumes MP")
+
+              # Hold does NOT block normal attack.
+              world.player.apply_hold(5.0)
+              world.level = 200
+              world.str_stat = 50
+              monster.armor_class = -1
+              monster.hp = 100000
+              monster.dead = false
+              monster.global_position = world.player.global_position + Vector2(50, 0)
+              world.selected_monster = monster
+              world.rng.seed = 1
+              var hp_before_attack: int = monster.hp
+              world._attack()
+              check(monster.hp < hp_before_attack, "hold allows normal attack")
+
+              # Hold does NOT block magic.
+              monster.hp = 100000
+              monster.magic_resistance = 0
+              world.mp = 1000
+              world.int_stat = 50
+              world.rng.seed = 2
+              var hp_before_magic: int = monster.hp
+              var magic_result: bool = world._cast_magic_attack(monster, 30, 3, "에너지 볼트")
+              check(magic_result, "hold allows magic")
+              check(monster.hp < hp_before_magic, "magic damages while held")
+
+              # Hold does NOT block active status skills.
+              monster.hold_remaining = 0.0
+              monster.stun_remaining = 0.0
+              monster.silence_remaining = 0.0
+              monster.stun_resistance = 0
+              monster.silence_resistance = 0
+              monster.magic_resistance = 0
+              world.equipped_items["weapon"] = {"stun_accuracy":100, "silence_accuracy":100}
+              var status_cast_possible: bool = false
+              for seed_value: int in range(1, 100):
+                  world.rng.seed = seed_value
+                  world.mp = 1000
+                  monster.stun_remaining = 0.0
+                  monster.hp = 100000
+                  if world._cast_stun_skill(monster, 10, 10, 1.0, "쇼크 스턴"):
+                      status_cast_possible = true
+                      break
+              check(status_cast_possible, "hold allows active stun skill")
+
+              # AUTO attack remains active in range, but no chase path out of range.
+              world.player.hold_remaining = 5.0
+              monster.dead = false
+              monster.hp = 100000
+              monster.global_position = world.player.global_position + Vector2(50, 0)
+              world.auto_target = monster
+              world.auto_attack_timer = 0.0
+              world.rng.seed = 3
+              var hp_before_auto: int = monster.hp
+              world._run_auto_hunt()
+              check(monster.hp < hp_before_auto, "held player can auto attack in range")
+
+              monster.global_position = world.player.global_position + Vector2(300, 0)
+              world.player.click_path = PackedVector2Array([Vector2(200,0)])
+              world.player.path_index = 0
+              world._run_auto_hunt()
+              check(world.player.click_path.is_empty(), "held auto hunt does not chase")
+
+              # Incoming monster hold.
+              world.player.hold_remaining = 0.0
+              world.player.stun_remaining = 0.0
+              world.player.silence_remaining = 0.0
+              world.hp = 5000
+              world.max_hp = 5000
+              world.level = 1
+              world.con_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 100
+              monster.melee_accuracy = 999
+              monster.melee_critical_rate = 0
+              monster.stun_duration = 0.0
+              monster.silence_duration = 0.0
+              monster.hold_accuracy = 100
+              monster.hold_duration = 1.25
+              var incoming_success: bool = false
+              for seed_value: int in range(1, 100):
+                  world.player.hold_remaining = 0.0
+                  world.hp = 5000
+                  world.rng.seed = seed_value
+                  world._on_player_hit(monster, 10, "melee")
+                  if world.player.is_held():
+                      incoming_success = true
+                      break
+              check(incoming_success, "monster hold can affect player")
+              check(world.player.hold_remaining > 0.0, "incoming hold duration stored")
+
+              # High hold resistance floors chance.
+              world.equipped_items["armor"] = {"hold_resistance":100}
+              monster.hold_accuracy = 5
+              check(approx(
+                  world._status_effect_chance(monster.hold_accuracy, monster.monster_level, world._hold_resistance_stat(), world.level),
+                  0.05
+              ), "high hold resistance reaches floor")
+
+              # Regression.
+              check(world._stun_accuracy_stat() >= 0, "stun preserved")
+              check(world._silence_accuracy_stat() >= 0, "silence preserved")
+              check(world._critical_damage(100) == 150, "critical preserved")
+              check(world._effective_mr() > 0, "MR preserved")
+
+              if failures.is_empty():
+                  print("V20.2 HOLD STEP11 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run hold test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_hold_step11.gd 2>&1 | tee /tmp/hold.log
+          grep -q "V20.2 HOLD STEP11 PASS" /tmp/hold.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/hold.log; then
+            exit 1
+          fi
