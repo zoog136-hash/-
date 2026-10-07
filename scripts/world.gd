@@ -2237,7 +2237,6 @@ func _load_game(quiet: bool) -> void:
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
 	item_use_cooldowns = item_cooldowns_value as Dictionary if item_cooldowns_value is Dictionary else {}
-	_sanitize_quickslots_for_current_job()
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
@@ -2392,7 +2391,6 @@ func _on_job_class_selected(job_name: String) -> void:
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
 	_prune_active_skill_buffs_for_current_job()
-	_sanitize_quickslots_for_current_job()
 	_refresh_speed_modifiers()
 	_update_job_skillbar()
 	hud.show_message("직업 변경: %s" % job_class)
