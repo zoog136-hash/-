@@ -351,7 +351,7 @@ func _build_stats_page() -> Control:
 		plus.custom_minimum_size = Vector2(42, 38)
 		plus.add_theme_font_size_override("font_size", 20)
 		plus.add_theme_stylebox_override("normal", _button_style(Color(0.09,0.075,0.045,1), GOLD_SOFT))
-		plus.pressed.connect(func() -> void: stat_increase_requested.emit(stat_name))
+		plus.pressed.connect(_emit_stat_increase.bind(stat_name))
 		row.add_child(plus)
 		grid.add_child(row)
 
@@ -359,6 +359,9 @@ func _build_stats_page() -> Control:
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(hint)
 	return root
+
+func _emit_stat_increase(stat_name: String) -> void:
+	stat_increase_requested.emit(stat_name)
 
 func _build_menu_panel() -> void:
 	menu_panel = _panel_base()
