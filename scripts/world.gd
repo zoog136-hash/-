@@ -226,6 +226,7 @@ func _build_astar() -> void:
 
 func _build_static_collisions() -> void:
 	for child: Node in map_collision.get_children():
+		map_collision.remove_child(child)
 		child.queue_free()
 	var rects: Array = active_map.get("collision_rects", []) as Array
 	for rect_value: Variant in rects:
@@ -394,10 +395,12 @@ func _spawn_position_fallback() -> Vector2:
 
 func _clear_monsters() -> void:
 	for child: Node in monsters_root.get_children():
+		monsters_root.remove_child(child)
 		child.queue_free()
 
 func _clear_drops() -> void:
 	for child: Node in drops_root.get_children():
+		drops_root.remove_child(child)
 		child.queue_free()
 
 func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
