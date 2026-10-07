@@ -152,6 +152,7 @@ func _connect_signals() -> void:
 	player.bleed_tick.connect(_on_player_bleed_tick)
 	hud.move_vector_changed.connect(player.set_touch_vector)
 	hud.attack_pressed.connect(_attack)
+	hud.bleed_skill_pressed.connect(_cast_bleed_from_hud)
 	hud.auto_pressed.connect(func() -> void: player.set_auto_enabled(not player.auto_enabled))
 	hud.potion_pressed.connect(_use_potion)
 	hud.inventory_pressed.connect(_open_inventory)
@@ -755,6 +756,12 @@ func _melee_hit_chance(target: TwilightMonster) -> float:
 
 func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
+
+func _cast_bleed_from_hud() -> void:
+	var target: TwilightMonster = selected_monster
+	if not is_instance_valid(target) or target.dead:
+		target = _nearest_monster(90.0)
+	_cast_bleed_skill(target)
 
 func _attack() -> void:
 	if player.is_stunned() or player.is_feared():
