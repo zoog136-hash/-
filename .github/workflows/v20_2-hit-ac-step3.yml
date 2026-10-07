@@ -1,0 +1,146 @@
+name: V20.2 Hit AC Step3 Test
+
+on:
+  push:
+    branches: [v20-2-hit-ac-step3]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-hit-ac-step3
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create hit AC test
+        shell: bash
+        run: |
+          cat > test_hit_ac_step3.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              # Step2 regression.
+              check(world.str_stat >= 18, "STR system preserved")
+              check(world._stat_points_for_level_up(40) == 1, "stat point schedule preserved")
+              var old_str: int = world.str_stat
+              world.stat_points = 1
+              world._on_stat_increase_requested("STR")
+              check(world.str_stat == old_str + 1, "stat allocation preserved")
+
+              # Reset STR so expected accuracy is deterministic.
+              world.str_stat = 18
+              world.level = 35
+              check(world._melee_accuracy_stat() == 63, "melee accuracy baseline")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+
+              var low: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(low)
+              low.setup({"name":"고스트","lv":1,"hp":50,"atk":7,"def":0,"xp":35,"speed":64}, world.player, world, null)
+              check(low.monster_level == 1, "low monster level")
+              check(low.armor_class == -11, "low monster AC")
+              check(low.attack_power == 7, "atk DB key")
+              check(low.exp_reward == 35, "xp DB key")
+              check(approx(low.move_speed, 64.0), "speed DB key")
+              check(approx(world._melee_hit_chance(low), 0.95), "low AC chance clamps at 95%")
+
+              var mid: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(mid)
+              mid.setup({"name":"바포메트","lv":45,"hp":1700,"atk":92,"def":17,"xp":1350,"speed":66}, world.player, world, null)
+              check(mid.armor_class == -89, "mid monster AC")
+              check(approx(world._melee_hit_chance(mid), 0.568), "mid AC hit chance")
+
+              var high: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(high)
+              high.setup({"name":"종말의 지배자","lv":194,"hp":50176,"atk":476,"def":68,"xp":10688,"speed":63}, world.player, world, null)
+              check(high.armor_class == -340, "high monster AC")
+              check(approx(world._melee_hit_chance(high), 0.05), "high AC chance clamps at 5%")
+
+              # Random roll should produce both hit and miss for a mid target.
+              world.rng.seed = 123456
+              var hits: int = 0
+              var misses: int = 0
+              for _i: int in range(250):
+                  if world._roll_melee_hit(mid):
+                      hits += 1
+                  else:
+                      misses += 1
+              check(hits > 0, "random roll produces hits")
+              check(misses > 0, "random roll produces misses")
+              check(hits > 110 and hits < 175, "mid hit distribution plausible")
+
+              # MISS feedback must not damage HP.
+              var hp_before: int = mid.hp
+              mid.show_miss()
+              check(mid.hp == hp_before, "MISS does zero damage")
+              mid.take_damage(10)
+              check(mid.hp == hp_before - 10, "HIT damage still works")
+
+              if failures.is_empty():
+                  print("V20.2 HIT AC STEP3 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run hit AC test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_hit_ac_step3.gd 2>&1 | tee /tmp/hitac.log
+          grep -q "V20.2 HIT AC STEP3 PASS" /tmp/hitac.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/hitac.log; then
+            exit 1
+          fi
