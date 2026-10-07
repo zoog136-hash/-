@@ -33,6 +33,10 @@ var silence_accuracy: int = 0
 var silence_resistance: int = 0
 var silence_duration: float = 0.0
 var silence_remaining: float = 0.0
+var hold_accuracy: int = 0
+var hold_resistance: int = 0
+var hold_duration: float = 0.0
+var hold_remaining: float = 0.0
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
@@ -78,6 +82,10 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	silence_accuracy = clampi(int(record.get("silence_accuracy", record.get("침묵 적중", 0))), 0, 100)
 	silence_resistance = clampi(int(record.get("silence_resistance", record.get("silence_resist", record.get("침묵 내성", default_silence_resistance)))), 0, 100)
 	silence_duration = maxf(0.0, float(record.get("silence_duration", record.get("침묵 지속시간", 0.0))))
+	var default_hold_resistance: int = 5 + int(floor(float(monster_level) / 10.0))
+	hold_accuracy = clampi(int(record.get("hold_accuracy", record.get("홀드 적중", 0))), 0, 100)
+	hold_resistance = clampi(int(record.get("hold_resistance", record.get("hold_resist", record.get("홀드 내성", default_hold_resistance)))), 0, 100)
+	hold_duration = maxf(0.0, float(record.get("hold_duration", record.get("홀드 지속시간", 0.0))))
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
@@ -107,6 +115,7 @@ func _physics_process(delta: float) -> void:
 		return
 	_tick_stun(delta)
 	_tick_silence(delta)
+	_tick_hold(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -124,6 +133,11 @@ func _physics_process(delta: float) -> void:
 		if attack_cooldown <= 0.0:
 			attack_cooldown = 1.25
 			player_hit.emit(self, attack_power, effective_attack_type)
+		return
+	if is_held():
+		velocity = Vector2.ZERO
+		path = PackedVector2Array()
+		path_index = 0
 		return
 	if distance > 760.0:
 		velocity = Vector2.ZERO
@@ -149,6 +163,21 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func _tick_hold(delta: float) -> void:
+	hold_remaining = maxf(0.0, hold_remaining - delta)
+
+func is_held() -> bool:
+	return hold_remaining > 0.0
+
+func apply_hold(duration: float) -> void:
+	if dead:
+		return
+	hold_remaining = maxf(hold_remaining, maxf(0.0, duration))
+	velocity = Vector2.ZERO
+	path = PackedVector2Array()
+	path_index = 0
+	show_status_text("HOLD")
 
 func current_attack_type() -> String:
 	if attack_type == "magic" and is_silenced():
