@@ -3,6 +3,9 @@ class_name TwilightVirtualJoystick
 
 signal vector_changed(value: Vector2)
 
+const DEAD_ZONE: float = 0.16
+const DIRECTION_STEP: float = PI / 4.0
+
 var active_touch: int = -1
 var value: Vector2 = Vector2.ZERO
 var mouse_active: bool = false
@@ -16,7 +19,7 @@ func _gui_input(event: InputEvent) -> void:
 		var touch: InputEventScreenTouch = event
 		if touch.pressed and active_touch == -1:
 			active_touch = touch.index
-			_update_value(_viewport_to_local(touch.position))
+			_update_value(_event_position_to_local(touch.position))
 			accept_event()
 		elif not touch.pressed and touch.index == active_touch:
 			active_touch = -1
@@ -25,36 +28,48 @@ func _gui_input(event: InputEvent) -> void:
 	elif event is InputEventScreenDrag:
 		var drag: InputEventScreenDrag = event
 		if drag.index == active_touch:
-			_update_value(_viewport_to_local(drag.position))
+			_update_value(_event_position_to_local(drag.position))
 			accept_event()
 	elif event is InputEventMouseButton:
 		var mouse_button: InputEventMouseButton = event
 		if mouse_button.button_index == MOUSE_BUTTON_LEFT:
 			mouse_active = mouse_button.pressed
 			if mouse_active:
-				# Mouse events received by Control._gui_input() are already local.
 				_update_value(mouse_button.position)
 			else:
 				_set_value(Vector2.ZERO)
 			accept_event()
 	elif event is InputEventMouseMotion and mouse_active:
 		var motion: InputEventMouseMotion = event
-		# Mouse motion received by Control._gui_input() is already local.
 		_update_value(motion.position)
 		accept_event()
 
-func _viewport_to_local(viewport_pos: Vector2) -> Vector2:
-	# Native touch events keep viewport coordinates even in Control._gui_input().
-	# Convert through the full canvas transform so the joystick remains correct
-	# with CanvasLayer, camera and stretch transforms on Android.
-	return get_global_transform_with_canvas().affine_inverse() * viewport_pos
+func _event_position_to_local(event_position: Vector2) -> Vector2:
+	# Control._gui_input normally delivers local coordinates, including native
+	# Android touch events. Some device/stretch combinations may still report
+	# viewport coordinates, so only transform when the point is clearly outside
+	# this joystick's local rectangle. This avoids the old double-transform bug
+	# that made every touch resolve toward the top.
+	if event_position.x >= -2.0 and event_position.x <= size.x + 2.0 	and event_position.y >= -2.0 and event_position.y <= size.y + 2.0:
+		return event_position
+	return get_global_transform_with_canvas().affine_inverse() * event_position
 
 func _update_value(local_pos: Vector2) -> void:
 	var center: Vector2 = size * 0.5
 	var radius: float = minf(size.x, size.y) * 0.38
 	if radius <= 1.0:
 		return
-	_set_value((local_pos - center) / radius)
+	var raw: Vector2 = (local_pos - center) / radius
+	if raw.length() < DEAD_ZONE:
+		_set_value(Vector2.ZERO)
+		return
+
+	# Player movement uses a normalized vector, so snap the stick angle to
+	# 45-degree increments. This gives reliable 8-direction movement including
+	# all four diagonals on touch and mouse.
+	var angle: float = raw.angle()
+	var snapped_angle: float = roundf(angle / DIRECTION_STEP) * DIRECTION_STEP
+	_set_value(Vector2(cos(snapped_angle), sin(snapped_angle)))
 
 func _set_value(next_value: Vector2) -> void:
 	value = next_value.limit_length(1.0)
