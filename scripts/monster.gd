@@ -43,6 +43,13 @@ var fear_duration: float = 0.0
 var fear_remaining: float = 0.0
 var fear_source_position: Vector2 = Vector2.ZERO
 var fear_move_multiplier: float = 0.82
+var poison_accuracy: int = 0
+var poison_resistance: int = 0
+var poison_duration: float = 0.0
+var poison_tick_damage: int = 0
+var poison_tick_interval: float = 1.0
+var poison_remaining: float = 0.0
+var poison_tick_clock: float = 0.0
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
@@ -96,6 +103,12 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	fear_accuracy = clampi(int(record.get("fear_accuracy", record.get("공포 적중", 0))), 0, 100)
 	fear_resistance = clampi(int(record.get("fear_resistance", record.get("fear_resist", record.get("공포 내성", default_fear_resistance)))), 0, 100)
 	fear_duration = maxf(0.0, float(record.get("fear_duration", record.get("공포 지속시간", 0.0))))
+	var default_poison_resistance: int = 5 + int(floor(float(monster_level) / 10.0))
+	poison_accuracy = clampi(int(record.get("poison_accuracy", record.get("독 적중", 0))), 0, 100)
+	poison_resistance = clampi(int(record.get("poison_resistance", record.get("poison_resist", record.get("독 내성", default_poison_resistance)))), 0, 100)
+	poison_duration = maxf(0.0, float(record.get("poison_duration", record.get("독 지속시간", 0.0))))
+	poison_tick_damage = maxi(0, int(record.get("poison_tick_damage", record.get("독 피해", 0))))
+	poison_tick_interval = maxf(0.1, float(record.get("poison_tick_interval", record.get("독 주기", 1.0))))
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
@@ -127,6 +140,10 @@ func _physics_process(delta: float) -> void:
 	_tick_silence(delta)
 	_tick_hold(delta)
 	_tick_fear(delta)
+	_tick_poison(delta)
+	if dead:
+		velocity = Vector2.ZERO
+		return
 	if is_stunned():
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -187,6 +204,43 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func _tick_poison(delta: float) -> void:
+	if dead or poison_remaining <= 0.0 or poison_tick_damage <= 0:
+		return
+	var active_delta: float = minf(delta, poison_remaining)
+	poison_remaining = maxf(0.0, poison_remaining - delta)
+	poison_tick_clock -= active_delta
+	while poison_tick_clock <= 0.0 and poison_tick_damage > 0 and not dead:
+		take_damage(poison_tick_damage, false)
+		poison_tick_clock += poison_tick_interval
+	if poison_remaining <= 0.0 or dead:
+		poison_tick_clock = 0.0
+		if not dead:
+			poison_tick_damage = 0
+
+func is_poisoned() -> bool:
+	return poison_remaining > 0.0 and poison_tick_damage > 0 and not dead
+
+func apply_poison(duration: float, damage: int, interval: float = 1.0) -> void:
+	if dead:
+		return
+	var safe_duration: float = maxf(0.0, duration)
+	var safe_interval: float = maxf(0.1, interval)
+	var was_poisoned: bool = is_poisoned()
+	poison_remaining = maxf(poison_remaining, safe_duration)
+	poison_tick_damage = maxi(poison_tick_damage, maxi(1, damage))
+	poison_tick_interval = safe_interval
+	if not was_poisoned or poison_tick_clock <= 0.0:
+		poison_tick_clock = safe_interval
+	else:
+		poison_tick_clock = minf(poison_tick_clock, safe_interval)
+	show_status_text("POISON")
+
+func clear_poison() -> void:
+	poison_remaining = 0.0
+	poison_tick_clock = 0.0
+	poison_tick_damage = 0
 
 func _tick_fear(delta: float) -> void:
 	fear_remaining = maxf(0.0, fear_remaining - delta)
