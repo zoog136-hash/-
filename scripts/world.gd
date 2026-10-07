@@ -982,6 +982,17 @@ func _monster_hit_chance(attacker: TwilightMonster, attack_type: String = "melee
 func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee") -> bool:
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
+func _respawn_player(message_text: String) -> void:
+	hp = _effective_max_hp()
+	mp = max_mp
+	gold = maxi(0, gold - 500)
+	player.clear_status_effects()
+	player.global_position = _spawn_position()
+	selected_monster = null
+	auto_target = null
+	hud.clear_target()
+	hud.show_message(message_text)
+
 func _on_player_poison_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
 		return
@@ -990,14 +1001,7 @@ func _on_player_poison_tick(damage_value: int) -> void:
 	player.show_poison_damage(poison_damage)
 	hud.append_log("독 피해 %d" % poison_damage)
 	if hp <= 0:
-		hp = _effective_max_hp()
-		mp = max_mp
-		gold = maxi(0, gold - 500)
-		player.clear_poison()
-		player.clear_bleed()
-		player.global_position = _spawn_position()
-		player.clear_click_path()
-		hud.show_message("독 피해로 사망 후 부활했습니다")
+		_respawn_player("독 피해로 사망 후 부활했습니다")
 	_update_hud()
 
 func _on_player_bleed_tick(damage_value: int) -> void:
@@ -1008,14 +1012,7 @@ func _on_player_bleed_tick(damage_value: int) -> void:
 	player.show_bleed_damage(bleed_damage)
 	hud.append_log("출혈 피해 %d" % bleed_damage)
 	if hp <= 0:
-		hp = _effective_max_hp()
-		mp = max_mp
-		gold = maxi(0, gold - 500)
-		player.clear_poison()
-		player.clear_bleed()
-		player.global_position = _spawn_position()
-		player.clear_click_path()
-		hud.show_message("출혈 피해로 사망 후 부활했습니다")
+		_respawn_player("출혈 피해로 사망 후 부활했습니다")
 	_update_hud()
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
@@ -1172,14 +1169,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 				attacker.monster_name, _bleed_resistance_stat(), bleed_chance * 100.0
 			])
 	if hp <= 0:
-		hp = _effective_max_hp()
-		mp = max_mp
-		gold = maxi(0, gold - 500)
-		player.clear_poison()
-		player.clear_bleed()
-		player.global_position = _spawn_position()
-		player.clear_click_path()
-		hud.show_message("사망 후 부활했습니다")
+		_respawn_player("사망 후 부활했습니다")
 	_update_hud()
 
 func _stat_points_for_level_up(new_level: int) -> int:
@@ -1347,6 +1337,7 @@ func _load_game(quiet: bool) -> void:
 		inventory = inventory_value as Dictionary
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
 	player.set_class_index(class_index)
+	player.clear_status_effects()
 	var equipped_value: Variant = data.get("equipped_catalog", equipped_catalog)
 	if equipped_value is Dictionary:
 		equipped_catalog = equipped_value as Dictionary
