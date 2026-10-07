@@ -55,6 +55,9 @@ func _run() -> void:
 		var expected_attack: int = base_attack + equipment_bonus + enhance + active_bonus + 4
 		if int(world.call("_effective_attack")) != expected_attack:
 			_fail("passive attack bonus was not automatically applied")
+		var expected_ranged: int = expected_attack + int(world.call("_stat_step_bonus", int(world.get("dex_stat")), 10, 2.0)) + int(world.call("_active_item_buff_total", "ranged_damage"))
+		if int(world.call("_ranged_damage_stat")) != expected_ranged:
+			_fail("passive attack bonus was not included in ranged skill damage")
 
 		var mp_before: int = int(world.get("mp"))
 		world.call("_cast_job_skill", "멘탈 포커스")

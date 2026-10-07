@@ -3446,7 +3446,7 @@ func _melee_accuracy_stat() -> int:
 	return level + str_stat + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return attack_power + _stat_step_bonus(dex_stat, 10, 2.0) + _equipment_enhancement_level("weapon") + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0) + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
 	return level + dex_stat + 5 + _equipment_enhancement_level("weapon") + _active_item_buff_total("ranged_accuracy")
