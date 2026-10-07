@@ -37,6 +37,15 @@ var category_filter: String = "전체"
 var max_slots: int = 104
 
 const CATEGORIES := ["전체", "장비", "소모품", "기타"]
+const GRADE_COLORS := {
+	"일반": Color(0.62, 0.64, 0.66, 1.0),
+	"고급": Color(0.32, 0.78, 0.38, 1.0),
+	"희귀": Color(0.28, 0.58, 0.98, 1.0),
+	"영웅": Color(0.70, 0.36, 0.94, 1.0),
+	"전설": Color(0.98, 0.56, 0.18, 1.0),
+	"신화": Color(0.94, 0.24, 0.28, 1.0),
+	"유일": Color(1.0, 0.82, 0.24, 1.0)
+}
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -238,6 +247,9 @@ func set_catalog_data(data: Dictionary, images: Dictionary) -> void:
 func set_character_state(state: Dictionary) -> void:
 	character_state = state.duplicate(true)
 	gold_label.text = "● %s" % _format_number(int(character_state.get("gold", 0)))
+	_refresh_inventory_grid()
+	if selected_item != "":
+		_refresh_detail(selected_item)
 
 func set_inventory(value: Dictionary) -> void:
 	inventory = value.duplicate(true)
@@ -300,13 +312,17 @@ func _refresh_inventory_grid() -> void:
 		visible_count += 1
 		var button := Button.new()
 		button.custom_minimum_size = Vector2(96, 88)
-		button.text = "%s\nx%d" % [_short_name(item_name), amount]
-		button.tooltip_text = item_name
+		var grade := str(record.get("grade", "일반"))
+		var equipped := _is_item_equipped(item_name)
+		var equip_mark := "E  " if equipped else ""
+		button.text = "%s%s\nx%d" % [equip_mark, _short_name(item_name), amount]
+		button.tooltip_text = "%s%s" % [item_name, " · 장착 중" if equipped else ""]
 		button.add_theme_font_size_override("font_size", 11)
 		button.add_theme_color_override("font_color", TEXT)
-		button.add_theme_stylebox_override("normal", _slot_style(item_name == selected_item))
-		button.add_theme_stylebox_override("hover", _style(Color(0.095,0.083,0.052,1), GOLD_SOFT, 2, 1))
-		button.add_theme_stylebox_override("pressed", _style(Color(0.14,0.105,0.05,1), GOLD_BRIGHT, 2, 2))
+		button.add_theme_color_override("font_hover_color", Color.WHITE)
+		button.add_theme_stylebox_override("normal", _slot_style_for_grade(grade, item_name == selected_item))
+		button.add_theme_stylebox_override("hover", _slot_hover_style(grade))
+		button.add_theme_stylebox_override("pressed", _slot_pressed_style(grade))
 		var path := str(images.get(item_name, ""))
 		if path != "" and ResourceLoader.exists(path):
 			button.icon = load(path) as Texture2D
@@ -329,10 +345,31 @@ func _refresh_inventory_grid() -> void:
 		empty.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		item_grid.add_child(empty)
 
-func _slot_style(selected: bool) -> StyleBoxFlat:
+func _grade_color(grade: String) -> Color:
+	return GRADE_COLORS.get(grade, GRADE_COLORS["일반"]) as Color
+
+func _slot_style_for_grade(grade: String, selected: bool) -> StyleBoxFlat:
+	var color := _grade_color(grade)
 	if selected:
-		return _style(Color(0.13,0.10,0.05,1), GOLD_BRIGHT, 2, 2)
-	return _style(SLOT_BG, Color(0.25,0.22,0.16,1), 2, 1)
+		return _style(Color(0.13,0.10,0.05,1), color.lightened(0.16), 2, 3)
+	return _style(SLOT_BG, color, 2, 2)
+
+func _slot_hover_style(grade: String) -> StyleBoxFlat:
+	var color := _grade_color(grade)
+	return _style(Color(0.095,0.083,0.052,1), color.lightened(0.10), 2, 2)
+
+func _slot_pressed_style(grade: String) -> StyleBoxFlat:
+	var color := _grade_color(grade)
+	return _style(Color(0.14,0.105,0.05,1), color.lightened(0.18), 2, 3)
+
+func _is_item_equipped(item_name: String) -> bool:
+	var equipped_items: Dictionary = character_state.get("equipped_items", {}) as Dictionary
+	for value: Variant in equipped_items.values():
+		if value is Dictionary:
+			var record := value as Dictionary
+			if str(record.get("name", "")) == item_name:
+				return true
+	return false
 
 func _short_name(item_name: String) -> String:
 	if item_name.length() <= 8:
@@ -343,7 +380,8 @@ func _select_item(item_name: String) -> void:
 	selected_item = item_name
 	for key: Variant in slot_buttons.keys():
 		var button := slot_buttons[key] as Button
-		button.add_theme_stylebox_override("normal", _slot_style(str(key) == selected_item))
+		var record := _find_item_record(str(key))
+		button.add_theme_stylebox_override("normal", _slot_style_for_grade(str(record.get("grade", "일반")), str(key) == selected_item))
 	_refresh_detail(item_name)
 
 func _find_item_record(item_name: String) -> Dictionary:
@@ -372,9 +410,11 @@ func _refresh_detail(item_name: String) -> void:
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))
+	var equipped := _is_item_equipped(item_name)
 	detail_name.text = item_name
-	detail_grade.text = "%s · 보유 %d" % [grade, amount]
-	detail_type.text = "%s%s" % [item_type, (" · " + slot) if slot != "" else ""]
+	detail_grade.text = "%s%s · 보유 %d" % [grade, " · 장착중" if equipped else "", amount]
+	detail_grade.add_theme_color_override("font_color", _grade_color(grade))
+	detail_type.text = "%s%s%s" % [item_type, (" · " + slot) if slot != "" else "", " · E" if equipped else ""]
 
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
 	var path := str(images.get(item_name, ""))
@@ -405,8 +445,13 @@ func _refresh_detail(item_name: String) -> void:
 	detail_text.text = "\n".join(lines)
 
 	var is_consumable := slot == "consumable" or item_type == "소모품" or item_name.find("물약") >= 0 or item_name.find("주문서") >= 0
-	detail_action.text = "사용" if is_consumable else "장착 / 사용"
-	detail_action.disabled = amount <= 0
+	if is_consumable:
+		detail_action.text = "사용"
+	elif equipped:
+		detail_action.text = "장착 중"
+	else:
+		detail_action.text = "장착 / 사용"
+	detail_action.disabled = amount <= 0 or (equipped and not is_consumable)
 	quick_button.disabled = amount <= 0 or not is_consumable
 
 func _activate_selected() -> void:
