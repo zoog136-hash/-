@@ -29,6 +29,10 @@ var stun_accuracy: int = 0
 var stun_resistance: int = 0
 var stun_duration: float = 0.0
 var stun_remaining: float = 0.0
+var silence_accuracy: int = 0
+var silence_resistance: int = 0
+var silence_duration: float = 0.0
+var silence_remaining: float = 0.0
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
@@ -70,6 +74,10 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	stun_accuracy = clampi(int(record.get("stun_accuracy", record.get("스턴 적중", default_stun_accuracy))), 0, 100)
 	stun_resistance = clampi(int(record.get("stun_resistance", record.get("stun_resist", record.get("스턴 내성", default_stun_resistance)))), 0, 100)
 	stun_duration = maxf(0.0, float(record.get("stun_duration", record.get("스턴 지속시간", 0.0))))
+	var default_silence_resistance: int = 5 + int(floor(float(monster_level) / 10.0))
+	silence_accuracy = clampi(int(record.get("silence_accuracy", record.get("침묵 적중", 0))), 0, 100)
+	silence_resistance = clampi(int(record.get("silence_resistance", record.get("silence_resist", record.get("침묵 내성", default_silence_resistance)))), 0, 100)
+	silence_duration = maxf(0.0, float(record.get("silence_duration", record.get("침묵 지속시간", 0.0))))
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
 	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
@@ -98,6 +106,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		return
 	_tick_stun(delta)
+	_tick_silence(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		move_and_slide()
@@ -108,12 +117,13 @@ func _physics_process(delta: float) -> void:
 	var ui_visible: bool = distance <= 420.0
 	name_label.visible = ui_visible
 	hp_bar.visible = ui_visible
-	var attack_range: float = 280.0 if attack_type == "magic" else (220.0 if attack_type == "ranged" else 58.0)
+	var effective_attack_type: String = "melee" if attack_type == "magic" and is_silenced() else attack_type
+	var attack_range: float = 280.0 if effective_attack_type == "magic" else (220.0 if effective_attack_type == "ranged" else 58.0)
 	if distance <= attack_range:
 		velocity = Vector2.ZERO
 		if attack_cooldown <= 0.0:
 			attack_cooldown = 1.25
-			player_hit.emit(self, attack_power, attack_type)
+			player_hit.emit(self, attack_power, effective_attack_type)
 		return
 	if distance > 760.0:
 		velocity = Vector2.ZERO
@@ -139,6 +149,18 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func _tick_silence(delta: float) -> void:
+	silence_remaining = maxf(0.0, silence_remaining - delta)
+
+func is_silenced() -> bool:
+	return silence_remaining > 0.0
+
+func apply_silence(duration: float) -> void:
+	if dead:
+		return
+	silence_remaining = maxf(silence_remaining, maxf(0.0, duration))
+	show_status_text("SILENCE")
 
 func _tick_stun(delta: float) -> void:
 	stun_remaining = maxf(0.0, stun_remaining - delta)
