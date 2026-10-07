@@ -47,6 +47,7 @@ var bleed_tick_interval: float = 0.75
 var bleed_tick_clock: float = 0.0
 var bleed_tick_damage: int = 0
 var base_move_speed: float = 210.0
+var skill_speed_multiplier: float = 1.0
 
 func _ready() -> void:
 	base_move_speed = move_speed
@@ -107,7 +108,7 @@ func _physics_process(delta: float) -> void:
 
 	if manual.length_squared() > 0.01:
 		clear_click_path()
-		velocity = manual.normalized() * move_speed
+		velocity = manual.normalized() * move_speed * skill_speed_multiplier
 	else:
 		velocity = _click_path_velocity()
 
@@ -126,7 +127,7 @@ func _click_path_velocity() -> Vector2:
 			return Vector2.ZERO
 		next_point = click_path[path_index]
 	var direction: Vector2 = global_position.direction_to(next_point)
-	return direction * click_move_speed
+	return direction * click_move_speed * skill_speed_multiplier
 
 func _update_facing(motion: Vector2) -> void:
 	if motion.length_squared() < 1.0:
@@ -285,6 +286,9 @@ func clear_transform_visual() -> void:
 	move_speed = base_move_speed
 	click_move_speed = base_move_speed + 15.0
 
+func set_skill_speed_multiplier(value: float) -> void:
+	skill_speed_multiplier = clampf(value, 0.5, 2.0)
+
 func set_touch_vector(value: Vector2) -> void:
 	touch_vector = value.limit_length(1.0)
 
@@ -413,7 +417,7 @@ func _fear_velocity() -> Vector2:
 	var away: Vector2 = global_position - fear_source_position
 	if away.length_squared() < 0.01:
 		away = Vector2.RIGHT
-	return away.normalized() * move_speed * fear_move_multiplier
+	return away.normalized() * move_speed * fear_move_multiplier * skill_speed_multiplier
 
 func _tick_hold(delta: float) -> void:
 	hold_remaining = maxf(0.0, hold_remaining - delta)
