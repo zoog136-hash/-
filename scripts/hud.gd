@@ -24,6 +24,9 @@ signal job_skill_pressed(skill_name: String)
 signal shop_buy_requested(item_name: String, price: int)
 signal inventory_item_activated(item_name: String)
 signal enhancement_requested(scroll_name: String, target_name: String)
+signal quickslot_pressed(slot_index: int)
+signal quickslot_assignment_requested(slot_index: int, entry_kind: String, entry_id: String)
+signal self_mode_changed(enabled: bool)
 
 @onready var hp_bar: ProgressBar = $Root/TopLeft/HPBar
 @onready var mp_bar: ProgressBar = $Root/TopLeft/MPBar
@@ -94,6 +97,7 @@ var last_inventory_tap_ms: int = 0
 var enhancement_scroll_name: String = ""
 var enhancement_candidates: Array = []
 var enhancement_selected_index: int = -1
+var quickslot_entries: Array = []
 var job_classes: Array = []
 var job_skills: Array = []
 var job_class_buttons: Dictionary = {}
@@ -210,6 +214,29 @@ func _emit_job_class(job_name: String) -> void:
 
 func _emit_job_skill(skill_name: String) -> void:
 	job_skill_pressed.emit(skill_name)
+
+func set_quickslot_entries(entries: Array) -> void:
+	quickslot_entries = entries.duplicate(true)
+
+func _open_quickslot_picker(entry_kind: String, entry_id: String, display_name: String) -> void:
+	_open_utility_panel("퀵슬롯 등록")
+	_utility_add_text("[font_size=20][b]%s[/b][/font_size]\n등록할 슬롯을 선택하세요. 기존 내용은 교체됩니다." % display_name)
+	for index: int in range(8):
+		var current_text: String = "비어 있음"
+		if index < quickslot_entries.size() and quickslot_entries[index] is Dictionary:
+			var current: Dictionary = quickslot_entries[index] as Dictionary
+			if not current.is_empty():
+				current_text = str(current.get("id", current.get("name", "등록됨")))
+		var button: Button = Button.new()
+		button.text = "%d번 슬롯  ·  %s" % [index + 1, current_text]
+		button.custom_minimum_size = Vector2(0, 44)
+		button.pressed.connect(_emit_quickslot_assignment.bind(index, entry_kind, entry_id))
+		utility_body.add_child(button)
+
+func _emit_quickslot_assignment(slot_index: int, entry_kind: String, entry_id: String) -> void:
+	quickslot_assignment_requested.emit(slot_index, entry_kind, entry_id)
+	utility_panel.visible = false
+	show_message("퀵슬롯 %d번에 등록" % (slot_index + 1))
 
 func _job_profile(job_name: String) -> Dictionary:
 	for value: Variant in job_classes:
@@ -329,20 +356,31 @@ func refresh_inventory(inventory: Dictionary) -> void:
 		var amount: int = int(inventory.get(item_name, 0))
 		if amount <= 0:
 			continue
-		var row: Button = Button.new()
-		row.custom_minimum_size = Vector2(0, 44)
-		row.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		row.text = "%s   x%d" % [item_name, amount]
-		row.tooltip_text = "빠르게 두 번 누르면 사용 / 강화"
-		row.add_theme_font_size_override("font_size", 17)
-		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var row: HBoxContainer = HBoxContainer.new()
+		row.custom_minimum_size = Vector2(0, 46)
+		row.add_theme_constant_override("separation", 6)
+
+		var use_button: Button = Button.new()
+		use_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		use_button.text = "%s   x%d" % [item_name, amount]
+		use_button.tooltip_text = "빠르게 두 번 누르면 사용 / 강화"
+		use_button.add_theme_font_size_override("font_size", 17)
+		use_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var path: String = str(images.get(item_name, ""))
 		if path != "" and ResourceLoader.exists(path):
-			row.icon = load(path) as Texture2D
-			row.expand_icon = false
-		row.icon_max_width = 36
-		row.add_theme_constant_override("icon_max_width", 36)
-		row.pressed.connect(_on_inventory_item_tapped.bind(item_name))
+			use_button.icon = load(path) as Texture2D
+			use_button.expand_icon = false
+			use_button.icon_max_width = 36
+			use_button.add_theme_constant_override("icon_max_width", 36)
+		use_button.pressed.connect(_on_inventory_item_tapped.bind(item_name))
+		row.add_child(use_button)
+
+		var quick_button: Button = Button.new()
+		quick_button.text = "Q등록"
+		quick_button.custom_minimum_size = Vector2(72, 42)
+		quick_button.tooltip_text = "소모품을 퀵슬롯에 등록"
+		quick_button.pressed.connect(_open_quickslot_picker.bind("item", item_name, item_name))
+		row.add_child(quick_button)
 		inventory_list.add_child(row)
 
 func _on_inventory_item_tapped(item_name: String) -> void:
@@ -963,17 +1001,29 @@ func open_skills() -> void:
 	)
 	for value: Variant in visible_skills:
 		var skill: Dictionary = value as Dictionary
-		var name: String = str(skill.get("name", "스킬"))
+		var skill_name: String = str(skill.get("name", "스킬"))
 		var grade: String = str(skill.get("grade", "일반"))
 		var type_text: String = str(skill.get("type", ""))
 		var mp_cost: int = int(skill.get("mp", 0))
 		var desc: String = str(skill.get("desc", ""))
+
+		var row: HBoxContainer = HBoxContainer.new()
+		row.add_theme_constant_override("separation", 6)
 		var button: Button = Button.new()
-		button.text = "[%s] %s · %s · MP %d\n%s" % [grade, name, type_text, mp_cost, desc]
+		button.text = "[%s] %s · %s · MP %d\n%s" % [grade, skill_name, type_text, mp_cost, desc]
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.custom_minimum_size = Vector2(0, 60)
-		button.pressed.connect(_emit_job_skill.bind(name))
-		utility_body.add_child(button)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.pressed.connect(_emit_job_skill.bind(skill_name))
+		row.add_child(button)
+
+		var quick_button: Button = Button.new()
+		quick_button.text = "Q등록"
+		quick_button.custom_minimum_size = Vector2(72, 60)
+		quick_button.tooltip_text = "스킬을 퀵슬롯에 등록"
+		quick_button.pressed.connect(_open_quickslot_picker.bind("skill", skill_name, skill_name))
+		row.add_child(quick_button)
+		utility_body.add_child(row)
 
 func open_quest_info() -> void:
 	_open_utility_panel("퀘스트")
