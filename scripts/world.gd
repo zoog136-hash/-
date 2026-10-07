@@ -2512,28 +2512,64 @@ func _normalize_quickslots() -> void:
 		quickslots.pop_back()
 
 func _ensure_quickslots_seeded() -> void:
-	_sanitize_quickslots_for_current_job()
+	var sanitized_changed: bool = _sanitize_quickslots_for_current_job()
 	var has_any: bool = false
+	var skill_count: int = 0
+	var item_count: int = 0
 	for value: Variant in quickslots:
-		if value is Dictionary and not (value as Dictionary).is_empty():
-			has_any = true
-			break
-	if has_any:
-		return
-	var defaults: Array = _quickbar_job_skills()
-	var slot_index: int = 0
-	for value: Variant in defaults:
-		if slot_index >= 5:
-			break
-		if value is Dictionary:
-			var skill: Dictionary = value as Dictionary
-			quickslots[slot_index] = {"kind":"skill", "id":str(skill.get("name", ""))}
+		if not (value is Dictionary):
+			continue
+		var entry: Dictionary = value as Dictionary
+		if entry.is_empty():
+			continue
+		has_any = true
+		if str(entry.get("kind", "")) == "skill":
+			skill_count += 1
+		elif str(entry.get("kind", "")) == "item":
+			item_count += 1
+	if not has_any:
+		var defaults: Array = _quickbar_job_skills()
+		var slot_index: int = 0
+		for value: Variant in defaults:
+			if slot_index >= 5:
+				break
+			if value is Dictionary:
+				var skill: Dictionary = value as Dictionary
+				quickslots[slot_index] = {"kind":"skill", "id":str(skill.get("name", ""))}
+				slot_index += 1
+		for item_name: String in ["HP 물약", "강력 HP 물약", "축복받은 HP 물약"]:
+			if slot_index >= 8:
+				break
+			quickslots[slot_index] = {"kind":"item", "id":item_name}
 			slot_index += 1
-	for item_name: String in ["HP 물약", "강력 HP 물약", "축복받은 HP 물약"]:
-		if slot_index >= 8:
+		return
+	if not sanitized_changed:
+		return
+	# A class/passive migration may clear only skill entries while leaving item slots.
+	# Refill empty positions with valid active skills without overwriting user items.
+	var defaults: Array = _quickbar_job_skills()
+	for value: Variant in defaults:
+		if skill_count >= 5:
 			break
-		quickslots[slot_index] = {"kind":"item", "id":item_name}
-		slot_index += 1
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		var skill_name: String = str(skill.get("name", ""))
+		var already_present: bool = false
+		for current_value: Variant in quickslots:
+			if current_value is Dictionary:
+				var current: Dictionary = current_value as Dictionary
+				if str(current.get("kind", "")) == "skill" and str(current.get("id", "")) == skill_name:
+					already_present = true
+					break
+		if already_present:
+			continue
+		for index: int in range(quickslots.size()):
+			var current_value: Variant = quickslots[index]
+			if current_value is Dictionary and (current_value as Dictionary).is_empty():
+				quickslots[index] = {"kind":"skill", "id":skill_name}
+				skill_count += 1
+				break
 
 func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, entry_id: String) -> void:
 	if slot_index < 0 or slot_index >= 8:
