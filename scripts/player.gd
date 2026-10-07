@@ -48,6 +48,9 @@ var bleed_tick_clock: float = 0.0
 var bleed_tick_damage: int = 0
 var base_move_speed: float = 210.0
 var skill_speed_multiplier: float = 1.0
+var equipment_move_speed_multiplier: float = 1.0
+var attack_speed_multiplier: float = 1.0
+var attack_visual_duration: float = 0.42
 
 func _ready() -> void:
 	base_move_speed = move_speed
@@ -108,7 +111,7 @@ func _physics_process(delta: float) -> void:
 
 	if manual.length_squared() > 0.01:
 		clear_click_path()
-		velocity = manual.normalized() * move_speed * skill_speed_multiplier
+		velocity = manual.normalized() * move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
 	else:
 		velocity = _click_path_velocity()
 
@@ -127,7 +130,7 @@ func _click_path_velocity() -> Vector2:
 			return Vector2.ZERO
 		next_point = click_path[path_index]
 	var direction: Vector2 = global_position.direction_to(next_point)
-	return direction * click_move_speed * skill_speed_multiplier
+	return direction * click_move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
 
 func _update_facing(motion: Vector2) -> void:
 	if motion.length_squared() < 1.0:
@@ -144,6 +147,7 @@ func _update_visual(_delta: float) -> void:
 		transform_sprite.visible = true
 		transform_sprite.flip_h = false
 		var animation_name: String = _direction_animation_name(facing)
+		transform_sprite.speed_scale = attack_speed_multiplier if attack_clock > 0.0 else equipment_move_speed_multiplier * skill_speed_multiplier
 		if transform_sprite.animation != animation_name:
 			transform_sprite.animation = animation_name
 			transform_sprite.frame = 0
@@ -156,7 +160,8 @@ func _update_visual(_delta: float) -> void:
 		var bob: float = -absf(sin(transform_bob_clock * 8.0)) * 2.0 if moving else sin(transform_bob_clock * 2.5) * 1.0
 		transform_sprite.position.y = -55.0 + bob
 		if attack_clock > 0.0:
-			var pulse: float = sin((1.0 - attack_clock / 0.42) * PI)
+			var pulse_duration: float = maxf(0.05, attack_visual_duration)
+			var pulse: float = sin((1.0 - attack_clock / pulse_duration) * PI)
 			transform_sprite.scale = transform_sprite.get_meta("base_scale", Vector2(0.6, 0.6)) * (1.0 + pulse * 0.08)
 		else:
 			transform_sprite.scale = transform_sprite.get_meta("base_scale", Vector2(0.6, 0.6))
@@ -169,6 +174,7 @@ func _update_visual(_delta: float) -> void:
 	# Never request a non-existent animation from AnimatedSprite2D.
 	if class_sprite.sprite_frames == null:
 		return
+	class_sprite.speed_scale = attack_speed_multiplier if attack_clock > 0.0 else equipment_move_speed_multiplier * skill_speed_multiplier
 	var required_animation: String = "attack" if attack_clock > 0.0 else _class_direction_animation_name(facing)
 	if not class_sprite.sprite_frames.has_animation(required_animation):
 		class_sprite.visible = false
@@ -220,7 +226,7 @@ func _build_class_frames(path: String) -> void:
 	class_sprite.frame = 0
 	class_sprite.play()
 
-func set_transform_visual(path: String, speed_multiplier: float) -> void:
+func set_transform_visual(path: String, _speed_multiplier: float) -> void:
 	if path == "" or not ResourceLoader.exists(path):
 		clear_transform_visual()
 		return
@@ -242,8 +248,7 @@ func set_transform_visual(path: String, speed_multiplier: float) -> void:
 	transform_active = true
 	class_sprite.visible = false
 	transform_sprite.visible = true
-	move_speed = base_move_speed * clampf(speed_multiplier, 0.75, 1.8)
-	click_move_speed = move_speed + 15.0
+	# Movement bonuses are applied centrally so transformation, doll, relic and equipment options stack consistently.
 
 func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
 	var frames: SpriteFrames = SpriteFrames.new()
@@ -283,8 +288,10 @@ func clear_transform_visual() -> void:
 	transform_sprite.stop()
 	transform_sprite.visible = false
 	class_sprite.visible = true
-	move_speed = base_move_speed
-	click_move_speed = base_move_speed + 15.0
+
+func set_equipment_speed_multipliers(move_multiplier: float, attack_multiplier: float) -> void:
+	equipment_move_speed_multiplier = clampf(move_multiplier, 0.5, 2.5)
+	attack_speed_multiplier = clampf(attack_multiplier, 0.5, 4.0)
 
 func set_skill_speed_multiplier(value: float) -> void:
 	skill_speed_multiplier = clampf(value, 0.5, 2.0)
@@ -417,7 +424,7 @@ func _fear_velocity() -> Vector2:
 	var away: Vector2 = global_position - fear_source_position
 	if away.length_squared() < 0.01:
 		away = Vector2.RIGHT
-	return away.normalized() * move_speed * fear_move_multiplier * skill_speed_multiplier
+	return away.normalized() * move_speed * fear_move_multiplier * equipment_move_speed_multiplier * skill_speed_multiplier
 
 func _tick_hold(delta: float) -> void:
 	hold_remaining = maxf(0.0, hold_remaining - delta)
@@ -476,7 +483,8 @@ func set_auto_enabled(enabled: bool) -> void:
 func pulse_attack() -> void:
 	if is_stunned():
 		return
-	attack_clock = 0.42
+	attack_visual_duration = clampf(0.42 / maxf(0.5, attack_speed_multiplier), 0.10, 0.42)
+	attack_clock = attack_visual_duration
 	if not transform_active:
 		class_sprite.animation = "attack"
 		class_sprite.frame = 0

@@ -905,6 +905,8 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 func _attack() -> void:
 	if player.is_stunned() or player.is_feared():
 		return
+	if auto_attack_timer > 0.0:
+		return
 	var target: TwilightMonster = selected_monster
 	var target_usable: bool = is_instance_valid(target) and not target.dead
 	if target_usable:
@@ -917,6 +919,7 @@ func _attack() -> void:
 		hud.show_message("공격 범위에 보이는 대상이 없습니다")
 		return
 	selected_monster = target
+	auto_attack_timer = _normal_attack_interval()
 	player.pulse_attack()
 	var hit_chance: float = _melee_hit_chance(target)
 	if not _roll_melee_hit(target):
@@ -953,7 +956,6 @@ func _run_auto_hunt() -> void:
 	if distance <= 95.0 and _has_line_of_sight_world(player.global_position, auto_target.global_position):
 		player.clear_click_path()
 		if auto_attack_timer <= 0.0:
-			auto_attack_timer = 0.72
 			_attack()
 	else:
 		if player.is_held():
@@ -2031,6 +2033,7 @@ func _ensure_job_class_visual() -> void:
 		return
 	equipped_catalog["변신"] = record.duplicate(true)
 	_apply_transform_visual(record)
+	_refresh_speed_modifiers()
 
 func _on_job_class_selected(job_name: String) -> void:
 	if not JOB_CLASS_ORDER.has(job_name):
@@ -2040,6 +2043,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	if not record.is_empty():
 		equipped_catalog["변신"] = record.duplicate(true)
 		_apply_transform_visual(record)
+	_refresh_speed_modifiers()
 	_update_job_skillbar()
 	hud.show_message("직업 변경: %s" % job_class)
 	hud.append_log("%s 클래스 적용 · 대표 신화 변신 %s" % [job_class, str(record.get("name", ""))])
@@ -2416,6 +2420,7 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		_apply_doll_visual(record)
 	elif category == "성물":
 		_apply_relic_visual(record)
+	_refresh_speed_modifiers()
 	var new_max_hp: int = _effective_max_hp()
 	if new_max_hp > old_max_hp:
 		hp += new_max_hp - old_max_hp
@@ -2431,6 +2436,7 @@ func _equip_or_acquire_item(record: Dictionary) -> void:
 	if slot == "weapon" or slot == "armor" or slot == "accessory":
 		var old_max_hp: int = _effective_max_hp()
 		equipped_items[slot] = record.duplicate(true)
+		_refresh_speed_modifiers()
 		var new_max_hp: int = _effective_max_hp()
 		if new_max_hp > old_max_hp:
 			hp += new_max_hp - old_max_hp
@@ -2539,6 +2545,7 @@ func _restore_equipped_visuals() -> void:
 	var relic_value: Variant = equipped_catalog.get("성물", {})
 	if relic_value is Dictionary:
 		_apply_relic_visual(relic_value as Dictionary)
+	_refresh_speed_modifiers()
 
 func _all_equipped_records() -> Array[Dictionary]:
 	var records: Array[Dictionary] = []
@@ -2551,6 +2558,39 @@ func _all_equipped_records() -> Array[Dictionary]:
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(item_value as Dictionary)
 	return records
+
+func _record_move_speed_multiplier(record: Dictionary) -> float:
+	var value: float = float(record.get("speed", 1.0))
+	if value <= 0.0:
+		return 1.0
+	return clampf(value, 0.5, 2.0)
+
+func _record_attack_speed_percent(record: Dictionary) -> float:
+	var value: float = float(record.get("attackSpeed", record.get("attack_speed", 0.0)))
+	return maxf(0.0, value)
+
+func _effective_move_speed_multiplier() -> float:
+	var multiplier: float = 1.0
+	for record: Dictionary in _all_equipped_records():
+		multiplier *= _record_move_speed_multiplier(record)
+	return clampf(multiplier, 0.5, 2.5)
+
+func _effective_attack_speed_bonus_percent() -> float:
+	var total: float = 0.0
+	for record: Dictionary in _all_equipped_records():
+		total += _record_attack_speed_percent(record)
+	return maxf(0.0, total)
+
+func _effective_attack_speed_multiplier() -> float:
+	return clampf(1.0 + _effective_attack_speed_bonus_percent() / 100.0, 0.5, 4.0)
+
+func _normal_attack_interval() -> float:
+	return clampf(0.72 / _effective_attack_speed_multiplier(), 0.12, 1.50)
+
+func _refresh_speed_modifiers() -> void:
+	if player == null:
+		return
+	player.set_equipment_speed_multipliers(_effective_move_speed_multiplier(), _effective_attack_speed_multiplier())
 
 func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	var delta: int = value - baseline
@@ -2937,7 +2977,10 @@ func _character_stats_snapshot() -> Dictionary:
 		"dg": _effective_dg(),
 		"er": _effective_er(),
 		"mr": _effective_mr(),
-		"damage_reduction": _damage_reduction_stat()
+		"damage_reduction": _damage_reduction_stat(),
+		"attack_speed_bonus": _effective_attack_speed_bonus_percent(),
+		"move_speed_bonus": (_effective_move_speed_multiplier() - 1.0) * 100.0,
+		"attack_interval": _normal_attack_interval()
 	}
 
 func _effective_attack() -> int:

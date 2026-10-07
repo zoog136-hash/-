@@ -81,3 +81,14 @@ jobs:
             exit 1
           fi
           grep -q "QUICKSLOT_SMOKE_OK" godot-quickslot-smoke.log
+
+      - name: Speed option smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/speed_option_smoke_test.gd 2>&1 | tee godot-speed-option-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|SPEED FAIL:|SPEED_OPTION_SMOKE_FAILED" godot-speed-option-smoke.log; then
+            echo "Attack/move speed option smoke test reported an error."
+            exit 1
+          fi
+          grep -q "SPEED_OPTION_SMOKE_OK" godot-speed-option-smoke.log
