@@ -386,6 +386,17 @@ func _clear_drops() -> void:
 	for child: Node in drops_root.get_children():
 		child.queue_free()
 
+func _melee_hit_chance(target: TwilightMonster) -> float:
+	if target == null:
+		return 0.05
+	var accuracy: int = _melee_accuracy_stat()
+	var target_ac_abs: int = absi(target.armor_class)
+	var chance_percent: float = 75.0 + float(accuracy - target_ac_abs) * 0.7
+	return clampf(chance_percent / 100.0, 0.05, 0.95)
+
+func _roll_melee_hit(target: TwilightMonster) -> bool:
+	return rng.randf() < _melee_hit_chance(target)
+
 func _attack() -> void:
 	var target: TwilightMonster = selected_monster
 	if not is_instance_valid(target) or target.dead or player.global_position.distance_to(target.global_position) > 105.0:
@@ -394,10 +405,18 @@ func _attack() -> void:
 		hud.show_message("공격 범위에 대상이 없습니다")
 		return
 	selected_monster = target
-	var damage: int = maxi(1, _effective_attack() + rng.randi_range(-6, 9))
-	target.take_damage(damage)
 	player.pulse_attack()
-	hud.append_log("%s에게 %d 피해" % [target.monster_name, damage])
+	var hit_chance: float = _melee_hit_chance(target)
+	if not _roll_melee_hit(target):
+		target.show_miss()
+		hud.append_log("%s 공격 MISS · 명중 %d / AC %d / %.1f%%" % [
+			target.monster_name, _melee_accuracy_stat(), target.armor_class, hit_chance * 100.0
+		])
+		_update_target_hud()
+		return
+	var damage: int = maxi(1, _melee_damage_stat() + rng.randi_range(-6, 9))
+	target.take_damage(damage)
+	hud.append_log("%s에게 %d 피해 · 명중률 %.1f%%" % [target.monster_name, damage, hit_chance * 100.0])
 	_update_target_hud()
 
 func _run_auto_hunt() -> void:
@@ -437,7 +456,7 @@ func _select_monster(monster: TwilightMonster) -> void:
 
 func _update_target_hud() -> void:
 	if is_instance_valid(selected_monster) and not selected_monster.dead:
-		hud.show_target(selected_monster.monster_name, selected_monster.hp, selected_monster.max_hp)
+		hud.show_target("Lv.%d %s · AC %d" % [selected_monster.monster_level, selected_monster.monster_name, selected_monster.armor_class], selected_monster.hp, selected_monster.max_hp)
 	else:
 		selected_monster = null
 		hud.clear_target()
