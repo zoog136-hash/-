@@ -505,43 +505,38 @@ func _build_v20_bottom_bar() -> void:
 		button.pressed.connect(func() -> void: show_message("%s 기능" % str(data[1])))
 		sys.add_child(button)
 
-	# Skill quick slots.
+	# Skill quick slots. Keep combat skills here; potion/AUTO already have
+	# dedicated controls elsewhere in the HUD.
 	var skill_panel: PanelContainer = PanelContainer.new()
 	skill_panel.add_theme_stylebox_override("panel", _panel_style(0.86, 5))
 	skill_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(skill_panel, 446.0, 637.0, 790.0, 716.0)
+	_place(skill_panel, 446.0, 637.0, 892.0, 716.0)
 	v20_layer.add_child(skill_panel)
 	var skills: HBoxContainer = HBoxContainer.new()
 	skills.add_theme_constant_override("separation", 5)
 	skill_panel.add_child(skills)
 	var skill_defs: Array = [
-		["res://assets/ui/skill.png", "1"],
-		["res://assets/ui/fire.png", "2"],
-		["res://assets/ui/heal.png", "3"],
-		["res://assets/ui/energy.png", "4"],
-		["res://assets/ui/wind.png", "5"],
-		["res://assets/ui/rune.png", "6"]
+		["res://assets/ui/attack.png", "공격", "attack"],
+		["res://assets/ui/fire.png", "출혈", "bleed"],
+		["res://assets/ui/energy.png", "스턴", "stun"],
+		["res://assets/ui/rune.png", "독", "poison"],
+		["res://assets/ui/wind.png", "침묵", "silence"],
+		["res://assets/ui/heal.png", "홀드", "hold"],
+		["res://assets/ui/eye.png", "공포", "fear"],
+		["res://assets/ui/skill.png", "마법", "magic"]
 	]
-	for skill_index: int in range(skill_defs.size()):
-		var data: Array = skill_defs[skill_index] as Array
+	for skill_data: Array in skill_defs:
 		var slot: Button = Button.new()
+		var skill_id: String = str(skill_data[2])
 		slot.custom_minimum_size = Vector2(50.0, 66.0)
-		slot.text = str(data[1])
-		slot.icon = _load_texture(str(data[0]))
+		slot.text = str(skill_data[1])
+		slot.tooltip_text = str(skill_data[1])
+		slot.icon = _load_texture(str(skill_data[0]))
 		slot.expand_icon = true
 		slot.add_theme_font_size_override("font_size", 10)
 		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
 		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		if skill_index == 0:
-			slot.pressed.connect(func() -> void: attack_pressed.emit())
-		elif skill_index == 1:
-			slot.pressed.connect(func() -> void: bleed_skill_pressed.emit())
-		elif skill_index == 2:
-			slot.pressed.connect(func() -> void: potion_pressed.emit())
-		elif skill_index == 3:
-			slot.pressed.connect(func() -> void: auto_pressed.emit())
-		else:
-			slot.pressed.connect(func() -> void: show_message("스킬 슬롯 사용"))
+		slot.pressed.connect(func() -> void: combat_skill_pressed.emit(skill_id))
 		skills.add_child(slot)
 
 	# Consumable quick slots bottom-right.
