@@ -2,7 +2,7 @@ extends CharacterBody2D
 class_name TwilightMonster
 
 signal died(monster: TwilightMonster)
-signal player_hit(attacker: TwilightMonster, damage: int)
+signal player_hit(attacker: TwilightMonster, damage: int, attack_type: String)
 signal selected(monster: TwilightMonster)
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -18,6 +18,8 @@ var hp: int = 100
 var max_hp: int = 100
 var attack_power: int = 8
 var melee_accuracy: int = 12
+var ranged_accuracy: int = 12
+var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
 var gold_reward: int = 40
@@ -42,7 +44,11 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	hp = max_hp
 	attack_power = maxi(3, int(record.get("atk", record.get("attack", record.get("공격력", 8)))))
 	var default_accuracy: int = monster_level + 10 + int(round(float(attack_power) * 0.25))
-	melee_accuracy = maxi(1, int(record.get("accuracy", record.get("hit", record.get("명중", default_accuracy)))))
+	melee_accuracy = maxi(1, int(record.get("melee_accuracy", record.get("accuracy", record.get("hit", record.get("명중", default_accuracy))))))
+	ranged_accuracy = maxi(1, int(record.get("ranged_accuracy", record.get("원거리 명중", melee_accuracy))))
+	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
+	if attack_type != "ranged":
+		attack_type = "melee"
 	exp_reward = maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
 	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
@@ -73,11 +79,12 @@ func _physics_process(delta: float) -> void:
 	var ui_visible: bool = distance <= 420.0
 	name_label.visible = ui_visible
 	hp_bar.visible = ui_visible
-	if distance <= 58.0:
+	var attack_range: float = 220.0 if attack_type == "ranged" else 58.0
+	if distance <= attack_range:
 		velocity = Vector2.ZERO
 		if attack_cooldown <= 0.0:
 			attack_cooldown = 1.25
-			player_hit.emit(self, attack_power)
+			player_hit.emit(self, attack_power, attack_type)
 		return
 	if distance > 760.0:
 		velocity = Vector2.ZERO
