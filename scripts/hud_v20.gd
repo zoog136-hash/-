@@ -532,8 +532,10 @@ func _build_v20_bottom_bar() -> void:
 		slot.add_theme_font_size_override("font_size", 10)
 		slot.add_theme_stylebox_override("normal", _button_style(0.92, 4))
 		slot.add_theme_stylebox_override("pressed", _button_style(1.0, 4))
-		if skill_index == 0 or skill_index == 1:
+		if skill_index == 0:
 			slot.pressed.connect(func() -> void: attack_pressed.emit())
+		elif skill_index == 1:
+			slot.pressed.connect(func() -> void: bleed_skill_pressed.emit())
 		elif skill_index == 2:
 			slot.pressed.connect(func() -> void: potion_pressed.emit())
 		elif skill_index == 3:
