@@ -26,7 +26,7 @@ func _run() -> void:
 			{"name":"HP 물약","grade":"일반","type":"소모품","slot":"consumable","desc":"HP 55 회복","heal":55,"weight":3}
 		]
 	}, {"아이템":{}})
-	ui.call("set_character_state", {"gold":2131928})
+	ui.call("set_character_state", {"gold":2131928, "equipped_items":{"weapon":{"name":"낡은 장검"}}})
 	ui.call("set_inventory", {"낡은 장검":1,"HP 물약":119})
 	ui.call("show_inventory")
 	await process_frame
@@ -43,6 +43,10 @@ func _run() -> void:
 		_fail("capacity indicator mismatch")
 	if gold == null or gold.text.find("2,131,928") < 0:
 		_fail("gold indicator mismatch")
+	var slot_buttons: Dictionary = ui.get("slot_buttons") as Dictionary
+	var sword_slot: Button = slot_buttons.get("낡은 장검") as Button
+	if sword_slot == null or not sword_slot.text.begins_with("E"):
+		_fail("equipped item is missing E marker")
 
 	ui.call("_select_item", "낡은 장검")
 	await process_frame
@@ -54,6 +58,16 @@ func _run() -> void:
 		_fail("weapon detail stats not shown")
 	if detail_text == null or detail_text.text.find("무게") < 0:
 		_fail("item weight not shown when present")
+	var detail_grade: Label = ui.get("detail_grade") as Label
+	if detail_grade == null or detail_grade.text.find("장착중") < 0:
+		_fail("equipped state not shown in detail panel")
+	var equipped_action: Button = ui.get("detail_action") as Button
+	if equipped_action == null or equipped_action.text != "장착 중":
+		_fail("equipped item action state mismatch")
+	var normal_color: Color = ui.call("_grade_color", "일반")
+	var unique_color: Color = ui.call("_grade_color", "유일")
+	if normal_color == unique_color:
+		_fail("grade colors are not differentiated")
 
 	ui.call("_activate_selected")
 	if activated_item != "낡은 장검":
