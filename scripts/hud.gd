@@ -990,7 +990,7 @@ func _emit_shop_buy(item_name: String, price: int) -> void:
 func open_skills() -> void:
 	_open_utility_panel("스킬")
 	var current_job: String = str(character_state.get("job_class", "기사"))
-	_utility_add_text("[font_size=22][b]%s 스킬[/b][/font_size]\n공용 스킬 + %s 전용 스킬만 표시합니다." % [current_job, current_job])
+	_utility_add_text("[font_size=22][b]%s 스킬[/b][/font_size]\n공용 스킬 + %s 전용 스킬만 표시합니다.\n패시브는 보유만으로 자동 적용되고, 액티브는 사용해야 발동합니다." % [current_job, current_job])
 	var visible_skills: Array = []
 	for value: Variant in job_skills:
 		if not (value is Dictionary):
@@ -1014,22 +1014,30 @@ func open_skills() -> void:
 		var type_text: String = str(skill.get("type", ""))
 		var mp_cost: int = int(skill.get("mp", 0))
 		var desc: String = str(skill.get("desc", ""))
+		var activation: String = str(skill.get("activation", "active")).to_lower()
+		var is_passive: bool = activation == "passive"
+		var activation_label: String = "패시브" if is_passive else "액티브"
 
 		var row: HBoxContainer = HBoxContainer.new()
 		row.add_theme_constant_override("separation", 6)
 		var button: Button = Button.new()
-		button.text = "[%s] %s · %s · MP %d\n%s" % [grade, skill_name, type_text, mp_cost, desc]
+		button.text = "[%s][%s] %s · %s · MP %d\n%s" % [grade, activation_label, skill_name, type_text, mp_cost, desc]
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.custom_minimum_size = Vector2(0, 60)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.pressed.connect(_emit_job_skill.bind(skill_name))
+		button.disabled = is_passive
+		button.tooltip_text = "보유 중 자동 적용" if is_passive else "눌러서 스킬 사용"
+		if not is_passive:
+			button.pressed.connect(_emit_job_skill.bind(skill_name))
 		row.add_child(button)
 
 		var quick_button: Button = Button.new()
-		quick_button.text = "Q등록"
+		quick_button.text = "상시" if is_passive else "Q등록"
 		quick_button.custom_minimum_size = Vector2(72, 60)
-		quick_button.tooltip_text = "스킬을 퀵슬롯에 등록"
-		quick_button.pressed.connect(_open_quickslot_picker.bind("skill", skill_name, skill_name))
+		quick_button.disabled = is_passive
+		quick_button.tooltip_text = "보유만으로 자동 적용되는 패시브" if is_passive else "스킬을 퀵슬롯에 등록"
+		if not is_passive:
+			quick_button.pressed.connect(_open_quickslot_picker.bind("skill", skill_name, skill_name))
 		row.add_child(quick_button)
 		utility_body.add_child(row)
 

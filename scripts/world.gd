@@ -2421,6 +2421,8 @@ func _quickbar_job_skills() -> Array:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
+		if _is_passive_skill(skill):
+			continue
 		var effect: String = str(skill.get("effect", ""))
 		if effect not in ["damage", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport"]:
 			continue
@@ -2492,6 +2494,9 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 		if skill.is_empty():
 			hud.show_message("등록할 스킬을 찾을 수 없습니다")
 			return
+		if _is_passive_skill(skill):
+			hud.show_message("%s은(는) 패시브 스킬이라 퀵슬롯 등록이 필요 없습니다" % entry_id)
+			return
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class != "공용" and skill_class != job_class:
 			hud.show_message("%s 직업에서는 사용할 수 없는 스킬입니다" % job_class)
@@ -2542,7 +2547,56 @@ func _on_self_mode_changed(enabled: bool) -> void:
 	_update_hud()
 	_save_game(true)
 
+func _skill_activation(skill: Dictionary) -> String:
+	var activation: String = str(skill.get("activation", "")).strip_edges().to_lower()
+	if activation == "passive" or activation == "active":
+		return activation
+	var effect: String = str(skill.get("effect", ""))
+	if str(skill.get("type", "")) == "버프" and int(skill.get("mp", 0)) == 0 and not skill.has("duration") and effect in ["atkBuff", "defBuff", "hpBuff", "speedBuff"]:
+		return "passive"
+	return "active"
+
+func _is_passive_skill(skill: Dictionary) -> bool:
+	return _skill_activation(skill) == "passive"
+
+func _skill_owned_for_current_job(skill: Dictionary) -> bool:
+	var skill_class: String = str(skill.get("class", "공용"))
+	return skill_class == "공용" or skill_class == job_class
+
+func _passive_skill_total(key: String) -> int:
+	var total: int = 0
+	for value: Variant in skills_db:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+			continue
+		total += int(skill.get(key, 0))
+	return total
+
+func _passive_skill_speed_multiplier() -> float:
+	var multiplier: float = 1.0
+	for value: Variant in skills_db:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+			continue
+		multiplier = maxf(multiplier, float(skill.get("speed", 1.0)))
+	return multiplier
+
+func _passive_skill_names() -> PackedStringArray:
+	var names: PackedStringArray = PackedStringArray()
+	for value: Variant in skills_db:
+		if value is Dictionary:
+			var skill: Dictionary = value as Dictionary
+			if _is_passive_skill(skill) and _skill_owned_for_current_job(skill):
+				names.append(str(skill.get("name", "")))
+	return names
+
 func _is_buff_skill(skill: Dictionary) -> bool:
+	if _is_passive_skill(skill):
+		return false
 	var effect: String = str(skill.get("effect", ""))
 	return effect in ["atkBuff", "defBuff", "hpBuff", "speedBuff"]
 
@@ -2587,6 +2641,9 @@ func _cast_job_skill(skill_name: String) -> void:
 	var skill: Dictionary = _skill_record(skill_name)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
+		return
+	if _is_passive_skill(skill):
+		hud.show_message("%s은(는) 패시브 스킬로 보유 중 자동 적용됩니다" % skill_name)
 		return
 	var skill_class: String = str(skill.get("class", "공용"))
 	if skill_class != "공용" and skill_class != job_class:
@@ -3268,6 +3325,7 @@ func _effective_move_speed_multiplier() -> float:
 	var multiplier: float = 1.0
 	for record: Dictionary in _all_equipped_records():
 		multiplier *= _record_move_speed_multiplier(record)
+	multiplier *= _passive_skill_speed_multiplier()
 	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
 	return clampf(multiplier, 0.5, 2.5)
 
@@ -3694,6 +3752,7 @@ func _character_stats_snapshot() -> Dictionary:
 		"weapon_ammo": _current_ammo_name(),
 		"weapon_ammo_count": int(inventory.get(_current_ammo_name(), 0)) if _current_ammo_name() != "" else -1,
 		"allowed_weapons": _job_weapon_text(job_class),
+		"passive_skills": _passive_skill_names(),
 		"shield_compatible": _current_weapon_supports_shield(),
 		"offhand_kind": _offhand_kind(equipped_items.get("offhand", {}) as Dictionary) if equipped_items.get("offhand", {}) is Dictionary else ""
 	}
@@ -3702,7 +3761,7 @@ func _effective_attack() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("atk", 0.0))
-	return attack_power + int(round(bonus)) + _equipment_enhancement_level("weapon") + _active_skill_buff_total("atk")
+	return attack_power + int(round(bonus)) + _equipment_enhancement_level("weapon") + _active_skill_buff_total("atk") + _passive_skill_total("atk")
 
 func _effective_defense() -> int:
 	var bonus: float = 0.0
@@ -3710,7 +3769,7 @@ func _effective_defense() -> int:
 		bonus += float(record.get("def", 0.0))
 	var armor_enhance: int = _equipment_enhancement_total(ARMOR_EQUIPMENT_SLOTS)
 	var accessory_enhance: int = int(floor(float(_equipment_enhancement_total(ACCESSORY_EQUIPMENT_SLOTS)) / 2.0))
-	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def")
+	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def")
 
 func _effective_max_hp() -> int:
 	var flat_bonus: float = 0.0
@@ -3720,6 +3779,7 @@ func _effective_max_hp() -> int:
 		percent_bonus += float(record.get("hpPct", 0.0))
 	flat_bonus += float(_equipment_enhancement_max(ACCESSORY_EQUIPMENT_SLOTS) * 20)
 	flat_bonus += float(_active_skill_buff_total("hp"))
+	flat_bonus += float(_passive_skill_total("hpFlat"))
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
