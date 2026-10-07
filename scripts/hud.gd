@@ -71,7 +71,10 @@ var item_grade_filter: String = "전체"
 const ITEM_SLOT_FILTERS: Array = [
 	["weapon", "무기"],
 	["armor", "방어구"],
-	["accessory", "악세사리"]
+	["accessory", "악세사리"],
+	["consumable", "소모품"],
+	["material", "재료"],
+	["other", "기타"]
 ]
 const ITEM_GRADE_ORDER: Array[String] = ["전체", "일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
 var character_panel: PanelContainer
@@ -413,7 +416,7 @@ func _refresh_catalog_list(filter_text: String) -> void:
 			continue
 		var record: Dictionary = value as Dictionary
 		if catalog_category == "아이템":
-			if str(record.get("slot", "")) != item_slot_filter:
+			if _item_filter_group(record) != item_slot_filter:
 				continue
 			if item_grade_filter != "전체" and str(record.get("grade", "")) != item_grade_filter:
 				continue
@@ -451,7 +454,7 @@ func _refresh_item_filter_controls() -> void:
 		if not (value is Dictionary):
 			continue
 		var record: Dictionary = value as Dictionary
-		if str(record.get("slot", "")) != item_slot_filter:
+		if _item_filter_group(record) != item_slot_filter:
 			continue
 		available_grades[str(record.get("grade", ""))] = true
 
@@ -850,6 +853,36 @@ func _equipped_detail(value: Variant) -> String:
 	if hp_value != 0:
 		parts.append("HP %+d" % hp_value)
 	return " · ".join(parts)
+
+func _item_filter_group(record: Dictionary) -> String:
+	var slot: String = str(record.get("slot", "")).strip_edges().to_lower()
+	var item_type: String = str(record.get("type", "")).strip_edges()
+	var item_name: String = str(record.get("name", "")).strip_edges()
+
+	if slot == "weapon" or slot == "armor" or slot == "accessory":
+		return slot
+	if slot == "consumable":
+		return "consumable"
+	if slot == "material":
+		if item_type == "이동주문서":
+			return "consumable"
+		if item_type in ["재료", "지배석", "마안", "성배"]:
+			return "material"
+		if item_type == "상자":
+			return "other"
+		# Future catalog imports sometimes normalize usable items as material.
+		if item_name.find("물약") >= 0 or item_name.find("이동 주문서") >= 0 or item_name.find("순간이동 주문서") >= 0:
+			return "consumable"
+		return "material"
+	if slot == "currency":
+		return "other"
+
+	# Fallbacks for future item sources that do not provide a normalized slot.
+	if item_type == "소모품" or item_type == "이동주문서":
+		return "consumable"
+	if item_type in ["재료", "지배석", "마안", "성배"]:
+		return "material"
+	return "other"
 
 func _item_slot_label(slot_id: String) -> String:
 	for slot_data: Array in ITEM_SLOT_FILTERS:
