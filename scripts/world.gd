@@ -395,9 +395,56 @@ func _player_magic_hit_chance(target: TwilightMonster) -> float:
 		return 0.05
 	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
 
+func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_duration: float = 3.0, skill_name: String = "사일런스") -> bool:
+	if player.is_stunned():
+		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if player.is_silenced():
+		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if target == null or not is_instance_valid(target) or target.dead:
+		hud.show_message("침묵 대상이 없습니다")
+		return false
+	if mp < mp_cost:
+		hud.show_message("MP가 부족합니다")
+		return false
+	if player.global_position.distance_to(target.global_position) > 320.0:
+		hud.show_message("사일런스 사거리 밖입니다")
+		return false
+	mp = maxi(0, mp - mp_cost)
+	selected_monster = target
+	player.pulse_attack()
+	var magic_hit_chance: float = _player_magic_hit_chance(target)
+	if rng.randf() >= magic_hit_chance:
+		target.show_miss()
+		hud.append_log("%s MISS · 마법 명중 %d / MR %d / %.1f%%" % [
+			skill_name, _magic_accuracy_stat(), target.magic_resistance, magic_hit_chance * 100.0
+		])
+		_update_hud()
+		_update_target_hud()
+		return false
+	var silence_chance: float = _player_silence_chance(target)
+	var silenced: bool = rng.randf() < silence_chance
+	if silenced:
+		target.apply_silence(silence_duration)
+		hud.append_log("%s 성공 · %s %.1f초 침묵 · 적중률 %.1f%%" % [
+			skill_name, target.monster_name, silence_duration, silence_chance * 100.0
+		])
+	else:
+		target.show_status_text("SILENCE RESIST")
+		hud.append_log("%s 실패 · 침묵 적중 %d / 내성 %d / %.1f%%" % [
+			skill_name, _silence_accuracy_stat(), target.silence_resistance, silence_chance * 100.0
+		])
+	_update_hud()
+	_update_target_hud()
+	return silenced
+
 func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 10, stun_duration: float = 2.0, skill_name: String = "쇼크 스턴") -> bool:
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if player.is_silenced():
+		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
 		return false
 	if target == null or not is_instance_valid(target) or target.dead:
 		hud.show_message("스턴 대상이 없습니다")
@@ -449,6 +496,9 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill_name: String = "마법") -> bool:
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 마법을 사용할 수 없습니다")
+		return false
+	if player.is_silenced():
+		hud.show_message("침묵 상태에서는 마법을 사용할 수 없습니다")
 		return false
 	if target == null or not is_instance_valid(target) or target.dead:
 		hud.show_message("마법 대상이 없습니다")
@@ -717,6 +767,23 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			player.show_status_text("STUN RESIST")
 			hud.append_log("%s 스턴 저항 성공 · 내성 %d · %.1f%%" % [
 				attacker.monster_name, _stun_resistance_stat(), stun_chance * 100.0
+			])
+	if hp > 0 and attacker.silence_duration > 0.0 and attacker.silence_accuracy > 0:
+		var silence_chance: float = _status_effect_chance(
+			attacker.silence_accuracy,
+			attacker.monster_level,
+			_silence_resistance_stat(),
+			level
+		)
+		if rng.randf() < silence_chance:
+			player.apply_silence(attacker.silence_duration)
+			hud.append_log("%s 침묵 적중 · %.1f초 · 내 침묵 내성 %d · %.1f%%" % [
+				attacker.monster_name, attacker.silence_duration, _silence_resistance_stat(), silence_chance * 100.0
+			])
+		else:
+			player.show_status_text("SILENCE RESIST")
+			hud.append_log("%s 침묵 저항 성공 · 내성 %d · %.1f%%" % [
+				attacker.monster_name, _silence_resistance_stat(), silence_chance * 100.0
 			])
 	if hp <= 0:
 		hp = _effective_max_hp()
@@ -1154,6 +1221,40 @@ func _stun_resistance_stat() -> int:
 		total += _record_stun_resistance(record)
 	return clampi(total, 0, 100)
 
+func _record_silence_accuracy(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"silence_accuracy",
+		record.get("silenceAccuracy", record.get("침묵 적중", record.get("사일런스 적중", 0)))
+	)))
+
+func _record_silence_resistance(record: Dictionary) -> int:
+	return maxi(0, int(record.get(
+		"silence_resistance",
+		record.get("silenceResistance", record.get("silence_resist", record.get("침묵 내성", record.get("사일런스 내성", 0))))
+	)))
+
+func _silence_accuracy_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_silence_accuracy(record)
+	return clampi(total, 0, 100)
+
+func _silence_resistance_stat() -> int:
+	var total: int = 5 + _stat_step_bonus(wis_stat, 10, 3.0)
+	for record: Dictionary in _all_equipped_records():
+		total += _record_silence_resistance(record)
+	return clampi(total, 0, 100)
+
+func _player_silence_chance(target: TwilightMonster) -> float:
+	if target == null:
+		return 0.05
+	return _status_effect_chance(
+		_silence_accuracy_stat(),
+		level,
+		target.silence_resistance,
+		target.monster_level
+	)
+
 func _status_effect_chance(attacker_accuracy: int, attacker_level: int, defender_resistance: int, defender_level: int) -> float:
 	var chance_percent: float = 50.0 + float(attacker_accuracy - defender_resistance)
 	chance_percent += float(attacker_level - defender_level) * 0.5
@@ -1271,6 +1372,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"critical_resistance": _critical_resistance_stat(),
 		"stun_accuracy": _stun_accuracy_stat(),
 		"stun_resistance": _stun_resistance_stat(),
+		"silence_accuracy": _silence_accuracy_stat(),
+		"silence_resistance": _silence_resistance_stat(),
 		"ac": _effective_ac(),
 		"dg": _effective_dg(),
 		"er": _effective_er(),
