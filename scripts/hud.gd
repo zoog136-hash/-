@@ -105,7 +105,7 @@ var job_class_buttons: Dictionary = {}
 const CLASS_NAMES: Array[String] = ["전사", "마법사", "궁수", "암살자"]
 const EQUIPMENT_SLOT_DISPLAY: Array = [
 	["weapon","무기"], ["offhand","보조무기"], ["helmet","투구"], ["tshirt","티셔츠"],
-	["body","갑옷"], ["pants","하의"], ["cloak","망토"], ["belt","벨트"],
+	["body","갑옷"], ["pants","하의"], ["cloak","망토"], ["shoulder","견갑"], ["belt","벨트"],
 	["earring1","귀걸이1"], ["earring2","귀걸이2"], ["ring1","반지1"], ["ring2","반지2"],
 	["seal1","인장1"], ["seal2","인장2"], ["gaiters","각반"], ["boots","신발"],
 	["gloves","장갑"], ["bracelet","팔찌"], ["necklace","목걸이"], ["badge","휘장"],
@@ -1185,9 +1185,11 @@ func _item_filter_group(record: Dictionary) -> String:
 	var item_type: String = str(record.get("type", "")).strip_edges()
 	var item_name: String = str(record.get("name", "")).strip_edges()
 
-	if slot == "weapon" or slot == "armor" or slot == "accessory":
-		return slot
-	if slot in ["earring", "belt", "bracelet", "badge", "seal", "crystal", "catalyst", "rune", "necklace"]:
+	if slot == "weapon":
+		return "weapon"
+	if slot in ["offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "gaiters", "gloves", "boots", "armor"]:
+		return "armor"
+	if slot in ["earring", "ring", "belt", "bracelet", "badge", "seal", "crystal", "catalyst", "rune", "necklace", "accessory"]:
 		return "accessory"
 	if slot == "consumable":
 		return "consumable"

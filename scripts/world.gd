@@ -97,12 +97,12 @@ const WEAPON_BASE_ATTACK_SPEED: Dictionary = {
 
 const SHIELD_COMPATIBLE_WEAPONS: Array[String] = ["단검", "한손검", "지팡이", "마검"]
 const EQUIPMENT_SLOT_ORDER: Array[String] = [
-	"weapon", "offhand", "helmet", "tshirt", "body", "pants", "cloak", "belt",
+	"weapon", "offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "belt",
 	"earring1", "earring2", "ring1", "ring2", "seal1", "seal2", "gaiters",
 	"boots", "gloves", "bracelet", "necklace", "badge", "crystal", "catalyst", "rune"
 ]
 const ARMOR_EQUIPMENT_SLOTS: Array[String] = [
-	"offhand", "helmet", "tshirt", "body", "pants", "cloak", "gaiters", "boots", "gloves"
+	"offhand", "helmet", "tshirt", "body", "pants", "cloak", "shoulder", "gaiters", "boots", "gloves"
 ]
 const ACCESSORY_EQUIPMENT_SLOTS: Array[String] = [
 	"belt", "earring1", "earring2", "ring1", "ring2", "seal1", "seal2",
@@ -110,7 +110,7 @@ const ACCESSORY_EQUIPMENT_SLOTS: Array[String] = [
 ]
 const EQUIPMENT_SLOT_LABELS: Dictionary = {
 	"weapon":"무기", "offhand":"보조무기", "helmet":"투구", "tshirt":"티셔츠", "body":"갑옷",
-	"pants":"하의", "cloak":"망토", "belt":"벨트", "earring1":"귀걸이1", "earring2":"귀걸이2",
+	"pants":"하의", "cloak":"망토", "shoulder":"견갑", "belt":"벨트", "earring1":"귀걸이1", "earring2":"귀걸이2",
 	"ring1":"반지1", "ring2":"반지2", "seal1":"인장1", "seal2":"인장2", "gaiters":"각반",
 	"boots":"신발", "gloves":"장갑", "bracelet":"팔찌", "necklace":"목걸이", "badge":"휘장",
 	"crystal":"수정", "catalyst":"카탈리스트", "rune":"룬"
@@ -1563,6 +1563,18 @@ func _on_inventory_item_activated(item_name: String) -> void:
 	var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name))
 	hud.call("open_enhancement", item_name, candidates)
 
+func _enhancement_kind_for_record(record: Dictionary) -> String:
+	if record.is_empty():
+		return ""
+	var base_slot: String = _equipment_slot_base(record)
+	if base_slot == "weapon":
+		return "weapon"
+	if ARMOR_EQUIPMENT_SLOTS.has(base_slot):
+		return "armor"
+	if ACCESSORY_EQUIPMENT_SLOTS.has(base_slot) or base_slot in ["ring", "earring", "seal"]:
+		return "accessory"
+	return ""
+
 func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 	var result: Array = []
 	var names: Array = inventory.keys()
@@ -1572,7 +1584,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 		if int(inventory.get(item_name, 0)) <= 0:
 			continue
 		var record: Dictionary = _find_catalog_item_record(item_name)
-		if record.is_empty() or str(record.get("slot", "")) != kind:
+		if record.is_empty() or _enhancement_kind_for_record(record) != kind:
 			continue
 		var level_value: int = int(enhancement_levels.get(item_name, 0))
 		if not _enhancement_level_allowed(kind, mode, level_value):
@@ -1762,7 +1774,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		return
 
 	var target_record: Dictionary = _find_catalog_item_record(target_name)
-	if target_record.is_empty() or str(target_record.get("slot", "")) != kind:
+	if target_record.is_empty() or _enhancement_kind_for_record(target_record) != kind:
 		hud.show_message("이 주문서로 강화할 수 없는 장비입니다")
 		return
 
@@ -2779,6 +2791,8 @@ func _equipment_slot_base(record: Dictionary) -> String:
 			return "pants"
 		"망토":
 			return "cloak"
+		"견갑":
+			return "shoulder"
 		"벨트":
 			return "belt"
 		"귀걸이":
@@ -2806,6 +2820,17 @@ func _equipment_slot_base(record: Dictionary) -> String:
 		"룬":
 			return "rune"
 	match source_slot:
+		"offhand": return "offhand"
+		"helmet": return "helmet"
+		"tshirt": return "tshirt"
+		"body": return "body"
+		"pants": return "pants"
+		"cloak": return "cloak"
+		"shoulder": return "shoulder"
+		"gaiters": return "gaiters"
+		"boots": return "boots"
+		"gloves": return "gloves"
+		"ring": return "ring"
 		"earring": return "earring"
 		"belt": return "belt"
 		"bracelet": return "bracelet"

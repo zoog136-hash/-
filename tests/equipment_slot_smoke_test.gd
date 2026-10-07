@@ -21,7 +21,7 @@ func _run() -> void:
 	await process_frame
 
 	var type_expect: Dictionary = {
-		"투구":"helmet", "티셔츠":"tshirt", "갑옷":"body", "하의":"pants", "망토":"cloak",
+		"투구":"helmet", "티셔츠":"tshirt", "갑옷":"body", "하의":"pants", "망토":"cloak", "견갑":"shoulder",
 		"벨트":"belt", "각반":"gaiters", "신발":"boots", "장갑":"gloves", "팔찌":"bracelet",
 		"목걸이":"necklace", "휘장":"badge", "수정":"crystal", "카탈리스트":"catalyst",
 		"룬":"rune", "방패":"offhand", "가더":"offhand"
@@ -33,7 +33,7 @@ func _run() -> void:
 			_fail("%s expected %s, got %s" % [str(item_type), str(type_expect[item_type]), actual])
 
 	var equipped: Dictionary = world.get("equipped_items") as Dictionary
-	for required_slot: String in ["weapon","offhand","helmet","tshirt","body","pants","cloak","belt","earring1","earring2","ring1","ring2","seal1","seal2","gaiters","boots","gloves","bracelet","necklace","badge","crystal","catalyst","rune"]:
+	for required_slot: String in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","belt","earring1","earring2","ring1","ring2","seal1","seal2","gaiters","boots","gloves","bracelet","necklace","badge","crystal","catalyst","rune"]:
 		if not equipped.has(required_slot):
 			_fail("missing equipment slot: " + required_slot)
 
