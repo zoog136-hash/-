@@ -115,6 +115,14 @@ func _run() -> void:
 	if not pruned_buffs.has("실드"):
 		_fail("valid common active buff was incorrectly removed")
 
+	# Restored active speed buffs must re-apply their runtime multiplier after load.
+	world.set("active_skill_buffs", {"헤이스트":{"remaining":120.0,"speed":1.15}})
+	var player_node: Node = world.get("player") as Node
+	player_node.call("set_skill_speed_multiplier", 1.0)
+	player_node.call("set_skill_speed_multiplier", float(world.call("_active_skill_speed_multiplier")))
+	if abs(float(player_node.get("skill_speed_multiplier")) - 1.15) > 0.001:
+		_fail("restored active speed buff did not reapply player speed multiplier")
+
 	# Active skill buffs must be serializable alongside item buffs instead of silently disappearing.
 	var serialized: String = JSON.stringify({"active_skill_buffs":pruned_buffs})
 	var parsed_value: Variant = JSON.parse_string(serialized)

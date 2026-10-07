@@ -2253,6 +2253,7 @@ func _load_game(quiet: bool) -> void:
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
+	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	hp = clampi(hp, 0, _effective_max_hp())
 	mp = clampi(mp, 0, max_mp)
 	var map_id: String = str(data.get("map_id", active_map_id))
