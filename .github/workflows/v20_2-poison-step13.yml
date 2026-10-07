@@ -1,0 +1,270 @@
+name: V20.2 Poison Step13 Test
+
+on:
+  push:
+    branches: [v20-2-poison-step13]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-poison-step13
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create poison test
+        shell: bash
+        run: |
+          cat > test_poison_step13.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.level = 35
+              world.int_stat = 16
+              world.con_stat = 16
+
+              check(world._poison_accuracy_stat() == 7, "base poison accuracy")
+              check(world._poison_resistance_stat() == 7, "base poison resistance")
+
+              world.equipped_items["weapon"] = {"poison_accuracy":8}
+              world.equipped_catalog["성물"] = {"독 적중":5}
+              world.equipped_items["armor"] = {"poison_resistance":6}
+              world.equipped_items["accessory"] = {"중독 내성":4}
+              check(world._poison_accuracy_stat() == 20, "poison accuracy stacks")
+              check(world._poison_resistance_stat() == 17, "poison resistance stacks")
+
+              var snapshot: Dictionary = world._character_stats_snapshot()
+              check(int(snapshot.get("poison_accuracy", -1)) == 20, "snapshot poison accuracy")
+              check(int(snapshot.get("poison_resistance", -1)) == 17, "snapshot poison resistance")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+
+              var monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(monster)
+              monster.setup({
+                  "name":"독 테스트","lv":20,"hp":1000,"atk":40,"def":5,"xp":10,"speed":60,
+                  "poison_accuracy":25,"poison_resistance":14,"poison_duration":6.0,
+                  "poison_tick_damage":9,"poison_tick_interval":1.0,"mr":0
+              }, world.player, world, null)
+              check(monster.poison_accuracy == 25, "monster poison accuracy")
+              check(monster.poison_resistance == 14, "monster poison resistance")
+              check(approx(monster.poison_duration, 6.0), "monster poison duration")
+              check(monster.poison_tick_damage == 9, "monster poison tick damage")
+              check(approx(monster.poison_tick_interval, 1.0), "monster poison interval")
+
+              # Direct monster DOT.
+              monster.apply_poison(3.0, 12, 1.0)
+              check(monster.is_poisoned(), "monster enters poison")
+              var hp0: int = monster.hp
+              monster._tick_poison(0.5)
+              check(monster.hp == hp0, "no poison damage before interval")
+              monster._tick_poison(0.5)
+              check(monster.hp == hp0 - 12, "poison first tick")
+              monster._tick_poison(1.0)
+              check(monster.hp == hp0 - 24, "poison second tick")
+
+              # Reapplication keeps stronger damage and refreshes duration.
+              monster.apply_poison(5.0, 20, 1.0)
+              check(monster.poison_tick_damage == 20, "stronger poison replaces tick damage")
+              check(monster.poison_remaining >= 5.0 - 0.001, "poison duration refreshes")
+
+              # Poison can kill a monster and emits died.
+              var death_state: Dictionary = {"count":0}
+              var doomed: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(doomed)
+              doomed.setup({"name":"중독 사망","lv":1,"hp":20,"atk":1,"def":0,"xp":1}, world.player, world, null)
+              doomed.died.connect(func(_m: TwilightMonster) -> void:
+                  death_state["count"] = int(death_state["count"]) + 1
+              )
+              doomed.apply_poison(2.0, 25, 1.0)
+              doomed._tick_poison(1.0)
+              check(doomed.dead, "poison can kill monster")
+              check(int(death_state["count"]) == 1, "poison death emits died")
+
+              # Actual Poison cast.
+              world.level = 100
+              world.int_stat = 50
+              world.mp = 1000
+              world.equipped_items = {
+                  "weapon":{"poison_accuracy":100},
+                  "armor":{},
+                  "accessory":{}
+              }
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.player.global_position = Vector2.ZERO
+              monster.global_position = Vector2(100, 0)
+              monster.monster_level = 1
+              monster.magic_resistance = 0
+              monster.poison_resistance = 0
+              monster.clear_poison()
+              monster.hp = 1000
+              monster.max_hp = 1000
+              check(approx(world._player_poison_chance(monster), 0.95), "player poison chance cap")
+              var poison_success: bool = false
+              for seed_value: int in range(1, 80):
+                  world.rng.seed = seed_value
+                  world.mp = 1000
+                  monster.clear_poison()
+                  if world._cast_poison_skill(monster, 6, 6.0, 12, 1.0, "포이즌"):
+                      poison_success = true
+                      break
+              check(poison_success, "Poison skill can succeed")
+              check(monster.is_poisoned(), "Poison applies to monster")
+              check(world.mp == 994, "Poison consumes MP")
+              var cast_hp: int = monster.hp
+              monster._tick_poison(1.0)
+              check(monster.hp == cast_hp - 12, "cast poison deals DOT")
+
+              # Player poison signal reduces world HP.
+              world.hp = 500
+              world.max_hp = 500
+              world.player.clear_poison()
+              world.player.apply_poison(3.0, 15, 1.0)
+              check(world.player.is_poisoned(), "player enters poison")
+              var player_hp0: int = world.hp
+              world.player._tick_poison(1.0)
+              check(world.hp == player_hp0 - 15, "player poison signal damages world HP")
+
+              # Poison does not block actions.
+              world.player.global_position = Vector2.ZERO
+              monster.global_position = Vector2(50, 0)
+              monster.dead = false
+              monster.hp = 1000
+              monster.armor_class = -1
+              world.level = 200
+              world.str_stat = 50
+              world.selected_monster = monster
+              world.rng.seed = 1
+              var action_hp: int = monster.hp
+              world._attack()
+              check(monster.hp < action_hp, "poison does not block normal attack")
+
+              # Incoming monster poison after confirmed hit.
+              world.player.clear_poison()
+              world.hp = 5000
+              world.max_hp = 5000
+              world.level = 1
+              world.con_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.monster_level = 100
+              monster.melee_accuracy = 999
+              monster.melee_critical_rate = 0
+              monster.stun_duration = 0.0
+              monster.silence_duration = 0.0
+              monster.hold_duration = 0.0
+              monster.fear_duration = 0.0
+              monster.poison_accuracy = 100
+              monster.poison_duration = 3.0
+              monster.poison_tick_damage = 17
+              monster.poison_tick_interval = 1.0
+              var incoming_success: bool = false
+              for seed_value: int in range(1, 100):
+                  world.player.clear_poison()
+                  world.hp = 5000
+                  world.rng.seed = seed_value
+                  world._on_player_hit(monster, 10, "melee")
+                  if world.player.is_poisoned():
+                      incoming_success = true
+                      break
+              check(incoming_success, "monster poison can affect player")
+              check(world.player.poison_tick_damage == 17, "incoming poison damage stored")
+              var before_incoming_tick: int = world.hp
+              world.player._tick_poison(1.0)
+              check(world.hp == before_incoming_tick - 17, "incoming poison ticks damage")
+
+              # Poison death respawns and clears poison.
+              world.hp = 5
+              world.max_hp = 500
+              world.player.clear_poison()
+              world.player.apply_poison(2.0, 20, 1.0)
+              world.player._tick_poison(1.0)
+              check(world.hp == world._effective_max_hp(), "poison death respawns at full HP")
+              check(not world.player.is_poisoned(), "poison clears on death")
+
+              # High poison resistance floors chance.
+              world.equipped_items["armor"] = {"poison_resistance":100}
+              monster.poison_accuracy = 5
+              check(approx(
+                  world._status_effect_chance(monster.poison_accuracy, monster.monster_level, world._poison_resistance_stat(), world.level),
+                  0.05
+              ), "high poison resistance reaches floor")
+
+              # Regression.
+              check(world._fear_accuracy_stat() >= 0, "fear preserved")
+              check(world._hold_accuracy_stat() >= 0, "hold preserved")
+              check(world._silence_accuracy_stat() >= 0, "silence preserved")
+              check(world._stun_accuracy_stat() >= 0, "stun preserved")
+              check(world._critical_damage(100) == 150, "critical preserved")
+              check(world._effective_mr() > 0, "MR preserved")
+
+              if failures.is_empty():
+                  print("V20.2 POISON STEP13 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run poison test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_poison_step13.gd 2>&1 | tee /tmp/poison.log
+          grep -q "V20.2 POISON STEP13 PASS" /tmp/poison.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/poison.log; then
+            exit 1
+          fi
