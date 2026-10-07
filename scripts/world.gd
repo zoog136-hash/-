@@ -168,6 +168,7 @@ func _connect_signals() -> void:
 	hud.catalog_equip_requested.connect(_equip_catalog)
 	hud.class_selected.connect(_on_class_selected)
 	hud.stat_increase_requested.connect(_on_stat_increase_requested)
+	hud.shop_buy_requested.connect(_buy_shop_item)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
 	if not maps_by_id.has(map_id):
@@ -1242,12 +1243,9 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	_update_hud()
 
 func _stat_points_for_level_up(new_level: int) -> int:
-	# Provisional Lineage-style growth rule, isolated for later balance changes.
-	if new_level > 50:
-		return 1
-	if new_level >= 5 and new_level % 5 == 0:
-		return 1
-	return 0
+	# Every level-up grants one allocatable point so the stat-growth screen is
+	# immediately useful and predictable in the offline RPG.
+	return 1 if new_level >= 2 else 0
 
 func _on_stat_increase_requested(stat_name: String) -> void:
 	if stat_points <= 0:
@@ -1275,6 +1273,7 @@ func _on_stat_increase_requested(stat_name: String) -> void:
 	_save_game(true)
 
 func _check_level_up() -> void:
+	var gained_stat_points: bool = false
 	while experience >= exp_need:
 		experience -= exp_need
 		level += 1
@@ -1288,10 +1287,14 @@ func _check_level_up() -> void:
 		var awarded_points: int = _stat_points_for_level_up(level)
 		stat_points += awarded_points
 		if awarded_points > 0:
+			gained_stat_points = true
 			hud.show_message("레벨 업! Lv.%d · 스탯 포인트 +%d" % [level, awarded_points])
 			hud.append_log("Lv.%d 달성 · 스탯 포인트 +%d" % [level, awarded_points])
 		else:
 			hud.show_message("레벨 업! Lv.%d" % level)
+	if gained_stat_points:
+		_update_hud()
+		hud.call_deferred("open_character")
 
 func _select_nearest_target() -> void:
 	var target: TwilightMonster = _nearest_reachable_monster(600.0)
@@ -1300,6 +1303,23 @@ func _select_nearest_target() -> void:
 		return
 	_select_monster(target)
 	hud.show_message("대상 선택: %s" % target.monster_name)
+
+func _buy_shop_item(item_name: String, price: int) -> void:
+	var safe_price: int = maxi(0, price)
+	if safe_price <= 0:
+		return
+	if gold < safe_price:
+		hud.show_message("아데나가 부족합니다")
+		return
+	gold -= safe_price
+	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+	hud.refresh_inventory(inventory)
+	hud.show_message("%s 구매 · %d 아데나" % [item_name, safe_price])
+	hud.append_log("상점 구매 · %s (-%d)" % [item_name, safe_price])
+	_update_hud()
+	_save_game(true)
+	if hud.has_method("open_shop"):
+		hud.call("open_shop")
 
 func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
@@ -1373,6 +1393,9 @@ func _update_hud() -> void:
 	character_state["defense"] = _effective_defense()
 	character_state["equipped"] = equipped_catalog
 	character_state["equipped_items"] = equipped_items
+	character_state["gold"] = gold
+	character_state["quest_kills"] = quest_kills
+	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
 
 func _save_game(quiet: bool) -> void:
