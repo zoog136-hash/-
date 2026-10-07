@@ -19,6 +19,8 @@ signal load_pressed
 signal catalog_equip_requested(category: String, record: Dictionary)
 signal class_selected(index: int)
 signal stat_increase_requested(stat_name: String)
+signal job_class_selected(class_name: String)
+signal job_skill_pressed(skill_name: String)
 signal shop_buy_requested(item_name: String, price: int)
 signal inventory_item_activated(item_name: String)
 signal enhancement_requested(scroll_name: String, target_name: String)
@@ -92,6 +94,9 @@ var last_inventory_tap_ms: int = 0
 var enhancement_scroll_name: String = ""
 var enhancement_candidates: Array = []
 var enhancement_selected_index: int = -1
+var job_classes: Array = []
+var job_skills: Array = []
+var job_class_buttons: Dictionary = {}
 
 const CLASS_NAMES: Array[String] = ["전사", "마법사", "궁수", "암살자"]
 const CLASS_SHEETS: Array[String] = [
@@ -158,6 +163,61 @@ func set_character_state(value: Dictionary) -> void:
 	character_state = value
 	if character_panel != null and character_panel.visible:
 		_refresh_character_panel()
+
+func set_job_data(classes_value: Array, skills_value: Array) -> void:
+	job_classes = classes_value.duplicate(true)
+	job_skills = skills_value.duplicate(true)
+	_rebuild_job_class_buttons()
+
+func _rebuild_job_class_buttons() -> void:
+	if character_panel == null:
+		return
+	var grid: GridContainer = character_panel.find_child("JobClassGrid", true, false) as GridContainer
+	if grid == null:
+		return
+	_clear_children(grid)
+	job_class_buttons.clear()
+	for value: Variant in job_classes:
+		if not (value is Dictionary):
+			continue
+		var profile: Dictionary = value as Dictionary
+		var class_name: String = str(profile.get("name", ""))
+		if class_name == "":
+			continue
+		var button: Button = Button.new()
+		button.text = class_name
+		button.custom_minimum_size = Vector2(98, 36)
+		button.toggle_mode = true
+		button.tooltip_text = "%s · 주무기 %s · 주스탯 %s" % [
+			str(profile.get("role", "")),
+			str(profile.get("weapon", "")),
+			str(profile.get("primary_stat", ""))
+		]
+		button.pressed.connect(_emit_job_class.bind(class_name))
+		grid.add_child(button)
+		job_class_buttons[class_name] = button
+	_refresh_job_class_selection()
+
+func _refresh_job_class_selection() -> void:
+	var current_job: String = str(character_state.get("job_class", "기사"))
+	for key: Variant in job_class_buttons.keys():
+		var value: Variant = job_class_buttons.get(key)
+		if value is Button:
+			(value as Button).button_pressed = str(key) == current_job
+
+func _emit_job_class(class_name: String) -> void:
+	job_class_selected.emit(class_name)
+
+func _emit_job_skill(skill_name: String) -> void:
+	job_skill_pressed.emit(skill_name)
+
+func _job_profile(class_name: String) -> Dictionary:
+	for value: Variant in job_classes:
+		if value is Dictionary:
+			var profile: Dictionary = value as Dictionary
+			if str(profile.get("name", "")) == class_name:
+				return profile
+	return {}
 
 func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> void:
 	player_label.text = "황혼의 기사  Lv.%d" % level
@@ -682,15 +742,23 @@ func _build_character_panel() -> void:
 	character_preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	left.add_child(character_preview)
 
+	var job_title: Label = Label.new()
+	job_title.text = "신화 변신 기반 직업"
+	job_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	job_title.add_theme_font_size_override("font_size", 16)
+	left.add_child(job_title)
+
+	var class_scroll: ScrollContainer = ScrollContainer.new()
+	class_scroll.custom_minimum_size = Vector2(315, 166)
+	class_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	left.add_child(class_scroll)
 	var class_grid: GridContainer = GridContainer.new()
-	class_grid.columns = 2
-	left.add_child(class_grid)
-	for index: int in range(4):
-		var class_button: Button = Button.new()
-		class_button.text = CLASS_NAMES[index]
-		class_button.custom_minimum_size = Vector2(152, 42)
-		class_button.pressed.connect(_emit_class_selected.bind(index))
-		class_grid.add_child(class_button)
+	class_grid.name = "JobClassGrid"
+	class_grid.columns = 3
+	class_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	class_grid.add_theme_constant_override("h_separation", 4)
+	class_grid.add_theme_constant_override("v_separation", 4)
+	class_scroll.add_child(class_grid)
 
 	var stat_title: Label = Label.new()
 	stat_title.text = "스탯 포인트 투자"
@@ -875,7 +943,37 @@ func _emit_shop_buy(item_name: String, price: int) -> void:
 
 func open_skills() -> void:
 	_open_utility_panel("스킬")
-	_utility_add_text("[font_size=20][b]전투 스킬[/b][/font_size]\n\n공격 · 기본 근접 공격\n출혈 · 지속 출혈 피해\n스턴 · 일정 시간 행동 불가\n독 · 지속 독 피해\n침묵 · 마법 사용 방해\n홀드 · 이동 제한\n공포 · 강제 이탈\n마법 · 원거리 마법 공격\n\n하단 퀵슬롯에서 즉시 사용할 수 있습니다.")
+	var current_job: String = str(character_state.get("job_class", "기사"))
+	_utility_add_text("[font_size=22][b]%s 스킬[/b][/font_size]\n공용 스킬 + %s 전용 스킬만 표시합니다." % [current_job, current_job])
+	var visible_skills: Array = []
+	for value: Variant in job_skills:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		var skill_class: String = str(skill.get("class", "공용"))
+		if skill_class == "공용" or skill_class == current_job:
+			visible_skills.append(skill)
+	visible_skills.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var grade_order: Dictionary = {"일반":0, "고급":1, "희귀":2, "영웅":3, "전설":4, "신화":5}
+		var ag: int = int(grade_order.get(str(a.get("grade", "일반")), 0))
+		var bg: int = int(grade_order.get(str(b.get("grade", "일반")), 0))
+		if ag == bg:
+			return str(a.get("name", "")) < str(b.get("name", ""))
+		return ag < bg
+	)
+	for value: Variant in visible_skills:
+		var skill: Dictionary = value as Dictionary
+		var name: String = str(skill.get("name", "스킬"))
+		var grade: String = str(skill.get("grade", "일반"))
+		var type_text: String = str(skill.get("type", ""))
+		var mp_cost: int = int(skill.get("mp", 0))
+		var desc: String = str(skill.get("desc", ""))
+		var button: Button = Button.new()
+		button.text = "[%s] %s · %s · MP %d\n%s" % [grade, name, type_text, mp_cost, desc]
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		button.custom_minimum_size = Vector2(0, 60)
+		button.pressed.connect(_emit_job_skill.bind(name))
+		utility_body.add_child(button)
 
 func open_quest_info() -> void:
 	_open_utility_panel("퀘스트")
@@ -908,13 +1006,22 @@ func _refresh_character_panel() -> void:
 			var stat_button: Button = stat_button_value as Button
 			stat_button.disabled = available_points <= 0
 			stat_button.tooltip_text = "남은 스탯 포인트 %d" % available_points
-	var class_index: int = clampi(int(character_state.get("class_index", 0)), 0, 3)
-	var path: String = CLASS_SHEETS[class_index]
-	if ResourceLoader.exists(path):
-		var atlas: AtlasTexture = AtlasTexture.new()
-		atlas.atlas = load(path) as Texture2D
-		atlas.region = Rect2(0, 0, 148, 116)
-		character_preview.texture = atlas
+
+	var current_job: String = str(character_state.get("job_class", "기사"))
+	_refresh_job_class_selection()
+	var profile: Dictionary = _job_profile(current_job)
+	var portrait_path: String = str(profile.get("image_path", ""))
+	if portrait_path != "" and ResourceLoader.exists(portrait_path):
+		character_preview.texture = load(portrait_path) as Texture2D
+	else:
+		var class_index: int = clampi(int(character_state.get("class_index", 0)), 0, 3)
+		var fallback_path: String = CLASS_SHEETS[class_index]
+		if ResourceLoader.exists(fallback_path):
+			var atlas: AtlasTexture = AtlasTexture.new()
+			atlas.atlas = load(fallback_path) as Texture2D
+			atlas.region = Rect2(0, 0, 148, 116)
+			character_preview.texture = atlas
+
 	var equipped: Dictionary = character_state.get("equipped", {}) as Dictionary
 	var equipped_items: Dictionary = character_state.get("equipped_items", {}) as Dictionary
 	var transform_name: String = _equipped_name(equipped.get("변신", {}))
@@ -941,8 +1048,14 @@ func _refresh_character_panel() -> void:
 		int(character_state.get("poison_accuracy", 0)), int(character_state.get("poison_resistance", 0)),
 		int(character_state.get("bleed_accuracy", 0)), int(character_state.get("bleed_resistance", 0))
 	]
-	character_info.text = "[font_size=22][b]%s[/b][/font_size]\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
-		CLASS_NAMES[class_index], int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
+	var profile_text: String = "역할 %s · 주무기 %s · 주스탯 %s\n대표 신화 변신: %s" % [
+		str(profile.get("role", "")),
+		str(profile.get("weapon", "")),
+		str(profile.get("primary_stat", "")),
+		str(profile.get("transform_name", ""))
+	]
+	character_info.text = "[font_size=22][b]%s[/b][/font_size]\n%s\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
+		current_job, profile_text, int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
 		int(character_state.get("hp", 0)), int(character_state.get("max_hp", 0)),
 		int(character_state.get("mp", 0)), int(character_state.get("max_mp", 0)),
 		core_stats, combat_stats, transform_name, doll_name, relic_name, weapon_name, armor_name, accessory_name
