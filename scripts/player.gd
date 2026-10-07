@@ -4,6 +4,7 @@ class_name TwilightPlayer
 signal attack_requested
 signal auto_toggled(enabled: bool)
 signal poison_tick(damage: int)
+signal bleed_tick(damage: int)
 
 @export var move_speed: float = 210.0
 @export var click_move_speed: float = 225.0
@@ -41,6 +42,10 @@ var poison_remaining: float = 0.0
 var poison_tick_interval: float = 1.0
 var poison_tick_clock: float = 0.0
 var poison_tick_damage: int = 0
+var bleed_remaining: float = 0.0
+var bleed_tick_interval: float = 0.75
+var bleed_tick_clock: float = 0.0
+var bleed_tick_damage: int = 0
 var base_move_speed: float = 210.0
 
 func _ready() -> void:
@@ -59,6 +64,7 @@ func _physics_process(delta: float) -> void:
 	_tick_hold(delta)
 	_tick_fear(delta)
 	_tick_poison(delta)
+	_tick_bleed(delta)
 	if is_stunned():
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
@@ -352,6 +358,43 @@ func clear_poison() -> void:
 
 func show_poison_damage(amount: int) -> void:
 	_show_combat_text("POISON " + str(amount), Color(0.48, 0.92, 0.38, 1.0), Vector2(-54.0, -118.0))
+
+func _tick_bleed(delta: float) -> void:
+	if bleed_remaining <= 0.0 or bleed_tick_damage <= 0:
+		return
+	var active_delta: float = minf(delta, bleed_remaining)
+	bleed_remaining = maxf(0.0, bleed_remaining - delta)
+	bleed_tick_clock -= active_delta
+	while bleed_tick_clock <= 0.0 and bleed_tick_damage > 0:
+		bleed_tick.emit(bleed_tick_damage)
+		bleed_tick_clock += bleed_tick_interval
+	if bleed_remaining <= 0.0:
+		bleed_tick_clock = 0.0
+		bleed_tick_damage = 0
+
+func is_bleeding() -> bool:
+	return bleed_remaining > 0.0 and bleed_tick_damage > 0
+
+func apply_bleed(duration: float, damage: int, interval: float = 0.75) -> void:
+	var safe_duration: float = maxf(0.0, duration)
+	var safe_interval: float = maxf(0.1, interval)
+	var was_bleeding: bool = is_bleeding()
+	bleed_remaining = maxf(bleed_remaining, safe_duration)
+	bleed_tick_damage = maxi(bleed_tick_damage, maxi(1, damage))
+	bleed_tick_interval = safe_interval
+	if not was_bleeding or bleed_tick_clock <= 0.0:
+		bleed_tick_clock = safe_interval
+	else:
+		bleed_tick_clock = minf(bleed_tick_clock, safe_interval)
+	show_status_text("BLEED")
+
+func clear_bleed() -> void:
+	bleed_remaining = 0.0
+	bleed_tick_clock = 0.0
+	bleed_tick_damage = 0
+
+func show_bleed_damage(amount: int) -> void:
+	_show_combat_text("BLEED " + str(amount), Color(1.0, 0.30, 0.25, 1.0), Vector2(-50.0, -126.0))
 
 func _tick_fear(delta: float) -> void:
 	fear_remaining = maxf(0.0, fear_remaining - delta)
