@@ -40,9 +40,21 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --version
 
       - name: Import and parse project
+        shell: bash
         run: |
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee godot-parse.log
+          if grep -E "SCRIPT ERROR:|ERROR:" godot-parse.log; then
+            echo "Godot import/parse reported an error."
+            exit 1
+          fi
 
       - name: Boot main scene
+        shell: bash
         run: |
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 30
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 30 2>&1 | tee godot-boot.log
+          if grep -E "SCRIPT ERROR:|ERROR:" godot-boot.log; then
+            echo "Godot boot reported an error."
+            exit 1
+          fi
