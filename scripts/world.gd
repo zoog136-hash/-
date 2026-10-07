@@ -1922,7 +1922,7 @@ func _load_game(quiet: bool) -> void:
 func _build_job_classes() -> void:
 	job_classes.clear()
 	var transforms: Array = catalog_db.get("변신", []) as Array
-	for class_name: String in JOB_CLASS_ORDER:
+	for job_name: String in JOB_CLASS_ORDER:
 		var transform_record: Dictionary = {}
 		for value: Variant in transforms:
 			if not (value is Dictionary):
@@ -1931,19 +1931,19 @@ func _build_job_classes() -> void:
 			if str(record.get("grade", "")) != "신화":
 				continue
 			var transform_name: String = str(record.get("name", ""))
-			if transform_name.begins_with("신화-" + class_name):
+			if transform_name.begins_with("신화-" + job_name):
 				transform_record = record
 				break
 		if transform_record.is_empty():
 			continue
 		job_classes.append({
-			"name": class_name,
+			"name": job_name,
 			"transform_name": str(transform_record.get("name", "")),
 			"image_path": str(transform_record.get("image_path", "")),
 			"source_id": str(transform_record.get("sourceId", "")),
 			"weapon": _job_weapon_hint(transform_record),
-			"role": _job_role_from_skills(class_name),
-			"primary_stat": str(JOB_PRIMARY_STAT.get(class_name, ""))
+			"role": _job_role_from_skills(job_name),
+			"primary_stat": str(JOB_PRIMARY_STAT.get(job_name, ""))
 		})
 
 func _job_weapon_hint(transform_record: Dictionary) -> String:
@@ -1959,7 +1959,7 @@ func _job_weapon_hint(transform_record: Dictionary) -> String:
 			weapons.append(weapon_name)
 	return ", ".join(weapons) if not weapons.is_empty() else "공용"
 
-func _job_role_from_skills(class_name: String) -> String:
+func _job_role_from_skills(job_name: String) -> String:
 	var attack_count: int = 0
 	var heal_count: int = 0
 	var buff_count: int = 0
@@ -1967,7 +1967,7 @@ func _job_role_from_skills(class_name: String) -> String:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
-		if str(skill.get("class", "")) != class_name:
+		if str(skill.get("class", "")) != job_name:
 			continue
 		var effect: String = str(skill.get("effect", ""))
 		if effect == "damage":
@@ -1982,16 +1982,16 @@ func _job_role_from_skills(class_name: String) -> String:
 		return "전투 / 강화"
 	return "공격 / 전투"
 
-func _job_profile(class_name: String) -> Dictionary:
+func _job_profile(job_name: String) -> Dictionary:
 	for value: Variant in job_classes:
 		if value is Dictionary:
 			var profile: Dictionary = value as Dictionary
-			if str(profile.get("name", "")) == class_name:
+			if str(profile.get("name", "")) == job_name:
 				return profile
 	return {}
 
-func _job_transform_record(class_name: String) -> Dictionary:
-	var profile: Dictionary = _job_profile(class_name)
+func _job_transform_record(job_name: String) -> Dictionary:
+	var profile: Dictionary = _job_profile(job_name)
 	var target_name: String = str(profile.get("transform_name", ""))
 	if target_name == "":
 		return {}
@@ -2013,10 +2013,10 @@ func _ensure_job_class_visual() -> void:
 	equipped_catalog["변신"] = record.duplicate(true)
 	_apply_transform_visual(record)
 
-func _on_job_class_selected(class_name: String) -> void:
-	if not JOB_CLASS_ORDER.has(class_name):
+func _on_job_class_selected(job_name: String) -> void:
+	if not JOB_CLASS_ORDER.has(job_name):
 		return
-	job_class = class_name
+	job_class = job_name
 	var record: Dictionary = _job_transform_record(job_class)
 	if not record.is_empty():
 		equipped_catalog["변신"] = record.duplicate(true)
