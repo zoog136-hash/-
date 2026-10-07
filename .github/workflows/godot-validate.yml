@@ -231,13 +231,14 @@ jobs:
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-render"
           export LIBGL_ALWAYS_SOFTWARE=1
-          xvfb-run -a -s "-screen 0 1280x720x24" ./Godot_v4.7.2-stable_linux.x86_64 --path . --script res://tests/capture_regions.gd 2>&1 | tee godot-region-render.log
+          xvfb-run -a -s "-screen 0 1280x720x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee godot-region-render.log
           if grep -E "SCRIPT ERROR:|ERROR:" godot-region-render.log; then
             exit 1
           fi
           grep -q "REGION_CAPTURE_DIRECTORY" godot-region-render.log
 
       - name: Upload gameplay renders and validation logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: twilight-world-review-${{ github.sha }}

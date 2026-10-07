@@ -98,6 +98,11 @@ func _build_ground() -> void:
 	_select_layer("Ground")
 	_polygon(_box_points(field.bounds),int(field.data["background"].get("base_material",0)))
 	for surface: Dictionary in field.data.get("surfaces", []):
+		# Same world-space material is already visible through the wall complement.
+		# Redrawing every overlapping room/corridor costs fill rate without changing
+		# a single pixel. Keep explicit surfaces for distinct materials/tints only.
+		if int(surface.get("material",2)) == int(field.data["background"].get("base_material",0)) and not surface.has("tint"):
+			continue
 		var a: Array = surface["rect"]
 		var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
 		var poly: Polygon2D = _polygon(_box_points(box),int(surface.get("material",2)))
