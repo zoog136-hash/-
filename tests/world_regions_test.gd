@@ -72,7 +72,7 @@ func _run() -> void:
 				check(field.line_clear(route[i],route[i+1]),id+" path respects walls and water")
 		for portal: Dictionary in field.data["portal"]:
 			var p: Vector2 = COORD.array_vector(portal["position"])
-			check(field.walkable(p) and field.point_clear(p),id+" portal has clear visible footprint")
+			check(field.walkable(p) and field.point_clear(p),id+" portal "+str(portal["id"])+" has clear visible footprint")
 			check(not field.path(spawn,p).is_empty(),id+" portal accessible from entry")
 			check(world.maps_by_id.has(str(portal["target_map"])),id+" portal target map exists")
 		# Actual physics queries, not only AStar point flags.

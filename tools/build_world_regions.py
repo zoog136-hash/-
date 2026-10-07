@@ -149,7 +149,7 @@ class Region:
         ]
         midway=self.d['route_checks'][len(self.d['route_checks'])//2]
         portals += [
-            {'id':'advance_waystone','name':'중앙 이동석','position':[spawn[0]+256,spawn[1]-224],
+            {'id':'advance_waystone','name':'중앙 이동석','position':[spawn[0]+384,spawn[1]-64],
              'target_map':self.d['map_id'],'target_position':midway,'radius':56},
             {'id':'entry_waystone','name':'입구 이동석','position':[midway[0]-256,midway[1]+160],
              'target_map':self.d['map_id'],'target_position':spawn,'radius':56},
