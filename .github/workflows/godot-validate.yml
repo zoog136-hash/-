@@ -103,3 +103,14 @@ jobs:
             exit 1
           fi
           grep -q "WEAPON_RULE_SMOKE_OK" godot-weapon-rules-smoke.log
+
+      - name: Shield compatibility smoke test
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/shield_rules_smoke_test.gd 2>&1 | tee godot-shield-rules-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|SHIELD RULE FAIL:|SHIELD_RULE_SMOKE_FAILED" godot-shield-rules-smoke.log; then
+            echo "Shield compatibility smoke test reported an error."
+            exit 1
+          fi
+          grep -q "SHIELD_RULE_SMOKE_OK" godot-shield-rules-smoke.log

@@ -1079,6 +1079,7 @@ func _refresh_character_panel() -> void:
 	var relic_name: String = _equipped_name(equipped.get("성물", {}))
 	var weapon_name: String = _equipped_detail(equipped_items.get("weapon", {}))
 	var armor_name: String = _equipped_detail(equipped_items.get("armor", {}))
+	var shield_name: String = _equipped_detail(equipped_items.get("shield", {}))
 	var accessory_name: String = _equipped_detail(equipped_items.get("accessory", {}))
 	var core_stats: String = "STR %d   DEX %d   CON %d\nINT %d   WIS %d   CHA %d" % [
 		int(character_state.get("str", 0)), int(character_state.get("dex", 0)), int(character_state.get("con", 0)),
@@ -1110,18 +1111,19 @@ func _refresh_character_panel() -> void:
 		float(character_state.get("weapon_attack_speed", 0.0)),
 		ammo_text
 	]
-	var profile_text: String = "역할 %s · 착용가능 %s · 주스탯 %s\n대표 신화 변신: %s\n현재 무기규칙: %s" % [
+	var shield_rule_text: String = "방패 착용 %s" % ("가능" if bool(character_state.get("shield_compatible", true)) else "불가")
+	var profile_text: String = "역할 %s · 착용가능 %s · 주스탯 %s\n대표 신화 변신: %s\n현재 무기규칙: %s · %s" % [
 		str(profile.get("role", "")),
 		str(character_state.get("allowed_weapons", profile.get("weapon", ""))),
 		str(profile.get("primary_stat", "")),
 		str(profile.get("transform_name", "")),
-		weapon_rule_text
+		weapon_rule_text, shield_rule_text
 	]
-	character_info.text = "[font_size=22][b]%s[/b][/font_size]\n%s\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n장신구: %s" % [
+	character_info.text = "[font_size=22][b]%s[/b][/font_size]\n%s\nLv.%d   [color=#f2c66d]남은 스탯 %d[/color]\n\nHP %d / %d   MP %d / %d\n\n[b]기본 스테이터스[/b]\n%s\n\n[b]전투 스테이터스[/b]\n%s\n\n[b]현재 장착[/b]\n변신: %s\n마법인형: %s\n성물: %s\n무기: %s\n방어구: %s\n방패/가더: %s\n장신구: %s" % [
 		current_job, profile_text, int(character_state.get("level", 1)), int(character_state.get("stat_points", 0)),
 		int(character_state.get("hp", 0)), int(character_state.get("max_hp", 0)),
 		int(character_state.get("mp", 0)), int(character_state.get("max_mp", 0)),
-		core_stats, combat_stats, transform_name, doll_name, relic_name, weapon_name, armor_name, accessory_name
+		core_stats, combat_stats, transform_name, doll_name, relic_name, weapon_name, armor_name, shield_name, accessory_name
 	]
 
 func _equipped_name(value: Variant) -> String:

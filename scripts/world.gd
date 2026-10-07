@@ -36,7 +36,7 @@ var catalog_db: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
-var equipped_items: Dictionary = {"weapon": {}, "armor": {}, "accessory": {}}
+var equipped_items: Dictionary = {"weapon": {}, "armor": {}, "shield": {}, "accessory": {}}
 var enhancement_levels: Dictionary = {}
 var class_index: int = 0
 var companion_velocity: Vector2 = Vector2.ZERO
@@ -89,6 +89,8 @@ const WEAPON_BASE_ATTACK_SPEED: Dictionary = {
 	"사이드":20.0, "체인소드":18.0, "마검":21.0, "건틀렛":24.0,
 	"활":24.0, "라이플":18.0, "핸드캐넌":10.0
 }
+
+const SHIELD_COMPATIBLE_WEAPONS: Array[String] = ["단검", "한손검", "지팡이", "마검"]
 
 var level: int = 35
 var experience: int = 100
@@ -1715,7 +1717,7 @@ func _enhancement_bonus_text(kind: String, target_level: int) -> String:
 	return "능력치 상승"
 
 func _is_item_equipped(item_name: String) -> bool:
-	for slot: String in ["weapon", "armor", "accessory"]:
+	for slot: String in ["weapon", "armor", "shield", "accessory"]:
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
 			return true
@@ -1801,7 +1803,7 @@ func _destroy_enhancement_target(item_name: String) -> void:
 	else:
 		inventory.erase(item_name)
 	enhancement_levels.erase(item_name)
-	for slot: String in ["weapon", "armor", "accessory"]:
+	for slot: String in ["weapon", "armor", "shield", "accessory"]:
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
 			equipped_items[slot] = {}
@@ -1817,7 +1819,7 @@ func _equipment_enhancement_level(slot: String) -> int:
 
 func _equipped_items_snapshot() -> Dictionary:
 	var result: Dictionary = {}
-	for slot: String in ["weapon", "armor", "accessory"]:
+	for slot: String in ["weapon", "armor", "shield", "accessory"]:
 		var value: Variant = equipped_items.get(slot, {})
 		if value is Dictionary:
 			var record: Dictionary = (value as Dictionary).duplicate(true)
@@ -2028,6 +2030,7 @@ func _load_game(quiet: bool) -> void:
 	if enhancement_value is Dictionary:
 		enhancement_levels = enhancement_value as Dictionary
 	_enforce_weapon_class_compatibility(true)
+	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
 	hp = clampi(hp, 0, _effective_max_hp())
 	mp = clampi(mp, 0, max_mp)
@@ -2165,6 +2168,7 @@ func _on_job_class_selected(job_name: String) -> void:
 		equipped_catalog["변신"] = record.duplicate(true)
 		_apply_transform_visual(record)
 	_enforce_weapon_class_compatibility(false)
+	_enforce_shield_weapon_compatibility(false)
 	_refresh_speed_modifiers()
 	_update_job_skillbar()
 	hud.show_message("직업 변경: %s" % job_class)
@@ -2562,16 +2566,27 @@ func _equip_or_acquire_item(record: Dictionary) -> void:
 		hud.refresh_inventory(inventory)
 		_update_hud()
 		return
-	if slot == "weapon" or slot == "armor" or slot == "accessory":
+	var equip_slot: String = slot
+	if _is_offhand_record(record):
+		equip_slot = "shield"
+		if not _can_equip_offhand(record):
+			hud.show_message("%s 무기에는 방패를 착용할 수 없습니다" % _current_weapon_type())
+			hud.append_log("방패 착용 불가 · %s + %s" % [_current_weapon_type(), item_name])
+			hud.refresh_inventory(inventory)
+			_update_hud()
+			return
+	if equip_slot in ["weapon", "armor", "shield", "accessory"]:
 		var old_max_hp: int = _effective_max_hp()
-		equipped_items[slot] = record.duplicate(true)
+		equipped_items[equip_slot] = record.duplicate(true)
+		if equip_slot == "weapon":
+			_enforce_shield_weapon_compatibility(false)
 		_refresh_speed_modifiers()
 		var new_max_hp: int = _effective_max_hp()
 		if new_max_hp > old_max_hp:
 			hp += new_max_hp - old_max_hp
 		hp = mini(hp, new_max_hp)
 		hud.show_message("아이템 장착: %s" % item_name)
-		hud.append_log("%s 슬롯 장착 · %s" % [slot, item_name])
+		hud.append_log("%s 슬롯 장착 · %s" % [equip_slot, item_name])
 	else:
 		hud.show_message("아이템 획득: %s" % item_name)
 		hud.append_log("인벤토리 획득 · %s" % item_name)
@@ -2682,7 +2697,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
 			records.append(value as Dictionary)
-	for slot: String in ["weapon", "armor", "accessory"]:
+	for slot: String in ["weapon", "armor", "shield", "accessory"]:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			records.append(item_value as Dictionary)
@@ -2716,6 +2731,51 @@ func _weapon_ammo_from_type(weapon_type: String) -> String:
 	if weapon_type in ["라이플", "핸드캐넌"]:
 		return "총알"
 	return ""
+
+func _offhand_kind(record: Dictionary) -> String:
+	if record.is_empty():
+		return ""
+	var item_type: String = str(record.get("type", "")).strip_edges()
+	var item_name: String = str(record.get("name", "")).strip_edges()
+	if item_type == "가더" or item_name.find("가더") >= 0:
+		return "guarder"
+	if item_type == "방패" or item_name.find("방패") >= 0:
+		return "shield"
+	if item_type == "방패/가더":
+		return "guarder"
+	return ""
+
+func _is_offhand_record(record: Dictionary) -> bool:
+	return _offhand_kind(record) != ""
+
+func _weapon_supports_shield(record: Dictionary) -> bool:
+	if record.is_empty():
+		return true
+	return SHIELD_COMPATIBLE_WEAPONS.has(_normalized_weapon_type(str(record.get("type", ""))))
+
+func _current_weapon_supports_shield() -> bool:
+	return _weapon_supports_shield(_equipped_weapon_record())
+
+func _can_equip_offhand(record: Dictionary) -> bool:
+	var kind: String = _offhand_kind(record)
+	if kind == "":
+		return false
+	if kind == "guarder":
+		return true
+	return _current_weapon_supports_shield()
+
+func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
+	var offhand_value: Variant = equipped_items.get("shield", {})
+	if not (offhand_value is Dictionary):
+		return
+	var offhand: Dictionary = offhand_value as Dictionary
+	if offhand.is_empty() or _offhand_kind(offhand) != "shield" or _current_weapon_supports_shield():
+		return
+	var offhand_name: String = str(offhand.get("name", "방패"))
+	equipped_items["shield"] = {}
+	if not quiet:
+		hud.show_message("현재 무기와 방패를 함께 착용할 수 없어 방패가 해제되었습니다")
+	hud.append_log("방패 자동 해제 · %s / 무기 %s" % [offhand_name, _current_weapon_type()])
 
 func _equipped_weapon_record() -> Dictionary:
 	var value: Variant = equipped_items.get("weapon", {})
@@ -3264,7 +3324,9 @@ func _character_stats_snapshot() -> Dictionary:
 		"weapon_attack_speed": _weapon_intrinsic_attack_speed_percent(_equipped_weapon_record()),
 		"weapon_ammo": _current_ammo_name(),
 		"weapon_ammo_count": int(inventory.get(_current_ammo_name(), 0)) if _current_ammo_name() != "" else -1,
-		"allowed_weapons": _job_weapon_text(job_class)
+		"allowed_weapons": _job_weapon_text(job_class),
+		"shield_compatible": _current_weapon_supports_shield(),
+		"offhand_kind": _offhand_kind(equipped_items.get("shield", {}) as Dictionary) if equipped_items.get("shield", {}) is Dictionary else ""
 	}
 
 func _effective_attack() -> int:
@@ -3277,7 +3339,7 @@ func _effective_defense() -> int:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("def", 0.0))
-	var armor_enhance: int = _equipment_enhancement_level("armor")
+	var armor_enhance: int = _equipment_enhancement_level("armor") + _equipment_enhancement_level("shield")
 	var accessory_enhance: int = int(floor(float(_equipment_enhancement_level("accessory")) / 2.0))
 	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def")
 
