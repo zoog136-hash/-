@@ -13,6 +13,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Package project source
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-godot-main-${{ github.sha }}
+          path: |
+            .gitignore
+            Main.tscn
+            README_KO.md
+            V19*.txt
+            V20*.txt
+            project.godot
+            assets
+            data
+            legacy
+            scenes
+            scripts
+          if-no-files-found: error
+          compression-level: 6
+
       - name: Install Godot 4.7.2
         run: |
           curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
