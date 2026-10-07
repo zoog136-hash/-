@@ -19,6 +19,8 @@ var max_hp: int = 100
 var attack_power: int = 8
 var melee_accuracy: int = 12
 var ranged_accuracy: int = 12
+var magic_accuracy: int = 12
+var magic_resistance: int = 10
 var attack_type: String = "melee"
 var move_speed: float = 90.0
 var exp_reward: int = 25
@@ -46,8 +48,12 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	var default_accuracy: int = monster_level + 10 + int(round(float(attack_power) * 0.25))
 	melee_accuracy = maxi(1, int(record.get("melee_accuracy", record.get("accuracy", record.get("hit", record.get("명중", default_accuracy))))))
 	ranged_accuracy = maxi(1, int(record.get("ranged_accuracy", record.get("원거리 명중", melee_accuracy))))
+	var default_magic_accuracy: int = monster_level + 10 + int(round(float(attack_power) * 0.20))
+	magic_accuracy = maxi(1, int(record.get("magic_accuracy", record.get("마법 명중", default_magic_accuracy))))
+	var default_mr: int = 10 + monster_level + defense_value
+	magic_resistance = maxi(0, int(record.get("mr", record.get("MR", record.get("마법 방어력", default_mr)))))
 	attack_type = str(record.get("attack_type", record.get("attackType", record.get("공격타입", "melee")))).to_lower()
-	if attack_type != "ranged":
+	if attack_type != "ranged" and attack_type != "magic":
 		attack_type = "melee"
 	exp_reward = maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
 	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
@@ -79,7 +85,7 @@ func _physics_process(delta: float) -> void:
 	var ui_visible: bool = distance <= 420.0
 	name_label.visible = ui_visible
 	hp_bar.visible = ui_visible
-	var attack_range: float = 220.0 if attack_type == "ranged" else 58.0
+	var attack_range: float = 280.0 if attack_type == "magic" else (220.0 if attack_type == "ranged" else 58.0)
 	if distance <= attack_range:
 		velocity = Vector2.ZERO
 		if attack_cooldown <= 0.0:
