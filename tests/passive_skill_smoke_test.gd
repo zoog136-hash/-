@@ -112,6 +112,16 @@ func _run() -> void:
 	if not pruned_buffs.has("실드"):
 		_fail("valid common active buff was incorrectly removed")
 
+	# Active skill buffs must be serializable alongside item buffs instead of silently disappearing.
+	var serialized: String = JSON.stringify({"active_skill_buffs":pruned_buffs})
+	var parsed_value: Variant = JSON.parse_string(serialized)
+	if not (parsed_value is Dictionary):
+		_fail("active skill buff save payload is not JSON-safe")
+	else:
+		var parsed_buffs: Variant = (parsed_value as Dictionary).get("active_skill_buffs", {})
+		if not (parsed_buffs is Dictionary) or not (parsed_buffs as Dictionary).has("실드"):
+			_fail("active skill buff did not survive save payload round-trip")
+
 	world.queue_free()
 	await process_frame
 	_finish()

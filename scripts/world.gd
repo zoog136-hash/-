@@ -2170,6 +2170,7 @@ func _save_game(quiet: bool) -> void:
 		"job_class": job_class,
 		"quickslots": quickslots,
 		"self_mode_enabled": self_mode_enabled,
+		"active_skill_buffs": active_skill_buffs,
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
 		"equipped_catalog": equipped_catalog,
@@ -2230,6 +2231,8 @@ func _load_game(quiet: bool) -> void:
 	if quickslots_value is Array:
 		quickslots = quickslots_value as Array
 	self_mode_enabled = bool(data.get("self_mode_enabled", self_mode_enabled))
+	var skill_buffs_value: Variant = data.get("active_skill_buffs", {})
+	active_skill_buffs = skill_buffs_value as Dictionary if skill_buffs_value is Dictionary else {}
 	var item_buffs_value: Variant = data.get("active_item_buffs", {})
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
