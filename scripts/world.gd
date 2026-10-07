@@ -154,8 +154,11 @@ func _connect_signals() -> void:
 	hud.attack_pressed.connect(_attack)
 	hud.bleed_skill_pressed.connect(_cast_bleed_from_hud)
 	hud.combat_skill_pressed.connect(_cast_combat_skill_from_hud)
+	hud.target_pressed.connect(_select_nearest_target)
 	hud.auto_pressed.connect(func() -> void: player.set_auto_enabled(not player.auto_enabled))
 	hud.potion_pressed.connect(_use_potion)
+	hud.quick_item_pressed.connect(_use_quick_item)
+	hud.return_pressed.connect(_return_to_spawn)
 	hud.inventory_pressed.connect(_open_inventory)
 	hud.menu_pressed.connect(hud.toggle_menu)
 	hud.map_pressed.connect(hud.toggle_map)
@@ -1224,19 +1227,52 @@ func _check_level_up() -> void:
 		else:
 			hud.show_message("레벨 업! Lv.%d" % level)
 
+func _select_nearest_target() -> void:
+	var target: TwilightMonster = _nearest_reachable_monster(600.0)
+	if target == null:
+		hud.show_message("선택할 수 있는 몬스터가 없습니다")
+		return
+	_select_monster(target)
+	hud.show_message("대상 선택: %s" % target.monster_name)
+
 func _use_potion() -> void:
-	var potion: String = "HP 물약"
-	if int(inventory.get(potion, 0)) <= 0:
-		hud.show_message("HP 물약이 없습니다")
+	_use_healing_item("HP 물약", 320)
+
+func _use_quick_item(item_name: String) -> void:
+	match item_name:
+		"HP 물약":
+			_use_healing_item(item_name, 320)
+		"강력 HP 물약":
+			_use_healing_item(item_name, 650)
+		"축복받은 HP 물약":
+			_use_healing_item(item_name, 1100)
+		_:
+			hud.show_message("사용할 수 없는 퀵 아이템입니다")
+
+func _use_healing_item(item_name: String, heal_amount: int) -> void:
+	if int(inventory.get(item_name, 0)) <= 0:
+		hud.show_message("%s이(가) 없습니다" % item_name)
 		return
 	var effective_max_hp: int = _effective_max_hp()
 	if hp >= effective_max_hp:
 		hud.show_message("HP가 가득 찼습니다")
 		return
-	inventory[potion] = int(inventory.get(potion, 0)) - 1
-	hp = mini(effective_max_hp, hp + 320)
-	hud.show_message("HP 물약 사용")
+	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
+	hp = mini(effective_max_hp, hp + maxi(1, heal_amount))
+	hud.show_message("%s 사용" % item_name)
 	_update_hud()
+
+func _return_to_spawn() -> void:
+	if player.is_stunned() or player.is_feared():
+		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
+		return
+	player.set_auto_enabled(false)
+	player.clear_click_path()
+	player.global_position = _spawn_position()
+	selected_monster = null
+	auto_target = null
+	hud.clear_target()
+	hud.show_message("현재 지역 시작 지점으로 귀환했습니다")
 
 func _on_auto_toggled(enabled: bool) -> void:
 	hud.set_auto(enabled)
