@@ -1,0 +1,199 @@
+name: V20.2 Critical Step8 Test
+
+on:
+  push:
+    branches: [v20-2-critical-step8]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: v20-2-critical-step8
+
+      - name: Download Godot 4.7.2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d /tmp/godot
+          GODOT_BIN="$(find /tmp/godot -maxdepth 1 -type f -name 'Godot*' | head -1)"
+          chmod +x "$GODOT_BIN"
+          echo "GODOT_BIN=$GODOT_BIN" >> "$GITHUB_ENV"
+          "$GODOT_BIN" --version
+
+      - name: Parse project
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee /tmp/editor.log
+          if grep -Eiq "Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|^ERROR:" /tmp/editor.log; then
+            exit 1
+          fi
+
+      - name: Create critical test
+        shell: bash
+        run: |
+          cat > test_critical_step8.gd <<'GD'
+          extends SceneTree
+
+          var failures: Array[String] = []
+
+          func check(value: bool, message: String) -> void:
+              if not value:
+                  failures.append(message)
+                  push_error("TEST FAIL: " + message)
+
+          func approx(a: float, b: float, eps: float = 0.0001) -> bool:
+              return absf(a - b) <= eps
+
+          func _init() -> void:
+              call_deferred("run_tests")
+
+          func run_tests() -> void:
+              var packed: PackedScene = load("res://Main.tscn") as PackedScene
+              check(packed != null, "Main loads")
+              if packed == null:
+                  quit(1)
+                  return
+              var world: Node = packed.instantiate()
+              root.add_child(world)
+              await process_frame
+              await process_frame
+              world.process_mode = Node.PROCESS_MODE_DISABLED
+
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+
+              # Attribute-derived critical rates.
+              world.str_stat = 18
+              world.dex_stat = 12
+              world.int_stat = 8
+              check(world._player_critical_rate("melee") == 2, "base melee crit")
+              check(world._player_critical_rate("ranged") == 2, "base ranged crit")
+              check(world._player_critical_rate("magic") == 2, "base magic crit")
+
+              world.str_stat = 41
+              world.dex_stat = 36
+              world.int_stat = 31
+              check(world._player_critical_rate("melee") == 7, "STR melee crit scaling")
+              check(world._player_critical_rate("ranged") == 6, "DEX ranged crit scaling")
+              check(world._player_critical_rate("magic") == 5, "INT magic crit scaling")
+
+              # Generic and typed equipment bonuses.
+              world.equipped_items["weapon"] = {"crit":3, "melee_crit":7, "ranged_crit":4, "magic_crit":2}
+              world.equipped_catalog["성물"] = {"치명타":2, "근거리 치명타":1, "원거리 치명타":2, "마법 치명타":3}
+              check(world._player_critical_rate("melee") == 20, "melee crit equipment stacks")
+              check(world._player_critical_rate("ranged") == 17, "ranged crit equipment stacks")
+              check(world._player_critical_rate("magic") == 15, "magic crit equipment stacks")
+
+              # Critical resistance aliases.
+              world.equipped_items["armor"] = {"critical_resistance":5}
+              world.equipped_items["accessory"] = {"치명타 저항":4}
+              world.equipped_catalog["마법인형"] = {"crit_resist":3}
+              check(world._critical_resistance_stat() == 12, "critical resistance stacks")
+              check(approx(world._critical_chance(30, 12), 0.18), "critical resistance subtracts rate")
+              check(approx(world._critical_chance(5, 10), 0.0), "critical chance floors zero")
+              check(approx(world._critical_chance(90, 0), 0.50), "critical chance caps 50")
+              check(world._critical_damage(100) == 150, "critical multiplier 1.5")
+              check(world._critical_damage(1) == 2, "critical damage rounding")
+
+              var snapshot: Dictionary = world._character_stats_snapshot()
+              check(snapshot.has("melee_critical"), "snapshot melee crit")
+              check(snapshot.has("ranged_critical"), "snapshot ranged crit")
+              check(snapshot.has("magic_critical"), "snapshot magic crit")
+              check(int(snapshot["critical_resistance"]) == 12, "snapshot crit resistance")
+
+              var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
+              check(monster_scene != null, "Monster scene loads")
+              var monster: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+              root.add_child(monster)
+              monster.setup({
+                  "name":"치명타 테스트","lv":20,"hp":1000,"atk":40,"def":5,"xp":10,
+                  "crit":8,"melee_crit":15,"ranged_crit":20,"magic_crit":25,
+                  "critical_resistance":9
+              }, world.player, world, null)
+              check(monster.melee_critical_rate == 15, "monster melee crit")
+              check(monster.ranged_critical_rate == 20, "monster ranged crit")
+              check(monster.magic_critical_rate == 25, "monster magic crit")
+              check(monster.critical_resistance == 9, "monster crit resistance")
+              check(monster.critical_rate_for_type("melee") == 15, "monster melee crit selector")
+              check(monster.critical_rate_for_type("ranged") == 20, "monster ranged crit selector")
+              check(monster.critical_rate_for_type("magic") == 25, "monster magic crit selector")
+
+              # Critical damage is multiplied before physical reduction.
+              world.equipped_items = {"weapon":{}, "armor":{"damage_reduction":10}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              check(world._physical_damage_after_reduction(world._critical_damage(40)) == 50, "crit then reduction")
+
+              # Magic crit stays separate from physical reduction.
+              check(world._critical_damage(40) == 60, "magic crit raw damage")
+
+              # Monster damage feedback supports optional critical flag.
+              var hp_before: int = monster.hp
+              monster.take_damage(60, true)
+              check(monster.hp == hp_before - 60, "monster critical damage application")
+              world.player.show_received_damage(60, true)
+              await process_frame
+
+              # Incoming actual critical path with deterministic seed.
+              world.hp = 1000
+              world.max_hp = 1000
+              world.defense = 0
+              world.dex_stat = 10
+              world.equipped_items = {"weapon":{}, "armor":{}, "accessory":{}}
+              world.equipped_catalog = {"변신":{}, "마법인형":{}, "성물":{}}
+              monster.attack_type = "melee"
+              monster.melee_accuracy = 999
+              monster.melee_critical_rate = 50
+              var chosen_seed: int = -1
+              for seed_value: int in range(1, 5000):
+                  world.rng.seed = seed_value
+                  var hit_roll: float = world.rng.randf()
+                  var crit_roll: float = world.rng.randf()
+                  if hit_roll < 0.95 and crit_roll < 0.50:
+                      chosen_seed = seed_value
+                      break
+              check(chosen_seed > 0, "found deterministic critical seed")
+              if chosen_seed > 0:
+                  world.rng.seed = chosen_seed
+                  var hp_before_incoming: int = world.hp
+                  world._on_player_hit(monster, 40, "melee")
+                  check(world.hp == hp_before_incoming - 60, "incoming melee critical applies 1.5x")
+
+              # Defender critical resistance can fully suppress lower critical rate.
+              world.hp = 1000
+              world.equipped_items["armor"] = {"critical_resistance":50}
+              monster.melee_critical_rate = 20
+              check(approx(world._critical_chance(monster.melee_critical_rate, world._critical_resistance_stat()), 0.0), "resistance suppresses crit")
+
+              # Step7 magic/MR regression.
+              world.level = 35
+              world.int_stat = 8
+              world.wis_stat = 10
+              check(world._magic_accuracy_stat() == 43, "magic accuracy preserved")
+              check(world._effective_mr() >= 65, "MR preserved")
+
+              if failures.is_empty():
+                  print("V20.2 CRITICAL STEP8 PASS")
+                  quit(0)
+              else:
+                  print("FAILURES ", failures)
+                  quit(1)
+          GD
+
+      - name: Run critical test
+        shell: bash
+        run: |
+          set -o pipefail
+          "$GODOT_BIN" --headless --path . --script res://test_critical_step8.gd 2>&1 | tee /tmp/critical.log
+          grep -q "V20.2 CRITICAL STEP8 PASS" /tmp/critical.log
+          if grep -Eiq "TEST FAIL|Parse Error|Failed to load script|SCRIPT ERROR|Invalid access|Invalid call|Node not found|Failed loading resource|^ERROR:" /tmp/critical.log; then
+            exit 1
+          fi
