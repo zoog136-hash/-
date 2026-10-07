@@ -184,6 +184,45 @@ func show_target(monster_name: String, hp: int, max_hp: int) -> void:
 func clear_target() -> void:
 	target_panel.visible = false
 
+func show_enhancement_result(result_type: String, item_name: String, from_level: int, to_level: int) -> void:
+	var overlay: Label = Label.new()
+	overlay.z_index = 400
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	overlay.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	overlay.add_theme_font_size_override("font_size", 34)
+	overlay.add_theme_color_override("font_outline_color", Color.BLACK)
+	overlay.add_theme_constant_override("outline_size", 8)
+	overlay.set_anchors_preset(Control.PRESET_CENTER)
+	overlay.offset_left = -360.0
+	overlay.offset_top = -70.0
+	overlay.offset_right = 360.0
+	overlay.offset_bottom = 70.0
+	match result_type:
+		"success":
+			overlay.text = "강화 성공!\n+%d %s" % [to_level, item_name]
+			overlay.add_theme_color_override("font_color", Color(1.0, 0.86, 0.35, 1.0))
+		"destroy":
+			overlay.text = "강화 실패\n%s 소실" % item_name
+			overlay.add_theme_color_override("font_color", Color(1.0, 0.25, 0.18, 1.0))
+		"decrease":
+			overlay.text = "강화 하락\n+%d → +%d" % [from_level, to_level]
+			overlay.add_theme_color_override("font_color", Color(0.75, 0.60, 1.0, 1.0))
+		_:
+			overlay.text = "강화 실패\n수치 유지"
+			overlay.add_theme_color_override("font_color", Color(0.82, 0.86, 0.92, 1.0))
+	$Root.add_child(overlay)
+	overlay.scale = Vector2(0.82, 0.82)
+	overlay.modulate.a = 0.0
+	var tween: Tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(overlay, "modulate:a", 1.0, 0.12)
+	tween.tween_property(overlay, "scale", Vector2.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.set_parallel(false)
+	tween.tween_interval(0.75)
+	tween.tween_property(overlay, "modulate:a", 0.0, 0.30)
+	tween.tween_callback(overlay.queue_free)
+
 func show_message(text: String) -> void:
 	message_label.text = text
 	message_time = 2.6
@@ -780,14 +819,17 @@ func _render_enhancement_panel() -> void:
 	var safe_text: String = "안전강화 +%d" % int(selected.get("safe_level", 0))
 	if int(selected.get("safe_level", 0)) <= 0:
 		safe_text = "안전강화 없음"
-	var detail: String = "[b]%s +%d → +%d[/b]\n%s\n성공 [color=#7edb83]%.1f%%[/color]   유지 %.1f%%   소실 [color=#e86f61]%.1f%%[/color]\n성공 시: [color=#f2c66d]%s[/color]" % [
+	var decrease_chance: float = float(selected.get("decrease_chance", 0.0))
+	var gain_text: String = str(selected.get("gain_text", "+1"))
+	var detail: String = "[b]%s +%d[/b]\n%s\n성공 [color=#7edb83]%.1f%%[/color]   유지 %.1f%%   하락 %.1f%%   소실 [color=#e86f61]%.1f%%[/color]\n성공 강화폭: [color=#9ad7ff]%s[/color]\n성공 시: [color=#f2c66d]%s[/color]" % [
 		str(selected.get("name", "")),
 		int(selected.get("level", 0)),
-		int(selected.get("level", 0)) + 1,
 		safe_text,
 		float(selected.get("success_chance", 0.0)),
 		float(selected.get("no_change_chance", 0.0)),
+		decrease_chance,
 		float(selected.get("destroy_chance", 0.0)),
+		gain_text,
 		str(selected.get("bonus_text", "능력치 상승"))
 	]
 	_utility_add_text(detail)
@@ -816,7 +858,13 @@ func open_shop() -> void:
 		["초록 잎", 100],
 		["무기 마법 주문서 (각인)", 25000],
 		["갑옷 마법 주문서 (각인)", 18000],
-		["장신구 마법 주문서 (각인)", 35000]
+		["장신구 마법 주문서 (각인)", 35000],
+		["축복받은 무기 마법 주문서 (각인)", 120000],
+		["축복받은 갑옷 마법 주문서 (각인)", 90000],
+		["장인의 무기 마법 주문서 (각인)", 350000],
+		["장인의 갑옷 마법 주문서 (각인)", 300000],
+		["오림의 장신구 마법 주문서 (각인)", 150000],
+		["축복받은 오림의 장신구 마법 주문서 (각인)", 450000]
 	]:
 		var item_name: String = str(shop_data[0])
 		var price: int = int(shop_data[1])
