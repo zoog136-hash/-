@@ -32,3 +32,10 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_mechanism_smoke_test.gd 2>&1 | tee skill-mechanism.log
           if grep -E "SCRIPT ERROR:|ERROR:|SKILL MECHANISM FAIL:|SKILL_MECHANISM_SMOKE_FAILED" skill-mechanism.log; then exit 1; fi
           grep -q "SKILL_MECHANISM_SMOKE_OK" skill-mechanism.log
+      - name: Skill elemental integration smoke
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_element_integration_smoke_test.gd 2>&1 | tee skill-element-integration.log
+          if grep -E "SCRIPT ERROR:|ERROR:|ELEMENT INTEGRATION FAIL:|SKILL_ELEMENT_INTEGRATION_FAILED" skill-element-integration.log; then exit 1; fi
+          grep -q "SKILL_ELEMENT_INTEGRATION_OK" skill-element-integration.log
