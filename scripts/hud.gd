@@ -286,7 +286,7 @@ func _open_quickslot_picker(entry_kind: String, entry_id: String, display_name: 
 			if value is Dictionary:
 				var skill: Dictionary = value as Dictionary
 				if str(skill.get("name", "")) == entry_id:
-					eligible_auto = str(skill.get("effect", "")) in ["damage", "heal", "stun", "silence", "poison", "bleed", "hold", "fear"]
+					eligible_auto = str(skill.get("effect", "")) in ["damage", "turnUndead", "charge", "heal", "stun", "silence", "poison", "bleed", "hold", "fear"]
 					break
 	for index: int in range(8):
 		var current_text: String = "비어 있음"
