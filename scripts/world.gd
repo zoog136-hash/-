@@ -78,6 +78,12 @@ var tile_size: int = 32
 var selected_monster: TwilightMonster = null
 var auto_target: TwilightMonster = null
 var auto_attack_timer: float = 0.0
+# Charge movement is advanced locally; field map/path scripts are never mutated.
+var charge_route: PackedVector2Array = PackedVector2Array()
+var charge_route_index: int = 0
+var charge_target: TwilightMonster = null
+var charge_skill: Dictionary = {}
+var charge_speed: float = 1150.0
 var save_timer: float = 0.0
 var collision_debug: bool = false
 var quest_kills: int = 0
@@ -218,13 +224,14 @@ func _process(delta: float) -> void:
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
+	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	_run_auto_buff_quickslots(delta)
 	save_timer += delta
 	if save_timer >= 30.0:
 		save_timer = 0.0
 		_save_game(true)
-	if player.auto_enabled and not player.is_stunned():
+	if player.auto_enabled and not player.is_stunned() and charge_skill.is_empty():
 		_run_auto_heal_quickslots()
 		_run_auto_hunt()
 	_update_companion(delta)
@@ -1173,7 +1180,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
-	if player.is_stunned() or player.is_feared():
+	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
 	if auto_attack_timer > 0.0:
 		return
@@ -1228,6 +1235,9 @@ func _run_auto_hunt() -> void:
 	if player.is_stunned() or player.is_feared():
 		player.clear_click_path()
 		return
+	if not charge_skill.is_empty():
+		player.clear_click_path()
+		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		auto_target = _nearest_reachable_monster(99999.0)
 	if auto_target == null:
@@ -1235,32 +1245,37 @@ func _run_auto_hunt() -> void:
 		player.clear_click_path()
 		return
 	selected_monster = auto_target
-	var distance: float = player.global_position.distance_to(auto_target.global_position)
-	if _target_in_current_weapon_range(auto_target) and _has_line_of_sight_world(player.global_position, auto_target.global_position):
+	var can_see: bool = _has_line_of_sight_world(player.global_position, auto_target.global_position)
+	# A registered, ready skill uses its own range even when the equipped weapon
+	# cannot reach the monster. Offensive skills always precede normal attacks.
+	if can_see and _run_auto_combat_quickslots():
 		player.clear_click_path()
-		if not _run_auto_combat_quickslots() and auto_attack_timer <= 0.0:
+		return
+	if _target_in_current_weapon_range(auto_target) and can_see:
+		player.clear_click_path()
+		if auto_attack_timer <= 0.0:
 			_attack()
-	else:
-		if player.is_held():
+		return
+	if player.is_held():
+		player.clear_click_path()
+		return
+	if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
+		auto_repath_timer = 0.65
+		if auto_stuck_time > 2.0:
+			auto_target = null
 			player.clear_click_path()
+			auto_stuck_time = 0.0
 			return
-		if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
-			auto_repath_timer = 0.65
-			if auto_stuck_time > 2.0:
-				auto_target = null
+		var path: PackedVector2Array = find_world_path(player.global_position, auto_target.global_position)
+		if path.is_empty():
+			auto_target = _nearest_reachable_monster(99999.0)
+			if auto_target == null:
+				selected_monster = null
 				player.clear_click_path()
-				auto_stuck_time = 0.0
 				return
-			var path: PackedVector2Array = find_world_path(player.global_position, auto_target.global_position)
-			if path.is_empty():
-				auto_target = _nearest_reachable_monster(99999.0)
-				if auto_target == null:
-					selected_monster = null
-					player.clear_click_path()
-					return
-				selected_monster = auto_target
-				path = find_world_path(player.global_position, auto_target.global_position)
-			player.set_click_path(path, auto_target.global_position)
+			selected_monster = auto_target
+			path = find_world_path(player.global_position, auto_target.global_position)
+		player.set_click_path(path, auto_target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
 	var best: TwilightMonster = null
@@ -1511,6 +1526,12 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	reduced = _pve_damage_after_item_buffs(reduced)
 	hp = maxi(0, hp - reduced)
+	if hp > 0:
+		_try_active_counterattack(attacker, normalized_type, reduced)
+	if attacker.dead:
+		player.show_received_damage(reduced, critical)
+		_update_hud()
+		return
 	if hp > 0:
 		_try_trigger_passives("on_damaged", attacker)
 	player.show_received_damage(reduced, critical)
@@ -2917,7 +2938,7 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 		if announce:
 			hud.show_message("%s · 효과 구현 전입니다" % skill_name)
 		return false
-	if player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
+	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
 		if announce:
 			hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
 		return false
@@ -2955,6 +2976,8 @@ func _run_auto_heal_quickslots() -> void:
 			return
 
 func _run_auto_combat_quickslots() -> bool:
+	if not is_instance_valid(selected_monster) or selected_monster.dead:
+		return false
 	for value: Variant in quickslots:
 		if not (value is Dictionary):
 			continue
@@ -2967,7 +2990,11 @@ func _run_auto_combat_quickslots() -> bool:
 			continue
 		if not _skill_ready(skill):
 			continue
-		if _skill_target(SKILL_RULES.range_pixels(skill)) == null:
+		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
+			continue
+		if not _has_line_of_sight_world(player.global_position, selected_monster.global_position):
+			continue
+		if SKILL_RULES.effect_kind(skill) == "turnUndead" and not selected_monster.is_undead():
 			continue
 		if _cast_job_skill(skill_name):
 			return true
@@ -3089,6 +3116,10 @@ func _cast_job_skill(skill_name: String) -> bool:
 	match effect:
 		"damage":
 			success = _cast_job_damage_skill(skill)
+		"turnUndead":
+			success = _cast_job_turn_undead(skill)
+		"charge":
+			success = _cast_job_charge_skill(skill)
 		"heal":
 			success = _cast_job_heal_skill(skill)
 		"atkBuff", "defBuff", "hpBuff", "speedBuff":
@@ -3115,17 +3146,171 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 	mp -= mp_cost
 	return true
 
+
+func _try_active_counterattack(attacker: TwilightMonster, attack_kind: String, received_damage: int) -> bool:
+	if attacker == null or not is_instance_valid(attacker) or attacker.dead or attack_kind != "melee" or hp <= 0:
+		return false
+	var chance: float = 0.0
+	var multiplier: float = 0.0
+	var counter_name: String = ""
+	for key_value: Variant in active_skill_buffs.keys():
+		var buff_value: Variant = active_skill_buffs.get(key_value, {})
+		if not (buff_value is Dictionary):
+			continue
+		var buff: Dictionary = buff_value as Dictionary
+		var rate: float = clampf(float(buff.get("counter_chance", 0.0)), 0.0, 1.0)
+		if rate > chance:
+			chance = rate
+			multiplier = maxf(0.0, float(buff.get("counter_multiplier", 0.0)))
+			counter_name = str(key_value)
+	if chance <= 0.0 or multiplier <= 0.0 or rng.randf() >= chance:
+		return false
+	var reflected: int = maxi(1, int(round(float(maxi(1, received_damage)) * multiplier)))
+	hud.append_log("%s 반격 발동 · %s에게 %d 피해" % [counter_name, attacker.monster_name, reflected])
+	attacker.take_damage(reflected)
+	return true
+
+func _cast_job_turn_undead(skill: Dictionary) -> bool:
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
+	if target == null:
+		hud.show_message("시야 내 언데드 대상이 없습니다")
+		return false
+	if not target.is_undead():
+		hud.show_message("턴 언데드는 언데드에게만 사용할 수 있습니다")
+		return false
+	if not _spend_skill_mp(skill):
+		return false
+	_break_invisibility()
+	player.pulse_attack()
+	if rng.randf() >= _player_magic_hit_chance(target):
+		target.show_miss()
+		hud.append_log("%s · %s 마법 명중 실패" % [str(skill.get("name", "")), target.monster_name])
+	else:
+		var target_name: String = target.monster_name
+		hud.append_log("%s · %s 언데드 즉사!" % [str(skill.get("name", "")), target_name])
+		target.take_damage(target.hp, false)
+	_update_target_hud()
+	return true
+
+func _clear_skill_charge() -> void:
+	charge_route = PackedVector2Array()
+	charge_route_index = 0
+	charge_target = null
+	charge_skill = {}
+
+func _cast_job_charge_skill(skill: Dictionary) -> bool:
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
+	if target == null:
+		hud.show_message("돌진 대상이 사거리 밖에 있습니다")
+		return false
+	var stop_distance: float = maxf(40.0, float(skill.get("charge_stop_distance", 52.0)))
+	var source: Vector2 = player.global_position
+	var distance: float = source.distance_to(target.global_position)
+	if distance <= stop_distance + 32.0:
+		if not _spend_skill_mp(skill):
+			return false
+		_break_invisibility()
+		_apply_job_skill_damage(skill, target)
+		return true
+	var path: PackedVector2Array = find_world_path(source, target.global_position)
+	if path.is_empty():
+		hud.show_message("돌진 경로를 찾을 수 없습니다")
+		return false
+	var planned: PackedVector2Array = PackedVector2Array()
+	var previous: Vector2 = source
+	var total_distance: float = 0.0
+	var stopped_near_target: bool = false
+	for waypoint: Vector2 in path:
+		if previous.distance_to(waypoint) <= 2.0:
+			continue
+		var endpoint: Vector2 = waypoint
+		var close_to_target: bool = waypoint.distance_to(target.global_position) <= stop_distance
+		if close_to_target:
+			var direction: Vector2 = (previous - target.global_position).normalized()
+			if direction.length_squared() > 0.01:
+				var before_target: Vector2 = target.global_position + direction * stop_distance
+				if _is_walkable_world(before_target) and _has_line_of_sight_world(previous, before_target):
+					endpoint = before_target
+				else:
+					endpoint = previous
+		total_distance += previous.distance_to(endpoint)
+		if total_distance > SKILL_RULES.range_pixels(skill) + 2.0:
+			break
+		if endpoint.distance_to(previous) > 2.0 and _is_walkable_world(endpoint):
+			planned.append(endpoint)
+		previous = endpoint
+		if close_to_target:
+			stopped_near_target = true
+			break
+	if not stopped_near_target or planned.is_empty() or previous.distance_to(target.global_position) > 100.0 or not _has_line_of_sight_world(previous, target.global_position):
+		hud.show_message("장애물 때문에 안전하게 돌진할 수 없습니다")
+		return false
+	if not _spend_skill_mp(skill):
+		return false
+	_break_invisibility()
+	player.clear_click_path()
+	charge_route = planned
+	charge_route_index = 0
+	charge_target = target
+	charge_skill = skill.duplicate(true)
+	charge_speed = maxf(250.0, float(skill.get("charge_speed", 1150.0)))
+	hud.append_log("%s · %s에게 돌진 시작" % [str(skill.get("name", "")), target.monster_name])
+	return true
+
+func _advance_skill_charge(delta: float) -> void:
+	if charge_skill.is_empty():
+		return
+	if not is_instance_valid(charge_target) or charge_target.dead or player.is_stunned() or player.is_feared():
+		_clear_skill_charge()
+		return
+	var remaining: float = maxf(0.0, charge_speed * delta)
+	var blocked: bool = false
+	while remaining > 0.0 and charge_route_index < charge_route.size():
+		var waypoint: Vector2 = charge_route[charge_route_index]
+		var distance: float = player.global_position.distance_to(waypoint)
+		if distance <= 1.0:
+			charge_route_index += 1
+			continue
+		var step: float = minf(remaining, minf(10.0, distance))
+		var next_position: Vector2 = player.global_position.move_toward(waypoint, step)
+		if not _is_walkable_world(next_position):
+			blocked = true
+			break
+		player.global_position = next_position
+		remaining -= step
+		if player.global_position.distance_to(waypoint) <= 1.0:
+			charge_route_index += 1
+	if blocked:
+		hud.show_message("돌진 경로에 장애물이 있습니다")
+		_clear_skill_charge()
+		return
+	if charge_route_index < charge_route.size():
+		return
+	var finished_skill: Dictionary = charge_skill
+	var finished_target: TwilightMonster = charge_target
+	_clear_skill_charge()
+	if is_instance_valid(finished_target) and not finished_target.dead and player.global_position.distance_to(finished_target.global_position) <= 100.0 and _has_line_of_sight_world(player.global_position, finished_target.global_position):
+		_apply_job_skill_damage(finished_skill, finished_target)
+	else:
+		hud.append_log("%s · 돌진 대상 이탈로 공격 실패" % str(finished_skill.get("name", "")))
+
 func _cast_job_damage_skill(skill: Dictionary) -> bool:
-	var max_range: float = SKILL_RULES.range_pixels(skill)
-	var target: TwilightMonster = _skill_target(max_range)
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
 	if target == null:
 		hud.show_message("공격 대상이 없습니다")
 		return false
 	if not _spend_skill_mp(skill):
 		return false
-	selected_monster = target
 	_break_invisibility()
+	_apply_job_skill_damage(skill, target)
+	return true
+
+func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void:
+	if target == null or not is_instance_valid(target) or target.dead:
+		return
+	selected_monster = target
 	player.pulse_attack()
+	var max_range: float = SKILL_RULES.range_pixels(skill)
 	var skill_class: String = str(skill.get("class", "공용"))
 	var ranged_style: bool = job_class == "요정" or job_class == "총사"
 	var magic_style: bool = job_class == "마법사" or skill_class == "마법사" or (skill_class == "공용" and max_range >= 250.0)
@@ -3152,11 +3337,12 @@ func _cast_job_damage_skill(skill: Dictionary) -> bool:
 	var power: int = maxi(1, int(skill.get("power", 20)))
 	var total_damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
 	for victim: TwilightMonster in targets:
-		for _hit_index: int in range(hits):
+		for hit_index: int in range(hits):
 			if victim.dead:
 				break
 			if rng.randf() >= hit_chance:
 				victim.show_miss()
+				hud.append_log("%s · %d/%d타 MISS" % [str(skill.get("name", "")), hit_index + 1, hits])
 				continue
 			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits))))
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
@@ -3164,11 +3350,10 @@ func _cast_job_damage_skill(skill: Dictionary) -> bool:
 				damage = _critical_damage(damage)
 			victim.take_damage(damage, critical)
 			_try_trigger_passives("on_hit", victim)
-			hud.append_log("%s · %s %d 피해%s" % [
-				str(skill.get("name", "")), victim.monster_name, damage, " CRITICAL" if critical else ""
+			hud.append_log("%s · %s %d/%d타 %d 피해%s" % [
+				str(skill.get("name", "")), victim.monster_name, hit_index + 1, hits, damage, " CRITICAL" if critical else ""
 			])
 	_update_target_hud()
-	return true
 
 func _cast_job_heal_skill(skill: Dictionary) -> bool:
 	if hp >= _effective_max_hp():
@@ -3193,7 +3378,9 @@ func _cast_job_buff_skill(skill: Dictionary) -> bool:
 		"atk": int(skill.get("atk", 0)),
 		"def": int(skill.get("def", 0)),
 		"hp": int(skill.get("hpFlat", 0)),
-		"speed": speed_value
+		"speed": speed_value,
+		"counter_chance": clampf(float(skill.get("counter_chance", 0.0)), 0.0, 1.0),
+		"counter_multiplier": maxf(0.0, float(skill.get("counter_multiplier", 0.0)))
 	}
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	hp = mini(_effective_max_hp(), hp + maxi(0, int(skill.get("hpFlat", 0))))
