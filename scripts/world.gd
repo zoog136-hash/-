@@ -52,7 +52,6 @@ var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
 var skill_cooldowns: Dictionary = {}
 var skill_global_cooldown: float = 0.0
-var auto_skill_check_timer: float = 0.0
 var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
 var quickslots: Array = []
@@ -2979,6 +2978,7 @@ func _cast_job_status_skill(skill: Dictionary) -> bool:
 	if target == null:
 		hud.show_message("상태이상 대상이 없습니다")
 		return false
+	_break_invisibility()
 	var cost: int = maxi(0, int(skill.get("mp", 0)))
 	var before: int = mp
 	var skill_name: String = str(skill.get("name", ""))
