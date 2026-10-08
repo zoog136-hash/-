@@ -5,6 +5,10 @@ const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const GROUND_SHADER = preload("res://assets/maps/aden/ground.gdshader")
 const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
 const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
+const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
+const LANDMARK_BAKE_SCALE: float = 1.5
+const LANDMARK_CELL: Vector2 = Vector2(256,256)
+const LANDMARK_ORIGIN: Vector2 = Vector2(128,224)
 # Atlas regions are measured from the generated source, not assumed to be a grid.
 const REGIONS: Dictionary = {
 	"oak":Rect2(0,0,390,388), "oak2":Rect2(390,0,273,388),
@@ -21,6 +25,10 @@ var field: PlayableField
 var player: Node2D
 var atlas: Texture2D
 var textures: Dictionary = {}
+var landmark_textures: Dictionary = {}
+var landmark_cache: SubViewport
+var landmark_material: ShaderMaterial
+var ground_materials: Dictionary = {}
 var terrain: Texture2D
 var buckets: Dictionary = {}
 var chunks: Dictionary = {}
@@ -54,19 +62,90 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		if not buckets.has(key):
 			buckets[key] = []
 		buckets[key].append(record)
+	_build_landmark_cache()
 	_build_markers()
 	refresh_visible()
 
-func _polygon(points: PackedVector2Array, index: int, alpha: float = 1.0) -> Polygon2D:
-	var poly := Polygon2D.new()
-	poly.polygon = points
+func _notification(what: int) -> void:
+	if what in [NOTIFICATION_APPLICATION_RESUMED,NOTIFICATION_WM_WINDOW_FOCUS_IN] and is_instance_valid(landmark_cache):
+		# Repaint the small active-map atlas if a mobile graphics context resumes.
+		_request_landmark_cache_render()
+
+func _request_landmark_cache_render() -> void:
+	landmark_cache.render_target_update_mode = SubViewport.UPDATE_ONCE
+	if not RenderingServer.frame_post_draw.is_connected(_freeze_landmark_cache):
+		RenderingServer.frame_post_draw.connect(_freeze_landmark_cache,CONNECT_ONE_SHOT)
+
+func _freeze_landmark_cache() -> void:
+	# Publish completion on the node after drawing. The one-shot callback keeps
+	# the lifecycle observable without adding a per-frame polling task.
+	if is_instance_valid(landmark_cache):
+		landmark_cache.render_target_update_mode = SubViewport.UPDATE_DISABLED
+
+func _landmark_key(record: Dictionary) -> String:
+	return str(record["kind"])+"|"+str(record.get("color",field.data.get("render_style",{}).get("accent","8abed4")))
+
+func _build_landmark_cache() -> void:
+	var styles: Dictionary = {}
+	for record: Dictionary in field.data["props"]:
+		if not textures.has(str(record["kind"])):
+			styles[_landmark_key(record)] = record
+	if styles.is_empty():
+		return
+	# One atlas for the active map (3-7 cells in current maps), not one render
+	# target per object or a permanent cache of all 25 maps. Each styled drawing
+	# is rasterized once; hundreds of instances share its cached Sprite2D cell.
+	var columns: int = mini(4,styles.size())
+	var rows: int = ceili(float(styles.size())/columns)
+	landmark_cache = SubViewport.new()
+	landmark_cache.name = "LandmarkAtlas"
+	landmark_cache.size = Vector2i(LANDMARK_CELL*Vector2(columns,rows)*LANDMARK_BAKE_SCALE)
+	landmark_cache.transparent_bg = true
+	landmark_cache.disable_3d = true
+	landmark_cache.gui_disable_input = true
+	landmark_cache.world_2d = World2D.new()
+	landmark_cache.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	add_child(landmark_cache)
+	landmark_material = ShaderMaterial.new()
+	landmark_material.shader = LANDMARK_SHADER
+	var index: int = 0
+	for key: String in styles:
+		var record: Dictionary = styles[key]
+		var cell: Vector2 = Vector2(index%columns,index/columns)*LANDMARK_CELL
+		var drawing: FieldLandmark = LANDMARK.new()
+		drawing.kind = str(record["kind"])
+		drawing.accent = Color(str(record.get("color",field.data.get("render_style",{}).get("accent","8abed4"))))
+		drawing.stone = Color(str(field.data.get("render_style",{}).get("prop_tint","817e89")))
+		drawing.stone_texture = terrain
+		drawing.position = (cell+LANDMARK_ORIGIN)*LANDMARK_BAKE_SCALE
+		drawing.scale = Vector2.ONE*LANDMARK_BAKE_SCALE
+		landmark_cache.add_child(drawing)
+		var texture := AtlasTexture.new()
+		texture.atlas = landmark_cache.get_texture()
+		texture.region = Rect2(cell*LANDMARK_BAKE_SCALE,LANDMARK_CELL*LANDMARK_BAKE_SCALE)
+		texture.filter_clip = true
+		landmark_textures[key] = texture
+		index += 1
+	_request_landmark_cache_render()
+
+func _ground_material(index: int, alpha: float = 1.0, edge: bool = false) -> ShaderMaterial:
+	var key := Vector3(float(index),alpha,1.0 if edge else 0.0)
+	if ground_materials.has(key):
+		return ground_materials[key] as ShaderMaterial
 	var material := ShaderMaterial.new()
 	material.shader = GROUND_SHADER
 	material.set_shader_parameter("terrain", terrain)
 	material.set_shader_parameter("material_index", float(index))
 	material.set_shader_parameter("opacity", alpha)
+	material.set_shader_parameter("edge_fade",edge)
 	_style_material(material)
-	poly.material = material
+	ground_materials[key] = material
+	return material
+
+func _polygon(points: PackedVector2Array, index: int, alpha: float = 1.0) -> Polygon2D:
+	var poly := Polygon2D.new()
+	poly.polygon = points
+	poly.material = _ground_material(index,alpha)
 	ground.add_child(poly)
 	return poly
 
@@ -84,14 +163,7 @@ func _road(points: Array, width: float, index: int, alpha: float) -> void:
 	line.end_cap_mode = Line2D.LINE_CAP_ROUND
 	line.joint_mode = Line2D.LINE_JOINT_ROUND
 	line.round_precision = 12
-	var material := ShaderMaterial.new()
-	material.shader = GROUND_SHADER
-	material.set_shader_parameter("terrain",terrain)
-	material.set_shader_parameter("material_index",float(index))
-	material.set_shader_parameter("opacity",alpha)
-	material.set_shader_parameter("edge_fade",true)
-	_style_material(material)
-	line.material = material
+	line.material = _ground_material(index,alpha,true)
 	ground.add_child(line)
 
 func _build_ground() -> void:
@@ -133,12 +205,7 @@ func _build_ground() -> void:
 		bank.default_color = Color(.78,.83,.70,1)
 		bank.texture = terrain
 		bank.texture_mode = Line2D.LINE_TEXTURE_STRETCH
-		var bank_material := ShaderMaterial.new()
-		bank_material.shader = GROUND_SHADER
-		bank_material.set_shader_parameter("terrain",terrain)
-		bank_material.set_shader_parameter("material_index",1.0)
-		_style_material(bank_material)
-		bank.material = bank_material
+		bank.material = _ground_material(1)
 		ground.add_child(bank)
 		var poly := Polygon2D.new()
 		poly.polygon = points
@@ -269,7 +336,9 @@ func _process(delta: float) -> void:
 		var size: Vector2 = sprite.get_meta("visual_size",Vector2(80,140)) as Vector2
 		var p: Vector2 = player.global_position
 		var behind: bool = p.y < sprite.position.y + 16 and p.y > sprite.position.y - size.y*.83 and absf(p.x-sprite.position.x)<size.x*.34
-		sprite.modulate.a = move_toward(sprite.modulate.a,float(field.data["foreground"]["fade_alpha"]) if behind else 1.0,delta*4)
+		var target_alpha: float = float(field.data["foreground"]["fade_alpha"]) if behind else 1.0
+		if not is_equal_approx(sprite.modulate.a,target_alpha):
+			sprite.modulate.a = move_toward(sprite.modulate.a,target_alpha,delta*4)
 
 func refresh_visible() -> void:
 	var viewport: Viewport = get_viewport()
@@ -312,14 +381,15 @@ func _load_chunk(key: Vector2i) -> void:
 	for record: Dictionary in buckets[key]:
 		var kind: String = str(record["kind"])
 		if not textures.has(kind):
-			var accent: FieldLandmark = LANDMARK.new()
-			accent.kind = kind
-			accent.accent = Color(str(record.get("color",field.data.get("render_style",{}).get("accent","8abed4"))))
-			accent.stone = Color(str(field.data.get("render_style",{}).get("prop_tint","817e89")))
+			var accent := Sprite2D.new()
+			accent.texture = landmark_textures[_landmark_key(record)]
+			accent.material = landmark_material
 			accent.position = COORD.array_vector(record["position"])
-			accent.scale = Vector2.ONE*float(record.get("scale",1.0))
+			accent.offset = (LANDMARK_CELL*.5-LANDMARK_ORIGIN)*LANDMARK_BAKE_SCALE
+			var prop_scale: float = float(record.get("scale",1.0))
+			accent.scale = Vector2.ONE*prop_scale/LANDMARK_BAKE_SCALE
 			accent.set_meta("prop_kind",kind)
-			accent.set_meta("visual_size",Vector2(110,160)*accent.scale)
+			accent.set_meta("visual_size",LANDMARK.VISUAL_SIZES.get(kind,Vector2(110,160))*prop_scale)
 			if kind in ["crystal","obelisk","arch","banner"]:
 				accent.set_meta("occluder",true)
 			if kind in ["rubble","rune"]:

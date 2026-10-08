@@ -14,26 +14,49 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	queue_redraw()
 
+func _notification(what: int) -> void:
+	match what:
+		NOTIFICATION_APPLICATION_FOCUS_OUT, NOTIFICATION_WM_WINDOW_FOCUS_OUT, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_EXIT_TREE:
+			_release_pointer()
+		NOTIFICATION_VISIBILITY_CHANGED:
+			if not is_visible_in_tree():
+				_release_pointer()
+		NOTIFICATION_RESIZED:
+			_release_pointer()
+			queue_redraw()
+
+func _release_pointer() -> void:
+	active_touch = -1
+	mouse_active = false
+	_set_value(Vector2.ZERO)
+
 func _gui_input(event: InputEvent) -> void:
+	# GUI dispatch already transforms positions to this Control's local space,
+	# including captured drags outside its rect. Never guess the coordinate space
+	# from whether the point is inside: that double-transform reverses directions.
+	# https://docs.godotengine.org/en/4.7/classes/class_control.html#class-control-private-method-gui-input
 	if event is InputEventScreenTouch:
 		var touch: InputEventScreenTouch = event
-		if touch.pressed and active_touch == -1:
+		if (touch.canceled or not touch.pressed) and touch.index == active_touch:
+			_release_pointer()
+		elif touch.pressed and not touch.canceled and active_touch == -1 and not mouse_active:
 			active_touch = touch.index
-			_update_value(_event_position_to_local(touch.position))
-			accept_event()
-		elif not touch.pressed and touch.index == active_touch:
-			active_touch = -1
-			_set_value(Vector2.ZERO)
-			accept_event()
+			_update_value(touch.position)
+		accept_event()
 	elif event is InputEventScreenDrag:
 		var drag: InputEventScreenDrag = event
 		if drag.index == active_touch:
-			_update_value(_event_position_to_local(drag.position))
+			_update_value(drag.position)
 			accept_event()
 	elif event is InputEventMouseButton:
 		var mouse_button: InputEventMouseButton = event
 		if mouse_button.button_index == MOUSE_BUTTON_LEFT:
-			mouse_active = mouse_button.pressed
+			# One pointer owns the stick. Emulated or simultaneous mouse events must
+			# not reset a native contact that is still down.
+			if active_touch != -1:
+				accept_event()
+				return
+			mouse_active = mouse_button.pressed and not mouse_button.canceled
 			if mouse_active:
 				_update_value(mouse_button.position)
 			else:
@@ -43,16 +66,6 @@ func _gui_input(event: InputEvent) -> void:
 		var motion: InputEventMouseMotion = event
 		_update_value(motion.position)
 		accept_event()
-
-func _event_position_to_local(event_position: Vector2) -> Vector2:
-	# Control._gui_input normally delivers local coordinates, including native
-	# Android touch events. Some device/stretch combinations may still report
-	# viewport coordinates, so only transform when the point is clearly outside
-	# this joystick's local rectangle. This avoids the old double-transform bug
-	# that made every touch resolve toward the top.
-	if event_position.x >= -2.0 and event_position.x <= size.x + 2.0 	and event_position.y >= -2.0 and event_position.y <= size.y + 2.0:
-		return event_position
-	return get_global_transform_with_canvas().affine_inverse() * event_position
 
 func _update_value(local_pos: Vector2) -> void:
 	var center: Vector2 = size * 0.5
@@ -72,9 +85,12 @@ func _update_value(local_pos: Vector2) -> void:
 	_set_value(Vector2(cos(snapped_angle), sin(snapped_angle)))
 
 func _set_value(next_value: Vector2) -> void:
-	value = next_value.limit_length(1.0)
+	var normalized: Vector2 = next_value.limit_length(1.0)
+	var changed: bool = not value.is_equal_approx(normalized)
+	value = normalized
 	vector_changed.emit(value)
-	queue_redraw()
+	if changed:
+		queue_redraw()
 
 func _draw() -> void:
 	var center: Vector2 = size * 0.5
