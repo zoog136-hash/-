@@ -16,6 +16,7 @@ const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 
 var field_map: PlayableField = null
 var field_renderer: FieldRenderer = null
@@ -2939,6 +2940,17 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 		if announce:
 			hud.show_message("%s · 효과 구현 전입니다" % skill_name)
 		return false
+	var required_value: Variant = skill.get("required_weapons", [])
+	if required_value is Array and not (required_value as Array).is_empty():
+		if not (required_value as Array).has(_current_weapon_type()):
+			if announce:
+				hud.show_message("%s · 현재 무기로 사용할 수 없는 스킬입니다" % skill_name)
+			return false
+	var required_ammo: int = maxi(0, int(skill.get("ammo_per_hit", 0))) * maxi(1, int(skill.get("hits", 1)))
+	if required_ammo > 0 and int(inventory.get("화살", 0)) < required_ammo:
+		if announce:
+			hud.show_message("%s · 화살 %d개 필요" % [skill_name, required_ammo])
+		return false
 	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
 		if announce:
 			hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
@@ -3147,6 +3159,9 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 		hud.show_message("MP가 부족합니다")
 		return false
 	mp -= mp_cost
+	var required_ammo: int = maxi(0, int(skill.get("ammo_per_hit", 0))) * maxi(1, int(skill.get("hits", 1)))
+	if required_ammo > 0:
+		inventory["화살"] = int(inventory.get("화살", 0)) - required_ammo
 	return true
 
 
@@ -3367,7 +3382,8 @@ func _cast_job_heal_skill(skill: Dictionary) -> bool:
 		return false
 	if not _spend_skill_mp(skill):
 		return false
-	var amount: int = maxi(1, int(skill.get("heal", 40)) + int_stat * 2)
+	var base_amount: int = int(skill.get("heal", 40)) + (int_stat + _active_skill_buff_total("intFlat")) * 2
+	var amount: int = maxi(1, int(round(float(base_amount) * (1.0 + float(skill.get("heal_bonus_percent", 0.0)) / 100.0))))
 	var before: int = hp
 	hp = mini(_effective_max_hp(), hp + amount)
 	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
@@ -3385,6 +3401,19 @@ func _cast_job_buff_skill(skill: Dictionary) -> bool:
 		"def": int(skill.get("def", 0)),
 		"hp": int(skill.get("hpFlat", 0)),
 		"speed": speed_value,
+		"ranged_bonus": int(skill.get("ranged_bonus", 0)),
+		"ranged_accuracy": int(skill.get("ranged_accuracy", 0)),
+		"strFlat": int(skill.get("strFlat", 0)),
+		"dexFlat": int(skill.get("dexFlat", 0)),
+		"intFlat": int(skill.get("intFlat", 0)),
+		"element_bonus_holy": int(skill.get("element_bonus_holy", 0)),
+		"element_bonus_wind": int(skill.get("element_bonus_wind", 0)),
+		"element_resist_dark": int(skill.get("element_resist_dark", 0)),
+		"element_resist_lightning": int(skill.get("element_resist_lightning", 0)),
+		"holy_vs_undead": int(skill.get("holy_vs_undead", 0)),
+		"double_chance": float(skill.get("double_chance", 0.0)),
+		"double_multiplier": float(skill.get("double_multiplier", 0.0)),
+		"damage_reduction": int(skill.get("damage_reduction", 0)),
 		"counter_chance": clampf(float(skill.get("counter_chance", 0.0)), 0.0, 1.0),
 		"counter_multiplier": maxf(0.0, float(skill.get("counter_multiplier", 0.0)))
 	}
