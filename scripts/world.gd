@@ -23,6 +23,7 @@ const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
 var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
 const COMBAT_FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
 var combat_flights: TwilightCombatFlights = null
+var combat_corpses: Node2D = null
 var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
@@ -441,6 +442,10 @@ func _merge_local_consumables_into_catalog() -> void:
 	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
+	combat_corpses = Node2D.new()
+	combat_corpses.name = "CombatCorpses"
+	combat_corpses.y_sort_enabled = true
+	add_child(combat_corpses)
 	combat_flights = COMBAT_FLIGHTS.new()
 	combat_flights.name = "CombatFlights"
 	combat_flights.z_index = 12
@@ -1442,9 +1447,8 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		selected_monster = null
 	if monster == auto_target:
 		auto_target = null
-	if monster.get_parent() == monsters_root:
-		monsters_root.remove_child(monster)
-	monster.queue_free()
+	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
+		monster.reparent(combat_corpses, true)
 	_update_hud()
 	call_deferred("_ensure_monster_count")
 
@@ -4924,3 +4928,5 @@ func _clear_combat_actions() -> void:
 	pending_attack.clear()
 	if is_instance_valid(player): player.cancel_attack()
 	if is_instance_valid(combat_flights): combat_flights.clear()
+	if is_instance_valid(combat_corpses):
+		for corpse: Node in combat_corpses.get_children(): corpse.queue_free()
