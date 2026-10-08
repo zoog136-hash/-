@@ -4419,11 +4419,11 @@ func _player_critical_rate(attack_type: String) -> int:
 	var base: int = 2
 	match attack_type:
 		"ranged":
-			base += _stat_step_bonus(dex_stat, 16, 5.0)
+			base += _stat_step_bonus(_effective_attribute("DEX"), 16, 5.0)
 		"magic":
-			base += _stat_step_bonus(int_stat, 16, 5.0)
+			base += _stat_step_bonus(_effective_attribute("INT"), 16, 5.0)
 		_:
-			base += _stat_step_bonus(str_stat, 16, 5.0)
+			base += _stat_step_bonus(_effective_attribute("STR"), 16, 5.0)
 	for record: Dictionary in _all_equipped_records():
 		base += _record_critical_bonus(record, attack_type)
 	return clampi(base, 0, 50)
@@ -4441,13 +4441,13 @@ func _record_stun_resistance(record: Dictionary) -> int:
 	)))
 
 func _stun_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(str_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _stun_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
 	total += _active_item_buff_total("stun_resistance")
@@ -4466,13 +4466,13 @@ func _record_silence_resistance(record: Dictionary) -> int:
 	)))
 
 func _silence_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_silence_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _silence_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(wis_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_silence_resistance(record)
 	return clampi(total, 0, 100)
@@ -4500,13 +4500,13 @@ func _record_hold_resistance(record: Dictionary) -> int:
 	)))
 
 func _hold_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(dex_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _hold_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_resistance(record)
 	return clampi(total, 0, 100)
@@ -4534,13 +4534,13 @@ func _record_fear_resistance(record: Dictionary) -> int:
 	)))
 
 func _fear_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _fear_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(wis_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_resistance(record)
 	return clampi(total, 0, 100)
@@ -4568,13 +4568,13 @@ func _record_poison_resistance(record: Dictionary) -> int:
 	)))
 
 func _poison_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_poison_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _poison_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_poison_resistance(record)
 	return clampi(total, 0, 100)
@@ -4602,13 +4602,13 @@ func _record_bleed_resistance(record: Dictionary) -> int:
 	)))
 
 func _bleed_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(str_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_bleed_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _bleed_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_bleed_resistance(record)
 	return clampi(total, 0, 100)
@@ -4730,13 +4730,16 @@ func _physical_damage_after_reduction(raw_damage: int) -> int:
 
 func _character_stats_snapshot() -> Dictionary:
 	return {
-		"str": str_stat,
-		"dex": dex_stat,
-		"con": con_stat,
-		"int": int_stat,
-		"wis": wis_stat,
-		"cha": cha_stat,
+		"str": _effective_attribute("STR"),
+		"dex": _effective_attribute("DEX"),
+		"con": _effective_attribute("CON"),
+		"int": _effective_attribute("INT"),
+		"wis": _effective_attribute("WIS"),
+		"cha": _effective_attribute("CHA"),
 		"stat_points": stat_points,
+		"inventory_weight": _inventory_total_weight(),
+		"carrying_capacity": _carrying_capacity(),
+		"encumbrance_multiplier": _inventory_encumbrance_multiplier(),
 		"melee_damage": _melee_damage_stat(),
 		"melee_accuracy": _melee_accuracy_stat(),
 		"ranged_damage": _ranged_damage_stat(),
