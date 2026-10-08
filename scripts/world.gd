@@ -332,6 +332,7 @@ func _load_data() -> void:
 		_enrich_weapon_records(catalog_items_value as Array)
 	_merge_local_consumables_into_catalog()
 	_load_verified_catalog_options()
+	_normalize_option_policies()
 	_index_item_weights()
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
@@ -340,6 +341,37 @@ func _load_data() -> void:
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
 	_build_job_classes()
+
+func _normalize_option_policies() -> void:
+	# Single-player rule: original PvP numerical bonuses become PvE bonuses;
+	# deprecated durability and curse labels must never reach UI/character data.
+	for source: Dictionary in [game_db, catalog_db]:
+		for category: String in ["아이템", "변신", "마법인형", "성물"]:
+			var raw_entries: Variant = source.get(category, [])
+			if not (raw_entries is Array):
+				continue
+			for raw_entry: Variant in raw_entries as Array:
+				if not (raw_entry is Dictionary):
+					continue
+				var entry: Dictionary = raw_entry as Dictionary
+				for key: Variant in entry.keys():
+					var label: String = str(key)
+					if label.begins_with("pvp_"):
+						var dest: String = "pve_" + label.substr(4)
+						entry[dest] = int(entry.get(dest, 0)) + int(entry.get(key, 0))
+						entry.erase(key)
+					elif label in ["cursed", "curse", "non_damageable", "damageable", "indestructible", "weapon_damage_prevention"]:
+						entry.erase(key)
+				if str(entry.get("bless_state", "")).to_lower() in ["cursed", "저주"]:
+					entry.erase("bless_state")
+				var description: String = str(entry.get("desc", ""))
+				var kept: PackedStringArray = []
+				for fragment: String in description.split("·"):
+					var part: String = fragment.strip_edges()
+					if part.contains("손상") or part.contains("저주"):
+						continue
+					kept.append(part.replace("PVP", "PVE").replace("PvP", "PvE"))
+				entry["desc"] = " · ".join(kept)
 
 func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
 	var category_values: Dictionary = verified_catalog_options.get(category, {}) as Dictionary
