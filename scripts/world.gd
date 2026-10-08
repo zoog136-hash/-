@@ -4196,6 +4196,7 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -
 		if new_max_hp > old_max_hp:
 			hp += new_max_hp - old_max_hp
 		hp = mini(hp, new_max_hp)
+		mp = mini(mp, _effective_max_mp())
 		var slot_label: String = str(EQUIPMENT_SLOT_LABELS.get(equip_slot, equip_slot))
 		hud.show_message("%s 장착: %s" % [slot_label, item_name])
 		hud.append_log("%s 슬롯 장착 · %s" % [slot_label, item_name])
@@ -5101,7 +5102,7 @@ func _damage_reduction_stat() -> int:
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
-	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction"))
+	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction"))
 	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct"), 0, 90)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
