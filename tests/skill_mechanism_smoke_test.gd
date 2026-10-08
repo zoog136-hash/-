@@ -34,11 +34,14 @@ func _run() -> void:
 		if str(skill.get("activation", "")) == "passive":
 			passive_count += 1
 		_expect(SKILL_RULES.is_supported(str(skill.get("effect", ""))), "unknown effect " + str(skill.get("name", "")))
-	_expect(passive_count > 0, "missing passive skills")
+	_expect(passive_count == 40, "expected 40 class/passive skills after reclassification")
 	_expect(str((world.call("_skill_record", "쇼크 스턴") as Dictionary).get("effect", "")) == "stun", "stun not routed to status effect")
 	_expect(str((world.call("_skill_record", "사일런스") as Dictionary).get("effect", "")) == "silence", "silence not routed to status effect")
 
 	world.call("_on_job_class_selected", "기사")
+	var initial_gear: Dictionary = world.get("equipped_items") as Dictionary
+	initial_gear["weapon"] = {"type":"한손검","name":"테스트 검","slot":"weapon"}
+	world.set("equipped_items", initial_gear)
 	world.set("mp", 999)
 	world.set("skill_cooldowns", {})
 	world.set("skill_global_cooldown", 0.0)
@@ -181,6 +184,10 @@ func _run() -> void:
 
 	# Both Triple Arrow grades must make three independent damage checks.
 	world.call("_on_job_class_selected", "요정")
+	var bow_gear: Dictionary = world.get("equipped_items") as Dictionary
+	bow_gear["weapon"] = {"type":"활","name":"테스트 활","slot":"weapon"}
+	world.set("equipped_items", bow_gear)
+	var arrows_before: int = int((world.get("inventory") as Dictionary).get("화살", 0))
 	world.set("mp", 999)
 	var triple: Dictionary = world.call("_skill_record", "트리플 애로우") as Dictionary
 	var triple_spirit: Dictionary = world.call("_skill_record", "트리플 애로우(스피릿)") as Dictionary
@@ -196,6 +203,7 @@ func _run() -> void:
 			multiple_landed = true
 			break
 	_expect(multiple_landed, "Triple Arrow did not land multiple independently rolled hits")
+	_expect(int((world.get("inventory") as Dictionary).get("화살", 0)) < arrows_before, "Triple Arrow failed to consume arrows")
 
 	# Find a clear, walkable target position so charge is tested against real
 	# world coordinates instead of teleporting through impassable map tiles.
