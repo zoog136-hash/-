@@ -2167,6 +2167,10 @@ func _sync_item_instances() -> void:
 				unique_id = str(next_item_instance_id)
 			next_item_instance_id += 1
 			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0)) if legacy_import else 0, "element":"", "element_level":0}
+			if not ids.is_empty():
+				var previous: Dictionary = item_instances.get(ids[0], {}) as Dictionary
+				if previous.has("record"):
+					item_instances[unique_id]["record"] = (previous["record"] as Dictionary).duplicate(true)
 			ids.append(unique_id)
 		while ids.size() > desired:
 			var found: bool = false
@@ -2302,6 +2306,12 @@ func _find_catalog_item_record(item_name: String) -> Dictionary:
 			var record: Dictionary = value as Dictionary
 			if str(record.get("name", "")) == item_name:
 				return record
+	# Runtime-earned / generated equipment may not exist in either catalog.
+	for raw_instance: Variant in item_instances.values():
+		if raw_instance is Dictionary:
+			var physical: Dictionary = raw_instance as Dictionary
+			if str(physical.get("name", "")) == item_name and physical.get("record", {}) is Dictionary:
+				return (physical.get("record", {}) as Dictionary).duplicate(true)
 	return {}
 
 func _safe_enhancement_level(kind: String) -> int:
@@ -3951,6 +3961,15 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 	var item_name: String = str(record.get("name", "아이템"))
 	if add_to_inventory:
 		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+		# Generated gear without static catalog rows must also acquire a physical
+		# ID and retain its schema for reload, equip and all scroll types.
+		if _enhancement_kind_for_record(record) != "" and _find_catalog_item_record(item_name).is_empty():
+			var new_id: String = str(next_item_instance_id)
+			while item_instances.has(new_id):
+				next_item_instance_id += 1
+				new_id = str(next_item_instance_id)
+			next_item_instance_id += 1
+			item_instances[new_id] = {"name":item_name, "level":0, "element":"", "element_level":0, "record":record.duplicate(true)}
 	var source_slot: String = str(record.get("slot", ""))
 	if source_slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
