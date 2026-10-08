@@ -24,7 +24,8 @@ func _run() -> void:
 	await process_frame
 
 	var db: Array = world.get("skills_db") as Array
-	_expect(db.size() == 258, "skill DB count unexpectedly changed")
+	_expect(db.size() == 257, "skill DB count unexpectedly changed")
+	_expect((world.call("_skill_record", "라이트") as Dictionary).is_empty(), "removed Light skill remains castable")
 	var passive_count: int = 0
 	for value: Variant in db:
 		if not (value is Dictionary):
@@ -32,7 +33,7 @@ func _run() -> void:
 		var skill: Dictionary = value as Dictionary
 		if str(skill.get("activation", "")) == "passive":
 			passive_count += 1
-		_expect(SKILL_RULES.is_supported(str(skill.get("effect", ""))) or str(skill.get("effect", "")) == "utility", "unknown effect " + str(skill.get("name", "")))
+		_expect(SKILL_RULES.is_supported(str(skill.get("effect", ""))), "unknown effect " + str(skill.get("name", "")))
 	_expect(passive_count > 0, "missing passive skills")
 	_expect(str((world.call("_skill_record", "쇼크 스턴") as Dictionary).get("effect", "")) == "stun", "stun not routed to status effect")
 	_expect(str((world.call("_skill_record", "사일런스") as Dictionary).get("effect", "")) == "silence", "silence not routed to status effect")
