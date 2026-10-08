@@ -56,23 +56,56 @@ func import_state(input: Variant) -> void:
 func permanent_damage_bonus(bonus_name: String) -> int:
 	return int(permanent_damage_bonuses.get(bonus_name, 0))
 
+func migrate_legacy_elemental() -> void:
+	# Old consumables used item *names* as elemental keys. Migrate that one
+	# shared enchant to ONE stable physical instance instead of all duplicates.
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	for key: Variant in elemental_enchants.keys():
+		var old_key: String = str(key)
+		var value: Variant = elemental_enchants[key]
+		if not (value is Dictionary):
+			continue
+		var element: String = str((value as Dictionary).get("element", ""))
+		var strength: int = clampi(int((value as Dictionary).get("level", 0)), 0, 5)
+		if not RULES.ELEMENT_NAMES.has(element) or strength <= 0:
+			continue
+		var instance_id: String = old_key if instances.has(old_key) else ""
+		if instance_id.is_empty():
+			instance_id = str(world.call("_chosen_instance", old_key))
+		if not instances.has(instance_id):
+			continue
+		var item: Dictionary = instances[instance_id] as Dictionary
+		if int(item.get("element_level", 0)) == 0:
+			item["element"] = element
+			item["element_level"] = strength
+			instances[instance_id] = item
+	elemental_enchants.clear()
+
+func _enchant_for_weapon(weapon_record: Dictionary) -> Dictionary:
+	var item_id: String = str(weapon_record.get("instance_id", ""))
+	if item_id.is_empty():
+		return {}
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	var record_value: Variant = instances.get(item_id, {})
+	if not (record_value is Dictionary):
+		return {}
+	var entry: Dictionary = record_value as Dictionary
+	if str(entry.get("name", "")) != str(weapon_record.get("name", "")):
+		return {}
+	return entry
+
 func weapon_element(weapon_record: Dictionary) -> String:
-	var name: String = str(weapon_record.get("name", ""))
-	var value: Variant = elemental_enchants.get(name, {})
-	if value is Dictionary and int((value as Dictionary).get("level", 0)) > 0:
-		return str((value as Dictionary).get("element", ""))
-	return ""
+	var entry: Dictionary = _enchant_for_weapon(weapon_record)
+	if int(entry.get("element_level", 0)) <= 0:
+		return ""
+	return str(entry.get("element", ""))
 
 func weapon_element_bonus(weapon_record: Dictionary, target: Node) -> int:
 	if target == null or not is_instance_valid(target):
 		return 0
-	var name: String = str(weapon_record.get("name", ""))
-	var value: Variant = elemental_enchants.get(name, {})
-	if not (value is Dictionary):
-		return 0
-	var enchant: Dictionary = value as Dictionary
-	var strength: int = int(enchant.get("level", 0))
-	var channel: String = str(enchant.get("element", ""))
+	var entry: Dictionary = _enchant_for_weapon(weapon_record)
+	var strength: int = int(entry.get("element_level", 0))
+	var channel: String = str(entry.get("element", ""))
 	if strength <= 0 or not RULES.ELEMENT_NAMES.has(channel):
 		return 0
 	if target.has_method("elemental_resistance_percent"):
@@ -304,14 +337,17 @@ func _use_half_elixir(item_name: String, spec: Dictionary) -> void:
 
 func _use_elemental_scroll(item_name: String, spec: Dictionary) -> void:
 	var candidates: Array[String] = []
-	var inv: Dictionary = world.get("inventory") as Dictionary
-	for key: Variant in inv.keys():
-		var weapon_name: String = str(key)
-		if int(inv.get(weapon_name, 0)) <= 0:
+	world.call("_sync_item_instances")
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	for id_key: Variant in instances.keys():
+		var id: String = str(id_key)
+		var entry: Dictionary = instances[id] as Dictionary
+		var weapon_name: String = str(entry.get("name", ""))
+		if int((world.get("inventory") as Dictionary).get(weapon_name, 0)) <= 0:
 			continue
 		var record: Dictionary = world.call("_find_catalog_item_record", weapon_name)
 		if str(world.call("_enhancement_kind_for_record", record)) == "weapon":
-			candidates.append(weapon_name)
+			candidates.append(weapon_name + "@@@" + id)
 	candidates.sort()
 	if candidates.is_empty():
 		_message("속성을 강화할 무기를 보유하고 있지 않습니다")
@@ -327,7 +363,17 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 	var selector: OptionButton = OptionButton.new()
 	selector.custom_minimum_size = Vector2(330, 42)
 	for candidate: String in candidates:
-		selector.add_item(candidate)
+		var display_name: String = candidate
+		if candidate.contains("@@@"):
+			var parts: PackedStringArray = candidate.split("@@@", false, 1)
+			var instance_id: String = parts[1]
+			var instances: Dictionary = world.get("item_instances") as Dictionary
+			var entry: Dictionary = instances.get(instance_id, {}) as Dictionary
+			var grade_text: String = "+%d" % int(entry.get("level", 0))
+			var element_level: int = int(entry.get("element_level", 0))
+			var element_name: String = str(RULES.ELEMENT_NAMES.get(str(entry.get("element", "")), ""))
+			display_name = "%s %s [%s] %s" % [grade_text, parts[0], instance_id, ("%s %d단계" % [element_name, element_level]) if element_level > 0 else ""]
+		selector.add_item(display_name)
 	dialog.get_vbox().add_child(selector)
 	var element_selector: OptionButton = null
 	if choose_element:
@@ -353,11 +399,14 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 	dialog.canceled.connect(func() -> void: dialog.queue_free())
 	dialog.popup_centered(Vector2i(440, 270 if choose_element else 215))
 
-func element_stage_cap(weapon_name: String) -> int:
+func element_stage_cap(weapon_name: String, instance_id: String = "") -> int:
 	# Common weapons permit 3; +10/+11 reach 4/5. Legacy special weapons
 	# (마족/집행) may reach 5 even without +11, based on community references.
 	var levels: Dictionary = world.get("enhancement_levels") as Dictionary
 	var enchant: int = maxi(0, int(levels.get(weapon_name, 0)))
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	if instance_id != "" and instances.has(instance_id):
+		enchant = maxi(0, int((instances[instance_id] as Dictionary).get("level", 0)))
 	if weapon_name.contains("마족") or weapon_name.contains("집행"):
 		return 5
 	if enchant >= 11:
@@ -366,9 +415,19 @@ func element_stage_cap(weapon_name: String) -> int:
 		return 4
 	return 3
 
-func apply_element_scroll(scroll_name: String, weapon_name: String, element_name: String) -> void:
+func apply_element_scroll(scroll_name: String, weapon_reference: String, element_name: String) -> void:
+	var selection: Dictionary = world.call("_parse_enhancement_target", weapon_reference)
+	var weapon_name: String = str(selection.get("name", weapon_reference))
+	var instance_id: String = str(selection.get("id", ""))
+	world.call("_sync_item_instances")
+	if instance_id == "":
+		instance_id = str(world.call("_chosen_instance", weapon_name))
+	var instances: Dictionary = world.get("item_instances") as Dictionary
 	var inv: Dictionary = world.get("inventory") as Dictionary
 	if int(inv.get(scroll_name, 0)) <= 0 or int(inv.get(weapon_name, 0)) <= 0:
+		return
+	if not instances.has(instance_id) or str((instances[instance_id] as Dictionary).get("name", "")) != weapon_name:
+		_message("해당 무기 개체를 찾을 수 없습니다")
 		return
 	var spec: Dictionary = RULES.definition(scroll_name)
 	if str(spec.get("kind", "")) != "element" or not RULES.ELEMENT_NAMES.has(element_name):
@@ -378,24 +437,26 @@ func apply_element_scroll(scroll_name: String, weapon_name: String, element_name
 	var weapon: Dictionary = world.call("_find_catalog_item_record", weapon_name)
 	if str(world.call("_enhancement_kind_for_record", weapon)) != "weapon":
 		return
-	var current: Dictionary = elemental_enchants.get(weapon_name, {}) as Dictionary
-	var previous_type: String = str(current.get("element", ""))
-	var previous_level: int = int(current.get("level", 0))
+	var entry: Dictionary = instances[instance_id] as Dictionary
+	var previous_type: String = str(entry.get("element", ""))
+	var previous_level: int = int(entry.get("element_level", 0))
 	if previous_type != "" and previous_type != element_name:
 		_message("다른 속성을 강화한 무기입니다. 속성 변경은 별도 기능입니다")
 		return
-	var cap: int = element_stage_cap(weapon_name)
+	var cap: int = element_stage_cap(weapon_name, instance_id)
 	if previous_level >= cap:
-		_message("%s 속성 강화 한도 %d단계입니다" % [weapon_name, cap])
+		_message("%s [%s] 속성 강화 한도 %d단계입니다" % [weapon_name, instance_id, cap])
 		return
 	var chance: float = RULES.element_success_chance(previous_level)
 	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
 	var success: bool = rng.randf_range(0.0, 100.0) < chance
 	if success:
-		elemental_enchants[weapon_name] = {"element":element_name, "level":previous_level + 1}
+		entry["element"] = element_name
+		entry["element_level"] = previous_level + 1
+		instances[instance_id] = entry
 	_consume(scroll_name)
-	_message("%s · %s 강화 %s · 현재 %d단계 (TWILIGHT 임시 확률 %.1f%%)" % [
-		weapon_name, str(RULES.ELEMENT_NAMES[element_name]),
-		"성공" if success else "실패 / 무기 유지",
+	_message("%s [%s] · %s %s · 현재 %d단계 (확률 %.1f%%)" % [
+		weapon_name, instance_id, str(RULES.ELEMENT_NAMES[element_name]),
+		"성공" if success else "실패/무기 유지",
 		previous_level + (1 if success else 0), chance
 	])
