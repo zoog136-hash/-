@@ -46,6 +46,12 @@ func _run() -> void:
 	world.player.set_touch_vector(Vector2.ZERO)
 	await create_timer(0.75).timeout
 	check(dummy.damage_hit_count == count and world.pending_attack.is_empty(), "manual move failed to cancel pending hit")
+	world.mp = 100
+	check(world._cast_magic_attack(dummy, 26, 3, "busy marker check"), "legacy command did not start windup")
+	var legacy_sequence: int = int(world.pending_attack.get("id", -1))
+	check(not world._cast_magic_attack(dummy, 26, 3, "duplicate command"), "legacy command overwrote pending attack")
+	check(world.mp == 97 and int(world.pending_attack.get("id", -1)) == legacy_sequence, "rejected duplicate consumed MP or changed sequence")
+	await create_timer(0.85).timeout
 	# An in-flight spell follows the original moving target, not selection.
 	var arrived: Array[int] = []
 	world.combat_flights.launch(world.player.position + Vector2(-100, -24), dummy, "magic", func() -> void: arrived.append(1), 300.0)

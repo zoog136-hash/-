@@ -23,8 +23,9 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if record.get("animation_profile", {}) is Dictionary:
 		settings = settings.duplicate(true)
 		settings.merge(record.get("animation_profile", {}), true)
-	for property: String in ["layout", "motion_style", "movement_fps", "reference_speed", "attack_hit_ratio", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
+	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
 		if settings.has(property): result.set(property, settings[property])
+	result.use_profile_hit_ratio = settings.has("attack_hit_ratio")
 	for property: String in ["sprite_offset", "collision_offset", "projectile_origin", "hit_position", "shadow_size"]:
 		var value: Variant = settings.get(property)
 		if value is Array and value.size() == 2: result.set(property, Vector2(float(value[0]), float(value[1])))
@@ -41,6 +42,11 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 	var result: SpriteFrames = SpriteFrames.new()
 	result.remove_animation("default")
 	if path.is_empty() or not ResourceLoader.exists(path): return result
+	if path.get_extension() in ["tres", "res"]:
+		var authored: SpriteFrames = load(path) as SpriteFrames
+		if authored != null:
+			_cache_frames(key, authored)
+			return authored
 	var texture: Texture2D = load(path) as Texture2D
 	if texture == null: return result
 	var names: Array[String] = ["still"]
@@ -67,8 +73,11 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 				atlas.atlas = texture
 				atlas.region = Rect2(Vector2(column, row) * cell, cell)
 				result.add_frame(name_value, atlas)
+	_cache_frames(key, result)
+	return result
+
+static func _cache_frames(key: String, result: SpriteFrames) -> void:
 	frame_cache[key] = result
 	frame_order.append(key)
 	while frame_order.size() > MAX_FRAME_CACHE:
 		frame_cache.erase(frame_order.pop_front())
-	return result

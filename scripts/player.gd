@@ -211,10 +211,11 @@ func _build_class_frames(path: String) -> void:
 	class_sprite.pause()
 
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
+	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
+	if not transform_profile.frames_path.is_empty(): path = transform_profile.frames_path
 	if path.is_empty() or not ResourceLoader.exists(path):
 		clear_transform_visual()
 		return
-	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
 	transform_profile.resource_path_hint = path
 	var frames: SpriteFrames = ANIMATION_CATALOG.frames(path, transform_profile.layout)
 	var names: PackedStringArray = frames.get_animation_names()

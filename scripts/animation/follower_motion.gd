@@ -13,11 +13,13 @@ var previous_sequence: int = -1
 var follow_offset: Vector2 = Vector2(-54, 24)
 
 func configure(record: Dictionary, path: String, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
+	if not record.is_empty():
+		motion.profile = CATALOG.for_record("doll", record, path)
+		if not motion.profile.frames_path.is_empty(): path = motion.profile.frames_path
 	if record.is_empty() or path.is_empty() or not ResourceLoader.exists(path):
 		enabled = false
 		state = "despawn"
 		return
-	motion.profile = CATALOG.for_record("doll", record, path)
 	sprite.stop()
 	sprite.sprite_frames = CATALOG.frames(path, motion.profile.layout)
 	var names: PackedStringArray = sprite.sprite_frames.get_animation_names()

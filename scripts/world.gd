@@ -829,6 +829,7 @@ func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -890,6 +891,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	return bleeding
 
 func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_duration: float = 6.0, tick_damage: int = 12, tick_interval: float = 1.0, skill_name: String = "포이즌") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -941,6 +943,7 @@ func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_durati
 	return poisoned
 
 func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration: float = 2.5, skill_name: String = "피어") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
 		return false
@@ -992,6 +995,7 @@ func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration:
 	return feared
 
 func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: float = 2.5, skill_name: String = "홀드") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -1043,6 +1047,7 @@ func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: 
 	return held
 
 func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_duration: float = 3.0, skill_name: String = "사일런스") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -1094,6 +1099,7 @@ func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_dura
 	return silenced
 
 func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 10, stun_duration: float = 2.0, skill_name: String = "쇼크 스턴") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -1155,6 +1161,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	return stunned
 
 func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill_name: String = "마법") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -4912,7 +4919,7 @@ func _queue_player_attack(target: TwilightMonster, kind: String, callback: Calla
 	player.cancel_attack()
 	player.clear_click_path()
 	var style: String = TwilightAnimationProfile.weapon_style(_current_weapon_type(), kind)
-	var marker: float = TwilightAnimationProfile.hit_ratio(style)
+	var marker: float = player.motion.profile.marker_for(style)
 	var id: int = player.start_combat_attack(target.global_position, duration, style, marker)
 	pending_attack = {"id":id, "target":weakref(target), "callback":callback, "kind":kind,
 		"style":style, "normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation}

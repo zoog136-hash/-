@@ -85,7 +85,14 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 	gait += delta * profile.movement_fps * move_ratio
 	if active:
 		attack_elapsed += delta
-		if visual_hold <= 0.0: visual_progress = minf(1.0, attack_elapsed / attack_duration)
+		if visual_hold <= 0.0:
+			var p: float = minf(1.0, attack_elapsed / attack_duration)
+			var speed: float = clampf(profile.attack_animation_speed, 0.25, 4.0)
+			# Speed changes pose easing inside each phase, preserving the marker and cadence.
+			if p < attack_hit_ratio:
+				visual_progress = attack_hit_ratio * (1.0 - pow(1.0 - p / attack_hit_ratio, speed))
+			else:
+				visual_progress = attack_hit_ratio + (1.0 - attack_hit_ratio) * (1.0 - pow(1.0 - (p - attack_hit_ratio) / (1.0 - attack_hit_ratio), speed))
 		if not released and attack_elapsed >= attack_duration * attack_hit_ratio:
 			released = true # mark before signal: reentrant handlers cannot double-hit
 			strike.emit(sequence)
@@ -152,6 +159,8 @@ func _apply_frames(sprite: AnimatedSprite2D) -> void:
 	if frames == null: return
 	var key: String = str(profile.animation_names.get(state + ":" + str(facing8), ""))
 	if key.is_empty(): key = str(profile.animation_names.get(state, ""))
+	if key.is_empty() and active:
+		key = str(profile.animation_names.get("attack:" + str(facing8), profile.animation_names.get("attack", "")))
 	if key.is_empty():
 		if profile.layout == "class5":
 			key = "attack" if active else ["walk_down", "walk_up", "walk_left", "walk_right"][facing4]
@@ -170,7 +179,7 @@ func _apply_frames(sprite: AnimatedSprite2D) -> void:
 	var frame_value: int = 0
 	if active and (profile.dedicated_attack or profile.animation_names.has(state)):
 		# Original class hit is frame 3/5, mapped exactly to the strike marker.
-		var marker_frame: int = mini(3, count - 1)
+		var marker_frame: int = clampi(profile.attack_hit_frame, 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = mini(marker_frame - 1, int(visual_progress / attack_hit_ratio * marker_frame))
 		else:

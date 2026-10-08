@@ -238,6 +238,9 @@ func _run() -> void:
 		charge_dummy.setup({"name":"돌진 검증용", "lv":1, "hp":999999, "mr":0}, player, world, null)
 		charge_dummy.global_position = charge_position
 		world.set("selected_monster", charge_dummy)
+		# This existing assertion requires a landed hit although combat allows MISS.
+		# Fix the fixture seed, leaving the production hit chance and damage unchanged.
+		(world.get("rng") as RandomNumberGenerator).seed = 20261008
 		var cast_charge: bool = bool(world.call("_cast_job_skill", "기사의 돌진 12"))
 		_expect(cast_charge, "charge skill could not start in open terrain")
 		if cast_charge:
