@@ -154,6 +154,18 @@ func _run() -> void:
 			fresh_count += 1
 	_check(fresh_count == 1, "Newly collected third sword inherited legacy +4 enchant")
 
+	# A previous consumable save could store elemental state by NAME. Migrate
+	# onto a single physical instance, never copy the element to all swords.
+	service.call("import_state", {"elemental_enchants":{"낡은 장검":{"element":"fire","level":3}}})
+	service.call("migrate_legacy_elemental")
+	instances = world.get("item_instances") as Dictionary
+	var migrated_elements: int = 0
+	for id_key: Variant in instances.keys():
+		var physical: Dictionary = instances[id_key] as Dictionary
+		if str(physical.get("name", "")) == "낡은 장검" and int(physical.get("element_level", 0)) == 3:
+			migrated_elements += 1
+	_check(migrated_elements == 1, "Legacy name-keyed element migration applied to multiple copies")
+
 	world.queue_free()
 	await process_frame
 	_finish()
