@@ -4121,6 +4121,15 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -
 	var item_name: String = str(record.get("name", "아이템"))
 	if add_to_inventory:
 		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+		# Reward/shop records can be dynamically generated and absent from the
+		# static catalog. They still need a unique physical enhancement ID.
+		if _enhancement_kind_for_record(record) != "" and _find_catalog_item_record(item_name).is_empty():
+			var item_id: String = str(next_item_instance_id)
+			while item_instances.has(item_id):
+				next_item_instance_id += 1
+				item_id = str(next_item_instance_id)
+			next_item_instance_id += 1
+			item_instances[item_id] = {"name":item_name,"level":0}
 	var source_slot: String = str(record.get("slot", ""))
 	if source_slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
