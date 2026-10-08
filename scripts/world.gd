@@ -16,6 +16,7 @@ const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 
@@ -52,6 +53,7 @@ var game_db: Dictionary = {}
 var loot_catalog: Dictionary = {}
 var monster_db: Array = []
 var item_db: Array = []
+var item_weight_index: Dictionary = {}
 var skills_db: Array = []
 var job_classes: Array = []
 var job_class: String = "기사"
@@ -319,6 +321,7 @@ func _load_data() -> void:
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
 	_merge_local_consumables_into_catalog()
+	_index_item_weights()
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
 		catalog_image_index = image_index_value as Dictionary
@@ -326,6 +329,84 @@ func _load_data() -> void:
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
 	_build_job_classes()
+
+func _index_item_weights() -> void:
+	item_weight_index.clear()
+	var type_defaults: Dictionary = {}
+	var overrides: Dictionary = {}
+	var path: String = "res://data/item_weight_rules.json"
+	if FileAccess.file_exists(path):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if parsed is Dictionary:
+			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
+			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+	for source: Variant in [catalog_db.get("아이템", []), item_db]:
+		if not (source is Array):
+			continue
+		for entry: Variant in source as Array:
+			if not (entry is Dictionary):
+				continue
+			var record: Dictionary = entry as Dictionary
+			var name_value: String = str(record.get("name", ""))
+			if name_value.is_empty():
+				continue
+			item_weight_index[name_value] = maxi(0, int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults))))
+
+func _inventory_total_weight() -> int:
+	var total: int = 0
+	for name_value: Variant in inventory.keys():
+		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0)))
+	return total
+
+func _carrying_capacity() -> int:
+	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON"))
+
+func _inventory_encumbrance_multiplier() -> float:
+	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
+
+func _equipment_attribute_bonus(stat: String) -> int:
+	var result: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if entry is Dictionary and not (entry as Dictionary).is_empty():
+			result += ITEM_OPTIONS.attribute(entry as Dictionary, stat)
+	return result
+
+func _effective_attribute(stat: String) -> int:
+	var base: int = 0
+	match stat:
+		"STR": base = str_stat
+		"DEX": base = dex_stat
+		"CON": base = con_stat
+		"INT": base = int_stat
+		"WIS": base = wis_stat
+		"CHA": base = cha_stat
+		_: return 0
+	return base + _equipment_attribute_bonus(stat)
+
+func _equipment_accuracy_bonus(kind: String) -> int:
+	var result: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if entry is Dictionary and not (entry as Dictionary).is_empty():
+			result += ITEM_OPTIONS.accuracy(entry as Dictionary, kind)
+	return result
+
+func _equipment_additional_damage(kind: String) -> int:
+	var result: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if entry is Dictionary and not (entry as Dictionary).is_empty():
+			result += ITEM_OPTIONS.additional_damage(entry as Dictionary, kind)
+	return result
+
+func _weapon_size_adjustment(target: TwilightMonster) -> int:
+	if target == null:
+		return 0
+	var label: String = str(target.get_meta("size_class", "")).to_lower()
+	# Explicit size_class wins; old DB has no size and uses boss fallback.
+	var large: bool = label == "large" or (label.is_empty() and target.is_boss)
+	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), large)
 
 func _ensure_ammo_items() -> void:
 	var names: Dictionary = {}
