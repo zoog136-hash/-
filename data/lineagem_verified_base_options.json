@@ -41,9 +41,9 @@
         "weightBonus": 1400,
         "potionHealFlat": 5,
         "potionHealPct": 5,
-        "pvp_damage_reduction": 3
+        "pve_damage_reduction": 3
       },
-      "desc": "경험치 +16% · 무게 보너스 +1400 · PVP 대미지 리덕션 +3 · 물약 회복량 +5 · 물약 회복률 +5%",
+      "desc": "경험치 +16% · 무게 보너스 +1400 · PVE 대미지 리덕션 +3 · 물약 회복량 +5 · 물약 회복률 +5%",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/"
     },
     "서큐버스퀸": {
@@ -90,10 +90,10 @@
         "speed": 1,
         "xp": 0.14,
         "weightBonus": 1400,
-        "pvp_melee_damage": 2,
-        "dg": 1
+        "dg": 1,
+        "pve_melee_damage": 2
       },
-      "desc": "경험치 +14% · 무게 보너스 +1400 · PVP 근거리 추가 대미지 +2 · 근거리 명중 +2 · 근거리 회피력 +1",
+      "desc": "경험치 +14% · 무게 보너스 +1400 · PVE 근거리 추가 대미지 +2 · 근거리 명중 +2 · 근거리 회피력 +1",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/"
     },
     "푸른 드레이크": {
@@ -143,11 +143,11 @@
         "speed": 1,
         "xp": 0.25,
         "weightBonus": 2400,
-        "pvp_damage_reduction": 5,
         "stun_resistance": 8,
-        "fear_resistance": 5
+        "fear_resistance": 5,
+        "pve_damage_reduction": 5
       },
-      "desc": "경험치 +25% · 무게 보너스 +2400 · PVP 대미지 리덕션 +5 · 스턴 내성 +8% · 공포 내성 +5%",
+      "desc": "경험치 +25% · 무게 보너스 +2400 · PVE 대미지 리덕션 +5 · 스턴 내성 +8% · 공포 내성 +5%",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/",
       "pending": "PvP world absent; PvP-only bonus has no effect in single-player PvE"
     },
@@ -241,11 +241,11 @@
         "xp": 0.13,
         "hpPct": 0.07,
         "damage_reduction": 2,
-        "pvp_damage_reduction": 2,
         "skillCooldownPct": 7,
-        "skillLevelBonus": 1
+        "skillLevelBonus": 1,
+        "pve_damage_reduction": 2
       },
-      "desc": "경험치 +13% · 최대 HP +7% · 스킬 쿨타임 감소 7% · 대미지 리덕션 +2 · PVP 대미지 리덕션 +2 · 일반~영웅 스킬 레벨 +1",
+      "desc": "경험치 +13% · 최대 HP +7% · 스킬 쿨타임 감소 7% · 대미지 리덕션 +2 · PVE 대미지 리덕션 +2 · 일반~영웅 스킬 레벨 +1",
       "source": "https://lineagem.inven.co.kr/db/hallows/",
       "pending": "Skill level tier semantics remain unimplemented"
     },
