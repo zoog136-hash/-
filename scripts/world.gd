@@ -17,6 +17,22 @@ const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
+var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
+const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
+var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
+const COMBAT_VFX = preload("res://scripts/animation/combat_vfx.gd")
+var combat_vfx: TwilightCombatVFX = null
+var feedback_kind: String = "melee"
+var feedback_style: String = "slash"
+const COMBAT_FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
+var combat_flights: TwilightCombatFlights = null
+var combat_corpses: Node2D = null
+var pending_attack: Dictionary = {}
+var combat_generation: int = 0
+var resolving_combat_action: bool = false
+
+const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 
 var field_map: PlayableField = null
@@ -430,6 +446,20 @@ func _merge_local_consumables_into_catalog() -> void:
 	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
+	combat_vfx = COMBAT_VFX.new()
+	combat_vfx.name = "CombatVFX"
+	combat_vfx.z_index = 12
+	add_child(combat_vfx)
+	combat_corpses = Node2D.new()
+	combat_corpses.name = "CombatCorpses"
+	combat_corpses.y_sort_enabled = true
+	add_child(combat_corpses)
+	combat_flights = COMBAT_FLIGHTS.new()
+	combat_flights.name = "CombatFlights"
+	combat_flights.z_index = 12
+	add_child(combat_flights)
+	player.attack_strike.connect(_release_player_attack)
+	player.attack_cancelled.connect(_cancel_player_attack)
 	player.attack_requested.connect(_attack)
 	player.auto_toggled.connect(_on_auto_toggled)
 	player.poison_tick.connect(_on_player_poison_tick)
@@ -462,6 +492,7 @@ func _connect_signals() -> void:
 	hud.enhancement_requested.connect(_attempt_enhancement)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
+	_clear_combat_actions()
 	if not maps_by_id.has(map_id):
 		return
 	# Validate before releasing the current playable world.
@@ -798,6 +829,7 @@ func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	return _magic_hit_chance(_magic_accuracy_stat(), target.magic_resistance)
 
 func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 28, bleed_duration: float = 4.5, tick_damage: int = 9, tick_interval: float = 0.75, skill_name: String = "출혈 베기") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -816,9 +848,13 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	if player.global_position.distance_to(target.global_position) > 90.0:
 		hud.show_message("출혈 베기 사거리 밖입니다")
 		return false
+	if not resolving_combat_action:
+		mp = maxi(0, mp - mp_cost)
+		_queue_player_attack(target, "melee", _cast_bleed_skill.bind(target, 0, power, bleed_duration, tick_damage, tick_interval, skill_name), _skill_motion_duration({}), false, 90.0)
+		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
-	player.pulse_attack()
+	if not resolving_combat_action: player.pulse_attack()
 	var hit_chance: float = _melee_hit_chance(target)
 	if not _roll_melee_hit(target):
 		target.show_miss()
@@ -855,6 +891,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	return bleeding
 
 func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_duration: float = 6.0, tick_damage: int = 12, tick_interval: float = 1.0, skill_name: String = "포이즌") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -873,9 +910,13 @@ func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_durati
 	if player.global_position.distance_to(target.global_position) > 300.0:
 		hud.show_message("포이즌 사거리 밖입니다")
 		return false
+	if not resolving_combat_action:
+		mp = maxi(0, mp - mp_cost)
+		_queue_player_attack(target, "magic", _cast_poison_skill.bind(target, 0, poison_duration, tick_damage, tick_interval, skill_name), _skill_motion_duration({}), false, 300.0)
+		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
-	player.pulse_attack()
+	if not resolving_combat_action: player.pulse_attack()
 	var magic_hit_chance: float = _player_magic_hit_chance(target)
 	if rng.randf() >= magic_hit_chance:
 		target.show_miss()
@@ -902,6 +943,7 @@ func _cast_poison_skill(target: TwilightMonster, mp_cost: int = 6, poison_durati
 	return poisoned
 
 func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration: float = 2.5, skill_name: String = "피어") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_stunned():
 		hud.show_message("스턴 상태에서는 스킬을 사용할 수 없습니다")
 		return false
@@ -920,9 +962,13 @@ func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration:
 	if player.global_position.distance_to(target.global_position) > 300.0:
 		hud.show_message("피어 사거리 밖입니다")
 		return false
+	if not resolving_combat_action:
+		mp = maxi(0, mp - mp_cost)
+		_queue_player_attack(target, "magic", _cast_fear_skill.bind(target, 0, fear_duration, skill_name), _skill_motion_duration({}), false, 300.0)
+		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
-	player.pulse_attack()
+	if not resolving_combat_action: player.pulse_attack()
 	var magic_hit_chance: float = _player_magic_hit_chance(target)
 	if rng.randf() >= magic_hit_chance:
 		target.show_miss()
@@ -949,6 +995,7 @@ func _cast_fear_skill(target: TwilightMonster, mp_cost: int = 10, fear_duration:
 	return feared
 
 func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: float = 2.5, skill_name: String = "홀드") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -967,9 +1014,13 @@ func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: 
 	if player.global_position.distance_to(target.global_position) > 280.0:
 		hud.show_message("홀드 사거리 밖입니다")
 		return false
+	if not resolving_combat_action:
+		mp = maxi(0, mp - mp_cost)
+		_queue_player_attack(target, "magic", _cast_hold_skill.bind(target, 0, hold_duration, skill_name), _skill_motion_duration({}), false, 280.0)
+		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
-	player.pulse_attack()
+	if not resolving_combat_action: player.pulse_attack()
 	var magic_hit_chance: float = _player_magic_hit_chance(target)
 	if rng.randf() >= magic_hit_chance:
 		target.show_miss()
@@ -996,6 +1047,7 @@ func _cast_hold_skill(target: TwilightMonster, mp_cost: int = 8, hold_duration: 
 	return held
 
 func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_duration: float = 3.0, skill_name: String = "사일런스") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -1014,9 +1066,13 @@ func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_dura
 	if player.global_position.distance_to(target.global_position) > 320.0:
 		hud.show_message("사일런스 사거리 밖입니다")
 		return false
+	if not resolving_combat_action:
+		mp = maxi(0, mp - mp_cost)
+		_queue_player_attack(target, "magic", _cast_silence_skill.bind(target, 0, silence_duration, skill_name), _skill_motion_duration({}), false, 320.0)
+		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
-	player.pulse_attack()
+	if not resolving_combat_action: player.pulse_attack()
 	var magic_hit_chance: float = _player_magic_hit_chance(target)
 	if rng.randf() >= magic_hit_chance:
 		target.show_miss()
@@ -1043,6 +1099,7 @@ func _cast_silence_skill(target: TwilightMonster, mp_cost: int = 8, silence_dura
 	return silenced
 
 func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 10, stun_duration: float = 2.0, skill_name: String = "쇼크 스턴") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -1061,9 +1118,13 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	if player.global_position.distance_to(target.global_position) > 90.0:
 		hud.show_message("쇼크 스턴 사거리 밖입니다")
 		return false
+	if not resolving_combat_action:
+		mp = maxi(0, mp - mp_cost)
+		_queue_player_attack(target, "melee", _cast_stun_skill.bind(target, power, 0, stun_duration, skill_name), _skill_motion_duration({}), false, 90.0)
+		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
-	player.pulse_attack()
+	if not resolving_combat_action: player.pulse_attack()
 	var hit_chance: float = _melee_hit_chance(target)
 	if not _roll_melee_hit(target):
 		target.show_miss()
@@ -1100,6 +1161,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	return stunned
 
 func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill_name: String = "마법") -> bool:
+	if not resolving_combat_action and not pending_attack.is_empty(): return false
 	if player.is_feared():
 		hud.show_message("공포 상태에서는 행동할 수 없습니다")
 		return false
@@ -1119,9 +1181,13 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	if player.global_position.distance_to(target.global_position) > max_range:
 		hud.show_message("마법 사거리 밖입니다")
 		return false
+	if not resolving_combat_action:
+		mp = maxi(0, mp - mp_cost)
+		_queue_player_attack(target, "magic", _cast_magic_attack.bind(target, power, 0, skill_name), _skill_motion_duration({}), false, 360.0)
+		return true
 	mp = maxi(0, mp - mp_cost)
 	selected_monster = target
-	player.pulse_attack()
+	if not resolving_combat_action: player.pulse_attack()
 	var hit_chance: float = _player_magic_hit_chance(target)
 	if rng.randf() >= hit_chance:
 		target.show_miss()
@@ -1192,7 +1258,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 func _attack() -> void:
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
-	if auto_attack_timer > 0.0:
+	if auto_attack_timer > 0.0 or not pending_attack.is_empty():
 		return
 	var attack_kind: String = _current_attack_kind()
 	var target: TwilightMonster = selected_monster
@@ -1212,7 +1278,10 @@ func _attack() -> void:
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
 	_break_invisibility()
-	player.pulse_attack()
+	_queue_player_attack(target, attack_kind, _resolve_normal_attack.bind(target, attack_kind), auto_attack_timer, true)
+
+func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> void:
+	if not is_instance_valid(target) or target.dead: return
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
 		target.show_miss()
@@ -1244,6 +1313,7 @@ func _attack() -> void:
 	_update_target_hud()
 
 func _run_auto_hunt() -> void:
+	if not pending_attack.is_empty(): return
 	if player.is_stunned() or player.is_feared():
 		player.clear_click_path()
 		return
@@ -1392,9 +1462,8 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		selected_monster = null
 	if monster == auto_target:
 		auto_target = null
-	if monster.get_parent() == monsters_root:
-		monsters_root.remove_child(monster)
-	monster.queue_free()
+	if monster.get_parent() == monsters_root and is_instance_valid(combat_corpses):
+		monster.reparent(combat_corpses, true)
 	_update_hud()
 	call_deferred("_ensure_monster_count")
 
@@ -1606,6 +1675,14 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
 func _respawn_player(message_text: String) -> void:
+	var death_position: Vector2 = player.global_position
+	var death_sprite: AnimatedSprite2D = player.transform_sprite if player.transform_active else player.class_sprite
+	var death_texture: Texture2D = death_sprite.sprite_frames.get_frame_texture(death_sprite.animation, death_sprite.frame) if death_sprite.sprite_frames != null else null
+	var death_scale: Vector2 = death_sprite.scale
+	var death_offset: Vector2 = death_sprite.position
+	_clear_combat_actions()
+	if combat_vfx != null and death_texture != null:
+		combat_vfx.death_pose(death_position, death_texture, death_scale, death_offset)
 	hp = _effective_max_hp()
 	mp = max_mp
 	gold = maxi(0, gold - 500)
@@ -1681,12 +1758,12 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
 	if attacker.dead:
-		player.show_received_damage(reduced, critical)
+		player.show_received_damage(reduced, critical, normalized_type, attacker.combat_hit_position())
 		_update_hud()
 		return
 	if hp > 0:
 		_try_trigger_passives("on_damaged", attacker)
-	player.show_received_damage(reduced, critical)
+	player.show_received_damage(reduced, critical, normalized_type, attacker.combat_hit_position())
 	if normalized_type == "magic":
 		hud.append_log("%s에게 %d 마법 피해%s · 피격률 %.1f%% · 치명타 %.1f%% · MR %d" % [
 			attacker.monster_name, reduced, " CRITICAL" if critical else "",
@@ -2533,6 +2610,7 @@ func _save_game(quiet: bool) -> void:
 		hud.show_message("저장 완료")
 
 func _load_game(quiet: bool) -> void:
+	_clear_combat_actions()
 	if not FileAccess.file_exists(SAVE_PATH):
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
@@ -3080,6 +3158,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
 	if _is_passive_skill(skill):
 		if announce:
@@ -3171,9 +3250,13 @@ func _cast_job_status_skill(skill: Dictionary) -> bool:
 	if target == null:
 		hud.show_message("상태이상 대상이 없습니다")
 		return false
+	if not _spend_skill_mp(skill): return false
 	_break_invisibility()
-	var cost: int = maxi(0, int(skill.get("mp", 0)))
-	var before: int = mp
+	_queue_player_attack(target, _skill_attack_kind(skill), _resolve_status_skill.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, SKILL_RULES.range_pixels(skill))
+	return true
+
+func _resolve_status_skill(skill: Dictionary, target: TwilightMonster) -> void:
+	var cost: int = 0
 	var skill_name: String = str(skill.get("name", ""))
 	var duration: float = float(skill.get("duration", 2.5))
 	match SKILL_RULES.effect_kind(skill):
@@ -3190,7 +3273,7 @@ func _cast_job_status_skill(skill: Dictionary) -> bool:
 		"fear":
 			_cast_fear_skill(target, cost, duration, skill_name)
 	# Status resisted / attack missed still counts as a completed cast.
-	return mp < before or cost == 0
+
 
 func _cast_job_invisibility_skill(skill: Dictionary) -> bool:
 	if not _spend_skill_mp(skill):
@@ -3406,7 +3489,10 @@ func _cast_job_turn_undead(skill: Dictionary) -> bool:
 	if not _spend_skill_mp(skill):
 		return false
 	_break_invisibility()
-	player.pulse_attack()
+	_queue_player_attack(target, "magic", _resolve_turn_undead.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, SKILL_RULES.range_pixels(skill))
+	return true
+
+func _resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	var chance: float = clampf(_player_magic_hit_chance(target) + float(skill.get("magic_hit_bonus", 0.0)), 0.05, 0.99)
 	if rng.randf() >= chance:
 		target.show_miss()
@@ -3416,7 +3502,6 @@ func _cast_job_turn_undead(skill: Dictionary) -> bool:
 		hud.append_log("%s · %s 언데드 즉사!" % [str(skill.get("name", "")), target_name])
 		target.take_damage(target.hp, false)
 	_update_target_hud()
-	return true
 
 func _clear_skill_charge() -> void:
 	charge_route = PackedVector2Array()
@@ -3439,7 +3524,7 @@ func _cast_job_charge_skill(skill: Dictionary) -> bool:
 		if not _spend_skill_mp(skill):
 			return false
 		_break_invisibility()
-		_apply_job_skill_damage(skill, target)
+		_queue_damage_skill(skill, target, 100.0)
 		return true
 	var path: PackedVector2Array = find_world_path(source, target.global_position)
 	if path.is_empty():
@@ -3505,6 +3590,7 @@ func _advance_skill_charge(delta: float) -> void:
 		if not _is_walkable_world(next_position):
 			blocked = true
 			break
+		player.face_target(next_position)
 		player.global_position = next_position
 		remaining -= step
 		if player.global_position.distance_to(waypoint) <= 1.0:
@@ -3519,7 +3605,7 @@ func _advance_skill_charge(delta: float) -> void:
 	var finished_target: TwilightMonster = charge_target
 	_clear_skill_charge()
 	if is_instance_valid(finished_target) and not finished_target.dead and player.global_position.distance_to(finished_target.global_position) <= 100.0 and _has_line_of_sight_world(player.global_position, finished_target.global_position):
-		_apply_job_skill_damage(finished_skill, finished_target)
+		_queue_damage_skill(finished_skill, finished_target, 100.0)
 	else:
 		hud.append_log("%s · 돌진 대상 이탈로 공격 실패" % str(finished_skill.get("name", "")))
 
@@ -3531,14 +3617,13 @@ func _cast_job_damage_skill(skill: Dictionary) -> bool:
 	if not _spend_skill_mp(skill):
 		return false
 	_break_invisibility()
-	_apply_job_skill_damage(skill, target)
+	_queue_damage_skill(skill, target, SKILL_RULES.range_pixels(skill))
 	return true
 
 func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	selected_monster = target
-	player.pulse_attack()
 	var max_range: float = SKILL_RULES.range_pixels(skill)
 	var skill_class: String = str(skill.get("class", "공용"))
 	var requested_style: String = str(skill.get("attack_style", ""))
@@ -3558,6 +3643,8 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 	var hits: int = clampi(int(skill.get("hits", 1)), 1, 8)
 	var targets: Array[TwilightMonster] = [target]
 	var area_radius: float = maxf(0.0, float(skill.get("area_radius", 0.0)))
+	if area_radius > 0.0 and is_instance_valid(combat_vfx):
+		combat_vfx.ring(target.combat_hit_position(), area_radius, Color(0.4, 0.65, 1.0))
 	if area_radius > 0.0:
 		for child: Node in monsters_root.get_children():
 			if child is TwilightMonster:
@@ -3582,7 +3669,11 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if not targets.has(candidate):
 				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
-	var total_damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+	var volley: Dictionary = skill.get("_volley_runtime", {})
+	var total_damage: int = int(volley.get("total_damage", 0))
+	if total_damage <= 0:
+		total_damage = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+		volley["total_damage"] = total_damage
 	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
 	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
 	var chain_index: int = 0
@@ -3594,7 +3685,9 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			victim_hit_chance = clampf(_melee_hit_chance(victim) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
 		else:
 			victim_hit_chance = _melee_hit_chance(victim)
-		for hit_index: int in range(hits):
+		var first_hit: int = int(skill.get("_single_hit_index", 0))
+		var last_hit: int = first_hit + 1 if skill.has("_single_hit_index") else hits
+		for hit_index: int in range(first_hit, last_hit):
 			if victim.dead:
 				break
 			if rng.randf() >= victim_hit_chance:
@@ -3825,30 +3918,10 @@ func _apply_transform_visual(record: Dictionary) -> void:
 		return
 	var path: String = _directional_image_path("transform", record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
-	player.set_transform_visual(path, speed_multiplier)
+	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", record, path))
 
 func _apply_doll_visual(record: Dictionary) -> void:
-	companion_sprite.stop()
-	companion_sprite.sprite_frames = SpriteFrames.new()
-	companion_sprite.visible = false
-	if record.is_empty():
-		return
-	var path: String = _directional_image_path("doll", record)
-	if path == "" or not ResourceLoader.exists(path):
-		return
-	var texture: Texture2D = load(path) as Texture2D
-	if texture == null:
-		return
-	_build_directional_frames(companion_sprite, texture)
-	var size: Vector2 = texture.get_size()
-	var cell_height: float = size.y / 4.0
-	var scale_value: float = 72.0 / maxf(1.0, cell_height)
-	companion_sprite.scale = Vector2(scale_value, scale_value)
-	companion_sprite.animation = _direction_animation_name(player.facing)
-	companion_sprite.frame = 0
-	companion_sprite.play()
-	companion_sprite.visible = true
-	$Companion.global_position = player.global_position + Vector2(-50, 18)
+	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
 
 func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
 	var frames: SpriteFrames = SpriteFrames.new()
@@ -3877,21 +3950,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func _apply_relic_visual(record: Dictionary) -> void:
-	relic_sprite.texture = null
-	relic_sprite.visible = false
-	if record.is_empty():
-		return
-	var path: String = str(record.get("image_path", ""))
-	if path == "" or not ResourceLoader.exists(path):
-		return
-	var texture: Texture2D = load(path) as Texture2D
-	if texture == null:
-		return
-	relic_sprite.texture = texture
-	var size: Vector2 = texture.get_size()
-	var scale_value: float = 34.0 / maxf(1.0, maxf(size.x, size.y))
-	relic_sprite.scale = Vector2(scale_value, scale_value)
-	relic_sprite.visible = true
+	relic_motion.configure(record, relic_sprite, player, _drop_grade_color(str(record.get("grade", "일반"))))
 
 func _restore_equipped_visuals() -> void:
 	var transform_value: Variant = equipped_catalog.get("변신", {})
@@ -4729,19 +4788,8 @@ func _experience_multiplier() -> float:
 	return maxf(1.0, 1.0 + bonus)
 
 func _update_companion(delta: float) -> void:
-	if companion_sprite.visible:
-		var side: float = -50.0 if player.facing != 2 else 50.0
-		var target: Vector2 = player.global_position + Vector2(side, 20.0)
-		$Companion.global_position = $Companion.global_position.lerp(target, clampf(delta * 6.5, 0.0, 1.0))
-		var animation_name: String = _direction_animation_name(player.facing)
-		if companion_sprite.animation != animation_name:
-			companion_sprite.animation = animation_name
-			companion_sprite.frame = 0
-		if not companion_sprite.is_playing():
-			companion_sprite.play()
-		companion_sprite.position.y = -26.0 + sin(Time.get_ticks_msec() / 180.0) * 2.0
-	if relic_sprite.visible:
-		relic_sprite.global_position = player.global_position + Vector2(42.0, -64.0 + sin(Time.get_ticks_msec() / 420.0) * 4.0)
+	doll_motion.update(delta, $Companion, companion_sprite, player)
+	relic_motion.update(delta, relic_sprite, player)
 
 # Playable-field services: renderer, physics, population and HUD remain separate.
 func _setup_field_services() -> void:
@@ -4850,3 +4898,97 @@ func _return_from_field_gate() -> void:
 	player.camera.reset_smoothing()
 	player.camera.force_update_scroll()
 	field_renderer.refresh_visible()
+
+# Attack commands retain their original target and resolve once at the motion marker.
+func _skill_attack_kind(skill: Dictionary) -> String:
+	var requested: String = str(skill.get("attack_style", ""))
+	if requested in ["melee", "ranged", "magic"]: return requested
+	if job_class in ["요정", "총사"]: return "ranged"
+	if job_class == "마법사" or str(skill.get("class", "")) == "마법사" or (str(skill.get("class", "공용")) == "공용" and SKILL_RULES.range_pixels(skill) >= 250.0): return "magic"
+	return "melee"
+
+func _skill_motion_duration(skill: Dictionary) -> float:
+	return clampf(maxf(0.42, SKILL_RULES.global_cooldown_seconds(skill)) / _effective_attack_speed_multiplier(), 0.14, 0.85)
+
+func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> void:
+	_queue_player_attack(target, _skill_attack_kind(skill), _apply_job_skill_damage.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, max_range)
+	pending_attack["skill"] = skill.duplicate(true)
+	pending_attack["duration"] = _skill_motion_duration(skill)
+
+func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> void:
+	player.cancel_attack()
+	player.clear_click_path()
+	var style: String = TwilightAnimationProfile.weapon_style(_current_weapon_type(), kind)
+	var marker: float = player.motion.profile.marker_for(style)
+	var id: int = player.start_combat_attack(target.global_position, duration, style, marker)
+	pending_attack = {"id":id, "target":weakref(target), "callback":callback, "kind":kind,
+		"style":style, "normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation}
+
+func _cancel_player_attack(id: int) -> void:
+	if int(pending_attack.get("id", -1)) == id: pending_attack.clear()
+
+func _release_player_attack(id: int) -> void:
+	if int(pending_attack.get("id", -1)) != id: return
+	var action: Dictionary = pending_attack
+	pending_attack = {}
+	var target: TwilightMonster = action.target.get_ref() as TwilightMonster
+	if not is_instance_valid(target) or target.dead or hp <= 0: return
+	if player.is_stunned() or player.is_feared(): return
+	if action.kind == "magic" and player.is_silenced(): return
+	if player.global_position.distance_to(action.start) > 12.0: return
+	var in_range: bool = _target_in_current_weapon_range(target) if action.normal else player.global_position.distance_to(target.global_position) <= float(action.range)
+	if not in_range or not _has_line_of_sight_world(player.global_position, target.global_position): return
+	player.face_target(target.global_position)
+	if action.kind == "magic" and combat_vfx != null:
+		combat_vfx.ring(player.combat_projectile_origin(), 18.0, Color(0.45, 0.7, 1.0))
+	var skill: Dictionary = action.get("skill", {})
+	var hits: int = clampi(int(skill.get("hits", 1)), 1, 8)
+	if hits > 1:
+		var volley_runtime: Dictionary = {}
+		var spacing: float = clampf(float(action.get("duration", 0.42)) * 0.18, 0.035, 0.10)
+		for shot: int in range(hits):
+			var shot_skill: Dictionary = skill.duplicate(true)
+			shot_skill["_single_hit_index"] = shot
+			shot_skill["_volley_runtime"] = volley_runtime
+			var shot_action: Dictionary = action.duplicate(false)
+			shot_action["callback"] = _apply_job_skill_damage.bind(shot_skill, target)
+			var flight_kind: String = action.kind if action.kind in ["ranged", "magic"] else "timed"
+			combat_flights.launch(player.combat_projectile_origin(), target, flight_kind, _impact_player_attack.bind(shot_action), 1300.0, float(shot) * spacing)
+		return
+	if action.kind in ["ranged", "magic"]:
+		combat_flights.launch(player.combat_projectile_origin(), target, action.kind, _impact_player_attack.bind(action), 900.0 if action.kind == "magic" else 1300.0)
+	else:
+		_impact_player_attack(action)
+
+func _impact_player_attack(action: Dictionary) -> void:
+	if int(action.generation) != combat_generation or hp <= 0: return
+	var target: TwilightMonster = action.target.get_ref() as TwilightMonster
+	if not is_instance_valid(target) or target.dead: return
+	if not _has_line_of_sight_world(player.global_position, target.global_position): return
+	var callback: Callable = action.callback
+	if not callback.is_valid(): return
+	resolving_combat_action = true
+	feedback_kind = action.kind
+	feedback_style = action.get("style", action.kind)
+	callback.call()
+	feedback_kind = "melee"
+	feedback_style = "slash"
+	resolving_combat_action = false
+
+func _clear_combat_actions() -> void:
+	combat_generation += 1
+	pending_attack.clear()
+	if is_instance_valid(player): player.cancel_attack()
+	if is_instance_valid(combat_flights): combat_flights.clear()
+	if is_instance_valid(combat_vfx): combat_vfx.clear()
+	if is_instance_valid(combat_corpses):
+		for corpse: Node in combat_corpses.get_children(): corpse.queue_free()
+
+func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
+	if is_instance_valid(combat_vfx): combat_vfx.number(point, value, color, critical)
+
+func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "") -> void:
+	if not is_instance_valid(combat_vfx): return
+	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
+	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)
+	if critical: player.motion.visual_hold = 0.028

@@ -1,6 +1,16 @@
 extends CharacterBody2D
 class_name TwilightMonster
 
+const MOTION = preload("res://scripts/animation/actor_motion.gd")
+const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
+var motion: TwilightActorMotion = MOTION.new()
+var animation_base_scale: Vector2 = Vector2.ONE
+var attack_interval: float = 1.25
+var configured_attack_range: float = 0.0
+var animation_state: String = "idle"
+var visual_height: float = 72.0
+var motion_connected: bool = false
+
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 
 signal died(monster: TwilightMonster)
@@ -176,8 +186,27 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	hp_bar.value = hp
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 42.0
+	_setup_animation(record)
 
 func _physics_process(delta: float) -> void:
+	if dead:
+		velocity = Vector2.ZERO
+		motion.advance(delta, Vector2.ZERO)
+		motion.apply(sprite, animation_base_scale)
+		animation_state = motion.state
+		if motion.death_clock >= 1.0: queue_free()
+		return
+	var previous: Vector2 = global_position
+	_tick_ai(delta)
+	if is_stunned() or is_feared(): motion.cancel_attack()
+	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
+	if get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
+		motion.apply(sprite, animation_base_scale)
+	animation_state = motion.state
+	if not motion.active and velocity.length_squared() > 1.0:
+		animation_state = "patrol" if velocity.length() < move_speed * 0.7 else "chase"
+
+func _tick_ai(delta: float) -> void:
 	if dead or not is_instance_valid(target_player):
 		velocity = Vector2.ZERO
 		return
@@ -202,7 +231,7 @@ func _physics_process(delta: float) -> void:
 	name_label.visible = ui_visible
 	hp_bar.visible = ui_visible
 	var effective_attack_type: String = current_attack_type()
-	var attack_range: float = 280.0 if effective_attack_type == "magic" else (220.0 if effective_attack_type == "ranged" else 58.0)
+	var attack_range: float = current_attack_range()
 	if is_feared():
 		if is_held():
 			velocity = Vector2.ZERO
@@ -215,6 +244,9 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		if absf(velocity.x) > 1.0:
 			sprite.flip_h = velocity.x < 0.0
+		return
+	if motion.active:
+		velocity = Vector2.ZERO
 		return
 	# Avoid line sampling to every distant monster on every physics tick.
 	var has_sight: bool = distance <= attack_range and world_controller._has_line_of_sight_world(global_position,target_player.global_position)
@@ -231,8 +263,9 @@ func _physics_process(delta: float) -> void:
 	if distance <= attack_range and has_sight:
 		velocity = Vector2.ZERO
 		if attack_cooldown <= 0.0:
-			attack_cooldown = 1.25
-			player_hit.emit(self, attack_power, effective_attack_type)
+			attack_cooldown = attack_interval
+			var style: String = motion.profile.motion_style if effective_attack_type == "melee" else ("magic" if effective_attack_type == "magic" else "bow")
+			motion.begin_attack(minf(0.68, attack_interval * 0.75), target_player.global_position - global_position, style, TwilightAnimationProfile.hit_ratio(style))
 		return
 	if is_held():
 		velocity = Vector2.ZERO
@@ -301,7 +334,7 @@ func _tick_poison(delta: float) -> void:
 	poison_remaining = maxf(0.0, poison_remaining - delta)
 	poison_tick_clock -= active_delta
 	while poison_tick_clock <= 0.0 and poison_tick_damage > 0 and not dead:
-		take_damage(poison_tick_damage, false)
+		take_damage(poison_tick_damage, false, "poison")
 		poison_tick_clock += poison_tick_interval
 	if poison_remaining <= 0.0 or dead:
 		poison_tick_clock = 0.0
@@ -338,7 +371,7 @@ func _tick_bleed(delta: float) -> void:
 	bleed_remaining = maxf(0.0, bleed_remaining - delta)
 	bleed_tick_clock -= active_delta
 	while bleed_tick_clock <= 0.0 and bleed_tick_damage > 0 and not dead:
-		take_damage(bleed_tick_damage, false)
+		take_damage(bleed_tick_damage, false, "bleed")
 		bleed_tick_clock += bleed_tick_interval
 	if bleed_remaining <= 0.0 or dead:
 		bleed_tick_clock = 0.0
@@ -487,22 +520,33 @@ func is_undead() -> bool:
 func elemental_resistance_percent(element_name: String) -> float:
 	return float(element_resistance.get(element_name, 0.0))
 
-func take_damage(amount: int, critical: bool = false) -> void:
+func take_damage(amount: int, critical: bool = false, damage_kind: String = "") -> void:
 	if dead:
 		return
 	damage_hit_count += 1
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
 	_show_damage_number(amount, critical)
-	var tween: Tween = create_tween()
-	tween.tween_property(sprite, "modulate", Color(1.0, 0.35, 0.35, 1.0), 0.05)
-	tween.tween_property(sprite, "modulate", Color.WHITE, 0.10)
+	if is_instance_valid(world_controller) and world_controller.has_method("monster_combat_feedback"):
+		world_controller.monster_combat_feedback(self, critical, damage_kind)
+	motion.react(critical)
 	if hp <= 0:
 		dead = true
+		motion.die()
+		if has_node("GroundShadow"): $GroundShadow.hide()
+		name_label.hide()
+		hp_bar.hide()
+		input_pickable = false
+		set_deferred("collision_layer", 0)
+		set_deferred("collision_mask", 0)
+		set_physics_process(true)
 		died.emit(self)
 
 func show_miss() -> void:
 	if dead:
+		return
+	if is_instance_valid(world_controller) and world_controller.has_method("show_combat_number"):
+		world_controller.show_combat_number(global_position + Vector2(0, -visual_height - 8), "MISS", Color(0.78, 0.86, 1.0))
 		return
 	var label: Label = Label.new()
 	label.text = "MISS"
@@ -521,6 +565,9 @@ func show_miss() -> void:
 	tween.tween_callback(label.queue_free)
 
 func _show_damage_number(amount: int, critical: bool = false) -> void:
+	if is_instance_valid(world_controller) and world_controller.has_method("show_combat_number"):
+		world_controller.show_combat_number(global_position + Vector2(0, -visual_height - 8), ("CRIT " if critical else "") + str(amount), Color(1.0, 0.45, 0.2) if critical else Color(1.0, 0.83, 0.4), critical)
+		return
 	var label: Label = Label.new()
 	label.text = ("CRIT " + str(amount)) if critical else str(amount)
 	label.position = Vector2(-28.0, -88.0)
@@ -546,3 +593,66 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 		var touch_event: InputEventScreenTouch = event
 		if touch_event.pressed:
 			selected.emit(self)
+
+func _setup_animation(record: Dictionary) -> void:
+	motion.profile = ANIMATION_CATALOG.for_record("monster", record)
+	motion.profile.reference_speed = maxf(1.0, base_move_speed)
+	visual_height = float(record.get("visual_height", 92.0 if is_boss else (62.0 if motion.profile.motion_style == "crawl" else 72.0)))
+	if sprite.texture != null:
+		animation_base_scale = Vector2.ONE * (visual_height / maxf(1.0, maxf(sprite.texture.get_width(), sprite.texture.get_height())))
+	else:
+		animation_base_scale = Vector2.ONE
+	# Foot anchor and hit point depend on visible body size, not one fixed offset.
+	motion.profile.sprite_offset = Vector2(0, -visual_height * 0.46)
+	motion.profile.hit_position = Vector2(0, -visual_height * 0.42)
+	motion.profile.projectile_origin = Vector2(visual_height * 0.15, -visual_height * 0.48)
+	motion.profile.shadow_size = Vector2(visual_height * 0.25, visual_height * 0.08)
+	var overrides: Dictionary = record.get("animation_profile", {})
+	for property: String in ["sprite_offset", "hit_position", "projectile_origin", "shadow_size"]:
+		var value: Variant = overrides.get(property)
+		if value is Array and value.size() == 2: motion.profile.set(property, Vector2(value[0], value[1]))
+	attack_interval = maxf(0.12, float(record.get("attack_interval", 1.25)))
+	configured_attack_range = maxf(0.0, float(record.get("attack_range", 0.0)))
+	if record.has("collision_radius"):
+		var shape: CircleShape2D = $CollisionShape2D.shape.duplicate() as CircleShape2D
+		shape.radius = maxf(1.0, float(record.collision_radius))
+		$CollisionShape2D.shape = shape
+	$CollisionShape2D.position = motion.profile.collision_offset
+	name_label.position.y = -visual_height - 20.0
+	hp_bar.position.y = -visual_height - 4.0
+	if not motion_connected:
+		motion.strike.connect(_release_attack)
+		motion_connected = true
+	if not has_node("GroundShadow"):
+		var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
+		shadow.name = "GroundShadow"
+		shadow.radius = motion.profile.shadow_size
+		add_child(shadow)
+	motion.apply(sprite, animation_base_scale)
+
+func current_attack_range() -> float:
+	if configured_attack_range > 0.0 and not is_silenced(): return configured_attack_range
+	var kind: String = current_attack_type()
+	return 280.0 if kind == "magic" else (220.0 if kind == "ranged" else 58.0)
+
+func combat_hit_position() -> Vector2:
+	return global_position + motion.profile.hit_position
+
+func _release_attack(id: int) -> void:
+	if dead or id != motion.sequence or not is_instance_valid(target_player): return
+	if is_stunned() or is_feared(): return
+	if global_position.distance_to(target_player.global_position) > current_attack_range(): return
+	if not world_controller._has_line_of_sight_world(global_position, target_player.global_position): return
+	if world_controller.is_player_concealed(): return
+	if world_controller.field_map != null and world_controller.field_map.is_safe(target_player.global_position): return
+	var kind: String = current_attack_type()
+	if kind in ["ranged", "magic"] and world_controller.combat_flights != null:
+		var origin: Vector2 = global_position + motion.profile.projectile_origin
+		world_controller.combat_flights.launch(origin, target_player, kind, _resolve_attack.bind(id, kind), 800.0 if kind == "magic" else 1100.0)
+	else:
+		_resolve_attack(id, kind)
+
+func _resolve_attack(id: int, kind: String) -> void:
+	if dead or id != motion.sequence or not is_instance_valid(target_player): return
+	if world_controller.hp <= 0: return
+	player_hit.emit(self, attack_power, kind)

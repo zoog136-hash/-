@@ -74,6 +74,7 @@ func _run() -> void:
 	world.set("selected_monster", primary)
 	_clear_cooldowns(world)
 	_check(bool(world.call("_cast_job_skill", "파이어 볼")), "Fire Ball unavailable")
+	preload("res://tests/combat_test_clock.gd").settle(world)
 	_check(neighbor.damage_hit_count > 0 or third.damage_hit_count > 0, "AoE failed to damage nearby monsters")
 	_clear_cooldowns(world)
 	var hits_before: Array[int] = [primary.damage_hit_count, neighbor.damage_hit_count, third.damage_hit_count]
@@ -81,6 +82,7 @@ func _run() -> void:
 		world.set("selected_monster", primary)
 		_clear_cooldowns(world)
 		_check(bool(world.call("_cast_job_skill", "콜 라이트닝")), "chain lightning could not cast")
+		preload("res://tests/combat_test_clock.gd").settle(world)
 		if primary.damage_hit_count > hits_before[0] and neighbor.damage_hit_count > hits_before[1] and third.damage_hit_count > hits_before[2]:
 			break
 	_check(primary.damage_hit_count > hits_before[0] and neighbor.damage_hit_count > hits_before[1] and third.damage_hit_count > hits_before[2], "chain lightning must reach all 3 nearby enemies")
@@ -90,6 +92,7 @@ func _run() -> void:
 		_clear_cooldowns(world)
 		world.set("selected_monster", primary)
 		world.call("_cast_job_skill", "콘 오브 콜드")
+		preload("res://tests/combat_test_clock.gd").settle(world)
 		if primary.slow_remaining > 0.0:
 			break
 	_check(primary.slow_remaining > 0.0 and primary.move_speed < primary.base_move_speed, "ice slow did not affect movement speed")
@@ -101,6 +104,7 @@ func _run() -> void:
 		_clear_cooldowns(world)
 		world.set("selected_monster", primary)
 		world.call("_cast_job_skill", "독의 구체 1단계")
+		preload("res://tests/combat_test_clock.gd").settle(world)
 		if primary.poison_remaining > 0.0:
 			break
 	_check(primary.poison_remaining > 0.0, "poison orb failed to apply damage-over-time status")
@@ -130,6 +134,7 @@ func _run() -> void:
 	_clear_cooldowns(world)
 	world.set("selected_monster", primary)
 	_check(bool(world.call("_cast_job_skill", "트리플 애로우")), "Triple Arrow failed with bow and arrows")
+	preload("res://tests/combat_test_clock.gd").settle(world)
 	_check(int((world.get("inventory") as Dictionary).get("화살", -1)) == 6, "Triple Arrow must consume 3 arrows")
 	_clear_cooldowns(world)
 	_check(bool(world.call("_cast_job_skill", "스톰 샷")), "Storm Shot rejected equipped bow")

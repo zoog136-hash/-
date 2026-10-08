@@ -89,6 +89,7 @@ func _run() -> void:
 	world.call("_tick_skill_cooldowns", 10.0)
 	before_mp = int(world.get("mp"))
 	_expect(bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun did not use dedicated status path")
+	preload("res://tests/combat_test_clock.gd").settle(world)
 	_expect(int(world.get("mp")) == before_mp - 10, "stun MP not consumed on attempt")
 	var cds: Dictionary = world.get("skill_cooldowns") as Dictionary
 	_expect(float(cds.get("쇼크 스턴", 0.0)) >= 9.0, "stun cooldown not started")
@@ -99,6 +100,7 @@ func _run() -> void:
 	_expect(bool((slots[0] as Dictionary).get("auto", false)), "AUTO flag was not stored")
 	before_mp = int(world.get("mp"))
 	_expect(bool(world.call("_run_auto_combat_quickslots")), "AUTO attack did not cast")
+	preload("res://tests/combat_test_clock.gd").settle(world)
 	_expect(int(world.get("mp")) == before_mp - 3, "AUTO attack MP cost incorrect")
 	_expect(not bool(world.call("_run_auto_combat_quickslots")), "AUTO attack ignored cooldown")
 
@@ -135,6 +137,7 @@ func _run() -> void:
 	world.set("selected_monster", dummy)
 	dummy.global_position = player.global_position
 	_expect(bool(world.call("_cast_job_skill", "사일런스")), "offensive silence could not be cast from stealth")
+	preload("res://tests/combat_test_clock.gd").settle(world)
 	_expect(not bool(world.call("is_player_concealed")), "offensive status skill did not break stealth")
 
 
@@ -158,6 +161,7 @@ func _run() -> void:
 		world.call("_tick_skill_cooldowns", 60.0)
 		world.set("selected_monster", undead_dummy)
 		_expect(bool(world.call("_cast_job_skill", "턴 언데드")), "Turn Undead failed to cast on undead")
+		preload("res://tests/combat_test_clock.gd").settle(world)
 	_expect(undead_dummy.dead, "a magic hit must instantly defeat undead regardless of HP")
 
 	# Counter Barrier must reflect damage only on a successful melee hit.
@@ -199,6 +203,7 @@ func _run() -> void:
 		world.set("selected_monster", dummy)
 		var count_before: int = dummy.damage_hit_count
 		_expect(bool(world.call("_cast_job_skill", "트리플 애로우(스피릿)")), "Spirit Triple Arrow cast failed")
+		preload("res://tests/combat_test_clock.gd").settle(world)
 		if dummy.damage_hit_count - count_before >= 2:
 			multiple_landed = true
 			break
@@ -233,6 +238,9 @@ func _run() -> void:
 		charge_dummy.setup({"name":"돌진 검증용", "lv":1, "hp":999999, "mr":0}, player, world, null)
 		charge_dummy.global_position = charge_position
 		world.set("selected_monster", charge_dummy)
+		# This existing assertion requires a landed hit although combat allows MISS.
+		# Fix the fixture seed, leaving the production hit chance and damage unchanged.
+		(world.get("rng") as RandomNumberGenerator).seed = 20261008
 		var cast_charge: bool = bool(world.call("_cast_job_skill", "기사의 돌진 12"))
 		_expect(cast_charge, "charge skill could not start in open terrain")
 		if cast_charge:
@@ -241,6 +249,7 @@ func _run() -> void:
 				if (world.get("charge_skill") as Dictionary).is_empty():
 					break
 			_expect((world.get("charge_skill") as Dictionary).is_empty(), "charge never completed")
+			preload("res://tests/combat_test_clock.gd").settle(world)
 			_expect(player.global_position.distance_to(start_position) > 40.0, "charge did not move player")
 			_expect(charge_dummy.damage_hit_count > 0, "charge did not strike after arriving")
 
