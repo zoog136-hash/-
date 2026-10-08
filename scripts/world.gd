@@ -179,6 +179,11 @@ var stat_points: int = 0
 var gold: int = 12000
 var inventory: Dictionary = {
 	"HP 물약":100,
+	"마나 회복 물약":10,
+	"힘센 한우 스테이크":3,
+	"귀환 주문서":10,
+	"순간이동 주문서":10,
+	"속성 강화 주문서":3,
 	"강력 HP 물약":14,
 	"축복받은 HP 물약":10,
 	"화살":500,
@@ -314,6 +319,10 @@ func _load_data() -> void:
 		game_db = db_value as Dictionary
 	monster_db = game_db.get("몬스터", []) as Array
 	item_db = game_db.get("아이템", []) as Array
+	for item_index: int in range(item_db.size() - 1, -1, -1):
+		var item_value: Variant = item_db[item_index]
+		if item_value is Dictionary and CONSUMABLE_RULES.is_removed_item(str((item_value as Dictionary).get("name", ""))):
+			item_db.remove_at(item_index)
 	skills_db = game_db.get("스킬", []) as Array
 	_ensure_ammo_items()
 	_enrich_weapon_records(item_db)
@@ -2208,6 +2217,8 @@ func _roll_enhancement_gain(mode: String, current_level: int) -> int:
 	return 1
 
 func _find_catalog_item_record(item_name: String) -> Dictionary:
+	if CONSUMABLE_RULES.is_removed_item(item_name):
+		return {}
 	var sources: Array = [catalog_db.get("아이템", []), item_db]
 	for source_value: Variant in sources:
 		if not (source_value is Array):
@@ -2437,6 +2448,9 @@ func _equipped_items_snapshot() -> Dictionary:
 	return result
 
 func _buy_shop_item(item_name: String, price: int) -> void:
+	if CONSUMABLE_RULES.is_removed_item(item_name):
+		hud.show_message("삭제된 소모품은 구매할 수 없습니다")
+		return
 	var safe_price: int = maxi(0, price)
 	if safe_price <= 0:
 		return
