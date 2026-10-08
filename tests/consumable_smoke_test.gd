@@ -16,7 +16,7 @@ func _run() -> void:
 		_check(false, "Main.tscn did not load")
 		_finish()
 		return
-	var world: Node = scene.instantiate()
+	var world: Variant = scene.instantiate()
 	root.add_child(world)
 	await process_frame
 	await process_frame
