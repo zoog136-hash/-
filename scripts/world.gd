@@ -1668,7 +1668,14 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 	return rng.randf() < _monster_hit_chance(attacker, attack_type)
 
 func _respawn_player(message_text: String) -> void:
+	var death_position: Vector2 = player.global_position
+	var death_sprite: AnimatedSprite2D = player.transform_sprite if player.transform_active else player.class_sprite
+	var death_texture: Texture2D = death_sprite.sprite_frames.get_frame_texture(death_sprite.animation, death_sprite.frame) if death_sprite.sprite_frames != null else null
+	var death_scale: Vector2 = death_sprite.scale
+	var death_offset: Vector2 = death_sprite.position
 	_clear_combat_actions()
+	if combat_vfx != null and death_texture != null:
+		combat_vfx.death_pose(death_position, death_texture, death_scale, death_offset)
 	hp = _effective_max_hp()
 	mp = max_mp
 	gold = maxi(0, gold - 500)
@@ -3655,7 +3662,11 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if not targets.has(candidate):
 				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
-	var total_damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+	var volley: Dictionary = skill.get("_volley_runtime", {})
+	var total_damage: int = int(volley.get("total_damage", 0))
+	if total_damage <= 0:
+		total_damage = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+		volley["total_damage"] = total_damage
 	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
 	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
 	var chain_index: int = 0
@@ -3667,7 +3678,9 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			victim_hit_chance = clampf(_melee_hit_chance(victim) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
 		else:
 			victim_hit_chance = _melee_hit_chance(victim)
-		for hit_index: int in range(hits):
+		var first_hit: int = int(skill.get("_single_hit_index", 0))
+		var last_hit: int = first_hit + 1 if skill.has("_single_hit_index") else hits
+		for hit_index: int in range(first_hit, last_hit):
 			if victim.dead:
 				break
 			if rng.randf() >= victim_hit_chance:
@@ -4892,6 +4905,8 @@ func _skill_motion_duration(skill: Dictionary) -> float:
 
 func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> void:
 	_queue_player_attack(target, _skill_attack_kind(skill), _apply_job_skill_damage.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, max_range)
+	pending_attack["skill"] = skill.duplicate(true)
+	pending_attack["duration"] = _skill_motion_duration(skill)
 
 func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> void:
 	player.cancel_attack()
@@ -4917,6 +4932,22 @@ func _release_player_attack(id: int) -> void:
 	var in_range: bool = _target_in_current_weapon_range(target) if action.normal else player.global_position.distance_to(target.global_position) <= float(action.range)
 	if not in_range or not _has_line_of_sight_world(player.global_position, target.global_position): return
 	player.face_target(target.global_position)
+	if action.kind == "magic" and combat_vfx != null:
+		combat_vfx.ring(player.combat_projectile_origin(), 18.0, Color(0.45, 0.7, 1.0))
+	var skill: Dictionary = action.get("skill", {})
+	var hits: int = clampi(int(skill.get("hits", 1)), 1, 8)
+	if hits > 1:
+		var volley_runtime: Dictionary = {}
+		var spacing: float = clampf(float(action.get("duration", 0.42)) * 0.18, 0.035, 0.10)
+		for shot: int in range(hits):
+			var shot_skill: Dictionary = skill.duplicate(true)
+			shot_skill["_single_hit_index"] = shot
+			shot_skill["_volley_runtime"] = volley_runtime
+			var shot_action: Dictionary = action.duplicate(false)
+			shot_action["callback"] = _apply_job_skill_damage.bind(shot_skill, target)
+			var flight_kind: String = action.kind if action.kind in ["ranged", "magic"] else "timed"
+			combat_flights.launch(player.combat_projectile_origin(), target, flight_kind, _impact_player_attack.bind(shot_action), 1300.0, float(shot) * spacing)
+		return
 	if action.kind in ["ranged", "magic"]:
 		combat_flights.launch(player.combat_projectile_origin(), target, action.kind, _impact_player_attack.bind(action), 900.0 if action.kind == "magic" else 1300.0)
 	else:

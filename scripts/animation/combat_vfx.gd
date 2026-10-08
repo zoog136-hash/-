@@ -35,6 +35,10 @@ func number(point: Vector2, value: String, color: Color, critical: bool = false)
 	var entry: Dictionary = _record("number", point, 0.65 if not critical else 0.8)
 	entry.merge({"text":value, "color":color, "critical":critical})
 
+func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2) -> void:
+	var entry: Dictionary = _record("death", point, 0.8)
+	entry.merge({"texture":texture, "scale":scale_value, "offset":offset})
+
 func ring(point: Vector2, radius: float, color: Color) -> void:
 	var entry: Dictionary = _record("ring", point, 0.3)
 	entry.merge({"radius":clampf(radius, 16, 150), "color":color})
@@ -68,6 +72,12 @@ func _draw() -> void:
 		var p: float = float(entry.age) / float(entry.duration)
 		var alpha: float = 1.0 - p
 		match str(entry.kind):
+			"death":
+				var texture: Texture2D = entry.texture
+				var lean: float = minf(1.0, p * 2.0) * 1.3
+				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, entry.scale)
+				draw_texture(texture, -texture.get_size() * 0.5, Color(1.0, 0.7, 0.65, alpha))
+				draw_set_transform(Vector2.ZERO)
 			"number":
 				var critical: bool = entry.critical
 				var size: int = 23 if critical else 18
@@ -104,4 +114,8 @@ func _draw_impact(point: Vector2, entry: Dictionary, p: float, alpha: float) -> 
 		draw_line(point - normal * radius, point + normal * radius, Color(1.0, 0.97, 0.83, alpha), 2.2, true)
 	elif style in ["heavy", "magic"]:
 		draw_arc(point, radius * 0.7, 0, TAU, 18, color, 2.0, true)
+	if critical:
+		var flash: float = maxf(0.0, 1.0 - p * 4.0)
+		draw_line(point - direction * radius * 1.35, point + direction * radius * 1.35, Color(1, 0.96, 0.72, flash), 3.0, true)
+		if style == "heavy": draw_arc(point, radius * 1.15, 0, TAU, 24, Color(1.0, 0.65, 0.3, alpha * 0.65), 1.5, true)
 	if p < 0.3: draw_circle(point, (4.0 if critical else 2.5) * (1.0 - p), Color(1, 1, 0.91, alpha))

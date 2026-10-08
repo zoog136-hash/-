@@ -7,10 +7,10 @@ var flights: Array[Dictionary] = []
 var resolved_count: int = 0
 var visual_limit: int = 64
 
-func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, speed: float = 1100.0) -> void:
+func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, speed: float = 1100.0, delay: float = 0.0) -> void:
 	if not is_instance_valid(target): return
 	flights.append({"position":origin, "previous":origin, "target":weakref(target), "kind":kind,
-		"callback":impact, "speed":speed, "age":0.0})
+		"callback":impact, "speed":speed, "age":-maxf(0.0, delay)})
 
 func clear() -> void:
 	flights.clear()
@@ -24,6 +24,12 @@ func _physics_process(delta: float) -> void:
 			flights.remove_at(i)
 			continue
 		flight.age += delta
+		if flight.age < 0.0: continue
+		if flight.kind == "timed":
+			flights.remove_at(i)
+			var timed_callback: Callable = flight.callback
+			if timed_callback.is_valid(): timed_callback.call()
+			continue
 		if flight.age > 3.0:
 			flights.remove_at(i)
 			continue
@@ -41,6 +47,7 @@ func _physics_process(delta: float) -> void:
 func _draw() -> void:
 	for i: int in range(mini(visual_limit, flights.size())):
 		var flight: Dictionary = flights[i]
+		if flight.age < 0.0 or flight.kind == "timed": continue
 		var tip: Vector2 = to_local(flight.position)
 		var direction: Vector2 = (flight.position as Vector2) - (flight.previous as Vector2)
 		direction = direction.normalized()
