@@ -3984,6 +3984,7 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	if new_max_hp > old_max_hp:
 		hp += new_max_hp - old_max_hp
 	hp = mini(hp, new_max_hp)
+	mp = mini(mp, _effective_max_mp())
 	hud.show_message("%s 장착: %s" % [category, str(record.get("name", ""))])
 	hud.append_log("%s 적용 · %s" % [category, str(record.get("name", ""))])
 	_update_hud()
