@@ -21,6 +21,10 @@ const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
 var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
 var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
+const COMBAT_VFX = preload("res://scripts/animation/combat_vfx.gd")
+var combat_vfx: TwilightCombatVFX = null
+var feedback_kind: String = "melee"
+var feedback_style: String = "slash"
 const COMBAT_FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
 var combat_flights: TwilightCombatFlights = null
 var combat_corpses: Node2D = null
@@ -442,6 +446,10 @@ func _merge_local_consumables_into_catalog() -> void:
 	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
+	combat_vfx = COMBAT_VFX.new()
+	combat_vfx.name = "CombatVFX"
+	combat_vfx.z_index = 12
+	add_child(combat_vfx)
 	combat_corpses = Node2D.new()
 	combat_corpses.name = "CombatCorpses"
 	combat_corpses.y_sort_enabled = true
@@ -1736,12 +1744,12 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
 	if attacker.dead:
-		player.show_received_damage(reduced, critical)
+		player.show_received_damage(reduced, critical, normalized_type, attacker.combat_hit_position())
 		_update_hud()
 		return
 	if hp > 0:
 		_try_trigger_passives("on_damaged", attacker)
-	player.show_received_damage(reduced, critical)
+	player.show_received_damage(reduced, critical, normalized_type, attacker.combat_hit_position())
 	if normalized_type == "magic":
 		hud.append_log("%s에게 %d 마법 피해%s · 피격률 %.1f%% · 치명타 %.1f%% · MR %d" % [
 			attacker.monster_name, reduced, " CRITICAL" if critical else "",
@@ -3621,6 +3629,8 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 	var hits: int = clampi(int(skill.get("hits", 1)), 1, 8)
 	var targets: Array[TwilightMonster] = [target]
 	var area_radius: float = maxf(0.0, float(skill.get("area_radius", 0.0)))
+	if area_radius > 0.0 and is_instance_valid(combat_vfx):
+		combat_vfx.ring(target.combat_hit_position(), area_radius, Color(0.4, 0.65, 1.0))
 	if area_radius > 0.0:
 		for child: Node in monsters_root.get_children():
 			if child is TwilightMonster:
@@ -4890,7 +4900,7 @@ func _queue_player_attack(target: TwilightMonster, kind: String, callback: Calla
 	var marker: float = TwilightAnimationProfile.hit_ratio(style)
 	var id: int = player.start_combat_attack(target.global_position, duration, style, marker)
 	pending_attack = {"id":id, "target":weakref(target), "callback":callback, "kind":kind,
-		"normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation}
+		"style":style, "normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation}
 
 func _cancel_player_attack(id: int) -> void:
 	if int(pending_attack.get("id", -1)) == id: pending_attack.clear()
@@ -4920,7 +4930,11 @@ func _impact_player_attack(action: Dictionary) -> void:
 	var callback: Callable = action.callback
 	if not callback.is_valid(): return
 	resolving_combat_action = true
+	feedback_kind = action.kind
+	feedback_style = action.get("style", action.kind)
 	callback.call()
+	feedback_kind = "melee"
+	feedback_style = "slash"
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
@@ -4928,5 +4942,15 @@ func _clear_combat_actions() -> void:
 	pending_attack.clear()
 	if is_instance_valid(player): player.cancel_attack()
 	if is_instance_valid(combat_flights): combat_flights.clear()
+	if is_instance_valid(combat_vfx): combat_vfx.clear()
 	if is_instance_valid(combat_corpses):
 		for corpse: Node in combat_corpses.get_children(): corpse.queue_free()
+
+func show_combat_number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
+	if is_instance_valid(combat_vfx): combat_vfx.number(point, value, color, critical)
+
+func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kind: String = "") -> void:
+	if not is_instance_valid(combat_vfx): return
+	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
+	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)
+	if critical: player.motion.visual_hold = 0.028

@@ -75,6 +75,9 @@ func _ready() -> void:
 	navigation_agent.target_desired_distance = 16.0
 	navigation_agent.avoidance_enabled = false
 	camera.enabled = true
+	var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
+	shadow.name = "GroundShadow"
+	add_child(shadow)
 
 func _physics_process(delta: float) -> void:
 	physics_delta = delta
@@ -277,13 +280,19 @@ func clear_click_path() -> void:
 func show_miss() -> void:
 	_show_combat_text("MISS", Color(0.78, 0.86, 1.0, 1.0), Vector2(-38.0, -112.0))
 
-func show_received_damage(amount: int, critical: bool = false) -> void:
+func show_received_damage(amount: int, critical: bool = false, kind: String = "melee", source: Vector2 = Vector2.ZERO) -> void:
 	motion.react(critical)
+	var world: Node = get_parent()
+	if world is TwilightWorld and world.combat_vfx != null:
+		world.combat_vfx.impact(combat_hit_position(), source.direction_to(combat_hit_position()), kind, critical)
 	var display_text: String = ("CRIT " + str(amount)) if critical else str(amount)
 	var display_color: Color = Color(1.0, 0.20, 0.12, 1.0) if critical else Color(1.0, 0.38, 0.32, 1.0)
 	_show_combat_text(display_text, display_color, Vector2(-38.0 if critical else -28.0, -112.0))
 
 func _show_combat_text(text_value: String, color_value: Color, start_position: Vector2) -> void:
+	if get_parent().has_method("show_combat_number"):
+		get_parent().show_combat_number(global_position + Vector2(0, start_position.y), text_value, color_value, text_value.begins_with("CRIT"))
+		return
 	var label: Label = Label.new()
 	label.text = text_value
 	label.position = start_position

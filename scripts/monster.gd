@@ -333,7 +333,7 @@ func _tick_poison(delta: float) -> void:
 	poison_remaining = maxf(0.0, poison_remaining - delta)
 	poison_tick_clock -= active_delta
 	while poison_tick_clock <= 0.0 and poison_tick_damage > 0 and not dead:
-		take_damage(poison_tick_damage, false)
+		take_damage(poison_tick_damage, false, "poison")
 		poison_tick_clock += poison_tick_interval
 	if poison_remaining <= 0.0 or dead:
 		poison_tick_clock = 0.0
@@ -370,7 +370,7 @@ func _tick_bleed(delta: float) -> void:
 	bleed_remaining = maxf(0.0, bleed_remaining - delta)
 	bleed_tick_clock -= active_delta
 	while bleed_tick_clock <= 0.0 and bleed_tick_damage > 0 and not dead:
-		take_damage(bleed_tick_damage, false)
+		take_damage(bleed_tick_damage, false, "bleed")
 		bleed_tick_clock += bleed_tick_interval
 	if bleed_remaining <= 0.0 or dead:
 		bleed_tick_clock = 0.0
@@ -519,17 +519,20 @@ func is_undead() -> bool:
 func elemental_resistance_percent(element_name: String) -> float:
 	return float(element_resistance.get(element_name, 0.0))
 
-func take_damage(amount: int, critical: bool = false) -> void:
+func take_damage(amount: int, critical: bool = false, damage_kind: String = "") -> void:
 	if dead:
 		return
 	damage_hit_count += 1
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
 	_show_damage_number(amount, critical)
+	if is_instance_valid(world_controller) and world_controller.has_method("monster_combat_feedback"):
+		world_controller.monster_combat_feedback(self, critical, damage_kind)
 	motion.react(critical)
 	if hp <= 0:
 		dead = true
 		motion.die()
+		if has_node("GroundShadow"): $GroundShadow.hide()
 		name_label.hide()
 		hp_bar.hide()
 		input_pickable = false
@@ -540,6 +543,9 @@ func take_damage(amount: int, critical: bool = false) -> void:
 
 func show_miss() -> void:
 	if dead:
+		return
+	if is_instance_valid(world_controller) and world_controller.has_method("show_combat_number"):
+		world_controller.show_combat_number(global_position + Vector2(0, -visual_height - 8), "MISS", Color(0.78, 0.86, 1.0))
 		return
 	var label: Label = Label.new()
 	label.text = "MISS"
@@ -558,6 +564,9 @@ func show_miss() -> void:
 	tween.tween_callback(label.queue_free)
 
 func _show_damage_number(amount: int, critical: bool = false) -> void:
+	if is_instance_valid(world_controller) and world_controller.has_method("show_combat_number"):
+		world_controller.show_combat_number(global_position + Vector2(0, -visual_height - 8), ("CRIT " if critical else "") + str(amount), Color(1.0, 0.45, 0.2) if critical else Color(1.0, 0.83, 0.4), critical)
+		return
 	var label: Label = Label.new()
 	label.text = ("CRIT " + str(amount)) if critical else str(amount)
 	label.position = Vector2(-28.0, -88.0)
@@ -613,6 +622,11 @@ func _setup_animation(record: Dictionary) -> void:
 	if not motion_connected:
 		motion.strike.connect(_release_attack)
 		motion_connected = true
+	if not has_node("GroundShadow"):
+		var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
+		shadow.name = "GroundShadow"
+		shadow.radius = motion.profile.shadow_size
+		add_child(shadow)
 	motion.apply(sprite, animation_base_scale)
 
 func current_attack_range() -> float:
