@@ -316,7 +316,7 @@ func _refresh_inventory_grid() -> void:
 		var equipped := _is_item_equipped(item_name)
 		var equip_mark := "E " if equipped else ""
 		var level := _enhance_level(item_name)
-		var level_mark := "+%d " % level if level > 0 else ""
+		var level_mark := "/".join(_enhancement_copy_labels(item_name)) + " " if amount > 1 and _enhancement_copy_labels(item_name).size() > 1 else ("+%d " % level if level > 0 else "")
 		var badges := _status_badges(record, item_name)
 		var badge_mark := badges + " " if badges != "" else ""
 		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(item_name), amount]
@@ -348,6 +348,18 @@ func _refresh_inventory_grid() -> void:
 		empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		empty.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		item_grid.add_child(empty)
+
+func _enhancement_copy_labels(item_name: String) -> PackedStringArray:
+	var labels: PackedStringArray = PackedStringArray()
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var levels: Array[int] = []
+	for raw: Variant in instances.values():
+		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == item_name:
+			levels.append(int((raw as Dictionary).get("level", 0)))
+	levels.sort()
+	for rank: int in levels:
+		labels.append("+%d" % rank)
+	return labels
 
 func _enhance_level(item_name: String) -> int:
 	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
@@ -498,6 +510,9 @@ func _refresh_detail(item_name: String) -> void:
 	detail_icon.texture = load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null
 
 	var lines := PackedStringArray()
+	var copies: PackedStringArray = _enhancement_copy_labels(item_name)
+	if copies.size() > 1:
+		lines.append("[color=#ffd36a]개체별 강화: %s[/color]" % ", ".join(copies))
 	if enhance_level > 0:
 		lines.append("[color=#ffd36a][b]강화 +%d[/b][/color]" % enhance_level)
 	if bless_state == "blessed":
