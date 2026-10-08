@@ -1,4 +1,6 @@
 extends CanvasLayer
+
+const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 class_name TwilightHUD
 
 signal move_vector_changed(value: Vector2)
@@ -1109,7 +1111,7 @@ func open_skills() -> void:
 		var activation: String = str(skill.get("activation", "active")).to_lower()
 		var is_passive: bool = activation == "passive"
 		var activation_label: String = "패시브" if is_passive else "액티브"
-		var cooldown: float = float(skill.get("cooldown", 0.0))
+		var cooldown: float = SKILL_RULES.cooldown_seconds(skill) if not is_passive else 0.0
 
 		var row: HBoxContainer = HBoxContainer.new()
 		row.add_theme_constant_override("separation", 6)
@@ -1119,13 +1121,13 @@ func open_skills() -> void:
 		button.custom_minimum_size = Vector2(0, 60)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.disabled = is_passive
-		button.tooltip_text = "보유 중 자동 적용" if is_passive else "눌러서 스킬 사용"
+		button.tooltip_text = ("상시 적용" if SKILL_RULES.passive_trigger(skill) == "always" else "조건부 자동 발동: %s" % SKILL_RULES.passive_trigger(skill)) if is_passive else "눌러서 스킬 사용"
 		if not is_passive:
 			button.pressed.connect(_emit_job_skill.bind(skill_name))
 		row.add_child(button)
 
 		var quick_button: Button = Button.new()
-		quick_button.text = "상시" if is_passive else "Q등록"
+		quick_button.text = ("상시" if SKILL_RULES.passive_trigger(skill) == "always" else "발동") if is_passive else "Q등록"
 		quick_button.custom_minimum_size = Vector2(72, 60)
 		quick_button.disabled = is_passive
 		quick_button.tooltip_text = "보유만으로 자동 적용되는 패시브" if is_passive else "스킬을 퀵슬롯에 등록"
