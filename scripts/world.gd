@@ -17,6 +17,7 @@ const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 
 var field_map: PlayableField = null
@@ -3825,7 +3826,7 @@ func _apply_transform_visual(record: Dictionary) -> void:
 		return
 	var path: String = _directional_image_path("transform", record)
 	var speed_multiplier: float = float(record.get("speed", 1.0))
-	player.set_transform_visual(path, speed_multiplier)
+	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", record, path))
 
 func _apply_doll_visual(record: Dictionary) -> void:
 	companion_sprite.stop()

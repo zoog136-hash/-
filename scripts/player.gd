@@ -5,6 +5,7 @@ signal attack_requested
 signal attack_strike(sequence: int)
 signal attack_cancelled(sequence: int)
 
+const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
 var motion: TwilightActorMotion = MOTION.new()
@@ -202,73 +203,34 @@ func set_class_index(value: int) -> void:
 		class_sprite.visible = true
 
 func _build_class_frames(path: String) -> void:
-	var frames: SpriteFrames = SpriteFrames.new()
-	frames.remove_animation("default")
-	var names: Array[String] = ["walk_down", "walk_up", "walk_left", "walk_right", "attack"]
-	if not ResourceLoader.exists(path):
-		class_sprite.sprite_frames = frames
-		return
-	var texture: Texture2D = load(path) as Texture2D
-	for row: int in range(5):
-		var anim: String = names[row]
-		frames.add_animation(anim)
-		frames.set_animation_speed(anim, 10.0 if row < 4 else 12.0)
-		frames.set_animation_loop(anim, row < 4)
-		for column: int in range(5):
-			var atlas: AtlasTexture = AtlasTexture.new()
-			atlas.atlas = texture
-			atlas.region = Rect2(column * CELL_SIZE.x, row * CELL_SIZE.y, CELL_SIZE.x, CELL_SIZE.y)
-			frames.add_frame(anim, atlas)
-	class_sprite.sprite_frames = frames
-	class_sprite.animation = "walk_down"
-	class_sprite.frame = 0
-	class_sprite.play()
+	class_sprite.sprite_frames = ANIMATION_CATALOG.frames(path, "class5")
+	class_sprite.set_meta("base_scale", Vector2.ONE)
+	class_sprite.pause()
 
-func set_transform_visual(path: String, _speed_multiplier: float) -> void:
-	if path == "" or not ResourceLoader.exists(path):
+func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
+	if path.is_empty() or not ResourceLoader.exists(path):
 		clear_transform_visual()
 		return
-	var texture: Texture2D = load(path) as Texture2D
-	if texture == null:
+	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
+	transform_profile.resource_path_hint = path
+	var frames: SpriteFrames = ANIMATION_CATALOG.frames(path, transform_profile.layout)
+	var names: PackedStringArray = frames.get_animation_names()
+	if names.is_empty():
 		clear_transform_visual()
 		return
-	_build_directional_frames(transform_sprite, texture)
-	var size: Vector2 = texture.get_size()
-	var cell_height: float = size.y / 4.0
-	var desired_height: float = 120.0
-	var scale_value: float = desired_height / maxf(1.0, cell_height)
-	var base_scale: Vector2 = Vector2(scale_value, scale_value)
-	transform_sprite.set_meta("base_scale", base_scale)
-	transform_sprite.scale = base_scale
-	transform_sprite.animation = _direction_animation_name(facing)
-	transform_sprite.frame = 0
-	transform_sprite.play()
-	transform_profile.layout = "directional4"
-	transform_profile.sprite_offset = Vector2(0, -55)
-	motion.profile = transform_profile
+	transform_sprite.stop()
+	transform_sprite.sprite_frames = frames
+	transform_sprite.animation = names[0]
+	var texture: Texture2D = frames.get_frame_texture(names[0], 0)
+	var scale_value: float = 120.0 / maxf(1.0, texture.get_height())
+	transform_sprite.set_meta("base_scale", Vector2.ONE * scale_value)
 	transform_active = true
+	motion.profile = transform_profile
+	class_sprite.stop()
 	class_sprite.visible = false
 	transform_sprite.visible = true
-	# Movement bonuses are applied centrally so transformation, doll, relic and equipment options stack consistently.
-
-func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
-	var frames: SpriteFrames = SpriteFrames.new()
-	frames.remove_animation("default")
-	var names: Array[String] = ["dir_down", "dir_up", "dir_left", "dir_right"]
-	var size: Vector2 = texture.get_size()
-	var cell_width: float = size.x / 4.0
-	var cell_height: float = size.y / 4.0
-	for row: int in range(4):
-		var animation_name: String = names[row]
-		frames.add_animation(animation_name)
-		frames.set_animation_speed(animation_name, 8.0)
-		frames.set_animation_loop(animation_name, true)
-		for column: int in range(4):
-			var atlas: AtlasTexture = AtlasTexture.new()
-			atlas.atlas = texture
-			atlas.region = Rect2(column * cell_width, row * cell_height, cell_width, cell_height)
-			frames.add_frame(animation_name, atlas)
-	sprite.sprite_frames = frames
+	# Keep position, current attack sequence, AUTO and all combat stats intact.
+	motion.apply(transform_sprite, Vector2.ONE * scale_value)
 
 func _class_direction_animation_name(direction_value: int) -> String:
 	match direction_value:
