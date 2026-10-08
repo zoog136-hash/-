@@ -350,19 +350,19 @@ func _refresh_inventory_grid() -> void:
 		item_grid.add_child(empty)
 
 func _enhance_level(item_name: String) -> int:
-	var levels: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
-	return maxi(0, int(levels.get(item_name, 0)))
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var best: int = 0
+	for raw_value: Variant in instances.values():
+		if raw_value is Dictionary and str((raw_value as Dictionary).get("name", "")) == item_name:
+			best = maxi(best, int((raw_value as Dictionary).get("level", 0)))
+	return best
 
 func _bless_state(record: Dictionary, item_name: String) -> String:
 	var explicit := str(record.get("bless_state", "")).to_lower()
 	if explicit in ["blessed", "축복"]:
 		return "blessed"
-	if explicit in ["cursed", "저주"]:
-		return "cursed"
 	if bool(record.get("blessed", false)) or item_name.find("축복받은") >= 0:
 		return "blessed"
-	if bool(record.get("cursed", false)) or item_name.find("저주받은") >= 0:
-		return "cursed"
 	return "normal"
 
 func _is_engraved(record: Dictionary, item_name: String) -> bool:
@@ -373,8 +373,6 @@ func _status_badges(record: Dictionary, item_name: String) -> String:
 	var state := _bless_state(record, item_name)
 	if state == "blessed":
 		badges.append("✦")
-	elif state == "cursed":
-		badges.append("☠")
 	if _is_engraved(record, item_name):
 		badges.append("◆")
 	return " ".join(badges)
@@ -390,8 +388,6 @@ func _status_tooltip(record: Dictionary, item_name: String) -> String:
 	var state := _bless_state(record, item_name)
 	if state == "blessed":
 		parts.append("축복")
-	elif state == "cursed":
-		parts.append("저주")
 	if _is_engraved(record, item_name):
 		parts.append("각인")
 	return (" · " + " · ".join(parts)) if not parts.is_empty() else ""
@@ -503,8 +499,6 @@ func _refresh_detail(item_name: String) -> void:
 		lines.append("[color=#ffd36a][b]강화 +%d[/b][/color]" % enhance_level)
 	if bless_state == "blessed":
 		lines.append("[color=#ffe77a]✦ 축복 아이템[/color]")
-	elif bless_state == "cursed":
-		lines.append("[color=#d76cff]☠ 저주 아이템[/color]")
 	if engraved:
 		lines.append("[color=#86d7ff]◆ 각인 아이템[/color]")
 	if enhance_level > 0 or bless_state != "normal" or engraved:
