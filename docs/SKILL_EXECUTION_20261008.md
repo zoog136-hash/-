@@ -30,7 +30,7 @@ Branch: `codex/skill-system-20261008`. No changes to `scripts/maps/*`, input rou
 - Event-driven passives are supported through `trigger: "on_hit" | "on_damaged" | "on_kill"`, `proc_effect: "damage" | "heal" | "atkBuff" | "defBuff" | "hpBuff" | "speedBuff"`, `proc_chance: 0..1`, and `cooldown`.
 - Event-driven passives do not register as manual slots, do not spend MP, and do not mistakenly contribute permanent stats.
 - Class changes prune ineligible active buffs/slots; saved skill cooldowns are restored on load.
-- Current DB still identifies **one** passive (멘탈 포커스); full 258-skill active/passive gameplay classification is a separate data-review task.
+- Current DB still identifies **one** passive (멘탈 포커스); full 257-skill active/passive gameplay classification is a separate data-review task.
 
 ## Named skills corrected in this patch
 
@@ -57,5 +57,20 @@ The skill-only workflow is `.github/workflows/skill-mechanism-validate.yml`; it 
 ## Known limits / follow-up
 
 - The 216 locally expanded skills still share generic formulas and placeholder-style descriptions. Individually authentic mechanics, exact skill rankings, learn/unlock systems, proc percentages and specialized attack animations require a separate content/balance pass.
-- Utility `라이트` has no real field-vision mechanic yet and is deliberately rejected instead of falsely consuming MP for no effect.
+- Utility `라이트` was removed at user request.
 - Invisibility currently prevents PvE monsters from targeting, not multiplayer targeting (this is an offline RPG).
+
+## Mechanics correction — 2026-10-08
+
+- **라이트** is removed from the skill DB (258 -> 257 records) and invalid saved quickslots are pruned.
+- **턴 언데드 / 턴 언데드(강화)**: only monsters with `type: "언데드"` / `undead: true` can be targeted. The normal magic hit roll is evaluated and a landed hit deals current HP, instantly defeating the undead even if it is a boss. A miss costs MP and cooldown; a non-undead target is rejected before spending MP. Five obviously undead expanded monster entries had incorrect race types corrected.
+- **카운터 배리어**: a 90-second active defense buff (+8) that on a landed melee hit has a 30% chance to reflect 150% of the actual received damage; **(마스터)** (+14) has a 45% chance to reflect 200%. When both are active, the highest proc chance wins; miss / ranged / magic hits cannot trigger a counter.
+- **트리플 애로우 and (스피릿)**: three independent hit/crit/damage attempts each; fixed 2-hit metadata for 13 class-specific `연격` skills, 112px AoE for 13 class-specific `폭발` skills.
+- **13 class-specific 돌진 skills**: 340px initiation range, 1150px/s dash along navigable route to near the target, followed by a real damage hit. Rejects path/obstacle failures before MP is spent; cancels if the target dies or the user is stunned. Dash movement is managed by world code without editing Astra's map renderer.
+- **AUTO attack priority**: checks registered offensive AUTO skills against *their own pixel ranges* **before** the normal weapon range/attack test. Falls back to normal attacks or chases the target while no registered spell can execute.
+- **Speed value corrections**: eight generated `가속 7` skills were adjusted from 11.5% to 12% or from 16.5% to 17% to exactly match their descriptions.
+- **Validation**: extended the independent skill smoke test with turn-undead, counters, three-hit, route-based charge and ranged AUTO priority checks. The existing full Godot validation workflow is left unchanged.
+
+### Limits of this pass
+
+The new charge and 3-hit mechanics are implemented as local movement / multiple damage rolls. Unique sprite/projectile art, per-frame animation timing and full 257-skill authenticity are separate animation/content work. Charge motion checks walkable map cells and follows navigation paths; it is not a physics-impulse attack.
