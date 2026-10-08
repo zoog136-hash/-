@@ -3415,10 +3415,28 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 				var other: TwilightMonster = child as TwilightMonster
 				if other != target and not other.dead and target.global_position.distance_to(other.global_position) <= area_radius and _has_line_of_sight_world(player.global_position, other.global_position):
 					targets.append(other)
+	var chain_limit: int = clampi(int(skill.get("chain_targets", 1)), 1, 8)
+	if chain_limit > 1:
+		var chain_candidates: Array[TwilightMonster] = []
+		var chain_radius: float = maxf(10.0, float(skill.get("chain_radius", 140.0)))
+		for child: Node in monsters_root.get_children():
+			if child is TwilightMonster:
+				var other: TwilightMonster = child as TwilightMonster
+				if other != target and not other.dead and target.global_position.distance_to(other.global_position) <= chain_radius and _has_line_of_sight_world(player.global_position, other.global_position):
+					chain_candidates.append(other)
+		chain_candidates.sort_custom(func(a: TwilightMonster, b: TwilightMonster) -> bool:
+			return target.global_position.distance_squared_to(a.global_position) < target.global_position.distance_squared_to(b.global_position)
+		)
+		for candidate: TwilightMonster in chain_candidates:
+			if targets.size() >= chain_limit:
+				break
+			if not targets.has(candidate):
+				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
 	var total_damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
 	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
 	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
+	var chain_index: int = 0
 	for victim: TwilightMonster in targets:
 		var victim_hit_chance: float = hit_chance
 		if magic_style:
@@ -3434,7 +3452,8 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 				victim.show_miss()
 				hud.append_log("%s · %d/%d타 MISS" % [str(skill.get("name", "")), hit_index + 1, hits])
 				continue
-			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits))))
+			var chain_factor: float = pow(clampf(float(skill.get("chain_falloff", 1.0)), 0.2, 1.0), chain_index) if chain_limit > 1 else 1.0
+			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor)))
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
 			if critical:
 				damage = _critical_damage(damage)
@@ -3442,9 +3461,16 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			victim.take_damage(damage, critical)
 			_try_trigger_passives("on_hit", victim)
 			_try_extra_weapon_hit(victim, damage, style)
+			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
+				match str(skill.get("on_hit_status", "")):
+					"slow":
+						victim.apply_slow(float(skill.get("status_duration", 3.0)), float(skill.get("slow_multiplier", 0.65)))
+					"hold":
+						victim.apply_hold(float(skill.get("status_duration", 2.0)))
 			hud.append_log("%s · %s %d/%d타 %d 피해%s" % [
 				str(skill.get("name", "")), victim.monster_name, hit_index + 1, hits, damage, " CRITICAL" if critical else ""
 			])
+		chain_index += 1
 	_update_target_hud()
 
 func _cast_job_heal_skill(skill: Dictionary) -> bool:
@@ -3455,6 +3481,8 @@ func _cast_job_heal_skill(skill: Dictionary) -> bool:
 		return false
 	var base_amount: int = int(skill.get("heal", 40)) + (int_stat + _active_skill_buff_total("intFlat")) * 2
 	var amount: int = maxi(1, int(round(float(base_amount) * (1.0 + float(skill.get("heal_bonus_percent", 0.0)) / 100.0))))
+	if bool(skill.get("heal_to_full", false)):
+		amount = _effective_max_hp()
 	var before: int = hp
 	hp = mini(_effective_max_hp(), hp + amount)
 	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
@@ -3477,6 +3505,7 @@ func _cast_job_buff_skill(skill: Dictionary) -> bool:
 		"strFlat": int(skill.get("strFlat", 0)),
 		"dexFlat": int(skill.get("dexFlat", 0)),
 		"intFlat": int(skill.get("intFlat", 0)),
+		"mrFlat": int(skill.get("mrFlat", 0)),
 		"element_bonus_holy": int(skill.get("element_bonus_holy", 0)),
 		"element_bonus_wind": int(skill.get("element_bonus_wind", 0)),
 		"element_resist_dark": int(skill.get("element_resist_dark", 0)),
@@ -4422,6 +4451,7 @@ func _effective_mr() -> int:
 	var total: int = 10 + level + wis_stat * 2
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
+	total += _active_skill_buff_total("mrFlat")
 	return maxi(0, total)
 
 func _record_damage_reduction(record: Dictionary) -> int:
