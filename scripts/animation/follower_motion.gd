@@ -15,19 +15,18 @@ var follow_offset: Vector2 = Vector2(-54, 24)
 func configure(record: Dictionary, path: String, anchor: Node2D, sprite: AnimatedSprite2D, player: TwilightPlayer) -> void:
 	if not record.is_empty():
 		motion.profile = CATALOG.for_record("doll", record, path)
-		if not motion.profile.frames_path.is_empty(): path = motion.profile.frames_path
-	if record.is_empty() or path.is_empty() or not ResourceLoader.exists(path):
+	if record.is_empty():
 		enabled = false
 		state = "despawn"
 		return
 	sprite.stop()
-	sprite.sprite_frames = CATALOG.frames(path, motion.profile.layout)
+	sprite.sprite_frames = CATALOG.frames_for_profile(motion.profile, path)
 	var names: PackedStringArray = sprite.sprite_frames.get_animation_names()
-	if names.is_empty():
+	var texture: Texture2D = CATALOG.first_texture(sprite.sprite_frames)
+	if texture == null:
 		enabled = false
 		return
 	sprite.animation = names[0]
-	var texture: Texture2D = sprite.sprite_frames.get_frame_texture(names[0], 0)
 	base_scale = Vector2.ONE * (72.0 / maxf(1.0, texture.get_height()))
 	anchor.global_position = player.global_position + follow_offset
 	motion.face(player.motion.direction)

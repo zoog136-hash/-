@@ -212,20 +212,16 @@ func _build_class_frames(path: String) -> void:
 
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
 	transform_profile = profile_value if profile_value != null else ANIMATION_CATALOG.for_record("transform", {}, path)
-	if not transform_profile.frames_path.is_empty(): path = transform_profile.frames_path
-	if path.is_empty() or not ResourceLoader.exists(path):
-		clear_transform_visual()
-		return
 	transform_profile.resource_path_hint = path
-	var frames: SpriteFrames = ANIMATION_CATALOG.frames(path, transform_profile.layout)
+	var frames: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(transform_profile, path)
 	var names: PackedStringArray = frames.get_animation_names()
-	if names.is_empty():
+	var texture: Texture2D = ANIMATION_CATALOG.first_texture(frames)
+	if texture == null:
 		clear_transform_visual()
 		return
 	transform_sprite.stop()
 	transform_sprite.sprite_frames = frames
 	transform_sprite.animation = names[0]
-	var texture: Texture2D = frames.get_frame_texture(names[0], 0)
 	var scale_value: float = 120.0 / maxf(1.0, texture.get_height())
 	transform_sprite.set_meta("base_scale", Vector2.ONE * scale_value)
 	transform_active = true

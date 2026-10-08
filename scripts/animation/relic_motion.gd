@@ -2,6 +2,7 @@ extends RefCounted
 class_name TwilightRelicMotion
 
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
+const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const GLOW = preload("res://assets/effects/relic_glow.gdshader")
 var enabled: bool = false
 var opacity: float = 0.0
@@ -13,15 +14,26 @@ var base_scale: Vector2 = Vector2.ONE
 var profile: TwilightAnimationProfile
 var material: ShaderMaterial
 var follow_offset: Vector2 = Vector2(48, 18)
+var motion: TwilightActorMotion = MOTION.new()
 
 func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, grade_color: Color) -> void:
 	var path: String = str(record.get("image_path", ""))
-	if record.is_empty() or path.is_empty() or not ResourceLoader.exists(path):
+	if record.is_empty():
 		enabled = false
 		state = "despawn"
 		return
 	profile = CATALOG.for_record("relic", record, path)
-	sprite.texture = load(path) as Texture2D
+	motion = MOTION.new()
+	motion.profile = profile
+	var frames: SpriteFrames = CATALOG.frames_for_profile(profile, path)
+	var texture: Texture2D = CATALOG.first_texture(frames)
+	if texture == null:
+		enabled = false
+		state = "despawn"
+		return
+	# Reuse the float/glow/foot sorting while sharing the native frame sampler.
+	motion.frame_source = frames
+	sprite.texture = texture
 	base_scale = Vector2.ONE * (34.0 / maxf(1.0, maxf(sprite.texture.get_width(), sprite.texture.get_height())))
 	if material == null:
 		material = ShaderMaterial.new()
@@ -48,11 +60,16 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 		return
 	clock += delta
 	var target: Vector2 = player.global_position + follow_offset
+	var previous: Vector2 = sprite.global_position
 	if sprite.global_position.distance_to(target) > 900.0:
 		sprite.global_position = target
 		opacity = 0.0
 	else:
 		sprite.global_position = sprite.global_position.lerp(target, 1.0 - exp(-8.0 * delta))
+	var real_velocity: Vector2 = (sprite.global_position - previous) / maxf(delta, 0.001)
+	if previous.distance_to(target) > 900.0: real_velocity = Vector2.ZERO
+	motion.advance(delta, real_velocity)
+	motion.apply_frames(sprite)
 	if player.motion.sequence != previous_sequence:
 		previous_sequence = player.motion.sequence
 		reaction = 0.28

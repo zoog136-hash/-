@@ -2,7 +2,7 @@ name: Combat Animation Validate
 
 on:
   push:
-    branches: ['feature/combat-animation-overhaul']
+    branches: ['feature/combat-animation-overhaul', 'feature/combat-animation-followup']
     paths-ignore: ['docs/**']
   pull_request:
     branches: [main]
@@ -44,10 +44,19 @@ jobs:
           export LIBGL_ALWAYS_SOFTWARE=1
           xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee test-results/region-render.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/region-render.log; then exit 1; fi
+      - name: Actual 32/96/192 monster crowd combat
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/crowd-render"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/crowd-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/crowd-render.log; then exit 1; fi
+          grep -q COMBAT_CROWD_RENDER_OK test-results/crowd-render.log
       - name: Checkout original map-complete main for comparison
         uses: actions/checkout@v4
         with:
-          ref: da5141bb91c0d852a0d8d175d54bb8b369e76a5d
+          ref: 11894be09077f9f3c14c2d3814aec422b8e7c2c0
           path: baseline
       - name: Original main render and active-play benchmark
         shell: bash
@@ -58,6 +67,18 @@ jobs:
           /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path baseline --editor --quit 2>&1 | tee test-results/baseline-import.log
           xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path baseline --script res://tests/capture_regions.gd 2>&1 | tee test-results/baseline-render.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/baseline-render.log; then exit 1; fi
+      - name: Identical CPU and crowd benchmark against starting main
+        shell: bash
+        run: |
+          set -o pipefail
+          cp tests/benchmark_actor_motion.gd tests/capture_combat_crowd.gd baseline/tests/
+          export LIBGL_ALWAYS_SOFTWARE=1
+          TWILIGHT_MOTION_BENCHMARK="$PWD/test-results/motion-baseline.json" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path baseline --script res://tests/benchmark_actor_motion.gd 2>&1 | tee test-results/motion-baseline.log
+          TWILIGHT_MOTION_BENCHMARK="$PWD/test-results/motion-followup.json" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/benchmark_actor_motion.gd 2>&1 | tee test-results/motion-followup.log
+          export XDG_DATA_HOME="${RUNNER_TEMP}/baseline-crowd-render"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path baseline --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/baseline-crowd-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/motion-baseline.log test-results/motion-followup.log test-results/baseline-crowd-render.log; then exit 1; fi
+          grep -q COMBAT_CROWD_RENDER_OK test-results/baseline-crowd-render.log
       - name: Upload review evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -68,4 +89,6 @@ jobs:
             ${{ runner.temp }}/combat-render/**/combat-review/
             ${{ runner.temp }}/region-render/**/world-regions-review/
             ${{ runner.temp }}/baseline-render/**/world-regions-review/
+            ${{ runner.temp }}/crowd-render/**/combat-crowd-review/
+            ${{ runner.temp }}/baseline-crowd-render/**/combat-crowd-review/
           if-no-files-found: error
