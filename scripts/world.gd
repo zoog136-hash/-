@@ -17,6 +17,8 @@ const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
+var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
 var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
 const COMBAT_FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
@@ -3914,21 +3916,7 @@ func _direction_animation_name(direction_value: int) -> String:
 		_: return "dir_down"
 
 func _apply_relic_visual(record: Dictionary) -> void:
-	relic_sprite.texture = null
-	relic_sprite.visible = false
-	if record.is_empty():
-		return
-	var path: String = str(record.get("image_path", ""))
-	if path == "" or not ResourceLoader.exists(path):
-		return
-	var texture: Texture2D = load(path) as Texture2D
-	if texture == null:
-		return
-	relic_sprite.texture = texture
-	var size: Vector2 = texture.get_size()
-	var scale_value: float = 34.0 / maxf(1.0, maxf(size.x, size.y))
-	relic_sprite.scale = Vector2(scale_value, scale_value)
-	relic_sprite.visible = true
+	relic_motion.configure(record, relic_sprite, player, _drop_grade_color(str(record.get("grade", "일반"))))
 
 func _restore_equipped_visuals() -> void:
 	var transform_value: Variant = equipped_catalog.get("변신", {})
@@ -4767,8 +4755,7 @@ func _experience_multiplier() -> float:
 
 func _update_companion(delta: float) -> void:
 	doll_motion.update(delta, $Companion, companion_sprite, player)
-	if relic_sprite.visible:
-		relic_sprite.global_position = player.global_position + Vector2(42.0, -64.0 + sin(Time.get_ticks_msec() / 420.0) * 4.0)
+	relic_motion.update(delta, relic_sprite, player)
 
 # Playable-field services: renderer, physics, population and HUD remain separate.
 func _setup_field_services() -> void:

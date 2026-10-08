@@ -17,7 +17,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	result.profile_id = key
 	result.resource_path_hint = resource
 	result.layout = "directional4" if resource.begins_with("res://assets/directional/") else "still"
-	result.sprite_offset = Vector2(0, -55 if kind == "transform" else -26)
+	result.sprite_offset = Vector2(0, -55 if kind == "transform" else (-64 if kind == "relic" else (-15 if kind == "monster" else -26)))
 	result.reference_speed = 210.0 if kind == "transform" else (90.0 if kind == "monster" else 180.0)
 	var settings: Dictionary = records.get(key, {})
 	if record.get("animation_profile", {}) is Dictionary:
