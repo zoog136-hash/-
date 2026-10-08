@@ -265,6 +265,7 @@ func set_touch_vector(value: Vector2) -> void:
 	touch_vector = value.limit_length(1.0)
 
 func set_click_path(points: PackedVector2Array, target: Vector2) -> void:
+	if not points.is_empty(): cancel_attack()
 	click_path = points
 	path_index = 0
 	navigation_agent.target_position = target
