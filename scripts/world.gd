@@ -18,6 +18,8 @@ const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
+const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
+const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 
 var field_map: PlayableField = null
 var field_renderer: FieldRenderer = null
@@ -60,6 +62,7 @@ var skill_cooldowns: Dictionary = {}
 var skill_global_cooldown: float = 0.0
 var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
+var consumable_service: Node = null
 var quickslots: Array = []
 var self_mode_enabled: bool = false
 var auto_buff_check_timer: float = 0.0
@@ -203,6 +206,9 @@ func _ready() -> void:
 	ThemeDB.fallback_font = korean_font
 	rng.randomize()
 	_load_data()
+	consumable_service = CONSUMABLE_SERVICE.new()
+	add_child(consumable_service)
+	consumable_service.call("setup", self)
 	_connect_signals()
 	_setup_collision_tileset()
 	_setup_field_services()
@@ -427,6 +433,22 @@ func _merge_local_consumables_into_catalog() -> void:
 			continue
 		catalog_items.append(scroll_record.duplicate(true))
 		seen_names[scroll_name] = true
+	for i: int in range(catalog_items.size() - 1, -1, -1):
+		var entry: Variant = catalog_items[i]
+		if entry is Dictionary and CONSUMABLE_RULES.is_removed_item(str((entry as Dictionary).get("name", ""))):
+			catalog_items.remove_at(i)
+	for spec: Dictionary in CONSUMABLE_RULES.records():
+		var found: bool = false
+		for i: int in range(catalog_items.size()):
+			var entry: Variant = catalog_items[i]
+			if entry is Dictionary and str((entry as Dictionary).get("name", "")) == str(spec["name"]):
+				var merged: Dictionary = (entry as Dictionary).duplicate(true)
+				merged.merge(spec, true)
+				catalog_items[i] = merged
+				found = true
+				break
+		if not found:
+			catalog_items.append(spec.duplicate(true))
 	catalog_db["아이템"] = catalog_items
 
 func _connect_signals() -> void:
@@ -1231,6 +1253,7 @@ func _attack() -> void:
 	if critical:
 		damage = _critical_damage(damage)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
+	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
 	target.take_damage(damage, critical)
 	_try_trigger_passives("on_hit", target)
 	_try_extra_weapon_hit(target, damage, attack_kind)
@@ -1893,8 +1916,13 @@ func _scroll_mode(scroll_name: String) -> String:
 	return "normal"
 
 func _on_inventory_item_activated(item_name: String) -> void:
+	if CONSUMABLE_RULES.is_removed_item(item_name):
+		hud.show_message("삭제된 상태이상 해제 물약입니다")
+		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("아이템이 없습니다")
+		return
+	if bool(consumable_service.call("try_use", item_name)):
 		return
 	var kind: String = _scroll_kind(item_name)
 	if kind != "":
@@ -1944,6 +1972,15 @@ func _description_time_seconds(desc: String, label: String) -> float:
 	return 0.0
 
 func _timed_item_buff_from_record(record: Dictionary) -> Dictionary:
+	var spec: Dictionary = CONSUMABLE_RULES.definition(str(record.get("name", "")))
+	if str(spec.get("kind", "")) in ["regen", "food", "buff"]:
+		var generated: Dictionary = (spec.get("buff", {}) as Dictionary).duplicate(true)
+		generated["duration"] = float(spec["duration"])
+		generated["remaining"] = float(spec["duration"])
+		generated["desc"] = str(spec.get("desc", ""))
+		generated["group"] = str(spec.get("group", ""))
+		generated["tick_elapsed"] = 0.0
+		return generated
 	var desc: String = str(record.get("desc", "")).strip_edges()
 	var duration: float = _description_time_seconds(desc, "지속 시간")
 	if duration <= 0.0:
@@ -2019,6 +2056,17 @@ func _use_timed_item_buff(record: Dictionary) -> bool:
 	if cooldown_left > 0.0:
 		hud.show_message("%s 재사용 대기 %s" % [item_name, _format_seconds_short(cooldown_left)])
 		return false
+	var spec: Dictionary = CONSUMABLE_RULES.definition(item_name)
+	var allowed: Array = spec.get("classes", []) as Array
+	if not allowed.is_empty() and not allowed.has(job_class):
+		hud.show_message("%s 직업은 %s 사용 불가" % [job_class, item_name])
+		return false
+	var buff_group: String = str(buff.get("group", ""))
+	if buff_group != "":
+		for current_key: Variant in active_item_buffs.keys():
+			var current: Variant = active_item_buffs.get(current_key, {})
+			if current is Dictionary and str((current as Dictionary).get("group", "")) == buff_group:
+				active_item_buffs.erase(current_key)
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
 	active_item_buffs[item_name] = buff
 	var cooldown: float = float(buff.get("cooldown", 0.0))
@@ -2041,7 +2089,17 @@ func _tick_item_buffs(delta: float) -> void:
 			expired.append(key)
 			continue
 		var buff: Dictionary = value as Dictionary
-		buff["remaining"] = maxf(0.0, float(buff.get("remaining", 0.0)) - delta)
+		var remaining_before: float = maxf(0.0, float(buff.get("remaining", 0.0)))
+		var interval: float = float(buff.get("tick_interval", 0.0))
+		if interval > 0.0 and remaining_before > 0.0:
+			var elapsed: float = float(buff.get("tick_elapsed", 0.0)) + minf(delta, remaining_before)
+			var ticks: int = maxi(0, int(floor(elapsed / interval)))
+			buff["tick_elapsed"] = fmod(elapsed, interval)
+			if ticks > 0:
+				mp = mini(max_mp, mp + maxi(0, int(buff.get("mp_regen_tick", 0))) * ticks)
+				hp = mini(_effective_max_hp(), hp + maxi(0, int(buff.get("hp_regen_tick", 0))) * ticks)
+				changed = true
+		buff["remaining"] = maxf(0.0, remaining_before - delta)
 		active_item_buffs[key] = buff
 		if float(buff.get("remaining", 0.0)) <= 0.0:
 			expired.append(key)
@@ -2399,6 +2457,8 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if bool(consumable_service.call("try_use", item_name)):
+		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
 	if record.is_empty():
 		hud.show_message("아이템 DB에서 정보를 찾을 수 없습니다")
@@ -2516,6 +2576,7 @@ func _save_game(quiet: bool) -> void:
 		"skill_global_cooldown": skill_global_cooldown,
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
+		"consumable_state": consumable_service.call("export_state"),
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
@@ -2566,6 +2627,7 @@ func _load_game(quiet: bool) -> void:
 	if inventory_value is Dictionary:
 		inventory = inventory_value as Dictionary
 	_ensure_inventory_ammo_defaults()
+	consumable_service.call("prune_removed")
 	class_index = clampi(int(data.get("class_index", class_index)), 0, 3)
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
@@ -2583,6 +2645,8 @@ func _load_game(quiet: bool) -> void:
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
 	item_use_cooldowns = item_cooldowns_value as Dictionary if item_cooldowns_value is Dictionary else {}
+	consumable_service.call("import_state", data.get("consumable_state", {}))
+	consumable_service.call("prune_removed")
 	_prune_active_skill_buffs_for_current_job()
 	player.set_class_index(class_index)
 	player.clear_status_effects()
@@ -3354,6 +3418,9 @@ func _player_element_resistance(element_name: String) -> float:
 func _normal_attack_element() -> String:
 	if _active_skill_buff_total("element_bonus_holy") > 0:
 		return "holy"
+	var enchanted: String = str(consumable_service.call("weapon_element", _equipped_weapon_record()))
+	if enchanted != "":
+		return ELEMENT_RULES.channel(enchanted)
 	return ELEMENT_RULES.channel(str(_equipped_weapon_record().get("element", "physical")))
 
 func _elemental_damage_to_monster(raw_damage: int, element_name: String, target: TwilightMonster) -> int:
@@ -4245,7 +4312,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _ranged_normal_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _record_move_speed_multiplier(record: Dictionary) -> float:
 	var value: float = float(record.get("speed", 1.0))
@@ -4292,19 +4359,19 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(str_stat + _active_skill_buff_total("strFlat"), 10, 2.0) + _active_item_buff_total("melee_damage")
+	return _effective_attack() + _stat_step_bonus(str_stat + _active_skill_buff_total("strFlat"), 10, 2.0) + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
 	return level + str_stat + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _ranged_accuracy_stat() -> int:
 	return level + dex_stat + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(int_stat + _active_skill_buff_total("intFlat"), 8, 2.0) + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(int_stat + _active_skill_buff_total("intFlat"), 8, 2.0) + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
 
 func _magic_accuracy_stat() -> int:
 	return level + int_stat + _active_skill_buff_total("intFlat") + _active_item_buff_total("magic_accuracy")
@@ -4615,6 +4682,7 @@ func _effective_mr() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
+	total += _active_item_buff_total("mr")
 	return maxi(0, total)
 
 func _record_damage_reduction(record: Dictionary) -> int:
@@ -4654,6 +4722,7 @@ func _character_stats_snapshot() -> Dictionary:
 		"wis": wis_stat,
 		"cha": cha_stat,
 		"stat_points": stat_points,
+		"consumable_state": consumable_service.call("export_state"),
 		"melee_damage": _melee_damage_stat(),
 		"melee_accuracy": _melee_accuracy_stat(),
 		"ranged_damage": _ranged_damage_stat(),
@@ -4726,7 +4795,7 @@ func _experience_multiplier() -> float:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
 		bonus += float(record.get("xp", 0.0))
-	return maxf(1.0, 1.0 + bonus)
+	return maxf(1.0, 1.0 + bonus + float(_active_item_buff_total("xp")) / 100.0)
 
 func _update_companion(delta: float) -> void:
 	if companion_sprite.visible:
