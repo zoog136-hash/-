@@ -15,6 +15,7 @@ const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
+const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 
 var field_map: PlayableField = null
 var field_renderer: FieldRenderer = null
@@ -49,6 +50,9 @@ var skills_db: Array = []
 var job_classes: Array = []
 var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
+var skill_cooldowns: Dictionary = {}
+var skill_global_cooldown: float = 0.0
+var auto_skill_check_timer: float = 0.0
 var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
 var quickslots: Array = []
@@ -214,6 +218,7 @@ func _process(delta: float) -> void:
 	_update_field_triggers()
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
+	_tick_skill_cooldowns(delta)
 	_tick_item_buffs(delta)
 	_run_auto_buff_quickslots(delta)
 	save_timer += delta
@@ -221,6 +226,7 @@ func _process(delta: float) -> void:
 		save_timer = 0.0
 		_save_game(true)
 	if player.auto_enabled and not player.is_stunned():
+		_run_auto_heal_quickslots()
 		_run_auto_hunt()
 	_update_companion(delta)
 	if Input.is_action_just_pressed("open_inventory"):
@@ -1189,6 +1195,7 @@ func _attack() -> void:
 		return
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
+	_break_invisibility()
 	player.pulse_attack()
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
@@ -1208,6 +1215,7 @@ func _attack() -> void:
 	if critical:
 		damage = _critical_damage(damage)
 	target.take_damage(damage, critical)
+	_try_trigger_passives("on_hit", target)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
 		target.monster_name, damage,
 		"원거리" if attack_kind == "ranged" else "근거리",
@@ -1231,7 +1239,7 @@ func _run_auto_hunt() -> void:
 	var distance: float = player.global_position.distance_to(auto_target.global_position)
 	if _target_in_current_weapon_range(auto_target) and _has_line_of_sight_world(player.global_position, auto_target.global_position):
 		player.clear_click_path()
-		if auto_attack_timer <= 0.0:
+		if not _run_auto_combat_quickslots() and auto_attack_timer <= 0.0:
 			_attack()
 	else:
 		if player.is_held():
@@ -1340,6 +1348,7 @@ func _update_target_hud() -> void:
 		hud.clear_target()
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	_try_trigger_passives("on_kill", monster)
 	if field_map != null:
 		field_population.release(monster)
 	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier())))
@@ -1503,6 +1512,8 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
 	reduced = _pve_damage_after_item_buffs(reduced)
 	hp = maxi(0, hp - reduced)
+	if hp > 0:
+		_try_trigger_passives("on_damaged", attacker)
 	player.show_received_damage(reduced, critical)
 	if normalized_type == "magic":
 		hud.append_log("%s에게 %d 마법 피해%s · 피격률 %.1f%% · 치명타 %.1f%% · MR %d" % [
@@ -2328,6 +2339,8 @@ func _save_game(quiet: bool) -> void:
 		"quickslots": quickslots,
 		"self_mode_enabled": self_mode_enabled,
 		"active_skill_buffs": active_skill_buffs,
+		"skill_cooldowns": skill_cooldowns,
+		"skill_global_cooldown": skill_global_cooldown,
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
 		"equipped_catalog": equipped_catalog,
@@ -2390,6 +2403,9 @@ func _load_game(quiet: bool) -> void:
 	self_mode_enabled = bool(data.get("self_mode_enabled", self_mode_enabled))
 	var skill_buffs_value: Variant = data.get("active_skill_buffs", {})
 	active_skill_buffs = skill_buffs_value as Dictionary if skill_buffs_value is Dictionary else {}
+	var skill_cooldowns_value: Variant = data.get("skill_cooldowns", {})
+	skill_cooldowns = skill_cooldowns_value as Dictionary if skill_cooldowns_value is Dictionary else {}
+	skill_global_cooldown = maxf(0.0, float(data.get("skill_global_cooldown", 0.0)))
 	var item_buffs_value: Variant = data.get("active_item_buffs", {})
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
@@ -2411,6 +2427,7 @@ func _load_game(quiet: bool) -> void:
 	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
+	_refresh_skill_stealth_visual()
 	hp = clampi(hp, 0, _effective_max_hp())
 	mp = clampi(mp, 0, max_mp)
 	var map_id: String = str(data.get("map_id", active_map_id))
@@ -2550,6 +2567,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
 	_prune_active_skill_buffs_for_current_job()
+	_refresh_skill_stealth_visual()
 	_refresh_speed_modifiers()
 	_update_job_skillbar()
 	hud.show_message("직업 변경: %s" % job_class)
@@ -2802,7 +2820,7 @@ func _skill_activation(skill: Dictionary) -> String:
 	return "active"
 
 func _is_passive_skill(skill: Dictionary) -> bool:
-	return _skill_activation(skill) == "passive"
+	return SKILL_RULES.is_passive(skill)
 
 func _skill_owned_for_current_job(skill: Dictionary) -> bool:
 	var skill_class: String = str(skill.get("class", "공용"))
@@ -2814,7 +2832,7 @@ func _passive_skill_total(key: String) -> int:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
-		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		total += int(skill.get(key, 0))
 	return total
@@ -2825,7 +2843,7 @@ func _passive_skill_speed_multiplier() -> float:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
-		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		multiplier = maxf(multiplier, float(skill.get("speed", 1.0)))
 	return multiplier
@@ -2840,10 +2858,7 @@ func _passive_skill_names() -> PackedStringArray:
 	return names
 
 func _is_buff_skill(skill: Dictionary) -> bool:
-	if _is_passive_skill(skill):
-		return false
-	var effect: String = str(skill.get("effect", ""))
-	return effect in ["atkBuff", "defBuff", "hpBuff", "speedBuff"]
+	return not _is_passive_skill(skill) and SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
 
 func _run_auto_buff_quickslots(delta: float) -> void:
 	if self_mode_enabled:
@@ -2864,15 +2879,191 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 		if skill_name == "" or active_skill_buffs.has(skill_name):
 			continue
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or not _is_buff_skill(skill):
+		if skill.is_empty() or not _is_buff_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
-		var skill_class: String = str(skill.get("class", "공용"))
-		if skill_class != "공용" and skill_class != job_class:
+		if not _skill_ready(skill):
 			continue
-		if mp < maxi(0, int(skill.get("mp", 0))):
+		if _cast_job_skill(skill_name):
+			break
+
+
+func _tick_skill_cooldowns(delta: float) -> void:
+	skill_global_cooldown = maxf(0.0, skill_global_cooldown - delta)
+	var expired: Array[String] = []
+	for key_value: Variant in skill_cooldowns.keys():
+		var key: String = str(key_value)
+		var remaining: float = maxf(0.0, float(skill_cooldowns.get(key, 0.0)) - delta)
+		if remaining <= 0.0:
+			expired.append(key)
+		else:
+			skill_cooldowns[key] = remaining
+	for key: String in expired:
+		skill_cooldowns.erase(key)
+
+func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	var skill_name: String = str(skill.get("name", ""))
+	if _is_passive_skill(skill):
+		if announce:
+			hud.show_message("%s은(는) 상시 패시브입니다" % skill_name)
+		return false
+	if not _skill_owned_for_current_job(skill):
+		if announce:
+			hud.show_message("%s 직업에서 사용할 수 없는 스킬입니다" % job_class)
+		return false
+	if not SKILL_RULES.is_supported(SKILL_RULES.effect_kind(skill)):
+		if announce:
+			hud.show_message("%s · 효과 구현 전입니다" % skill_name)
+		return false
+	if player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
+		if announce:
+			hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if skill_global_cooldown > 0.0 or float(skill_cooldowns.get(skill_name, 0.0)) > 0.0:
+		if announce:
+			hud.show_message("%s 재사용 대기 %s" % [skill_name, _format_seconds_short(maxf(skill_global_cooldown, float(skill_cooldowns.get(skill_name, 0.0))))])
+		return false
+	if mp < maxi(0, int(skill.get("mp", 0))):
+		if announce:
+			hud.show_message("MP가 부족합니다")
+		return false
+	return true
+
+func _start_skill_cooldown(skill: Dictionary) -> void:
+	var name_value: String = str(skill.get("name", ""))
+	var cooldown: float = SKILL_RULES.cooldown_seconds(skill)
+	if cooldown > 0.0:
+		skill_cooldowns[name_value] = cooldown
+	skill_global_cooldown = maxf(skill_global_cooldown, SKILL_RULES.global_cooldown_seconds(skill))
+
+func _run_auto_heal_quickslots() -> void:
+	for value: Variant in quickslots:
+		if not (value is Dictionary):
 			continue
-		_cast_job_buff_skill(skill)
-		break
+		var entry: Dictionary = value as Dictionary
+		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
+			continue
+		var skill: Dictionary = _skill_record(str(entry.get("id", "")))
+		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
+			continue
+		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
+			continue
+		if _skill_ready(skill):
+			_cast_job_skill(str(skill.get("name", "")))
+			return
+
+func _run_auto_combat_quickslots() -> bool:
+	for value: Variant in quickslots:
+		if not (value is Dictionary):
+			continue
+		var entry: Dictionary = value as Dictionary
+		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
+			continue
+		var skill_name: String = str(entry.get("id", ""))
+		var skill: Dictionary = _skill_record(skill_name)
+		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal":
+			continue
+		if not _skill_ready(skill):
+			continue
+		if _skill_target(SKILL_RULES.range_pixels(skill)) == null:
+			continue
+		if _cast_job_skill(skill_name):
+			return true
+	return false
+
+func _cast_job_status_skill(skill: Dictionary) -> bool:
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
+	if target == null:
+		hud.show_message("상태이상 대상이 없습니다")
+		return false
+	var cost: int = maxi(0, int(skill.get("mp", 0)))
+	var before: int = mp
+	var skill_name: String = str(skill.get("name", ""))
+	var duration: float = float(skill.get("duration", 2.5))
+	match SKILL_RULES.effect_kind(skill):
+		"stun":
+			_cast_stun_skill(target, int(skill.get("power", 55)), cost, duration, skill_name)
+		"silence":
+			_cast_silence_skill(target, cost, duration, skill_name)
+		"poison":
+			_cast_poison_skill(target, cost, duration, int(skill.get("tick_damage", 12)), float(skill.get("tick_interval", 1.0)), skill_name)
+		"bleed":
+			_cast_bleed_skill(target, cost, int(skill.get("power", 28)), duration, int(skill.get("tick_damage", 9)), float(skill.get("tick_interval", 0.75)), skill_name)
+		"hold":
+			_cast_hold_skill(target, cost, duration, skill_name)
+		"fear":
+			_cast_fear_skill(target, cost, duration, skill_name)
+	# Status resisted / attack missed still counts as a completed cast.
+	return mp < before or cost == 0
+
+func _cast_job_invisibility_skill(skill: Dictionary) -> bool:
+	if not _spend_skill_mp(skill):
+		return false
+	active_skill_buffs[str(skill.get("name", "은신"))] = {
+		"remaining": maxf(1.0, float(skill.get("duration", 20.0))),
+		"stealth": true
+	}
+	_refresh_skill_stealth_visual()
+	hud.show_message("%s · 은신 활성화" % str(skill.get("name", "")))
+	return true
+
+func is_player_concealed() -> bool:
+	for value: Variant in active_skill_buffs.values():
+		if value is Dictionary and bool((value as Dictionary).get("stealth", false)):
+			return true
+	return false
+
+func _refresh_skill_stealth_visual() -> void:
+	if player != null:
+		player.modulate.a = 0.5 if is_player_concealed() else 1.0
+
+func _break_invisibility() -> void:
+	if not is_player_concealed():
+		return
+	for key_value: Variant in active_skill_buffs.keys():
+		var name_value: String = str(key_value)
+		var value: Variant = active_skill_buffs.get(name_value, {})
+		if value is Dictionary and bool((value as Dictionary).get("stealth", false)):
+			active_skill_buffs.erase(name_value)
+	_refresh_skill_stealth_visual()
+	hud.append_log("공격으로 은신 해제")
+
+func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
+	for value: Variant in skills_db:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+			continue
+		if SKILL_RULES.passive_trigger(skill) != trigger_name:
+			continue
+		var skill_name: String = str(skill.get("name", ""))
+		if float(skill_cooldowns.get(skill_name, 0.0)) > 0.0 or rng.randf() >= SKILL_RULES.passive_proc_chance(skill):
+			continue
+		var proc_effect: String = str(skill.get("proc_effect", ""))
+		match proc_effect:
+			"damage":
+				if target == null or not is_instance_valid(target) or target.dead:
+					continue
+				target.take_damage(maxi(1, int(skill.get("power", 1))), false)
+			"heal":
+				if hp >= _effective_max_hp():
+					continue
+				hp = mini(_effective_max_hp(), hp + maxi(1, int(skill.get("heal", 1))))
+			"atkBuff", "defBuff", "hpBuff", "speedBuff":
+				active_skill_buffs[skill_name] = {
+					"remaining": maxf(1.0, float(skill.get("duration", 5.0))),
+					"atk": int(skill.get("atk", 0)),
+					"def": int(skill.get("def", 0)),
+					"hp": int(skill.get("hpFlat", 0)),
+					"speed": float(skill.get("speed", 1.0))
+				}
+				player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
+			_:
+				continue
+		var cooldown: float = SKILL_RULES.cooldown_seconds(skill)
+		if cooldown > 0.0:
+			skill_cooldowns[skill_name] = cooldown
+		hud.append_log("%s 패시브 발동" % skill_name)
 
 func _skill_record(skill_name: String) -> Dictionary:
 	for value: Variant in skills_db:
@@ -2882,40 +3073,35 @@ func _skill_record(skill_name: String) -> Dictionary:
 				return skill
 	return {}
 
-func _cast_job_skill(skill_name: String) -> void:
+func _cast_job_skill(skill_name: String) -> bool:
 	var skill: Dictionary = _skill_record(skill_name)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
-		return
-	if _is_passive_skill(skill):
-		hud.show_message("%s은(는) 패시브 스킬로 보유 중 자동 적용됩니다" % skill_name)
-		return
-	var skill_class: String = str(skill.get("class", "공용"))
-	if skill_class != "공용" and skill_class != job_class:
-		hud.show_message("%s 전용 스킬입니다" % skill_class)
-		return
-	if player.is_stunned() or player.is_feared():
-		hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
-		return
-	if player.is_silenced() and int(skill.get("mp", 0)) > 0:
-		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
-		return
-	var effect: String = str(skill.get("effect", "utility"))
+		return false
+	if not _skill_ready(skill, true):
+		return false
+	var effect: String = SKILL_RULES.effect_kind(skill)
+	var success: bool = false
 	match effect:
 		"damage":
-			_cast_job_damage_skill(skill)
+			success = _cast_job_damage_skill(skill)
 		"heal":
-			_cast_job_heal_skill(skill)
+			success = _cast_job_heal_skill(skill)
 		"atkBuff", "defBuff", "hpBuff", "speedBuff":
-			_cast_job_buff_skill(skill)
+			success = _cast_job_buff_skill(skill)
 		"teleport":
-			_cast_job_teleport_skill(skill)
+			success = _cast_job_teleport_skill(skill)
+		"invisibility":
+			success = _cast_job_invisibility_skill(skill)
+		"stun", "silence", "poison", "bleed", "hold", "fear":
+			success = _cast_job_status_skill(skill)
 		_:
-			if not _spend_skill_mp(skill):
-				return
-			hud.show_message("%s 사용" % skill_name)
-			hud.append_log("%s · %s 보조 스킬 사용" % [job_class, skill_name])
-			_update_hud()
+			hud.show_message("%s · 구현되지 않은 효과입니다" % skill_name)
+			return false
+	if success:
+		_start_skill_cooldown(skill)
+		_update_hud()
+	return success
 
 func _spend_skill_mp(skill: Dictionary) -> bool:
 	var mp_cost: int = maxi(0, int(skill.get("mp", 0)))
@@ -2925,15 +3111,16 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 	mp -= mp_cost
 	return true
 
-func _cast_job_damage_skill(skill: Dictionary) -> void:
-	var max_range: float = maxf(80.0, float(skill.get("range", 120)))
+func _cast_job_damage_skill(skill: Dictionary) -> bool:
+	var max_range: float = SKILL_RULES.range_pixels(skill)
 	var target: TwilightMonster = _skill_target(max_range)
 	if target == null:
 		hud.show_message("공격 대상이 없습니다")
-		return
+		return false
 	if not _spend_skill_mp(skill):
-		return
+		return false
 	selected_monster = target
+	_break_invisibility()
 	player.pulse_attack()
 	var skill_class: String = str(skill.get("class", "공용"))
 	var ranged_style: bool = job_class == "요정" or job_class == "총사"
@@ -2949,36 +3136,52 @@ func _cast_job_damage_skill(skill: Dictionary) -> void:
 		stat_damage = _ranged_damage_stat()
 		crit_rate = _player_critical_rate("ranged")
 		hit_chance = clampf(_melee_hit_chance(target) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
-	if rng.randf() >= hit_chance:
-		target.show_miss()
-		hud.append_log("%s MISS · %.1f%%" % [str(skill.get("name", "")), hit_chance * 100.0])
-		_update_hud()
-		return
+	var hits: int = clampi(int(skill.get("hits", 1)), 1, 8)
+	var targets: Array[TwilightMonster] = [target]
+	var area_radius: float = maxf(0.0, float(skill.get("area_radius", 0.0)))
+	if area_radius > 0.0:
+		for child: Node in monsters_root.get_children():
+			if child is TwilightMonster:
+				var other: TwilightMonster = child as TwilightMonster
+				if other != target and not other.dead and target.global_position.distance_to(other.global_position) <= area_radius and _has_line_of_sight_world(player.global_position, other.global_position):
+					targets.append(other)
 	var power: int = maxi(1, int(skill.get("power", 20)))
-	var damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
-	var critical_chance: float = _critical_chance(crit_rate, target.critical_resistance)
-	var critical: bool = rng.randf() < critical_chance
-	if critical:
-		damage = _critical_damage(damage)
-	target.take_damage(damage, critical)
-	hud.append_log("%s · %s에게 %d 피해%s" % [
-		str(skill.get("name", "")), target.monster_name, damage, " CRITICAL" if critical else ""
-	])
-	_update_hud()
+	var total_damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+	for victim: TwilightMonster in targets:
+		for _hit_index: int in range(hits):
+			if victim.dead:
+				break
+			if rng.randf() >= hit_chance:
+				victim.show_miss()
+				continue
+			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits))))
+			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
+			if critical:
+				damage = _critical_damage(damage)
+			victim.take_damage(damage, critical)
+			_try_trigger_passives("on_hit", victim)
+			hud.append_log("%s · %s %d 피해%s" % [
+				str(skill.get("name", "")), victim.monster_name, damage, " CRITICAL" if critical else ""
+			])
 	_update_target_hud()
+	return true
 
-func _cast_job_heal_skill(skill: Dictionary) -> void:
+func _cast_job_heal_skill(skill: Dictionary) -> bool:
+	if hp >= _effective_max_hp():
+		hud.show_message("HP가 가득 찼습니다")
+		return false
 	if not _spend_skill_mp(skill):
-		return
+		return false
 	var amount: int = maxi(1, int(skill.get("heal", 40)) + int_stat * 2)
+	var before: int = hp
 	hp = mini(_effective_max_hp(), hp + amount)
-	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), amount])
-	hud.append_log("%s 회복 · HP +%d" % [str(skill.get("name", "")), amount])
-	_update_hud()
+	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
+	hud.append_log("%s 회복 · HP +%d" % [str(skill.get("name", "")), hp - before])
+	return true
 
-func _cast_job_buff_skill(skill: Dictionary) -> void:
+func _cast_job_buff_skill(skill: Dictionary) -> bool:
 	if not _spend_skill_mp(skill):
-		return
+		return false
 	var duration: float = maxf(5.0, float(skill.get("duration", 60.0)))
 	var speed_value: float = float(skill.get("speed", 1.0))
 	active_skill_buffs[str(skill.get("name", "버프"))] = {
@@ -2992,21 +3195,21 @@ func _cast_job_buff_skill(skill: Dictionary) -> void:
 	hp = mini(_effective_max_hp(), hp + maxi(0, int(skill.get("hpFlat", 0))))
 	hud.show_message("%s 활성화" % str(skill.get("name", "")))
 	hud.append_log("%s 버프 · %.0f초" % [str(skill.get("name", "")), duration])
-	_update_hud()
+	return true
 
-func _cast_job_teleport_skill(skill: Dictionary) -> void:
-	if not _spend_skill_mp(skill):
-		return
+func _cast_job_teleport_skill(skill: Dictionary) -> bool:
 	for _attempt: int in range(60):
 		var candidate: Vector2 = player.global_position + Vector2(rng.randf_range(-700.0, 700.0), rng.randf_range(-500.0, 500.0))
 		if _is_walkable_world(candidate):
+			if not _spend_skill_mp(skill):
+				return false
 			player.global_position = candidate
 			player.clear_click_path()
 			player.camera.reset_smoothing()
 			hud.show_message("%s" % str(skill.get("name", "텔레포트")))
-			_update_hud()
-			return
+			return true
 	hud.show_message("이동 가능한 위치를 찾지 못했습니다")
+	return false
 
 func _active_skill_buff_total(key: String) -> int:
 	var total: int = 0
@@ -3041,6 +3244,7 @@ func _tick_skill_buffs(delta: float) -> void:
 		return
 	for key: String in expired:
 		active_skill_buffs.erase(key)
+	_refresh_skill_stealth_visual()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	hp = mini(hp, _effective_max_hp())
 	_update_hud()
