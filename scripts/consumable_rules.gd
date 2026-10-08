@@ -3,8 +3,8 @@ class_name TwilightConsumableRules
 
 # Data-only rules for user consumables; no map, HUD, monster or animation dependencies.
 # Lineage M reference: 2017 official powerbook (duration/effects), adjusted for offline game.
-# Elemental enchant chances are provisional and MUST NOT be described as official rates.
-const ELEMENT_CHANCES: Array[float] = [30.0, 20.0, 10.0, 5.0, 3.0]
+# Community-reported legacy 1–3 chances: 30/10/5. Stage 4–5: TWILIGHT placeholders, NOT official rates.
+const ELEMENT_CHANCES: Array[float] = [30.0, 10.0, 5.0, 2.0, 1.0]
 const ELEMENT_NAMES: Dictionary = {"fire":"화령", "water":"수령", "earth":"지령", "wind":"풍령"}
 const STAT_KEYS: Array[String] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"]
 const STATUS_CLEANSERS: Array[String] = ["상태이상 해제 물약", "상태 이상 해제 물약", "만능 해독제", "해독제", "해독 물약", "정화의 물약"]
@@ -48,15 +48,15 @@ static func records() -> Array[Dictionary]:
 		{"name":"순간이동 주문서", "grade":"일반", "type":"이동주문서", "slot":"consumable",
 		 "kind":"teleport", "desc":"현재 맵 안의 도달 가능한 무작위 위치로 순간이동"},
 		{"name":"속성 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
-		 "kind":"element", "element":"", "desc":"무기 속성 1~5단계 강화 · 실패해도 무기 유지 · 강화확률은 TWILIGHT 임시 설정"},
+		 "kind":"element", "element":"", "desc":"일반 무기 최대 3단계 · 고강화 무기 추가 단계 · 실패 시 무기 유지 · 확률 일부 임시값"},
 		{"name":"화령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
-		 "kind":"element", "element":"fire", "desc":"무기 불 속성 강화 · 최대 5단계 · 실패 시 무기 유지"},
+		 "kind":"element", "element":"fire", "desc":"무기 불 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
 		{"name":"수령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
-		 "kind":"element", "element":"water", "desc":"무기 물 속성 강화 · 최대 5단계 · 실패 시 무기 유지"},
+		 "kind":"element", "element":"water", "desc":"무기 물 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
 		{"name":"지령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
-		 "kind":"element", "element":"earth", "desc":"무기 땅 속성 강화 · 최대 5단계 · 실패 시 무기 유지"},
+		 "kind":"element", "element":"earth", "desc":"무기 땅 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
 		{"name":"풍령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
-		 "kind":"element", "element":"wind", "desc":"무기 바람 속성 강화 · 최대 5단계 · 실패 시 무기 유지"},
+		 "kind":"element", "element":"wind", "desc":"무기 바람 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
 		{"name":"엘릭서", "grade":"희귀", "type":"성장소모품", "slot":"consumable", "kind":"elixir",
 		 "desc":"50레벨 이상 · 선택한 기본 스탯 영구 +1 · TWILIGHT 최대 10회 / 스탯 45 제한"},
 		{"name":"힘의 엘릭서", "grade":"희귀", "type":"성장소모품", "slot":"consumable", "kind":"elixir", "stat":"STR",
