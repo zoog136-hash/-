@@ -360,7 +360,7 @@ func _verified_catalog_record(category: String, source_record: Dictionary) -> Di
 		)
 	if bool(stats.get("hpAbsorption", false)):
 		runtime_description = runtime_description.replace("HP 흡수", "HP 흡수(공격 적중마다 1~3)")
-	merged["desc"] = runtime_description
+	merged["desc"] = runtime_description.replace("PVP", "PVE").replace("PvP", "PvE")
 	merged["reference_verified"] = true
 	merged["reference_source"] = str(override_entry.get("source", ""))
 	return merged
@@ -458,7 +458,16 @@ func _skill_cooldown_factor() -> float:
 	return clampf(1.0 - float(_catalog_stat_sum("skillCooldownPct")) / 100.0, 0.1, 1.0)
 
 func _effective_max_mp() -> int:
-	return maxi(1, max_mp + _catalog_stat_sum("mpFlat"))
+	var added: int = _catalog_stat_sum("mpFlat")
+	for record: Dictionary in _all_equipped_records():
+		if str(record.get("slot", "")) != "":
+			added += int(record.get("mpFlat", record.get("max_mp_bonus", 0)))
+			var description: String = str(record.get("desc", ""))
+			for fragment: String in description.split("·"):
+				var segment: String = fragment.strip_edges()
+				if segment.begins_with("MP ") or segment.begins_with("Max MP "):
+					added += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr(3 if segment.begins_with("MP ") else 7)))
+	return maxi(1, max_mp + added)
 
 func _index_item_weights() -> void:
 	item_weight_index.clear()
@@ -527,16 +536,36 @@ func _equipment_additional_damage(kind: String) -> int:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
-			result += ITEM_OPTIONS.additional_damage(entry as Dictionary, kind)
+			var item: Dictionary = entry as Dictionary
+			result += ITEM_OPTIONS.additional_damage(item, kind)
+			result += int(item.get("damage_reduction_ignore", item.get("damageReductionIgnore", 0)))
+			for fragment: String in str(item.get("desc", "")).split("·"):
+				var segment: String = fragment.strip_edges()
+				if segment.begins_with("대미지 리덕션 무시"):
+					result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
 	return result
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	if target == null:
 		return 0
-	var label: String = str(target.get_meta("size_class", "")).to_lower()
-	# Explicit size_class wins; old DB has no size and uses boss fallback.
-	var large: bool = label == "large" or (label.is_empty() and target.is_boss)
-	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), large)
+	var label: String = str(target.get_meta("size_class", "small")).to_lower()
+	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), label == "large")
+
+func _monster_size_class(record: Dictionary) -> String:
+	for key: String in ["size_class", "size", "monster_size", "크기"]:
+		if record.has(key):
+			var raw: String = str(record.get(key, "")).to_lower()
+			if raw in ["large", "대", "대형", "big"]:
+				return "large"
+			if raw in ["small", "소", "소형"]:
+				return "small"
+	var name_value: String = str(record.get("name", ""))
+	# Body-type classification, deliberately independent of 'is_boss'.
+	var big_keywords: Array[String] = ["거대", "골렘", "오우거", "사이클롭스", "에틴", "웜", "드레이크", "드래곤", "드레곤", "용", "피닉스", "마이노", "가디언", "수호자", "바실리스크", "크랩맨", "에르자베"]
+	for keyword: String in big_keywords:
+		if name_value.contains(keyword):
+			return "large"
+	return "small"
 
 func _ensure_ammo_items() -> void:
 	var names: Dictionary = {}
@@ -933,6 +962,7 @@ func _spawn_monsters(count: int) -> void:
 		monster.global_position = _random_walkable_position(player.global_position, 360.0, 1200.0)
 		var texture: Texture2D = _monster_texture(record)
 		monster.setup(record, player, self, texture)
+		monster.set_meta("size_class", _monster_size_class(record))
 		monster.died.connect(_on_monster_died)
 		monster.player_hit.connect(_on_player_hit)
 		monster.selected.connect(_select_monster)
@@ -2175,11 +2205,11 @@ func _timed_item_buff_from_record(record: Dictionary) -> Dictionary:
 		elif segment.begins_with("PVE 대미지 리덕션"):
 			buff["pve_damage_reduction"] = value
 		elif segment.begins_with("PVP 대미지 리덕션"):
-			buff["pvp_damage_reduction"] = value
+			buff["pve_damage_reduction"] = value
 		elif segment.begins_with("PVE 대미지 감소"):
 			buff["pve_damage_reduction_pct"] = value
 		elif segment.begins_with("PVP 대미지 감소"):
-			buff["pvp_damage_reduction_pct"] = value
+			buff["pve_damage_reduction_pct"] = value
 		elif segment.begins_with("대미지 리덕션"):
 			buff["damage_reduction"] = value
 		elif segment.begins_with("근거리 대미지"):
@@ -4467,7 +4497,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _catalog_damage_bonus(kind: String) -> int:
-	var total: int = 0
+	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -4549,7 +4579,7 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _catalog_damage_adjustment("melee") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage")
+	return _effective_attack() + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
 	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
@@ -4894,8 +4924,8 @@ func _damage_reduction_stat() -> int:
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
-	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _catalog_stat_sum("pve_damage_reduction"))
-	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct"), 0, 90)
+	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction"))
+	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct"), 0, 90)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
 	return reduced
@@ -4914,6 +4944,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"stat_points": stat_points,
 		"inventory_weight": _inventory_total_weight(),
 		"carrying_capacity": _carrying_capacity(),
+		"current_weight": _inventory_total_weight(),
+		"max_weight": _carrying_capacity(),
 		"encumbrance_multiplier": _inventory_encumbrance_multiplier(),
 		"melee_damage": _melee_damage_stat(),
 		"melee_accuracy": _melee_accuracy_stat(),
