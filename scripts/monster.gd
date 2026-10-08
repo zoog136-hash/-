@@ -199,7 +199,10 @@ func _physics_process(delta: float) -> void:
 	var has_sight: bool = distance <= attack_range and world_controller._has_line_of_sight_world(global_position,target_player.global_position)
 	var field_active: bool = world_controller.field_map != null
 	if world_controller != null and world_controller.has_method("is_player_concealed") and world_controller.call("is_player_concealed"):
-		_roam_field(delta) if field_active else _stop_chasing_concealed_player()
+		if field_active:
+			_roam_field(delta)
+		else:
+			_stop_chasing_concealed_player()
 		return
 	if field_active and (world_controller.field_map.is_safe(target_player.global_position) or distance > 550.0 or target_player.global_position.distance_to(home_position) > 1050.0):
 		_roam_field(delta)
