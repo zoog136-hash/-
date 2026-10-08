@@ -128,6 +128,7 @@ func _run() -> void:
 	var old_hits: int = primary.damage_hit_count
 	world.call("_try_extra_weapon_hit", primary, 50, "melee")
 	_check(primary.damage_hit_count == old_hits + 1, "Double Break did not produce an independent extra hit")
+	world.call("_on_job_class_selected", "암흑기사")
 	_clear_cooldowns(world)
 	_check(bool(world.call("_cast_job_skill", "다크 프로텍션")), "Dark Protection did not cast")
 	_check(absf(float(world.call("_player_element_resistance", "dark")) - 25.0) < 0.01, "dark resistance buff not applied")
