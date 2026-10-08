@@ -56,6 +56,9 @@ func _run() -> void:
 	var buffs: Dictionary = world.get("active_skill_buffs") as Dictionary
 	buffs.erase("카운터 배리어")
 	world.set("active_skill_buffs", buffs)
+	# Clear an earlier automatic buff\u0027s GCD before testing explicit recast.
+	world.set("skill_cooldowns", {})
+	world.set("skill_global_cooldown", 0.0)
 	world.set("auto_buff_check_timer", 0.0)
 	world.call("_run_auto_buff_quickslots", 1.0)
 	buffs = world.get("active_skill_buffs") as Dictionary
