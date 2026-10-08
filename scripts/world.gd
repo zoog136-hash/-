@@ -27,6 +27,9 @@ var field_minimap: FieldMinimap = null
 var portal_cooldown: float = 2.0
 var auto_repath_timer: float = 0.0
 var auto_last_position: Vector2 = Vector2.ZERO
+var pending_ground_pickup: Button = null
+const GROUND_PICKUP_RADIUS: float = 72.0
+const AUTO_GROUND_PICKUP_SCAN: float = 460.0
 var auto_stuck_time: float = 0.0
 var region_id: String = ""
 var return_gate: Node2D = null
@@ -224,6 +227,7 @@ func _process(delta: float) -> void:
 		auto_stuck_time = 0.0
 	auto_last_position = player.global_position
 	_update_field_triggers()
+	_tick_manual_ground_pickup()
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
@@ -492,6 +496,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	player.camera.limit_bottom = maxi(1, int(world_size.y))
 	_clear_monsters()
 	_clear_drops()
+	pending_ground_pickup = null
 	for shape: Node in map_collision.get_children():
 		map_collision.remove_child(shape)
 		shape.queue_free()
@@ -778,6 +783,7 @@ func _clear_monsters() -> void:
 		child.queue_free()
 
 func _clear_drops() -> void:
+	pending_ground_pickup = null
 	for child: Node in drops_root.get_children():
 		drops_root.remove_child(child)
 		child.queue_free()
@@ -1244,6 +1250,8 @@ func _run_auto_hunt() -> void:
 	if not charge_skill.is_empty():
 		player.clear_click_path()
 		return
+	if _run_auto_ground_pickup():
+		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		auto_target = _nearest_reachable_monster(99999.0)
 	if auto_target == null:
@@ -1400,28 +1408,165 @@ func _ensure_monster_count() -> void:
 	if alive < 9:
 		_spawn_monsters(9 - alive)
 
+
+func _drop_grade_color(grade: String) -> Color:
+	match grade:
+		"고급":
+			return Color("a8e080")
+		"희귀":
+			return Color("3b99ff")
+		"영웅":
+			return Color("ff5360")
+		"전설":
+			return Color("bd79ff")
+		"신화":
+			return Color("ffd450")
+		"유일":
+			return Color("4cf9cf")
+		_:
+			return Color("eeeeee")
+
+func _spawn_ground_drop(item_name: String, world_position: Vector2) -> Button:
+	if item_name.is_empty():
+		return null
+	var record: Dictionary = _find_catalog_item_record(item_name)
+	var grade: String = str(record.get("grade", "일반"))
+	var drop: Button = Button.new()
+	drop.name = "GroundDrop"
+	drop.text = "◆ " + item_name
+	drop.flat = true
+	drop.focus_mode = Control.FOCUS_NONE
+	drop.mouse_filter = Control.MOUSE_FILTER_STOP
+	drop.custom_minimum_size = Vector2(152, 30)
+	drop.position = world_position + Vector2(-76.0, -38.0)
+	drop.z_index = 20
+	drop.add_theme_font_size_override("font_size", 17)
+	drop.add_theme_color_override("font_color", _drop_grade_color(grade))
+	drop.add_theme_color_override("font_hover_color", _drop_grade_color(grade))
+	drop.set_meta("item_name", item_name)
+	drop.set_meta("world_position", world_position)
+	drop.set_meta("grade", grade)
+	drop.tooltip_text = "%s · %s · 눌러서 줍기" % [item_name, grade]
+	drops_root.add_child(drop)
+	drop.pressed.connect(_on_ground_drop_clicked.bind(drop))
+	return drop
+
+func _collect_ground_drop(drop: Button) -> bool:
+	if not is_instance_valid(drop) or drop.is_queued_for_deletion() or drop.get_parent() != drops_root:
+		return false
+	if player.global_position.distance_to(drop.get_meta("world_position", drop.global_position)) > GROUND_PICKUP_RADIUS:
+		return false
+	var item_name: String = str(drop.get_meta("item_name", ""))
+	if item_name.is_empty():
+		return false
+	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+	if pending_ground_pickup == drop:
+		pending_ground_pickup = null
+	drops_root.remove_child(drop)
+	drop.queue_free()
+	hud.refresh_inventory(inventory)
+	hud.append_log("%s 습득" % item_name)
+	hud.show_message("%s 획득" % item_name)
+	_update_hud()
+	return true
+
+func _on_ground_drop_clicked(drop: Button) -> void:
+	if not is_instance_valid(drop) or drop.get_parent() != drops_root:
+		return
+	if player.is_stunned() or player.is_feared() or player.is_held():
+		hud.show_message("이동 불가 상태에서는 아이템을 주울 수 없습니다")
+		return
+	if _collect_ground_drop(drop):
+		player.clear_click_path()
+		return
+	var destination: Vector2 = drop.get_meta("world_position", drop.global_position)
+	var path: PackedVector2Array = find_world_path(player.global_position, destination)
+	if path.is_empty():
+		hud.show_message("아이템까지 이동할 경로가 없습니다")
+		return
+	player.set_click_path(path, destination)
+	pending_ground_pickup = drop
+	hud.show_message("아이템 위치로 이동합니다")
+
+func _tick_manual_ground_pickup() -> void:
+	if not is_instance_valid(pending_ground_pickup):
+		pending_ground_pickup = null
+		return
+	if player.auto_enabled or player.is_stunned() or player.is_feared() or player.is_held():
+		return
+	if _collect_ground_drop(pending_ground_pickup):
+		player.clear_click_path()
+
+func _run_auto_ground_pickup() -> bool:
+	if player.is_held():
+		return false
+	var nearest: Button = null
+	var nearest_distance: float = AUTO_GROUND_PICKUP_SCAN
+	for child: Node in drops_root.get_children():
+		if not (child is Button) or child.is_queued_for_deletion():
+			continue
+		var drop: Button = child as Button
+		var drop_position: Vector2 = drop.get_meta("world_position", drop.global_position)
+		var distance: float = player.global_position.distance_to(drop_position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest = drop
+	if nearest == null:
+		return false
+	if nearest_distance <= GROUND_PICKUP_RADIUS:
+		_collect_ground_drop(nearest)
+		player.clear_click_path()
+		return true
+	var destination: Vector2 = nearest.get_meta("world_position", nearest.global_position)
+	# Do not interrupt valid movement every frame. A repath is only requested
+	# periodically, as with monster chasing.
+	if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
+		var path: PackedVector2Array = find_world_path(player.global_position, destination)
+		if path.is_empty():
+			return false
+		auto_repath_timer = 0.65
+		player.set_click_path(path, destination)
+	return true
+
+func _ground_drops_snapshot() -> Array:
+	var result: Array = []
+	for child: Node in drops_root.get_children():
+		if not (child is Button) or child.is_queued_for_deletion():
+			continue
+		var drop: Button = child as Button
+		var where: Vector2 = drop.get_meta("world_position", drop.global_position)
+		result.append({"item_name":str(drop.get_meta("item_name", "")), "position":[where.x, where.y]})
+	return result
+
+func _restore_ground_drops(saved: Variant) -> void:
+	_clear_drops()
+	if not (saved is Array):
+		return
+	for value: Variant in saved as Array:
+		if not (value is Dictionary):
+			continue
+		var entry: Dictionary = value as Dictionary
+		var position_value: Variant = entry.get("position", [])
+		if not (position_value is Array) or (position_value as Array).size() < 2:
+			continue
+		var pos_array: Array = position_value as Array
+		var position_value2: Vector2 = Vector2(float(pos_array[0]), float(pos_array[1]))
+		if not _is_walkable_world(position_value2):
+			continue
+		_spawn_ground_drop(str(entry.get("item_name", "")), position_value2)
+
 func _roll_drop(monster: TwilightMonster) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
 	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng)
 	if earned.is_empty():
 		return
-	var acquired_text: String = ""
 	for index: int in range(earned.size()):
 		var item_name: String = earned[index]
-		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
-		var label: Label = Label.new()
-		label.text = "◆ " + item_name
-		label.position = monster.global_position + Vector2(-45, -28 - 25 * index)
-		label.add_theme_color_override("font_color", Color("f5d66f"))
-		drops_root.add_child(label)
-		var timer: SceneTreeTimer = get_tree().create_timer(4.0)
-		timer.timeout.connect(label.queue_free)
-		if not acquired_text.is_empty():
-			acquired_text += ", "
-		acquired_text += item_name
-	hud.refresh_inventory(inventory)
-	hud.show_message("획득: " + acquired_text)
+		var drop_position: Vector2 = monster.global_position + Vector2(float((index % 3) - 1) * 15.0, float(index / 3) * 18.0)
+		_spawn_ground_drop(item_name, drop_position)
+	hud.show_message("아이템 %d개가 바닥에 떨어졌습니다" % earned.size())
+
 
 func _physical_hit_chance(attacker_accuracy: int, target_ac: int, avoidance: int) -> float:
 	var base_percent: float = 75.0 + float(attacker_accuracy - absi(target_ac)) * 0.7
@@ -2361,6 +2506,7 @@ func _save_game(quiet: bool) -> void:
 		"stat_points": stat_points,
 		"gold": gold,
 		"inventory": inventory,
+		"ground_drops": _ground_drops_snapshot(),
 		"class_index": class_index,
 		"job_class": job_class,
 		"quickslots": quickslots,
@@ -2461,6 +2607,7 @@ func _load_game(quiet: bool) -> void:
 	if not maps_by_id.has(map_id):
 		map_id = active_map_id
 	_set_map(map_id, false)
+	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
 	if position_value is Array and compatible_layout:
