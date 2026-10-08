@@ -127,8 +127,11 @@ func _run() -> void:
 	_expect(bool(world.call("_cast_job_skill", "인비지블리티")), "invisibility skill failed")
 	_expect(int(world.get("mp")) == before_mp - 15, "invisibility MP mismatch")
 	_expect(bool(world.call("is_player_concealed")), "invisibility flag not active")
-	world.call("_break_invisibility")
-	_expect(not bool(world.call("is_player_concealed")), "attack did not break stealth")
+	world.call("_tick_skill_cooldowns", 20.0)
+	world.set("selected_monster", dummy)
+	dummy.global_position = player.global_position
+	_expect(bool(world.call("_cast_job_skill", "사일런스")), "offensive silence could not be cast from stealth")
+	_expect(not bool(world.call("is_player_concealed")), "offensive status skill did not break stealth")
 
 	world.queue_free()
 	await process_frame
