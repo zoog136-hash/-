@@ -349,7 +349,18 @@ func _verified_catalog_record(category: String, source_record: Dictionary) -> Di
 	var merged: Dictionary = source_record.duplicate(true)
 	for option: Variant in stats.keys():
 		merged[str(option)] = stats[option]
-	merged["desc"] = str(override_entry.get("desc", source_record.get("desc", "")))
+	var runtime_description: String = str(override_entry.get("desc", source_record.get("desc", "")))
+	if int(stats.get("mpRecoveryTick", 0)) > 0:
+		runtime_description = runtime_description.replace(
+			"MP 회복(틱) +%d" % int(stats.get("mpRecoveryTick", 0)), "MP 자동회복(30초) +5"
+		)
+	if int(stats.get("hpAbsoluteRecovery", 0)) > 0:
+		runtime_description = runtime_description.replace(
+			"HP 절대회복 +%d" % int(stats.get("hpAbsoluteRecovery", 0)), "HP 자동회복(30초) +5"
+		)
+	if bool(stats.get("hpAbsorption", false)):
+		runtime_description = runtime_description.replace("HP 흡수", "HP 흡수(공격 적중마다 1~3)")
+	merged["desc"] = runtime_description
 	merged["reference_verified"] = true
 	merged["reference_source"] = str(override_entry.get("source", ""))
 	return merged
