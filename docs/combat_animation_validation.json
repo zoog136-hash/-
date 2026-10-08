@@ -1,0 +1,370 @@
+{
+  "baseline_main": "da5141bb91c0d852a0d8d175d54bb8b369e76a5d",
+  "map_baseline": "cd635a74e9974637fdd4ae7854ab8434b0ea084e",
+  "branch": "feature/combat-animation-overhaul",
+  "code_head": "28983a82acc845f349580d04e5b3a4de5ac57cbf",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "commits": [
+    {
+      "stage": 1,
+      "sha": "4852a2576e0c1ac4f160f9363b42f37f64f05d05",
+      "message": "Improve player locomotion with foot-anchored shared animation states"
+    },
+    {
+      "stage": 2,
+      "sha": "87a9112cfee48c4f3dc4672037a69810ee1a22e2",
+      "message": "Apply per-form profiles and safe directional or single-image fallbacks"
+    },
+    {
+      "stage": 3,
+      "sha": "de793ac4a7147151a19cfb6a10e741217dd50911",
+      "message": "Resolve player attacks at motion markers and projectile arrival"
+    },
+    {
+      "stage": 4,
+      "sha": "cff319c7a9be33721c8f34d0bb722208799c89f2",
+      "message": "Animate every doll with stable actual-direction following and summon fades"
+    },
+    {
+      "stage": 5,
+      "sha": "124af1e7ac85ccdd85520dc4428eef72bbe10a6a",
+      "message": "Add lightweight relic float glow and independently sorted following"
+    },
+    {
+      "stage": 6,
+      "sha": "95da8827b9862738643472acb3f0e34ce0f919eb",
+      "message": "Synchronize monster motion and attacks and retain short-lived corpses"
+    },
+    {
+      "stage": 7,
+      "sha": "8ed8dd45cc1ce8b7d29c7a1a6522e1b6ef232d00",
+      "message": "Pool world-space hit sparks damage text and foot shadows"
+    },
+    {
+      "stage": 8,
+      "sha": "eec61c8009da4a20641852a8b25dfaa6df8747aa",
+      "message": "Stagger multi-hit projectiles and accent actual critical impacts"
+    },
+    {
+      "stage": 9,
+      "sha": "6326f0cd0eaba312d717c95ecbc82edd6fd6e0ea",
+      "message": "Bound combat pools and verify headless and desktop GL lifecycle"
+    },
+    {
+      "stage": 10,
+      "sha": "2768b0339c0a675344e7cf8cb0a882dd347933e2",
+      "message": "Allow authored motion profiles and verify persistence and repeated commands"
+    },
+    {
+      "stage": 10,
+      "sha": "28983a82acc845f349580d04e5b3a4de5ac57cbf",
+      "message": "Keep outgoing strike frames aligned through incoming critical pose holds"
+    }
+  ],
+  "stage9_run": 37782768130,
+  "stage10_native_run": 37786166032,
+  "final_run": 37787334107,
+  "final_run_status": "success",
+  "headless_checks": 35,
+  "local_regions_seconds": 126.34,
+  "stage9_performance": {
+    "baseline-render": {
+      "active_play": [
+        {
+          "active_monsters": 19,
+          "distance_world_pixels": 1685.8,
+          "frames": 180,
+          "map": "aden_world",
+          "median_ms": 40.29,
+          "mode": "active_auto_hunt",
+          "p95_ms": 71.334,
+          "peak_draw_calls": 268,
+          "physics_p95_ms": 32.122,
+          "process_p95_ms": 99.04,
+          "xp_gained": 435
+        },
+        {
+          "active_monsters": 16,
+          "distance_world_pixels": 3792.8,
+          "frames": 180,
+          "map": "oman_10",
+          "median_ms": 39.047,
+          "mode": "active_auto_hunt",
+          "p95_ms": 69.809,
+          "peak_draw_calls": 276,
+          "physics_p95_ms": 33.263,
+          "process_p95_ms": 42.593,
+          "xp_gained": 0
+        },
+        {
+          "active_monsters": 21,
+          "distance_world_pixels": 4508.4,
+          "frames": 180,
+          "map": "albino_04",
+          "median_ms": 47.28,
+          "mode": "active_auto_hunt",
+          "p95_ms": 78.703,
+          "peak_draw_calls": 282,
+          "physics_p95_ms": 60.514,
+          "process_p95_ms": 77.61,
+          "xp_gained": 0
+        },
+        {
+          "active_monsters": 22,
+          "distance_world_pixels": 4513.9,
+          "frames": 180,
+          "map": "faith_04",
+          "median_ms": 48.203,
+          "mode": "active_auto_hunt",
+          "p95_ms": 103.826,
+          "peak_draw_calls": 281,
+          "physics_p95_ms": 31.796,
+          "process_p95_ms": 130.534,
+          "xp_gained": 195
+        }
+      ],
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "captures": 37,
+      "frame_cap": 60,
+      "note": "Desktop GL probe; not an Android device FPS guarantee.",
+      "os": "Linux",
+      "static_render": {
+        "median_ms": 37.515,
+        "p95_ms": 70.657
+      },
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "region-render": {
+      "active_play": [
+        {
+          "active_monsters": 17,
+          "distance_world_pixels": 1567.0,
+          "frames": 180,
+          "map": "aden_world",
+          "median_ms": 40.547,
+          "mode": "active_auto_hunt",
+          "p95_ms": 68.539,
+          "peak_draw_calls": 278,
+          "physics_p95_ms": 60.267,
+          "process_p95_ms": 96.815,
+          "xp_gained": 390
+        },
+        {
+          "active_monsters": 17,
+          "distance_world_pixels": 3728.0,
+          "frames": 180,
+          "map": "oman_10",
+          "median_ms": 38.927,
+          "mode": "active_auto_hunt",
+          "p95_ms": 70.056,
+          "peak_draw_calls": 294,
+          "physics_p95_ms": 33.714,
+          "process_p95_ms": 290.309,
+          "xp_gained": 0
+        },
+        {
+          "active_monsters": 21,
+          "distance_world_pixels": 4446.5,
+          "frames": 180,
+          "map": "albino_04",
+          "median_ms": 46.468,
+          "mode": "active_auto_hunt",
+          "p95_ms": 80.188,
+          "peak_draw_calls": 297,
+          "physics_p95_ms": 33.906,
+          "process_p95_ms": 71.118,
+          "xp_gained": 0
+        },
+        {
+          "active_monsters": 21,
+          "distance_world_pixels": 4569.6,
+          "frames": 180,
+          "map": "faith_04",
+          "median_ms": 50.139,
+          "mode": "active_auto_hunt",
+          "p95_ms": 105.266,
+          "peak_draw_calls": 301,
+          "physics_p95_ms": 58.771,
+          "process_p95_ms": 79.168,
+          "xp_gained": 195
+        }
+      ],
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "captures": 37,
+      "frame_cap": 60,
+      "note": "Desktop GL probe; not an Android device FPS guarantee.",
+      "os": "Linux",
+      "static_render": {
+        "median_ms": 36.8,
+        "p95_ms": 70.107
+      },
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "combat-render": {
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "captures": 10,
+      "frames": 300,
+      "median_ms": 40.206,
+      "movement": 782.450378417969,
+      "note": "Linux software GL diagnostic poses and live AUTO; not a hardware FPS guarantee.",
+      "p95_ms": 70.558,
+      "peak_nodes": 2860,
+      "peak_orphans": 0,
+      "vfx_high_water": 6,
+      "xp_delta": 560
+    }
+  },
+  "resource_status": {
+    "base_classes": 4,
+    "transform_active": 413,
+    "transform_directional4": 78,
+    "transform_still": 335,
+    "transform_dedicated_attack": 0,
+    "doll_active": 166,
+    "doll_directional4": 59,
+    "doll_still": 107,
+    "relic_active": 144,
+    "monster_active": 163,
+    "monster_textures": 6,
+    "monster_dedicated_attack": 0
+  },
+  "not_run": [
+    "Windows/macOS hardware GPU play",
+    "long-duration memory stability",
+    "manual visual review of every catalog entry"
+  ],
+  "final_artifact": 11555167284,
+  "final_performance": {
+    "combat": [
+      {
+        "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+        "captures": 10,
+        "frames": 300,
+        "median_ms": 33.698,
+        "movement": 767.336242675781,
+        "note": "Linux software GL diagnostic poses and live AUTO; not a hardware FPS guarantee.",
+        "p95_ms": 38.457,
+        "peak_nodes": 2852,
+        "peak_orphans": 0,
+        "vfx_high_water": 5,
+        "xp_delta": 515
+      }
+    ],
+    "plays": [
+      {
+        "active_monsters": 18,
+        "distance_world_pixels": 1427.4,
+        "frames": 180,
+        "map": "aden_world",
+        "median_ms": 34.98,
+        "mode": "active_auto_hunt",
+        "p95_ms": 72.991,
+        "peak_draw_calls": 277,
+        "physics_p95_ms": 71.529,
+        "process_p95_ms": 106.757,
+        "xp_gained": 390
+      },
+      {
+        "active_monsters": 17,
+        "distance_world_pixels": 3534.6,
+        "frames": 180,
+        "map": "oman_10",
+        "median_ms": 34.32,
+        "mode": "active_auto_hunt",
+        "p95_ms": 70.661,
+        "peak_draw_calls": 298,
+        "physics_p95_ms": 42.286,
+        "process_p95_ms": 75.005,
+        "xp_gained": 0
+      },
+      {
+        "active_monsters": 21,
+        "distance_world_pixels": 4044.1,
+        "frames": 180,
+        "map": "albino_04",
+        "median_ms": 41.344,
+        "mode": "active_auto_hunt",
+        "p95_ms": 79.878,
+        "peak_draw_calls": 302,
+        "physics_p95_ms": 74.575,
+        "process_p95_ms": 81.405,
+        "xp_gained": 0
+      },
+      {
+        "active_monsters": 21,
+        "distance_world_pixels": 3928.4,
+        "frames": 180,
+        "map": "faith_04",
+        "median_ms": 62.7,
+        "mode": "active_auto_hunt",
+        "p95_ms": 101.421,
+        "peak_draw_calls": 305,
+        "physics_p95_ms": 41.384,
+        "process_p95_ms": 134.581,
+        "xp_gained": 195
+      },
+      {
+        "active_monsters": 19,
+        "distance_world_pixels": 1444.2,
+        "frames": 180,
+        "map": "aden_world",
+        "median_ms": 34.956,
+        "mode": "active_auto_hunt",
+        "p95_ms": 73.975,
+        "peak_draw_calls": 268,
+        "physics_p95_ms": 38.741,
+        "process_p95_ms": 108.707,
+        "xp_gained": 390
+      },
+      {
+        "active_monsters": 17,
+        "distance_world_pixels": 3558.4,
+        "frames": 180,
+        "map": "oman_10",
+        "median_ms": 34.256,
+        "mode": "active_auto_hunt",
+        "p95_ms": 71.732,
+        "peak_draw_calls": 274,
+        "physics_p95_ms": 40.18,
+        "process_p95_ms": 75.642,
+        "xp_gained": 0
+      },
+      {
+        "active_monsters": 21,
+        "distance_world_pixels": 4101.2,
+        "frames": 180,
+        "map": "albino_04",
+        "median_ms": 41.064,
+        "mode": "active_auto_hunt",
+        "p95_ms": 77.497,
+        "peak_draw_calls": 278,
+        "physics_p95_ms": 73.376,
+        "process_p95_ms": 67.437,
+        "xp_gained": 0
+      },
+      {
+        "active_monsters": 21,
+        "distance_world_pixels": 4058.2,
+        "frames": 180,
+        "map": "faith_04",
+        "median_ms": 44.092,
+        "mode": "active_auto_hunt",
+        "p95_ms": 102.649,
+        "peak_draw_calls": 289,
+        "physics_p95_ms": 40.659,
+        "process_p95_ms": 101.772,
+        "xp_gained": 195
+      }
+    ],
+    "staticStats": [
+      "2026-10-08T13:52:28.6499489Z REGION_RENDER median_ms=32.585 p95_ms=61.889",
+      "2026-10-08T13:54:16.9404583Z REGION_RENDER median_ms=32.573 p95_ms=62.644"
+    ]
+  }
+}
