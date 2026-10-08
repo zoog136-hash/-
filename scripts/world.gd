@@ -67,6 +67,7 @@ var quickslots: Array = []
 var self_mode_enabled: bool = false
 var auto_buff_check_timer: float = 0.0
 var catalog_db: Dictionary = {}
+var verified_catalog_options: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
 var equipped_catalog: Dictionary = {"변신": {}, "마법인형": {}, "성물": {}}
@@ -322,6 +323,7 @@ func _load_data() -> void:
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
 	_merge_local_consumables_into_catalog()
+	_load_verified_catalog_options()
 	_index_item_weights()
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
@@ -330,6 +332,57 @@ func _load_data() -> void:
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
 	_build_job_classes()
+
+func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
+	var category_values: Dictionary = verified_catalog_options.get(category, {}) as Dictionary
+	var name_value: String = str(source_record.get("name", ""))
+	var override_value: Variant = category_values.get(name_value, {})
+	if not (override_value is Dictionary) or (override_value as Dictionary).is_empty():
+		return source_record
+	var override_entry: Dictionary = override_value as Dictionary
+	var stats: Dictionary = override_entry.get("stats", {}) as Dictionary
+	var merged: Dictionary = source_record.duplicate(true)
+	for option: Variant in stats.keys():
+		merged[str(option)] = stats[option]
+	merged["desc"] = str(override_entry.get("desc", source_record.get("desc", "")))
+	merged["reference_verified"] = true
+	merged["reference_source"] = str(override_entry.get("source", ""))
+	return merged
+
+func _load_verified_catalog_options() -> void:
+	var path: String = "res://data/lineagem_verified_base_options.json"
+	if not FileAccess.file_exists(path):
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	if not (parsed is Dictionary):
+		return
+	verified_catalog_options = parsed as Dictionary
+	# Modify only verified named base cards, not custom/generated content.
+	# The old save-format card is independently corrected on read too.
+	for category: String in ["마법인형", "성물"]:
+		for source: Dictionary in [game_db, catalog_db]:
+			var entries_value: Variant = source.get(category, [])
+			if not (entries_value is Array):
+				continue
+			var entries: Array = entries_value as Array
+			for index: int in range(entries.size()):
+				if entries[index] is Dictionary:
+					entries[index] = _verified_catalog_record(category, entries[index] as Dictionary)
+
+func _catalog_stat_sum(key: String) -> int:
+	var result: int = 0
+	for category: String in ["변신", "마법인형", "성물"]:
+		var record_value: Variant = equipped_catalog.get(category, {})
+		if record_value is Dictionary and not (record_value as Dictionary).is_empty():
+			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
+			result += int(entry.get(key, 0))
+	return result
+
+func _skill_cooldown_factor() -> float:
+	return clampf(1.0 - float(_catalog_stat_sum("skillCooldownPct")) / 100.0, 0.1, 1.0)
+
+func _effective_max_mp() -> int:
+	return maxi(1, max_mp + _catalog_stat_sum("mpFlat"))
 
 func _index_item_weights() -> void:
 	item_weight_index.clear()
@@ -360,7 +413,7 @@ func _inventory_total_weight() -> int:
 	return total
 
 func _carrying_capacity() -> int:
-	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON"))
+	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus")
 
 func _inventory_encumbrance_multiplier() -> float:
 	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
@@ -2502,7 +2555,9 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP가 가득 찼습니다")
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	hp = mini(effective_max_hp, hp + maxi(1, heal_amount))
+	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat"))
+	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct")) / 100.0))
+	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
 	_update_hud()
@@ -2536,7 +2591,7 @@ func _on_map_selected(map_id: String) -> void:
 
 func _update_hud() -> void:
 	_refresh_speed_modifiers()
-	hud.update_player(level, hp, _effective_max_hp(), mp, max_mp, experience, exp_need, gold)
+	hud.update_player(level, hp, _effective_max_hp(), mp, _effective_max_mp(), experience, exp_need, gold)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
 	if hud.has_method("set_quest_progress"):
@@ -2551,7 +2606,7 @@ func _update_hud() -> void:
 	character_state["hp"] = hp
 	character_state["max_hp"] = _effective_max_hp()
 	character_state["mp"] = mp
-	character_state["max_mp"] = max_mp
+	character_state["max_mp"] = _effective_max_mp()
 	character_state["attack"] = _effective_attack()
 	character_state["defense"] = _effective_defense()
 	character_state["equipped"] = equipped_catalog
@@ -3203,7 +3258,7 @@ func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
 
 func _start_skill_cooldown(skill: Dictionary) -> void:
 	var name_value: String = str(skill.get("name", ""))
-	var cooldown: float = SKILL_RULES.cooldown_seconds(skill)
+	var cooldown: float = SKILL_RULES.cooldown_seconds(skill) * _skill_cooldown_factor()
 	if cooldown > 0.0:
 		skill_cooldowns[name_value] = cooldown
 	skill_global_cooldown = maxf(skill_global_cooldown, SKILL_RULES.global_cooldown_seconds(skill))
@@ -3340,7 +3395,7 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> voi
 				player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 			_:
 				continue
-		var cooldown: float = SKILL_RULES.cooldown_seconds(skill)
+		var cooldown: float = SKILL_RULES.cooldown_seconds(skill) * _skill_cooldown_factor()
 		if cooldown > 0.0:
 			skill_cooldowns[skill_name] = cooldown
 		hud.append_log("%s 패시브 발동" % skill_name)
@@ -3993,7 +4048,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
-			records.append(value as Dictionary)
+			records.append(_verified_catalog_record(category, value as Dictionary))
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
@@ -4332,7 +4387,7 @@ func _catalog_damage_bonus(kind: String) -> int:
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
-			total += CATALOG_EFFECTS.damage_by_style(value as Dictionary, kind)
+			total += CATALOG_EFFECTS.damage_by_style(_verified_catalog_record(category, value as Dictionary), kind)
 	return total
 
 func _catalog_damage_adjustment(kind: String) -> int:
@@ -4342,7 +4397,7 @@ func _catalog_damage_adjustment(kind: String) -> int:
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
-			original_bonus += int((value as Dictionary).get("atk", 0))
+			original_bonus += int(_verified_catalog_record(category, value as Dictionary).get("atk", 0))
 	return _catalog_damage_bonus(kind) - original_bonus
 
 func _catalog_accuracy_bonus(kind: String) -> int:
@@ -4350,7 +4405,7 @@ func _catalog_accuracy_bonus(kind: String) -> int:
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
-			total += CATALOG_EFFECTS.accuracy_by_style(value as Dictionary, kind)
+			total += CATALOG_EFFECTS.accuracy_by_style(_verified_catalog_record(category, value as Dictionary), kind)
 	return total
 
 func _catalog_critical_bonus(kind: String) -> int:
@@ -4358,7 +4413,7 @@ func _catalog_critical_bonus(kind: String) -> int:
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
-			total += CATALOG_EFFECTS.critical_by_style(value as Dictionary, kind)
+			total += CATALOG_EFFECTS.critical_by_style(_verified_catalog_record(category, value as Dictionary), kind)
 	return total
 
 func _ranged_normal_damage_stat() -> int:
@@ -4422,7 +4477,7 @@ func _ranged_accuracy_stat() -> int:
 	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
 	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
@@ -4755,7 +4810,7 @@ func _damage_reduction_stat() -> int:
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
-	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction"))
+	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _catalog_stat_sum("pve_damage_reduction"))
 	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct"), 0, 90)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
