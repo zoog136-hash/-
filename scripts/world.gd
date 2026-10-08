@@ -395,8 +395,9 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		# HP stolen from the target, capped by its remaining HP.
 		stolen = mini(rng.randi_range(1, 3), maxi(0, target.hp))
 	if stolen > 0:
+		var previous_hp: int = hp
 		hp = mini(_effective_max_hp(), hp + stolen)
-		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, stolen])
+		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	target.take_damage(maxi(1, normal_damage) + stolen, critical)
 	if stolen > 0:
 		_update_hud()
