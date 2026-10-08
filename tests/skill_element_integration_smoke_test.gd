@@ -41,6 +41,19 @@ func _run() -> void:
 			passive_total += 1
 	_check(spells.size() == 257 and passive_total == 40, "reclassification must preserve 257 entries and 40 passives")
 	_check(str((world.call("_skill_record", "콜 라이트닝") as Dictionary).get("attack_style", "")) == "magic", "magic projectile style not declared")
+	var sphere_count: int = 0
+	for skill_value: Variant in spells:
+		if not (skill_value is Dictionary):
+			continue
+		var skill_data: Dictionary = skill_value as Dictionary
+		if not str(skill_data.get("name", "")).contains("의 구체 "):
+			continue
+		sphere_count += 1
+		_check(ELEMENT_RULES.channel(str(skill_data.get("element", "physical"))) != "physical", "orb has no elemental channel: " + str(skill_data.get("name", "")))
+		_check(str(skill_data.get("attack_style", "")) == "magic", "orb is not using magic accuracy: " + str(skill_data.get("name", "")))
+	_check(sphere_count == 60, "all 60 expansion orb skills must have distinct elements")
+	var judge: Dictionary = world.call("_skill_record", "기사의 심판 4") as Dictionary
+	_check(float(judge.get("execute_threshold", 0.0)) >= 0.3 and float(judge.get("execute_multiplier", 1.0)) >= 1.5, "judgment execute rule missing")
 	_check(ELEMENT_RULES.damage_after_resistance(100, 40) == 60, "40% resist not applied")
 	_check(ELEMENT_RULES.damage_after_resistance(100, -25) == 125, "weakness does not amplify damage")
 	_check(ELEMENT_RULES.damage_with_bonus(100, 20) == 120, "20% elemental attack bonus not applied")
@@ -82,6 +95,15 @@ func _run() -> void:
 	_check(primary.slow_remaining > 0.0 and primary.move_speed < primary.base_move_speed, "ice slow did not affect movement speed")
 	primary.call("_tick_slow", 6.0)
 	_check(primary.slow_remaining == 0.0 and absf(primary.move_speed - primary.base_move_speed) < 0.01, "ice slow did not expire cleanly")
+	var poison_orb: Dictionary = world.call("_skill_record", "독의 구체 1단계") as Dictionary
+	poison_orb["status_chance"] = 1.0
+	for attempt: int in range(5):
+		_clear_cooldowns(world)
+		world.set("selected_monster", primary)
+		world.call("_cast_job_skill", "독의 구체 1단계")
+		if primary.poison_remaining > 0.0:
+			break
+	_check(primary.poison_remaining > 0.0, "poison orb failed to apply damage-over-time status")
 	_clear_cooldowns(world)
 	world.set("hp", maxi(1, int(world.call("_effective_max_hp")) / 3))
 	_check(bool(world.call("_cast_job_skill", "풀 힐")), "Full Heal did not cast")
