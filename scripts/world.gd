@@ -2579,6 +2579,7 @@ func _ensure_job_class_visual() -> void:
 func _on_job_class_selected(job_name: String) -> void:
 	if not JOB_CLASS_ORDER.has(job_name):
 		return
+	_clear_skill_charge()
 	job_class = job_name
 	var record: Dictionary = _job_transform_record(job_class)
 	if not record.is_empty():
@@ -3135,6 +3136,8 @@ func _cast_job_skill(skill_name: String) -> bool:
 			return false
 	if success:
 		_start_skill_cooldown(skill)
+		if SKILL_RULES.has_target(effect):
+			auto_attack_timer = maxf(auto_attack_timer, SKILL_RULES.global_cooldown_seconds(skill))
 		_update_hud()
 	return success
 
@@ -3199,6 +3202,9 @@ func _clear_skill_charge() -> void:
 	charge_skill = {}
 
 func _cast_job_charge_skill(skill: Dictionary) -> bool:
+	if player.is_held():
+		hud.show_message("이동 불가 상태에서는 돌진할 수 없습니다")
+		return false
 	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
 	if target == null:
 		hud.show_message("돌진 대상이 사거리 밖에 있습니다")
@@ -3260,7 +3266,7 @@ func _cast_job_charge_skill(skill: Dictionary) -> bool:
 func _advance_skill_charge(delta: float) -> void:
 	if charge_skill.is_empty():
 		return
-	if not is_instance_valid(charge_target) or charge_target.dead or player.is_stunned() or player.is_feared():
+	if not is_instance_valid(charge_target) or charge_target.dead or player.is_stunned() or player.is_feared() or player.is_held():
 		_clear_skill_charge()
 		return
 	var remaining: float = maxf(0.0, charge_speed * delta)
