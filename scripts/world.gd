@@ -476,7 +476,7 @@ func _effective_max_mp() -> int:
 				var segment: String = fragment.strip_edges()
 				if typed_mp == 0 and (segment.begins_with("MP ") or segment.begins_with("Max MP ")):
 					added += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr(3 if segment.begins_with("MP ") else 7)))
-	return maxi(1, max_mp + added)
+	return maxi(1, max_mp + added + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp"))
 
 func _index_item_weights() -> void:
 	item_weight_index.clear()
@@ -541,17 +541,19 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 	return result
 
 func _equipment_additional_damage(kind: String) -> int:
-	var result: int = 0
+	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
 			var item: Dictionary = entry as Dictionary
 			result += ITEM_OPTIONS.additional_damage(item, kind)
-			result += int(item.get("damage_reduction_ignore", item.get("damageReductionIgnore", 0)))
-			for fragment: String in str(item.get("desc", "")).split("·"):
-				var segment: String = fragment.strip_edges()
-				if segment.begins_with("대미지 리덕션 무시"):
-					result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
+			var typed_ignore: int = int(item.get("damage_reduction_ignore", item.get("damageReductionIgnore", 0)))
+			result += typed_ignore
+			if typed_ignore == 0:
+				for fragment: String in str(item.get("desc", "")).split("·"):
+					var segment: String = fragment.strip_edges()
+					if segment.begins_with("대미지 리덕션 무시"):
+						result += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
 	return result
 
 func _weapon_size_adjustment(target: TwilightMonster) -> int:
@@ -570,10 +572,12 @@ func _monster_size_class(record: Dictionary) -> String:
 				return "small"
 	var name_value: String = str(record.get("name", ""))
 	# Body-type classification, deliberately independent of 'is_boss'.
-	var big_keywords: Array[String] = ["거대", "골렘", "오우거", "사이클롭스", "에틴", "웜", "드레이크", "드래곤", "드레곤", "용", "피닉스", "마이노", "가디언", "수호자", "바실리스크", "크랩맨", "에르자베"]
+	var big_keywords: Array[String] = ["거대", "골렘", "오우거", "사이클롭스", "에틴", "웜", "드레이크", "드래곤", "드레곤", "피닉스", "마이노", "바실리스크", "크랩맨", "에르자베"]
 	for keyword: String in big_keywords:
 		if name_value.contains(keyword):
 			return "large"
+	if str(record.get("type", "")) == "거인":
+		return "large"
 	return "small"
 
 func _ensure_ammo_items() -> void:
@@ -2776,6 +2780,7 @@ func _on_map_selected(map_id: String) -> void:
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
+	_sync_item_instances()
 	_refresh_speed_modifiers()
 	hud.update_player(level, hp, _effective_max_hp(), mp, _effective_max_mp(), experience, exp_need, gold)
 	if hud.has_method("set_quick_items"):
@@ -2810,6 +2815,7 @@ func _update_hud() -> void:
 		hud.call("set_quickslot_entries", quickslots)
 
 func _save_game(quiet: bool) -> void:
+	_sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
@@ -2935,6 +2941,7 @@ func _load_game(quiet: bool) -> void:
 			next_item_instance_id = maxi(next_item_instance_id, int(str(raw_id)) + 1)
 	_sync_item_instances()
 	_normalize_equipment_slots()
+	_attach_missing_equipment_instance_ids()
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
@@ -4408,6 +4415,20 @@ func _place_migrated_equipment(container: Dictionary, record: Dictionary, prefer
 			target_slot = _choose_multi_equipment_slot(base_slot, container)
 	container[target_slot] = record.duplicate(true)
 
+func _attach_missing_equipment_instance_ids() -> void:
+	_sync_item_instances()
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var value: Variant = equipped_items.get(slot, {})
+		if not (value is Dictionary) or (value as Dictionary).is_empty():
+			continue
+		var record: Dictionary = value as Dictionary
+		if not str(record.get("instance_id", "")).is_empty():
+			continue
+		var unique_id: String = _chosen_instance(str(record.get("name", "")), true)
+		if not unique_id.is_empty():
+			record["instance_id"] = unique_id
+			equipped_items[slot] = record
+
 func _normalize_equipment_slots() -> void:
 	var old_items: Dictionary = equipped_items
 	var normalized: Dictionary = _empty_equipment_slots()
@@ -4696,19 +4717,19 @@ func _melee_damage_stat() -> int:
 	return _effective_attack() + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
-	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _enhancement_weapon_stat("accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
 	return _effective_attack() + _catalog_damage_adjustment("ranged") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
-	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _enhancement_weapon_stat("accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("sp") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
-	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
+	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -5035,6 +5056,7 @@ func _damage_reduction_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_damage_reduction(record)
 	total += _active_item_buff_total("damage_reduction")
+	total += _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "reduction")
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
