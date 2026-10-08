@@ -364,6 +364,11 @@ func _verified_catalog_record(category: String, source_record: Dictionary) -> Di
 	if bool(stats.get("hpAbsorption", false)):
 		runtime_description = runtime_description.replace("HP 흡수", "HP 흡수(공격 적중마다 1~3)")
 	merged["desc"] = runtime_description.replace("PVP", "PVE").replace("PvP", "PvE")
+	if not merged.has("damage_reduction_ignore"):
+		for part: String in str(merged.get("desc", "")).split("·"):
+			var segment: String = part.strip_edges()
+			if segment.begins_with("대미지 리덕션 무시"):
+				merged["damage_reduction_ignore"] = maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
 	merged["reference_verified"] = true
 	merged["reference_source"] = str(override_entry.get("source", ""))
 	return merged
@@ -464,11 +469,12 @@ func _effective_max_mp() -> int:
 	var added: int = _catalog_stat_sum("mpFlat")
 	for record: Dictionary in _all_equipped_records():
 		if str(record.get("slot", "")) != "":
-			added += int(record.get("mpFlat", record.get("max_mp_bonus", 0)))
+			var typed_mp: int = int(record.get("mpFlat", record.get("max_mp_bonus", 0)))
+			added += typed_mp
 			var description: String = str(record.get("desc", ""))
 			for fragment: String in description.split("·"):
 				var segment: String = fragment.strip_edges()
-				if segment.begins_with("MP ") or segment.begins_with("Max MP "):
+				if typed_mp == 0 and (segment.begins_with("MP ") or segment.begins_with("Max MP ")):
 					added += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr(3 if segment.begins_with("MP ") else 7)))
 	return maxi(1, max_mp + added)
 
@@ -2334,6 +2340,9 @@ func _sync_item_instances() -> void:
 				ids.append(str(key))
 		while ids.size() < desired:
 			var unique_id: String = str(next_item_instance_id)
+			while item_instances.has(unique_id):
+				next_item_instance_id += 1
+				unique_id = str(next_item_instance_id)
 			next_item_instance_id += 1
 			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0))}
 			ids.append(unique_id)
@@ -2665,7 +2674,7 @@ func _destroy_enhancement_target(item_name: String, item_id: String = "") -> voi
 		inventory.erase(item_name)
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var value: Variant = equipped_items.get(slot, {})
-		if value is Dictionary and str((value as Dictionary).get("instance_id", "")) == item_id or (item_id.is_empty() and str((value as Dictionary).get("name", "")) == item_name):
+		if value is Dictionary and (str((value as Dictionary).get("instance_id", "")) == item_id or (item_id.is_empty() and str((value as Dictionary).get("name", "")) == item_name)):
 			equipped_items[slot] = {}
 
 func _equipment_enhancement_level(slot: String) -> int:
@@ -2921,6 +2930,9 @@ func _load_game(quiet: bool) -> void:
 	var stored_instances: Variant = data.get("item_instances", {})
 	item_instances = stored_instances as Dictionary if stored_instances is Dictionary else {}
 	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
+	for raw_id: Variant in item_instances.keys():
+		if str(raw_id).is_valid_int():
+			next_item_instance_id = maxi(next_item_instance_id, int(str(raw_id)) + 1)
 	_sync_item_instances()
 	_normalize_equipment_slots()
 	_enforce_weapon_class_compatibility(true)
@@ -4122,8 +4134,11 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -
 	if equip_slot != "" and EQUIPMENT_SLOT_ORDER.has(equip_slot):
 		var old_max_hp: int = _effective_max_hp()
 		var selected_id: String = _chosen_instance(item_name, true)
+		if selected_id.is_empty() and str((equipped_items.get(equip_slot, {}) as Dictionary).get("name", "")) == item_name:
+			selected_id = str((equipped_items.get(equip_slot, {}) as Dictionary).get("instance_id", ""))
 		if selected_id.is_empty():
-			selected_id = _chosen_instance(item_name)
+			hud.show_message("장착 가능한 장비 개체가 없습니다")
+			return
 		equipped_items[equip_slot] = record.duplicate(true)
 		equipped_items[equip_slot]["instance_id"] = selected_id
 		if equip_slot == "weapon":
