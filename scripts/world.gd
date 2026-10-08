@@ -2159,13 +2159,14 @@ func _sync_item_instances() -> void:
 		for key: Variant in item_instances.keys():
 			if str((item_instances[key] as Dictionary).get("name", "")) == name_value:
 				ids.append(str(key))
+		var legacy_import: bool = ids.is_empty() and enhancement_levels.has(name_value)
 		while ids.size() < desired:
 			var unique_id: String = str(next_item_instance_id)
 			while item_instances.has(unique_id):
 				next_item_instance_id += 1
 				unique_id = str(next_item_instance_id)
 			next_item_instance_id += 1
-			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0)), "element":"", "element_level":0}
+			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0)) if legacy_import else 0, "element":"", "element_level":0}
 			ids.append(unique_id)
 		while ids.size() > desired:
 			var found: bool = false
@@ -2200,7 +2201,7 @@ func _chosen_instance(name_value: String, only_free: bool = false) -> String:
 func _item_instance_level(instance_id: String, fallback_name: String = "") -> int:
 	if item_instances.has(instance_id):
 		return int((item_instances[instance_id] as Dictionary).get("level", 0))
-	return int(enhancement_levels.get(fallback_name, 0))
+	return int(enhancement_levels.get(fallback_name, 0)) if instance_id == "" else 0
 
 func _parse_enhancement_target(raw_name: String) -> Dictionary:
 	var pieces: PackedStringArray = raw_name.split("@@@", false, 1)
@@ -2637,6 +2638,8 @@ func _update_hud() -> void:
 	character_state["quest_kills"] = quest_kills
 	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
+	if hud.inventory_panel.visible:
+		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
 		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
