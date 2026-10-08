@@ -15,6 +15,7 @@ const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
+const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 
 var field_map: PlayableField = null
 var field_renderer: FieldRenderer = null
@@ -45,6 +46,7 @@ var maps_by_id: Dictionary = {}
 var game_db: Dictionary = {}
 var monster_db: Array = []
 var item_db: Array = []
+var loot_catalog: Dictionary = {}
 var skills_db: Array = []
 var job_classes: Array = []
 var job_class: String = "기사"
@@ -292,6 +294,7 @@ func _load_data() -> void:
 	skills_db = game_db.get("스킬", []) as Array
 	_ensure_ammo_items()
 	_enrich_weapon_records(item_db)
+	loot_catalog = LOOT_DROP.build_catalog(item_db)
 	var catalog_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_PATH))
 	if catalog_value is Dictionary:
 		catalog_db = catalog_value as Dictionary
@@ -1374,27 +1377,25 @@ func _ensure_monster_count() -> void:
 func _roll_drop(monster: TwilightMonster) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	if rng.randf() > 0.72:
+	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng)
+	if earned.is_empty():
 		return
-	var item_name: String = ""
-	if not monster.drop_items.is_empty():
-		item_name = monster.drop_items[rng.randi_range(0, monster.drop_items.size() - 1)]
-	elif not item_db.is_empty():
-		var record_value: Variant = item_db[rng.randi_range(0, item_db.size() - 1)]
-		if record_value is Dictionary:
-			item_name = str(record_value.get("name", ""))
-	if item_name.is_empty():
-		return
-	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+	var acquired_text: String = ""
+	for index: int in range(earned.size()):
+		var item_name: String = earned[index]
+		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
+		var label: Label = Label.new()
+		label.text = "◆ " + item_name
+		label.position = monster.global_position + Vector2(-45, -28 - 25 * index)
+		label.add_theme_color_override("font_color", Color("f5d66f"))
+		drops_root.add_child(label)
+		var timer: SceneTreeTimer = get_tree().create_timer(4.0)
+		timer.timeout.connect(label.queue_free)
+		if not acquired_text.is_empty():
+			acquired_text += ", "
+		acquired_text += item_name
 	hud.refresh_inventory(inventory)
-	var label: Label = Label.new()
-	label.text = "◆ " + item_name
-	label.position = monster.global_position + Vector2(-45, -28)
-	label.add_theme_color_override("font_color", Color("f5d66f"))
-	drops_root.add_child(label)
-	var timer: SceneTreeTimer = get_tree().create_timer(4.0)
-	timer.timeout.connect(label.queue_free)
-	hud.show_message("획득: " + item_name)
+	hud.show_message("획득: " + acquired_text)
 
 func _physical_hit_chance(attacker_accuracy: int, target_ac: int, avoidance: int) -> float:
 	var base_percent: float = 75.0 + float(attacker_accuracy - absi(target_ac)) * 0.7

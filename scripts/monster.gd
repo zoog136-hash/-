@@ -1,6 +1,8 @@
 extends CharacterBody2D
 class_name TwilightMonster
 
+const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+
 signal died(monster: TwilightMonster)
 signal player_hit(attacker: TwilightMonster, damage: int, attack_type: String)
 signal selected(monster: TwilightMonster)
@@ -62,6 +64,7 @@ var move_speed: float = 90.0
 var exp_reward: int = 25
 var gold_reward: int = 40
 var grade: String = "일반"
+var is_boss: bool = false
 var drop_items: Array[String] = []
 var target_player: TwilightPlayer = null
 var world_controller: Node = null
@@ -133,6 +136,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	exp_reward = maxi(10, int(record.get("xp", record.get("exp", record.get("경험치", int(float(max_hp) / 4.0))))))
 	gold_reward = maxi(10, int(record.get("gold", record.get("아데나", int(float(max_hp) / 3.0)))))
 	grade = str(record.get("grade", record.get("등급", "일반")))
+	is_boss = LOOT_DROP.is_boss_record(record)
 	drop_items.clear()
 	var drop_value: Variant = record.get("drop", [])
 	if drop_value is Array:
