@@ -1,5 +1,7 @@
 extends SceneTree
 
+const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+
 var failures: Array[String] = []
 
 func _initialize() -> void:
@@ -11,9 +13,8 @@ func _expect(condition: bool, detail: String) -> void:
 		print("SKILL MECHANISM FAIL: " + detail)
 
 func _run() -> void:
-	var rules: Script = load("res://scripts/skill_rules.gd") as Script
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene
-	if rules == null or scene == null:
+	if scene == null:
 		_expect(false, "Skill rules or main scene failed to load")
 		_finish()
 		return
@@ -31,7 +32,7 @@ func _run() -> void:
 		var skill: Dictionary = value as Dictionary
 		if str(skill.get("activation", "")) == "passive":
 			passive_count += 1
-		_expect(rules.call("is_supported", str(skill.get("effect", ""))) or str(skill.get("effect", "")) == "utility", "unknown effect " + str(skill.get("name", "")))
+		_expect(SKILL_RULES.is_supported(str(skill.get("effect", ""))) or str(skill.get("effect", "")) == "utility", "unknown effect " + str(skill.get("name", "")))
 	_expect(passive_count > 0, "missing passive skills")
 	_expect(str((world.call("_skill_record", "쇼크 스턴") as Dictionary).get("effect", "")) == "stun", "stun not routed to status effect")
 	_expect(str((world.call("_skill_record", "사일런스") as Dictionary).get("effect", "")) == "silence", "silence not routed to status effect")
