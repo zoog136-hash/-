@@ -2625,7 +2625,7 @@ func _quickbar_job_skills() -> Array:
 		if _is_passive_skill(skill):
 			continue
 		var effect: String = str(skill.get("effect", ""))
-		if effect not in ["damage", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport", "invisibility", "stun", "silence", "poison", "bleed", "hold", "fear"]:
+		if effect not in ["damage", "turnUndead", "charge", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport", "invisibility", "stun", "silence", "poison", "bleed", "hold", "fear"]:
 			continue
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class == job_class:
