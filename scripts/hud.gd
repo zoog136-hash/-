@@ -1,7 +1,7 @@
 extends CanvasLayer
+class_name TwilightHUD
 
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
-class_name TwilightHUD
 
 signal move_vector_changed(value: Vector2)
 signal attack_pressed
