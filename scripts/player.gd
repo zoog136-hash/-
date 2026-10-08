@@ -2,6 +2,18 @@ extends CharacterBody2D
 class_name TwilightPlayer
 
 signal attack_requested
+signal attack_strike(sequence: int)
+signal attack_cancelled(sequence: int)
+
+const MOTION = preload("res://scripts/animation/actor_motion.gd")
+const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
+var motion: TwilightActorMotion = MOTION.new()
+var class_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
+var transform_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
+var animation_state: String:
+	get: return motion.state
+var facing8: int:
+	get: return motion.facing8
 signal auto_toggled(enabled: bool)
 signal poison_tick(damage: int)
 signal bleed_tick(damage: int)
@@ -55,6 +67,8 @@ var physics_delta: float = 1.0 / 60.0
 
 func _ready() -> void:
 	base_move_speed = move_speed
+	motion.strike.connect(func(id: int) -> void: attack_strike.emit(id))
+	motion.cancelled.connect(func(id: int) -> void: attack_cancelled.emit(id))
 	set_class_index(class_index)
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 16.0
@@ -63,7 +77,6 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	physics_delta = delta
-	attack_clock = maxf(0.0, attack_clock - delta)
 	transform_bob_clock += delta
 	_tick_stun(delta)
 	_tick_silence(delta)
@@ -72,6 +85,7 @@ func _physics_process(delta: float) -> void:
 	_tick_poison(delta)
 	_tick_bleed(delta)
 	if is_stunned():
+		cancel_attack()
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
 		clear_click_path()
@@ -92,6 +106,7 @@ func _physics_process(delta: float) -> void:
 		return
 
 	if is_feared():
+		cancel_attack()
 		touch_vector = Vector2.ZERO
 		clear_click_path()
 		velocity = _fear_velocity()
@@ -112,6 +127,7 @@ func _physics_process(delta: float) -> void:
 		manual = touch_vector
 
 	if manual.length_squared() > 0.01:
+		cancel_attack()
 		if auto_enabled:
 			set_auto_enabled(false)
 		clear_click_path()
@@ -138,73 +154,49 @@ func _click_path_velocity() -> Vector2:
 	var speed: float = click_move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
 	return direction * minf(speed, distance / maxf(physics_delta, 0.001))
 
-func _update_facing(motion: Vector2) -> void:
-	if motion.length_squared() < 1.0:
-		return
-	if absf(motion.x) > absf(motion.y):
-		facing = 2 if motion.x < 0.0 else 3
-	else:
-		facing = 1 if motion.y < 0.0 else 0
+func _update_facing(motion_vector: Vector2) -> void:
+	if motion.active: return
+	motion.face(motion_vector)
+	facing = motion.facing4
 
-func _update_visual(_delta: float) -> void:
-	var moving: bool = velocity.length_squared() > 4.0
-	if transform_active:
-		class_sprite.visible = false
-		transform_sprite.visible = true
-		transform_sprite.flip_h = false
-		var animation_name: String = _direction_animation_name(facing)
-		transform_sprite.speed_scale = attack_speed_multiplier if attack_clock > 0.0 else equipment_move_speed_multiplier * skill_speed_multiplier
-		if transform_sprite.animation != animation_name:
-			transform_sprite.animation = animation_name
-			transform_sprite.frame = 0
-		if moving or attack_clock > 0.0:
-			if not transform_sprite.is_playing():
-				transform_sprite.play()
-		else:
-			transform_sprite.stop()
-			transform_sprite.frame = 0
-		var bob: float = -absf(sin(transform_bob_clock * 8.0)) * 2.0 if moving else sin(transform_bob_clock * 2.5) * 1.0
-		transform_sprite.position.y = -55.0 + bob
-		if attack_clock > 0.0:
-			var pulse_duration: float = maxf(0.05, attack_visual_duration)
-			var pulse: float = sin((1.0 - attack_clock / pulse_duration) * PI)
-			transform_sprite.scale = transform_sprite.get_meta("base_scale", Vector2(0.6, 0.6)) * (1.0 + pulse * 0.08)
-		else:
-			transform_sprite.scale = transform_sprite.get_meta("base_scale", Vector2(0.6, 0.6))
-		return
+func _update_visual(delta: float) -> void:
+	motion.profile = transform_profile if transform_active else class_profile
+	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
+	facing = motion.facing4
+	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0
+	class_sprite.visible = not transform_active
+	transform_sprite.visible = transform_active
+	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else class_sprite
+	motion.apply(active_sprite, active_sprite.get_meta("base_scale", Vector2.ONE))
 
-	transform_sprite.visible = false
-	class_sprite.visible = true
-	class_sprite.flip_h = false
-	# Resource imports can briefly leave the base class sheet unavailable.
-	# Never request a non-existent animation from AnimatedSprite2D.
-	if class_sprite.sprite_frames == null:
-		return
-	class_sprite.speed_scale = attack_speed_multiplier if attack_clock > 0.0 else equipment_move_speed_multiplier * skill_speed_multiplier
-	var required_animation: String = "attack" if attack_clock > 0.0 else _class_direction_animation_name(facing)
-	if not class_sprite.sprite_frames.has_animation(required_animation):
-		class_sprite.visible = false
-		return
-	if attack_clock > 0.0:
-		class_sprite.animation = "attack"
-		class_sprite.flip_h = facing == 2
-		if not class_sprite.is_playing():
-			class_sprite.play()
-	elif moving:
-		match facing:
-			0: class_sprite.animation = "walk_down"
-			1: class_sprite.animation = "walk_up"
-			2: class_sprite.animation = "walk_left"
-			3: class_sprite.animation = "walk_right"
-		if not class_sprite.is_playing():
-			class_sprite.play()
-	else:
-		class_sprite.stop()
-		class_sprite.animation = "walk_down" if facing == 0 else ("walk_up" if facing == 1 else ("walk_left" if facing == 2 else "walk_right"))
-		class_sprite.frame = 0
+func face_target(position_value: Vector2) -> void:
+	motion.face(position_value - global_position)
+	facing = motion.facing4
+
+func start_combat_attack(aim: Vector2, duration: float, style: String, marker: float = -1.0) -> int:
+	attack_visual_duration = duration
+	attack_clock = duration
+	return motion.begin_attack(duration, aim - global_position, style, marker)
+
+func cancel_attack() -> void:
+	motion.cancel_attack()
+	attack_clock = 0.0
+
+func combat_hit_position() -> Vector2:
+	return global_position + motion.profile.hit_position
+
+func combat_projectile_origin() -> Vector2:
+	var point: Vector2 = motion.profile.projectile_origin
+	point.x *= -1.0 if motion.direction.x < 0.0 else 1.0
+	return global_position + point
 
 func set_class_index(value: int) -> void:
 	class_index = clampi(value, 0, CLASS_SHEETS.size() - 1)
+	class_profile.profile_id = "class:" + str(class_index)
+	class_profile.layout = "class5"
+	class_profile.dedicated_attack = true
+	class_profile.sprite_offset = Vector2(0, -46)
+	motion.profile = transform_profile if transform_active else class_profile
 	_build_class_frames(CLASS_SHEETS[class_index])
 	if not transform_active:
 		class_sprite.visible = true
@@ -251,6 +243,9 @@ func set_transform_visual(path: String, _speed_multiplier: float) -> void:
 	transform_sprite.animation = _direction_animation_name(facing)
 	transform_sprite.frame = 0
 	transform_sprite.play()
+	transform_profile.layout = "directional4"
+	transform_profile.sprite_offset = Vector2(0, -55)
+	motion.profile = transform_profile
 	transform_active = true
 	class_sprite.visible = false
 	transform_sprite.visible = true
@@ -291,6 +286,8 @@ func _direction_animation_name(direction_value: int) -> String:
 
 func clear_transform_visual() -> void:
 	transform_active = false
+	motion.profile = class_profile
+	transform_sprite.rotation = 0.0
 	transform_sprite.stop()
 	transform_sprite.visible = false
 	class_sprite.visible = true
@@ -318,6 +315,7 @@ func show_miss() -> void:
 	_show_combat_text("MISS", Color(0.78, 0.86, 1.0, 1.0), Vector2(-38.0, -112.0))
 
 func show_received_damage(amount: int, critical: bool = false) -> void:
+	motion.react(critical)
 	var display_text: String = ("CRIT " + str(amount)) if critical else str(amount)
 	var display_color: Color = Color(1.0, 0.20, 0.12, 1.0) if critical else Color(1.0, 0.38, 0.32, 1.0)
 	_show_combat_text(display_text, display_color, Vector2(-38.0 if critical else -28.0, -112.0))
@@ -487,11 +485,7 @@ func set_auto_enabled(enabled: bool) -> void:
 	auto_toggled.emit(enabled)
 
 func pulse_attack() -> void:
-	if is_stunned():
-		return
-	attack_visual_duration = clampf(0.42 / maxf(0.5, attack_speed_multiplier), 0.10, 0.42)
-	attack_clock = attack_visual_duration
-	if not transform_active:
-		class_sprite.animation = "attack"
-		class_sprite.frame = 0
-		class_sprite.play()
+	if is_stunned(): return
+	if motion.active: return
+	attack_visual_duration = clampf(0.42 / maxf(0.5, attack_speed_multiplier), 0.10, 0.84)
+	start_combat_attack(global_position + motion.direction, attack_visual_duration, motion.profile.motion_style)
