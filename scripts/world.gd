@@ -3393,8 +3393,9 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 	player.pulse_attack()
 	var max_range: float = SKILL_RULES.range_pixels(skill)
 	var skill_class: String = str(skill.get("class", "공용"))
-	var ranged_style: bool = job_class == "요정" or job_class == "총사"
-	var magic_style: bool = job_class == "마법사" or skill_class == "마법사" or (skill_class == "공용" and max_range >= 250.0)
+	var requested_style: String = str(skill.get("attack_style", ""))
+	var ranged_style: bool = requested_style == "ranged" or (requested_style == "" and (job_class == "요정" or job_class == "총사"))
+	var magic_style: bool = requested_style == "magic" or (requested_style == "" and (job_class == "마법사" or skill_class == "마법사" or (skill_class == "공용" and max_range >= 250.0)))
 	var hit_chance: float = _melee_hit_chance(target)
 	var stat_damage: int = _melee_damage_stat()
 	var crit_rate: int = _player_critical_rate("melee")
@@ -3523,10 +3524,21 @@ func _cast_job_buff_skill(skill: Dictionary) -> bool:
 	hud.append_log("%s 버프 · %.0f초" % [str(skill.get("name", "")), duration])
 	return true
 
+func _teleport_landing_clear(candidate: Vector2) -> bool:
+	if not _is_walkable_world(candidate):
+		return false
+	for child: Node in monsters_root.get_children():
+		if child is TwilightMonster:
+			var monster: TwilightMonster = child as TwilightMonster
+			if not monster.dead and candidate.distance_to(monster.global_position) < 155.0:
+				return false
+	return true
+
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
-	for _attempt: int in range(60):
+	for _attempt: int in range(100):
 		var candidate: Vector2 = player.global_position + Vector2(rng.randf_range(-700.0, 700.0), rng.randf_range(-500.0, 500.0))
-		if _is_walkable_world(candidate):
+		var safe_only: bool = bool(skill.get("safe_zone_only", false))
+		if _teleport_landing_clear(candidate) if safe_only else _is_walkable_world(candidate):
 			if not _spend_skill_mp(skill):
 				return false
 			player.global_position = candidate
@@ -3534,7 +3546,7 @@ func _cast_job_teleport_skill(skill: Dictionary) -> bool:
 			player.camera.reset_smoothing()
 			hud.show_message("%s" % str(skill.get("name", "텔레포트")))
 			return true
-	hud.show_message("이동 가능한 위치를 찾지 못했습니다")
+	hud.show_message("안전하게 이동할 위치를 찾지 못했습니다")
 	return false
 
 func _active_skill_buff_total(key: String) -> int:
