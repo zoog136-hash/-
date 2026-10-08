@@ -1016,7 +1016,7 @@ func _render_enhancement_panel() -> void:
 		var selected_mark: String = "▶ " if index == enhancement_selected_index else ""
 		var equipped_mark: String = " [장착]" if bool(data.get("equipped", false)) else ""
 		var button: Button = Button.new()
-		button.text = "%s%s%s  +%d" % [selected_mark, str(data.get("name", "")), equipped_mark, int(data.get("level", 0))]
+		button.text = "%s%s [개체 #%s]%s  +%d" % [selected_mark, str(data.get("name", "")), str(data.get("instance_id", "")), equipped_mark, int(data.get("level", 0))]
 		button.custom_minimum_size = Vector2(0, 42)
 		button.pressed.connect(_select_enhancement_candidate.bind(index))
 		utility_body.add_child(button)
@@ -1044,7 +1044,7 @@ func _render_enhancement_panel() -> void:
 	var enhance_button: Button = Button.new()
 	enhance_button.text = "강화 시도"
 	enhance_button.custom_minimum_size = Vector2(0, 52)
-	enhance_button.pressed.connect(_emit_enhancement_requested.bind(str(selected.get("name", ""))))
+	enhance_button.pressed.connect(_emit_enhancement_requested.bind(str(selected.get("target_id", selected.get("name", "")))))
 	utility_body.add_child(enhance_button)
 
 func _select_enhancement_candidate(index: int) -> void:
