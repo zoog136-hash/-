@@ -355,6 +355,9 @@ func _enhance_level(item_name: String) -> int:
 	for raw_value: Variant in instances.values():
 		if raw_value is Dictionary and str((raw_value as Dictionary).get("name", "")) == item_name:
 			best = maxi(best, int((raw_value as Dictionary).get("level", 0)))
+	if best <= 0:
+		var legacy: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
+		return maxi(0, int(legacy.get(item_name, 0)))
 	return best
 
 func _bless_state(record: Dictionary, item_name: String) -> String:
