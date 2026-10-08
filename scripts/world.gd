@@ -76,7 +76,9 @@ var equipped_items: Dictionary = {
 	"gaiters": {}, "boots": {}, "gloves": {}, "bracelet": {}, "necklace": {}, "badge": {},
 	"crystal": {}, "catalyst": {}, "rune": {}
 }
-var enhancement_levels: Dictionary = {}
+var enhancement_levels: Dictionary = {} # legacy migration only
+var item_instances: Dictionary = {} # instance_id -> individual upgrade + element state
+var next_item_instance_id: int = 1
 var class_index: int = 0
 var companion_velocity: Vector2 = Vector2.ZERO
 var active_map: Dictionary = {}
@@ -1925,6 +1927,8 @@ func _scroll_mode(scroll_name: String) -> String:
 	return "normal"
 
 func _on_inventory_item_activated(item_name: String) -> void:
+	var selected: Dictionary = _parse_enhancement_target(item_name)
+	item_name = str(selected.get("name", item_name))
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 상태이상 해제 물약입니다")
 		return
@@ -1944,7 +1948,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	var equip_slot: String = _equipment_slot_base(record)
 	if equip_slot != "":
-		_equip_or_acquire_item(record, false)
+		_equip_or_acquire_item(record, false, str(selected.get("id", "")))
 		return
 	if _is_timed_buff_item(record):
 		_use_timed_item_buff(record)
@@ -2138,6 +2142,70 @@ func _combined_active_buffs() -> Dictionary:
 		result[key] = active_item_buffs[key]
 	return result
 
+func _is_instance_equipped(id: String) -> bool:
+	for entry: Variant in equipped_items.values():
+		if entry is Dictionary and str((entry as Dictionary).get("instance_id", "")) == id:
+			return true
+	return false
+
+func _sync_item_instances() -> void:
+	for raw_name: Variant in inventory.keys():
+		var name_value: String = str(raw_name)
+		var record: Dictionary = _find_catalog_item_record(name_value)
+		if _enhancement_kind_for_record(record) == "":
+			continue
+		var desired: int = maxi(0, int(inventory.get(name_value, 0)))
+		var ids: Array[String] = []
+		for key: Variant in item_instances.keys():
+			if str((item_instances[key] as Dictionary).get("name", "")) == name_value:
+				ids.append(str(key))
+		while ids.size() < desired:
+			var unique_id: String = str(next_item_instance_id)
+			while item_instances.has(unique_id):
+				next_item_instance_id += 1
+				unique_id = str(next_item_instance_id)
+			next_item_instance_id += 1
+			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0)), "element":"", "element_level":0}
+			ids.append(unique_id)
+		while ids.size() > desired:
+			var found: bool = false
+			for id: String in ids:
+				if not _is_instance_equipped(id):
+					item_instances.erase(id)
+					ids.erase(id)
+					found = true
+					break
+			if not found:
+				break
+	for raw_id: Variant in item_instances.keys():
+		var instance_id: String = str(raw_id)
+		var name_value: String = str((item_instances[raw_id] as Dictionary).get("name", ""))
+		if int(inventory.get(name_value, 0)) <= 0 and not _is_instance_equipped(instance_id):
+			item_instances.erase(raw_id)
+
+func _chosen_instance(name_value: String, only_free: bool = false) -> String:
+	_sync_item_instances()
+	var chosen: String = ""
+	var level_value: int = -1
+	for raw_id: Variant in item_instances.keys():
+		var instance_id: String = str(raw_id)
+		var entry: Dictionary = item_instances[raw_id] as Dictionary
+		if str(entry.get("name", "")) != name_value or (only_free and _is_instance_equipped(instance_id)):
+			continue
+		if chosen.is_empty() or int(entry.get("level", 0)) > level_value:
+			chosen = instance_id
+			level_value = int(entry.get("level", 0))
+	return chosen
+
+func _item_instance_level(instance_id: String, fallback_name: String = "") -> int:
+	if item_instances.has(instance_id):
+		return int((item_instances[instance_id] as Dictionary).get("level", 0))
+	return int(enhancement_levels.get(fallback_name, 0))
+
+func _parse_enhancement_target(raw_name: String) -> Dictionary:
+	var pieces: PackedStringArray = raw_name.split("@@@", false, 1)
+	return {"name": pieces[0], "id": pieces[1] if pieces.size() > 1 else ""}
+
 func _enhancement_kind_for_record(record: Dictionary) -> String:
 	if record.is_empty():
 		return ""
@@ -2151,17 +2219,19 @@ func _enhancement_kind_for_record(record: Dictionary) -> String:
 	return ""
 
 func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
+	_sync_item_instances()
 	var result: Array = []
-	var names: Array = inventory.keys()
+	var names: Array = item_instances.keys()
 	names.sort()
 	for value: Variant in names:
-		var item_name: String = str(value)
+		var instance_id: String = str(value)
+		var item_name: String = str((item_instances[instance_id] as Dictionary).get("name", ""))
 		if int(inventory.get(item_name, 0)) <= 0:
 			continue
 		var record: Dictionary = _find_catalog_item_record(item_name)
 		if record.is_empty() or _enhancement_kind_for_record(record) != kind:
 			continue
-		var level_value: int = int(enhancement_levels.get(item_name, 0))
+		var level_value: int = _item_instance_level(instance_id, item_name)
 		if not _enhancement_level_allowed(kind, mode, level_value):
 			continue
 		var chance: Dictionary = _enhancement_chance(kind, level_value, mode)
@@ -2170,6 +2240,8 @@ func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 		var max_gain: int = 3 if mode == "blessed" and level_value <= 2 else (2 if mode == "blessed" and level_value <= 5 else 1)
 		result.append({
 			"name": item_name,
+			"instance_id":instance_id,
+			"target_id":item_name + "@@@" + instance_id,
 			"level": level_value,
 			"safe_level": _safe_enhancement_level(kind),
 			"success_chance": float(chance.get("success", 0.0)),
@@ -2178,7 +2250,7 @@ func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 			"decrease_chance": float(chance.get("decrease", 0.0)),
 			"gain_text": _enhancement_gain_text(mode, level_value),
 			"bonus_text": _enhancement_bonus_text(kind, level_value + max_gain),
-			"equipped": _is_item_equipped(item_name)
+			"equipped": _is_instance_equipped(instance_id)
 		})
 	return result
 
@@ -2341,6 +2413,15 @@ func _is_item_equipped(item_name: String) -> bool:
 	return false
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
+	var selected: Dictionary = _parse_enhancement_target(target_name)
+	var item_id: String = str(selected.get("id", ""))
+	target_name = str(selected.get("name", target_name))
+	_sync_item_instances()
+	if item_id.is_empty():
+		item_id = _chosen_instance(target_name)
+	if not item_instances.has(item_id) or str((item_instances[item_id] as Dictionary).get("name", "")) != target_name:
+		hud.show_message("해당 장비 개체를 찾을 수 없습니다")
+		return
 	var kind: String = _scroll_kind(scroll_name)
 	var mode: String = _scroll_mode(scroll_name)
 	if kind == "":
@@ -2358,7 +2439,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.show_message("이 주문서로 강화할 수 없는 장비입니다")
 		return
 
-	var current_level: int = int(enhancement_levels.get(target_name, 0))
+	var current_level: int = _item_instance_level(item_id, target_name)
 	if not _enhancement_level_allowed(kind, mode, current_level):
 		hud.show_message("현재 강화 단계에는 이 주문서를 사용할 수 없습니다")
 		return
@@ -2380,7 +2461,7 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	if roll < success_chance:
 		var gain: int = _roll_enhancement_gain(mode, current_level)
 		result_level = mini(21, current_level + gain)
-		enhancement_levels[target_name] = result_level
+		item_instances[item_id]["level"] = result_level
 		result_type = "success"
 		hud.show_message("강화 성공! +%d %s" % [result_level, target_name])
 		hud.append_log("강화 성공 · +%d %s" % [result_level, target_name])
@@ -2389,12 +2470,12 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 		hud.append_log("강화 실패(유지) · +%d %s" % [current_level, target_name])
 	elif roll < success_chance + no_change_chance + decrease_chance:
 		result_level = maxi(0, current_level - 1)
-		enhancement_levels[target_name] = result_level
+		item_instances[item_id]["level"] = result_level
 		result_type = "decrease"
 		hud.show_message("강화 실패 · +%d → +%d 하락" % [current_level, result_level])
 		hud.append_log("강화 실패(하락) · %s +%d → +%d" % [target_name, current_level, result_level])
 	else:
-		_destroy_enhancement_target(target_name)
+		_destroy_enhancement_target(target_name, item_id)
 		result_type = "destroy"
 		result_level = 0
 		hud.show_message("강화 실패 · %s 소실" % target_name)
@@ -2413,16 +2494,17 @@ func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
 	else:
 		hud.call("open_enhancement", scroll_name, [])
 
-func _destroy_enhancement_target(item_name: String) -> void:
+func _destroy_enhancement_target(item_name: String, item_id: String = "") -> void:
+	if not item_id.is_empty():
+		item_instances.erase(item_id)
 	var remaining: int = int(inventory.get(item_name, 0)) - 1
 	if remaining > 0:
 		inventory[item_name] = remaining
 	else:
 		inventory.erase(item_name)
-	enhancement_levels.erase(item_name)
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var value: Variant = equipped_items.get(slot, {})
-		if value is Dictionary and str((value as Dictionary).get("name", "")) == item_name:
+		if value is Dictionary and (str((value as Dictionary).get("instance_id", "")) == item_id or (item_id.is_empty() and str((value as Dictionary).get("name", "")) == item_name)):
 			equipped_items[slot] = {}
 
 func _equipment_enhancement_level(slot: String) -> int:
@@ -2432,7 +2514,7 @@ func _equipment_enhancement_level(slot: String) -> int:
 	var record: Dictionary = value as Dictionary
 	if record.is_empty():
 		return 0
-	return int(enhancement_levels.get(str(record.get("name", "")), 0))
+	return _item_instance_level(str(record.get("instance_id", "")), str(record.get("name", "")))
 
 func _equipped_items_snapshot() -> Dictionary:
 	var result: Dictionary = {}
@@ -2441,7 +2523,7 @@ func _equipped_items_snapshot() -> Dictionary:
 		if value is Dictionary:
 			var record: Dictionary = (value as Dictionary).duplicate(true)
 			if not record.is_empty():
-				record["enhance_level"] = int(enhancement_levels.get(str(record.get("name", "")), 0))
+				record["enhance_level"] = _item_instance_level(str(record.get("instance_id", "")), str(record.get("name", "")))
 			result[slot] = record
 		else:
 			result[slot] = {}
@@ -2527,6 +2609,7 @@ func _on_map_selected(map_id: String) -> void:
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
+	_sync_item_instances()
 	hud.update_player(level, hp, _effective_max_hp(), mp, max_mp, experience, exp_need, gold)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
@@ -2548,6 +2631,8 @@ func _update_hud() -> void:
 	character_state["equipped"] = equipped_catalog
 	character_state["equipped_items"] = _equipped_items_snapshot()
 	character_state["enhancement_levels"] = enhancement_levels
+	_sync_item_instances()
+	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
 	character_state["quest_kills"] = quest_kills
 	character_state["quest_goal"] = QUEST_GOAL
@@ -2558,6 +2643,7 @@ func _update_hud() -> void:
 		hud.call("set_quickslot_entries", quickslots)
 
 func _save_game(quiet: bool) -> void:
+	_sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
 		"map_layout_revision": int(field_map.data.get("layout_revision", 0)) if field_map != null else 0,
@@ -2594,6 +2680,8 @@ func _save_game(quiet: bool) -> void:
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
+		"item_instances": item_instances,
+		"next_item_instance_id": next_item_instance_id,
 		"quest_kills": quest_kills
 	}
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -2673,7 +2761,15 @@ func _load_game(quiet: bool) -> void:
 	var enhancement_value: Variant = data.get("enhancement_levels", enhancement_levels)
 	if enhancement_value is Dictionary:
 		enhancement_levels = enhancement_value as Dictionary
+	var raw_instances: Variant = data.get("item_instances", {})
+	item_instances = raw_instances as Dictionary if raw_instances is Dictionary else {}
+	next_item_instance_id = maxi(1, int(data.get("next_item_instance_id", 1)))
+	for instance_key: Variant in item_instances.keys():
+		if str(instance_key).is_valid_int():
+			next_item_instance_id = maxi(next_item_instance_id, int(str(instance_key)) + 1)
 	_normalize_equipment_slots()
+	_attach_missing_equipment_instance_ids()
+	consumable_service.call("migrate_legacy_elemental")
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
@@ -3848,7 +3944,7 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	hud.append_log("%s 적용 · %s" % [category, str(record.get("name", ""))])
 	_update_hud()
 
-func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -> void:
+func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "") -> void:
 	var item_name: String = str(record.get("name", "아이템"))
 	if add_to_inventory:
 		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
@@ -3871,7 +3967,15 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -
 		return
 	if equip_slot != "" and EQUIPMENT_SLOT_ORDER.has(equip_slot):
 		var old_max_hp: int = _effective_max_hp()
+		var selected_id: String = requested_id if requested_id != "" else _chosen_instance(item_name, true)
+		if not item_instances.has(selected_id) or str((item_instances[selected_id] as Dictionary).get("name", "")) != item_name:
+			hud.show_message("착용 가능한 장비 개체가 없습니다")
+			return
+		if _is_instance_equipped(selected_id):
+			hud.show_message("이미 착용한 장비 개체입니다")
+			return
 		equipped_items[equip_slot] = record.duplicate(true)
+		equipped_items[equip_slot]["instance_id"] = selected_id
 		if equip_slot == "weapon":
 			_enforce_shield_weapon_compatibility(false)
 		_refresh_speed_modifiers()
@@ -4138,6 +4242,20 @@ func _place_migrated_equipment(container: Dictionary, record: Dictionary, prefer
 		if base_slot in ["earring", "ring", "seal"]:
 			target_slot = _choose_multi_equipment_slot(base_slot, container)
 	container[target_slot] = record.duplicate(true)
+
+func _attach_missing_equipment_instance_ids() -> void:
+	_sync_item_instances()
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var value: Variant = equipped_items.get(slot, {})
+		if not (value is Dictionary) or (value as Dictionary).is_empty():
+			continue
+		var record: Dictionary = value as Dictionary
+		if not str(record.get("instance_id", "")).is_empty():
+			continue
+		var unique_id: String = _chosen_instance(str(record.get("name", "")), true)
+		if not unique_id.is_empty():
+			record["instance_id"] = unique_id
+			equipped_items[slot] = record
 
 func _normalize_equipment_slots() -> void:
 	var old_items: Dictionary = equipped_items
