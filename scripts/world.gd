@@ -1306,7 +1306,7 @@ func _attack() -> void:
 		_update_target_hud()
 		return
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
-	var damage: int = maxi(1, damage_stat + rng.randi_range(-6, 9))
+	var damage: int = maxi(1, damage_stat + _weapon_size_adjustment(target) + rng.randi_range(-6, 9))
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
@@ -2534,6 +2534,7 @@ func _on_map_selected(map_id: String) -> void:
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
+	_refresh_speed_modifiers()
 	hud.update_player(level, hp, _effective_max_hp(), mp, max_mp, experience, exp_need, gold)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
@@ -4326,7 +4327,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _ranged_normal_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
+	return _ranged_damage_stat()
 
 func _record_move_speed_multiplier(record: Dictionary) -> float:
 	var value: float = float(record.get("speed", 1.0))
@@ -4346,6 +4347,7 @@ func _effective_move_speed_multiplier() -> float:
 		multiplier *= _record_move_speed_multiplier(record)
 	multiplier *= _passive_skill_speed_multiplier()
 	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
+	multiplier *= _inventory_encumbrance_multiplier()
 	return clampf(multiplier, 0.5, 2.5)
 
 func _effective_attack_speed_bonus_percent() -> float:
@@ -4373,22 +4375,22 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(str_stat + _active_skill_buff_total("strFlat"), 10, 2.0) + _active_item_buff_total("melee_damage")
+	return _effective_attack() + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
-	return level + str_stat + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
+	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
-	return level + dex_stat + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(int_stat + _active_skill_buff_total("intFlat"), 8, 2.0) + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
-	return level + int_stat + _active_skill_buff_total("intFlat") + _active_item_buff_total("magic_accuracy")
+	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _equipment_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -4649,7 +4651,7 @@ func _critical_damage(raw_damage: int) -> int:
 	return maxi(1, int(round(float(raw_damage) * 1.5)))
 
 func _effective_ac() -> int:
-	var dex_ac_bonus: int = _stat_step_bonus(dex_stat, 10, 3.0)
+	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	return -(_effective_defense() + dex_ac_bonus)
 
 func _record_dg(record: Dictionary) -> int:
@@ -4671,13 +4673,13 @@ func _record_er(record: Dictionary) -> int:
 	return 0
 
 func _effective_dg() -> int:
-	var total: int = _stat_step_bonus(dex_stat, 10, 4.0)
+	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 4.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_dg(record)
 	return maxi(0, total)
 
 func _effective_er() -> int:
-	var total: int = _stat_step_bonus(dex_stat, 10, 2.0)
+	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 2.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_er(record)
 	return maxi(0, total)
@@ -4692,7 +4694,7 @@ func _record_mr(record: Dictionary) -> int:
 	return 0
 
 func _effective_mr() -> int:
-	var total: int = 10 + level + wis_stat * 2
+	var total: int = 10 + level + _effective_attribute("WIS") * 2
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
@@ -4798,6 +4800,7 @@ func _effective_max_hp() -> int:
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
 	flat_bonus += float(_equipment_enhancement_max(ACCESSORY_EQUIPMENT_SLOTS) * 20)
+	flat_bonus += float(_equipment_attribute_bonus("CON") * 10)
 	flat_bonus += float(_active_skill_buff_total("hp"))
 	flat_bonus += float(_passive_skill_total("hpFlat"))
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
