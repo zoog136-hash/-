@@ -90,8 +90,8 @@ func _run() -> void:
 		_fail("unique glow must be emerald/green dominant")
 	if str(ui.call("_bless_state", {"blessed":true}, "테스트")) != "blessed":
 		_fail("explicit blessed flag not recognized")
-	if str(ui.call("_bless_state", {"cursed":true}, "테스트")) != "cursed":
-		_fail("explicit cursed flag not recognized")
+	if str(ui.call("_bless_state", {"cursed":true}, "테스트")) != "normal":
+		_fail("cursed item state must be removed")
 	if not bool(ui.call("_is_engraved", {}, "무기 마법 주문서 (각인)")):
 		_fail("engraved name marker not recognized")
 
