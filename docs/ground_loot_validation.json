@@ -1,0 +1,181 @@
+{
+  "base_main": "18161dc1ae0b268e660f19e1817983c71e166562",
+  "engine": "Godot 4.7.2",
+  "validated_at": "2026-10-08T23:25:20.360893+00:00",
+  "headless_suites_passed": 36,
+  "ground_loot_assertions": 172,
+  "world_regions": 24,
+  "world_region_assertions": 5882,
+  "viewport_sizes": [
+    [
+      1280,
+      720
+    ],
+    [
+      960,
+      540
+    ],
+    [
+      1920,
+      1080
+    ]
+  ],
+  "camera_zooms": [
+    0.8,
+    1.3
+  ],
+  "input": [
+    "mouse",
+    "native_touch",
+    "pickup_button"
+  ],
+  "live_auto_flow": "ranged hit marker and projectile death -> 3 equipment + 1 potion ground drops -> real physics walk -> sequential pickup with exact inventory quantities -> next monster attack",
+  "rate_changes": false,
+  "tests": [
+    {
+      "name": "actor_motion_test",
+      "passed": true
+    },
+    {
+      "name": "animation_catalog_test",
+      "passed": true
+    },
+    {
+      "name": "animation_restore_test",
+      "passed": true
+    },
+    {
+      "name": "authored_frames_test",
+      "passed": true
+    },
+    {
+      "name": "boot",
+      "passed": true
+    },
+    {
+      "name": "combat_timing_test",
+      "passed": true
+    },
+    {
+      "name": "combat_vfx_test",
+      "passed": true
+    },
+    {
+      "name": "equipment_slot_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "field_world_test",
+      "passed": true
+    },
+    {
+      "name": "flight_lifecycle_test",
+      "passed": true
+    },
+    {
+      "name": "follower_motion_test",
+      "passed": true
+    },
+    {
+      "name": "ground_drop_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "ground_loot_system_test",
+      "passed": true
+    },
+    {
+      "name": "import",
+      "passed": true
+    },
+    {
+      "name": "input_routing_test",
+      "passed": true
+    },
+    {
+      "name": "inventory_db_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "item_buff_description_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "item_db_slot_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "item_weight_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "job_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "lineage_inventory_ui_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "lineage_side_ui_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "loot_balance_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "mobile_scroll_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "monster_motion_test",
+      "passed": true
+    },
+    {
+      "name": "passive_skill_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "quickslot_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "relic_motion_test",
+      "passed": true
+    },
+    {
+      "name": "shield_rules_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "skill_element_integration_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "skill_mechanism_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "speed_option_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "volley_motion_test",
+      "passed": true
+    },
+    {
+      "name": "weapon_rules_smoke_test",
+      "passed": true
+    },
+    {
+      "name": "world_region_portals_test",
+      "passed": true
+    },
+    {
+      "name": "world_regions_test",
+      "passed": true
+    }
+  ],
+  "render_validation": "CI ground-loot workflow; pending rendered evidence review"
+}
