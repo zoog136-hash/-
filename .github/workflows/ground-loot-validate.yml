@@ -1,0 +1,53 @@
+name: Ground Loot Validate
+
+on:
+  push:
+    branches: ['feature/ground-loot-pickup-*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ground-loot-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot and virtual GL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import and ground loot regression
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/ground-loot-tests"
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee loot-import.log
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ground_loot_system_test.gd 2>&1 | tee loot-test.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|GROUND_LOOT FAIL:' loot-import.log loot-test.log; then exit 1; fi
+          grep -q GROUND_LOOT_SYSTEM_OK loot-test.log
+      - name: Render all grades, manual selection and live AUTO approach
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/ground-loot-render"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ground_loot.gd 2>&1 | tee loot-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' loot-render.log; then exit 1; fi
+          grep -q GROUND_LOOT_RENDER_OK loot-render.log
+      - name: Upload ground loot review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ground-loot-review-${{ github.sha }}
+          path: |
+            loot-*.log
+            ${{ runner.temp }}/ground-loot-render/**/ground-loot-review/*.png
+          if-no-files-found: error

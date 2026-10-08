@@ -17,6 +17,10 @@ const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
+const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
+var ground_loot: TwilightGroundLootManager = GROUND_LOOT_MANAGER.new()
+var loot_pickup: TwilightLootPickupController = LOOT_PICKUP_CONTROLLER.new()
 const RELIC_MOTION = preload("res://scripts/animation/relic_motion.gd")
 var relic_motion: TwilightRelicMotion = RELIC_MOTION.new()
 const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
@@ -44,7 +48,7 @@ var portal_cooldown: float = 2.0
 var auto_repath_timer: float = 0.0
 var auto_last_position: Vector2 = Vector2.ZERO
 var pending_ground_pickup: Button = null
-const GROUND_PICKUP_RADIUS: float = 72.0
+const GROUND_PICKUP_RADIUS: float = 60.0
 const AUTO_GROUND_PICKUP_SCAN: float = 460.0
 var auto_stuck_time: float = 0.0
 var region_id: String = ""
@@ -219,6 +223,8 @@ func _ready() -> void:
 	ThemeDB.fallback_font = korean_font
 	rng.randomize()
 	_load_data()
+	ground_loot.configure(self)
+	loot_pickup.configure(self, ground_loot)
 	_connect_signals()
 	_setup_collision_tileset()
 	_setup_field_services()
@@ -243,7 +249,8 @@ func _process(delta: float) -> void:
 		auto_stuck_time = 0.0
 	auto_last_position = player.global_position
 	_update_field_triggers()
-	_tick_manual_ground_pickup()
+	ground_loot.tick(delta)
+	loot_pickup.tick(delta)
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
@@ -517,6 +524,8 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	field_renderer = null
 	field_physics = null
 	field_map = null
+	loot_pickup.map_changed()
+	ground_loot.hide_map()
 	active_map_id = map_id
 	active_map = maps_by_id[map_id] as Dictionary
 	tile_size = int(active_map.get("tile_size_world", 32))
@@ -526,7 +535,6 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	player.camera.limit_right = maxi(1, int(world_size.x))
 	player.camera.limit_bottom = maxi(1, int(world_size.y))
 	_clear_monsters()
-	_clear_drops()
 	pending_ground_pickup = null
 	for shape: Node in map_collision.get_children():
 		map_collision.remove_child(shape)
@@ -580,6 +588,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	portal_cooldown = 2.0
 	region_id = ""
 	auto_repath_timer = 0.0
+	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
 
 func _apply_map_background() -> void:
@@ -726,6 +735,7 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	return origin
 
 func _set_click_destination(target: Vector2) -> void:
+	loot_pickup.cancel()
 	if field_map != null:
 		for npc: Dictionary in field_map.data["npc_spawn"]:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
@@ -814,10 +824,8 @@ func _clear_monsters() -> void:
 		child.queue_free()
 
 func _clear_drops() -> void:
-	pending_ground_pickup = null
-	for child: Node in drops_root.get_children():
-		drops_root.remove_child(child)
-		child.queue_free()
+	loot_pickup.cancel()
+	ground_loot.clear_map(active_map_id)
 
 func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
 	var chance_percent: float = 75.0 + float(attacker_magic_accuracy - maxi(0, target_mr)) * 0.7
@@ -1495,134 +1503,38 @@ func _drop_grade_color(grade: String) -> Color:
 		_:
 			return Color("eeeeee")
 
-func _spawn_ground_drop(item_name: String, world_position: Vector2) -> Button:
-	if item_name.is_empty():
-		return null
-	var record: Dictionary = _find_catalog_item_record(item_name)
-	var grade: String = str(record.get("grade", "일반"))
-	var drop: Button = Button.new()
-	drop.name = "GroundDrop"
-	drop.text = "◆ " + item_name
-	drop.flat = true
-	drop.focus_mode = Control.FOCUS_NONE
-	drop.mouse_filter = Control.MOUSE_FILTER_STOP
-	drop.custom_minimum_size = Vector2(152, 30)
-	drop.position = world_position + Vector2(-76.0, -38.0)
-	drop.z_index = 20
-	drop.add_theme_font_size_override("font_size", 17)
-	drop.add_theme_color_override("font_color", _drop_grade_color(grade))
-	drop.add_theme_color_override("font_hover_color", _drop_grade_color(grade))
-	drop.set_meta("item_name", item_name)
-	drop.set_meta("world_position", world_position)
-	drop.set_meta("grade", grade)
-	drop.tooltip_text = "%s · %s · 눌러서 줍기" % [item_name, grade]
-	drops_root.add_child(drop)
-	drop.pressed.connect(_on_ground_drop_clicked.bind(drop))
-	return drop
+func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: int = 1, source_batch: String = "") -> Button:
+	return ground_loot.spawn(item_name, world_position, quantity, source_batch)
 
 func _collect_ground_drop(drop: Button) -> bool:
-	if not is_instance_valid(drop) or drop.is_queued_for_deletion() or drop.get_parent() != drops_root:
-		return false
-	if player.global_position.distance_to(drop.get_meta("world_position", drop.global_position)) > GROUND_PICKUP_RADIUS:
-		return false
-	var item_name: String = str(drop.get_meta("item_name", ""))
-	if item_name.is_empty():
-		return false
-	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
-	if pending_ground_pickup == drop:
-		pending_ground_pickup = null
-	drops_root.remove_child(drop)
-	drop.queue_free()
+	if player.is_stunned() or player.is_feared() or player.is_held(): return false
+	var record: Dictionary = ground_loot.take(drop, player.global_position, GROUND_PICKUP_RADIUS)
+	if record.is_empty(): return false
+	var item_name: String = str(record["item_name"])
+	var quantity: int = int(record["quantity"])
+	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.refresh_inventory(inventory)
-	hud.append_log("%s 습득" % item_name)
+	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	_update_hud()
 	return true
 
 func _on_ground_drop_clicked(drop: Button) -> void:
-	if not is_instance_valid(drop) or drop.get_parent() != drops_root:
-		return
-	if player.is_stunned() or player.is_feared() or player.is_held():
-		hud.show_message("이동 불가 상태에서는 아이템을 주울 수 없습니다")
-		return
-	if _collect_ground_drop(drop):
-		player.clear_click_path()
-		return
-	var destination: Vector2 = drop.get_meta("world_position", drop.global_position)
-	var path: PackedVector2Array = find_world_path(player.global_position, destination)
-	if path.is_empty():
-		hud.show_message("아이템까지 이동할 경로가 없습니다")
-		return
-	player.set_click_path(path, destination)
-	pending_ground_pickup = drop
-	hud.show_message("아이템 위치로 이동합니다")
+	loot_pickup.select(drop)
 
 func _tick_manual_ground_pickup() -> void:
-	if not is_instance_valid(pending_ground_pickup):
-		pending_ground_pickup = null
-		return
-	if player.auto_enabled or player.is_stunned() or player.is_feared() or player.is_held():
-		return
-	if _collect_ground_drop(pending_ground_pickup):
-		player.clear_click_path()
+	loot_pickup.tick(0.0)
 
 func _run_auto_ground_pickup() -> bool:
-	if player.is_held():
-		return false
-	var nearest: Button = null
-	var nearest_distance: float = AUTO_GROUND_PICKUP_SCAN
-	for child: Node in drops_root.get_children():
-		if not (child is Button) or child.is_queued_for_deletion():
-			continue
-		var drop: Button = child as Button
-		var drop_position: Vector2 = drop.get_meta("world_position", drop.global_position)
-		var distance: float = player.global_position.distance_to(drop_position)
-		if distance < nearest_distance:
-			nearest_distance = distance
-			nearest = drop
-	if nearest == null:
-		return false
-	if nearest_distance <= GROUND_PICKUP_RADIUS:
-		_collect_ground_drop(nearest)
-		player.clear_click_path()
-		return true
-	var destination: Vector2 = nearest.get_meta("world_position", nearest.global_position)
-	# Do not interrupt valid movement every frame. A repath is only requested
-	# periodically, as with monster chasing.
-	if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
-		var path: PackedVector2Array = find_world_path(player.global_position, destination)
-		if path.is_empty():
-			return false
-		auto_repath_timer = 0.65
-		player.set_click_path(path, destination)
-	return true
+	return loot_pickup.run_auto()
 
 func _ground_drops_snapshot() -> Array:
-	var result: Array = []
-	for child: Node in drops_root.get_children():
-		if not (child is Button) or child.is_queued_for_deletion():
-			continue
-		var drop: Button = child as Button
-		var where: Vector2 = drop.get_meta("world_position", drop.global_position)
-		result.append({"item_name":str(drop.get_meta("item_name", "")), "position":[where.x, where.y]})
-	return result
+	return ground_loot.snapshot()
 
 func _restore_ground_drops(saved: Variant) -> void:
-	_clear_drops()
-	if not (saved is Array):
-		return
-	for value: Variant in saved as Array:
-		if not (value is Dictionary):
-			continue
-		var entry: Dictionary = value as Dictionary
-		var position_value: Variant = entry.get("position", [])
-		if not (position_value is Array) or (position_value as Array).size() < 2:
-			continue
-		var pos_array: Array = position_value as Array
-		var position_value2: Vector2 = Vector2(float(pos_array[0]), float(pos_array[1]))
-		if not _is_walkable_world(position_value2):
-			continue
-		_spawn_ground_drop(str(entry.get("item_name", "")), position_value2)
+	loot_pickup.map_changed()
+	ground_loot.restore(saved)
 
 func _roll_drop(monster: TwilightMonster) -> void:
 	if monster == null or not is_instance_valid(monster):
@@ -1630,10 +1542,10 @@ func _roll_drop(monster: TwilightMonster) -> void:
 	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng)
 	if earned.is_empty():
 		return
+	var batch_id: String = ground_loot.begin_hunt_batch()
 	for index: int in range(earned.size()):
 		var item_name: String = earned[index]
-		var drop_position: Vector2 = monster.global_position + Vector2(float((index % 3) - 1) * 15.0, float(index / 3) * 18.0)
-		_spawn_ground_drop(item_name, drop_position)
+		_spawn_ground_drop(item_name, monster.global_position, 1, batch_id)
 	hud.show_message("아이템 %d개가 바닥에 떨어졌습니다" % earned.size())
 
 
@@ -2516,6 +2428,7 @@ func _return_to_spawn() -> void:
 	hud.show_message("현재 지역 시작 지점으로 귀환했습니다")
 
 func _on_auto_toggled(enabled: bool) -> void:
+	loot_pickup.cancel()
 	hud.set_auto(enabled)
 	if not enabled:
 		auto_target = null
@@ -4992,3 +4905,7 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
 	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)
 	if critical: player.motion.visual_hold = 0.028
+
+func _notification(what: int) -> void:
+	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
+		_save_game(true)

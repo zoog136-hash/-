@@ -29,6 +29,9 @@ func _run() -> void:
 	_check(is_instance_valid(drop) and drops.get_child_count() == 1, "visible ground item is not spawned")
 	_check(int(inventory.get("HP 물약", 0)) == initial_count, "ground item was prematurely granted to inventory")
 	_check(not bool(drop.is_queued_for_deletion()), "ground item expired before pickup")
+	drop.set("visible_since", Time.get_ticks_msec() - 900)
+	drop.pressed.emit()
+	_check(int(inventory.get("HP 물약", 0)) == initial_count, "selection prematurely grants an item")
 	drop.pressed.emit()
 	_check(int(inventory.get("HP 물약", 0)) == initial_count + 1, "click did not collect item within pickup radius")
 	_check(drops.get_child_count() == 0, "picked-up ground item was not removed")
@@ -52,6 +55,8 @@ func _run() -> void:
 	if far_point != Vector2.ZERO:
 		var distant: Button = world.call("_spawn_ground_drop", "HP 물약", far_point) as Button
 		var before_click: int = int(inventory.get("HP 물약", 0))
+		distant.set("visible_since", Time.get_ticks_msec() - 900)
+		distant.pressed.emit()
 		distant.pressed.emit()
 		_check(int(inventory.get("HP 물약", 0)) == before_click, "distant click bypassed pickup radius")
 		_check(is_instance_valid(world.get("pending_ground_pickup")), "distant click did not start walking to item")
@@ -69,10 +74,13 @@ func _run() -> void:
 	if far_point != Vector2.ZERO:
 		player.global_position = far_point
 	var auto_drop: Button = world.call("_spawn_ground_drop", "HP 물약", player.global_position + Vector2(13, 0)) as Button
+	auto_drop.set("visible_since", Time.get_ticks_msec() - 900)
+	player.set_auto_enabled(true)
 	var auto_before: int = int(inventory.get("HP 물약", 0))
 	_check(bool(world.call("_run_auto_ground_pickup")), "AUTO did not find nearby ground drop")
 	_check(int(inventory.get("HP 물약", 0)) == auto_before + 1, "AUTO ground pickup did not grant loot")
 	_check(drops.get_child_count() == 0, "AUTO collected item was not removed")
+	player.set_auto_enabled(false)
 	player.global_position = auto_origin
 
 	# Explicit save/reload-style snapshot must preserve dropped items without
