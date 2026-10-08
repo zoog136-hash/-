@@ -1,0 +1,48 @@
+name: Twilight Item Options Runtime
+
+on:
+  push:
+    branches: ['codex/item-options-runtime-*']
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/item_options.gd'
+      - 'scripts/world.gd'
+      - 'tests/item_options_runtime_smoke_test.gd'
+      - '.github/workflows/item-options-validate.yml'
+  workflow_dispatch:
+
+jobs:
+  item-options:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Godot import and parse
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee item-import.log
+          if grep -E "SCRIPT ERROR:|ERROR:" item-import.log; then exit 1; fi
+      - name: Item option runtime checks
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_options_runtime_smoke_test.gd 2>&1 | tee item-options.log
+          if grep -E "SCRIPT ERROR:|ERROR:|ITEM_OPTIONS_FAIL:|ITEM_OPTIONS_SMOKE_FAILED" item-options.log; then exit 1; fi
+          grep -q "ITEM_OPTIONS_SMOKE_OK" item-options.log
+      - name: Existing equipment regression
+        shell: bash
+        run: |
+          set -o pipefail
+          for test in equipment_slot_smoke_test inventory_db_smoke_test weapon_rules_smoke_test speed_option_smoke_test item_buff_description_smoke_test ground_drop_smoke_test skill_element_integration_smoke_test; do
+            ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
+            if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|GROUND_DROP_FAIL:|ELEMENT INTEGRATION FAIL:" "${test}.log"; then exit 1; fi
+            grep -q "_OK" "${test}.log"
+          done
