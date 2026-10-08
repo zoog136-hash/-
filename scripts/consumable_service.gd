@@ -189,19 +189,18 @@ func _use_return(item_name: String) -> void:
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 귀환할 수 없습니다")
 		return
+	if not (world.get("maps_by_id") as Dictionary).has("aden_world"):
+		_message("귀환 가능한 마을을 찾을 수 없습니다")
+		return
+	if str(world.get("active_map_id")) != "aden_world":
+		world.call("_set_map", "aden_world", false)
 	var place: Vector2 = _safe_region_position()
 	if place != Vector2.INF:
 		_teleport_player(place)
 	else:
-		if not (world.get("maps_by_id") as Dictionary).has("aden_world"):
-			_message("귀환 가능한 마을을 찾을 수 없습니다")
-			return
-		world.call("_set_map", "aden_world", false)
-		place = _safe_region_position()
-		if place != Vector2.INF:
-			_teleport_player(place)
+		_teleport_player(world.call("_spawn_position"))
 	_consume(item_name)
-	_message("마을로 귀환했습니다")
+	_message("아덴 마을로 귀환했습니다")
 
 func _random_destination() -> Vector2:
 	var field: Variant = world.get("field_map")
