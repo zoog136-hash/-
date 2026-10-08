@@ -13,6 +13,11 @@ signal selected(monster: TwilightMonster)
 @onready var hp_bar: ProgressBar = $HPBar
 
 var monster_name: String = "몬스터"
+var monster_type: String = ""
+var undead: bool = false
+var element_resistance: Dictionary = {}
+var attack_element: String = "physical"
+var damage_hit_count: int = 0
 var monster_level: int = 1
 var defense_value: int = 0
 var armor_class: int = -10
@@ -61,6 +66,9 @@ var bleed_remaining: float = 0.0
 var bleed_tick_clock: float = 0.0
 var attack_type: String = "melee"
 var move_speed: float = 90.0
+var base_move_speed: float = 90.0
+var slow_remaining: float = 0.0
+var slow_multiplier: float = 1.0
 var exp_reward: int = 25
 var gold_reward: int = 40
 var grade: String = "일반"
@@ -80,6 +88,11 @@ var roam_clock: float = 0.0
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
 	monster_name = str(record.get("name", "몬스터"))
+	monster_type = str(record.get("type", record.get("race", "")))
+	undead = bool(record.get("undead", monster_type == "언데드"))
+	var raw_resistance: Variant = record.get("element_resistance", {})
+	element_resistance = (raw_resistance as Dictionary).duplicate(true) if raw_resistance is Dictionary else {}
+	attack_element = str(record.get("attack_element", "physical"))
 	monster_level = maxi(1, int(record.get("lv", record.get("level", 1))))
 	defense_value = maxi(0, int(record.get("def", record.get("defense", record.get("방어력", 0)))))
 	var default_ac: int = -(10 + monster_level + defense_value * 2)
@@ -145,6 +158,9 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			if not item_name.is_empty():
 				drop_items.append(item_name)
 	move_speed = float(record.get("speed", 70.0 + float(mini(70, int(float(max_hp) / 10.0)))))
+	base_move_speed = move_speed
+	slow_remaining = 0.0
+	slow_multiplier = 1.0
 	target_player = player_ref
 	world_controller = world_ref
 	sprite.texture = texture
@@ -171,6 +187,7 @@ func _physics_process(delta: float) -> void:
 	_tick_fear(delta)
 	_tick_poison(delta)
 	_tick_bleed(delta)
+	_tick_slow(delta)
 	if dead:
 		velocity = Vector2.ZERO
 		return
@@ -202,6 +219,12 @@ func _physics_process(delta: float) -> void:
 	# Avoid line sampling to every distant monster on every physics tick.
 	var has_sight: bool = distance <= attack_range and world_controller._has_line_of_sight_world(global_position,target_player.global_position)
 	var field_active: bool = world_controller.field_map != null
+	if world_controller != null and world_controller.has_method("is_player_concealed") and world_controller.call("is_player_concealed"):
+		if field_active:
+			_roam_field(delta)
+		else:
+			_stop_chasing_concealed_player()
+		return
 	if field_active and (world_controller.field_map.is_safe(target_player.global_position) or distance > 550.0 or target_player.global_position.distance_to(home_position) > 1050.0):
 		_roam_field(delta)
 		return
@@ -243,6 +266,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if absf(velocity.x) > 1.0:
 		sprite.flip_h = velocity.x < 0.0
+
+func _stop_chasing_concealed_player() -> void:
+	velocity = Vector2.ZERO
+	path = PackedVector2Array()
+	path_index = 0
 
 func _roam_field(delta: float) -> void:
 	if is_held():
@@ -437,9 +465,32 @@ func critical_rate_for_type(kind: String) -> int:
 		_:
 			return melee_critical_rate
 
+func apply_slow(duration: float, multiplier: float = 0.65) -> void:
+	if dead:
+		return
+	slow_remaining = maxf(slow_remaining, maxf(0.0, duration))
+	slow_multiplier = minf(slow_multiplier, clampf(multiplier, 0.2, 1.0))
+	move_speed = base_move_speed * slow_multiplier
+	show_status_text("SLOW")
+
+func _tick_slow(delta: float) -> void:
+	if slow_remaining <= 0.0:
+		return
+	slow_remaining = maxf(0.0, slow_remaining - delta)
+	if slow_remaining <= 0.0:
+		slow_multiplier = 1.0
+	move_speed = base_move_speed * slow_multiplier
+
+func is_undead() -> bool:
+	return undead or monster_type == "언데드"
+
+func elemental_resistance_percent(element_name: String) -> float:
+	return float(element_resistance.get(element_name, 0.0))
+
 func take_damage(amount: int, critical: bool = false) -> void:
 	if dead:
 		return
+	damage_hit_count += 1
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
 	_show_damage_number(amount, critical)

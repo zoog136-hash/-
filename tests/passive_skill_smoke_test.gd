@@ -33,8 +33,8 @@ func _run() -> void:
 			_fail("invalid or missing activation: " + str(skill.get("name","")))
 		if activation == "passive":
 			passive_count += 1
-	if passive_count <= 0:
-		_fail("no passive skills marked in DB")
+	if passive_count != 40:
+		_fail("expected 40 reclassified passives, found %d" % passive_count)
 
 	var focus: Dictionary = world.call("_skill_record", "멘탈 포커스")
 	if focus.is_empty():
@@ -50,9 +50,9 @@ func _run() -> void:
 		var enhance: int = int(world.call("_equipment_enhancement_level", "weapon"))
 		var active_bonus: int = int(world.call("_active_skill_buff_total", "atk"))
 		var passive_bonus: int = int(world.call("_passive_skill_total", "atk"))
-		if passive_bonus != 4:
-			_fail("요정 멘탈 포커스 passive attack should be +4")
-		var expected_attack: int = base_attack + equipment_bonus + enhance + active_bonus + 4
+		if passive_bonus != 14:
+			_fail("요정 멘탈 포커스 + 집중 passive should total +14")
+		var expected_attack: int = base_attack + equipment_bonus + enhance + active_bonus + passive_bonus
 		if int(world.call("_effective_attack")) != expected_attack:
 			_fail("passive attack bonus was not automatically applied")
 		var expected_ranged: int = expected_attack + int(world.call("_stat_step_bonus", int(world.get("dex_stat")), 10, 2.0)) + int(world.call("_active_item_buff_total", "ranged_damage"))
@@ -73,8 +73,8 @@ func _run() -> void:
 				_fail("passive skill appeared in active quickbar list")
 
 	world.call("_on_job_class_selected", "기사")
-	if int(world.call("_passive_skill_total", "atk")) != 0:
-		_fail("요정 passive remained active after switching to 기사")
+	if int(world.call("_passive_skill_total", "atk")) != 10:
+		_fail("기사 집중 should replace 요정 passive attack after class switch")
 
 	var active_skill: Dictionary = world.call("_skill_record", "에너지 볼트")
 	if active_skill.is_empty() or bool(world.call("_is_passive_skill", active_skill)):

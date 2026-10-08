@@ -15,7 +15,9 @@ const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
+const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 
 var field_map: PlayableField = null
 var field_renderer: FieldRenderer = null
@@ -44,13 +46,15 @@ var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var maps: Array = []
 var maps_by_id: Dictionary = {}
 var game_db: Dictionary = {}
+var loot_catalog: Dictionary = {}
 var monster_db: Array = []
 var item_db: Array = []
-var loot_catalog: Dictionary = {}
 var skills_db: Array = []
 var job_classes: Array = []
 var job_class: String = "기사"
 var active_skill_buffs: Dictionary = {}
+var skill_cooldowns: Dictionary = {}
+var skill_global_cooldown: float = 0.0
 var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
 var quickslots: Array = []
@@ -77,6 +81,12 @@ var tile_size: int = 32
 var selected_monster: TwilightMonster = null
 var auto_target: TwilightMonster = null
 var auto_attack_timer: float = 0.0
+# Charge movement is advanced locally; field map/path scripts are never mutated.
+var charge_route: PackedVector2Array = PackedVector2Array()
+var charge_route_index: int = 0
+var charge_target: TwilightMonster = null
+var charge_skill: Dictionary = {}
+var charge_speed: float = 1150.0
 var save_timer: float = 0.0
 var collision_debug: bool = false
 var quest_kills: int = 0
@@ -216,13 +226,16 @@ func _process(delta: float) -> void:
 	_update_field_triggers()
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
+	_tick_skill_cooldowns(delta)
+	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	_run_auto_buff_quickslots(delta)
 	save_timer += delta
 	if save_timer >= 30.0:
 		save_timer = 0.0
 		_save_game(true)
-	if player.auto_enabled and not player.is_stunned():
+	if player.auto_enabled and not player.is_stunned() and charge_skill.is_empty():
+		_run_auto_heal_quickslots()
 		_run_auto_hunt()
 	_update_companion(delta)
 	if Input.is_action_just_pressed("open_inventory"):
@@ -1171,7 +1184,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
-	if player.is_stunned() or player.is_feared():
+	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
 	if auto_attack_timer > 0.0:
 		return
@@ -1192,6 +1205,7 @@ func _attack() -> void:
 		return
 	selected_monster = target
 	auto_attack_timer = _normal_attack_interval()
+	_break_invisibility()
 	player.pulse_attack()
 	var hit_chance: float = _normal_attack_hit_chance(target, attack_kind)
 	if rng.randf() >= hit_chance:
@@ -1210,7 +1224,10 @@ func _attack() -> void:
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _critical_damage(damage)
+	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	target.take_damage(damage, critical)
+	_try_trigger_passives("on_hit", target)
+	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
 		target.monster_name, damage,
 		"원거리" if attack_kind == "ranged" else "근거리",
@@ -1224,6 +1241,9 @@ func _run_auto_hunt() -> void:
 	if player.is_stunned() or player.is_feared():
 		player.clear_click_path()
 		return
+	if not charge_skill.is_empty():
+		player.clear_click_path()
+		return
 	if not is_instance_valid(auto_target) or auto_target.dead:
 		auto_target = _nearest_reachable_monster(99999.0)
 	if auto_target == null:
@@ -1231,32 +1251,37 @@ func _run_auto_hunt() -> void:
 		player.clear_click_path()
 		return
 	selected_monster = auto_target
-	var distance: float = player.global_position.distance_to(auto_target.global_position)
-	if _target_in_current_weapon_range(auto_target) and _has_line_of_sight_world(player.global_position, auto_target.global_position):
+	var can_see: bool = _has_line_of_sight_world(player.global_position, auto_target.global_position)
+	# A registered, ready skill uses its own range even when the equipped weapon
+	# cannot reach the monster. Offensive skills always precede normal attacks.
+	if can_see and _run_auto_combat_quickslots():
+		player.clear_click_path()
+		return
+	if _target_in_current_weapon_range(auto_target) and can_see:
 		player.clear_click_path()
 		if auto_attack_timer <= 0.0:
 			_attack()
-	else:
-		if player.is_held():
+		return
+	if player.is_held():
+		player.clear_click_path()
+		return
+	if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
+		auto_repath_timer = 0.65
+		if auto_stuck_time > 2.0:
+			auto_target = null
 			player.clear_click_path()
+			auto_stuck_time = 0.0
 			return
-		if player.click_path.is_empty() or player.path_index >= player.click_path.size() or auto_repath_timer <= 0.0:
-			auto_repath_timer = 0.65
-			if auto_stuck_time > 2.0:
-				auto_target = null
+		var path: PackedVector2Array = find_world_path(player.global_position, auto_target.global_position)
+		if path.is_empty():
+			auto_target = _nearest_reachable_monster(99999.0)
+			if auto_target == null:
+				selected_monster = null
 				player.clear_click_path()
-				auto_stuck_time = 0.0
 				return
-			var path: PackedVector2Array = find_world_path(player.global_position, auto_target.global_position)
-			if path.is_empty():
-				auto_target = _nearest_reachable_monster(99999.0)
-				if auto_target == null:
-					selected_monster = null
-					player.clear_click_path()
-					return
-				selected_monster = auto_target
-				path = find_world_path(player.global_position, auto_target.global_position)
-			player.set_click_path(path, auto_target.global_position)
+			selected_monster = auto_target
+			path = find_world_path(player.global_position, auto_target.global_position)
+		player.set_click_path(path, auto_target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
 	var best: TwilightMonster = null
@@ -1343,6 +1368,7 @@ func _update_target_hud() -> void:
 		hud.clear_target()
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	_try_trigger_passives("on_kill", monster)
 	if field_map != null:
 		field_population.release(monster)
 	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier())))
@@ -1502,8 +1528,19 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
+	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
+	if attack_element != "physical":
+		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
 	hp = maxi(0, hp - reduced)
+	if hp > 0:
+		_try_active_counterattack(attacker, normalized_type, reduced)
+	if attacker.dead:
+		player.show_received_damage(reduced, critical)
+		_update_hud()
+		return
+	if hp > 0:
+		_try_trigger_passives("on_damaged", attacker)
 	player.show_received_damage(reduced, critical)
 	if normalized_type == "magic":
 		hud.append_log("%s에게 %d 마법 피해%s · 피격률 %.1f%% · 치명타 %.1f%% · MR %d" % [
@@ -2329,6 +2366,8 @@ func _save_game(quiet: bool) -> void:
 		"quickslots": quickslots,
 		"self_mode_enabled": self_mode_enabled,
 		"active_skill_buffs": active_skill_buffs,
+		"skill_cooldowns": skill_cooldowns,
+		"skill_global_cooldown": skill_global_cooldown,
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
 		"equipped_catalog": equipped_catalog,
@@ -2391,6 +2430,9 @@ func _load_game(quiet: bool) -> void:
 	self_mode_enabled = bool(data.get("self_mode_enabled", self_mode_enabled))
 	var skill_buffs_value: Variant = data.get("active_skill_buffs", {})
 	active_skill_buffs = skill_buffs_value as Dictionary if skill_buffs_value is Dictionary else {}
+	var skill_cooldowns_value: Variant = data.get("skill_cooldowns", {})
+	skill_cooldowns = skill_cooldowns_value as Dictionary if skill_cooldowns_value is Dictionary else {}
+	skill_global_cooldown = maxf(0.0, float(data.get("skill_global_cooldown", 0.0)))
 	var item_buffs_value: Variant = data.get("active_item_buffs", {})
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
@@ -2412,6 +2454,7 @@ func _load_game(quiet: bool) -> void:
 	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
+	_refresh_skill_stealth_visual()
 	hp = clampi(hp, 0, _effective_max_hp())
 	mp = clampi(mp, 0, max_mp)
 	var map_id: String = str(data.get("map_id", active_map_id))
@@ -2543,6 +2586,7 @@ func _ensure_job_class_visual() -> void:
 func _on_job_class_selected(job_name: String) -> void:
 	if not JOB_CLASS_ORDER.has(job_name):
 		return
+	_clear_skill_charge()
 	job_class = job_name
 	var record: Dictionary = _job_transform_record(job_class)
 	if not record.is_empty():
@@ -2551,6 +2595,7 @@ func _on_job_class_selected(job_name: String) -> void:
 	_enforce_weapon_class_compatibility(false)
 	_enforce_shield_weapon_compatibility(false)
 	_prune_active_skill_buffs_for_current_job()
+	_refresh_skill_stealth_visual()
 	_refresh_speed_modifiers()
 	_update_job_skillbar()
 	hud.show_message("직업 변경: %s" % job_class)
@@ -2588,7 +2633,7 @@ func _quickbar_job_skills() -> Array:
 		if _is_passive_skill(skill):
 			continue
 		var effect: String = str(skill.get("effect", ""))
-		if effect not in ["damage", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport"]:
+		if effect not in ["damage", "turnUndead", "charge", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport", "invisibility", "stun", "silence", "poison", "bleed", "hold", "fear"]:
 			continue
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class == job_class:
@@ -2735,13 +2780,17 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 	if slot_index < 0 or slot_index >= 8:
 		return
 	_normalize_quickslots()
-	if entry_kind == "skill":
+	var is_auto_skill: bool = entry_kind == "skill_auto"
+	if entry_kind == "skill" or is_auto_skill:
 		var skill: Dictionary = _skill_record(entry_id)
 		if skill.is_empty():
 			hud.show_message("등록할 스킬을 찾을 수 없습니다")
 			return
 		if _is_passive_skill(skill):
 			hud.show_message("%s은(는) 패시브 스킬이라 퀵슬롯 등록이 필요 없습니다" % entry_id)
+			return
+		if is_auto_skill and not SKILL_RULES.can_auto_cast(skill):
+			hud.show_message("%s은(는) 자동 공격/회복용 스킬이 아닙니다" % entry_id)
 			return
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class != "공용" and skill_class != job_class:
@@ -2753,7 +2802,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 			return
 	else:
 		return
-	quickslots[slot_index] = {"kind":entry_kind, "id":entry_id}
+	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
 	_update_hud()
 	_save_game(true)
 
@@ -2803,7 +2852,7 @@ func _skill_activation(skill: Dictionary) -> String:
 	return "active"
 
 func _is_passive_skill(skill: Dictionary) -> bool:
-	return _skill_activation(skill) == "passive"
+	return SKILL_RULES.is_passive(skill)
 
 func _skill_owned_for_current_job(skill: Dictionary) -> bool:
 	var skill_class: String = str(skill.get("class", "공용"))
@@ -2815,7 +2864,7 @@ func _passive_skill_total(key: String) -> int:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
-		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		total += int(skill.get(key, 0))
 	return total
@@ -2826,7 +2875,7 @@ func _passive_skill_speed_multiplier() -> float:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
-		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		multiplier = maxf(multiplier, float(skill.get("speed", 1.0)))
 	return multiplier
@@ -2841,10 +2890,7 @@ func _passive_skill_names() -> PackedStringArray:
 	return names
 
 func _is_buff_skill(skill: Dictionary) -> bool:
-	if _is_passive_skill(skill):
-		return false
-	var effect: String = str(skill.get("effect", ""))
-	return effect in ["atkBuff", "defBuff", "hpBuff", "speedBuff"]
+	return not _is_passive_skill(skill) and SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
 
 func _run_auto_buff_quickslots(delta: float) -> void:
 	if self_mode_enabled:
@@ -2865,15 +2911,209 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 		if skill_name == "" or active_skill_buffs.has(skill_name):
 			continue
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or not _is_buff_skill(skill):
+		if skill.is_empty() or not _is_buff_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
-		var skill_class: String = str(skill.get("class", "공용"))
-		if skill_class != "공용" and skill_class != job_class:
+		if not _skill_ready(skill):
 			continue
-		if mp < maxi(0, int(skill.get("mp", 0))):
+		if _cast_job_skill(skill_name):
+			break
+
+
+func _tick_skill_cooldowns(delta: float) -> void:
+	skill_global_cooldown = maxf(0.0, skill_global_cooldown - delta)
+	var expired: Array[String] = []
+	for key_value: Variant in skill_cooldowns.keys():
+		var key: String = str(key_value)
+		var remaining: float = maxf(0.0, float(skill_cooldowns.get(key, 0.0)) - delta)
+		if remaining <= 0.0:
+			expired.append(key)
+		else:
+			skill_cooldowns[key] = remaining
+	for key: String in expired:
+		skill_cooldowns.erase(key)
+
+func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	var skill_name: String = str(skill.get("name", ""))
+	if _is_passive_skill(skill):
+		if announce:
+			hud.show_message("%s은(는) 상시 패시브입니다" % skill_name)
+		return false
+	if not _skill_owned_for_current_job(skill):
+		if announce:
+			hud.show_message("%s 직업에서 사용할 수 없는 스킬입니다" % job_class)
+		return false
+	if not SKILL_RULES.is_supported(SKILL_RULES.effect_kind(skill)):
+		if announce:
+			hud.show_message("%s · 효과 구현 전입니다" % skill_name)
+		return false
+	var required_value: Variant = skill.get("required_weapons", [])
+	if required_value is Array and not (required_value as Array).is_empty():
+		if not (required_value as Array).has(_current_weapon_type()):
+			if announce:
+				hud.show_message("%s · 현재 무기로 사용할 수 없는 스킬입니다" % skill_name)
+			return false
+	var required_ammo: int = maxi(0, int(skill.get("ammo_per_hit", 0))) * maxi(1, int(skill.get("hits", 1)))
+	if required_ammo > 0 and int(inventory.get("화살", 0)) < required_ammo:
+		if announce:
+			hud.show_message("%s · 화살 %d개 필요" % [skill_name, required_ammo])
+		return false
+	if not charge_skill.is_empty() or player.is_stunned() or player.is_feared() or (player.is_silenced() and int(skill.get("mp", 0)) > 0):
+		if announce:
+			hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
+		return false
+	if skill_global_cooldown > 0.0 or float(skill_cooldowns.get(skill_name, 0.0)) > 0.0:
+		if announce:
+			hud.show_message("%s 재사용 대기 %s" % [skill_name, _format_seconds_short(maxf(skill_global_cooldown, float(skill_cooldowns.get(skill_name, 0.0))))])
+		return false
+	if mp < maxi(0, int(skill.get("mp", 0))):
+		if announce:
+			hud.show_message("MP가 부족합니다")
+		return false
+	return true
+
+func _start_skill_cooldown(skill: Dictionary) -> void:
+	var name_value: String = str(skill.get("name", ""))
+	var cooldown: float = SKILL_RULES.cooldown_seconds(skill)
+	if cooldown > 0.0:
+		skill_cooldowns[name_value] = cooldown
+	skill_global_cooldown = maxf(skill_global_cooldown, SKILL_RULES.global_cooldown_seconds(skill))
+
+func _run_auto_heal_quickslots() -> void:
+	for value: Variant in quickslots:
+		if not (value is Dictionary):
 			continue
-		_cast_job_buff_skill(skill)
-		break
+		var entry: Dictionary = value as Dictionary
+		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
+			continue
+		var skill: Dictionary = _skill_record(str(entry.get("id", "")))
+		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
+			continue
+		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
+			continue
+		if _skill_ready(skill):
+			_cast_job_skill(str(skill.get("name", "")))
+			return
+
+func _run_auto_combat_quickslots() -> bool:
+	if not is_instance_valid(selected_monster) or selected_monster.dead:
+		return false
+	for value: Variant in quickslots:
+		if not (value is Dictionary):
+			continue
+		var entry: Dictionary = value as Dictionary
+		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
+			continue
+		var skill_name: String = str(entry.get("id", ""))
+		var skill: Dictionary = _skill_record(skill_name)
+		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal":
+			continue
+		if not _skill_ready(skill):
+			continue
+		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
+			continue
+		if not _has_line_of_sight_world(player.global_position, selected_monster.global_position):
+			continue
+		if SKILL_RULES.effect_kind(skill) == "turnUndead" and not selected_monster.is_undead():
+			continue
+		if _cast_job_skill(skill_name):
+			return true
+	return false
+
+func _cast_job_status_skill(skill: Dictionary) -> bool:
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
+	if target == null:
+		hud.show_message("상태이상 대상이 없습니다")
+		return false
+	_break_invisibility()
+	var cost: int = maxi(0, int(skill.get("mp", 0)))
+	var before: int = mp
+	var skill_name: String = str(skill.get("name", ""))
+	var duration: float = float(skill.get("duration", 2.5))
+	match SKILL_RULES.effect_kind(skill):
+		"stun":
+			_cast_stun_skill(target, int(skill.get("power", 55)), cost, duration, skill_name)
+		"silence":
+			_cast_silence_skill(target, cost, duration, skill_name)
+		"poison":
+			_cast_poison_skill(target, cost, duration, int(skill.get("tick_damage", 12)), float(skill.get("tick_interval", 1.0)), skill_name)
+		"bleed":
+			_cast_bleed_skill(target, cost, int(skill.get("power", 28)), duration, int(skill.get("tick_damage", 9)), float(skill.get("tick_interval", 0.75)), skill_name)
+		"hold":
+			_cast_hold_skill(target, cost, duration, skill_name)
+		"fear":
+			_cast_fear_skill(target, cost, duration, skill_name)
+	# Status resisted / attack missed still counts as a completed cast.
+	return mp < before or cost == 0
+
+func _cast_job_invisibility_skill(skill: Dictionary) -> bool:
+	if not _spend_skill_mp(skill):
+		return false
+	active_skill_buffs[str(skill.get("name", "은신"))] = {
+		"remaining": maxf(1.0, float(skill.get("duration", 20.0))),
+		"stealth": true
+	}
+	_refresh_skill_stealth_visual()
+	hud.show_message("%s · 은신 활성화" % str(skill.get("name", "")))
+	return true
+
+func is_player_concealed() -> bool:
+	for value: Variant in active_skill_buffs.values():
+		if value is Dictionary and bool((value as Dictionary).get("stealth", false)):
+			return true
+	return false
+
+func _refresh_skill_stealth_visual() -> void:
+	if player != null:
+		player.modulate.a = 0.5 if is_player_concealed() else 1.0
+
+func _break_invisibility() -> void:
+	if not is_player_concealed():
+		return
+	for key_value: Variant in active_skill_buffs.keys():
+		var name_value: String = str(key_value)
+		var value: Variant = active_skill_buffs.get(name_value, {})
+		if value is Dictionary and bool((value as Dictionary).get("stealth", false)):
+			active_skill_buffs.erase(name_value)
+	_refresh_skill_stealth_visual()
+	hud.append_log("공격으로 은신 해제")
+
+func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
+	for value: Variant in skills_db:
+		if not (value is Dictionary):
+			continue
+		var skill: Dictionary = value as Dictionary
+		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
+			continue
+		if SKILL_RULES.passive_trigger(skill) != trigger_name:
+			continue
+		var skill_name: String = str(skill.get("name", ""))
+		if float(skill_cooldowns.get(skill_name, 0.0)) > 0.0 or rng.randf() >= SKILL_RULES.passive_proc_chance(skill):
+			continue
+		var proc_effect: String = str(skill.get("proc_effect", ""))
+		match proc_effect:
+			"damage":
+				if target == null or not is_instance_valid(target) or target.dead:
+					continue
+				target.take_damage(maxi(1, int(skill.get("power", 1))), false)
+			"heal":
+				if hp >= _effective_max_hp():
+					continue
+				hp = mini(_effective_max_hp(), hp + maxi(1, int(skill.get("heal", 1))))
+			"atkBuff", "defBuff", "hpBuff", "speedBuff":
+				active_skill_buffs[skill_name] = {
+					"remaining": maxf(1.0, float(skill.get("duration", 5.0))),
+					"atk": int(skill.get("atk", 0)),
+					"def": int(skill.get("def", 0)),
+					"hp": int(skill.get("hpFlat", 0)),
+					"speed": float(skill.get("speed", 1.0))
+				}
+				player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
+			_:
+				continue
+		var cooldown: float = SKILL_RULES.cooldown_seconds(skill)
+		if cooldown > 0.0:
+			skill_cooldowns[skill_name] = cooldown
+		hud.append_log("%s 패시브 발동" % skill_name)
 
 func _skill_record(skill_name: String) -> Dictionary:
 	for value: Variant in skills_db:
@@ -2883,40 +3123,41 @@ func _skill_record(skill_name: String) -> Dictionary:
 				return skill
 	return {}
 
-func _cast_job_skill(skill_name: String) -> void:
+func _cast_job_skill(skill_name: String) -> bool:
 	var skill: Dictionary = _skill_record(skill_name)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
-		return
-	if _is_passive_skill(skill):
-		hud.show_message("%s은(는) 패시브 스킬로 보유 중 자동 적용됩니다" % skill_name)
-		return
-	var skill_class: String = str(skill.get("class", "공용"))
-	if skill_class != "공용" and skill_class != job_class:
-		hud.show_message("%s 전용 스킬입니다" % skill_class)
-		return
-	if player.is_stunned() or player.is_feared():
-		hud.show_message("현재 상태에서는 스킬을 사용할 수 없습니다")
-		return
-	if player.is_silenced() and int(skill.get("mp", 0)) > 0:
-		hud.show_message("침묵 상태에서는 스킬을 사용할 수 없습니다")
-		return
-	var effect: String = str(skill.get("effect", "utility"))
+		return false
+	if not _skill_ready(skill, true):
+		return false
+	var effect: String = SKILL_RULES.effect_kind(skill)
+	var success: bool = false
 	match effect:
 		"damage":
-			_cast_job_damage_skill(skill)
+			success = _cast_job_damage_skill(skill)
+		"turnUndead":
+			success = _cast_job_turn_undead(skill)
+		"charge":
+			success = _cast_job_charge_skill(skill)
 		"heal":
-			_cast_job_heal_skill(skill)
+			success = _cast_job_heal_skill(skill)
 		"atkBuff", "defBuff", "hpBuff", "speedBuff":
-			_cast_job_buff_skill(skill)
+			success = _cast_job_buff_skill(skill)
 		"teleport":
-			_cast_job_teleport_skill(skill)
+			success = _cast_job_teleport_skill(skill)
+		"invisibility":
+			success = _cast_job_invisibility_skill(skill)
+		"stun", "silence", "poison", "bleed", "hold", "fear":
+			success = _cast_job_status_skill(skill)
 		_:
-			if not _spend_skill_mp(skill):
-				return
-			hud.show_message("%s 사용" % skill_name)
-			hud.append_log("%s · %s 보조 스킬 사용" % [job_class, skill_name])
-			_update_hud()
+			hud.show_message("%s · 구현되지 않은 효과입니다" % skill_name)
+			return false
+	if success:
+		_start_skill_cooldown(skill)
+		if SKILL_RULES.has_target(effect):
+			auto_attack_timer = maxf(auto_attack_timer, SKILL_RULES.global_cooldown_seconds(skill))
+		_update_hud()
+	return success
 
 func _spend_skill_mp(skill: Dictionary) -> bool:
 	var mp_cost: int = maxi(0, int(skill.get("mp", 0)))
@@ -2924,21 +3165,238 @@ func _spend_skill_mp(skill: Dictionary) -> bool:
 		hud.show_message("MP가 부족합니다")
 		return false
 	mp -= mp_cost
+	var required_ammo: int = maxi(0, int(skill.get("ammo_per_hit", 0))) * maxi(1, int(skill.get("hits", 1)))
+	if required_ammo > 0:
+		inventory["화살"] = int(inventory.get("화살", 0)) - required_ammo
 	return true
 
-func _cast_job_damage_skill(skill: Dictionary) -> void:
-	var max_range: float = maxf(80.0, float(skill.get("range", 120)))
-	var target: TwilightMonster = _skill_target(max_range)
+
+func _try_active_counterattack(attacker: TwilightMonster, attack_kind: String, received_damage: int) -> bool:
+	if attacker == null or not is_instance_valid(attacker) or attacker.dead or attack_kind != "melee" or hp <= 0:
+		return false
+	var chance: float = 0.0
+	var multiplier: float = 0.0
+	var counter_name: String = ""
+	for key_value: Variant in active_skill_buffs.keys():
+		var buff_value: Variant = active_skill_buffs.get(key_value, {})
+		if not (buff_value is Dictionary):
+			continue
+		var buff: Dictionary = buff_value as Dictionary
+		var rate: float = clampf(float(buff.get("counter_chance", 0.0)), 0.0, 1.0)
+		if rate > chance:
+			chance = rate
+			multiplier = maxf(0.0, float(buff.get("counter_multiplier", 0.0)))
+			counter_name = str(key_value)
+	if chance <= 0.0 or multiplier <= 0.0 or rng.randf() >= chance:
+		return false
+	var reflected: int = maxi(1, int(round(float(maxi(1, received_damage)) * multiplier)))
+	hud.append_log("%s 반격 발동 · %s에게 %d 피해" % [counter_name, attacker.monster_name, reflected])
+	attacker.take_damage(reflected)
+	return true
+
+
+func _player_element_resistance(element_name: String) -> float:
+	if ELEMENT_RULES.channel(element_name) == "physical":
+		return 0.0
+	var key: String = "element_resist_" + element_name
+	var total: float = float(_active_skill_buff_total(key) + _passive_skill_total(key))
+	for record: Dictionary in _all_equipped_records():
+		total += float(record.get(key, 0.0))
+	return clampf(total, -80.0, 85.0)
+
+func _normal_attack_element() -> String:
+	if _active_skill_buff_total("element_bonus_holy") > 0:
+		return "holy"
+	return ELEMENT_RULES.channel(str(_equipped_weapon_record().get("element", "physical")))
+
+func _elemental_damage_to_monster(raw_damage: int, element_name: String, target: TwilightMonster) -> int:
+	var channel: String = ELEMENT_RULES.channel(element_name)
+	if channel == "physical" or target == null:
+		return maxi(1, raw_damage)
+	var bonus: float = float(_active_skill_buff_total("element_bonus_" + channel) + _passive_skill_total("element_bonus_" + channel))
+	for record: Dictionary in _all_equipped_records():
+		bonus += float(record.get("element_bonus_" + channel, 0.0))
+	var modified: int = ELEMENT_RULES.damage_with_bonus(raw_damage, bonus)
+	if channel == "holy" and target.is_undead():
+		modified = ELEMENT_RULES.damage_with_bonus(modified, float(_active_skill_buff_total("holy_vs_undead")))
+	return ELEMENT_RULES.damage_after_resistance(modified, target.elemental_resistance_percent(channel))
+
+func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_kind: String) -> void:
+	if attack_kind != "melee" or target == null or not is_instance_valid(target) or target.dead:
+		return
+	var chance: float = 0.0
+	var multiplier: float = 0.0
+	for buff_name: Variant in active_skill_buffs.keys():
+		var record: Dictionary = _skill_record(str(buff_name))
+		if record.is_empty():
+			continue
+		var weapon_value: Variant = record.get("required_weapons", [])
+		if weapon_value is Array and not (weapon_value as Array).is_empty() and not (weapon_value as Array).has(_current_weapon_type()):
+			continue
+		var value: Variant = active_skill_buffs.get(buff_name, {})
+		if not (value is Dictionary):
+			continue
+		var buff: Dictionary = value as Dictionary
+		if float(buff.get("double_chance", 0.0)) > chance:
+			chance = float(buff.get("double_chance", 0.0))
+			multiplier = float(buff.get("double_multiplier", 0.0))
+	if chance <= 0.0 or multiplier <= 0.0 or rng.randf() >= chance:
+		return
+	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
+	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
+	target.take_damage(damage)
+	_try_trigger_passives("on_hit", target)
+	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
+
+func _cast_job_turn_undead(skill: Dictionary) -> bool:
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
+	if target == null:
+		hud.show_message("시야 내 언데드 대상이 없습니다")
+		return false
+	if not target.is_undead():
+		hud.show_message("턴 언데드는 언데드에게만 사용할 수 있습니다")
+		return false
+	if not _spend_skill_mp(skill):
+		return false
+	_break_invisibility()
+	player.pulse_attack()
+	var chance: float = clampf(_player_magic_hit_chance(target) + float(skill.get("magic_hit_bonus", 0.0)), 0.05, 0.99)
+	if rng.randf() >= chance:
+		target.show_miss()
+		hud.append_log("%s · %s 마법 명중 실패" % [str(skill.get("name", "")), target.monster_name])
+	else:
+		var target_name: String = target.monster_name
+		hud.append_log("%s · %s 언데드 즉사!" % [str(skill.get("name", "")), target_name])
+		target.take_damage(target.hp, false)
+	_update_target_hud()
+	return true
+
+func _clear_skill_charge() -> void:
+	charge_route = PackedVector2Array()
+	charge_route_index = 0
+	charge_target = null
+	charge_skill = {}
+
+func _cast_job_charge_skill(skill: Dictionary) -> bool:
+	if player.is_held():
+		hud.show_message("이동 불가 상태에서는 돌진할 수 없습니다")
+		return false
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
+	if target == null:
+		hud.show_message("돌진 대상이 사거리 밖에 있습니다")
+		return false
+	var stop_distance: float = maxf(40.0, float(skill.get("charge_stop_distance", 52.0)))
+	var source: Vector2 = player.global_position
+	var distance: float = source.distance_to(target.global_position)
+	if distance <= stop_distance + 32.0:
+		if not _spend_skill_mp(skill):
+			return false
+		_break_invisibility()
+		_apply_job_skill_damage(skill, target)
+		return true
+	var path: PackedVector2Array = find_world_path(source, target.global_position)
+	if path.is_empty():
+		hud.show_message("돌진 경로를 찾을 수 없습니다")
+		return false
+	var planned: PackedVector2Array = PackedVector2Array()
+	var previous: Vector2 = source
+	var total_distance: float = 0.0
+	var stopped_near_target: bool = false
+	for waypoint: Vector2 in path:
+		if previous.distance_to(waypoint) <= 2.0:
+			continue
+		var endpoint: Vector2 = waypoint
+		var close_to_target: bool = waypoint.distance_to(target.global_position) <= stop_distance
+		if close_to_target:
+			var direction: Vector2 = (previous - target.global_position).normalized()
+			if direction.length_squared() > 0.01:
+				var before_target: Vector2 = target.global_position + direction * stop_distance
+				if _is_walkable_world(before_target) and _has_line_of_sight_world(previous, before_target):
+					endpoint = before_target
+				else:
+					endpoint = previous
+		total_distance += previous.distance_to(endpoint)
+		if total_distance > SKILL_RULES.range_pixels(skill) + 2.0:
+			break
+		if endpoint.distance_to(previous) > 2.0 and _is_walkable_world(endpoint):
+			planned.append(endpoint)
+		previous = endpoint
+		if close_to_target:
+			stopped_near_target = true
+			break
+	if not stopped_near_target or planned.is_empty() or previous.distance_to(target.global_position) > 100.0 or not _has_line_of_sight_world(previous, target.global_position):
+		hud.show_message("장애물 때문에 안전하게 돌진할 수 없습니다")
+		return false
+	if not _spend_skill_mp(skill):
+		return false
+	_break_invisibility()
+	player.clear_click_path()
+	charge_route = planned
+	charge_route_index = 0
+	charge_target = target
+	charge_skill = skill.duplicate(true)
+	charge_speed = maxf(250.0, float(skill.get("charge_speed", 1150.0)))
+	hud.append_log("%s · %s에게 돌진 시작" % [str(skill.get("name", "")), target.monster_name])
+	return true
+
+func _advance_skill_charge(delta: float) -> void:
+	if charge_skill.is_empty():
+		return
+	if not is_instance_valid(charge_target) or charge_target.dead or player.is_stunned() or player.is_feared() or player.is_held():
+		_clear_skill_charge()
+		return
+	var remaining: float = maxf(0.0, charge_speed * delta)
+	var blocked: bool = false
+	while remaining > 0.0 and charge_route_index < charge_route.size():
+		var waypoint: Vector2 = charge_route[charge_route_index]
+		var distance: float = player.global_position.distance_to(waypoint)
+		if distance <= 1.0:
+			charge_route_index += 1
+			continue
+		var step: float = minf(remaining, minf(10.0, distance))
+		var next_position: Vector2 = player.global_position.move_toward(waypoint, step)
+		if not _is_walkable_world(next_position):
+			blocked = true
+			break
+		player.global_position = next_position
+		remaining -= step
+		if player.global_position.distance_to(waypoint) <= 1.0:
+			charge_route_index += 1
+	if blocked:
+		hud.show_message("돌진 경로에 장애물이 있습니다")
+		_clear_skill_charge()
+		return
+	if charge_route_index < charge_route.size():
+		return
+	var finished_skill: Dictionary = charge_skill
+	var finished_target: TwilightMonster = charge_target
+	_clear_skill_charge()
+	if is_instance_valid(finished_target) and not finished_target.dead and player.global_position.distance_to(finished_target.global_position) <= 100.0 and _has_line_of_sight_world(player.global_position, finished_target.global_position):
+		_apply_job_skill_damage(finished_skill, finished_target)
+	else:
+		hud.append_log("%s · 돌진 대상 이탈로 공격 실패" % str(finished_skill.get("name", "")))
+
+func _cast_job_damage_skill(skill: Dictionary) -> bool:
+	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
 	if target == null:
 		hud.show_message("공격 대상이 없습니다")
-		return
+		return false
 	if not _spend_skill_mp(skill):
+		return false
+	_break_invisibility()
+	_apply_job_skill_damage(skill, target)
+	return true
+
+func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void:
+	if target == null or not is_instance_valid(target) or target.dead:
 		return
 	selected_monster = target
 	player.pulse_attack()
+	var max_range: float = SKILL_RULES.range_pixels(skill)
 	var skill_class: String = str(skill.get("class", "공용"))
-	var ranged_style: bool = job_class == "요정" or job_class == "총사"
-	var magic_style: bool = job_class == "마법사" or skill_class == "마법사" or (skill_class == "공용" and max_range >= 250.0)
+	var requested_style: String = str(skill.get("attack_style", ""))
+	var ranged_style: bool = requested_style == "ranged" or (requested_style == "" and (job_class == "요정" or job_class == "총사"))
+	var magic_style: bool = requested_style == "magic" or (requested_style == "" and (job_class == "마법사" or skill_class == "마법사" or (skill_class == "공용" and max_range >= 250.0)))
 	var hit_chance: float = _melee_hit_chance(target)
 	var stat_damage: int = _melee_damage_stat()
 	var crit_rate: int = _player_critical_rate("melee")
@@ -2950,36 +3408,95 @@ func _cast_job_damage_skill(skill: Dictionary) -> void:
 		stat_damage = _ranged_damage_stat()
 		crit_rate = _player_critical_rate("ranged")
 		hit_chance = clampf(_melee_hit_chance(target) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
-	if rng.randf() >= hit_chance:
-		target.show_miss()
-		hud.append_log("%s MISS · %.1f%%" % [str(skill.get("name", "")), hit_chance * 100.0])
-		_update_hud()
-		return
+	var hits: int = clampi(int(skill.get("hits", 1)), 1, 8)
+	var targets: Array[TwilightMonster] = [target]
+	var area_radius: float = maxf(0.0, float(skill.get("area_radius", 0.0)))
+	if area_radius > 0.0:
+		for child: Node in monsters_root.get_children():
+			if child is TwilightMonster:
+				var other: TwilightMonster = child as TwilightMonster
+				if other != target and not other.dead and target.global_position.distance_to(other.global_position) <= area_radius and _has_line_of_sight_world(player.global_position, other.global_position):
+					targets.append(other)
+	var chain_limit: int = clampi(int(skill.get("chain_targets", 1)), 1, 8)
+	if chain_limit > 1:
+		var chain_candidates: Array[TwilightMonster] = []
+		var chain_radius: float = maxf(10.0, float(skill.get("chain_radius", 140.0)))
+		for child: Node in monsters_root.get_children():
+			if child is TwilightMonster:
+				var other: TwilightMonster = child as TwilightMonster
+				if other != target and not other.dead and target.global_position.distance_to(other.global_position) <= chain_radius and _has_line_of_sight_world(player.global_position, other.global_position):
+					chain_candidates.append(other)
+		chain_candidates.sort_custom(func(a: TwilightMonster, b: TwilightMonster) -> bool:
+			return target.global_position.distance_squared_to(a.global_position) < target.global_position.distance_squared_to(b.global_position)
+		)
+		for candidate: TwilightMonster in chain_candidates:
+			if targets.size() >= chain_limit:
+				break
+			if not targets.has(candidate):
+				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
-	var damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
-	var critical_chance: float = _critical_chance(crit_rate, target.critical_resistance)
-	var critical: bool = rng.randf() < critical_chance
-	if critical:
-		damage = _critical_damage(damage)
-	target.take_damage(damage, critical)
-	hud.append_log("%s · %s에게 %d 피해%s" % [
-		str(skill.get("name", "")), target.monster_name, damage, " CRITICAL" if critical else ""
-	])
-	_update_hud()
+	var total_damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
+	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
+	var chain_index: int = 0
+	for victim: TwilightMonster in targets:
+		var victim_hit_chance: float = hit_chance
+		if magic_style:
+			victim_hit_chance = _player_magic_hit_chance(victim)
+		elif ranged_style:
+			victim_hit_chance = clampf(_melee_hit_chance(victim) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
+		else:
+			victim_hit_chance = _melee_hit_chance(victim)
+		for hit_index: int in range(hits):
+			if victim.dead:
+				break
+			if rng.randf() >= victim_hit_chance:
+				victim.show_miss()
+				hud.append_log("%s · %d/%d타 MISS" % [str(skill.get("name", "")), hit_index + 1, hits])
+				continue
+			var chain_factor: float = pow(clampf(float(skill.get("chain_falloff", 1.0)), 0.2, 1.0), chain_index) if chain_limit > 1 else 1.0
+			var execute_factor: float = maxf(1.0, float(skill.get("execute_multiplier", 1.0))) if float(victim.hp) / maxf(1.0, float(victim.max_hp)) <= float(skill.get("execute_threshold", 0.0)) else 1.0
+			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor * execute_factor)))
+			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
+			if critical:
+				damage = _critical_damage(damage)
+			damage = _elemental_damage_to_monster(damage, element_name, victim)
+			victim.take_damage(damage, critical)
+			_try_trigger_passives("on_hit", victim)
+			_try_extra_weapon_hit(victim, damage, style)
+			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
+				match str(skill.get("on_hit_status", "")):
+					"slow":
+						victim.apply_slow(float(skill.get("status_duration", 3.0)), float(skill.get("slow_multiplier", 0.65)))
+					"hold":
+						victim.apply_hold(float(skill.get("status_duration", 2.0)))
+					"poison":
+						victim.apply_poison(float(skill.get("status_duration", 4.0)), maxi(1, int(skill.get("poison_tick_damage", 10))), 1.0)
+			hud.append_log("%s · %s %d/%d타 %d 피해%s" % [
+				str(skill.get("name", "")), victim.monster_name, hit_index + 1, hits, damage, " CRITICAL" if critical else ""
+			])
+		chain_index += 1
 	_update_target_hud()
 
-func _cast_job_heal_skill(skill: Dictionary) -> void:
+func _cast_job_heal_skill(skill: Dictionary) -> bool:
+	if hp >= _effective_max_hp():
+		hud.show_message("HP가 가득 찼습니다")
+		return false
 	if not _spend_skill_mp(skill):
-		return
-	var amount: int = maxi(1, int(skill.get("heal", 40)) + int_stat * 2)
+		return false
+	var base_amount: int = int(skill.get("heal", 40)) + (int_stat + _active_skill_buff_total("intFlat")) * 2
+	var amount: int = maxi(1, int(round(float(base_amount) * (1.0 + float(skill.get("heal_bonus_percent", 0.0)) / 100.0))))
+	if bool(skill.get("heal_to_full", false)):
+		amount = _effective_max_hp()
+	var before: int = hp
 	hp = mini(_effective_max_hp(), hp + amount)
-	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), amount])
-	hud.append_log("%s 회복 · HP +%d" % [str(skill.get("name", "")), amount])
-	_update_hud()
+	hud.show_message("%s · HP +%d" % [str(skill.get("name", "")), hp - before])
+	hud.append_log("%s 회복 · HP +%d" % [str(skill.get("name", "")), hp - before])
+	return true
 
-func _cast_job_buff_skill(skill: Dictionary) -> void:
+func _cast_job_buff_skill(skill: Dictionary) -> bool:
 	if not _spend_skill_mp(skill):
-		return
+		return false
 	var duration: float = maxf(5.0, float(skill.get("duration", 60.0)))
 	var speed_value: float = float(skill.get("speed", 1.0))
 	active_skill_buffs[str(skill.get("name", "버프"))] = {
@@ -2987,27 +3504,54 @@ func _cast_job_buff_skill(skill: Dictionary) -> void:
 		"atk": int(skill.get("atk", 0)),
 		"def": int(skill.get("def", 0)),
 		"hp": int(skill.get("hpFlat", 0)),
-		"speed": speed_value
+		"speed": speed_value,
+		"ranged_bonus": int(skill.get("ranged_bonus", 0)),
+		"ranged_accuracy": int(skill.get("ranged_accuracy", 0)),
+		"strFlat": int(skill.get("strFlat", 0)),
+		"dexFlat": int(skill.get("dexFlat", 0)),
+		"intFlat": int(skill.get("intFlat", 0)),
+		"mrFlat": int(skill.get("mrFlat", 0)),
+		"element_bonus_holy": int(skill.get("element_bonus_holy", 0)),
+		"element_bonus_wind": int(skill.get("element_bonus_wind", 0)),
+		"element_resist_dark": int(skill.get("element_resist_dark", 0)),
+		"element_resist_lightning": int(skill.get("element_resist_lightning", 0)),
+		"holy_vs_undead": int(skill.get("holy_vs_undead", 0)),
+		"double_chance": float(skill.get("double_chance", 0.0)),
+		"double_multiplier": float(skill.get("double_multiplier", 0.0)),
+		"damage_reduction": int(skill.get("damage_reduction", 0)),
+		"counter_chance": clampf(float(skill.get("counter_chance", 0.0)), 0.0, 1.0),
+		"counter_multiplier": maxf(0.0, float(skill.get("counter_multiplier", 0.0)))
 	}
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	hp = mini(_effective_max_hp(), hp + maxi(0, int(skill.get("hpFlat", 0))))
 	hud.show_message("%s 활성화" % str(skill.get("name", "")))
 	hud.append_log("%s 버프 · %.0f초" % [str(skill.get("name", "")), duration])
-	_update_hud()
+	return true
 
-func _cast_job_teleport_skill(skill: Dictionary) -> void:
-	if not _spend_skill_mp(skill):
-		return
-	for _attempt: int in range(60):
+func _teleport_landing_clear(candidate: Vector2) -> bool:
+	if not _is_walkable_world(candidate):
+		return false
+	for child: Node in monsters_root.get_children():
+		if child is TwilightMonster:
+			var monster: TwilightMonster = child as TwilightMonster
+			if not monster.dead and candidate.distance_to(monster.global_position) < 155.0:
+				return false
+	return true
+
+func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	for _attempt: int in range(100):
 		var candidate: Vector2 = player.global_position + Vector2(rng.randf_range(-700.0, 700.0), rng.randf_range(-500.0, 500.0))
-		if _is_walkable_world(candidate):
+		var safe_only: bool = bool(skill.get("safe_zone_only", false))
+		if _teleport_landing_clear(candidate) if safe_only else _is_walkable_world(candidate):
+			if not _spend_skill_mp(skill):
+				return false
 			player.global_position = candidate
 			player.clear_click_path()
 			player.camera.reset_smoothing()
 			hud.show_message("%s" % str(skill.get("name", "텔레포트")))
-			_update_hud()
-			return
-	hud.show_message("이동 가능한 위치를 찾지 못했습니다")
+			return true
+	hud.show_message("안전하게 이동할 위치를 찾지 못했습니다")
+	return false
 
 func _active_skill_buff_total(key: String) -> int:
 	var total: int = 0
@@ -3042,6 +3586,7 @@ func _tick_skill_buffs(delta: float) -> void:
 		return
 	for key: String in expired:
 		active_skill_buffs.erase(key)
+	_refresh_skill_stealth_visual()
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	hp = mini(hp, _effective_max_hp())
 	_update_hud()
@@ -3553,7 +4098,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _ranged_normal_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0) + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
 
 func _record_move_speed_multiplier(record: Dictionary) -> float:
 	var value: float = float(record.get("speed", 1.0))
@@ -3600,22 +4145,22 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(str_stat, 10, 2.0) + _active_item_buff_total("melee_damage")
+	return _effective_attack() + _stat_step_bonus(str_stat + _active_skill_buff_total("strFlat"), 10, 2.0) + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
-	return level + str_stat + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
+	return level + str_stat + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0) + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
-	return level + dex_stat + 5 + _equipment_enhancement_level("weapon") + _active_item_buff_total("ranged_accuracy")
+	return level + dex_stat + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(int_stat, 8, 2.0) + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(int_stat + _active_skill_buff_total("intFlat"), 8, 2.0) + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
-	return level + int_stat + _active_item_buff_total("magic_accuracy")
+	return level + int_stat + _active_skill_buff_total("intFlat") + _active_item_buff_total("magic_accuracy")
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -3922,6 +4467,7 @@ func _effective_mr() -> int:
 	var total: int = 10 + level + wis_stat * 2
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
+	total += _active_skill_buff_total("mrFlat")
 	return maxi(0, total)
 
 func _record_damage_reduction(record: Dictionary) -> int:
@@ -3950,7 +4496,7 @@ func _pve_damage_after_item_buffs(raw_damage: int) -> int:
 	return reduced
 
 func _physical_damage_after_reduction(raw_damage: int) -> int:
-	return maxi(1, raw_damage - _damage_reduction_stat())
+	return maxi(1, raw_damage - _damage_reduction_stat() - _active_skill_buff_total("damage_reduction"))
 
 func _character_stats_snapshot() -> Dictionary:
 	return {

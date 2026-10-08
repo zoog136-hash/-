@@ -742,12 +742,12 @@ func _render_quickslots(inventory: Dictionary, active_buffs: Dictionary) -> void
 				continue
 			var is_buff: bool = str(skill.get("effect", "")).find("Buff") >= 0
 			var active_text: String = " · ACTIVE" if active_buffs.has(entry_id) else ""
-			button.text = entry_id.left(5)
+			button.text = entry_id.left(5) + ("\nAUTO" if bool(entry.get("auto", false)) else "")
 			button.icon = _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
 			button.expand_icon = true
 			button.tooltip_text = "%s · %s · MP %d%s" % [
 				entry_id, str(skill.get("type", "")), int(skill.get("mp", 0)),
-				(" · SELF OFF시 자동 재사용" if is_buff else "") + active_text
+				(" · SELF OFF시 자동 재사용" if is_buff else "") + (" · AUTO사냥 자동사용" if bool(entry.get("auto", false)) else "") + active_text
 			]
 		elif kind == "item":
 			var count: int = int(inventory.get(entry_id, 0))
@@ -776,7 +776,7 @@ func _job_skill_by_name(skill_name: String) -> Dictionary:
 func _skill_icon(effect: String, type_text: String) -> Texture2D:
 	if effect == "heal":
 		return _load_texture("res://assets/ui/heal.png")
-	if effect == "damage":
+	if effect in ["damage", "charge", "turnUndead"]:
 		return _load_texture("res://assets/ui/attack.png")
 	if effect.find("Buff") >= 0 or type_text == "버프":
 		return _load_texture("res://assets/ui/rune.png")

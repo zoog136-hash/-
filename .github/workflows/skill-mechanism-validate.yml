@@ -1,0 +1,41 @@
+name: Twilight Skill Mechanism
+
+on:
+  push:
+    branches: ['codex/skill-system-*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  skill-mechanism:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and parse
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee skill-import.log
+          if grep -E "SCRIPT ERROR:|ERROR:" skill-import.log; then exit 1; fi
+      - name: Skill mechanism smoke
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_mechanism_smoke_test.gd 2>&1 | tee skill-mechanism.log
+          if grep -E "SCRIPT ERROR:|ERROR:|SKILL MECHANISM FAIL:|SKILL_MECHANISM_SMOKE_FAILED" skill-mechanism.log; then exit 1; fi
+          grep -q "SKILL_MECHANISM_SMOKE_OK" skill-mechanism.log
+      - name: Skill elemental integration smoke
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/skill_element_integration_smoke_test.gd 2>&1 | tee skill-element-integration.log
+          if grep -E "SCRIPT ERROR:|ERROR:|ELEMENT INTEGRATION FAIL:|SKILL_ELEMENT_INTEGRATION_FAILED" skill-element-integration.log; then exit 1; fi
+          grep -q "SKILL_ELEMENT_INTEGRATION_OK" skill-element-integration.log

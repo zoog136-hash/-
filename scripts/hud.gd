@@ -1,6 +1,8 @@
 extends CanvasLayer
 class_name TwilightHUD
 
+const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+
 signal move_vector_changed(value: Vector2)
 signal attack_pressed
 signal bleed_skill_pressed
@@ -279,18 +281,37 @@ func set_quickslot_entries(entries: Array) -> void:
 
 func _open_quickslot_picker(entry_kind: String, entry_id: String, display_name: String) -> void:
 	_open_utility_panel("퀵슬롯 등록")
-	_utility_add_text("[font_size=20][b]%s[/b][/font_size]\n등록할 슬롯을 선택하세요. 기존 내용은 교체됩니다." % display_name)
+	_utility_add_text("[font_size=20][b]%s[/b][/font_size]\n등록할 슬롯을 선택하세요. 자동 버튼은 AUTO 사냥 중 스킬을 자동 발동합니다." % display_name)
+	var eligible_auto: bool = false
+	if entry_kind == "skill":
+		for value: Variant in job_skills:
+			if value is Dictionary:
+				var skill: Dictionary = value as Dictionary
+				if str(skill.get("name", "")) == entry_id:
+					eligible_auto = str(skill.get("effect", "")) in ["damage", "turnUndead", "charge", "heal", "stun", "silence", "poison", "bleed", "hold", "fear"]
+					break
 	for index: int in range(8):
 		var current_text: String = "비어 있음"
 		if index < quickslot_entries.size() and quickslot_entries[index] is Dictionary:
 			var current: Dictionary = quickslot_entries[index] as Dictionary
 			if not current.is_empty():
 				current_text = str(current.get("id", current.get("name", "등록됨")))
+				if bool(current.get("auto", false)):
+					current_text += " · 자동 ON"
+		var row: HBoxContainer = HBoxContainer.new()
 		var button: Button = Button.new()
-		button.text = "%d번 슬롯  ·  %s" % [index + 1, current_text]
+		button.text = "%d번 · %s (수동)" % [index + 1, current_text]
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.custom_minimum_size = Vector2(0, 44)
 		button.pressed.connect(_emit_quickslot_assignment.bind(index, entry_kind, entry_id))
-		utility_body.add_child(button)
+		row.add_child(button)
+		if eligible_auto:
+			var auto_button: Button = Button.new()
+			auto_button.text = "자동"
+			auto_button.custom_minimum_size = Vector2(56, 44)
+			auto_button.pressed.connect(_emit_quickslot_assignment.bind(index, "skill_auto", entry_id))
+			row.add_child(auto_button)
+		utility_body.add_child(row)
 
 func _emit_quickslot_assignment(slot_index: int, entry_kind: String, entry_id: String) -> void:
 	quickslot_assignment_requested.emit(slot_index, entry_kind, entry_id)
@@ -1090,22 +1111,23 @@ func open_skills() -> void:
 		var activation: String = str(skill.get("activation", "active")).to_lower()
 		var is_passive: bool = activation == "passive"
 		var activation_label: String = "패시브" if is_passive else "액티브"
+		var cooldown: float = SKILL_RULES.cooldown_seconds(skill) if not is_passive else 0.0
 
 		var row: HBoxContainer = HBoxContainer.new()
 		row.add_theme_constant_override("separation", 6)
 		var button: Button = Button.new()
-		button.text = "[%s][%s] %s · %s · MP %d\n%s" % [grade, activation_label, skill_name, type_text, mp_cost, desc]
+		button.text = "[%s][%s] %s · %s · MP %d%s\n%s" % [grade, activation_label, skill_name, type_text, mp_cost, (" · 재사용 %.1f초" % cooldown if cooldown > 0.0 else ""), desc]
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.custom_minimum_size = Vector2(0, 60)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.disabled = is_passive
-		button.tooltip_text = "보유 중 자동 적용" if is_passive else "눌러서 스킬 사용"
+		button.tooltip_text = ("상시 적용" if SKILL_RULES.passive_trigger(skill) == "always" else "조건부 자동 발동: %s" % SKILL_RULES.passive_trigger(skill)) if is_passive else "눌러서 스킬 사용"
 		if not is_passive:
 			button.pressed.connect(_emit_job_skill.bind(skill_name))
 		row.add_child(button)
 
 		var quick_button: Button = Button.new()
-		quick_button.text = "상시" if is_passive else "Q등록"
+		quick_button.text = ("상시" if SKILL_RULES.passive_trigger(skill) == "always" else "발동") if is_passive else "Q등록"
 		quick_button.custom_minimum_size = Vector2(72, 60)
 		quick_button.disabled = is_passive
 		quick_button.tooltip_text = "보유만으로 자동 적용되는 패시브" if is_passive else "스킬을 퀵슬롯에 등록"
