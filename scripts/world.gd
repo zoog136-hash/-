@@ -17,6 +17,8 @@ const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
+const FOLLOWER_MOTION = preload("res://scripts/animation/follower_motion.gd")
+var doll_motion: TwilightFollowerMotion = FOLLOWER_MOTION.new()
 const COMBAT_FLIGHTS = preload("res://scripts/animation/combat_flights.gd")
 var combat_flights: TwilightCombatFlights = null
 var pending_attack: Dictionary = {}
@@ -3883,27 +3885,7 @@ func _apply_transform_visual(record: Dictionary) -> void:
 	player.set_transform_visual(path, speed_multiplier, ANIMATION_CATALOG.for_record("transform", record, path))
 
 func _apply_doll_visual(record: Dictionary) -> void:
-	companion_sprite.stop()
-	companion_sprite.sprite_frames = SpriteFrames.new()
-	companion_sprite.visible = false
-	if record.is_empty():
-		return
-	var path: String = _directional_image_path("doll", record)
-	if path == "" or not ResourceLoader.exists(path):
-		return
-	var texture: Texture2D = load(path) as Texture2D
-	if texture == null:
-		return
-	_build_directional_frames(companion_sprite, texture)
-	var size: Vector2 = texture.get_size()
-	var cell_height: float = size.y / 4.0
-	var scale_value: float = 72.0 / maxf(1.0, cell_height)
-	companion_sprite.scale = Vector2(scale_value, scale_value)
-	companion_sprite.animation = _direction_animation_name(player.facing)
-	companion_sprite.frame = 0
-	companion_sprite.play()
-	companion_sprite.visible = true
-	$Companion.global_position = player.global_position + Vector2(-50, 18)
+	doll_motion.configure(record, _directional_image_path("doll", record), $Companion, companion_sprite, player)
 
 func _build_directional_frames(sprite: AnimatedSprite2D, texture: Texture2D) -> void:
 	var frames: SpriteFrames = SpriteFrames.new()
@@ -4784,17 +4766,7 @@ func _experience_multiplier() -> float:
 	return maxf(1.0, 1.0 + bonus)
 
 func _update_companion(delta: float) -> void:
-	if companion_sprite.visible:
-		var side: float = -50.0 if player.facing != 2 else 50.0
-		var target: Vector2 = player.global_position + Vector2(side, 20.0)
-		$Companion.global_position = $Companion.global_position.lerp(target, clampf(delta * 6.5, 0.0, 1.0))
-		var animation_name: String = _direction_animation_name(player.facing)
-		if companion_sprite.animation != animation_name:
-			companion_sprite.animation = animation_name
-			companion_sprite.frame = 0
-		if not companion_sprite.is_playing():
-			companion_sprite.play()
-		companion_sprite.position.y = -26.0 + sin(Time.get_ticks_msec() / 180.0) * 2.0
+	doll_motion.update(delta, $Companion, companion_sprite, player)
 	if relic_sprite.visible:
 		relic_sprite.global_position = player.global_position + Vector2(42.0, -64.0 + sin(Time.get_ticks_msec() / 420.0) * 4.0)
 
