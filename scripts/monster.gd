@@ -64,6 +64,9 @@ var bleed_remaining: float = 0.0
 var bleed_tick_clock: float = 0.0
 var attack_type: String = "melee"
 var move_speed: float = 90.0
+var base_move_speed: float = 90.0
+var slow_remaining: float = 0.0
+var slow_multiplier: float = 1.0
 var exp_reward: int = 25
 var gold_reward: int = 40
 var grade: String = "일반"
@@ -151,6 +154,9 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			if not item_name.is_empty():
 				drop_items.append(item_name)
 	move_speed = float(record.get("speed", 70.0 + float(mini(70, int(float(max_hp) / 10.0)))))
+	base_move_speed = move_speed
+	slow_remaining = 0.0
+	slow_multiplier = 1.0
 	target_player = player_ref
 	world_controller = world_ref
 	sprite.texture = texture
@@ -177,6 +183,7 @@ func _physics_process(delta: float) -> void:
 	_tick_fear(delta)
 	_tick_poison(delta)
 	_tick_bleed(delta)
+	_tick_slow(delta)
 	if dead:
 		velocity = Vector2.ZERO
 		return
@@ -453,6 +460,22 @@ func critical_rate_for_type(kind: String) -> int:
 			return magic_critical_rate
 		_:
 			return melee_critical_rate
+
+func apply_slow(duration: float, multiplier: float = 0.65) -> void:
+	if dead:
+		return
+	slow_remaining = maxf(slow_remaining, maxf(0.0, duration))
+	slow_multiplier = minf(slow_multiplier, clampf(multiplier, 0.2, 1.0))
+	move_speed = base_move_speed * slow_multiplier
+	show_status_text("SLOW")
+
+func _tick_slow(delta: float) -> void:
+	if slow_remaining <= 0.0:
+		return
+	slow_remaining = maxf(0.0, slow_remaining - delta)
+	if slow_remaining <= 0.0:
+		slow_multiplier = 1.0
+	move_speed = base_move_speed * slow_multiplier
 
 func is_undead() -> bool:
 	return undead or monster_type == "언데드"
