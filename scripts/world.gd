@@ -3191,6 +3191,60 @@ func _try_active_counterattack(attacker: TwilightMonster, attack_kind: String, r
 	attacker.take_damage(reflected)
 	return true
 
+
+func _player_element_resistance(element_name: String) -> float:
+	if ELEMENT_RULES.channel(element_name) == "physical":
+		return 0.0
+	var key: String = "element_resist_" + element_name
+	var total: float = float(_active_skill_buff_total(key) + _passive_skill_total(key))
+	for record: Dictionary in _all_equipped_records():
+		total += float(record.get(key, 0.0))
+	return clampf(total, -80.0, 85.0)
+
+func _normal_attack_element() -> String:
+	if _active_skill_buff_total("element_bonus_holy") > 0:
+		return "holy"
+	return ELEMENT_RULES.channel(str(_equipped_weapon_record().get("element", "physical")))
+
+func _elemental_damage_to_monster(raw_damage: int, element_name: String, target: TwilightMonster) -> int:
+	var channel: String = ELEMENT_RULES.channel(element_name)
+	if channel == "physical" or target == null:
+		return maxi(1, raw_damage)
+	var bonus: float = float(_active_skill_buff_total("element_bonus_" + channel) + _passive_skill_total("element_bonus_" + channel))
+	for record: Dictionary in _all_equipped_records():
+		bonus += float(record.get("element_bonus_" + channel, 0.0))
+	var modified: int = ELEMENT_RULES.damage_with_bonus(raw_damage, bonus)
+	if channel == "holy" and target.is_undead():
+		modified = ELEMENT_RULES.damage_with_bonus(modified, float(_active_skill_buff_total("holy_vs_undead")))
+	return ELEMENT_RULES.damage_after_resistance(modified, target.elemental_resistance_percent(channel))
+
+func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_kind: String) -> void:
+	if attack_kind != "melee" or target == null or not is_instance_valid(target) or target.dead:
+		return
+	var chance: float = 0.0
+	var multiplier: float = 0.0
+	for buff_name: Variant in active_skill_buffs.keys():
+		var record: Dictionary = _skill_record(str(buff_name))
+		if record.is_empty():
+			continue
+		var weapon_value: Variant = record.get("required_weapons", [])
+		if weapon_value is Array and not (weapon_value as Array).is_empty() and not (weapon_value as Array).has(_current_weapon_type()):
+			continue
+		var value: Variant = active_skill_buffs.get(buff_name, {})
+		if not (value is Dictionary):
+			continue
+		var buff: Dictionary = value as Dictionary
+		if float(buff.get("double_chance", 0.0)) > chance:
+			chance = float(buff.get("double_chance", 0.0))
+			multiplier = float(buff.get("double_multiplier", 0.0))
+	if chance <= 0.0 or multiplier <= 0.0 or rng.randf() >= chance:
+		return
+	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
+	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
+	target.take_damage(damage)
+	_try_trigger_passives("on_hit", target)
+	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
+
 func _cast_job_turn_undead(skill: Dictionary) -> bool:
 	var target: TwilightMonster = _skill_target(SKILL_RULES.range_pixels(skill))
 	if target == null:
