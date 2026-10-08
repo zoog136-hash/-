@@ -353,6 +353,19 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 	dialog.canceled.connect(func() -> void: dialog.queue_free())
 	dialog.popup_centered(Vector2i(440, 270 if choose_element else 215))
 
+func element_stage_cap(weapon_name: String) -> int:
+	# Common weapons permit 3; +10/+11 reach 4/5. Legacy special weapons
+	# (마족/집행) may reach 5 even without +11, based on community references.
+	var levels: Dictionary = world.get("enhancement_levels") as Dictionary
+	var enchant: int = maxi(0, int(levels.get(weapon_name, 0)))
+	if weapon_name.contains("마족") or weapon_name.contains("집행"):
+		return 5
+	if enchant >= 11:
+		return 5
+	if enchant >= 10:
+		return 4
+	return 3
+
 func apply_element_scroll(scroll_name: String, weapon_name: String, element_name: String) -> void:
 	var inv: Dictionary = world.get("inventory") as Dictionary
 	if int(inv.get(scroll_name, 0)) <= 0 or int(inv.get(weapon_name, 0)) <= 0:
@@ -371,8 +384,9 @@ func apply_element_scroll(scroll_name: String, weapon_name: String, element_name
 	if previous_type != "" and previous_type != element_name:
 		_message("다른 속성을 강화한 무기입니다. 속성 변경은 별도 기능입니다")
 		return
-	if previous_level >= 5:
-		_message("속성 강화 최대 5단계입니다")
+	var cap: int = element_stage_cap(weapon_name)
+	if previous_level >= cap:
+		_message("%s 속성 강화 한도 %d단계입니다" % [weapon_name, cap])
 		return
 	var chance: float = RULES.element_success_chance(previous_level)
 	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
