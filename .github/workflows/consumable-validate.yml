@@ -1,0 +1,45 @@
+name: Twilight Consumable Integration
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/world.gd'
+      - 'scripts/consumable_rules.gd'
+      - 'scripts/consumable_service.gd'
+      - 'tests/consumable_smoke_test.gd'
+      - '.github/workflows/consumable-validate.yml'
+  workflow_dispatch:
+
+jobs:
+  consumables:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Parse all scripts
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee consumable-parse.log
+          if grep -E "SCRIPT ERROR:|ERROR:" consumable-parse.log; then exit 1; fi
+      - name: Run consumables integration smoke
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-consumable-test"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/consumable_smoke_test.gd 2>&1 | tee consumable-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|CONSUMABLE FAIL:|CONSUMABLE_SMOKE_FAILED" consumable-smoke.log; then exit 1; fi
+          grep -q "CONSUMABLE_SMOKE_OK" consumable-smoke.log
+      - name: Upload smoke test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: consumable-test-logs-${{ github.sha }}
+          path: consumable-*.log
+          if-no-files-found: ignore
