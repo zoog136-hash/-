@@ -3454,7 +3454,8 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 				hud.append_log("%s · %d/%d타 MISS" % [str(skill.get("name", "")), hit_index + 1, hits])
 				continue
 			var chain_factor: float = pow(clampf(float(skill.get("chain_falloff", 1.0)), 0.2, 1.0), chain_index) if chain_limit > 1 else 1.0
-			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor)))
+			var execute_factor: float = maxf(1.0, float(skill.get("execute_multiplier", 1.0))) if float(victim.hp) / maxf(1.0, float(victim.max_hp)) <= float(skill.get("execute_threshold", 0.0)) else 1.0
+			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor * execute_factor)))
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
 			if critical:
 				damage = _critical_damage(damage)
@@ -3468,6 +3469,8 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 						victim.apply_slow(float(skill.get("status_duration", 3.0)), float(skill.get("slow_multiplier", 0.65)))
 					"hold":
 						victim.apply_hold(float(skill.get("status_duration", 2.0)))
+					"poison":
+						victim.apply_poison(float(skill.get("status_duration", 4.0)), maxi(1, int(skill.get("poison_tick_damage", 10))), 1.0)
 			hud.append_log("%s · %s %d/%d타 %d 피해%s" % [
 				str(skill.get("name", "")), victim.monster_name, hit_index + 1, hits, damage, " CRITICAL" if critical else ""
 			])
