@@ -674,7 +674,7 @@ func _job_skill_by_name(skill_name: String) -> Dictionary:
 func _skill_icon(effect: String, type_text: String) -> Texture2D:
 	if effect == "heal":
 		return _load_texture("res://assets/ui/heal.png")
-	if effect == "damage":
+	if effect in ["damage", "charge", "turnUndead"]:
 		return _load_texture("res://assets/ui/attack.png")
 	if effect.find("Buff") >= 0 or type_text == "버프":
 		return _load_texture("res://assets/ui/rune.png")
