@@ -2605,7 +2605,7 @@ func _quickbar_job_skills() -> Array:
 		if _is_passive_skill(skill):
 			continue
 		var effect: String = str(skill.get("effect", ""))
-		if effect not in ["damage", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport"]:
+		if effect not in ["damage", "heal", "atkBuff", "defBuff", "hpBuff", "speedBuff", "teleport", "invisibility", "stun", "silence", "poison", "bleed", "hold", "fear"]:
 			continue
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class == job_class:
@@ -2752,13 +2752,17 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 	if slot_index < 0 or slot_index >= 8:
 		return
 	_normalize_quickslots()
-	if entry_kind == "skill":
+	var is_auto_skill: bool = entry_kind == "skill_auto"
+	if entry_kind == "skill" or is_auto_skill:
 		var skill: Dictionary = _skill_record(entry_id)
 		if skill.is_empty():
 			hud.show_message("등록할 스킬을 찾을 수 없습니다")
 			return
 		if _is_passive_skill(skill):
 			hud.show_message("%s은(는) 패시브 스킬이라 퀵슬롯 등록이 필요 없습니다" % entry_id)
+			return
+		if is_auto_skill and not SKILL_RULES.can_auto_cast(skill):
+			hud.show_message("%s은(는) 자동 공격/회복용 스킬이 아닙니다" % entry_id)
 			return
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class != "공용" and skill_class != job_class:
@@ -2770,7 +2774,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 			return
 	else:
 		return
-	quickslots[slot_index] = {"kind":entry_kind, "id":entry_id}
+	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
 	_update_hud()
 	_save_game(true)
 
