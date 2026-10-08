@@ -8,7 +8,7 @@ const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 const ELIXIR_LIMIT: int = 10
 const STAT_CAP: int = 45
 
-var world: Node = null
+var world: Variant = null
 var elemental_enchants: Dictionary = {}
 var elixirs_used: int = 0
 var half_elixirs_used: int = 0
