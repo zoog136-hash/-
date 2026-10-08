@@ -134,6 +134,119 @@ func _run() -> void:
 	_expect(bool(world.call("_cast_job_skill", "사일런스")), "offensive silence could not be cast from stealth")
 	_expect(not bool(world.call("is_player_concealed")), "offensive status skill did not break stealth")
 
+
+	# Turn Undead must be restricted to the monster race and instantly defeat
+	# an undead on a successful magic hit, not just deal high fixed damage.
+	world.call("_on_job_class_selected", "마법사")
+	world.set("mp", 999)
+	world.call("_tick_skill_cooldowns", 60.0)
+	world.set("selected_monster", dummy)
+	before_mp = int(world.get("mp"))
+	_expect(not bool(world.call("_cast_job_skill", "턴 언데드")), "Turn Undead accepted a living monster")
+	_expect(int(world.get("mp")) == before_mp, "rejected Turn Undead consumed MP")
+	var undead_dummy: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+	monsters.add_child(undead_dummy)
+	undead_dummy.setup({"name":"검증용 해골", "type":"언데드", "lv":1, "hp":999999, "mr":0}, player, world, null)
+	undead_dummy.global_position = player.global_position
+	_expect(undead_dummy.is_undead(), "monster metadata does not identify undead")
+	for _attempt: int in range(16):
+		if undead_dummy.dead:
+			break
+		world.call("_tick_skill_cooldowns", 60.0)
+		world.set("selected_monster", undead_dummy)
+		_expect(bool(world.call("_cast_job_skill", "턴 언데드")), "Turn Undead failed to cast on undead")
+	_expect(undead_dummy.dead, "a magic hit must instantly defeat undead regardless of HP")
+
+	# Counter Barrier must reflect damage only on a successful melee hit.
+	world.call("_on_job_class_selected", "기사")
+	world.set("mp", 999)
+	world.set("hp", int(world.call("_effective_max_hp")))
+	world.call("_tick_skill_cooldowns", 60.0)
+	_expect(bool(world.call("_cast_job_skill", "카운터 배리어")), "counter buff could not be cast")
+	buffs = world.get("active_skill_buffs") as Dictionary
+	_expect(buffs.has("카운터 배리어"), "counter buff record missing")
+	var counter_buff: Dictionary = buffs.get("카운터 배리어", {}) as Dictionary
+	_expect(float(counter_buff.get("counter_chance", 0.0)) > 0.0, "counter proc chance not stored")
+	counter_buff["counter_chance"] = 1.0
+	buffs["카운터 배리어"] = counter_buff
+	world.set("active_skill_buffs", buffs)
+	var target_hp_before: int = dummy.hp
+	_expect(not bool(world.call("_try_active_counterattack", dummy, "ranged", 20)), "counter incorrectly procced on ranged damage")
+	_expect(dummy.hp == target_hp_before, "counter reflected ranged damage")
+	_expect(bool(world.call("_try_active_counterattack", dummy, "melee", 20)), "melee counter did not proc at 100%")
+	_expect(dummy.hp < target_hp_before, "counter did not hurt attacker")
+
+	# Both Triple Arrow grades must make three independent damage checks.
+	world.call("_on_job_class_selected", "요정")
+	world.set("mp", 999)
+	var triple: Dictionary = world.call("_skill_record", "트리플 애로우") as Dictionary
+	var triple_spirit: Dictionary = world.call("_skill_record", "트리플 애로우(스피릿)") as Dictionary
+	_expect(int(triple.get("hits", 0)) == 3, "basic Triple Arrow is not 3-hit")
+	_expect(int(triple_spirit.get("hits", 0)) == 3, "Spirit Triple Arrow is not 3-hit")
+	var multiple_landed: bool = false
+	for _attempt: int in range(6):
+		world.call("_tick_skill_cooldowns", 60.0)
+		world.set("selected_monster", dummy)
+		var count_before: int = dummy.damage_hit_count
+		_expect(bool(world.call("_cast_job_skill", "트리플 애로우(스피릿)")), "Spirit Triple Arrow cast failed")
+		if dummy.damage_hit_count - count_before >= 2:
+			multiple_landed = true
+			break
+	_expect(multiple_landed, "Triple Arrow did not land multiple independently rolled hits")
+
+	# Find a clear, walkable target position so charge is tested against real
+	# world coordinates instead of teleporting through impassable map tiles.
+	world.call("_on_job_class_selected", "기사")
+	world.set("mp", 999)
+	world.call("_tick_skill_cooldowns", 60.0)
+	var start_position: Vector2 = player.global_position
+	var charge_position: Vector2 = Vector2.ZERO
+	for radius: int in [180, 140, 220]:
+		for angle_index: int in range(24):
+			var candidate: Vector2 = start_position + Vector2.from_angle(float(angle_index) * TAU / 24.0) * float(radius)
+			if not bool(world.call("_is_walkable_world", candidate)):
+				continue
+			if not bool(world.call("_has_line_of_sight_world", start_position, candidate)):
+				continue
+			var path_check: PackedVector2Array = world.call("find_world_path", start_position, candidate) as PackedVector2Array
+			if path_check.size() < 2:
+				continue
+			charge_position = candidate
+			break
+		if charge_position != Vector2.ZERO:
+			break
+	_expect(charge_position != Vector2.ZERO, "no open charge destination found for integration test")
+	if charge_position != Vector2.ZERO:
+		var charge_dummy: TwilightMonster = monster_scene.instantiate() as TwilightMonster
+		monsters.add_child(charge_dummy)
+		charge_dummy.setup({"name":"돌진 검증용", "lv":1, "hp":999999, "mr":0}, player, world, null)
+		charge_dummy.global_position = charge_position
+		world.set("selected_monster", charge_dummy)
+		var cast_charge: bool = bool(world.call("_cast_job_skill", "기사의 돌진 12"))
+		_expect(cast_charge, "charge skill could not start in open terrain")
+		if cast_charge:
+			for _step: int in range(120):
+				world.call("_advance_skill_charge", 1.0 / 60.0)
+				if (world.get("charge_skill") as Dictionary).is_empty():
+					break
+			_expect((world.get("charge_skill") as Dictionary).is_empty(), "charge never completed")
+			_expect(player.global_position.distance_to(start_position) > 40.0, "charge did not move player")
+			_expect(charge_dummy.damage_hit_count > 0, "charge did not strike after arriving")
+
+		# A ranged AUTO skill must cast outside the equipped melee weapon range.
+		world.call("_on_job_class_selected", "요정")
+		world.set("mp", 999)
+		world.call("_tick_skill_cooldowns", 60.0)
+		world.call("_on_quickslot_assignment_requested", 0, "skill_auto", "에너지 볼트")
+		world.set("auto_target", dummy)
+		world.set("selected_monster", dummy)
+		var distance_to_original: float = player.global_position.distance_to(dummy.global_position)
+		if distance_to_original <= 300.0 and distance_to_original > 90.0 and bool(world.call("_has_line_of_sight_world", player.global_position, dummy.global_position)):
+			_expect(not bool(world.call("_target_in_current_weapon_range", dummy)), "AUTO priority target unexpectedly in 1-cell weapon range")
+			before_mp = int(world.get("mp"))
+			world.call("_run_auto_hunt")
+			_expect(int(world.get("mp")) == before_mp - 3, "AUTO did not prioritize available spell outside weapon range")
+
 	world.queue_free()
 	await process_frame
 	_finish()
