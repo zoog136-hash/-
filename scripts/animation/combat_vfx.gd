@@ -33,7 +33,9 @@ func impact(point: Vector2, direction: Vector2, style: String, critical: bool = 
 
 func number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
 	var entry: Dictionary = _record("number", point, 0.65 if not critical else 0.8)
-	entry.merge({"text":value, "color":color, "critical":critical})
+	var size: int = 23 if critical else 18
+	var width: float = font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
+	entry.merge({"text":value, "color":color, "critical":critical, "width":width})
 
 func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2) -> void:
 	var entry: Dictionary = _record("death", point, 0.8)
@@ -82,7 +84,7 @@ func _draw() -> void:
 				var critical: bool = entry.critical
 				var size: int = 23 if critical else 18
 				var text_value: String = entry.text
-				var width: float = font.get_string_size(text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+				var width: float = entry.width
 				point += Vector2(-width * 0.5 + (int(entry.serial) % 3 - 1) * 7.0, -p * 35.0)
 				var color: Color = entry.color
 				color.a *= minf(1.0, alpha * 2.0)

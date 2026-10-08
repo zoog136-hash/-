@@ -200,7 +200,8 @@ func _physics_process(delta: float) -> void:
 	_tick_ai(delta)
 	if is_stunned() or is_feared(): motion.cancel_attack()
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
-	motion.apply(sprite, animation_base_scale)
+	if get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
+		motion.apply(sprite, animation_base_scale)
 	animation_state = motion.state
 	if not motion.active and velocity.length_squared() > 1.0:
 		animation_state = "patrol" if velocity.length() < move_speed * 0.7 else "chase"

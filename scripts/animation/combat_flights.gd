@@ -4,45 +4,65 @@ class_name TwilightCombatFlights
 ## Flight lifetime is independent of the visual budget. Never drop a damage callback
 ## because the screen is busy. Weak targets cannot hit a newly selected enemy.
 var flights: Array[Dictionary] = []
+var available: Array[Dictionary] = []
+var generation: int = 0
+const MAX_POOL: int = 128
 var resolved_count: int = 0
 var visual_limit: int = 64
 
+func _ready() -> void:
+	set_physics_process(false)
+
 func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, speed: float = 1100.0, delay: float = 0.0) -> void:
 	if not is_instance_valid(target): return
-	flights.append({"position":origin, "previous":origin, "target":weakref(target), "kind":kind,
+	var record: Dictionary = available.pop_back() if not available.is_empty() else {}
+	record.merge({"position":origin, "previous":origin, "target":weakref(target), "kind":kind,
 		"callback":impact, "speed":speed, "age":-maxf(0.0, delay)})
+	flights.append(record)
+	set_physics_process(true)
+
+func _retire(index: int) -> Callable:
+	var flight: Dictionary = flights[index]
+	var callback: Callable = flight.callback
+	flights.remove_at(index)
+	flight.clear()
+	if available.size() < MAX_POOL: available.append(flight)
+	return callback
 
 func clear() -> void:
-	flights.clear()
+	generation += 1
+	for i: int in range(flights.size() - 1, -1, -1): _retire(i)
+	set_physics_process(false)
 	queue_redraw()
 
 func _physics_process(delta: float) -> void:
+	var batch_generation: int = generation
 	for i: int in range(flights.size() - 1, -1, -1):
+		if batch_generation != generation: break
+		if i >= flights.size(): continue
 		var flight: Dictionary = flights[i]
 		var target: Node2D = flight.target.get_ref() as Node2D
 		if not is_instance_valid(target) or not target.is_inside_tree() or (target is TwilightMonster and target.dead):
-			flights.remove_at(i)
+			_retire(i)
 			continue
 		flight.age += delta
 		if flight.age < 0.0: continue
 		if flight.kind == "timed":
-			flights.remove_at(i)
-			var timed_callback: Callable = flight.callback
+			var timed_callback: Callable = _retire(i)
 			if timed_callback.is_valid(): timed_callback.call()
 			continue
 		if flight.age > 3.0:
-			flights.remove_at(i)
+			_retire(i)
 			continue
 		var end: Vector2 = target.combat_hit_position() if target.has_method("combat_hit_position") else target.global_position + Vector2(0, -24)
 		flight.previous = flight.position
 		flight.position = (flight.position as Vector2).move_toward(end, float(flight.speed) * delta)
 		if (flight.position as Vector2).distance_squared_to(end) <= 0.25:
-			flights.remove_at(i) # retire before calling potentially reentrant combat code
+			var callback: Callable = _retire(i)
 			resolved_count += 1
-			var callback: Callable = flight.callback
 			if callback.is_valid(): callback.call()
-	if not flights.is_empty(): queue_redraw()
-	elif resolved_count > 0: queue_redraw()
+	queue_redraw()
+	if flights.is_empty(): set_physics_process(false)
 
 func _draw() -> void:
 	for i: int in range(mini(visual_limit, flights.size())):

@@ -177,4 +177,5 @@ func _apply_frames(sprite: AnimatedSprite2D) -> void:
 			frame_value = marker_frame + int((visual_progress - attack_hit_ratio) / (1.0 - attack_hit_ratio) * (count - marker_frame))
 	elif move_ratio > 0.01 and not active:
 		frame_value = posmod(int(gait), count)
-	sprite.frame = clampi(frame_value, 0, count - 1)
+	var next_frame: int = clampi(frame_value, 0, count - 1)
+	if sprite.frame != next_frame: sprite.frame = next_frame
