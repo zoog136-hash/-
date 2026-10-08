@@ -1525,6 +1525,9 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var critical: bool = rng.randf() < critical_chance
 	var incoming_damage: int = _critical_damage(damage_value) if critical else damage_value
 	var reduced: int = maxi(1, incoming_damage) if normalized_type == "magic" else _physical_damage_after_reduction(incoming_damage)
+	var attack_element: String = ELEMENT_RULES.channel(attacker.attack_element)
+	if attack_element != "physical":
+		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
 	hp = maxi(0, hp - reduced)
 	if hp > 0:
@@ -3982,7 +3985,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _ranged_normal_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0) + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
 
 func _record_move_speed_multiplier(record: Dictionary) -> float:
 	var value: float = float(record.get("speed", 1.0))
@@ -4029,22 +4032,22 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(str_stat, 10, 2.0) + _active_item_buff_total("melee_damage")
+	return _effective_attack() + _stat_step_bonus(str_stat + _active_skill_buff_total("strFlat"), 10, 2.0) + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
-	return level + str_stat + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
+	return level + str_stat + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat, 10, 2.0) + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
-	return level + dex_stat + 5 + _equipment_enhancement_level("weapon") + _active_item_buff_total("ranged_accuracy")
+	return level + dex_stat + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(int_stat, 8, 2.0) + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(int_stat + _active_skill_buff_total("intFlat"), 8, 2.0) + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
-	return level + int_stat + _active_item_buff_total("magic_accuracy")
+	return level + int_stat + _active_skill_buff_total("intFlat") + _active_item_buff_total("magic_accuracy")
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -4379,7 +4382,7 @@ func _pve_damage_after_item_buffs(raw_damage: int) -> int:
 	return reduced
 
 func _physical_damage_after_reduction(raw_damage: int) -> int:
-	return maxi(1, raw_damage - _damage_reduction_stat())
+	return maxi(1, raw_damage - _damage_reduction_stat() - _active_skill_buff_total("damage_reduction"))
 
 func _character_stats_snapshot() -> Dictionary:
 	return {
