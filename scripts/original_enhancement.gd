@@ -8,7 +8,7 @@ static func stats(kind: String, level: int, record: Dictionary = {}) -> Dictiona
 	var custom_value: Variant = record.get("enhancement_options", {})
 	if custom_value is Dictionary and not (custom_value as Dictionary).is_empty():
 		var custom: Dictionary = custom_value as Dictionary
-		var entry_value: Variant = custom.get(str(ranki(rank, 0, 21)), {})
+		var entry_value: Variant = custom.get(str(clampi(rank, 0, 21)), {})
 		if entry_value is Dictionary:
 			return (entry_value as Dictionary).duplicate(true)
 	match kind:
