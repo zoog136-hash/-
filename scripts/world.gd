@@ -1221,8 +1221,10 @@ func _attack() -> void:
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _critical_damage(damage)
+	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	target.take_damage(damage, critical)
 	_try_trigger_passives("on_hit", target)
+	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
 		target.monster_name, damage,
 		"원거리" if attack_kind == "ranged" else "근거리",
@@ -3257,7 +3259,8 @@ func _cast_job_turn_undead(skill: Dictionary) -> bool:
 		return false
 	_break_invisibility()
 	player.pulse_attack()
-	if rng.randf() >= _player_magic_hit_chance(target):
+	var chance: float = clampf(_player_magic_hit_chance(target) + float(skill.get("magic_hit_bonus", 0.0)), 0.05, 0.99)
+	if rng.randf() >= chance:
 		target.show_miss()
 		hud.append_log("%s · %s 마법 명중 실패" % [str(skill.get("name", "")), target.monster_name])
 	else:
@@ -3414,11 +3417,20 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 					targets.append(other)
 	var power: int = maxi(1, int(skill.get("power", 20)))
 	var total_damage: int = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
+	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
 	for victim: TwilightMonster in targets:
+		var victim_hit_chance: float = hit_chance
+		if magic_style:
+			victim_hit_chance = _player_magic_hit_chance(victim)
+		elif ranged_style:
+			victim_hit_chance = clampf(_melee_hit_chance(victim) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
+		else:
+			victim_hit_chance = _melee_hit_chance(victim)
 		for hit_index: int in range(hits):
 			if victim.dead:
 				break
-			if rng.randf() >= hit_chance:
+			if rng.randf() >= victim_hit_chance:
 				victim.show_miss()
 				hud.append_log("%s · %d/%d타 MISS" % [str(skill.get("name", "")), hit_index + 1, hits])
 				continue
@@ -3426,8 +3438,10 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
 			if critical:
 				damage = _critical_damage(damage)
+			damage = _elemental_damage_to_monster(damage, element_name, victim)
 			victim.take_damage(damage, critical)
 			_try_trigger_passives("on_hit", victim)
+			_try_extra_weapon_hit(victim, damage, style)
 			hud.append_log("%s · %s %d/%d타 %d 피해%s" % [
 				str(skill.get("name", "")), victim.monster_name, hit_index + 1, hits, damage, " CRITICAL" if critical else ""
 			])
