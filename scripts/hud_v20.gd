@@ -1,5 +1,8 @@
 extends "res://scripts/hud.gd"
 
+const LineageSideUI = preload("res://scripts/ui/lineage_side_ui.gd")
+const LineageInventoryUI = preload("res://scripts/ui/lineage_inventory_ui.gd")
+
 # V20 gameplay HUD overlay inspired by classic mobile MMORPG layouts.
 # Keeps the V19 catalog/inventory/map panels and replaces only the always-visible combat HUD.
 
@@ -22,6 +25,8 @@ var v20_status_name: Label
 var v20_skill_container: HBoxContainer
 var v20_self_button: Button
 var v20_quickslot_buttons: Array[Button] = []
+var lineage_side_ui: TwilightSideUI
+var lineage_inventory_ui: TwilightInventoryUI
 
 const V20_CLASS_SHEETS: Array[String] = [
 	"res://assets/sprites/classes/warrior.png",
@@ -71,10 +76,107 @@ func _build_v20_gameplay_hud() -> void:
 	_build_v20_right_controls()
 	_build_v20_bottom_bar()
 	_build_v20_message_and_log()
+	_build_lineage_side_ui()
+	_build_lineage_inventory_ui()
 
 	_update_v20_portrait(0)
 	set_quick_items({"HP 물약": 100, "강력 HP 물약": 14, "축복받은 HP 물약": 10, "초록 잎": 200})
 	set_quest_progress(0, 9)
+
+func _build_lineage_side_ui() -> void:
+	lineage_side_ui = LineageSideUI.new() as TwilightSideUI
+	lineage_side_ui.name = "LineageSideUI"
+	lineage_side_ui.action_requested.connect(_on_lineage_side_action)
+	lineage_side_ui.stat_increase_requested.connect(func(stat_name: String) -> void: stat_increase_requested.emit(stat_name))
+	$Root.add_child(lineage_side_ui)
+	lineage_side_ui.set_character_state(character_state)
+
+func _build_lineage_inventory_ui() -> void:
+	lineage_inventory_ui = LineageInventoryUI.new() as TwilightInventoryUI
+	lineage_inventory_ui.name = "LineageInventoryUI"
+	lineage_inventory_ui.item_activate_requested.connect(func(item_name: String) -> void: inventory_item_activated.emit(item_name))
+	lineage_inventory_ui.quickslot_requested.connect(_register_inventory_quickslot)
+	$Root.add_child(lineage_inventory_ui)
+	lineage_inventory_ui.set_catalog_data(catalog_data, item_image_index)
+	lineage_inventory_ui.set_character_state(character_state)
+
+func _register_inventory_quickslot(item_name: String) -> void:
+	_open_quickslot_picker("item", item_name, item_name)
+
+func toggle_inventory() -> void:
+	var target: bool = true
+	if lineage_inventory_ui != null and lineage_inventory_ui.inventory_panel != null:
+		target = not lineage_inventory_ui.inventory_panel.visible
+	_hide_aux_panels()
+	if lineage_side_ui != null:
+		lineage_side_ui.hide_all()
+	if lineage_inventory_ui != null:
+		if target:
+			lineage_inventory_ui.show_inventory()
+		else:
+			lineage_inventory_ui.hide_inventory()
+
+func refresh_inventory(inventory_value: Dictionary) -> void:
+	super.refresh_inventory(inventory_value)
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.set_inventory(inventory_value)
+
+func set_catalog_data(value: Dictionary, image_index: Dictionary) -> void:
+	super.set_catalog_data(value, image_index)
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.set_catalog_data(value, image_index)
+
+func toggle_menu() -> void:
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.hide_inventory()
+	_hide_aux_panels()
+	if lineage_side_ui != null:
+		lineage_side_ui.toggle_menu()
+
+func open_character() -> void:
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.hide_inventory()
+	_hide_aux_panels()
+	if lineage_side_ui != null:
+		lineage_side_ui.show_character(character_state)
+
+func _on_lineage_side_action(action_id: String) -> void:
+	if lineage_side_ui != null and action_id != "character":
+		lineage_side_ui.hide_all()
+	match action_id:
+		"shop":
+			open_shop()
+		"inventory":
+			inventory_pressed.emit()
+		"skills":
+			open_skills()
+		"quest":
+			open_quest_info()
+		"character":
+			open_character()
+		"transform":
+			open_catalog("변신")
+		"doll":
+			open_catalog("마법인형")
+		"relic":
+			open_catalog("성물")
+		"itemdb":
+			open_catalog("아이템")
+		"map":
+			map_pressed.emit()
+		"craft":
+			_open_utility_panel("제작")
+			_utility_add_text("[font_size=20][b]제작[/b][/font_size]\n제작 시스템 연결을 위한 메뉴 자리입니다. 기존 게임 데이터와 연결하기 전까지 UI만 활성화합니다.")
+		"macro":
+			open_macro_info()
+		"save":
+			save_pressed.emit()
+		"load":
+			load_pressed.emit()
+		"settings":
+			open_settings_info()
+		_:
+			pass
 
 func _panel_style(alpha: float = 0.88, radius: int = 6, border: Color = Color(0.52, 0.40, 0.22, 0.95)) -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
@@ -722,6 +824,10 @@ func clear_target() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
+	if lineage_side_ui != null:
+		lineage_side_ui.set_character_state(value)
+	if lineage_inventory_ui != null:
+		lineage_inventory_ui.set_character_state(value)
 	var job_image_path: String = str(value.get("job_image_path", ""))
 	if job_image_path != "" and ResourceLoader.exists(job_image_path):
 		var job_texture: Texture2D = load(job_image_path) as Texture2D
