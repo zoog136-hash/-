@@ -175,6 +175,9 @@ func _run() -> void:
 	_expect(dummy.hp == target_hp_before, "counter reflected ranged damage")
 	_expect(bool(world.call("_try_active_counterattack", dummy, "melee", 20)), "melee counter did not proc at 100%")
 	_expect(dummy.hp < target_hp_before, "counter did not hurt attacker")
+	var master_counter: Dictionary = world.call("_skill_record", "카운터 배리어(마스터)") as Dictionary
+	_expect(float(master_counter.get("counter_chance", 0.0)) > float((world.call("_skill_record", "카운터 배리어") as Dictionary).get("counter_chance", 0.0)), "master counter proc rate is not stronger")
+	_expect(float(master_counter.get("counter_multiplier", 0.0)) > 1.5, "master counter does not upgrade reflected damage")
 
 	# Both Triple Arrow grades must make three independent damage checks.
 	world.call("_on_job_class_selected", "요정")
@@ -240,8 +243,18 @@ func _run() -> void:
 		world.call("_on_quickslot_assignment_requested", 0, "skill_auto", "에너지 볼트")
 		world.set("auto_target", dummy)
 		world.set("selected_monster", dummy)
-		var distance_to_original: float = player.global_position.distance_to(dummy.global_position)
-		if distance_to_original <= 300.0 and distance_to_original > 90.0 and bool(world.call("_has_line_of_sight_world", player.global_position, dummy.global_position)):
+		var priority_position: Vector2 = Vector2.ZERO
+		for radius: int in [185, 155, 230]:
+			for angle_index: int in range(24):
+				var candidate: Vector2 = player.global_position + Vector2.from_angle(float(angle_index) * TAU / 24.0) * float(radius)
+				if bool(world.call("_is_walkable_world", candidate)) and bool(world.call("_has_line_of_sight_world", player.global_position, candidate)):
+					priority_position = candidate
+					break
+			if priority_position != Vector2.ZERO:
+				break
+		_expect(priority_position != Vector2.ZERO, "no candidate for AUTO distance priority integration test")
+		if priority_position != Vector2.ZERO:
+			dummy.global_position = priority_position
 			_expect(not bool(world.call("_target_in_current_weapon_range", dummy)), "AUTO priority target unexpectedly in 1-cell weapon range")
 			before_mp = int(world.get("mp"))
 			world.call("_run_auto_hunt")
