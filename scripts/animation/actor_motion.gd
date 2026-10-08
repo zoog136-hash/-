@@ -94,6 +94,9 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 			else:
 				visual_progress = attack_hit_ratio + (1.0 - attack_hit_ratio) * (1.0 - pow(1.0 - (p - attack_hit_ratio) / (1.0 - attack_hit_ratio), speed))
 		if not released and attack_elapsed >= attack_duration * attack_hit_ratio:
+			# Receiving a critical just before this marker may freeze the windup pose.
+			# The strike pose must still catch up without delaying gameplay clocks.
+			visual_progress = attack_hit_ratio
 			released = true # mark before signal: reentrant handlers cannot double-hit
 			strike.emit(sequence)
 		if active and attack_elapsed >= attack_duration:
