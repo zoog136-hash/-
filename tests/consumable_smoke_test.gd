@@ -92,6 +92,13 @@ func _run() -> void:
 	var elemental_state: Dictionary = service.call("export_state")
 	var enchant: Dictionary = (elemental_state.get("elemental_enchants", {}) as Dictionary).get("낡은 장검", {}) as Dictionary
 	_check(int(enchant.get("level", 0)) >= 0 and int(enchant.get("level", 0)) <= 1, "Element enchant level invalid")
+	_check(int(service.call("element_stage_cap", "낡은 장검")) == 3, "Basic weapon elemental cap should be 3")
+	var enhancement_levels: Dictionary = world.get("enhancement_levels") as Dictionary
+	enhancement_levels["낡은 장검"] = 10
+	_check(int(service.call("element_stage_cap", "낡은 장검")) == 4, "+10 weapon elemental cap should be 4")
+	enhancement_levels["낡은 장검"] = 11
+	_check(int(service.call("element_stage_cap", "낡은 장검")) == 5, "+11 weapon elemental cap should be 5")
+	enhancement_levels.erase("낡은 장검")
 
 	# Random teleport stays on same map and is traversable.
 	inv["순간이동 주문서"] = 1
