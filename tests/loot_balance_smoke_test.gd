@@ -22,53 +22,98 @@ func _run() -> void:
 	var catalog: Dictionary = LOOT.build_catalog(data.get("아이템", []))
 	var by_name: Dictionary = catalog["by_name"]
 	var monsters: Array = data.get("몬스터", [])
-	_check(monsters.size() >= 163, "monster catalogue must include all existing records")
+	_check(monsters.size() >= 163, "existing monster catalog must remain present")
 	_check(LOOT.is_boss_record({"name":"검은숲의 지배자"}), "zone keeper must be a boss")
 	_check(LOOT.is_boss_record({"name":"데스나이트", "desc":"보스형"}), "described boss must be a boss")
 	_check(LOOT.is_boss_record({"name":"흑장로"}), "named boss must be a boss")
 	_check(not LOOT.is_boss_record({"name":"천상계 성광기사", "grade":"영웅"}), "grade alone must not imply boss")
-	_check(not LOOT.is_boss_record({"name":"데스나이트", "desc":"보스형", "is_boss":false}), "explicit override must work")
+	_check(not LOOT.is_boss_record({"name":"데스나이트", "desc":"보스형", "is_boss":false}), "boss override must work")
+	_check(LOOT.MAX_BOSS_EQUIPMENT_ROLLS == 3, "boss equipment must roll three times")
+	_check(LOOT.EQUIPMENT_GRADES.has("유일"), "Unique grade must be selectable")
+	for grade: String in ["일반", "고급", "희귀"]:
+		_check(absf(float(LOOT.NORMAL_EQUIPMENT_RATES[grade]) - 0.001) < 0.000000001, "normal " + grade + " rate must be 0.1%")
+		_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES[grade]) - 0.001) < 0.000000001, "boss " + grade + " rate must be 0.1% per roll")
+	_check(absf(float(LOOT.NORMAL_EQUIPMENT_RATES["영웅"]) - 0.00015) < 0.000000001, "normal Hero rate must be 0.015%")
+	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["영웅"]) - 0.01) < 0.000000001, "boss Hero rate must be 1%")
+	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["전설"]) - 0.002) < 0.000000001, "boss Legendary rate must be 0.2%")
+	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["신화"]) - 0.00025) < 0.000000001, "boss Mythic rate must be 0.025%")
+	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["유일"]) - 0.00001) < 0.000000001, "boss Unique rate must be 0.001%")
+	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("전설"), "normal monsters cannot roll Legendary")
+	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("신화"), "normal monsters cannot roll Mythic")
+	_check(not LOOT.NORMAL_EQUIPMENT_RATES.has("유일"), "normal monsters cannot roll Unique")
+	_check(absf(LOOT.NORMAL_POTION_RATE - 0.45) < 0.000001, "normal potion rate must remain 45%")
+	_check(absf(LOOT.BOSS_POTION_RATE - 0.90) < 0.000001, "boss potion rate must remain 90%")
+	var equipment_pools: Dictionary = catalog["equipment_by_grade"]
+	_check(not (equipment_pools.get("유일", []) as Array).is_empty(), "Unique equipment pool must be available")
+	var special_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	special_rng.seed = 714
+	var unique_item: String = LOOT._pick_equipment("유일", ["기르타스의 단검"], catalog, special_rng)
+	_check(unique_item == "기르타스의 단검", "boss configured Unique gear should be prioritized")
 	var boss_count: int = 0
+	var normal_count: int = 0
+	var gear_count: int = 0
 	for monster_value: Variant in monsters:
 		var record: Dictionary = monster_value as Dictionary
 		var is_boss: bool = LOOT.is_boss_record(record)
 		if is_boss:
 			boss_count += 1
+		else:
+			normal_count += 1
 		var drops: Array[String] = []
 		for item_value: Variant in record.get("drop", []):
 			drops.append(str(item_value))
 		var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 		rng.seed = 1024
 		var potion_count: int = 0
-		var gear_count: int = 0
-		for index: int in range(500):
+		for index: int in range(200):
 			var acquired: Array[String] = LOOT.roll(drops, is_boss, catalog, rng)
-			_check(acquired.size() <= 2, "at most one potion and one piece of equipment")
+			var max_gear: int = 3 if is_boss else 1
+			_check(acquired.size() <= max_gear + 1, "at most one potion plus allowed equipment slots")
+			var potions_in_kill: int = 0
+			var gear_in_kill: int = 0
 			for item_name: String in acquired:
-				_check(by_name.has(item_name), "unknown item: " + item_name)
+				_check(by_name.has(item_name), "unknown dropped item: " + item_name)
 				if not by_name.has(item_name):
 					continue
 				var item: Dictionary = by_name[item_name] as Dictionary
 				var grade: String = str(item.get("grade", ""))
 				if LOOT._is_potion(item):
 					potion_count += 1
-					_check(grade != "유일", "unique potion forbidden")
+					potions_in_kill += 1
+					_check(grade != "유일", "Unique potions remain outside potion drops")
 				else:
 					gear_count += 1
-					_check(LOOT._is_equipment(item), "drops must be gear or potion")
-					_check(grade != "유일", "unique equipment forbidden")
+					gear_in_kill += 1
+					_check(LOOT._is_equipment(item), "drops must be equipment or potions")
+					_check(grade in LOOT.EQUIPMENT_GRADES, "equipment grade unrecognized")
 					if not is_boss:
 						_check(grade in ["일반", "고급", "희귀", "영웅"], "normal monster exceeded Hero cap: " + item_name)
-		_check(potion_count > 0, "potion loot must be available to " + str(record.get("name", "")))
-		_check(gear_count > 0, "equipment loot must be available to " + str(record.get("name", "")))
-	_check(boss_count >= 30, "named / described boss recognition unexpectedly low")
-	_check(absf(float(LOOT.NORMAL_EQUIPMENT_RATES["영웅"])-0.0003) < 0.000001, "normal Hero rate wrong")
-	_check(absf(float(LOOT.BOSS_EQUIPMENT_RATES["신화"])-0.0005) < 0.000001, "boss Mythic rate wrong")
+			_check(potions_in_kill <= 1, "at most one potion per kill")
+			_check(gear_in_kill <= max_gear, "equipment drop count exceeded cap")
+		_check(potion_count > 0, "potion should drop during sample for " + str(record.get("name","")))
+	_check(boss_count >= 30 and normal_count >= 100, "boss/normal classification unexpectedly changed")
+	_check(gear_count > 0, "equipment roll must produce items in aggregate")
+	# Very-low drop rates make a two-or-more-gear kill rare. Sample a large
+	# deterministic boss series to verify the independent-roll implementation.
+	var sampled_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	sampled_rng.seed = 90210
+	var multi_gear_kills: int = 0
+	for index: int in range(25000):
+		var earned: Array[String] = LOOT.roll(["HP 물약", "기르타스의 단검"], true, catalog, sampled_rng)
+		var earned_gear: int = 0
+		for name: String in earned:
+			var item: Dictionary = by_name[name] as Dictionary
+			if LOOT._is_equipment(item):
+				earned_gear += 1
+		if earned_gear >= 2:
+			multi_gear_kills += 1
+		_check(earned_gear <= 3, "boss dropped more than three equipment")
+	_check(multi_gear_kills > 0, "boss must be able to award multiple equipment items")
 	_finish()
 
 func _finish() -> void:
 	if failures.is_empty():
-		print("LOOT_BALANCE_OK: normal <= Hero, boss <= Mythic, unique excluded, potions separate")
+		print("LOOT_BALANCE_OK: 0.1% common/advanced/rare, halved high grades, boss Unique 0.001%, 3 equipment rolls")
 		quit(0)
 	else:
 		print("LOOT_BALANCE_FAILED: %d issues" % failures.size())

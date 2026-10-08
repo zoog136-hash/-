@@ -1,11 +1,13 @@
 extends RefCounted
-# Drop chances are per monster kill. Potion and equipment rolls are independent.
-# Boss monsters may drop up to Mythic; field monsters may drop up to Hero.
-# Unique gear is never rolled here.
+# Equipment rates are per independent equipment roll, not guaranteed drops.
+# Field monsters: 1 equipment roll, at most Hero. Bosses: 3 equipment rolls,
+# at most Unique. One separate potion roll per kill is preserved.
+# Each roll yields at most one equipment item; rolls may yield duplicate items.
 
-const EQUIPMENT_GRADES = ["일반", "고급", "희귀", "영웅", "전설", "신화"]
-const NORMAL_EQUIPMENT_RATES = {"일반":0.08, "고급":0.03, "희귀":0.007, "영웅":0.0003}
-const BOSS_EQUIPMENT_RATES = {"일반":0.12, "고급":0.08, "희귀":0.05, "영웅":0.02, "전설":0.004, "신화":0.0005}
+const EQUIPMENT_GRADES = ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
+const NORMAL_EQUIPMENT_RATES = {"일반":0.001, "고급":0.001, "희귀":0.001, "영웅":0.00015}
+const BOSS_EQUIPMENT_RATES = {"일반":0.001, "고급":0.001, "희귀":0.001, "영웅":0.01, "전설":0.002, "신화":0.00025, "유일":0.00001}
+const MAX_BOSS_EQUIPMENT_ROLLS: int = 3
 const NORMAL_POTION_RATE: float = 0.45
 const BOSS_POTION_RATE: float = 0.90
 const NAMED_BOSSES = ["흑장로", "이프리트", "드레이크", "거대 드레이크"]
@@ -117,8 +119,11 @@ static func roll(monster_drops: Array[String], is_boss: bool, catalog: Dictionar
 		var potion: String = _pick_potion(monster_drops, is_boss, catalog, rng)
 		if not potion.is_empty():
 			earned.append(potion)
-	var equipment_grade: String = _roll_equipment_grade(is_boss, rng)
-	if not equipment_grade.is_empty():
+	var equipment_roll_count: int = MAX_BOSS_EQUIPMENT_ROLLS if is_boss else 1
+	for _attempt: int in range(equipment_roll_count):
+		var equipment_grade: String = _roll_equipment_grade(is_boss, rng)
+		if equipment_grade.is_empty():
+			continue
 		var equipment: String = _pick_equipment(equipment_grade, monster_drops, catalog, rng)
 		if not equipment.is_empty():
 			earned.append(equipment)
