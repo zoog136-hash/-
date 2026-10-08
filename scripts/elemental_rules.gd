@@ -2,7 +2,7 @@ extends RefCounted
 class_name TwilightElementRules
 
 # Twilight-local elemental channels. "physical" bypasses elemental resistance.
-const CHANNELS: Array[String] = ["physical", "fire", "ice", "lightning", "earth", "wind", "holy", "dark", "arcane"]
+const CHANNELS: Array[String] = ["physical", "fire", "water", "ice", "lightning", "earth", "wind", "holy", "dark", "arcane", "poison", "chaos", "temporal"]
 
 static func channel(raw_value: String) -> String:
 	var value: String = raw_value.strip_edges().to_lower()
