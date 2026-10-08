@@ -11,6 +11,9 @@ signal selected(monster: TwilightMonster)
 @onready var hp_bar: ProgressBar = $HPBar
 
 var monster_name: String = "몬스터"
+var monster_type: String = ""
+var undead: bool = false
+var damage_hit_count: int = 0
 var monster_level: int = 1
 var defense_value: int = 0
 var armor_class: int = -10
@@ -77,6 +80,8 @@ var roam_clock: float = 0.0
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
 	monster_name = str(record.get("name", "몬스터"))
+	monster_type = str(record.get("type", record.get("race", "")))
+	undead = bool(record.get("undead", monster_type == "언데드"))
 	monster_level = maxi(1, int(record.get("lv", record.get("level", 1))))
 	defense_value = maxi(0, int(record.get("def", record.get("defense", record.get("방어력", 0)))))
 	var default_ac: int = -(10 + monster_level + defense_value * 2)
@@ -444,9 +449,13 @@ func critical_rate_for_type(kind: String) -> int:
 		_:
 			return melee_critical_rate
 
+func is_undead() -> bool:
+	return undead or monster_type == "언데드"
+
 func take_damage(amount: int, critical: bool = false) -> void:
 	if dead:
 		return
+	damage_hit_count += 1
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
 	_show_damage_number(amount, critical)
