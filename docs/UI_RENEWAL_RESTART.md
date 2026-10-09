@@ -58,9 +58,13 @@ displayed when supplied, without migrating or writing inventory data.
 5. Skills/catalogs: searchable card lists connected to original signals. Item
    catalog no longer invokes the legacy free acquisition action; only owned
    items can be used/equipped. Native catalog touch scroll smoke test passes.
-6. Remaining panels and integration: in progress.
-7. Regression, real GL renders at 1280x720/1600x900/1920x1080/2560x1440,
-   verification evidence and PR: pending.
+6. Additional UI: shop, enhancement, quest, settings, AUTO and combat log
+   now have signal-driven UI-only adapters. Shop purchases call the original
+   transaction signal; enhancement uses original world-generated chances.
+   Quest progress is read-only; save/load use the established signals.
+7. Integration smoke and 68-frame OpenGL capture automation authored for
+   1280x720/1600x900/1920x1080/2560x1440. They are not passing results
+   until GitHub Actions artifacts and log outputs are inspected.
 
 Resume from the last successful branch commit; never regenerate existing art.
 Current checkpoint: HUD, inventory, character, catalog cards, skill cards and
@@ -68,3 +72,24 @@ current-region map are wired; finish shop/forge/quest/settings, then add full
 functional UI assertions and final screenshot checks. No new image art created.
 Image processing batches are limited to five, with SHA-256 deduplication and
 commit/tree verification. Screenshots are test evidence, not generated UI art.
+
+
+## Recovery verification ledger (2026-10-09)
+
+- Branch at restart: 4c52dc2, identical to last good commit.
+- Protected: ground loot PR #15 and combat animation PR #16;
+  no modification or merge of either workstream.
+- 36 existing tests claimed by prior Work: UNVERIFIED. No original
+  per-test log or archived evidence in the UI restart checkpoint.
+- 220 new checks claimed by prior Work: UNVERIFIED. No complete
+  test manifest or result file available in the checkpoint.
+- 68 prior OpenGL captures claimed by prior Work: UNVERIFIED.
+  Original branch capture script contained 6 views x 4 sizes = 24
+  attempts, not a confirmed 68-capture artifact.
+- New screenshot automation now targets 17 views x 4 sizes = 68.
+  A successful GitHub Action plus artifact inspection is needed
+  to verify that the files were actually generated.
+- Source-only recovery steps: f8af5b1 (shop), 19b2c19 (forge),
+  74be413 (quest), 5338058 (settings/AUTO/log), 7bcb16f
+  (UI integration and screenshot CI).
+- No gameplay or animation/map/save asset edits. Main remains untouched.

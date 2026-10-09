@@ -54,7 +54,7 @@ func _run() -> void:
 		await _capture("shop-%dx%d" % [extent.x,extent.y])
 		world.hud.open_quest_info()
 		await _capture("quest-%dx%d" % [extent.x,extent.y])
-		world.hud._open_enhance_chooser()
+		world.hud.call("_open_enhance_chooser")
 		await _capture("forge-%dx%d" % [extent.x,extent.y])
 		world.hud.open_enhancement("무기 마법 주문서 (각인)",world._enhancement_candidates("weapon","normal"))
 		await _capture("forge-target-%dx%d" % [extent.x,extent.y])
@@ -64,6 +64,10 @@ func _run() -> void:
 		await _capture("auto-%dx%d" % [extent.x,extent.y])
 		world.hud.open_chat_info()
 		await _capture("log-%dx%d" % [extent.x,extent.y])
+	if results.size() != 68:
+		push_error("UI review expected 68 captures; got %d" % results.size())
+		quit(1)
+		return
 	var file := FileAccess.open(directory+"/render-results.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"renderer":RenderingServer.get_video_adapter_name(),"driver":RenderingServer.get_current_rendering_method(),"captures":results},"\t"))
 	file.close()
