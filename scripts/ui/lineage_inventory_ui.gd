@@ -4,6 +4,7 @@ class_name TwilightInventoryUI
 signal item_activate_requested(item_name: String)
 signal quickslot_requested(item_name: String)
 
+const FULL_CATALOG_OPTIONS = preload("res://scripts/full_catalog_options.gd")
 const GOLD := Color(0.82, 0.68, 0.40, 1.0)
 const GOLD_BRIGHT := Color(0.98, 0.81, 0.42, 1.0)
 const GOLD_SOFT := Color(0.68, 0.55, 0.32, 1.0)
@@ -556,7 +557,14 @@ func _refresh_detail(item_name: String) -> void:
 	if enhance_level > 0 or bless_state != "normal" or engraved:
 		lines.append("")
 	var desc := str(record.get("desc", "")).strip_edges()
-	if desc != "":
+	var detailed_options: Array[String] = FULL_CATALOG_OPTIONS.visible_options(record)
+	if not detailed_options.is_empty() and record.get("sourceOptions", []) is Array and not (record.get("sourceOptions", []) as Array).is_empty():
+		lines.append("[color=#e9d7a5]원작 상세 옵션 · %d개[/color]" % detailed_options.size())
+		for option_text: String in detailed_options:
+			var safe_text: String = option_text.replace("[", "［").replace("]", "］")
+			lines.append("• %s" % safe_text)
+		lines.append("")
+	elif desc != "":
 		lines.append("[color=#d8c9aa]%s[/color]" % desc)
 		lines.append("")
 	if record.has("atk"):
