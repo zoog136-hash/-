@@ -4874,7 +4874,9 @@ func _catalog_critical_bonus(kind: String) -> int:
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
-			total += CATALOG_EFFECTS.critical_by_style(_verified_catalog_record(category, value as Dictionary), kind)
+			var record: Dictionary = _verified_catalog_record(category, value as Dictionary)
+			var described: int = CATALOG_EFFECTS.critical_by_style(record, kind)
+			total += described if described != 0 else _record_critical_bonus(record, kind)
 	return total
 
 func _ranged_normal_damage_stat() -> int:
@@ -4975,8 +4977,12 @@ func _player_critical_rate(attack_type: String) -> int:
 			base += _stat_step_bonus(_effective_attribute("INT"), 16, 5.0)
 		_:
 			base += _stat_step_bonus(_effective_attribute("STR"), 16, 5.0)
-	for record: Dictionary in _all_equipped_records():
-		base += _record_critical_bonus(record, attack_type)
+	# Cards are accounted for by _catalog_critical_bonus. Do not also add
+	# their newly structured critical fields via the equipment loop.
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var value: Variant = equipped_items.get(slot, {})
+		if value is Dictionary and not (value as Dictionary).is_empty():
+			base += _record_critical_bonus(value as Dictionary, attack_type)
 	base += _catalog_critical_bonus(attack_type)
 	return clampi(base, 0, 50)
 
