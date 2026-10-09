@@ -116,6 +116,8 @@ func _run() -> void:
 	root.size=Vector2i(1280,720)
 	await process_frame
 	hud._close_workspace()
+	var tracker: Control = hud.v20_layer.get_node("QuestTracker")
+	_check(tracker.size.y <= 125,"quest tracker leaves the world visible below its two text lines")
 	var auto: Button=hud.get("v20_auto_button")
 	var original_auto: bool=world.player.auto_enabled
 	_touch(77,_point(auto),true); _touch(77,_point(auto),false)
@@ -131,6 +133,22 @@ func _run() -> void:
 	modal.title_text="확인"; modal.message_text="검수용 확인창"
 	hud.get_node("Root").add_child(modal)
 	await process_frame
+	for extent: Vector2i in [Vector2i(1280,720),Vector2i(854,480),Vector2i(720,720)]:
+		root.size = extent
+		for frame: int in range(3): await process_frame
+		var card_transform: Transform2D = root.get_final_transform()*modal.card.get_global_transform_with_canvas()
+		var first: Vector2 = card_transform*Vector2.ZERO
+		var last: Vector2 = card_transform*modal.card.size
+		_check(first.x >= 0 and first.y >= 0 and last.x <= extent.x and last.y <= extent.y,"confirmation card stays on screen "+str(extent))
+		var visible_buttons: int = 0
+		for candidate: Node in modal.card.find_children("*","Button",true,false):
+			var confirmation_button: Button = candidate
+			var button_transform: Transform2D = root.get_final_transform()*confirmation_button.get_global_transform_with_canvas()
+			var button_corner: Vector2 = button_transform*confirmation_button.size
+			if confirmation_button.is_visible_in_tree() and button_corner.x <= last.x and button_corner.y <= last.y: visible_buttons += 1
+		_check(visible_buttons == 2,"cancel and confirm are visible inside card "+str(extent))
+	root.size = Vector2i(1280,720)
+	for frame: int in range(3): await process_frame
 	original_auto=world.player.auto_enabled
 	_touch(79,_point(auto),true); _touch(79,_point(auto),false)
 	await process_frame

@@ -189,6 +189,9 @@ func _build_v20_quest() -> void:
 	head.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	v.add_child(head)
 	v20_quest_text = UI.rich("")
+	v20_quest_text.fit_content = false
+	v20_quest_text.custom_minimum_size.y = 48
+	v20_quest_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v20_quest_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v20_quest_text.add_theme_font_size_override("normal_font_size",12)
 	v.add_child(v20_quest_text)

@@ -5,7 +5,7 @@ signal canceled
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 var title_text: String = "확인"
 var message_text: String = ""
-var card: PanelContainer
+var card: Panel
 
 func _ready() -> void:
 	name = "TwilightConfirmation"
@@ -17,12 +17,19 @@ func _ready() -> void:
 	dim.color = Color(0,0,0,.72)
 	add_child(dim)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	card = PanelContainer.new()
+	# A plain Panel keeps wrapped labels from inflating the modal's minimum
+	# height before the first container sort has assigned their text width.
+	card = Panel.new()
 	card.add_theme_stylebox_override("panel",UI.chrome_panel(Color("10131a"),UI.GOLD,18))
 	add_child(card)
 	var stack := VBoxContainer.new()
 	stack.add_theme_constant_override("separation",16)
 	card.add_child(stack)
+	stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	stack.offset_left = 18
+	stack.offset_top = 18
+	stack.offset_right = -18
+	stack.offset_bottom = -18
 	stack.add_child(UI.section(title_text,20))
 	stack.add_child(HSeparator.new())
 	var copy := UI.label(message_text,14)
