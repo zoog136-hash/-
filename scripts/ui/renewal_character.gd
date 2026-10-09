@@ -39,7 +39,7 @@ func _refresh_character() -> void:
 		button.text=button.text.replace("\n","\n+%d " % level) if level>0 else button.text
 		button.add_theme_stylebox_override("normal",UI.box(Color("1b2025"),UI.grade(grade),6))
 		button.add_theme_color_override("font_color",UI.grade(grade))
-		button.tooltip_text="%s · %s · +%d\n클릭: 보유 아이템 상세정보" % [record.get("name",""),grade,level]
+		button.tooltip_text="%s · %s · +%d\n클릭: 보유 아이템 상세정보" % [_equipped_display_name(record),grade,level]
 		var path := str(record.get("image_path",""))
 		button.icon=load(path) as Texture2D if path!="" and ResourceLoader.exists(path) else null
 	if character_state.has("current_weight") and not character_state.has("max_weight"):
