@@ -265,7 +265,7 @@ func _tick_ai(delta: float) -> void:
 		if attack_cooldown <= 0.0:
 			attack_cooldown = attack_interval
 			var style: String = motion.profile.motion_style if effective_attack_type == "melee" else ("magic" if effective_attack_type == "magic" else "bow")
-			motion.begin_attack(minf(0.68, attack_interval * 0.75), target_player.global_position - global_position, style, TwilightAnimationProfile.hit_ratio(style))
+			motion.begin_attack(minf(0.68, attack_interval * 0.75), target_player.global_position - global_position, style, motion.profile.marker_for(style))
 		return
 	if is_held():
 		velocity = Vector2.ZERO
@@ -596,6 +596,14 @@ func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> vo
 
 func _setup_animation(record: Dictionary) -> void:
 	motion.profile = ANIMATION_CATALOG.for_record("monster", record)
+	# Sample optional native art onto the existing Sprite2D; no scene/AI/UI changes.
+	motion.frame_source = null
+	if not motion.profile.frames_path.is_empty():
+		var frames: SpriteFrames = ANIMATION_CATALOG.frames_for_profile(motion.profile, "")
+		var first: Texture2D = ANIMATION_CATALOG.first_texture(frames)
+		if first != null:
+			motion.frame_source = frames
+			sprite.texture = first
 	motion.profile.reference_speed = maxf(1.0, base_move_speed)
 	visual_height = float(record.get("visual_height", 92.0 if is_boss else (62.0 if motion.profile.motion_style == "crawl" else 72.0)))
 	if sprite.texture != null:
@@ -607,7 +615,8 @@ func _setup_animation(record: Dictionary) -> void:
 	motion.profile.hit_position = Vector2(0, -visual_height * 0.42)
 	motion.profile.projectile_origin = Vector2(visual_height * 0.15, -visual_height * 0.48)
 	motion.profile.shadow_size = Vector2(visual_height * 0.25, visual_height * 0.08)
-	var overrides: Dictionary = record.get("animation_profile", {})
+	var overrides: Dictionary = ANIMATION_CATALOG.records.get(motion.profile.profile_id, {}).duplicate(true)
+	overrides.merge(record.get("animation_profile", {}), true)
 	for property: String in ["sprite_offset", "hit_position", "projectile_origin", "shadow_size"]:
 		var value: Variant = overrides.get(property)
 		if value is Array and value.size() == 2: motion.profile.set(property, Vector2(value[0], value[1]))
@@ -647,7 +656,9 @@ func _release_attack(id: int) -> void:
 	if world_controller.field_map != null and world_controller.field_map.is_safe(target_player.global_position): return
 	var kind: String = current_attack_type()
 	if kind in ["ranged", "magic"] and world_controller.combat_flights != null:
-		var origin: Vector2 = global_position + motion.profile.projectile_origin
+		var offset: Vector2 = motion.profile.projectile_origin
+		offset.x *= -1.0 if motion.direction.x < 0.0 else 1.0
+		var origin: Vector2 = global_position + offset
 		world_controller.combat_flights.launch(origin, target_player, kind, _resolve_attack.bind(id, kind), 800.0 if kind == "magic" else 1100.0)
 	else:
 		_resolve_attack(id, kind)

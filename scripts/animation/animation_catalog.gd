@@ -73,6 +73,7 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 				atlas.atlas = texture
 				atlas.region = Rect2(Vector2(column, row) * cell, cell)
 				result.add_frame(name_value, atlas)
+	result.set_meta("twilight_generated_sheet", true)
 	_cache_frames(key, result)
 	return result
 
@@ -81,3 +82,18 @@ static func _cache_frames(key: String, result: SpriteFrames) -> void:
 	frame_order.append(key)
 	while frame_order.size() > MAX_FRAME_CACHE:
 		frame_cache.erase(frame_order.pop_front())
+
+static func first_texture(source: SpriteFrames) -> Texture2D:
+	if source == null: return null
+	for animation: String in source.get_animation_names():
+		for index: int in range(source.get_frame_count(animation)):
+			var texture: Texture2D = source.get_frame_texture(animation, index)
+			if texture != null: return texture
+	return null
+
+static func frames_for_profile(profile: TwilightAnimationProfile, fallback: String) -> SpriteFrames:
+	# Optional authored art must never remove an otherwise valid existing appearance.
+	if not profile.frames_path.is_empty() and ResourceLoader.exists(profile.frames_path):
+		var authored: SpriteFrames = frames(profile.frames_path, profile.layout)
+		if first_texture(authored) != null: return authored
+	return frames(fallback, profile.layout)
