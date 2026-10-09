@@ -18,6 +18,9 @@ var active_scroll_touch: int = -1
 var active_scroll_mouse: bool = false
 var viewport_fitted: bool = false
 var navigation_scroll: ScrollContainer
+var navigation_separator: VSeparator
+var compact_menu_button: Button
+var header_crest: Label
 var scroll_gestures: Dictionary = {}
 
 func _ready() -> void:
@@ -25,11 +28,24 @@ func _ready() -> void:
 	theme = UI.make_theme()
 	z_index = 150
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	add_theme_stylebox_override("panel",UI.box(Color(0.03,0.04,0.05,.98),UI.GOLD,16))
+	add_theme_stylebox_override("panel",UI.chrome_panel(Color("0b0c10"),UI.GOLD,14))
 	var layout := VBoxContainer.new()
+	layout.add_theme_constant_override("separation",8)
 	add_child(layout)
+	var accent := ColorRect.new()
+	accent.name = "HeaderGoldRule"
+	accent.color = UI.GOLD
+	accent.custom_minimum_size.y = 2
+	accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layout.add_child(accent)
 	var title_row := HBoxContainer.new()
+	title_row.custom_minimum_size.y = 53
+	title_row.add_theme_constant_override("separation",8)
 	layout.add_child(title_row)
+	header_crest = UI.label("✧",31,UI.GOLD)
+	header_crest.name = "HeaderCrest"
+	header_crest.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title_row.add_child(header_crest)
 	var titles := VBoxContainer.new()
 	titles.name = "WorkspaceTitleDragArea"
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -38,14 +54,19 @@ func _ready() -> void:
 	titles.gui_input.connect(_on_title_drag_input)
 	titles.add_theme_constant_override("separation",0)
 	title_row.add_child(titles)
-	heading = UI.label("TWILIGHT",24,UI.GOLD)
+	heading = UI.label("TWILIGHT",22,UI.GOLD)
 	titles.add_child(heading)
 	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	subtitle = UI.label("황혼의 기록",12,UI.MUTED)
+	subtitle = UI.label("황혼의 기록",11,UI.MUTED)
 	titles.add_child(subtitle)
 	subtitle.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var close := UI.button("닫기  Esc",func() -> void: closed.emit(),Vector2(106,42))
+	compact_menu_button = UI.button("☰ 메뉴",func() -> void: navigate.emit("menu"),Vector2(86,40))
+	compact_menu_button.name = "CompactMenuButton"
+	compact_menu_button.visible = false
+	title_row.add_child(compact_menu_button)
+	var close := UI.button("✕  Esc",func() -> void: closed.emit(),Vector2(88,40))
 	close.name = "CloseWindow"
+	close.add_theme_stylebox_override("normal",UI.tab_frame())
 	title_row.add_child(close)
 	layout.add_child(HSeparator.new())
 	var body := HBoxContainer.new()
@@ -68,13 +89,18 @@ func _ready() -> void:
 			if not was_scroll_dragged(navigation_scroll):
 				navigate.emit(id),Vector2(124,36))
 		b.toggle_mode = true
+		b.add_theme_stylebox_override("normal",UI.tab_frame())
+		b.add_theme_stylebox_override("hover",UI.box(Color("342a1c"),UI.BRONZE,7))
+		b.add_theme_stylebox_override("pressed",UI.tab_frame(true))
+		b.add_theme_color_override("font_pressed_color",UI.GOLD)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size",12)
 		b.name = "Nav_"+id
 		nav.add_child(b)
 		register_scroll_drag(navigation_scroll,b)
 		navigation[id] = b
-	body.add_child(VSeparator.new())
+	navigation_separator = VSeparator.new()
+	body.add_child(navigation_separator)
 	content = Control.new()
 	content.name = "Content"
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -86,7 +112,10 @@ func _ready() -> void:
 	footer.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	layout.add_child(footer)
 	var ornament := Ornament.new()
+	ornament.name = "DecorativeFrame"
 	add_child(ornament)
+	ornament.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	ornament.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	get_viewport().size_changed.connect(fit_viewport)
 	fit_viewport()
 	hide()
@@ -177,7 +206,16 @@ func _scroll_by_drag(scroll: ScrollContainer, delta_y: float) -> void:
 
 func fit_viewport() -> void:
 	var viewport := get_viewport_rect().size
-	var extent := Vector2(maxf(200.0,minf(1160.0,viewport.x-48.0)),maxf(140.0,minf(642.0,viewport.y-48.0)))
+	var extent := Vector2(maxf(200.0,minf(1160.0,viewport.x-32.0)),maxf(140.0,minf(642.0,viewport.y-32.0)))
+	# On narrow displays the sidebar would consume the catalog and inventory.
+	# Keep all its original nodes and input handlers for desktop/tablet, but
+	# expose the same routes through the compact menu when space is scarce.
+	var compact: bool = viewport.x < 840.0
+	navigation_scroll.visible = not compact
+	navigation_separator.visible = not compact
+	navigation_scroll.custom_minimum_size.x = 132.0 if not compact else 0.0
+	compact_menu_button.visible = compact
+	header_crest.visible = not compact
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	size = extent
 	if not viewport_fitted or not title_dragged:
