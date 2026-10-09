@@ -1,6 +1,8 @@
 extends Control
 class_name TwilightSideUI
 
+const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
+
 signal action_requested(action_id: String)
 signal stat_increase_requested(stat_name: String)
 
@@ -478,6 +480,20 @@ func set_character_state(state: Dictionary) -> void:
 	character_state = state.duplicate(true)
 	_refresh_character()
 
+func _equipped_display_name(record: Dictionary) -> String:
+	var name_value: String = str(record.get("name", ""))
+	if name_value == "":
+		return ""
+	var id: String = str(record.get("instance_id", ""))
+	var all_instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var physical: Dictionary = all_instances.get(id, {}) as Dictionary
+	var source: Dictionary = record
+	if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
+		source = physical["record"] as Dictionary
+	if EQUIPMENT_BLESSING.is_blessed(physical, source) and not name_value.begins_with("축복받은 "):
+		return "축복받은 " + name_value
+	return name_value
+
 func _refresh_character() -> void:
 	if character_panel == null:
 		return
@@ -508,7 +524,7 @@ func _refresh_character() -> void:
 		if record_variant is Dictionary:
 			var record := record_variant as Dictionary
 			if not record.is_empty():
-				item_name = str(record.get("name", "-"))
+				item_name = _equipped_display_name(record)
 		if item_name.length() > 9:
 			item_name = item_name.left(8) + "…"
 		button.text = "%s\n%s" % [slot_label, item_name]
