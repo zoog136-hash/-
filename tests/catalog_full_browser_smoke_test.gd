@@ -76,6 +76,54 @@ func _run() -> void:
 		if option_text.contains("PVE"):
 			saw_pve = true
 	_check(saw_pve, "verified PvP text must appear as PvE")
+	# Source artwork explicitly encodes hero/legend rank for some gear.
+	var rank_counts: Dictionary = {}
+	for raw: Variant in all_items:
+		if raw is Dictionary:
+			var entry: Dictionary = raw as Dictionary
+			var grade: String = str(entry.get("grade", ""))
+			rank_counts[grade] = int(rank_counts.get(grade, 0)) + 1
+	_check(int(rank_counts.get("영웅", 0)) >= 19, "source hero equipment grades recovered")
+	_check(int(rank_counts.get("전설", 0)) >= 13, "source legendary equipment grades recovered")
+	var cloak: Dictionary = _find_record(all_items, "기억의 망토")
+	_check(str(cloak.get("grade", "")) == "영웅", "hero-art cloak grade recovered")
+	_check(str(cloak.get("grade_evidence", "")) == "inven_original_artwork_filename", "inferred rank provenance retained")
+	var memory_cloak: Dictionary = _find_record(all_items, "진 기억의 망토")
+	_check(str(memory_cloak.get("grade", "")) == "전설", "legend-art cloak grade recovered")
+	var trophy: Dictionary = _find_record(all_items, "전설급 스킬 상자(기사)")
+	_check(str(trophy.get("grade", "")) == "일반", "material box must not be promoted from asset token")
+	# Same-name entries must retain distinct authoritative source IDs and
+	# independent physical equipment instances, including after save/load.
+	var same_name: String = "헌팅 라이플 (각인)"
+	var duplicate_ids: Array[String] = []
+	for raw: Variant in all_items:
+		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == same_name:
+			duplicate_ids.append(str((raw as Dictionary).get("sourceId", "")))
+	_check(duplicate_ids.size() >= 2, "distinct same-name source items retained")
+	if duplicate_ids.size() >= 2:
+		var before_count: int = int((world.get("inventory") as Dictionary).get(same_name, 0))
+		world.call("_grant_playtest_catalog_variant", duplicate_ids[0], 1)
+		world.call("_grant_playtest_catalog_variant", duplicate_ids[1], 1)
+		_check(int((world.get("inventory") as Dictionary).get(same_name, 0)) == before_count + 2, "both source variants granted without name duplication loss")
+		var instances: Dictionary = world.get("item_instances") as Dictionary
+		var observed: Dictionary = {}
+		for raw_id: Variant in instances.keys():
+			var entry: Dictionary = instances[raw_id] as Dictionary
+			if str(entry.get("name", "")) == same_name:
+				var original_id: String = str(entry.get("sourceId", ""))
+				observed[original_id] = true
+		_check(observed.has(duplicate_ids[0]) and observed.has(duplicate_ids[1]), "distinct source IDs pinned to physical items")
+		var second_variant: Dictionary = world.call("_find_catalog_item_record", same_name, duplicate_ids[1])
+		_check(str(second_variant.get("sourceId", "")) == duplicate_ids[1], "source-ID lookup returns exact record")
+		world.call("_save_game", true)
+		world.call("_load_game", true)
+		instances = world.get("item_instances") as Dictionary
+		observed.clear()
+		for raw_id: Variant in instances.keys():
+			var entry: Dictionary = instances[raw_id] as Dictionary
+			if str(entry.get("name", "")) == same_name:
+				observed[str(entry.get("sourceId", ""))] = true
+		_check(observed.has(duplicate_ids[0]) and observed.has(duplicate_ids[1]), "source variants survive save and reload")
 	world.queue_free()
 	await process_frame
 	_finish()
