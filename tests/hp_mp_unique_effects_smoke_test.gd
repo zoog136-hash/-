@@ -49,7 +49,7 @@ func _run() -> void:
 		var monster_loss: int = monster_hp_before - victim.hp
 		var stolen: int = monster_loss - 10
 		var healed: int = int(world.get("hp")) - hp_before
-		_check(stolen >= 1 and stolen <= 3, "successful hit must drain extra 1-3 monster HP (attempt %d)" % attempt)
+		_check(stolen == 1, "successful hit must drain exactly 1 monster HP (attempt %d)" % attempt)
 		_check(healed == stolen, "player heal must equal the HP actually stolen (attempt %d)" % attempt)
 
 	world.set("hp", int(world.call("_effective_max_hp")))

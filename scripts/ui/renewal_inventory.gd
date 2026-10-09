@@ -27,6 +27,25 @@ func _ready() -> void:
 	weight_readout = UI.label("",11,UI.MUTED)
 	(inventory_panel.get_child(0) as VBoxContainer).add_child(weight_readout)
 
+func _find_item_record(item_name: String) -> Dictionary:
+	var instance_id: String = _ref_instance_id(item_name)
+	if instance_id != "":
+		var all_instances: Variant = character_state.get("item_instances", {})
+		if all_instances is Dictionary:
+			var item_data: Variant = (all_instances as Dictionary).get(instance_id, {})
+			if item_data is Dictionary:
+				var identified: Variant = (item_data as Dictionary).get("record", {})
+				if identified is Dictionary and not (identified as Dictionary).is_empty() and str((identified as Dictionary).get("name", "")) == _base_item_name(item_name):
+					return identified as Dictionary
+	return super._find_item_record(item_name)
+
+func _icon_for_reference(record: Dictionary, name_value: String, item_reference: String) -> Texture2D:
+	if _ref_instance_id(item_reference) != "" and str(record.get("sourceId", "")) != "":
+		var path: String = str(record.get("image_path", ""))
+		if path != "" and ResourceLoader.exists(path):
+			return load(path) as Texture2D
+	return UI.item_icon(record, name_value, item_image_index.get("아이템", {}))
+
 func _grade_color(value: String) -> Color:
 	return UI.grade(value)
 
@@ -53,8 +72,8 @@ func _refresh_inventory_grid() -> void:
 		references.sort_custom(func(a: String, b: String) -> bool:
 			var left_name: String = _base_item_name(a)
 			var right_name: String = _base_item_name(b)
-			var left_grade: int = UI.GRADES.keys().find(str(_find_item_record(left_name).get("grade", "일반")))
-			var right_grade: int = UI.GRADES.keys().find(str(_find_item_record(right_name).get("grade", "일반")))
+			var left_grade: int = UI.GRADES.keys().find(str(_find_item_record(a).get("grade", "일반")))
+			var right_grade: int = UI.GRADES.keys().find(str(_find_item_record(b).get("grade", "일반")))
 			return a < b if left_grade == right_grade else left_grade > right_grade)
 	elif sort_mode == 2:
 		references.sort_custom(func(a: String, b: String) -> bool:
@@ -68,8 +87,8 @@ func _refresh_inventory_grid() -> void:
 		var item_name: String = _base_item_name(reference)
 		var button: Button = slot_buttons[reference] as Button
 		item_grid.move_child(button, index)
-		var record: Dictionary = _find_item_record(item_name)
-		var texture: Texture2D = UI.item_icon(record, item_name, item_image_index.get("아이템", {}))
+		var record: Dictionary = _find_item_record(reference)
+		var texture: Texture2D = _icon_for_reference(record, item_name, reference)
 		button.icon = null
 		button.text = ""
 		button.custom_minimum_size = Vector2(96, 98)
@@ -110,8 +129,8 @@ func _refresh_detail(item_reference: String) -> void:
 	super._refresh_detail(item_reference)
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
-	var item: Dictionary = _find_item_record(item_name)
-	detail_icon.texture = UI.item_icon(item, item_name, item_image_index.get("아이템", {}))
+	var item: Dictionary = _find_item_record(item_reference)
+	detail_icon.texture = _icon_for_reference(item, item_name, item_reference)
 	var slot: String = str(item.get("slot", ""))
 	var worn: Dictionary = character_state.get("equipped_items", {})
 	var current: Variant = worn.get(slot, {})

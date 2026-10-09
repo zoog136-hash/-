@@ -4,7 +4,15 @@ on:
   push:
     branches: ['codex/catalog-options-runtime-*']
   pull_request:
-    branches: ['codex/item-options-runtime-*']
+    branches: [main, 'codex/item-options-runtime-*']
+    paths:
+      - 'scripts/hud.gd'
+      - 'scripts/world.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'tests/catalog_full_browser_smoke_test.gd'
+      - 'tests/hp_mp_unique_effects_smoke_test.gd'
+      - 'tests/catalog_effects_smoke_test.gd'
+      - '.github/workflows/catalog-effects-validate.yml'
   workflow_dispatch:
 
 jobs:
@@ -36,7 +44,7 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          for test in item_options_runtime_smoke_test speed_option_smoke_test passive_skill_smoke_test skill_mechanism_smoke_test skill_element_integration_smoke_test item_buff_description_smoke_test ground_drop_smoke_test; do
+          for test in catalog_full_browser_smoke_test hp_mp_unique_effects_smoke_test item_options_runtime_smoke_test speed_option_smoke_test passive_skill_smoke_test skill_mechanism_smoke_test skill_element_integration_smoke_test item_buff_description_smoke_test ground_drop_smoke_test; do
             ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
             if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|GROUND_DROP_FAIL:|ELEMENT INTEGRATION FAIL:|ITEM_OPTIONS_FAIL:" "${test}.log"; then exit 1; fi
             grep -q "_OK" "${test}.log"

@@ -331,7 +331,7 @@ func _refresh_inventory_grid() -> void:
 		var item_name: String = str(entry["name"])
 		var reference: String = str(entry["reference"])
 		var amount: int = int(entry["amount"])
-		var record: Dictionary = _find_item_record(item_name)
+		var record: Dictionary = _find_item_record(reference)
 		if not _matches_category(record, item_name) or (search != "" and item_name.to_lower().find(search) < 0):
 			continue
 		visible_count += 1
@@ -489,7 +489,7 @@ func _select_item(item_name: String) -> void:
 	selected_item = item_name
 	for key: Variant in slot_buttons.keys():
 		var button := slot_buttons[key] as Button
-		var record := _find_item_record(_base_item_name(str(key)))
+		var record := _find_item_record(str(key))
 		button.add_theme_stylebox_override("normal", _slot_style_for_grade(str(record.get("grade", "일반")), str(key) == selected_item))
 	_refresh_detail(item_name)
 
@@ -518,7 +518,7 @@ func _refresh_detail(item_name: String) -> void:
 	var selected_reference: String = item_name
 	var selected_id: String = _ref_instance_id(item_name)
 	item_name = _base_item_name(item_name)
-	var record := _find_item_record(item_name)
+	var record := _find_item_record(selected_reference)
 	var amount := 1 if selected_id != "" else int(inventory.get(item_name, 0))
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
