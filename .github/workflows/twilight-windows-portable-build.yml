@@ -1,0 +1,251 @@
+name: TWILIGHT Playtest PC and Mobile Packages
+
+on:
+  push:
+    branches:
+      - validation/twilight-playtest-packages-20261009
+  pull_request:
+    branches:
+      - integration/twilight-complete-20261009
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Package and smoke-test Windows portable game
+    runs-on: windows-latest
+    timeout-minutes: 55
+    steps:
+      - name: Check out exact validated game commit
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Fetch official Godot Windows 4.7.2 binaries
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $download = Join-Path $env:RUNNER_TEMP "godot-windows.zip"
+          $url = "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_win64.exe.zip"
+          curl.exe -L --fail --retry 4 --retry-delay 4 --output $download $url
+          if ($LASTEXITCODE -ne 0) { throw "Godot Windows download failed" }
+          $dest = Join-Path $env:RUNNER_TEMP "godot-windows"
+          Expand-Archive -Path $download -DestinationPath $dest -Force
+          $engine = Get-ChildItem -Path $dest -Recurse -Filter "Godot_v4.7.2-stable_win64.exe" | Select-Object -First 1
+          $console = Get-ChildItem -Path $dest -Recurse -Filter "Godot_v4.7.2-stable_win64_console.exe" | Select-Object -First 1
+          if ($null -eq $engine -or $null -eq $console) { throw "Official Godot Windows binaries missing from ZIP" }
+          "GODOT_ENGINE=$($engine.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          "GODOT_CONSOLE=$($console.FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          & $console.FullName --version
+          if ($LASTEXITCODE -ne 0) { throw "Godot Windows version command failed" }
+
+      - name: Import game and boot with Windows Godot
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          & $env:GODOT_CONSOLE --headless --editor --import --path "$PWD" *> windows-import.log
+          $importExit = $LASTEXITCODE
+          Get-Content windows-import.log | Select-Object -Last 12
+          if ($importExit -ne 0) { throw "Windows Godot project import failed" }
+          & $env:GODOT_CONSOLE --headless --path "$PWD" --quit-after 120 *> windows-boot.log
+          $bootExit = $LASTEXITCODE
+          Get-Content windows-boot.log | Select-Object -Last 12
+          if ($bootExit -ne 0) { throw "Windows Godot boot failed" }
+          if ((Get-Content windows-import.log,windows-boot.log -Raw) -match '(SCRIPT ERROR:|ERROR:|Parse Error:)') {
+            throw "Windows Godot boot/import contained an engine error"
+          }
+          Write-Output "TWILIGHT_WINDOWS_GODOT_BOOT_OK"
+
+      - name: Assemble portable Windows test distribution
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $dest = Join-Path $env:RUNNER_TEMP "TWILIGHT_WINDOWS_PORTABLE"
+          New-Item -ItemType Directory -Path $dest -Force | Out-Null
+          $excludeDirs = @(".git", ".github", ".godot", "tests", "tools", "docs", "test-results", "__pycache__")
+          & robocopy.exe "$PWD" "$dest" /E /R:1 /W:1 /NFL /NDL /NP /NJH /NJS /XD $excludeDirs /XF "*.zip" "*.log" "*.tmp" "*.pyc"
+          $copyExit = $LASTEXITCODE
+          if ($copyExit -gt 7) { throw "Copying game resources failed: $copyExit" }
+          $global:LASTEXITCODE = 0
+          Copy-Item -Path $env:GODOT_ENGINE -Destination (Join-Path $dest "Godot_v4.7.2-stable_win64.exe") -Force
+          Copy-Item -Path $env:GODOT_CONSOLE -Destination (Join-Path $dest "Godot_v4.7.2-stable_win64_console.exe") -Force
+
+          @'
+          @echo off
+          setlocal
+          cd /d "%~dp0"
+          if not exist "Godot_v4.7.2-stable_win64.exe" (
+            echo Godot runtime is missing.
+            pause
+            exit /b 1
+          )
+          if not exist ".godot\imported" (
+            echo First launch: preparing game resources. This can take several minutes.
+            "Godot_v4.7.2-stable_win64_console.exe" --headless --editor --import --path "%cd%" > "TWILIGHT_IMPORT_LOG.txt" 2>&1
+            if errorlevel 1 (
+              echo Resource import failed. See TWILIGHT_IMPORT_LOG.txt.
+              pause
+              exit /b 1
+            )
+          )
+          start "" "Godot_v4.7.2-stable_win64.exe" --path "%cd%"
+          '@ | Set-Content -Path (Join-Path $dest "START_TWILIGHT.bat") -Encoding ascii
+
+          @'
+          @echo off
+          setlocal
+          cd /d "%~dp0"
+          if not exist ".godot\imported" (
+            "Godot_v4.7.2-stable_win64_console.exe" --headless --editor --import --path "%cd%" > "TWILIGHT_IMPORT_LOG.txt" 2>&1
+            if errorlevel 1 (
+              echo Resource import failed. Check TWILIGHT_IMPORT_LOG.txt.
+              pause
+              exit /b 1
+            )
+          )
+          start "" "Godot_v4.7.2-stable_win64.exe" --path "%cd%" --rendering-method gl_compatibility --rendering-driver opengl3
+          '@ | Set-Content -Path (Join-Path $dest "START_SAFE_OPENGL.bat") -Encoding ascii
+
+          @'
+          @echo off
+          setlocal
+          cd /d "%~dp0"
+          echo Collecting Godot version and Windows boot information...
+          "Godot_v4.7.2-stable_win64_console.exe" --version > "TWILIGHT_DIAGNOSTICS.txt" 2>&1
+          "Godot_v4.7.2-stable_win64_console.exe" --headless --path "%cd%" --quit-after 120 >> "TWILIGHT_DIAGNOSTICS.txt" 2>&1
+          echo Saved TWILIGHT_DIAGNOSTICS.txt.
+          notepad "TWILIGHT_DIAGNOSTICS.txt"
+          pause
+          '@ | Set-Content -Path (Join-Path $dest "RUN_DIAGNOSTICS.bat") -Encoding ascii
+
+          @'
+          TWILIGHT - WINDOWS PORTABLE PLAYTEST
+          Exact game commit: playtest_202610093caa892ad6a3fcedfb7f67871bf41aac1
+          Build source branch: validation/twilight-windows-portable-20261009
+          Godot Windows runtime: 4.7.2 official, included in this folder
+
+          1. Extract ALL files to a writable local folder (e.g. C:\Games\TWILIGHT).
+          2. Double-click START_TWILIGHT.bat.
+          3. On first launch, wait for the one-time asset import.
+          4. If the screen is blank or crashes, try START_SAFE_OPENGL.bat.
+          5. If issues remain, run RUN_DIAGNOSTICS.bat and share TWILIGHT_DIAGNOSTICS.txt.
+
+          BASIC CONTROLS (from project.godot):
+          WASD / arrows - move
+          SPACE - attack
+          T - AUTO hunt
+          I - inventory
+          M - menu
+          TAB - map
+          Q - quick potion
+          F5 - save
+          F9 - load
+
+          PLAYTEST (allow 15-30 minutes):
+          A. Launch, move in four directions, attack a monster.
+          B. Enable AUTO: verify movement, kills, dropped items on ground, pickup.
+          C. Open inventory: obtain two identical items, enhance only one,
+             check individual level and equipment / elemental state.
+          D. Use HP/MP potions, food and a teleport/return scroll.
+          E. Save (F5), exit completely, relaunch and load (F9).
+             Verify level, position, equipment IDs, enhancements, drops, gold.
+          F. Check HUD, inventory, skills, map, store and enchant panels.
+          G. For frame-rate testing, fight in a crowded area and report stutter.
+
+          IMPORTANT:
+          - This is a portable Godot-engine project runner, not a Windows
+            exported retail .exe. The bundled official Godot engine is included.
+          - It runs offline. No game server is necessary.
+          - Tests should use a new save first. Back up any older player saves.
+          - The game save is stored in Windows Godot user:// application data,
+            not beside START_TWILIGHT.bat.
+          - No main / backup GitHub branch is altered by this ZIP.
+          '@ | Set-Content -Path (Join-Path $dest "READ_ME_FIRST.txt") -Encoding utf8
+
+          @'
+          Godot Engine is distributed under the MIT License.
+          Copyright (c) 2007-present Juan Linietsky, Ariel Manzur and contributors.
+
+          Permission is hereby granted, free of charge, to any person obtaining
+          a copy of this software and associated documentation files (the
+          "Software"), to deal in the Software without restriction, including
+          without limitation the rights to use, copy, modify, merge, publish,
+          distribute, sublicense, and/or sell copies of the Software, and to
+          permit persons to whom the Software is furnished to do so, subject to
+          the following conditions:
+
+          The above copyright notice and this permission notice shall be
+          included in all copies or substantial portions of the Software.
+
+          THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+          EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+          MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+          NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+          BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+          ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+          CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+          SOFTWARE.
+          '@ | Set-Content -Path (Join-Path $dest "GODOT_MIT_LICENSE.txt") -Encoding utf8
+
+          if (!(Test-Path (Join-Path $dest "Main.tscn")) -or !(Test-Path (Join-Path $dest "project.godot"))) {
+            throw "Game source missing from Windows portable package"
+          }
+          $archive = Join-Path $env:RUNNER_TEMP "TWILIGHT_WINDOWS_PORTABLE_playtest_20261009.zip"
+          Compress-Archive -Path (Join-Path $dest "*") -DestinationPath $archive -CompressionLevel Optimal
+          if (!(Test-Path $archive)) { throw "Windows ZIP not created" }
+          Write-Output "TWILIGHT_WINDOWS_PACKAGE_OK"
+          Get-Item $archive | Select-Object Name,Length
+
+      - name: Assemble mobile Godot editor project ZIP
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $dest = Join-Path $env:RUNNER_TEMP "TWILIGHT_MOBILE_GODOT_PLAYTEST"
+          New-Item -ItemType Directory -Path $dest -Force | Out-Null
+          $excludeDirs = @(".git", ".github", ".godot", "tests", "tools", "docs", "test-results", "__pycache__")
+          & robocopy.exe "$PWD" "$dest" /E /R:1 /W:1 /NFL /NDL /NP /NJH /NJS /XD $excludeDirs /XF "*.zip" "*.log" "*.tmp" "*.pyc"
+          $copyExit = $LASTEXITCODE
+          if ($copyExit -gt 7) { throw "Mobile resource copy failed: $copyExit" }
+          $global:LASTEXITCODE = 0
+          $project = Join-Path $dest "project.godot"
+          if (!(Test-Path $project)) { throw "Missing mobile project.godot" }
+          $config = Get-Content -Path $project -Raw -Encoding utf8
+          $config = $config.Replace("run/max_fps=60","run/max_fps=30")
+          Set-Content -Path $project -Value $config -Encoding utf8
+          @'
+          TWILIGHT MOBILE GODOT PLAYTEST — Temporary item and Adena grant
+          1. Extract entire ZIP on Android phone.
+          2. In Godot Android Editor 4.7.2, Import > project.godot.
+          3. Wait for resources to import, then press Play.
+          4. Menu > Item Catalog > Consumables to get enhancement scrolls.
+          5. Temporary gold and scroll buttons live in Item Catalog.
+          6. Drag windows from their title. Swipe inside details to scroll.
+          7. Save your old local save elsewhere before testing.
+          NOTE: Godot editor project, NOT an installed APK.
+          Game source: 60024016b57d3419f9578b47471512f1a750b85f
+          '@ | Set-Content -Path (Join-Path $dest "MOBILE_README.txt") -Encoding utf8
+          $archive = Join-Path $env:RUNNER_TEMP "TWILIGHT_MOBILE_GODOT_PLAYTEST.zip"
+          Compress-Archive -Path (Join-Path $dest "*") -DestinationPath $archive -CompressionLevel Optimal
+          if (!(Test-Path $archive)) { throw "Mobile project ZIP missing" }
+          Write-Output "TWILIGHT_MOBILE_PLAYTEST_PACKAGE_OK"
+          Get-Item $archive | Select-Object Name,Length
+
+      - name: Upload playable portable ZIP and Windows logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT_WINDOWS_PLAYTEST_playtest_20261009
+          path: |
+            ${{ runner.temp }}/TWILIGHT_WINDOWS_PORTABLE_playtest_20261009.zip
+            windows-import.log
+            windows-boot.log
+          if-no-files-found: error
+          compression-level: 0
+
+      - name: Upload mobile Godot ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT_MOBILE_GODOT_PLAYTEST_20261009
+          path: ${{ runner.temp }}/TWILIGHT_MOBILE_GODOT_PLAYTEST.zip
+          if-no-files-found: error
+          compression-level: 0
