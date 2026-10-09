@@ -189,6 +189,8 @@ static func annotate(source_record: Dictionary) -> Dictionary:
 	for key: Variant in applied.keys():
 		var name_value: String = str(key)
 		var numeric: float = float(applied[key])
+		if name_value == "ac" and float(record.get("def", 0.0)) == 0.0:
+			record["def"] = int(absf(numeric))
 		if name_value in ["hpFlat", "hpPct", "xp", "hit", "attackSpeed", "speed", "def"]:
 			if float(record.get(name_value, 0.0)) != 0.0:
 				continue
