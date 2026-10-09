@@ -122,9 +122,15 @@ func _spawn_slot(slot: Dictionary) -> void:
 		var state: Dictionary = boss_director.state_for(str(field.data.map_id),region)
 		if int(state.hp)>0: monster.hp = mini(monster.max_hp,int(state.hp)); monster.hp_bar.value = monster.hp
 		var position: Array = state.position
+		var home: Array = state.get("home",[])
+		if home.size()==2:
+			var saved_home := Vector2(float(home[0]),float(home[1]))
+			var rect: Array = region.rect
+			var box := Rect2(float(rect[0]),float(rect[1]),float(rect[2]),float(rect[3]))
+			if box.has_point(saved_home) and field.walkable(saved_home) and field.point_clear(saved_home) and not field.is_safe(saved_home): monster.home_position = saved_home
 		if position.size()==2:
 			var saved := Vector2(float(position[0]),float(position[1]))
-			if field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(p)<float(monster.ai.get("leash_distance",820.)):
+			if field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
 				monster.global_position = saved
 		boss_director.capture(str(field.data.map_id),region,monster)
 	monster.set_physics_process(monster.global_position.distance_to(world.player.global_position)<float(field.data.streaming.monster_sleep_distance))

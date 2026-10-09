@@ -118,6 +118,8 @@ func _run() -> void:
 	check(boss.monster_name=="오만한 우그누스","canonical tenth-floor boss")
 	boss.take_damage(77)
 	var damaged_hp: int = boss.hp
+	var saved_boss_position: Vector2 = boss.global_position
+	var saved_boss_home: Vector2 = boss.home_position
 	world._save_game(true)
 	world._set_map("faith_01",false)
 	world._set_map("oman_10",false)
@@ -126,12 +128,14 @@ func _run() -> void:
 		if str(slot.region.get("mode",""))=="boss": boss_slot = slot
 	boss = boss_slot.monster
 	check(boss.hp==damaged_hp,"boss HP survives map round trip")
+	check(boss.global_position.distance_to(saved_boss_position)<.01 and boss.home_position.distance_to(saved_boss_home)<.01,"boss position and leash origin survive map round trip")
 	world._load_game(true)
 	pause_actors()
 	for slot: Dictionary in world.field_population.slots:
 		if str(slot.region.get("mode",""))=="boss": boss_slot = slot
 	boss = boss_slot.monster
 	check(boss.hp==damaged_hp,"boss HP survives save/load")
+	check(boss.global_position.distance_to(saved_boss_position)<.01,"boss position survives save/load")
 	var inventory_before: Dictionary = world.inventory.duplicate(true)
 	boss.take_damage(99999999)
 	check(world.inventory==inventory_before,"boss reward still goes through ground loot")
@@ -140,6 +144,15 @@ func _run() -> void:
 	var state: Dictionary = world.field_population.export_state()
 	var key: String = world.field_population.boss_director.key("oman_10",boss_slot.region)
 	check(str(state.bosses[key].phase)=="cooldown","dead boss enters cooldown")
+	var restarted: TwilightWorld = load("res://Main.tscn").instantiate()
+	root.add_child(restarted)
+	restarted.save_timer = -10000
+	restarted.field_population.set_process(false)
+	for slot: Dictionary in restarted.field_population.slots:
+		if str(slot.region.get("mode",""))=="boss": check(not is_instance_valid(slot.monster),"fresh world cannot duplicate a saved dead boss")
+	check(restarted.inventory==world.inventory and restarted._ground_drops_snapshot().size()==saved_drops.size(),"fresh world preserves inventory and ground items")
+	restarted.queue_free()
+	await process_frame
 	world._set_map("aden_world",false); world._load_game(true)
 	pause_actors()
 	for slot: Dictionary in world.field_population.slots:

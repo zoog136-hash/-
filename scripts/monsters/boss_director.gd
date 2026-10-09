@@ -15,7 +15,7 @@ func key(map_id: String, region: Dictionary) -> String:
 func state_for(map_id: String, region: Dictionary) -> Dictionary:
 	var id: String = key(map_id, region)
 	if not states.has(id):
-		states[id] = {"phase":"ready","ready_at":game_seconds+float(region.get("initial_delay",0)),"hp":-1,"position":[]}
+		states[id] = {"phase":"ready","ready_at":game_seconds+float(region.get("initial_delay",0)),"hp":-1,"position":[],"home":[]}
 	return states[id]
 
 func can_spawn(map_id: String, region: Dictionary) -> bool:
@@ -25,11 +25,12 @@ func can_spawn(map_id: String, region: Dictionary) -> bool:
 func capture(map_id: String, region: Dictionary, monster: TwilightMonster) -> void:
 	if not is_instance_valid(monster) or monster.dead: return
 	var state: Dictionary = state_for(map_id, region)
-	state.merge({"phase":"alive","hp":monster.hp,"position":[monster.global_position.x,monster.global_position.y]},true)
+	state.merge({"phase":"alive","hp":monster.hp,"position":[monster.global_position.x,monster.global_position.y],
+		"home":[monster.home_position.x,monster.home_position.y]},true)
 
 func died(map_id: String, region: Dictionary) -> void:
 	var state: Dictionary = state_for(map_id, region)
-	state.merge({"phase":"cooldown","hp":-1,"position":[],
+	state.merge({"phase":"cooldown","hp":-1,"position":[],"home":[],
 		"ready_at":game_seconds+maxf(1.0,float(region.get("respawn_time",900)))},true)
 
 func export_state() -> Dictionary:
@@ -49,5 +50,7 @@ func import_state(value: Variant) -> void:
 		var phase: String = str(state.get("phase","ready"))
 		if phase not in ["ready","alive","cooldown"]: phase = "ready"
 		var position: Variant = state.get("position",[])
+		var home: Variant = state.get("home",[])
 		states[str(id)] = {"phase":phase,"ready_at":maxf(0.0,float(state.get("ready_at",game_seconds))),
-			"hp":maxi(-1,int(state.get("hp",-1))),"position":position if position is Array and position.size()==2 else []}
+			"hp":maxi(-1,int(state.get("hp",-1))),"position":position if position is Array and position.size()==2 else [],
+			"home":home if home is Array and home.size()==2 else []}
