@@ -48,12 +48,17 @@ func _run() -> void:
 	await process_frame
 	print("OPTION_FINALIZE_TRACE: world scene ready")
 	var db: Array = world.get("monster_db") as Array
+	var originals: Array = (world.get("game_db") as Dictionary).get("몬스터", []) as Array
 	var sizes: Dictionary = world.get("monster_size_index") as Dictionary
-	assert_ok(db.size() == 163, "163 monster records expected")
+	assert_ok(db.size() == 318, "expanded monster catalog must preserve 318 records")
+	assert_ok(originals.size() == 163, "source 163 monster records expected")
+	for value: Variant in originals:
+		var monster: Dictionary = value as Dictionary
+		var name_value: String = str(monster.get("name", ""))
+		assert_ok(sizes.has(name_value), "original source size missing: " + name_value)
 	for value: Variant in db:
 		var monster: Dictionary = value as Dictionary
 		var name_value: String = str(monster.get("name", ""))
-		assert_ok(sizes.has(name_value), "explicit size missing: " + name_value)
 		assert_ok(str(world.call("_monster_size_class", monster)) in ["small", "large"], "invalid size for: " + name_value)
 	assert_ok(str(world.call("_monster_size_class", {"name":"커츠", "is_boss":true})) == "small", "boss need not be large")
 	assert_ok(str(world.call("_monster_size_class", {"name":"거대 드레이크", "is_boss":false})) == "large", "nonboss may be large")
