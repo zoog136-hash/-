@@ -13,8 +13,9 @@ func _run() -> void:
 	root.add_child(world)
 	await process_frame
 	await process_frame
-	var base_db: Dictionary = world.get("game_db") as Dictionary
-	var catalog: Dictionary = world.get("catalog_db") as Dictionary
+	var base_db: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json")) as Dictionary
+	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json")) as Dictionary
+	var runtime_catalog: Dictionary = world.get("catalog_db") as Dictionary
 	var verification: Dictionary = world.get("verified_catalog_options") as Dictionary
 	var weight: Dictionary = world.get("item_weight_index") as Dictionary
 	var report: Dictionary = {}
@@ -60,7 +61,7 @@ func _run() -> void:
 			"description_diff_examples":differing_examples,
 			"verified_original_overlay_count":(verification.get(category, {}) as Dictionary).size(),
 			"catalog_desc_patterns":field_option_excerpts}
-	var items: Array = catalog.get("아이템", []) as Array
+	var items: Array = runtime_catalog.get("아이템", []) as Array
 	var missing_weights: Array[String] = []
 	var zero_weights: Array[String] = []
 	var unknown_weight_types: Array[String] = []
@@ -78,7 +79,7 @@ func _run() -> void:
 			missing_weights.append(item_name)
 		if int(weight.get(item_name, 0)) <= 0 and str(record.get("slot", "")) != "currency" and zero_weights.size() < 15:
 			zero_weights.append(item_name)
-	report["weight_check"] = {"indexed":weight.size(), "catalog_missing":missing_weights, "noncurrency_zero_examples":zero_weights, "catalog_types_without_policy":unknown_weight_types}
+	report["weight_check"] = {"runtime_items":items.size(), "indexed":weight.size(), "catalog_missing":missing_weights, "noncurrency_zero_examples":zero_weights, "catalog_types_without_policy":unknown_weight_types}
 	report["monster_size_explicit_count"] = (world.get("monster_size_index") as Dictionary).size()
 	print("ORIGINAL_OPTION_COMPARISON_REPORT:" + JSON.stringify(report))
 	var is_valid: bool = unknown_weight_types.is_empty() and missing_weights.is_empty() and zero_weights.is_empty() and int(report["monster_size_explicit_count"]) >= 163
