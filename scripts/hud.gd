@@ -858,8 +858,10 @@ func _on_catalog_item_selected(index: int) -> void:
 	var type_name: String = str(selected_catalog_record.get("type", ""))
 	var options: Array = selected_catalog_record.get("sourceOptions", []) as Array
 	var option_text: String = ""
-	for value: Variant in options.slice(0, 16):
+	for value: Variant in options:
 		option_text += "• %s\n" % str(value)
+	if options.is_empty():
+		option_text = "상세 옵션 미수록 · 확인된 수치 없음\n"
 	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\nID: %s\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "")), option_text]
 
 func _equip_selected_catalog() -> void:

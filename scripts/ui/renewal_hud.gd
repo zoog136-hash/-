@@ -2,6 +2,7 @@ extends "res://scripts/hud_v20.gd"
 
 # ISOLATED PLAYTEST BUILD ONLY: remove these debug signals before production.
 signal playtest_catalog_grant_requested(item_name: String, amount: int)
+signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
@@ -548,7 +549,7 @@ func open_catalog(category: String) -> void:
 	catalog_category = category
 	catalog_grade_filter = "전체"
 	item_grade_filter = "전체"
-	item_slot_filter = "weapon"
+	item_slot_filter = "all"
 	rarity_filter.select(0)
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
@@ -586,9 +587,10 @@ func _build_catalog_panel() -> void:
 	top.add_child(rarity_filter)
 	collection_slot_filter = OptionButton.new()
 	collection_slot_filter.name = "EquipmentTypeFilter"
+	collection_slot_filter.add_item("전체")
 	for pair: Array in ITEM_SLOT_FILTERS:
 		collection_slot_filter.add_item(str(pair[1]))
-	collection_slot_filter.item_selected.connect(func(index: int) -> void: _set_item_slot_filter(str(ITEM_SLOT_FILTERS[index][0])))
+	collection_slot_filter.item_selected.connect(_select_catalog_group_index)
 	top.add_child(collection_slot_filter)
 	collection_status = UI.label("",12,UI.MUTED)
 	col.add_child(collection_status)
@@ -656,6 +658,18 @@ func _build_catalog_panel() -> void:
 		playtest_scroll_buttons.append(grant)
 	old.queue_free()
 
+func _select_catalog_group_index(index: int) -> void:
+	item_slot_filter = "all" if index == 0 else str(ITEM_SLOT_FILTERS[index - 1][0])
+	item_grade_filter = "전체"
+	catalog_grade_filter = "전체"
+	rarity_filter.select(0)
+	_refresh_catalog_list(catalog_search.text)
+
+func _item_slot_label(slot_id: String) -> String:
+	if slot_id == "all":
+		return "전체"
+	return super._item_slot_label(slot_id)
+
 func _refresh_item_filter_controls() -> void:
 	if rarity_filter != null:
 		rarity_filter.select(maxi(0,["전체","일반","고급","희귀","영웅","전설","신화","유일"].find(item_grade_filter)))
@@ -667,9 +681,9 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	for value: Variant in catalog_data.get(catalog_category,[]):
 		if not value is Dictionary: continue
 		var record: Dictionary = value
-		if catalog_category=="아이템" and _item_filter_group(record)!=item_slot_filter: continue
+		if catalog_category=="아이템" and item_slot_filter!="all" and _item_filter_group(record)!=item_slot_filter: continue
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
-		var searchable := "%s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type","")]
+		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
 		if query!="" and not searchable.to_lower().contains(query): continue
 		catalog_filtered_results.append(record)
 	catalog_page=0
@@ -681,12 +695,15 @@ func _apply_catalog_page() -> void:
 		var record: Dictionary = catalog_results[index]
 		var grade_name := str(record.get("grade","일반"))
 		var color: Color = UI.grade(grade_name)
-		catalog_list.set_item_text(index,str(record.get("name","")))
+		var item_label: String = str(record.get("name", ""))
+		if catalog_category == "아이템" and _catalog_variant_count(item_label) > 1:
+			item_label += "\nID " + str(record.get("sourceId", ""))
+		catalog_list.set_item_text(index,item_label)
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
 		var path := str(record.get("image_path",""))
 		if path!="" and ResourceLoader.exists(path): catalog_list.set_item_icon(index,load(path) as Texture2D)
-		catalog_list.set_item_tooltip(index,"%s · %s" % [grade_name,record.get("name","")])
+		catalog_list.set_item_tooltip(index,"%s · %s · 원본 ID: %s" % [grade_name,record.get("name",""),record.get("sourceId","")])
 	if catalog_results.is_empty():
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
 		catalog_equip_button.disabled=true
@@ -695,7 +712,38 @@ func _apply_catalog_page() -> void:
 func _request_playtest_catalog_grant() -> void:
 	if catalog_category != "아이템" or selected_catalog_record.is_empty():
 		return
-	playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name","")),1)
+	var source_id: String = str(selected_catalog_record.get("sourceId", ""))
+	if source_id != "":
+		playtest_catalog_variant_grant_requested.emit(source_id, 1)
+	else:
+		playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name", "")), 1)
+
+func _catalog_variant_count(item_name: String) -> int:
+	var count: int = 0
+	for raw: Variant in catalog_data.get("아이템", []) as Array:
+		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == item_name:
+			count += 1
+	return count
+
+func _catalog_pinned_instance_id(record: Dictionary) -> String:
+	var source_id: String = str(record.get("sourceId", ""))
+	var name_value: String = str(record.get("name", ""))
+	var state: Variant = character_state.get("item_instances", {})
+	if not (state is Dictionary):
+		return ""
+	for raw_id: Variant in (state as Dictionary).keys():
+		var raw_entry: Variant = (state as Dictionary)[raw_id]
+		if not (raw_entry is Dictionary):
+			continue
+		var entry: Dictionary = raw_entry as Dictionary
+		if str(entry.get("name", "")) != name_value:
+			continue
+		if str(entry.get("sourceId", "")) == source_id:
+			return str(raw_id)
+		var pinned: Variant = entry.get("record", {})
+		if pinned is Dictionary and str((pinned as Dictionary).get("sourceId", "")) == source_id:
+			return str(raw_id)
+	return ""
 
 func _on_catalog_item_selected(index: int) -> void:
 	super._on_catalog_item_selected(index)
@@ -710,8 +758,16 @@ func _on_catalog_item_selected(index: int) -> void:
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
 		catalog_detail.text+="\n보유 수량: %d\n테스트 지급 버튼으로 임시 획득 가능" % owned
+		if selected_catalog_record.has("grade_evidence"):
+			catalog_detail.text+="\n등급 판정: 원본 이미지 파일명 기반 (검증 필요)"
+		var variants: int = _catalog_variant_count(item_name)
+		var pinned_id: String = _catalog_pinned_instance_id(selected_catalog_record) if variants > 1 else ""
+		if variants > 1:
+			catalog_detail.text+="\n동일 이름 %d종 · 원본 ID %s · 다른 ID와 구별" % [variants,selected_catalog_record.get("sourceId","")]
+			if owned > 0 and pinned_id.is_empty():
+				catalog_detail.text+="\n이 원본 ID로 지급한 장비 없음 · 이름만 같은 장비를 대신 장착하지 않습니다"
 		catalog_equip_button.text="보유 아이템 장착 / 사용" if owned>0 else "미보유 · 조회 전용"
-		catalog_equip_button.disabled=owned<=0
+		catalog_equip_button.disabled=owned<=0 or (variants>1 and pinned_id.is_empty())
 	else:
 		var equipped: Dictionary = character_state.get("equipped",{}).get(catalog_category,{})
 		var applied := str(equipped.get("name",""))==item_name
@@ -722,7 +778,14 @@ func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return
 	if catalog_category=="아이템":
 		var item_name := str(selected_catalog_record.get("name",""))
-		if int(lineage_inventory_ui.inventory.get(item_name,0))>0: inventory_item_activated.emit(item_name)
+		if int(lineage_inventory_ui.inventory.get(item_name,0))>0:
+			var variants: int = _catalog_variant_count(item_name)
+			if variants > 1:
+				var pinned_id: String = _catalog_pinned_instance_id(selected_catalog_record)
+				if pinned_id != "":
+					inventory_item_activated.emit(item_name + "@@@" + pinned_id)
+			else:
+				inventory_item_activated.emit(item_name)
 	else:
 		catalog_equip_requested.emit(catalog_category,selected_catalog_record.duplicate(true))
 		catalog_equip_button.text="현재 적용 중"
