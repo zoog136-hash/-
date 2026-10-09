@@ -3,10 +3,13 @@ extends RefCounted
 # Render/benchmark harnesses launch with no save. Simulate the same class
 # confirmation a player performs before benchmarking active gameplay.
 # This is test-only and must not disable the production startup picker.
-static func enter_game(world: TwilightWorld) -> bool:
+static func enter_game(world: Node) -> bool:
 	var hud: Node = world.get_node_or_null("HUD")
 	if hud == null:
 		return false
+	# The older benchmark baseline has no class picker, so proceed directly.
+	if not hud.has_method("open_class_selection"):
+		return true
 	if not bool(hud.get("class_picker_initial")):
 		return true
 	var window: Control = hud.get("workspace") as Control
@@ -20,4 +23,4 @@ static func enter_game(world: TwilightWorld) -> bool:
 	if confirm.disabled:
 		return false
 	confirm.pressed.emit()
-	return not bool(hud.get("class_picker_initial")) and world.job_class == "기사"
+	return not bool(hud.get("class_picker_initial")) and str(world.get("job_class")) == "기사"
