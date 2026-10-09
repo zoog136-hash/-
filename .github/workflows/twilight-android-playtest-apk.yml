@@ -55,15 +55,25 @@ jobs:
           echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$HOME/.android/debug.keystore" >> "$GITHUB_ENV"
           echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> "$GITHUB_ENV"
           echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> "$GITHUB_ENV"
-      - name: Import and export Android debug APK
+      - name: Import Android game resources
         shell: bash
         run: |
           set -euo pipefail
-          GODOT=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { echo "IMPORT_FAILED"; tail -n 100 /tmp/import-android.txt; exit 1; }
+          echo "ANDROID_IMPORT_DONE"
+      - name: Configure Android export settings
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 75 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --script /tmp/config-editor.gd > /tmp/android-settings.txt 2>&1 || { echo "SETTINGS_FAILED"; tail -n 100 /tmp/android-settings.txt; exit 1; }
+          cat /tmp/android-settings.txt
+          echo "ANDROID_SETTINGS_DONE"
+      - name: Build and inspect APK
+        shell: bash
+        run: |
+          set -euo pipefail
           mkdir -p build
-          "$GODOT" --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { tail -n 100 /tmp/import-android.txt; exit 1; }
-          "$GODOT" --headless --editor --path . --script /tmp/config-editor.gd > /tmp/android-settings.txt 2>&1 || { cat /tmp/android-settings.txt; exit 1; }
-          "$GODOT" --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { tail -n 160 /tmp/export-android.txt; exit 1; }
+          timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
           unzip -tqq build/TWILIGHT_ANDROID_PLAYTEST.apk
           "$ANDROID_HOME/build-tools/35.0.1/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16
