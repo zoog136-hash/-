@@ -2562,6 +2562,8 @@ func _combined_active_buffs() -> Dictionary:
 	for key_value: Variant in active_item_buffs.keys():
 		var key: String = str(key_value)
 		result[key] = active_item_buffs[key]
+	if ain_service.orb_active():
+		result["드래곤의 보호"] = {"remaining": maxi(0, ain_service.dragon_orb_expires_at - int(Time.get_unix_time_from_system()))}
 	return result
 
 func _is_instance_equipped(id: String) -> bool:
@@ -2964,6 +2966,8 @@ func _equipped_items_snapshot() -> Dictionary:
 	return result
 
 func _on_ain_item_requested(item_name: String) -> void:
+	if int(inventory.get(item_name, 0)) <= 0 and int(inventory.get(item_name + " (각인)", 0)) > 0:
+		item_name += " (각인)"
 	_on_inventory_item_activated(item_name)
 
 func _on_ain_shop_requested() -> void:
@@ -2981,6 +2985,7 @@ func _update_ain_hud() -> void:
 
 func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 	var kind: String = str(spec.get("kind", ""))
+	var base_name: String = CONSUMABLE_RULES.normalize_name(item_name)
 	if kind == "ain_orb":
 		if not ain_service.start_dragon_orb():
 			hud.show_message("드래곤의 보호가 이미 적용 중입니다")
@@ -2990,15 +2995,15 @@ func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 		return true
 	if kind != "ain_charge":
 		return false
-	if item_name == "드래곤의 성수" and level < 45:
+	if base_name == "드래곤의 성수" and level < 45:
 		hud.show_message("드래곤의 성수는 45레벨부터 사용 가능합니다")
 		return false
-	var amount: int = AIN_SERVICE.charge_amount(item_name, level)
+	var amount: int = AIN_SERVICE.charge_amount(base_name, level)
 	var charged: int = ain_service.charge(amount)
 	if charged <= 0:
 		hud.show_message("아인하사드 축복이 최대치입니다")
 		return false
-	if item_name == "드래곤의 성수":
+	if base_name == "드래곤의 성수":
 		experience += 31920000
 		_check_level_up()
 	hud.show_message("%s 사용 · 축복 +%d" % [item_name, charged])
@@ -3009,9 +3014,10 @@ func _auto_recharge_ain() -> void:
 	if not ain_service.auto_recharge or ain_service.blessing > 200:
 		return
 	for item_name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드"]:
-		if int(inventory.get(item_name, 0)) > 0:
-			consumable_service.call("try_use", item_name)
-			return
+		for inventory_name: String in [item_name, item_name + " (각인)"]:
+			if int(inventory.get(inventory_name, 0)) > 0:
+				consumable_service.call("try_use", inventory_name)
+				return
 
 func _buy_shop_item(item_name: String, price: int) -> void:
 	if CONSUMABLE_RULES.is_removed_item(item_name):
