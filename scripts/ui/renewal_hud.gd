@@ -6,6 +6,7 @@ const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
+const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var workspace: PanelContainer
@@ -382,6 +383,12 @@ func _navigate(section: String) -> void:
 		"log": open_chat_info()
 		"enhance": _open_enhance_chooser()
 		_: open_catalog(section)
+
+func open_shop() -> void:
+	_open_window("shop","잡화 상점","보유 아데나 · 아이템 검색 · 구매")
+	var shop := ShopUI.new()
+	workspace.mount(shop)
+	shop.configure(self)
 
 func toggle_inventory() -> void:
 	if active_section=="inventory" and workspace.visible:
