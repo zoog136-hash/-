@@ -2,7 +2,8 @@ extends RefCounted
 class_name TwilightEquipmentBlessing
 
 # Base equipment blessing: per physical item; separate from blessed enchant scrolls.
-# Original 2017 NC guide confirms common through legendary. Mythic and\n# unique are TWILIGHT extensions pending reliable contemporary option data.
+# Original 2017 NC guide confirms common through legendary. Mythic and
+# unique are TWILIGHT extensions pending reliable contemporary option data.
 # "유일" is a TWILIGHT extension, NOT a verified official option.
 # Success rates are TWILIGHT placeholders until current NC numeric disclosure can
 # be verified. Never describe these numbers as official probabilities.
