@@ -115,6 +115,10 @@ static func enrich(source: Dictionary) -> Dictionary:
 		var label: String = str(data.get("label", ""))
 		var number: float = float(data.get("value", 0.0))
 		var percent: bool = bool(data.get("percent", false))
+		# A percent attribute is never the same as +N flat points.
+		if percent and label in ["STR", "DEX", "CON", "INT", "WIS", "CHA", "근거리대미지리덕션무시", "원거리대미지리덕션무시", "마법대미지리덕션무시", "대미지리덕션무시"]:
+			deferred.append(option)
+			continue
 		var effect: String = ""
 		var value: Variant = number
 		if (label == "PVE대미지리덕션" or label == "PVE대미지감소") and percent:
