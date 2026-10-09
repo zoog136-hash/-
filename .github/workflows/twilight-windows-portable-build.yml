@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - validation/twilight-windows-portable-20261009
+  pull_request:
+    branches:
+      - integration/twilight-complete-20261009
   workflow_dispatch:
 
 permissions:
