@@ -858,7 +858,7 @@ func _on_catalog_item_selected(index: int) -> void:
 	var type_name: String = str(selected_catalog_record.get("type", ""))
 	var options: Array = selected_catalog_record.get("sourceOptions", []) as Array
 	var option_text: String = ""
-	for value: Variant in options.slice(0, 16):
+	for value: Variant in options:
 		option_text += "• %s\n" % str(value)
 	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\nID: %s\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "")), option_text]
 
