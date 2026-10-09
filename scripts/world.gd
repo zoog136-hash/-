@@ -16,6 +16,7 @@ const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -72,6 +73,7 @@ var game_db: Dictionary = {}
 var loot_catalog: Dictionary = {}
 var monster_db: Array = []
 var item_db: Array = []
+var item_weight_index: Dictionary = {}
 var skills_db: Array = []
 var job_classes: Array = []
 var job_class: String = "기사"
@@ -342,6 +344,7 @@ func _load_data() -> void:
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
 	_merge_local_consumables_into_catalog()
+	_index_item_weights()
 	var image_index_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(CATALOG_IMAGE_INDEX_PATH))
 	if image_index_value is Dictionary:
 		catalog_image_index = image_index_value as Dictionary
@@ -349,6 +352,84 @@ func _load_data() -> void:
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
 	_build_job_classes()
+
+func _index_item_weights() -> void:
+	item_weight_index.clear()
+	var type_defaults: Dictionary = {}
+	var overrides: Dictionary = {}
+	var path: String = "res://data/item_weight_rules.json"
+	if FileAccess.file_exists(path):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		if parsed is Dictionary:
+			type_defaults = (parsed as Dictionary).get("type_defaults", {}) as Dictionary
+			overrides = (parsed as Dictionary).get("overrides", {}) as Dictionary
+	for source: Variant in [catalog_db.get("아이템", []), item_db]:
+		if not (source is Array):
+			continue
+		for entry: Variant in source as Array:
+			if not (entry is Dictionary):
+				continue
+			var record: Dictionary = entry as Dictionary
+			var name_value: String = str(record.get("name", ""))
+			if name_value.is_empty():
+				continue
+			item_weight_index[name_value] = maxi(0, int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults))))
+
+func _inventory_total_weight() -> int:
+	var total: int = 0
+	for name_value: Variant in inventory.keys():
+		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0)))
+	return total
+
+func _carrying_capacity() -> int:
+	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON"))
+
+func _inventory_encumbrance_multiplier() -> float:
+	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
+
+func _equipment_attribute_bonus(stat: String) -> int:
+	var result: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if entry is Dictionary and not (entry as Dictionary).is_empty():
+			result += ITEM_OPTIONS.attribute(entry as Dictionary, stat)
+	return result
+
+func _effective_attribute(stat: String) -> int:
+	var base: int = 0
+	match stat:
+		"STR": base = str_stat
+		"DEX": base = dex_stat
+		"CON": base = con_stat
+		"INT": base = int_stat
+		"WIS": base = wis_stat
+		"CHA": base = cha_stat
+		_: return 0
+	return base + _equipment_attribute_bonus(stat)
+
+func _equipment_accuracy_bonus(kind: String) -> int:
+	var result: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if entry is Dictionary and not (entry as Dictionary).is_empty():
+			result += ITEM_OPTIONS.accuracy(entry as Dictionary, kind)
+	return result
+
+func _equipment_additional_damage(kind: String) -> int:
+	var result: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if entry is Dictionary and not (entry as Dictionary).is_empty():
+			result += ITEM_OPTIONS.additional_damage(entry as Dictionary, kind)
+	return result
+
+func _weapon_size_adjustment(target: TwilightMonster) -> int:
+	if target == null:
+		return 0
+	var label: String = str(target.get_meta("size_class", "")).to_lower()
+	# Explicit size_class wins; old DB has no size and uses boss fallback.
+	var large: bool = label == "large" or (label.is_empty() and target.is_boss)
+	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), large)
 
 func _ensure_ammo_items() -> void:
 	var names: Dictionary = {}
@@ -1302,7 +1383,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 		_update_target_hud()
 		return
 	var damage_stat: int = _ranged_normal_damage_stat() if attack_kind == "ranged" else _melee_damage_stat()
-	var damage: int = maxi(1, damage_stat + rng.randi_range(-6, 9))
+	var damage: int = maxi(1, damage_stat + _weapon_size_adjustment(target) + rng.randi_range(-6, 9))
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
@@ -2443,6 +2524,7 @@ func _on_map_selected(map_id: String) -> void:
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
+	_refresh_speed_modifiers()
 	hud.update_player(level, hp, _effective_max_hp(), mp, max_mp, experience, exp_need, gold)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
@@ -4217,7 +4299,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _ranged_normal_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
+	return _ranged_damage_stat()
 
 func _record_move_speed_multiplier(record: Dictionary) -> float:
 	var value: float = float(record.get("speed", 1.0))
@@ -4237,6 +4319,7 @@ func _effective_move_speed_multiplier() -> float:
 		multiplier *= _record_move_speed_multiplier(record)
 	multiplier *= _passive_skill_speed_multiplier()
 	multiplier *= 1.0 + float(_active_item_buff_total("move_speed")) / 100.0
+	multiplier *= _inventory_encumbrance_multiplier()
 	return clampf(multiplier, 0.5, 2.5)
 
 func _effective_attack_speed_bonus_percent() -> float:
@@ -4264,22 +4347,22 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(str_stat + _active_skill_buff_total("strFlat"), 10, 2.0) + _active_item_buff_total("melee_damage")
+	return _effective_attack() + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
-	return level + str_stat + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _active_item_buff_total("melee_accuracy")
+	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(dex_stat + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
-	return level + dex_stat + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(int_stat + _active_skill_buff_total("intFlat"), 8, 2.0) + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
-	return level + int_stat + _active_skill_buff_total("intFlat") + _active_item_buff_total("magic_accuracy")
+	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _equipment_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -4308,11 +4391,11 @@ func _player_critical_rate(attack_type: String) -> int:
 	var base: int = 2
 	match attack_type:
 		"ranged":
-			base += _stat_step_bonus(dex_stat, 16, 5.0)
+			base += _stat_step_bonus(_effective_attribute("DEX"), 16, 5.0)
 		"magic":
-			base += _stat_step_bonus(int_stat, 16, 5.0)
+			base += _stat_step_bonus(_effective_attribute("INT"), 16, 5.0)
 		_:
-			base += _stat_step_bonus(str_stat, 16, 5.0)
+			base += _stat_step_bonus(_effective_attribute("STR"), 16, 5.0)
 	for record: Dictionary in _all_equipped_records():
 		base += _record_critical_bonus(record, attack_type)
 	return clampi(base, 0, 50)
@@ -4330,13 +4413,13 @@ func _record_stun_resistance(record: Dictionary) -> int:
 	)))
 
 func _stun_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(str_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _stun_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
 	total += _active_item_buff_total("stun_resistance")
@@ -4355,13 +4438,13 @@ func _record_silence_resistance(record: Dictionary) -> int:
 	)))
 
 func _silence_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_silence_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _silence_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(wis_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_silence_resistance(record)
 	return clampi(total, 0, 100)
@@ -4389,13 +4472,13 @@ func _record_hold_resistance(record: Dictionary) -> int:
 	)))
 
 func _hold_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(dex_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _hold_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_resistance(record)
 	return clampi(total, 0, 100)
@@ -4423,13 +4506,13 @@ func _record_fear_resistance(record: Dictionary) -> int:
 	)))
 
 func _fear_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _fear_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(wis_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_resistance(record)
 	return clampi(total, 0, 100)
@@ -4457,13 +4540,13 @@ func _record_poison_resistance(record: Dictionary) -> int:
 	)))
 
 func _poison_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(int_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("INT"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_poison_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _poison_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_poison_resistance(record)
 	return clampi(total, 0, 100)
@@ -4491,13 +4574,13 @@ func _record_bleed_resistance(record: Dictionary) -> int:
 	)))
 
 func _bleed_accuracy_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(str_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("STR"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_bleed_accuracy(record)
 	return clampi(total, 0, 100)
 
 func _bleed_resistance_stat() -> int:
-	var total: int = 5 + _stat_step_bonus(con_stat, 10, 3.0)
+	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_bleed_resistance(record)
 	return clampi(total, 0, 100)
@@ -4540,7 +4623,7 @@ func _critical_damage(raw_damage: int) -> int:
 	return maxi(1, int(round(float(raw_damage) * 1.5)))
 
 func _effective_ac() -> int:
-	var dex_ac_bonus: int = _stat_step_bonus(dex_stat, 10, 3.0)
+	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	return -(_effective_defense() + dex_ac_bonus)
 
 func _record_dg(record: Dictionary) -> int:
@@ -4562,13 +4645,13 @@ func _record_er(record: Dictionary) -> int:
 	return 0
 
 func _effective_dg() -> int:
-	var total: int = _stat_step_bonus(dex_stat, 10, 4.0)
+	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 4.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_dg(record)
 	return maxi(0, total)
 
 func _effective_er() -> int:
-	var total: int = _stat_step_bonus(dex_stat, 10, 2.0)
+	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 2.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_er(record)
 	return maxi(0, total)
@@ -4583,7 +4666,7 @@ func _record_mr(record: Dictionary) -> int:
 	return 0
 
 func _effective_mr() -> int:
-	var total: int = 10 + level + wis_stat * 2
+	var total: int = 10 + level + _effective_attribute("WIS") * 2
 	for record: Dictionary in _all_equipped_records():
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
@@ -4619,13 +4702,16 @@ func _physical_damage_after_reduction(raw_damage: int) -> int:
 
 func _character_stats_snapshot() -> Dictionary:
 	return {
-		"str": str_stat,
-		"dex": dex_stat,
-		"con": con_stat,
-		"int": int_stat,
-		"wis": wis_stat,
-		"cha": cha_stat,
+		"str": _effective_attribute("STR"),
+		"dex": _effective_attribute("DEX"),
+		"con": _effective_attribute("CON"),
+		"int": _effective_attribute("INT"),
+		"wis": _effective_attribute("WIS"),
+		"cha": _effective_attribute("CHA"),
 		"stat_points": stat_points,
+		"inventory_weight": _inventory_total_weight(),
+		"carrying_capacity": _carrying_capacity(),
+		"encumbrance_multiplier": _inventory_encumbrance_multiplier(),
 		"melee_damage": _melee_damage_stat(),
 		"melee_accuracy": _melee_accuracy_stat(),
 		"ranged_damage": _ranged_damage_stat(),
@@ -4689,6 +4775,7 @@ func _effective_max_hp() -> int:
 		flat_bonus += float(record.get("hpFlat", 0.0))
 		percent_bonus += float(record.get("hpPct", 0.0))
 	flat_bonus += float(_equipment_enhancement_max(ACCESSORY_EQUIPMENT_SLOTS) * 20)
+	flat_bonus += float(_equipment_attribute_bonus("CON") * 10)
 	flat_bonus += float(_active_skill_buff_total("hp"))
 	flat_bonus += float(_passive_skill_total("hpFlat"))
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
