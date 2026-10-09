@@ -266,13 +266,13 @@ func _ready() -> void:
 	# Headless automated suites explicitly open the picker to test it; the
 	# existing movement/input regressions must not inherit an opaque modal.
 	if creating_character and DisplayServer.get_name() != "headless":
-		hud.open_class_selection(true)
+		hud.call("open_class_selection",true)
 	hud.append_log("V20 · 모바일 MMORPG HUD / 전투 화면 개선")
 
 func _process(delta: float) -> void:
 	# No auto-save, auto-hunt or keyboard commands until the new class is
 	# chosen. Otherwise a default-class save can silently bypass creation.
-	if hud.class_picker_initial:
+	if bool(hud.get("class_picker_initial")):
 		return
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
@@ -320,7 +320,7 @@ func _process(delta: float) -> void:
 	_update_target_hud()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if hud.class_picker_initial:
+	if bool(hud.get("class_picker_initial")):
 		return
 	if event is InputEventMouseButton:
 		var mouse_event: InputEventMouseButton = event
