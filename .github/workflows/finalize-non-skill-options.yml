@@ -1,0 +1,47 @@
+name: TWILIGHT Finalize Non-Skill Options
+
+on:
+  push:
+    branches: ['codex/original-options-audit-finalize-*']
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get Godot 4.7.2
+        run: |
+          curl -fsSL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and parse
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee import.log
+          if grep -E "SCRIPT ERROR:|ERROR:" import.log; then exit 1; fi
+      - name: New source enhancement, MP, element and size tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/option_finalize_smoke_test.gd 2>&1 | tee final-options.log
+          if grep -E "SCRIPT ERROR:|ERROR:|OPTION_FINALIZE_FAIL" final-options.log; then exit 1; fi
+          grep -q "OPTION_FINALIZE_OK" final-options.log
+      - name: Full original catalog comparison report
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/original_option_comparison_audit.gd 2>&1 | tee catalog-comparison.log
+          if grep -E "SCRIPT ERROR:|ERROR:|OPTION_AUDIT_FAILED" catalog-comparison.log; then exit 1; fi
+          grep -q "OPTION_AUDIT_OK" catalog-comparison.log
+      - name: Existing item, catalog, enchant, consumable, combat and UI regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          for test in non_skill_options_smoke_test per_instance_enchantments_smoke_test consumable_smoke_test item_weight_smoke_test equipment_slot_smoke_test original_lineagem_effects_smoke_test catalog_effects_smoke_test hp_mp_unique_effects_smoke_test item_buff_description_smoke_test ui_stage4_item_instance_test; do
+            ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
+            if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|OPTION_FAIL:|TEST_FAIL:" "${test}.log"; then exit 1; fi
+            grep -q "_OK" "${test}.log"
+          done
