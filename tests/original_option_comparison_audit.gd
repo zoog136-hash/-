@@ -63,19 +63,25 @@ func _run() -> void:
 	var items: Array = catalog.get("아이템", []) as Array
 	var missing_weights: Array[String] = []
 	var zero_weights: Array[String] = []
+	var unknown_weight_types: Array[String] = []
+	var weight_spec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/item_weight_rules.json")) as Dictionary
+	var typed_defaults: Dictionary = weight_spec.get("type_defaults", {}) as Dictionary
 	for raw: Variant in items:
 		if not (raw is Dictionary):
 			continue
 		var record: Dictionary = raw as Dictionary
 		var item_name: String = str(record.get("name", ""))
+		var item_type: String = str(record.get("type", ""))
+		if not typed_defaults.has(item_type) and unknown_weight_types.size() < 30 and not unknown_weight_types.has(item_type):
+			unknown_weight_types.append(item_type)
 		if not weight.has(item_name) and missing_weights.size() < 15:
 			missing_weights.append(item_name)
 		if int(weight.get(item_name, 0)) <= 0 and str(record.get("slot", "")) != "currency" and zero_weights.size() < 15:
 			zero_weights.append(item_name)
-	report["weight_check"] = {"indexed":weight.size(), "catalog_missing":missing_weights, "noncurrency_zero_examples":zero_weights}
+	report["weight_check"] = {"indexed":weight.size(), "catalog_missing":missing_weights, "noncurrency_zero_examples":zero_weights, "catalog_types_without_policy":unknown_weight_types}
 	report["monster_size_explicit_count"] = (world.get("monster_size_index") as Dictionary).size()
 	print("ORIGINAL_OPTION_COMPARISON_REPORT:" + JSON.stringify(report))
-	var is_valid: bool = missing_weights.is_empty() and zero_weights.is_empty() and int(report["monster_size_explicit_count"]) >= 163
+	var is_valid: bool = unknown_weight_types.is_empty() and missing_weights.is_empty() and zero_weights.is_empty() and int(report["monster_size_explicit_count"]) >= 163
 	world.queue_free()
 	await process_frame
 	print("OPTION_AUDIT_OK" if is_valid else "OPTION_AUDIT_FAILED")
