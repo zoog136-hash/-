@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+
 var world: TwilightWorld
 var directory: String
 var results: Array = []
@@ -23,10 +25,11 @@ func _run() -> void:
 	root.add_child(world)
 	world.save_timer = -10000
 	for i: int in range(12): await process_frame
-	# Fresh desktop launches show the class picker automatically. Unlock
-	# the capture harness only; a real player must confirm a class.
-	if bool(world.hud.get("class_picker_initial")):
-		world.hud.call("complete_class_selection")
+	# Benchmarks must explicitly confirm a starter class before rendering.
+	if not CLASS_QA.enter_game(world):
+		push_error("UI capture class confirmation failed")
+		quit(1)
+		return
 	world.set_process(false)
 	world.field_population.set_process(false)
 	for monster: Node in world.monsters_root.get_children(): monster.set_physics_process(false)
