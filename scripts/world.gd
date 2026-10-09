@@ -19,6 +19,7 @@ const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
+const FULL_CATALOG_OPTIONS = preload("res://scripts/full_catalog_options.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -425,13 +426,16 @@ func _normalize_option_policies() -> void:
 						continue
 					kept.append(part.replace("PVP", "PVE").replace("PvP", "PvE"))
 				entry["desc"] = " · ".join(kept)
+				var enhanced: Dictionary = FULL_CATALOG_OPTIONS.enrich(entry)
+				entry.clear()
+				entry.merge(enhanced, true)
 
 func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
 	var category_values: Dictionary = verified_catalog_options.get(category, {}) as Dictionary
 	var name_value: String = str(source_record.get("name", ""))
 	var override_value: Variant = category_values.get(name_value, {})
 	if not (override_value is Dictionary) or (override_value as Dictionary).is_empty():
-		return source_record
+		return source_record if source_record.has("catalogOptionCount") or not source_record.has("sourceOptions") else FULL_CATALOG_OPTIONS.enrich(source_record)
 	var override_entry: Dictionary = override_value as Dictionary
 	var stats: Dictionary = override_entry.get("stats", {}) as Dictionary
 	var merged: Dictionary = source_record.duplicate(true)
@@ -456,7 +460,7 @@ func _verified_catalog_record(category: String, source_record: Dictionary) -> Di
 				merged["damage_reduction_ignore"] = maxi(0, ITEM_OPTIONS._signed_integer(segment.substr("대미지 리덕션 무시".length())))
 	merged["reference_verified"] = true
 	merged["reference_source"] = str(override_entry.get("source", ""))
-	return merged
+	return merged if merged.has("catalogOptionCount") else FULL_CATALOG_OPTIONS.enrich(merged)
 
 func _load_verified_catalog_options() -> void:
 	var path: String = "res://data/lineagem_verified_base_options.json"
@@ -538,6 +542,14 @@ func _tick_catalog_recovery(delta: float) -> void:
 	if changed:
 		_update_hud()
 
+func _equipment_option_sum(key: String) -> int:
+	var sum: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var value: Variant = equipped_items.get(slot, {})
+		if value is Dictionary:
+			sum += int((value as Dictionary).get(key, 0))
+	return sum
+
 func _catalog_stat_sum(key: String) -> int:
 	var result: int = 0
 	for category: String in ["변신", "마법인형", "성물"]:
@@ -595,7 +607,7 @@ func _inventory_total_weight() -> int:
 	return total
 
 func _carrying_capacity() -> int:
-	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity")
+	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + _equipment_option_sum("weightBonus") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity")
 
 func _inventory_encumbrance_multiplier() -> float:
 	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
@@ -618,7 +630,7 @@ func _effective_attribute(stat: String) -> int:
 		"WIS": base = wis_stat
 		"CHA": base = cha_stat
 		_: return 0
-	return base + _equipment_attribute_bonus(stat)
+	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(stat.to_lower() + "Flat")
 
 func _equipment_accuracy_bonus(kind: String) -> int:
 	var result: int = 0
@@ -648,6 +660,7 @@ func _equipment_additional_damage(kind: String) -> int:
 			result += ITEM_OPTIONS.additional_damage(item, kind)
 			var typed_ignore: int = int(item.get("damage_reduction_ignore", item.get("damageReductionIgnore", 0)))
 			result += typed_ignore
+			result += int(item.get(kind + "_damage_reduction_ignore", 0))
 			if typed_ignore == 0:
 				for fragment: String in str(item.get("desc", "")).split("·"):
 					var segment: String = fragment.strip_edges()
@@ -4319,7 +4332,7 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	if not equipped_catalog.has(category):
 		return
 	var old_max_hp: int = _effective_max_hp()
-	equipped_catalog[category] = record.duplicate(true)
+	equipped_catalog[category] = FULL_CATALOG_OPTIONS.enrich(record) if not record.has("catalogOptionCount") else record.duplicate(true)
 	if category == "마법인형" or category == "성물":
 		hp_recovery_elapsed = 0.0
 		mp_recovery_elapsed = 0.0
@@ -4378,7 +4391,7 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 		if _is_instance_equipped(selected_id):
 			hud.show_message("이미 착용한 장비 개체입니다")
 			return
-		equipped_items[equip_slot] = record.duplicate(true)
+		equipped_items[equip_slot] = FULL_CATALOG_OPTIONS.enrich(record) if not record.has("catalogOptionCount") else record.duplicate(true)
 		equipped_items[equip_slot]["instance_id"] = selected_id
 		if equip_slot == "weapon":
 			_enforce_shield_weapon_compatibility(false)
@@ -4831,7 +4844,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
 func _catalog_damage_bonus(kind: String) -> int:
-	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore")
+	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_damage_reduction_ignore")
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
@@ -4919,13 +4932,13 @@ func _melee_accuracy_stat() -> int:
 	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _catalog_damage_adjustment("ranged") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
+	return _effective_attack() + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _ranged_accuracy_stat() -> int:
 	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("sp") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("sp") + _equipment_option_sum("sp") + _catalog_stat_sum("pve_magic_damage") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
 
 func _magic_accuracy_stat() -> int:
 	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
@@ -5261,8 +5274,8 @@ func _damage_reduction_stat() -> int:
 	return maxi(0, total)
 
 func _pve_damage_after_item_buffs(raw_damage: int) -> int:
-	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction"))
-	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct"), 0, 90)
+	var reduced: int = maxi(1, raw_damage - _active_item_buff_total("pve_damage_reduction") - _active_item_buff_total("pvp_damage_reduction") - _catalog_stat_sum("pve_damage_reduction") - _catalog_stat_sum("pvp_damage_reduction") - _equipment_option_sum("pve_damage_reduction"))
+	var percent: int = clampi(_active_item_buff_total("pve_damage_reduction_pct") + _active_item_buff_total("pvp_damage_reduction_pct") + _catalog_stat_sum("pvp_damage_reduction_pct") + _catalog_stat_sum("pve_damage_reduction_pct") + _equipment_option_sum("pve_damage_reduction_pct"), 0, 90)
 	if percent > 0:
 		reduced = maxi(1, int(round(float(reduced) * (1.0 - float(percent) / 100.0))))
 	return reduced
