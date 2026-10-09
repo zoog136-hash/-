@@ -1,6 +1,7 @@
 extends "res://scripts/ui/lineage_side_ui.gd"
 
 signal equipment_requested(item_name: String)
+signal class_selection_requested
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 
 func _ready() -> void:
@@ -9,6 +10,9 @@ func _ready() -> void:
 	character_panel.add_theme_stylebox_override("panel",UI.box(Color("11171d"),UI.BRONZE,10))
 	var header: HBoxContainer = character_panel.get_child(0).get_child(0)
 	(header.get_child(header.get_child_count()-1) as Control).hide()
+	var change_class := UI.button("클래스 선택",func() -> void: class_selection_requested.emit(),Vector2(110,38))
+	change_class.name = "ChangeClassButton"
+	header.add_child(change_class)
 	equipment_grid.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	# Additional equipment sets have no gameplay implementation.
 	equipment_grid.get_parent().get_child(2).hide()
