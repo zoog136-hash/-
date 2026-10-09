@@ -66,6 +66,7 @@ func _run() -> void:
 	check(total_originals == 2852, "2,852 entries ingested")
 	var hud: Node = world.get("hud") as Node
 	hud.call("open_catalog", "아이템")
+	print("INVEN_UI_SLOT_FILTER=" + str(hud.get("item_slot_filter")))
 	check(str(hud.get("item_slot_filter")) == "all", "all original item types accessible without slot filter")
 	var staff: Dictionary = world.call("_source_catalog_record", "아이템", {"name":"기르타스의 지팡이"})
 	check((staff.get("sourceOptions", []) as Array).size() >= 17, "original Giltas staff has over 16 source options")
