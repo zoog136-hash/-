@@ -19,7 +19,7 @@ func _run() -> void:
 	if service_script == null:
 		_finish()
 		return
-	var ain: RefCounted = service_script.new()
+	var ain: TwilightAinhasadService = service_script.new()
 	ain.import_state({})
 	_check(ain.blessing == 200 and is_equal_approx(ain.experience_rate(), 4.0), "green default")
 	_check(ain.charge(1) == 1 and ain.blessing == 201, "charge stage boundary")
@@ -32,17 +32,17 @@ func _run() -> void:
 	_check(not ain.start_dragon_orb(), "orb cannot stack")
 	_check(ain.protected_drops() and is_equal_approx(ain.experience_rate(), 4.0), "orb zero-stage protection")
 	_check(ain.charge(201) == 201 and is_equal_approx(ain.experience_rate(), 7.0), "gold overrides orb")
-	_check(ain.charge_amount("드래곤의 다이아몬드", 35) == 100, "base recharge")
-	_check(ain.charge_amount("드래곤의 다이아몬드", 85) == 200, "level 85 recharge")
-	_check(ain.charge_amount("드래곤의 고급 다이아몬드", 89) == 2500, "level 89 recharge")
+	_check(TwilightAinhasadService.charge_amount("드래곤의 다이아몬드", 35) == 100, "base recharge")
+	_check(TwilightAinhasadService.charge_amount("드래곤의 다이아몬드", 85) == 200, "level 85 recharge")
+	_check(TwilightAinhasadService.charge_amount("드래곤의 고급 다이아몬드", 89) == 2500, "level 89 recharge")
 	var now: int = int(Time.get_unix_time_from_system())
 	ain.import_state({"blessing":196, "last_regen_at":now - 240, "dragon_orb_expires_at":0})
 	_check(ain.blessing == 198, "offline time recovery")
 	_check(ain.advance_time(now + 240) and ain.blessing == 200, "regen caps at 200")
-	ain.last_orb_purchase_month = ain.month_key()
+	ain.last_orb_purchase_month = TwilightAinhasadService.month_key()
 	_check(not ain.may_purchase_orb(), "monthly orb purchase limit")
 	var save: Dictionary = ain.export_state()
-	var restored: RefCounted = service_script.new()
+	var restored: TwilightAinhasadService = service_script.new()
 	restored.import_state(save)
 	_check(restored.blessing == ain.blessing and restored.auto_recharge == ain.auto_recharge, "save roundtrip")
 
@@ -54,7 +54,7 @@ func _run() -> void:
 		for frame: int in range(8):
 			await process_frame
 		var hud: Node = world.get_node("HUD")
-		var runtime_ain: RefCounted = world.get("ain_service") as RefCounted
+		var runtime_ain: TwilightAinhasadService = world.get("ain_service") as TwilightAinhasadService
 		_check(runtime_ain != null, "runtime blessing service")
 		_check(hud.has_signal("ain_item_requested"), "HUD recharge signal")
 		var leaf: Label = hud.get("v20_leaf_count") as Label
