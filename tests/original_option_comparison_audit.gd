@@ -85,4 +85,4 @@ func _run() -> void:
 	world.queue_free()
 	await process_frame
 	print("OPTION_AUDIT_OK" if is_valid else "OPTION_AUDIT_FAILED")
-	quit(0 if pass else 1)
+	quit(0 if is_valid else 1)
