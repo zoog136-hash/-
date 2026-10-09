@@ -103,11 +103,17 @@ func _run() -> void:
 		world.player.set_auto_enabled(false)
 		world.player.clear_click_path()
 		check(kills[0]>0,"actual AUTO dense kills "+id)
+		# A dying corpse still owns its slot until the death motion completes.
+		# Freeze survivors, let corpses return to the pool, then count live respawns.
+		world._clear_combat_actions()
+		for mob: TwilightMonster in world.monsters_root.get_children():
+			if not mob.dead: mob.set_physics_process(false)
+		for frame: int in range(90): await physics_frame
 		world.field_population._process(float(region.respawn_time)+.5)
 		pause_actors()
 		var restored: int = 0
 		for slot: Dictionary in world.field_population.slots:
-			if str(slot.region.id)==str(region.id) and is_instance_valid(slot.monster): restored += 1
+			if str(slot.region.id)==str(region.id) and is_instance_valid(slot.monster) and not slot.monster.dead: restored += 1
 		check(restored==24,"dense cap restored "+id)
 		report.dense.append({"map":id,"max":24,"auto_kills":kills[0],"restored":restored,"controlled_hp":30})
 		await capture("dense-auto-"+id)
