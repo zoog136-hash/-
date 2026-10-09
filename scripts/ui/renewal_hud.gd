@@ -39,6 +39,14 @@ var collection_status: Label
 var playtest_grant_button: Button
 var playtest_aden_button: Button
 var playtest_scroll_buttons: Array[Button] = []
+var catalog_body_left: VBoxContainer
+var catalog_body_actions: ScrollContainer
+var catalog_view_tabs: HBoxContainer
+var catalog_list_tab: Button
+var catalog_details_tab: Button
+var catalog_details_active: bool = false
+var catalog_icon_generation: int = 0
+var catalog_variant_counts: Dictionary = {}
 var skills_view: VBoxContainer
 var region_selection: ItemList
 var quest_view: Control
@@ -52,6 +60,7 @@ func _ready() -> void:
 	$Root.add_child(workspace)
 	workspace.navigate.connect(_navigate)
 	workspace.closed.connect(_close_workspace)
+	workspace.resized.connect(_fit_catalog_browser_layout)
 	# Starting-character selection is a genuine modal on PC and Android.
 	class_picker_backdrop = ColorRect.new()
 	class_picker_backdrop.name = "ClassSelectionBackdrop"
@@ -561,6 +570,8 @@ func open_catalog(category: String) -> void:
 	for grant: Button in playtest_scroll_buttons:
 		grant.visible = category == "아이템"
 	_refresh_catalog_list("")
+	catalog_details_active = false
+	_fit_catalog_browser_layout()
 
 func _build_catalog_panel() -> void:
 	super._build_catalog_panel()
@@ -594,10 +605,19 @@ func _build_catalog_panel() -> void:
 	top.add_child(collection_slot_filter)
 	collection_status = UI.label("",12,UI.MUTED)
 	col.add_child(collection_status)
+	catalog_view_tabs = HBoxContainer.new()
+	catalog_view_tabs.name = "CatalogCompactTabs"
+	catalog_list_tab = UI.button("아이템 목록", func() -> void: _set_catalog_detail_view(false), Vector2(115, 34))
+	catalog_details_tab = UI.button("선택 상세", func() -> void: _set_catalog_detail_view(true), Vector2(115, 34))
+	catalog_view_tabs.add_child(catalog_list_tab)
+	catalog_view_tabs.add_child(catalog_details_tab)
+	col.add_child(catalog_view_tabs)
+	catalog_view_tabs.hide()
 	var body := HBoxContainer.new()
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	col.add_child(body)
 	var left := VBoxContainer.new()
+	catalog_body_left = left
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_child(left)
 	catalog_list.reparent(left)
@@ -612,15 +632,23 @@ func _build_catalog_panel() -> void:
 	catalog_list.add_theme_constant_override("h_separation",8)
 	catalog_list.add_theme_font_size_override("font_size",13)
 	var pager := HBoxContainer.new()
+	pager.custom_minimum_size = Vector2(0, 40)
 	pager.alignment = BoxContainer.ALIGNMENT_CENTER
 	left.add_child(pager)
 	for control: Control in [catalog_first_button,catalog_prev_button,catalog_page_label,catalog_next_button,catalog_last_button]:
 		control.reparent(pager)
 		control.custom_minimum_size.y = 34
+	catalog_first_button.custom_minimum_size.x = 46
+	catalog_prev_button.custom_minimum_size.x = 38
+	catalog_page_label.custom_minimum_size.x = 64
+	catalog_next_button.custom_minimum_size.x = 38
+	catalog_last_button.custom_minimum_size.x = 46
 	catalog_count.reparent(left)
 	catalog_count.add_theme_font_size_override("font_size",11)
 	var right_scroll := ScrollContainer.new()
 	right_scroll.name = "CatalogActionsScroll"
+	catalog_body_actions = right_scroll
+	right_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_scroll.custom_minimum_size.x = 315
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -658,6 +686,29 @@ func _build_catalog_panel() -> void:
 		playtest_scroll_buttons.append(grant)
 	old.queue_free()
 
+func _set_catalog_detail_view(show_details: bool) -> void:
+	catalog_details_active = show_details
+	_fit_catalog_browser_layout()
+
+func _fit_catalog_browser_layout() -> void:
+	if workspace == null or catalog_body_left == null or catalog_body_actions == null:
+		return
+	# A fixed 530px grid + 315px preview used to spill outside portrait/small
+	# windows. On narrow viewports show either full-width grid or full-width detail.
+	var compact: bool = workspace.size.x < 1030.0
+	catalog_view_tabs.visible = compact and active_section in ["아이템", "변신", "마법인형", "성물"]
+	catalog_body_left.visible = not compact or not catalog_details_active
+	catalog_body_actions.visible = not compact or catalog_details_active
+	catalog_list.custom_minimum_size.x = 0.0 if compact else 530.0
+	catalog_list.max_columns = 2 if compact else 4
+	catalog_list.fixed_column_width = 115 if compact else 126
+	catalog_body_actions.custom_minimum_size.x = 0.0 if compact else 315.0
+	var actions_content: Control = catalog_body_actions.get_child(0) as Control
+	if actions_content != null:
+		actions_content.custom_minimum_size.x = 0.0 if compact else 300.0
+	catalog_list_tab.disabled = compact and not catalog_details_active
+	catalog_details_tab.disabled = compact and catalog_details_active
+
 func _select_catalog_group_index(index: int) -> void:
 	item_slot_filter = "all" if index == 0 else str(ITEM_SLOT_FILTERS[index - 1][0])
 	item_grade_filter = "전체"
@@ -677,6 +728,12 @@ func _refresh_item_filter_controls() -> void:
 func _refresh_catalog_list(filter_text: String) -> void:
 	# The original paging, selection and native touch handler remain in use.
 	catalog_filtered_results.clear()
+	catalog_variant_counts.clear()
+	if catalog_category == "아이템":
+		for raw: Variant in catalog_data.get("아이템", []) as Array:
+			if raw is Dictionary:
+				var name_value: String = str((raw as Dictionary).get("name", ""))
+				catalog_variant_counts[name_value] = int(catalog_variant_counts.get(name_value, 0)) + 1
 	var query := filter_text.strip_edges().to_lower()
 	for value: Variant in catalog_data.get(catalog_category,[]):
 		if not value is Dictionary: continue
@@ -690,6 +747,8 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	_apply_catalog_page()
 
 func _apply_catalog_page() -> void:
+	catalog_icon_generation += 1
+	var request_id: int = catalog_icon_generation
 	super._apply_catalog_page()
 	for index: int in range(catalog_results.size()):
 		var record: Dictionary = catalog_results[index]
@@ -701,12 +760,7 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_text(index,item_label)
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
-		if catalog_category == "아이템":
-			# PR46: use this sourceId record, never another item with the same name.
-			var item_texture: Texture2D = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
-			if item_texture != null:
-				catalog_list.set_item_icon(index, item_texture)
-		else:
+		if catalog_category != "아이템":
 			var path := str(record.get("image_path", ""))
 			if path != "" and ResourceLoader.exists(path):
 				catalog_list.set_item_icon(index, load(path) as Texture2D)
@@ -715,6 +769,21 @@ func _apply_catalog_page() -> void:
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
 		catalog_equip_button.disabled=true
 	(catalog_panel.find_child("ClearCatalog",true,false) as Button).visible=catalog_category!="아이템"
+	# Render the original source-ID icons in small batches so all item names
+	# appear immediately instead of the browser blocking during 40 image effects.
+	if catalog_category == "아이템" and not catalog_results.is_empty():
+		call_deferred("_fill_catalog_page_icons", request_id)
+
+func _fill_catalog_page_icons(request_id: int) -> void:
+	for index: int in range(catalog_results.size()):
+		if request_id != catalog_icon_generation or catalog_category != "아이템":
+			return
+		var record: Dictionary = catalog_results[index]
+		var icon_texture: Texture2D = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
+		if icon_texture != null and index < catalog_list.item_count:
+			catalog_list.set_item_icon(index, icon_texture)
+		if index % 3 == 2:
+			await get_tree().process_frame
 
 func _request_playtest_catalog_grant() -> void:
 	if catalog_category != "아이템" or selected_catalog_record.is_empty():
@@ -726,11 +795,7 @@ func _request_playtest_catalog_grant() -> void:
 		playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name", "")), 1)
 
 func _catalog_variant_count(item_name: String) -> int:
-	var count: int = 0
-	for raw: Variant in catalog_data.get("아이템", []) as Array:
-		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == item_name:
-			count += 1
-	return count
+	return int(catalog_variant_counts.get(item_name, 0))
 
 func _catalog_pinned_instance_id(record: Dictionary) -> String:
 	var source_id: String = str(record.get("sourceId", ""))
