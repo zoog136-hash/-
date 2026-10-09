@@ -1,6 +1,8 @@
 extends CanvasLayer
 class_name TwilightHUD
 
+const DETAIL_OPTIONS = preload("res://scripts/detailed_catalog_options.gd")
+
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 
 signal move_vector_changed(value: Vector2)
@@ -685,7 +687,7 @@ func _refresh_catalog_list(filter_text: String) -> void:
 				continue
 			if item_grade_filter != "전체" and str(record.get("grade", "")) != item_grade_filter:
 				continue
-		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", ""))).to_lower()
+		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", "")) + " " + str(record.get("desc", ""))).to_lower()
 		if query != "" and search_text.find(query) < 0:
 			continue
 		catalog_filtered_results.append(record)
@@ -856,11 +858,27 @@ func _on_catalog_item_selected(index: int) -> void:
 	var title: String = str(selected_catalog_record.get("name", ""))
 	var grade: String = str(selected_catalog_record.get("grade", ""))
 	var type_name: String = str(selected_catalog_record.get("type", ""))
-	var options: Array = selected_catalog_record.get("sourceOptions", []) as Array
+	var options: PackedStringArray = DETAIL_OPTIONS.source_display(selected_catalog_record)
 	var option_text: String = ""
-	for value: Variant in options.slice(0, 16):
-		option_text += "• %s\n" % str(value)
-	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\nID: %s\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "")), option_text]
+	var num_stats: int = 0
+	var num_pending: int = 0
+	for raw: String in options:
+		var check: Dictionary = DETAIL_OPTIONS.parse_option(raw)
+		var state: String = str(check.get("kind", "deferred"))
+		if state in ["numeric", "effect"]:
+			num_stats += 1
+		else:
+			num_pending += 1
+		var safe_line: String = raw.replace("[", "［").replace("]", "］")
+		var note: String = " [color=#b3a7a1](효과 개별 확인)[/color]" if state == "deferred" else ""
+		option_text += "• %s%s\n" % [safe_line, note]
+	var source_id: String = str(selected_catalog_record.get("sourceId", ""))
+	var report: String = "도감 원본 옵션 %d개 · 일반옵션 식별 %d개 · 추가 검증 %d개" % [
+		options.size(), num_stats, num_pending
+	]
+	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\nID: %s\n%s\n\n%s" % [
+		title, grade, type_name, source_id, report, option_text
+	]
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty():
