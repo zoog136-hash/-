@@ -165,6 +165,65 @@ static func value(record: Dictionary, key: String) -> float:
 		return float((stored as Dictionary).get(key, 0.0))
 	return float((classify(record).get("stats", {}) as Dictionary).get(key, 0.0))
 
+
+# Never add detail option values on top of a nonzero typed value from the
+# original source. All saved instances remain backward compatible.
+const FIELD_MAP: Dictionary = {
+	"str":"strFlat", "dex":"dexFlat", "con":"conFlat", "int":"intFlat", "wis":"wisFlat", "cha":"chaFlat",
+	"hp_flat":"hpFlat", "hp_pct":"hpPct", "mp_flat":"mpFlat", "mr":"mr", "sp":"sp",
+	"weight":"weightBonus", "stun_hit":"stun_accuracy", "stun_resist":"stun_resistance",
+	"fear_hit":"fear_accuracy", "fear_resist":"fear_resistance",
+	"hold_resist":"hold_resistance", "poison_resist":"poison_resistance",
+	"bleed_hit":"bleed_accuracy", "dg":"dg", "er":"er",
+	"melee_crit":"melee_crit", "ranged_crit":"ranged_crit", "magic_crit":"magic_crit",
+	"potion_pct":"potionHealPct", "potion_flat":"potionHealFlat",
+	"melee_damage":"meleeDamage", "ranged_damage":"rangedDamage", "magic_damage":"magicDamage",
+	"pve_melee_damage":"pve_melee_damage", "pve_ranged_damage":"pve_ranged_damage",
+	"pve_magic_damage":"pve_magic_damage", "pve_reduction":"pve_damage_reduction",
+	"pve_reduction_pct":"pve_damage_reduction_pct",
+	"ignore_reduction":"damage_reduction_ignore",
+	"ignore_reduction_melee":"ignore_reduction_melee",
+	"ignore_reduction_ranged":"ignore_reduction_ranged",
+	"ignore_reduction_magic":"ignore_reduction_magic",
+	"pve_ignore_reduction":"damage_reduction_ignore",
+	"reduction":"damage_reduction", "mp_recovery":"mpRecoveryTick",
+	"hp_recovery":"hpRecoveryTick", "hp_absorption":"hpAbsorption",
+	"skill_cooldown_pct":"skillCooldownPct"
+}
+
+static func enrich(source: Dictionary) -> Dictionary:
+	var record: Dictionary = source.duplicate(true)
+	if record.is_empty():
+		return record
+	var result: Dictionary = classify(record)
+	var stats: Dictionary = result.get("stats", {}) as Dictionary
+	record["_detail_stats"] = stats
+	record["_detail_deferred"] = result.get("deferred", [])
+	record["_detail_removed_count"] = int(result.get("removed", 0))
+	for raw_key: Variant in FIELD_MAP.keys():
+		var key: String = str(raw_key)
+		if not stats.has(key):
+			continue
+		var dest: String = str(FIELD_MAP[key])
+		if not record.has(dest) or (record[dest] is float or record[dest] is int) and absf(float(record[dest])) < 0.00001:
+			if dest == "hpAbsorption":
+				record[dest] = bool(float(stats[key]) > 0.0)
+			else:
+				record[dest] = stats[key]
+	# These are original typed fields already present on the Inven catalog;
+	# fill only when absent/unset.
+	if float(record.get("xp", 0.0)) == 0.0 and stats.has("xp_pct"):
+		record["xp"] = float(stats["xp_pct"]) / 100.0
+	if float(record.get("speed", 1.0)) == 1.0 and stats.has("move_speed"):
+		record["speed"] = 1.0 + float(stats["move_speed"]) / 100.0
+	if float(record.get("attackSpeed", 0.0)) == 0.0 and stats.has("attack_speed"):
+		record["attackSpeed"] = stats["attack_speed"]
+	if float(record.get("def", 0.0)) == 0.0 and stats.has("ac"):
+		record["def"] = stats["ac"]
+	if float(record.get("hit", 0.0)) == 0.0 and stats.has("weapon_hit"):
+		record["hit"] = stats["weapon_hit"]
+	return record
+
 static func source_display(record: Dictionary) -> PackedStringArray:
 	var lines: PackedStringArray = []
 	var options: Array = record.get("sourceOptions", []) as Array
