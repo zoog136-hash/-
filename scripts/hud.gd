@@ -712,7 +712,7 @@ func _refresh_item_filter_controls() -> void:
 		var slot_button_value: Variant = item_slot_buttons.get(slot_key)
 		if slot_button_value is Button:
 			var slot_button: Button = slot_button_value as Button
-			slot_button.button_pressed = str(slot_key) == item_slot_filter
+			slot_button.set_pressed_no_signal(str(slot_key) == item_slot_filter)
 
 	var available_grades: Dictionary = {}
 	var source: Array = catalog_data.get("아이템", []) as Array
@@ -732,7 +732,7 @@ func _refresh_item_filter_controls() -> void:
 			var grade_button: Button = grade_button_value as Button
 			var grade_name: String = str(grade_key)
 			grade_button.visible = grade_name == "전체" or available_grades.has(grade_name)
-			grade_button.button_pressed = grade_name == item_grade_filter
+			grade_button.set_pressed_no_signal(grade_name == item_grade_filter)
 
 func _catalog_page_count() -> int:
 	if catalog_filtered_results.is_empty():
