@@ -81,6 +81,7 @@ func _run() -> void:
 	if hud != null:
 		hud.call("open_catalog", "아이템")
 		check(str(hud.get("item_slot_filter")) == "all", "all detailed items shown by default")
+		print("FULL_CATALOG_HUD_DEBUG: filter=%s source=%d filtered=%d hud=%s" % [str(hud.get("item_slot_filter")), (hud.get("catalog_data") as Dictionary).get("아이템", []).size(), (hud.get("catalog_filtered_results") as Array).size(), str(hud.get_path())])
 		var filtered: Array = hud.get("catalog_filtered_results") as Array
 		check(filtered.size() >= 2129, "unfiltered all-items view includes all 2,129 Inven items")
 		hud.call("open_catalog", "변신")
