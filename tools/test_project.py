@@ -9,6 +9,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import re
+import json
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -34,4 +35,6 @@ for name,extra in tests:
         print(('PASS ' if ok else 'FAIL ')+name,flush=True)
         if not ok:failed.append(name)
 print(f'{len(tests)-len(failed)}/{len(tests)} checks passed')
+(logs/'summary.json').write_text(json.dumps({'total':len(tests),'passed':len(tests)-len(failed),
+    'failed':failed,'checks':[name for name,_ in tests]},indent=2)+'\n',encoding='utf-8')
 raise SystemExit(bool(failed))
