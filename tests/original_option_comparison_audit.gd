@@ -75,8 +75,8 @@ func _run() -> void:
 	report["weight_check"] = {"indexed":weight.size(), "catalog_missing":missing_weights, "noncurrency_zero_examples":zero_weights}
 	report["monster_size_explicit_count"] = (world.get("monster_size_index") as Dictionary).size()
 	print("ORIGINAL_OPTION_COMPARISON_REPORT:" + JSON.stringify(report))
-	var pass: bool = missing_weights.is_empty() and zero_weights.is_empty() and int(report["monster_size_explicit_count"]) >= 163
+	var is_valid: bool = missing_weights.is_empty() and zero_weights.is_empty() and int(report["monster_size_explicit_count"]) >= 163
 	world.queue_free()
 	await process_frame
-	print("OPTION_AUDIT_OK" if pass else "OPTION_AUDIT_FAILED")
+	print("OPTION_AUDIT_OK" if is_valid else "OPTION_AUDIT_FAILED")
 	quit(0 if pass else 1)
