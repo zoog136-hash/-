@@ -254,15 +254,26 @@ func _ready() -> void:
 	hud.set_catalog_data(catalog_db, catalog_image_index)
 	hud.set_job_data(job_classes, skills_db)
 	_set_map(active_map_id, false)
+	var creating_character: bool = not FileAccess.file_exists(SAVE_PATH)
 	_load_game(true)
 	_normalize_equipment_slots()
 	_ensure_job_class_visual()
 	_ensure_quickslots_seeded()
 	_update_job_skillbar()
 	_update_hud()
+	# The original renewal replaced the old class-button panel without
+	# replacing character creation. Show it only on a fresh playable launch.
+	# Headless automated suites explicitly open the picker to test it; the
+	# existing movement/input regressions must not inherit an opaque modal.
+	if creating_character and DisplayServer.get_name() != "headless":
+		hud.open_class_selection(true)
 	hud.append_log("V20 · 모바일 MMORPG HUD / 전투 화면 개선")
 
 func _process(delta: float) -> void:
+	# No auto-save, auto-hunt or keyboard commands until the new class is
+	# chosen. Otherwise a default-class save can silently bypass creation.
+	if hud.class_picker_initial:
+		return
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
 	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
@@ -309,6 +320,8 @@ func _process(delta: float) -> void:
 	_update_target_hud()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if hud.class_picker_initial:
+		return
 	if event is InputEventMouseButton:
 		var mouse_event: InputEventMouseButton = event
 		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
