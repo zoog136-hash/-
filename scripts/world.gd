@@ -437,6 +437,11 @@ func _enrich_inven_catalog() -> void:
 func _source_catalog_record(category: String, saved: Dictionary) -> Dictionary:
 	if str(saved.get("name", "")).is_empty():
 		return saved
+	# Exact source IDs are authoritative. Preserve explicitly typed, locally
+	# equipped records without sourceId; never replace a test/save item's
+	# attack/hit fields merely because an Inven entry has the same name.
+	if category == "아이템" and str(saved.get("sourceId", "")).is_empty() and (saved.has("atk") or saved.has("hit")):
+		return saved
 	var catalog_index: Dictionary = inven_record_index.get(category, {}) as Dictionary
 	var candidate: Variant = {}
 	var item_id: String = str(saved.get("sourceId", ""))
