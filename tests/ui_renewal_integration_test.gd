@@ -55,7 +55,7 @@ func _run() -> void:
 	_check(workspace.visible,"shop window visible")
 	var listing: ItemList = workspace.find_child("ShopItems",true,false) as ItemList
 	var buy: Button = workspace.find_child("ShopBuy",true,false) as Button
-	_check(listing != null and listing.item_count == 13,"13 original shop products")
+	_check(listing != null and listing.item_count == 19,"19 shop products including dragon items")
 	_check(buy != null and not buy.disabled,"potion affordable")
 	# Real viewport GUI touch events (not direct _select or item_selected.emit).
 	if listing != null and listing.item_count > 1:
