@@ -48,71 +48,82 @@ func set_character_state(value: Dictionary) -> void:
 
 func _refresh_inventory_grid() -> void:
 	super._refresh_inventory_grid()
-	var names: Array = slot_buttons.keys()
+	var references: Array = slot_buttons.keys()
 	if sort_mode == 1:
-		names.sort_custom(func(a: String,b: String) -> bool:
-			var ga: int = UI.GRADES.keys().find(str(_find_item_record(a).get("grade","일반")))
-			var gb: int = UI.GRADES.keys().find(str(_find_item_record(b).get("grade","일반")))
-			return a < b if ga == gb else ga > gb)
+		references.sort_custom(func(a: String, b: String) -> bool:
+			var left_name: String = _base_item_name(a)
+			var right_name: String = _base_item_name(b)
+			var left_grade: int = UI.GRADES.keys().find(str(_find_item_record(left_name).get("grade", "일반")))
+			var right_grade: int = UI.GRADES.keys().find(str(_find_item_record(right_name).get("grade", "일반")))
+			return a < b if left_grade == right_grade else left_grade > right_grade)
 	elif sort_mode == 2:
-		names.sort_custom(func(a: String,b: String) -> bool: return a < b if int(inventory[a]) == int(inventory[b]) else int(inventory[a]) > int(inventory[b]))
+		references.sort_custom(func(a: String, b: String) -> bool:
+			var left_count: int = 1 if _ref_instance_id(a) != "" else int(inventory.get(_base_item_name(a), 0))
+			var right_count: int = 1 if _ref_instance_id(b) != "" else int(inventory.get(_base_item_name(b), 0))
+			return a < b if left_count == right_count else left_count > right_count)
 	else:
-		names.sort()
-	for index: int in range(names.size()):
-		var item_name: String = str(names[index])
-		var b: Button = slot_buttons[item_name]
-		item_grid.move_child(b,index)
-		var texture: Texture2D = UI.item_icon(_find_item_record(item_name),item_name,item_image_index.get("아이템",{}))
-		b.icon = null
-		b.text = ""
-		b.custom_minimum_size = Vector2(96,98)
+		references.sort()
+	for index: int in range(references.size()):
+		var reference: String = str(references[index])
+		var item_name: String = _base_item_name(reference)
+		var button: Button = slot_buttons[reference] as Button
+		item_grid.move_child(button, index)
+		var record: Dictionary = _find_item_record(item_name)
+		var texture: Texture2D = UI.item_icon(record, item_name, item_image_index.get("아이템", {}))
+		button.icon = null
+		button.text = ""
+		button.custom_minimum_size = Vector2(96, 98)
 		var icon := TextureRect.new()
 		icon.texture = texture
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position = Vector2(15,10)
-		icon.size = Vector2(66,60)
+		icon.position = Vector2(15, 10)
+		icon.size = Vector2(66, 60)
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		b.add_child(icon)
-		var caption := UI.label(item_name.left(6)+"…" if item_name.length()>7 else item_name,11)
-		caption.position = Vector2(4,75)
-		caption.size = Vector2(88,19)
+		button.add_child(icon)
+		var caption := UI.label(item_name.left(6) + "…" if item_name.length() > 7 else item_name, 11)
+		caption.position = Vector2(4, 75)
+		caption.size = Vector2(88, 19)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		caption.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		caption.clip_text = true
-		b.add_child(caption)
-		var badge := UI.label("+%d" % _enhance_level(item_name) if _enhance_level(item_name)>0 else "",12,UI.GOLD)
-		badge.position = Vector2(5,2)
-		b.add_child(badge)
-		var count := UI.label("E" if _is_item_equipped(item_name) else "×%d" % int(inventory[item_name]),12,UI.GOLD if _is_item_equipped(item_name) else UI.TEXT)
-		count.position = Vector2(52,3)
-		count.size = Vector2(38,22)
+		button.add_child(caption)
+		var level: int = _enhance_level(reference)
+		var badge := UI.label("+%d" % level if level > 0 else "", 12, UI.GOLD)
+		badge.position = Vector2(5, 2)
+		button.add_child(badge)
+		var equipped: bool = _is_item_equipped(reference)
+		var amount: int = 1 if _ref_instance_id(reference) != "" else int(inventory.get(item_name, 0))
+		var count := UI.label("E" if equipped else "×%d" % amount, 12, UI.GOLD if equipped else UI.TEXT)
+		count.position = Vector2(52, 3)
+		count.size = Vector2(38, 22)
 		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		b.add_child(count)
+		button.add_child(count)
+		if _ref_instance_id(reference) != "":
+			button.tooltip_text += " · 개체 ID:" + _ref_instance_id(reference)
 	if weight_readout != null:
-		var total: float = 0
-		for item: String in inventory:
-			total += float(_find_item_record(item).get("weight",0))*int(inventory[item])
-		weight_readout.text = "보유 물품 무게  %.0f  ·  이름별 강화 정보 / 개체별 강화는 현재 버전 미연결" % total
+		var current_weight: float = float(character_state.get("current_weight", 0))
+		var max_weight: float = float(character_state.get("max_weight", character_state.get("carrying_capacity", 0)))
+		weight_readout.text = "현재 무게 %.0f / %.0f · 장비별 강화·속성은 개체 ID별 보존" % [current_weight, max_weight]
 
-func _refresh_detail(item_name: String) -> void:
-	super._refresh_detail(item_name)
+func _refresh_detail(item_reference: String) -> void:
+	super._refresh_detail(item_reference)
+	var item_name: String = _base_item_name(item_reference)
+	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_name)
-	detail_icon.texture=UI.item_icon(item,item_name,item_image_index.get("아이템",{}))
-	var slot := str(item.get("slot",""))
-	var worn: Dictionary = character_state.get("equipped_items",{})
-	var current: Variant = worn.get(slot,{})
-	if current is Dictionary and not current.is_empty() and str(current.get("name","")) != item_name:
-		detail_text.text += "\n\n[color=#d8b878]착용 장비와 비교[/color]\n"+UI.safe(current.get("name",""))
-		for pair: Array in [["atk","공격력"],["def","방어력"],["hit","명중"],["hpFlat","최대 HP"]]:
-			var delta: int = int(item.get(pair[0],0))-int(current.get(pair[0],0))
+	detail_icon.texture = UI.item_icon(item, item_name, item_image_index.get("아이템", {}))
+	var slot: String = str(item.get("slot", ""))
+	var worn: Dictionary = character_state.get("equipped_items", {})
+	var current: Variant = worn.get(slot, {})
+	if current is Dictionary and not (current as Dictionary).is_empty() and str((current as Dictionary).get("name", "")) != item_name:
+		detail_text.text += "\n\n[color=#d8b878]착용 장비와 비교[/color]\n" + UI.safe((current as Dictionary).get("name", ""))
+		for pair: Array in [["atk", "공격력"], ["def", "방어력"], ["hit", "명중"], ["hpFlat", "최대 HP"]]:
+			var delta: int = int(item.get(pair[0], 0)) - int((current as Dictionary).get(pair[0], 0))
 			if delta != 0:
-				detail_text.text += "\n%s  %s%d" % [pair[1],"+" if delta>0 else "",delta]
-	var instances: Variant = character_state.get("item_instances",{})
-	if instances is Dictionary:
-		for id: Variant in instances:
-			var entry: Variant = instances[id]
-			if entry is Dictionary and str(entry.get("name","")) == item_name:
-				detail_text.text += "\nID %s  ·  +%d" % [UI.safe(id),int(entry.get("enhance_level",entry.get("level",0)))]
-	if _is_item_equipped(item_name):
-		detail_action.tooltip_text = "장착 중 · 현재 게임 버전은 일반 장비 해제 동작을 제공하지 않습니다."
+				detail_text.text += "\n%s  %s%d" % [pair[1], "+" if delta > 0 else "", delta]
+	if selected_id != "":
+		detail_text.text += "\n[color=#d8b878]선택한 장비 ID: %s[/color]" % UI.safe(selected_id)
+	if _is_item_equipped(item_reference):
+		detail_action.tooltip_text = "선택된 장비 개체가 장착 중입니다. 현재 게임은 일반 장비 해제를 제공하지 않습니다."
+	else:
+		detail_action.tooltip_text = ""
