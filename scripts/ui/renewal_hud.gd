@@ -9,6 +9,7 @@ const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
+const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var workspace: PanelContainer
@@ -46,6 +47,7 @@ func _ready() -> void:
 	joystick.offset_bottom = -84
 	get_viewport().size_changed.connect(_fit_hud)
 	_fit_hud()
+	SettingsUI.apply_saved(self)
 
 func _build_lineage_inventory_ui() -> void:
 	lineage_inventory_ui = Inventory.new() as TwilightInventoryUI
@@ -400,6 +402,34 @@ func open_quest_info() -> void:
 	quest_view = QuestUI.new()
 	workspace.mount(quest_view)
 	quest_view.call("configure",self)
+
+func open_settings_info() -> void:
+	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
+	var options := SettingsUI.new()
+	workspace.mount(options)
+	options.configure(self)
+
+func open_macro_info() -> void:
+	_open_window("auto","자동사냥","기존 게임의 AUTO 상태를 제어합니다.")
+	var col := workspace.column()
+	var player: Node = get_parent().get("player")
+	var enabled := bool(player.get("auto_enabled")) if player != null else false
+	col.add_child(UI.label("AUTO 현재 상태: "+"켜짐" if enabled else "AUTO 현재 상태: 꺼짐",22,UI.GOLD))
+	col.add_child(UI.label("근처의 목표를 찾고 이동·공격하는 기존 자동사냥을 사용합니다.",13,UI.MUTED))
+	col.add_child(UI.button("AUTO 끄기" if enabled else "AUTO 켜기",func() -> void:
+		auto_pressed.emit()
+		open_macro_info(),Vector2(220,52)))
+
+func open_chat_info() -> void:
+	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
+	var col := workspace.column()
+	col.add_child(UI.label("전투 / 시스템 로그",21,UI.GOLD))
+	var history := UI.rich("")
+	history.fit_content = false
+	history.scroll_active = true
+	history.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	history.text = "\n".join(log_history) if not log_history.is_empty() else "아직 기록이 없습니다."
+	col.add_child(history)
 
 func toggle_inventory() -> void:
 	if active_section=="inventory" and workspace.visible:
