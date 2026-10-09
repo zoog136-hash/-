@@ -27,6 +27,11 @@ var detail: RichTextLabel
 var purchase: Button
 var filtered: Array = []
 var selected: Array = []
+var list_touch_index: int = -1
+var list_touch_travel: float = 0.0
+var list_touch_dragging: bool = false
+var list_mouse_dragging: bool = false
+var list_mouse_travel: float = 0.0
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -57,6 +62,7 @@ func configure(controller: Node) -> void:
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	listing.item_selected.connect(_select)
+	listing.gui_input.connect(_on_listing_input)
 	row.add_child(listing)
 	var side := VBoxContainer.new()
 	side.custom_minimum_size.x = 315
@@ -93,6 +99,53 @@ func _refresh() -> void:
 	else:
 		listing.select(0)
 		_select(0)
+
+# ItemList mouse selection works in the editor but a native Android
+# InputEventScreenTouch does not necessarily emit item_selected. Treat a tap
+# as a selection and a swipe as scrolling, never as an item purchase.
+func _select_at_position(local_point: Vector2) -> void:
+	var index: int = listing.get_item_at_position(local_point,true)
+	if index >= 0 and index < filtered.size():
+		listing.select(index)
+		_select(index)
+
+func _scroll_listing(delta_y: float) -> void:
+	var bar: VScrollBar = listing.get_v_scroll_bar()
+	if bar != null:
+		bar.value = clampf(bar.value-delta_y,bar.min_value,maxf(bar.min_value,bar.max_value-bar.page))
+
+func _on_listing_input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		var touch: InputEventScreenTouch = event
+		if touch.pressed and not touch.canceled and list_touch_index == -1:
+			list_touch_index = touch.index
+			list_touch_travel = 0.0
+			list_touch_dragging = false
+		elif (not touch.pressed or touch.canceled) and touch.index == list_touch_index:
+			if not touch.canceled and not list_touch_dragging:
+				_select_at_position(touch.position)
+			list_touch_index = -1
+			listing.accept_event()
+	elif event is InputEventScreenDrag and event.index == list_touch_index:
+		var drag: InputEventScreenDrag = event
+		list_touch_travel += absf(drag.relative.y)
+		if list_touch_travel > 8.0:
+			list_touch_dragging = true
+			_scroll_listing(drag.relative.y)
+			listing.accept_event()
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			list_mouse_dragging = true
+			list_mouse_travel = 0.0
+		else:
+			if list_mouse_dragging and list_mouse_travel <= 8.0:
+				_select_at_position(event.position)
+			list_mouse_dragging = false
+	elif event is InputEventMouseMotion and list_mouse_dragging and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+		list_mouse_travel += absf(event.relative.y)
+		if list_mouse_travel > 8.0:
+			_scroll_listing(event.relative.y)
+			listing.accept_event()
 
 func _select(index: int) -> void:
 	if index < 0 or index >= filtered.size(): return
