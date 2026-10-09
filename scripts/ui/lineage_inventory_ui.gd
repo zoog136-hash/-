@@ -1,4 +1,6 @@
 extends Control
+
+const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 class_name TwilightInventoryUI
 
 signal item_activate_requested(item_name: String)
@@ -342,10 +344,10 @@ func _refresh_inventory_grid() -> void:
 		var equip_mark: String = "E " if equipped else ""
 		var level: int = _enhance_level(reference)
 		var level_mark: String = "+%d " % level if level > 0 else ""
-		var badges: String = _status_badges(record, item_name)
+		var badges: String = _status_badges(record, reference)
 		var badge_mark: String = badges + " " if badges != "" else ""
 		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(item_name), amount]
-		button.tooltip_text = "%s%s%s" % [_enhanced_display_name(record, reference), " · 장착 중" if equipped else "", _status_tooltip(record, item_name)]
+		button.tooltip_text = "%s%s%s" % [_enhanced_display_name(record, reference), " · 장착 중" if equipped else "", _status_tooltip(record, reference)]
 		button.add_theme_font_size_override("font_size", 11)
 		button.add_theme_color_override("font_color", TEXT)
 		button.add_theme_color_override("font_hover_color", Color.WHITE)
@@ -390,13 +392,13 @@ func _enhance_level(item_reference: String) -> int:
 	var legacy: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
 	return maxi(0, int(legacy.get(_base_item_name(item_reference), 0))) if id == "" else 0
 
-func _bless_state(record: Dictionary, item_name: String) -> String:
-	var explicit := str(record.get("bless_state", "")).to_lower()
-	if explicit in ["blessed", "축복"]:
-		return "blessed"
-	if bool(record.get("blessed", false)) or item_name.find("축복받은") >= 0:
-		return "blessed"
-	return "normal"
+func _bless_state(record: Dictionary, item_reference: String) -> String:
+	var instance_id: String = _ref_instance_id(item_reference)
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	if instance_id != "" and instances.has(instance_id):
+		var physical: Dictionary = instances[instance_id] as Dictionary
+		return "blessed" if EQUIPMENT_BLESSING.is_blessed(physical, record) else "normal"
+	return "blessed" if EQUIPMENT_BLESSING.is_blessed({}, record) else "normal"
 
 func _is_engraved(record: Dictionary, item_name: String) -> bool:
 	return bool(record.get("engraved", false)) or item_name.find("(각인)") >= 0 or item_name.find("각인") >= 0
@@ -414,7 +416,9 @@ func _enhanced_display_name(record: Dictionary, item_name: String) -> String:
 	var level := _enhance_level(item_name)
 	var prefix := "+%d " % level if level > 0 else ""
 	var badges := _status_badges(record, item_name)
-	return "%s%s%s" % [prefix, badges + " " if badges != "" else "", _base_item_name(item_name)]
+	var base: String = _base_item_name(item_name)
+	var blessed_name: String = "축복받은 " + base if _bless_state(record, item_name) == "blessed" and not base.begins_with("축복받은 ") else base
+	return "%s%s%s" % [prefix, badges + " " if badges != "" else "", blessed_name]
 
 func _status_tooltip(record: Dictionary, item_name: String) -> String:
 	var parts := PackedStringArray()
@@ -525,7 +529,7 @@ func _refresh_detail(item_name: String) -> void:
 	var slot := str(record.get("slot", ""))
 	var equipped := _is_item_equipped(selected_reference)
 	var enhance_level := _enhance_level(selected_reference)
-	var bless_state := _bless_state(record, item_name)
+	var bless_state := _bless_state(record, selected_reference)
 	var engraved := _is_engraved(record, item_name)
 	detail_name.text = _enhanced_display_name(record, selected_reference)
 	detail_grade.text = "%s%s · 보유 %d" % [grade, " · 장착중" if equipped else "", amount]
@@ -548,7 +552,11 @@ func _refresh_detail(item_name: String) -> void:
 	if enhance_level > 0:
 		lines.append("[color=#ffd36a][b]강화 +%d[/b][/color]" % enhance_level)
 	if bless_state == "blessed":
-		lines.append("[color=#ffe77a]✦ 축복 아이템[/color]")
+		lines.append("[color=#ffe77a]✦ 축복받은 장비[/color]")
+		var kind: String = "weapon" if slot == "weapon" else "armor"
+		var bless_option: String = EQUIPMENT_BLESSING.effect_text(grade, kind)
+		if bless_option != "" and (slot == "weapon" or slot in ["offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","boots","gloves"]):
+			lines.append("[color=#f3d586]축복 효과 · %s[/color]" % bless_option)
 	elif bless_state == "cursed":
 		lines.append("[color=#d76cff]☠ 저주 아이템[/color]")
 	if engraved:
