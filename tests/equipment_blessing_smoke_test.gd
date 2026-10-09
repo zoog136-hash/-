@@ -2,6 +2,7 @@ extends SceneTree
 
 const BLESSING = preload("res://scripts/equipment_blessing.gd")
 const INVENTORY_UI = preload("res://scripts/ui/lineage_inventory_ui.gd")
+const SIDE_UI = preload("res://scripts/ui/lineage_side_ui.gd")
 var failures: Array[String] = []
 
 func _initialize() -> void:
@@ -83,7 +84,12 @@ func _run() -> void:
 	_check(ordinary_name == "낡은 장검", "ordinary copy inherited blessing label")
 	_check(str(ui.call("_status_badges", weapon, "낡은 장검@@@" + a)) == "", "blessing star still rendered")
 	_check(not blessed_name.contains("✦"), "star remained in blessed name")
-	ui.queue_free()
+	ui.free()
+	var side: Control = SIDE_UI.new()
+	side.set("character_state", {"item_instances": instances})
+	_check(str(side.call("_equipped_display_name", {"name": "낡은 장검", "instance_id": a})) == "축복받은 낡은 장검", "equipped slot missing blessed name")
+	_check(str(side.call("_equipped_display_name", {"name": "낡은 장검", "instance_id": b})) == "낡은 장검", "unblessed equipped copy has prefix")
+	side.free()
 	_check(int(inv.get(scroll, 0)) == 4, "successful blessing must consume exactly one scroll")
 	_check(int(world.call("_effective_max_hp")) == base_hp + expected_hp, "equipped HP blessing missing")
 	_check(int(world.call("_equipped_bless_bonus", "accuracy")) == expected_hit, "equipped weapon accuracy bonus missing")
