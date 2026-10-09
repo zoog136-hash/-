@@ -309,6 +309,14 @@ func _process(delta: float) -> void:
 
 func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience_value: int,exp_need: int,gold: int) -> void:
 	super.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
+	# Keep the open character sheet and its stored state current without sending
+	# the full equipment/ID snapshot back through every inventory and icon view.
+	var vitals: Dictionary = {"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp}
+	character_state.merge(vitals, true)
+	if is_instance_valid(lineage_side_ui):
+		lineage_side_ui.update_vitals(hp, max_hp, mp, max_mp)
+	if is_instance_valid(lineage_inventory_ui):
+		lineage_inventory_ui.character_state.merge(vitals, true)
 	if exp_readout != null:
 		exp_readout.text = "Lv.%d  ·  EXP %.2f%%" % [level,float(experience_value)*100/maxi(1,exp_need)]
 	if currency_readout != null:

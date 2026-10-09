@@ -478,6 +478,13 @@ func set_character_state(state: Dictionary) -> void:
 	character_state = state.duplicate(true)
 	_refresh_character()
 
+func update_vitals(hp: int, max_hp: int, mp: int, max_mp: int) -> void:
+	character_state.merge({"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp}, true)
+	if hp_label != null:
+		hp_label.text = "HP %d / %d" % [hp, max_hp]
+	if mp_label != null:
+		mp_label.text = "MP %d / %d" % [mp, max_mp]
+
 func _refresh_character() -> void:
 	if character_panel == null:
 		return

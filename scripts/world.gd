@@ -41,8 +41,6 @@ var combat_corpses: Node2D = null
 var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
-var combat_hud_dirty: bool = false
-var combat_hud_clock: float = 0.0
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -281,11 +279,6 @@ func _process(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
-	combat_hud_clock = maxf(0.,combat_hud_clock-delta)
-	if combat_hud_dirty and combat_hud_clock<=0.:
-		combat_hud_dirty = false
-		combat_hud_clock = .25
-		_update_hud()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
 	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
@@ -546,7 +539,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	target.take_damage(maxi(1, normal_damage) + stolen, critical)
 	if stolen > 0:
-		_update_hud()
+		_refresh_combat_hud()
 
 func _tick_catalog_recovery(delta: float) -> void:
 	var elapsed: float = maxf(0.0, delta)
@@ -578,7 +571,7 @@ func _tick_catalog_recovery(delta: float) -> void:
 	else:
 		mp_recovery_elapsed = 0.0
 	if changed:
-		_update_hud()
+		_refresh_combat_hud()
 
 func _catalog_stat_sum(key: String) -> int:
 	var result: int = 0
@@ -2008,7 +2001,9 @@ func _on_player_poison_tick(damage_value: int) -> void:
 	hud.append_log("독 피해 %d" % poison_damage)
 	if hp <= 0:
 		_respawn_player("독 피해로 사망 후 부활했습니다")
-	_update_hud()
+		_update_hud()
+	else:
+		_refresh_combat_hud()
 
 func _on_player_bleed_tick(damage_value: int) -> void:
 	if damage_value <= 0 or hp <= 0:
@@ -2019,7 +2014,9 @@ func _on_player_bleed_tick(damage_value: int) -> void:
 	hud.append_log("출혈 피해 %d" % bleed_damage)
 	if hp <= 0:
 		_respawn_player("출혈 피해로 사망 후 부활했습니다")
-	_update_hud()
+		_update_hud()
+	else:
+		_refresh_combat_hud()
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
 	if attacker == null or not is_instance_valid(attacker):
@@ -2190,7 +2187,9 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			])
 	if hp <= 0:
 		_respawn_player("사망 후 부활했습니다")
-	_refresh_combat_hud()
+		_update_hud()
+	else:
+		_refresh_combat_hud()
 
 func _stat_points_for_level_up(new_level: int) -> int:
 	# Every level-up grants one allocatable point so the stat-growth screen is
@@ -3032,7 +3031,9 @@ func _on_map_selected(map_id: String) -> void:
 func _update_hud() -> void:
 	_sync_item_instances()
 	_refresh_speed_modifiers()
-	hud.update_player(level, hp, _effective_max_hp(), mp, _effective_max_mp(), experience, exp_need, gold)
+	var display_max_hp: int = _effective_max_hp()
+	var display_max_mp: int = _effective_max_mp()
+	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
 	if hud.has_method("set_quest_progress"):
@@ -3045,15 +3046,14 @@ func _update_hud() -> void:
 	character_state["job_transform_name"] = str(job_profile.get("transform_name", ""))
 	character_state["level"] = level
 	character_state["hp"] = hp
-	character_state["max_hp"] = _effective_max_hp()
+	character_state["max_hp"] = display_max_hp
 	character_state["mp"] = mp
-	character_state["max_mp"] = _effective_max_mp()
+	character_state["max_mp"] = display_max_mp
 	character_state["attack"] = _effective_attack()
 	character_state["defense"] = _effective_defense()
 	character_state["equipped"] = equipped_catalog
 	character_state["equipped_items"] = _equipped_items_snapshot()
 	character_state["enhancement_levels"] = enhancement_levels
-	_sync_item_instances()
 	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
 	character_state["quest_kills"] = quest_kills
@@ -3067,11 +3067,12 @@ func _update_hud() -> void:
 		hud.call("set_quickslot_entries", quickslots)
 
 func _refresh_combat_hud() -> void:
-	# HP/MP bars update on the hit. Rebuilding equipment IDs, quickslot icons and
-	# the full character sheet for every crowd strike is unnecessary; coalesce
-	# that presentation work while keeping all combat/stat formulas unchanged.
-	hud.update_player(level,hp,_effective_max_hp(),mp,_effective_max_mp(),experience,exp_need,gold)
-	combat_hud_dirty = true
+	# Only presentation limits are reused. Equipment/stat/buff changes and loads
+	# publish fresh limits through _update_hud; real damage still queries live stats.
+	# HP-only changes must not queue an equipment/character/inventory rebuild.
+	var display_max_hp: int = int(hud.character_state.get("max_hp", max_hp))
+	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
+	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func _save_game(quiet: bool) -> void:
 	_sync_item_instances()
@@ -3886,6 +3887,9 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> voi
 					"speed": float(skill.get("speed", 1.0))
 				}
 				player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
+				# A proc that changes stats needs a fresh full snapshot; an ordinary
+				# hit/heal only updates vitals. Do not rely on a later damage flush.
+				_update_hud()
 			_:
 				continue
 		var cooldown: float = SKILL_RULES.cooldown_seconds(skill) * _skill_cooldown_factor()

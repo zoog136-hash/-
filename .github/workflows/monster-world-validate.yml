@@ -52,6 +52,23 @@ jobs:
           xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/monster-crowd-render.log
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-crowd-render.log; then exit 1; fi
           grep -q COMBAT_CROWD_RENDER_OK test-results/monster-crowd-render.log
+      - name: Checkout PR43 before HUD optimization with PR46 and PR48 integrated
+        uses: actions/checkout@v4
+        with:
+          ref: 1b53a3ea56ef61bd69af5d2b1649ac325b52ca33
+          path: hud-baseline
+      - name: Identical 192-strike HUD and real damage comparison
+        shell: bash
+        run: |
+          set -o pipefail
+          cp tests/qa_combat_hud_world.gd tests/benchmark_combat_hud.gd hud-baseline/tests/
+          export XDG_DATA_HOME="${RUNNER_TEMP}/hud-before"
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --quit --path hud-baseline 2>&1 | tee test-results/hud-baseline-import.log
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path hud-baseline --script res://tests/benchmark_combat_hud.gd 2>&1 | tee test-results/hud-before.log
+          export XDG_DATA_HOME="${RUNNER_TEMP}/hud-after"
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/benchmark_combat_hud.gd 2>&1 | tee test-results/hud-after.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/hud-{baseline-import,before,after}.log; then exit 1; fi
+          python3 tools/compare_combat_hud.py --before "${RUNNER_TEMP}/hud-before" --after "${RUNNER_TEMP}/hud-after" --output test-results/hud-comparison.json
       - name: Upload exact-sha logs and OpenGL review evidence
         id: review_upload
         if: always()
@@ -62,6 +79,8 @@ jobs:
             test-results/
             ${{ runner.temp }}/monster-world-render/**/monster-world-review/
             ${{ runner.temp }}/monster-crowd-render/**/combat-crowd-review/
+            ${{ runner.temp }}/hud-before/**/combat-hud-review/
+            ${{ runner.temp }}/hud-after/**/combat-hud-review/
           if-no-files-found: error
       - name: Persist source-labelled unedited review files on the feature branch
         if: success() && github.event_name == 'pull_request' && github.head_ref == 'feature/twilight-monster-world-overhaul-20261009' && github.event.pull_request.head.repo.full_name == github.repository
@@ -81,6 +100,9 @@ jobs:
           crowd_root = next((Path(os.environ["RUNNER_TEMP"]) / "monster-crowd-render").rglob("combat-crowd-review"))
           render = json.loads((region_root / "render-summary.json").read_text())
           perf = json.loads((crowd_root / "performance.json").read_text())
+          regression = json.loads(Path("test-results/summary.json").read_text())
+          assert regression["passed"] == regression["total"] and not regression["failed"]
+          regression_text = str(regression["passed"]) + "/" + str(regression["total"]) + " passed"
           assert len(render["maps"]) == 25 and len(render["dense"]) == 4 and len(render["bosses"]) == 10
           assert sum(page["count"] for page in render["gallery"]) == 318
           assert all(entry["auto_kills"] > 0 and entry["restored"] == 24 for entry in render["dense"])
@@ -101,6 +123,9 @@ jobs:
           for path in [region_root / "render-summary.json", crowd_root / "performance.json"]:
               shutil.copyfile(path, output / path.name)
           shutil.copytree(Path("test-results"), output / "logs", dirs_exist_ok=True)
+          # .log is ignored by the repository. Persist readable text logs too.
+          for path in Path("test-results").glob("*.log"):
+              shutil.copyfile(path, output / "logs" / (path.stem + ".txt"))
           meta = {
               "branch": "feature/twilight-monster-world-overhaul-20261009",
               "source_head": os.environ["EXPECTED_HEAD"],
@@ -109,7 +134,8 @@ jobs:
               "run_url": "https://github.com/zoog136-hash/-/actions/runs/" + os.environ["REVIEW_RUN"],
               "artifact_id": os.environ["ARTIFACT_ID"], "artifact_url": os.environ["ARTIFACT_URL"],
               "png_count": 106, "all_png_hashes": hashes,
-              "regression": "50/50 passed; previous workflow step exited successfully",
+              "regression": regression_text,
+              "hud_baseline": "1b53a3ea56ef61bd69af5d2b1649ac325b52ca33",
               "note": "Unedited actual OpenGL captures; gallery and crowd use controlled QA conditions."
           }
           (output / "evidence.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n")
@@ -122,7 +148,8 @@ jobs:
           text += "코드 HEAD: " + meta["source_head"] + "\n\n검사 checkout: " + meta["tested_checkout"] + "\n\n"
           text += "검사 tree: " + meta["tested_tree"] + "\n\n"
           text += "[GitHub Actions 실행](" + meta["run_url"] + ") · [전체 PNG/로그 ZIP](" + meta["artifact_url"] + ")\n\n"
-          text += "실제 Godot 4.7.2 전체 회귀 **50/50 통과**. 25개 맵, 폭젠 4곳 AUTO 처치·24마리 복구, 오만 보스 10종, 전체 318종의 다섯 상태를 실제 Compatibility OpenGL에서 실행했습니다. 지역/폭젠/보스/갤러리 103장과 군집 3장, 총 **106장**이 생성됐습니다. PNG 원본은 편집하지 않았으며 전체 해시는 evidence.json에 있습니다.\n\n"
+          text += "실제 Godot 4.7.2 전체 회귀 **" + regression_text + "**. 25개 맵, 폭젠 4곳 AUTO 처치·24마리 복구, 오만 보스 10종, 전체 318종의 다섯 상태를 실제 Compatibility OpenGL에서 실행했습니다. 지역/폭젠/보스/갤러리 103장과 군집 3장, 총 **106장**이 생성됐습니다. PNG 원본은 편집하지 않았으며 전체 해시는 evidence.json에 있습니다.\n\n"
+          text += "같은 러너에서 최신 main의 PR #46·#48을 포함한 HUD 변경 전 커밋 `" + meta["hud_baseline"] + "`과 동일한 192회 입력을 비교했습니다. 실제 남은 HP와 표시 상한은 같고, HP만 바뀌는 입력의 전체 HUD·장비 동기화·능력치 재계산은 0회입니다. 원본 수치는 [HUD 비교](logs/hud-comparison.json), 장비·버프·사망·저장 검사는 [로그](logs/combat_hud_test.txt)에 있습니다.\n\n"
           text += "이 증거를 기록한 뒤 자동 문서 커밋만 브랜치에 추가됩니다. 검사한 코드는 위 HEAD/checkout으로 구별하며 문서 커밋을 다시 실행한 게임 검사로 주장하지 않습니다.\n\n"
           text += "## 현재 고밀도 전투\n\nGPU: " + perf["adapter"] + ". 120프레임 워밍업 뒤 240프레임을 측정했습니다. HP/AC/공격 유형을 제어한 QA 전투이며 일반 플레이 밸런스 검사가 아닙니다.\n\n"
           text += "\n".join(rows) + "\n\n"
@@ -145,7 +172,7 @@ jobs:
             exit 0
           fi
           git fetch origin "refs/heads/$REVIEW_BRANCH"
-          git checkout -b twilight-monster-evidence FETCH_HEAD
+          git checkout --detach FETCH_HEAD
           cp -R "$REVIEW_EXPORT/." docs/monster-world-evidence/
           git add docs/monster-world-evidence/
           if git diff --cached --quiet; then exit 0; fi

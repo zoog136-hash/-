@@ -24,6 +24,9 @@ func _clear(world: TwilightWorld) -> void:
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
 	var world: TwilightWorld = load("res://Main.tscn").instantiate()
+	# Old comparison checkouts do not have the test-only metering script.
+	var metered: bool = ResourceLoader.exists("res://tests/qa_combat_hud_world.gd")
+	if metered: world.set_script(load("res://tests/qa_combat_hud_world.gd"))
 	root.add_child(world)
 	if not CLASS_QA.enter_game(world):
 		push_error("Rendered gameplay class confirmation failed")
@@ -81,6 +84,7 @@ func _run() -> void:
 		var peak_flights: int = 0
 		var peak_nodes: int = 0
 		for frame: int in range(WARMUP_FRAMES+SAMPLE_FRAMES):
+			if frame==WARMUP_FRAMES and metered: world.call("reset_hud_counts")
 			var start: int = Time.get_ticks_usec()
 			await process_frame
 			if frame >= WARMUP_FRAMES:
@@ -108,6 +112,7 @@ func _run() -> void:
 			"physics_p95_ms":physics_times[int(physics_times.size() * 0.95)], "peak_nodes":peak_nodes,
 			"monster_released_hits":hits[0], "player_landed_hits":damage_hits, "peak_flights":peak_flights,
 			"vfx_high_water":world.combat_vfx.high_water, "orphans":int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))}
+		if metered: sample["hud_work"] = world.call("hud_counts")
 		_clear(world)
 		await process_frame
 		sample["vfx_returned"] = world.combat_vfx.active.is_empty() and world.combat_vfx.available.size() == world.combat_vfx.CAPACITY
