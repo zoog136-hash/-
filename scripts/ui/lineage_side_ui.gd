@@ -544,8 +544,8 @@ func _refresh_character() -> void:
 	var max_weight := float(character_state.get("max_weight", 0.0))
 	var ratio := 0.0
 	if max_weight > 0.0:
-		ratio = clampf(current_weight / max_weight * 100.0, 0.0, 100.0)
-	weight_bar.value = ratio
+		ratio = maxf(0.0, current_weight / max_weight * 100.0)
+	weight_bar.value = minf(100.0, ratio)
 	if max_weight > 0.0:
 		weight_label.text = "%d / %d  (%.0f%%)" % [int(current_weight), int(max_weight), ratio]
 	else:

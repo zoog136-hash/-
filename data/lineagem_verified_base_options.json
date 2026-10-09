@@ -1,0 +1,322 @@
+{
+  "마법인형": {
+    "린드비오르": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.41,
+        "attackSpeed": 15,
+        "weightBonus": 3500,
+        "stun_resistance": 15,
+        "fear_resistance": 12,
+        "stun_accuracy": 10
+      },
+      "desc": "경험치 +41% · 무게 보너스 +3500 · 공격 속도 +15% · 스턴 내성 +15% · 공포 내성 +12% · 스턴 적중 +10%",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/116",
+      "pending": "린드비오르 디스펠 +2%: exact target/debuff semantics pending"
+    },
+    "안타라스": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.35,
+        "damage_reduction": 5,
+        "weightBonus": 3500,
+        "stun_resistance": 10,
+        "fear_resistance": 7,
+        "stun_accuracy": 15
+      },
+      "desc": "경험치 +35% · 무게 보너스 +3500 · 대미지 리덕션 +5 · 스턴 내성 +10% · 공포 내성 +7% · 스턴 적중 +15%",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/60",
+      "pending": "안타라스 홀드 +1%: exact duration and resistance handling pending"
+    },
+    "판도라": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.16,
+        "weightBonus": 1400,
+        "potionHealFlat": 5,
+        "potionHealPct": 5,
+        "pve_damage_reduction": 3
+      },
+      "desc": "경험치 +16% · 무게 보너스 +1400 · PVE 대미지 리덕션 +3 · 물약 회복량 +5 · 물약 회복률 +5%",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    },
+    "서큐버스퀸": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.08,
+        "weightBonus": 800,
+        "mpFlat": 50,
+        "sp": 1,
+        "mpRecoveryTick": 12
+      },
+      "desc": "경험치 +8% · 무게 보너스 +800 · Max MP +50 · SP +1 · MP 회복(틱) +12",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/",
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 12
+      }
+    },
+    "흑장로": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.08,
+        "weightBonus": 800,
+        "sp": 1,
+        "mpRecoveryTick": 15
+      },
+      "desc": "경험치 +8% · 무게 보너스 +800 · SP +1 · MP 회복(틱) +15",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/",
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 15
+      }
+    },
+    "단테스": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.14,
+        "weightBonus": 1400,
+        "dg": 1,
+        "pve_melee_damage": 2
+      },
+      "desc": "경험치 +14% · 무게 보너스 +1400 · PVE 근거리 추가 대미지 +2 · 근거리 명중 +2 · 근거리 회피력 +1",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    },
+    "푸른 드레이크": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.14,
+        "weightBonus": 1400
+      },
+      "desc": "경험치 +14% · 무게 보너스 +1400 · 원거리 치명타 +1%",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    },
+    "버그베어": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.03,
+        "weightBonus": 500
+      },
+      "desc": "경험치 +3% · 무게 보너스 +500",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    },
+    "리즈": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.16,
+        "weightBonus": 1400,
+        "pve_damage_reduction": 3,
+        "mpRecoveryTick": 10
+      },
+      "desc": "경험치 +16% · 무게 보너스 +1400 · PVE 대미지 리덕션 +3 · MP 회복(틱) +10 · 마법 명중 +2",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/",
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 10
+      }
+    },
+    "다크 하딘": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.25,
+        "weightBonus": 2400,
+        "stun_resistance": 8,
+        "fear_resistance": 5,
+        "pve_damage_reduction": 5
+      },
+      "desc": "경험치 +25% · 무게 보너스 +2400 · PVE 대미지 리덕션 +5 · 스턴 내성 +8% · 공포 내성 +5%",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/",
+      "pending": "PvP world absent; PvP-only bonus has no effect in single-player PvE"
+    },
+    "킹버그베어": {
+      "stats": {
+        "atk": 2,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.08,
+        "weightBonus": 800,
+        "mpRecoveryTick": 6
+      },
+      "desc": "경험치 +8% · 무게 보너스 +800 · 근거리 대미지 +2 · MP 회복(틱) +6",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/",
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 6
+      }
+    },
+    "드레이크": {
+      "stats": {
+        "atk": 2,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.08,
+        "weightBonus": 800
+      },
+      "desc": "경험치 +8% · 무게 보너스 +800 · 원거리 대미지 +2",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    },
+    "스파토이": {
+      "stats": {
+        "atk": 2,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.05,
+        "weightBonus": 500
+      },
+      "desc": "경험치 +5% · 무게 보너스 +500 · 근거리 대미지 +2",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    },
+    "데스나이트": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.25,
+        "weightBonus": 2400,
+        "damage_reduction": 5,
+        "potionHealPct": 3
+      },
+      "desc": "경험치 +25% · 무게 보너스 +2400 · 대미지 리덕션 +5 · 물약 회복률 +3%",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    },
+    "누조어스": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.16,
+        "weightBonus": 1400,
+        "mpRecoveryTick": 10
+      },
+      "desc": "경험치 +16% · 무게 보너스 +1400 · 마법 대미지 +3 · 마법 명중 +2 · MP 회복(틱) +10",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/",
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 10
+      }
+    },
+    "타로스": {
+      "stats": {
+        "atk": 0,
+        "def": 2,
+        "speed": 1,
+        "xp": 0.16,
+        "weightBonus": 1400
+      },
+      "desc": "경험치 +16% · 무게 보너스 +1400 · 근거리 대미지 +2 · 원거리 대미지 +2 · 마법 대미지 +2 · AC -2",
+      "source": "https://lineagem.inven.co.kr/db/magicdoll/"
+    }
+  },
+  "성물": {
+    "군터의 방패": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.13,
+        "hpPct": 0.07,
+        "damage_reduction": 2,
+        "skillCooldownPct": 7,
+        "skillLevelBonus": 1,
+        "pve_damage_reduction": 2
+      },
+      "desc": "경험치 +13% · 최대 HP +7% · 스킬 쿨타임 감소 7% · 대미지 리덕션 +2 · PVE 대미지 리덕션 +2 · 일반~영웅 스킬 레벨 +1",
+      "source": "https://lineagem.inven.co.kr/db/hallows/",
+      "pending": "Skill level tier semantics remain unimplemented"
+    },
+    "세계수의 꽃잎": {
+      "stats": {
+        "atk": 0,
+        "def": 2,
+        "speed": 1,
+        "xp": 0.08,
+        "hpPct": 0.05,
+        "damage_reduction": 2,
+        "skillCooldownPct": 5,
+        "skillLevelBonus": 1
+      },
+      "desc": "경험치 +8% · 최대 HP +5% · 스킬 쿨타임 감소 5% · AC -2 · 대미지 리덕션 +2 · 일반 스킬 레벨 +1",
+      "source": "https://lineagem.inven.co.kr/db/hallows/",
+      "pending": "Skill level tier semantics remain unimplemented"
+    },
+    "타로스의 창": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.08,
+        "hpPct": 0.05,
+        "skillCooldownPct": 5,
+        "hpAbsoluteRecovery": 6,
+        "skillLevelBonus": 1,
+        "hpAbsorption": true
+      },
+      "desc": "경험치 +8% · 최대 HP +5% · 스킬 쿨타임 감소 5% · HP 흡수 · HP 절대회복 +6 · 일반 스킬 레벨 +1",
+      "source": "https://lineagem.inven.co.kr/db/hallows/",
+      "runtimeRule": {
+        "hpAbsorption": "매 적중 시 몬스터 HP 1~3 추가 소모와 같은 양 HP 회복",
+        "hpRecovery": "30초마다 HP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_hpRecovery_source_value": 6
+      }
+    },
+    "지배자 기르타스의 뿔": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.3,
+        "hpPct": 0.15,
+        "skillCooldownPct": 15,
+        "stun_resistance": 10,
+        "fear_resistance": 10,
+        "stun_accuracy": 10,
+        "fear_accuracy": 10,
+        "skillLevelBonus": 1
+      },
+      "desc": "경험치 +30% · 최대 HP +15% · 스킬 쿨타임 감소 15% · 스턴 내성 +10% · 공포 내성 +10% · 스턴 적중 +10% · 공포 적중 +10% · 일반~신화 스킬 레벨 +1",
+      "source": "https://lineagem.inven.co.kr/db/hallows/",
+      "pending": "Unique named proc/skill functionality and skill level tier pending"
+    },
+    "진명황의 보주": {
+      "stats": {
+        "atk": 0,
+        "def": 0,
+        "speed": 1,
+        "xp": 0.2,
+        "hpPct": 0.1,
+        "skillCooldownPct": 10,
+        "stun_accuracy": 5,
+        "skillLevelBonus": 1
+      },
+      "desc": "경험치 +20% · 최대 HP +10% · 스킬 쿨타임 감소 10% · 스턴 적중 +5% · 대미지 리덕션 무시 +5 · 일반~전설 스킬 레벨 +1",
+      "source": "https://lineagem.inven.co.kr/db/hallows/",
+      "pending": "집행 +3% proc has unspecified damage, and skill level tier pending"
+    }
+  }
+}

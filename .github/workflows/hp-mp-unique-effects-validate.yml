@@ -1,0 +1,41 @@
+name: Twilight HP Absorption and 30s Recovery
+
+on:
+  push:
+    branches: ['codex/hp-mp-regeneration-*']
+  workflow_dispatch:
+
+jobs:
+  hp-mp-unique-effects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and parse
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee import.log
+          if grep -E "SCRIPT ERROR:|ERROR:" import.log; then exit 1; fi
+      - name: HP absorption and recovery tests
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/hp_mp_unique_effects_smoke_test.gd 2>&1 | tee unique-effects.log
+          if grep -E "SCRIPT ERROR:|ERROR:|HP_MP_UNIQUE_EFFECT_FAIL:|HP_MP_UNIQUE_EFFECTS_SMOKE_FAILED" unique-effects.log; then exit 1; fi
+          grep -q "HP_MP_UNIQUE_EFFECTS_SMOKE_OK" unique-effects.log
+      - name: Previous catalog and combat regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          for test in original_lineagem_effects_smoke_test catalog_effects_smoke_test item_options_runtime_smoke_test speed_option_smoke_test passive_skill_smoke_test skill_mechanism_smoke_test skill_element_integration_smoke_test ground_drop_smoke_test; do
+            ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
+            if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|GROUND_DROP_FAIL:|ORIGINAL_EFFECTS_FAIL:|ITEM_OPTIONS_FAIL:|CATALOG_EFFECTS_FAIL:" "${test}.log"; then exit 1; fi
+            grep -q "_OK" "${test}.log"
+          done

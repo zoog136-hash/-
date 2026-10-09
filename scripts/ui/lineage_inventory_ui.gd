@@ -253,7 +253,7 @@ func set_character_state(state: Dictionary) -> void:
 
 func set_inventory(value: Dictionary) -> void:
 	inventory = value.duplicate(true)
-	if selected_item != "" and int(inventory.get(selected_item, 0)) <= 0:
+	if selected_item != "" and int(inventory.get(_base_item_name(selected_item), 0)) <= 0:
 		selected_item = ""
 	_refresh_inventory_grid()
 	if selected_item != "":
@@ -289,80 +289,113 @@ func _clear(node: Node) -> void:
 		node.remove_child(child)
 		child.queue_free()
 
+func _base_item_name(reference: String) -> String:
+	return reference.split("@@@", false, 1)[0]
+
+func _ref_instance_id(reference: String) -> String:
+	var pieces: PackedStringArray = reference.split("@@@", false, 1)
+	return pieces[1] if pieces.size() > 1 else ""
+
+func _inventory_entries() -> Array[Dictionary]:
+	var entries: Array[Dictionary] = []
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var names: Array = inventory.keys()
+	names.sort()
+	for raw_name: Variant in names:
+		var item_name: String = str(raw_name)
+		if int(inventory.get(item_name, 0)) <= 0:
+			continue
+		var instance_ids: Array[String] = []
+		for instance_key: Variant in instances.keys():
+			var physical: Variant = instances[instance_key]
+			if physical is Dictionary and str((physical as Dictionary).get("name", "")) == item_name:
+				instance_ids.append(str(instance_key))
+		instance_ids.sort_custom(func(a: String, b: String) -> bool: return int(a) < int(b))
+		if instance_ids.is_empty():
+			entries.append({"name":item_name, "reference":item_name, "amount":int(inventory[item_name])})
+		else:
+			for id: String in instance_ids:
+				entries.append({"name":item_name, "reference":item_name+"@@@"+id, "amount":1})
+	return entries
+
 func _refresh_inventory_grid() -> void:
 	if item_grid == null:
 		return
 	_clear(item_grid)
 	slot_buttons.clear()
-	var names: Array = inventory.keys()
-	names.sort()
-	var visible_count := 0
-	var search := search_line.text.strip_edges().to_lower() if search_line != null else ""
+	var visible_count: int = 0
+	var search: String = search_line.text.strip_edges().to_lower() if search_line != null else ""
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
-	for value: Variant in names:
-		var item_name := str(value)
-		var amount := int(inventory.get(item_name, 0))
-		if amount <= 0:
-			continue
-		var record := _find_item_record(item_name)
-		if not _matches_category(record, item_name):
-			continue
-		if search != "" and item_name.to_lower().find(search) < 0:
+	var entries: Array[Dictionary] = _inventory_entries()
+	for entry: Dictionary in entries:
+		var item_name: String = str(entry["name"])
+		var reference: String = str(entry["reference"])
+		var amount: int = int(entry["amount"])
+		var record: Dictionary = _find_item_record(item_name)
+		if not _matches_category(record, item_name) or (search != "" and item_name.to_lower().find(search) < 0):
 			continue
 		visible_count += 1
-		var button := Button.new()
+		var button: Button = Button.new()
 		button.custom_minimum_size = Vector2(96, 88)
-		var grade := str(record.get("grade", "일반"))
-		var equipped := _is_item_equipped(item_name)
-		var equip_mark := "E " if equipped else ""
-		var level := _enhance_level(item_name)
-		var level_mark := "+%d " % level if level > 0 else ""
-		var badges := _status_badges(record, item_name)
-		var badge_mark := badges + " " if badges != "" else ""
+		var grade: String = str(record.get("grade", "일반"))
+		var equipped: bool = _is_item_equipped(reference)
+		var equip_mark: String = "E " if equipped else ""
+		var level: int = _enhance_level(reference)
+		var level_mark: String = "+%d " % level if level > 0 else ""
+		var badges: String = _status_badges(record, item_name)
+		var badge_mark: String = badges + " " if badges != "" else ""
 		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(item_name), amount]
-		button.tooltip_text = "%s%s%s" % [_enhanced_display_name(record, item_name), " · 장착 중" if equipped else "", _status_tooltip(record, item_name)]
+		button.tooltip_text = "%s%s%s" % [_enhanced_display_name(record, reference), " · 장착 중" if equipped else "", _status_tooltip(record, item_name)]
 		button.add_theme_font_size_override("font_size", 11)
 		button.add_theme_color_override("font_color", TEXT)
 		button.add_theme_color_override("font_hover_color", Color.WHITE)
-		button.add_theme_stylebox_override("normal", _slot_style_for_grade(grade, item_name == selected_item))
+		button.add_theme_stylebox_override("normal", _slot_style_for_grade(grade, reference == selected_item))
 		button.add_theme_stylebox_override("hover", _slot_hover_style(grade))
 		button.add_theme_stylebox_override("pressed", _slot_pressed_style(grade))
-		var path := str(images.get(item_name, ""))
+		var path: String = str(images.get(item_name, ""))
 		if path != "" and ResourceLoader.exists(path):
 			button.icon = load(path) as Texture2D
 			button.expand_icon = true
 			button.add_theme_constant_override("icon_max_width", 42)
-		button.pressed.connect(_select_item.bind(item_name))
+		button.pressed.connect(_select_item.bind(reference))
 		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		item_grid.add_child(button)
-		slot_buttons[item_name] = button
-
-	var occupied := 0
-	for value: Variant in inventory.keys():
-		if int(inventory.get(value, 0)) > 0:
-			occupied += 1
+		slot_buttons[reference] = button
+	var occupied: int = entries.size()
 	capacity_label.text = "%d / %d" % [occupied, max_slots]
 	if visible_count == 0:
-		var empty := _label("표시할 아이템이 없습니다.", 14, TEXT_DIM)
+		var empty: Label = _label("표시할 아이템이 없습니다.", 14, TEXT_DIM)
 		empty.custom_minimum_size = Vector2(350, 80)
 		empty.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		empty.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		item_grid.add_child(empty)
 
-func _enhance_level(item_name: String) -> int:
-	var levels: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
-	return maxi(0, int(levels.get(item_name, 0)))
+func _enhancement_copy_labels(item_name: String) -> PackedStringArray:
+	var labels: PackedStringArray = PackedStringArray()
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var levels: Array[int] = []
+	for raw: Variant in instances.values():
+		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == item_name:
+			levels.append(int((raw as Dictionary).get("level", 0)))
+	levels.sort()
+	for rank: int in levels:
+		labels.append("+%d" % rank)
+	return labels
+
+func _enhance_level(item_reference: String) -> int:
+	var id: String = _ref_instance_id(item_reference)
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	if id != "" and instances.has(id):
+		return maxi(0, int((instances[id] as Dictionary).get("level", 0)))
+	var legacy: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
+	return maxi(0, int(legacy.get(_base_item_name(item_reference), 0))) if id == "" else 0
 
 func _bless_state(record: Dictionary, item_name: String) -> String:
 	var explicit := str(record.get("bless_state", "")).to_lower()
 	if explicit in ["blessed", "축복"]:
 		return "blessed"
-	if explicit in ["cursed", "저주"]:
-		return "cursed"
 	if bool(record.get("blessed", false)) or item_name.find("축복받은") >= 0:
 		return "blessed"
-	if bool(record.get("cursed", false)) or item_name.find("저주받은") >= 0:
-		return "cursed"
 	return "normal"
 
 func _is_engraved(record: Dictionary, item_name: String) -> bool:
@@ -373,8 +406,6 @@ func _status_badges(record: Dictionary, item_name: String) -> String:
 	var state := _bless_state(record, item_name)
 	if state == "blessed":
 		badges.append("✦")
-	elif state == "cursed":
-		badges.append("☠")
 	if _is_engraved(record, item_name):
 		badges.append("◆")
 	return " ".join(badges)
@@ -383,15 +414,13 @@ func _enhanced_display_name(record: Dictionary, item_name: String) -> String:
 	var level := _enhance_level(item_name)
 	var prefix := "+%d " % level if level > 0 else ""
 	var badges := _status_badges(record, item_name)
-	return "%s%s%s" % [prefix, badges + " " if badges != "" else "", item_name]
+	return "%s%s%s" % [prefix, badges + " " if badges != "" else "", _base_item_name(item_name)]
 
 func _status_tooltip(record: Dictionary, item_name: String) -> String:
 	var parts := PackedStringArray()
 	var state := _bless_state(record, item_name)
 	if state == "blessed":
 		parts.append("축복")
-	elif state == "cursed":
-		parts.append("저주")
 	if _is_engraved(record, item_name):
 		parts.append("각인")
 	return (" · " + " · ".join(parts)) if not parts.is_empty() else ""
@@ -436,13 +465,19 @@ func _slot_pressed_style(grade: String) -> StyleBoxFlat:
 	var style := _style(_grade_background(grade, true), color.lightened(0.20), 2, 3)
 	return _apply_grade_glow(style, grade, true)
 
-func _is_item_equipped(item_name: String) -> bool:
-	var equipped_items: Dictionary = character_state.get("equipped_items", {}) as Dictionary
-	for value: Variant in equipped_items.values():
-		if value is Dictionary:
-			var record := value as Dictionary
-			if str(record.get("name", "")) == item_name:
+func _is_item_equipped(item_reference: String) -> bool:
+	var item_name: String = _base_item_name(item_reference)
+	var instance_id: String = _ref_instance_id(item_reference)
+	var equipped: Dictionary = character_state.get("equipped_items", {}) as Dictionary
+	for value: Variant in equipped.values():
+		if not (value is Dictionary):
+			continue
+		var record: Dictionary = value as Dictionary
+		if instance_id != "":
+			if str(record.get("instance_id", "")) == instance_id and str(record.get("name", "")) == item_name:
 				return true
+		elif str(record.get("name", "")) == item_name:
+			return true
 	return false
 
 func _short_name(item_name: String) -> String:
@@ -454,11 +489,12 @@ func _select_item(item_name: String) -> void:
 	selected_item = item_name
 	for key: Variant in slot_buttons.keys():
 		var button := slot_buttons[key] as Button
-		var record := _find_item_record(str(key))
+		var record := _find_item_record(_base_item_name(str(key)))
 		button.add_theme_stylebox_override("normal", _slot_style_for_grade(str(record.get("grade", "일반")), str(key) == selected_item))
 	_refresh_detail(item_name)
 
 func _find_item_record(item_name: String) -> Dictionary:
+	item_name = _base_item_name(item_name)
 	var records: Array = catalog_data.get("아이템", []) as Array
 	for value: Variant in records:
 		if value is Dictionary:
@@ -479,26 +515,36 @@ func _matches_category(record: Dictionary, item_name: String) -> bool:
 	return not (slot in ["weapon","offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","gloves","boots","earring","ring","belt","bracelet","badge","seal","crystal","catalyst","rune","necklace","armor","consumable"])
 
 func _refresh_detail(item_name: String) -> void:
+	var selected_reference: String = item_name
+	var selected_id: String = _ref_instance_id(item_name)
+	item_name = _base_item_name(item_name)
 	var record := _find_item_record(item_name)
-	var amount := int(inventory.get(item_name, 0))
+	var amount := 1 if selected_id != "" else int(inventory.get(item_name, 0))
 	var grade := str(record.get("grade", "일반"))
 	var item_type := str(record.get("type", "기타"))
 	var slot := str(record.get("slot", ""))
-	var equipped := _is_item_equipped(item_name)
-	var enhance_level := _enhance_level(item_name)
+	var equipped := _is_item_equipped(selected_reference)
+	var enhance_level := _enhance_level(selected_reference)
 	var bless_state := _bless_state(record, item_name)
 	var engraved := _is_engraved(record, item_name)
-	detail_name.text = _enhanced_display_name(record, item_name)
+	detail_name.text = _enhanced_display_name(record, selected_reference)
 	detail_grade.text = "%s%s · 보유 %d" % [grade, " · 장착중" if equipped else "", amount]
 	detail_grade.add_theme_color_override("font_color", _grade_color(grade))
 	detail_name.add_theme_color_override("font_color", _grade_color(grade))
-	detail_type.text = "%s%s%s" % [item_type, (" · " + slot) if slot != "" else "", " · E" if equipped else ""]
+	detail_type.text = "%s%s%s%s" % [item_type, (" · " + slot) if slot != "" else "", " · E" if equipped else "", " · ID:"+selected_id if selected_id != "" else ""]
 
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
 	var path := str(images.get(item_name, ""))
 	detail_icon.texture = load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null
 
 	var lines := PackedStringArray()
+	if selected_id != "":
+		var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+		var physical: Dictionary = instances.get(selected_id, {}) as Dictionary
+		var elemental_level: int = int(physical.get("element_level", 0))
+		if elemental_level > 0:
+			var elemental_name: String = str({"fire":"화령","water":"수령","earth":"지령","wind":"풍령"}.get(str(physical.get("element", "")), ""))
+			lines.append("[color=#f1d47a]속성 강화 %s %d단계[/color]" % [elemental_name, elemental_level])
 	if enhance_level > 0:
 		lines.append("[color=#ffd36a][b]강화 +%d[/b][/color]" % enhance_level)
 	if bless_state == "blessed":
@@ -550,7 +596,7 @@ func _activate_selected() -> void:
 func _quickslot_selected() -> void:
 	if selected_item == "":
 		return
-	quickslot_requested.emit(selected_item)
+	quickslot_requested.emit(_base_item_name(selected_item))
 
 func _format_number(value: int) -> String:
 	var source := str(absi(value))

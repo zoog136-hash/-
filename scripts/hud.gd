@@ -431,36 +431,66 @@ func refresh_inventory(inventory: Dictionary) -> void:
 	var names: Array = inventory.keys()
 	names.sort()
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
-	for item_value: Variant in names:
-		var item_name: String = str(item_value)
-		var amount: int = int(inventory.get(item_name, 0))
-		if amount <= 0:
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var equipped: Dictionary = character_state.get("equipped_items", {}) as Dictionary
+	var equipped_ids: Dictionary = {}
+	for equipped_value: Variant in equipped.values():
+		if equipped_value is Dictionary:
+			var item_id: String = str((equipped_value as Dictionary).get("instance_id", ""))
+			if item_id != "":
+				equipped_ids[item_id] = true
+	for raw_name: Variant in names:
+		var name_value: String = str(raw_name)
+		if int(inventory.get(name_value, 0)) <= 0:
 			continue
-		var row: HBoxContainer = HBoxContainer.new()
-		row.custom_minimum_size = Vector2(0, 46)
-		row.add_theme_constant_override("separation", 6)
+		var copies: Array[Dictionary] = []
+		for key: Variant in instances.keys():
+			var item: Variant = instances[key]
+			if item is Dictionary and str((item as Dictionary).get("name", "")) == name_value:
+				var copy: Dictionary = (item as Dictionary).duplicate(true)
+				copy["instance_id"] = str(key)
+				copies.append(copy)
+		copies.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return int(a["instance_id"]) < int(b["instance_id"]))
+		if copies.is_empty():
+			_add_inventory_item_row(name_value, name_value, "  x%d" % int(inventory[name_value]), images, true)
+		else:
+			for copy: Dictionary in copies:
+				var item_id: String = str(copy["instance_id"])
+				var level: int = int(copy.get("level", 0))
+				var element_level: int = int(copy.get("element_level", 0))
+				var element_name: String = str(copy.get("element", ""))
+				var element_label: String = ""
+				if element_level > 0:
+					element_label = " · %s %d단" % [str({"fire":"화령","water":"수령","earth":"지령","wind":"풍령"}.get(element_name, element_name)), element_level]
+				var equipped_mark: String = " [착용]" if equipped_ids.has(item_id) else ""
+				var display_name: String = "%s%s +%d%s  [ID:%s]" % [name_value, equipped_mark, level, element_label, item_id]
+				_add_inventory_item_row(name_value, name_value + "@@@" + item_id, display_name, images, false)
 
-		var use_button: Button = Button.new()
-		use_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		use_button.text = "%s   x%d" % [item_name, amount]
-		use_button.tooltip_text = "장비: 더블클릭 장착 / 강화 주문서: 더블클릭 강화 / 소모품: 더블클릭 사용"
-		use_button.add_theme_font_size_override("font_size", 17)
-		use_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var path: String = str(images.get(item_name, ""))
-		if path != "" and ResourceLoader.exists(path):
-			use_button.icon = load(path) as Texture2D
-			use_button.expand_icon = false
-			use_button.add_theme_constant_override("icon_max_width", 36)
-		use_button.pressed.connect(_on_inventory_item_tapped.bind(item_name))
-		row.add_child(use_button)
-
+func _add_inventory_item_row(item_name: String, target_reference: String, display_name: String, images: Dictionary, allow_quickslot: bool) -> void:
+	var row: HBoxContainer = HBoxContainer.new()
+	row.custom_minimum_size = Vector2(0, 46)
+	row.add_theme_constant_override("separation", 6)
+	var use_button: Button = Button.new()
+	use_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	use_button.text = display_name
+	use_button.tooltip_text = "개체별 강화·장착 / 같은 이름 장비도 개별 ID 적용" if not allow_quickslot else "더블클릭 사용 또는 퀵슬롯 등록"
+	use_button.add_theme_font_size_override("font_size", 16)
+	use_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var image_path: String = str(images.get(item_name, ""))
+	if image_path != "" and ResourceLoader.exists(image_path):
+		use_button.icon = load(image_path) as Texture2D
+		use_button.expand_icon = false
+		use_button.add_theme_constant_override("icon_max_width", 36)
+	use_button.pressed.connect(_on_inventory_item_tapped.bind(target_reference))
+	row.add_child(use_button)
+	if allow_quickslot:
 		var quick_button: Button = Button.new()
 		quick_button.text = "Q등록"
 		quick_button.custom_minimum_size = Vector2(72, 42)
 		quick_button.tooltip_text = "소모품을 퀵슬롯에 등록"
 		quick_button.pressed.connect(_open_quickslot_picker.bind("item", item_name, item_name))
 		row.add_child(quick_button)
-		inventory_list.add_child(row)
+	inventory_list.add_child(row)
 
 func _on_inventory_item_tapped(item_name: String) -> void:
 	var now_ms: int = Time.get_ticks_msec()
@@ -1016,7 +1046,7 @@ func _render_enhancement_panel() -> void:
 		var selected_mark: String = "▶ " if index == enhancement_selected_index else ""
 		var equipped_mark: String = " [장착]" if bool(data.get("equipped", false)) else ""
 		var button: Button = Button.new()
-		button.text = "%s%s%s  +%d" % [selected_mark, str(data.get("name", "")), equipped_mark, int(data.get("level", 0))]
+		button.text = "%s%s [개체 #%s]%s  +%d" % [selected_mark, str(data.get("name", "")), str(data.get("instance_id", "")), equipped_mark, int(data.get("level", 0))]
 		button.custom_minimum_size = Vector2(0, 42)
 		button.pressed.connect(_select_enhancement_candidate.bind(index))
 		utility_body.add_child(button)
@@ -1044,7 +1074,7 @@ func _render_enhancement_panel() -> void:
 	var enhance_button: Button = Button.new()
 	enhance_button.text = "강화 시도"
 	enhance_button.custom_minimum_size = Vector2(0, 52)
-	enhance_button.pressed.connect(_emit_enhancement_requested.bind(str(selected.get("name", ""))))
+	enhance_button.pressed.connect(_emit_enhancement_requested.bind(str(selected.get("target_id", selected.get("name", "")))))
 	utility_body.add_child(enhance_button)
 
 func _select_enhancement_candidate(index: int) -> void:
