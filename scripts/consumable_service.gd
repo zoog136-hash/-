@@ -174,7 +174,7 @@ func _use_instant_mp(item_name: String, spec: Dictionary) -> void:
 	if cooldown > 0.0:
 		_message("재사용 대기 %s" % str(world.call("_format_seconds_short", cooldown)))
 		return
-	var maximum: int = int(world.get("max_mp"))
+	var maximum: int = int(world.call("_effective_max_mp"))
 	if int(world.get("mp")) >= maximum:
 		_message("MP가 가득 찼습니다")
 		return
