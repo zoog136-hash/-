@@ -27,7 +27,7 @@ jobs:
         run: |
           set -o pipefail
           for test in non_skill_options_smoke_test per_instance_enchantments_smoke_test consumable_smoke_test item_weight_smoke_test equipment_slot_smoke_test original_lineagem_effects_smoke_test catalog_effects_smoke_test hp_mp_unique_effects_smoke_test item_buff_description_smoke_test ui_stage4_item_instance_test; do
-            ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
+            XDG_DATA_HOME="$RUNNER_TEMP/twilight-option-${test}" ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
             if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|OPTION_FAIL:|TEST_FAIL:" "${test}.log"; then exit 1; fi
             grep -q "_OK" "${test}.log"
           done
