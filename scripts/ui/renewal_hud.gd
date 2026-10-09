@@ -411,7 +411,7 @@ func open_settings_info() -> void:
 
 func open_macro_info() -> void:
 	_open_window("auto","자동사냥","기존 게임의 AUTO 상태를 제어합니다.")
-	var col := workspace.column()
+	var col: VBoxContainer = workspace.column()
 	var player: Node = get_parent().get("player")
 	var enabled := bool(player.get("auto_enabled")) if player != null else false
 	col.add_child(UI.label("AUTO 현재 상태: "+"켜짐" if enabled else "AUTO 현재 상태: 꺼짐",22,UI.GOLD))
@@ -422,7 +422,7 @@ func open_macro_info() -> void:
 
 func open_chat_info() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
-	var col := workspace.column()
+	var col: VBoxContainer = workspace.column()
 	col.add_child(UI.label("전투 / 시스템 로그",21,UI.GOLD))
 	var history := UI.rich("")
 	history.fit_content = false
