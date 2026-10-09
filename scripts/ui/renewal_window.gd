@@ -11,6 +11,11 @@ var content: Control
 var navigation: Dictionary = {}
 var title_dragging: bool = false
 var title_dragged: bool = false
+var title_drag_touch: int = -1
+var title_drag_mouse: bool = false
+var active_scroll: ScrollContainer
+var active_scroll_touch: int = -1
+var active_scroll_mouse: bool = false
 var viewport_fitted: bool = false
 var navigation_scroll: ScrollContainer
 var scroll_gestures: Dictionary = {}
@@ -26,6 +31,7 @@ func _ready() -> void:
 	var title_row := HBoxContainer.new()
 	layout.add_child(title_row)
 	var titles := VBoxContainer.new()
+	titles.name = "WorkspaceTitleDragArea"
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# Grab only the title area. Close/nav controls keep their own pointer events.
 	titles.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -95,34 +101,74 @@ func register_scroll_drag(scroll: ScrollContainer, target: Control) -> void:
 func was_scroll_dragged(scroll: ScrollContainer) -> bool:
 	return bool((scroll_gestures.get(scroll.get_instance_id(), {}) as Dictionary).get("dragged", false))
 
-func _on_scroll_drag_input(event: InputEvent, scroll: ScrollContainer, target: Control) -> void:
+func _on_scroll_drag_input(event: InputEvent, scroll: ScrollContainer, _target: Control) -> void:
 	var key: int = scroll.get_instance_id()
-	var gesture: Dictionary = scroll_gestures.get(key, {"touch":-1,"mouse":false,"distance":0.0,"dragged":false})
 	if event is InputEventScreenTouch:
 		var touch: InputEventScreenTouch = event
-		if touch.pressed and not touch.canceled and int(gesture.get("touch",-1)) == -1:
-			gesture = {"touch":touch.index,"mouse":false,"distance":0.0,"dragged":false}
-		elif (not touch.pressed or touch.canceled) and touch.index == int(gesture.get("touch",-1)):
-			gesture["touch"] = -1
-	elif event is InputEventScreenDrag and event.index == int(gesture.get("touch",-1)):
-		var drag: InputEventScreenDrag = event
-		gesture["distance"] = float(gesture.get("distance",0.0)) + absf(drag.relative.y)
-		if float(gesture["distance"]) > 8.0:
-			gesture["dragged"] = true
-			_scroll_by_drag(scroll,drag.relative.y)
-			target.accept_event()
+		if touch.pressed and not touch.canceled and active_scroll_touch == -1:
+			active_scroll = scroll
+			active_scroll_touch = touch.index
+			scroll_gestures[key] = {"touch":touch.index,"mouse":false,"distance":0.0,"dragged":false}
+		elif touch.index == active_scroll_touch and (not touch.pressed or touch.canceled):
+			active_scroll_touch = -1
+			active_scroll = null
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
-			gesture = {"touch":-1,"mouse":true,"distance":0.0,"dragged":false}
-		else:
-			gesture["mouse"] = false
-	elif event is InputEventMouseMotion and bool(gesture.get("mouse",false)) and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
-		gesture["distance"] = float(gesture.get("distance",0.0)) + absf(event.relative.y)
-		if float(gesture["distance"]) > 8.0:
-			gesture["dragged"] = true
-			_scroll_by_drag(scroll,event.relative.y)
-			target.accept_event()
+			active_scroll = scroll
+			active_scroll_mouse = true
+			scroll_gestures[key] = {"touch":-1,"mouse":true,"distance":0.0,"dragged":false}
+		elif active_scroll == scroll:
+			active_scroll_mouse = false
+			active_scroll = null
+
+func _scroll_gesture_motion(delta_y: float) -> void:
+	if active_scroll == null or not is_instance_valid(active_scroll):
+		return
+	var key: int = active_scroll.get_instance_id()
+	var gesture: Dictionary = scroll_gestures.get(key, {})
+	gesture["distance"] = float(gesture.get("distance", 0.0)) + absf(delta_y)
+	if float(gesture["distance"]) > 8.0:
+		gesture["dragged"] = true
+		_scroll_by_drag(active_scroll, delta_y)
+		# Stop child buttons and the native ScrollContainer both processing a swipe.
+		get_viewport().set_input_as_handled()
 	scroll_gestures[key] = gesture
+
+func _input(event: InputEvent) -> void:
+	# Keep title/window and button-originated scroll drags captured after the
+	# pointer leaves the original Control. Android drag events aren't guaranteed
+	# to remain over the originating button.
+	if event is InputEventScreenDrag:
+		var drag: InputEventScreenDrag = event
+		if drag.index == title_drag_touch and title_dragging:
+			position += drag.relative
+			_keep_title_visible()
+			get_viewport().set_input_as_handled()
+		elif drag.index == active_scroll_touch:
+			_scroll_gesture_motion(drag.relative.y)
+	elif event is InputEventScreenTouch:
+		var touch: InputEventScreenTouch = event
+		if not touch.pressed or touch.canceled:
+			if touch.index == title_drag_touch:
+				title_drag_touch = -1
+				title_dragging = false
+			if touch.index == active_scroll_touch:
+				active_scroll_touch = -1
+				active_scroll = null
+	elif event is InputEventMouseMotion:
+		var motion: InputEventMouseMotion = event
+		if title_drag_mouse and title_dragging and (motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+			position += motion.relative
+			_keep_title_visible()
+			get_viewport().set_input_as_handled()
+		elif active_scroll_mouse and (motion.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+			_scroll_gesture_motion(motion.relative.y)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		title_drag_mouse = false
+		if title_drag_touch == -1:
+			title_dragging = false
+		active_scroll_mouse = false
+		active_scroll = null
 
 func _scroll_by_drag(scroll: ScrollContainer, delta_y: float) -> void:
 	var bar: VScrollBar = scroll.get_v_scroll_bar()
@@ -148,22 +194,34 @@ func _keep_title_visible() -> void:
 	position.y = clampf(position.y, 0.0,maxf(0.0,view.y-64.0))
 
 func _on_title_drag_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
-		title_dragging = (event as InputEventMouseButton).pressed
-		if title_dragging:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			title_drag_mouse = true
+			title_dragging = true
 			title_dragged = true
-		accept_event()
-	elif event is InputEventMouseMotion and title_dragging:
-		position += (event as InputEventMouseMotion).relative
+			accept_event()
+		else:
+			title_drag_mouse = false
+			if title_drag_touch == -1:
+				title_dragging = false
+	elif event is InputEventMouseMotion and title_drag_mouse and title_dragging:
+		# Native motions are handled by _input before GUI dispatch. Retain this
+		# path for direct title-gui_input calls and legacy playtest regression.
+		position += event.relative
 		_keep_title_visible()
 		accept_event()
 	elif event is InputEventScreenTouch:
-		title_dragging = (event as InputEventScreenTouch).pressed
-		if title_dragging:
+		var touch: InputEventScreenTouch = event
+		if touch.pressed and not touch.canceled and title_drag_touch == -1:
+			title_drag_touch = touch.index
+			title_dragging = true
 			title_dragged = true
-		accept_event()
-	elif event is InputEventScreenDrag and title_dragging:
-		position += (event as InputEventScreenDrag).relative
+			accept_event()
+		elif not touch.pressed and touch.index == title_drag_touch:
+			title_drag_touch = -1
+			title_dragging = false
+	elif event is InputEventScreenDrag and title_dragging and event.index == title_drag_touch:
+		position += event.relative
 		_keep_title_visible()
 		accept_event()
 
