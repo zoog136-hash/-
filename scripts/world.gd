@@ -80,6 +80,7 @@ var maps_by_id: Dictionary = {}
 var game_db: Dictionary = {}
 var loot_catalog: Dictionary = {}
 var monster_db: Array = []
+var monster_size_index: Dictionary = {}
 var item_db: Array = []
 var item_weight_index: Dictionary = {}
 var skills_db: Array = []
@@ -375,6 +376,7 @@ func _load_data() -> void:
 		game_db = db_value as Dictionary
 	monster_db = game_db.get("몬스터", []) as Array
 	monster_db = MONSTER_CATALOG.expand(monster_db)
+	_load_monster_sizes()
 	item_db = game_db.get("아이템", []) as Array
 	for item_index: int in range(item_db.size() - 1, -1, -1):
 		var item_value: Variant = item_db[item_index]
@@ -547,7 +549,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 func _tick_catalog_recovery(delta: float) -> void:
 	var elapsed: float = maxf(0.0, delta)
 	var hp_enabled: bool = _has_recovery_effect("hpAbsoluteRecovery") or _has_recovery_effect("hpRecoveryTick")
-	var mp_enabled: bool = _has_recovery_effect("mpRecoveryTick")
+	var mp_enabled: bool = _has_recovery_effect("mpRecoveryTick") or _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp_recovery") > 0
 	var changed: bool = false
 	if hp_enabled:
 		hp_recovery_elapsed += elapsed
@@ -621,12 +623,15 @@ func _index_item_weights() -> void:
 			var name_value: String = str(record.get("name", ""))
 			if name_value.is_empty():
 				continue
-			item_weight_index[name_value] = maxi(0, int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults))))
+			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐":
+				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
+			item_weight_index[name_value] = maxi(0, raw_weight)
 
 func _inventory_total_weight() -> int:
 	var total: int = 0
 	for name_value: Variant in inventory.keys():
-		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0)))
+		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0 if str(name_value) == "아데나" else 3)))
 	return total
 
 func _carrying_capacity() -> int:
@@ -663,6 +668,17 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 			result += ITEM_OPTIONS.accuracy(entry as Dictionary, kind)
 	return result
 
+func _equipment_potion_heal_stat(label: String) -> int:
+	var sum: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if not (entry is Dictionary) or (entry as Dictionary).is_empty():
+			continue
+		var record: Dictionary = entry as Dictionary
+		var typed_key: String = "potionHealFlat" if label == "물약 회복량" else "potionHealPct"
+		sum += int(record.get(typed_key, ITEM_OPTIONS._description_bonus(record, label)))
+	return sum
+
 func _equipment_additional_damage(kind: String) -> int:
 	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -685,6 +701,17 @@ func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	var label: String = str(target.get_meta("size_class", "small")).to_lower()
 	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), label == "large")
 
+func _load_monster_sizes() -> void:
+	monster_size_index.clear()
+	var filename: String = "res://data/monster_sizes_v1.json"
+	if not FileAccess.file_exists(filename):
+		return
+	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(filename))
+	if value is Dictionary:
+		var size_records: Variant = (value as Dictionary).get("monster_sizes", {})
+		if size_records is Dictionary:
+			monster_size_index = size_records as Dictionary
+
 func _monster_size_class(record: Dictionary) -> String:
 	for key: String in ["size_class", "size", "monster_size", "크기"]:
 		if record.has(key):
@@ -694,6 +721,11 @@ func _monster_size_class(record: Dictionary) -> String:
 			if raw in ["small", "소", "소형"]:
 				return "small"
 	var name_value: String = str(record.get("name", ""))
+	var known_value: Variant = monster_size_index.get(name_value, {})
+	if known_value is Dictionary:
+		var known_size: String = str((known_value as Dictionary).get("size", ""))
+		if known_size in ["small", "large"]:
+			return known_size
 	# Body-type classification, deliberately independent of 'is_boss'.
 	var big_keywords: Array[String] = ["거대", "골렘", "오우거", "사이클롭스", "에틴", "웜", "드레이크", "드래곤", "드레곤", "피닉스", "마이노", "바실리스크", "크랩맨", "에르자베"]
 	for keyword: String in big_keywords:
@@ -2517,7 +2549,7 @@ func _tick_item_buffs(delta: float) -> void:
 			var ticks: int = maxi(0, int(floor(elapsed / interval)))
 			buff["tick_elapsed"] = fmod(elapsed, interval)
 			if ticks > 0:
-				mp = mini(max_mp, mp + maxi(0, int(buff.get("mp_regen_tick", 0))) * ticks)
+				mp = mini(_effective_max_mp(), mp + maxi(0, int(buff.get("mp_regen_tick", 0))) * ticks)
 				hp = mini(_effective_max_hp(), hp + maxi(0, int(buff.get("hp_regen_tick", 0))) * ticks)
 				changed = true
 		buff["remaining"] = maxf(0.0, remaining_before - delta)
@@ -2996,8 +3028,8 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP가 가득 찼습니다")
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat"))
-	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct")) / 100.0))
+	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat"))
+	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
@@ -5015,7 +5047,7 @@ func _ranged_accuracy_stat() -> int:
 	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("sp") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("sp") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
 
 func _magic_accuracy_stat() -> int:
 	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
@@ -5320,7 +5352,7 @@ func _record_mr(record: Dictionary) -> int:
 		return maxi(0, int(record.get("MR", 0)))
 	if record.has("마법 방어력"):
 		return maxi(0, int(record.get("마법 방어력", 0)))
-	return 0
+	return maxi(0, int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력(MR)")) + int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력")) )
 
 func _effective_mr() -> int:
 	var total: int = 10 + level + _effective_attribute("WIS") * 2
@@ -5328,6 +5360,7 @@ func _effective_mr() -> int:
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
 	total += _active_item_buff_total("mr")
+	total += _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "mr")
 	return maxi(0, total)
 
 func _record_damage_reduction(record: Dictionary) -> int:
