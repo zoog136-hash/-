@@ -20,3 +20,8 @@
 **먼저 `main` HEAD를 확인하고 `TWILIGHT_PROJECT_RULES.md`와 `TWILIGHT_VERSION_HISTORY.md`을 읽으세요.** 이전 대화에서 생성된 ZIP이나 오래된 SHA로 버전을 역행시키지 마세요. 모든 변경은 새 브랜치/PR과 Godot CI 증거로 관리하세요.
 
 게임플레이 자동 검사는 `tools/test_project.py`, UI 검증은 `tests/ui_renewal_integration_test.gd`, 모바일 APK 검증은 `.github/workflows/twilight-android-playtest-apk.yml`을 참고하세요.
+
+몬스터 월드 구현 후보의 [구현·배치·조사 한계·검증 보고서](docs/MONSTER_WORLD_IMPLEMENTATION.md)를 참고하세요. 원작 전체 고증과 모든 종의 독립 8시점 아트 완성 여부는 기능 검사 통과와 구분합니다.
+
+
+UI 전면 리뉴얼 후속 PR #50의 [화면별 변경·참조·검증 범위](docs/UI_RENEWAL_FIDELITY_20261009.md)를 참고하세요. 실제 터치 입력 회귀와 작은 창/Android 크기 화면 검증은 `tests/ui_fidelity_regression_test.gd`와 `tests/capture_ui_fidelity.gd`에 포함됩니다.

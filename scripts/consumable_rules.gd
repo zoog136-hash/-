@@ -3,7 +3,8 @@ class_name TwilightConsumableRules
 
 # Data-only rules for user consumables; no map, HUD, monster or animation dependencies.
 # Lineage M reference: 2017 official powerbook (duration/effects), adjusted for offline game.
-# Community-reported legacy 1–3 chances: 30/10/5. Stage 4–5: TWILIGHT placeholders, NOT official rates.
+# TWILIGHT fixed balance table (30/10/5/2/1%), not falsely labeled as official NC rates.
+# The 4th/5th stages are consciously TWILIGHT values until NC stage-specific rates can be verified.
 const ELEMENT_CHANCES: Array[float] = [30.0, 10.0, 5.0, 2.0, 1.0]
 const ELEMENT_NAMES: Dictionary = {"fire":"화령", "water":"수령", "earth":"지령", "wind":"풍령"}
 const STAT_KEYS: Array[String] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"]
@@ -18,6 +19,18 @@ static func is_removed_item(item_name: String) -> bool:
 
 static func records() -> Array[Dictionary]:
 	return [
+		{"name":"드래곤의 루비", "grade":"고급", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":30,
+		 "desc":"아인하사드 축복 +30 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 사파이어", "grade":"희귀", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":50,
+		 "desc":"아인하사드 축복 +50 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 다이아몬드", "grade":"희귀", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":100,
+		 "desc":"아인하사드 축복 +100 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 고급 다이아몬드", "grade":"영웅", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":500,
+		 "desc":"아인하사드 축복 +500 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 성수", "grade":"영웅", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":1500,
+		 "desc":"45레벨 이상 · 아인하사드 축복 +1,500 · 경험치 +31,920,000"},
+		{"name":"드래곤의 용옥", "grade":"희귀", "type":"축복버프", "slot":"consumable", "kind":"ain_orb",
+		 "desc":"30일간 드래곤의 보호 · 축복 0에서도 EXP 400% / 아데나 150% · 캐릭터별 실제 시간 적용"},
 		{"name":"마나 회복 물약", "grade":"일반", "type":"회복물약", "slot":"consumable", "kind":"regen",
 		 "duration":300.0, "group":"mana_potion", "buff":{"mp_regen_tick":5, "tick_interval":30.0},
 		 "desc":"지속 시간 300초 · 30초마다 MP 5 회복 (TWILIGHT 밸런스)"},
@@ -47,6 +60,8 @@ static func records() -> Array[Dictionary]:
 		 "kind":"return", "desc":"가장 가까운 안전 마을로 귀환 (던전은 아덴 마을)"},
 		{"name":"순간이동 주문서", "grade":"일반", "type":"이동주문서", "slot":"consumable",
 		 "kind":"teleport", "desc":"현재 맵 안의 도달 가능한 무작위 위치로 순간이동"},
+		{"name":"축복 부여 주문서", "grade":"희귀", "type":"강화주문서", "slot":"consumable",
+		 "kind":"equipment_bless", "desc":"무기·방어구에 축복 옵션 부여 · 실패 시 장비 유지, 주문서 소모 · 성공률은 TWILIGHT 임시값"},
 		{"name":"속성 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
 		 "kind":"element", "element":"", "desc":"일반 무기 최대 3단계 · 고강화 무기 추가 단계 · 실패 시 무기 유지 · 확률 일부 임시값"},
 		{"name":"화령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
@@ -57,6 +72,10 @@ static func records() -> Array[Dictionary]:
 		 "kind":"element", "element":"earth", "desc":"무기 땅 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
 		{"name":"풍령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
 		 "kind":"element", "element":"wind", "desc":"무기 바람 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
+		{"name":"속성 변경 주문서", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "kind":"element_change",
+		 "desc":"동일 무기의 속성 단계 유지, 화/수/지/풍 속성 변경 (TWILIGHT 확정 규칙)"},
+		{"name":"속성 초기화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable", "kind":"element_reset",
+		 "desc":"무기 속성 단계 및 속성 초기화 (TWILIGHT 확정 규칙)"},
 		{"name":"엘릭서", "grade":"희귀", "type":"성장소모품", "slot":"consumable", "kind":"elixir",
 		 "desc":"50레벨 이상 · 선택한 기본 스탯 영구 +1 · TWILIGHT 최대 10회 / 스탯 45 제한"},
 		{"name":"힘의 엘릭서", "grade":"희귀", "type":"성장소모품", "slot":"consumable", "kind":"elixir", "stat":"STR",

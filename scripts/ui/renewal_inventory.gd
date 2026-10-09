@@ -4,28 +4,120 @@ const UI = preload("res://scripts/ui/renewal_theme.gd")
 var sort_mode: int = 0
 var inventory_fingerprint: String = ""
 var weight_readout: Label
+var weight_gauge: ProgressBar
+var compact_tabs: HBoxContainer
+var detail_active: bool = false
+var inventory_left: Control
+var grid_scroll: ScrollContainer
+var gesture_index: int = -1
+var gesture_mouse: bool = false
+var gesture_distance: float = 0
+var gesture_dragged: bool = false
+var gesture_reference: String = ""
+var gesture_button: Control
 
 func _ready() -> void:
 	super._ready()
 	theme = UI.make_theme()
 	inventory_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	inventory_panel.add_theme_stylebox_override("panel",UI.box(Color("11171d"),UI.BRONZE,10))
+	inventory_panel.add_theme_stylebox_override("panel",UI.box(Color("0e1117"),UI.BRONZE,8))
 	var header: HBoxContainer = inventory_panel.get_child(0).get_child(0)
-	# Shared window owns close. Keep the original grid/details/data contract.
 	(header.get_child(0) as Label).text = "소지품"
+	(header.get_child(0) as Label).add_theme_font_size_override("font_size",15)
+	header.custom_minimum_size.y = 36
 	(header.get_child(header.get_child_count()-1) as Button).hide()
 	var sorter := OptionButton.new()
 	sorter.name = "InventorySort"
-	for label: String in ["이름순","등급순","수량순"]:
-		sorter.add_item(label)
+	for label: String in ["이름순","등급순","수량순"]: sorter.add_item(label)
 	sorter.item_selected.connect(func(index: int) -> void: sort_mode=index; _refresh_inventory_grid())
 	header.add_child(sorter)
-	search_line.custom_minimum_size.x = 160
-	detail_panel.custom_minimum_size.x = 288
-	for b: Button in tab_buttons.values():
-		b.custom_minimum_size.x = 82
+	search_line.custom_minimum_size = Vector2(110,34)
+	detail_panel.custom_minimum_size.x = 260
+	for b: Button in tab_buttons.values(): b.custom_minimum_size.x = 82
 	weight_readout = UI.label("",11,UI.MUTED)
 	(inventory_panel.get_child(0) as VBoxContainer).add_child(weight_readout)
+	weight_gauge = ProgressBar.new()
+	weight_gauge.name = "InventoryWeight"
+	weight_gauge.show_percentage = false
+	weight_gauge.custom_minimum_size.y = 7
+	(inventory_panel.get_child(0) as VBoxContainer).add_child(weight_gauge)
+	inventory_left = item_grid.get_parent().get_parent()
+	grid_scroll = item_grid.get_parent()
+	grid_scroll.name = "InventoryGridScroll"
+	compact_tabs = HBoxContainer.new()
+	compact_tabs.name = "InventoryCompactTabs"
+	compact_tabs.add_child(UI.button("소지품 목록",func() -> void: detail_active=false; _reflow(),Vector2(112,34)))
+	compact_tabs.add_child(UI.button("선택 상세",func() -> void: detail_active=true; _reflow(),Vector2(112,34)))
+	var layout: VBoxContainer = inventory_panel.get_child(0)
+	layout.add_child(compact_tabs)
+	layout.move_child(compact_tabs,3)
+	resized.connect(_reflow)
+	_reflow()
+
+func _reflow() -> void:
+	if grid_scroll == null: return
+	var compact: bool = inventory_panel.size.x < 720
+	compact_tabs.visible = compact
+	inventory_left.visible = not compact or not detail_active
+	detail_panel.visible = not compact or detail_active
+	detail_panel.custom_minimum_size.x = 0 if compact else 260
+	var width: float = inventory_panel.size.x-26-(0 if compact else 270)
+	item_grid.columns = clampi(floori(width/77.0),2,7)
+	for button: Button in tab_buttons.values(): button.custom_minimum_size.x = 68
+
+func _gesture_start(event: InputEvent, reference: String, button: Control) -> void:
+	if event is InputEventScreenTouch and event.pressed and not event.canceled and gesture_index == -1:
+		gesture_index = event.index
+		gesture_distance = 0
+		gesture_dragged = false
+		gesture_reference = reference
+		gesture_button = button
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		gesture_mouse = true
+		gesture_distance = 0
+		gesture_dragged = false
+
+func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree() or not inventory_panel.visible: return
+	var motion: float = 0
+	if event is InputEventScreenDrag and event.index == gesture_index:
+		motion = event.relative.y
+	elif event is InputEventMouseMotion and gesture_mouse and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+		motion = event.relative.y
+	if motion != 0:
+		gesture_distance += absf(motion)
+		if gesture_distance > 8:
+			gesture_dragged = true
+			var bar: VScrollBar = grid_scroll.get_v_scroll_bar()
+			grid_scroll.scroll_vertical = clampi(grid_scroll.scroll_vertical-roundi(motion),0,maxi(0,ceili(bar.max_value-bar.page)))
+			get_viewport().set_input_as_handled()
+	elif event is InputEventScreenTouch and event.index == gesture_index and (not event.pressed or event.canceled):
+		var tapped: bool = not gesture_dragged and not event.canceled and is_instance_valid(gesture_button)
+		if tapped:
+			var local_point: Vector2 = gesture_button.get_global_transform_with_canvas().affine_inverse() * event.position
+			tapped = Rect2(Vector2.ZERO,gesture_button.size).has_point(local_point)
+		gesture_index = -1
+		gesture_button = null
+		get_viewport().set_input_as_handled()
+		if tapped: _select_item(gesture_reference)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		gesture_mouse = false
+		if gesture_dragged: get_viewport().set_input_as_handled()
+
+func _select_item(item_name: String) -> void:
+	if gesture_dragged: return
+	super._select_item(item_name)
+	detail_active = true
+	_reflow()
+
+func show_inventory() -> void:
+	gesture_dragged = false
+	detail_active = false
+	super.show_inventory()
+	_reflow()
+
+func _slot_style_for_grade(grade: String, selected: bool) -> StyleBoxFlat:
+	return UI.item_frame(grade,selected)
 
 func _find_item_record(item_name: String) -> Dictionary:
 	var instance_id: String = _ref_instance_id(item_name)
@@ -57,6 +149,7 @@ func set_inventory(value: Dictionary) -> void:
 func set_character_state(value: Dictionary) -> void:
 	var fingerprint := JSON.stringify([value.get("gold",0),value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{})])
 	character_state = value.duplicate(true)
+	_refresh_weight()
 	if fingerprint == inventory_fingerprint:
 		return
 	inventory_fingerprint = fingerprint
@@ -91,18 +184,20 @@ func _refresh_inventory_grid() -> void:
 		var texture: Texture2D = _icon_for_reference(record, item_name, reference)
 		button.icon = null
 		button.text = ""
-		button.custom_minimum_size = Vector2(96, 98)
+		button.custom_minimum_size = Vector2(72,82)
+		button.gui_input.connect(_gesture_start.bind(reference,button))
 		var icon := TextureRect.new()
 		icon.texture = texture
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position = Vector2(15, 10)
-		icon.size = Vector2(66, 60)
+		icon.position = Vector2(7,7)
+		icon.size = Vector2(58,54)
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(icon)
-		var caption := UI.label(item_name.left(6) + "…" if item_name.length() > 7 else item_name, 11)
-		caption.position = Vector2(4, 75)
-		caption.size = Vector2(88, 19)
+		var shown_name: String = _display_item_name(record, reference)
+		var caption := UI.label(shown_name.left(6) + "…" if shown_name.length() > 7 else shown_name, 11)
+		caption.position = Vector2(3,61)
+		caption.size = Vector2(66,18)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		caption.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		caption.clip_text = true
@@ -114,16 +209,22 @@ func _refresh_inventory_grid() -> void:
 		var equipped: bool = _is_item_equipped(reference)
 		var amount: int = 1 if _ref_instance_id(reference) != "" else int(inventory.get(item_name, 0))
 		var count := UI.label("E" if equipped else "×%d" % amount, 12, UI.GOLD if equipped else UI.TEXT)
-		count.position = Vector2(52, 3)
-		count.size = Vector2(38, 22)
+		count.position = Vector2(33,40)
+		count.size = Vector2(36,20)
 		count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		button.add_child(count)
 		if _ref_instance_id(reference) != "":
 			button.tooltip_text += " · 개체 ID:" + _ref_instance_id(reference)
+	_refresh_weight()
+	_reflow()
+
+func _refresh_weight() -> void:
 	if weight_readout != null:
 		var current_weight: float = float(character_state.get("current_weight", 0))
 		var max_weight: float = float(character_state.get("max_weight", character_state.get("carrying_capacity", 0)))
-		weight_readout.text = "현재 무게 %.0f / %.0f · 장비별 강화·속성은 개체 ID별 보존" % [current_weight, max_weight]
+		var ratio: float = 100*current_weight/maxf(1,max_weight)
+		weight_readout.text = "무게  %.0f / %.0f  (%.1f%%)" % [current_weight,max_weight,ratio]
+		weight_gauge.value = minf(100,ratio)
 
 func _refresh_detail(item_reference: String) -> void:
 	super._refresh_detail(item_reference)

@@ -2,14 +2,22 @@ extends VBoxContainer
 
 # UI-only shop adapter: all payments go through the original shop signal.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Browser = preload("res://scripts/ui/renewal_browser.gd")
 const GOODS = [
 	["HP 물약", 50, "물약"],
 	["강력 HP 물약", 180, "물약"],
 	["축복받은 HP 물약", 450, "물약"],
 	["초록 잎", 100, "소모품"],
+	["드래곤의 루비", 15000, "소모품"], # TWILIGHT local economy, not an official shop price
+	["드래곤의 사파이어", 25000, "소모품"],
+	["드래곤의 다이아몬드", 50000, "소모품"],
+	["드래곤의 고급 다이아몬드", 250000, "소모품"],
+	["드래곤의 성수", 600000, "소모품"],
+	["드래곤의 용옥", 1000000, "소모품"], # 2021 Adena purchase reference
 	["무기 마법 주문서 (각인)", 25000, "강화 주문서"],
 	["갑옷 마법 주문서 (각인)", 18000, "강화 주문서"],
 	["장신구 마법 주문서 (각인)", 35000, "강화 주문서"],
+	["축복 부여 주문서 (각인)", 250000, "강화 주문서"],
 	["축복받은 무기 마법 주문서 (각인)", 120000, "강화 주문서"],
 	["축복받은 갑옷 마법 주문서 (각인)", 90000, "강화 주문서"],
 	["장인의 무기 마법 주문서 (각인)", 350000, "강화 주문서"],
@@ -37,7 +45,7 @@ func configure(controller: Node) -> void:
 	hud = controller
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(UI.label("잡화 상점",22,UI.GOLD))
+	add_child(UI.section("ADEN  /  잡화 상점",16))
 	wallet = UI.label("",15,UI.GOLD)
 	add_child(wallet)
 	var filters := HBoxContainer.new()
@@ -54,11 +62,19 @@ func configure(controller: Node) -> void:
 		category_filter.add_item(name)
 	category_filter.item_selected.connect(func(_index: int) -> void: _refresh())
 	filters.add_child(category_filter)
-	var row := HBoxContainer.new()
+	var row := Browser.new()
 	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(row)
 	listing = ItemList.new()
 	listing.name = "ShopItems"
+	listing.icon_mode = ItemList.ICON_MODE_TOP
+	listing.fixed_icon_size = Vector2i(48,48)
+	listing.max_columns = 3
+	listing.fixed_column_width = 142
+	listing.same_column_width = true
+	listing.max_text_lines = 3
+	listing.add_theme_font_size_override("font_size",12)
+	listing.add_theme_constant_override("v_separation",10)
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	listing.item_selected.connect(_select)
@@ -76,7 +92,8 @@ func configure(controller: Node) -> void:
 	purchase = UI.button("상품 선택",_buy,Vector2(0,54))
 	purchase.name = "ShopBuy"
 	side.add_child(purchase)
-	side.add_child(UI.label("구매는 기존 게임의 아데나·인벤토리·저장 처리에 연결됩니다.",11,UI.MUTED))
+	side.add_child(UI.section("상품을 선택한 후 구매하세요.",11))
+	row.configure(listing,side,278)
 	_refresh()
 
 func _refresh() -> void:
@@ -92,7 +109,7 @@ func _refresh() -> void:
 		if query != "" and not name.to_lower().contains(query): continue
 		filtered.append(entry)
 		var count: int = int(hud.lineage_inventory_ui.inventory.get(name,0))
-		listing.add_item("%s  ·  %d 아데나  ·  보유 %d" % [name,int(entry[1]),count])
+		listing.add_item("%s\n%d 아데나\n보유 %d" % [name,int(entry[1]),count],UI.item_icon(hud.lineage_inventory_ui._find_item_record(name),name,hud.item_image_index.get("아이템",{})))
 	if filtered.is_empty():
 		detail.text = "검색 조건에 맞는 상품이 없습니다."
 		purchase.disabled = true

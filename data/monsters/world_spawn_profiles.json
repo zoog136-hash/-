@@ -1,0 +1,6012 @@
+{
+  "schema_version": 1,
+  "maps": {
+    "oman_01": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "왜곡의 웅골리언트",
+            "왜곡의 라미아",
+            "왜곡의 메두사"
+          ],
+          "level": [
+            75,
+            77
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "왜곡의 라미아",
+            "왜곡의 메두사",
+            "왜곡의 코카트리스"
+          ],
+          "level": [
+            75,
+            77
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "왜곡의 메두사",
+            "왜곡의 코카트리스",
+            "왜곡의 키메라"
+          ],
+          "level": [
+            75,
+            77
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "왜곡의 코카트리스",
+            "왜곡의 키메라",
+            "왜곡의 타란툴라"
+          ],
+          "level": [
+            75,
+            77
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "왜곡의 키메라",
+            "왜곡의 타란툴라",
+            "왜곡의 웅골리언트"
+          ],
+          "level": [
+            75,
+            77
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "왜곡의 타란툴라",
+            "왜곡의 웅골리언트",
+            "왜곡의 라미아"
+          ],
+          "level": [
+            75,
+            77
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "왜곡의 웅골리언트",
+            "왜곡의 라미아",
+            "왜곡의 메두사"
+          ],
+          "level": [
+            75,
+            77
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "왜곡의 제니스 퀸"
+          ],
+          "level": [
+            87,
+            87
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "왜곡의 제니스 퀸",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_02": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불신의 다이어울프",
+            "불신의 비홀더",
+            "불신의 서큐버스"
+          ],
+          "level": [
+            76,
+            78
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불신의 비홀더",
+            "불신의 서큐버스",
+            "불신의 미믹"
+          ],
+          "level": [
+            76,
+            78
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불신의 서큐버스",
+            "불신의 미믹",
+            "불신의 댄싱 소드"
+          ],
+          "level": [
+            76,
+            78
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불신의 미믹",
+            "불신의 댄싱 소드",
+            "불신의 임프"
+          ],
+          "level": [
+            76,
+            78
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불신의 댄싱 소드",
+            "불신의 임프",
+            "불신의 다이어울프"
+          ],
+          "level": [
+            76,
+            78
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불신의 임프",
+            "불신의 다이어울프",
+            "불신의 비홀더"
+          ],
+          "level": [
+            76,
+            78
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불신의 다이어울프",
+            "불신의 비홀더",
+            "불신의 서큐버스"
+          ],
+          "level": [
+            76,
+            78
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "불신의 시어"
+          ],
+          "level": [
+            88,
+            88
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "불신의 시어",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_03": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "공포의 파이어 에그",
+            "공포의 켈베로스",
+            "공포의 레서 데몬"
+          ],
+          "level": [
+            77,
+            79
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "공포의 켈베로스",
+            "공포의 레서 데몬",
+            "공포의 나이트메어"
+          ],
+          "level": [
+            77,
+            79
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "공포의 레서 데몬",
+            "공포의 나이트메어",
+            "공포의 이프리트"
+          ],
+          "level": [
+            77,
+            79
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "공포의 나이트메어",
+            "공포의 이프리트",
+            "공포의 아그니"
+          ],
+          "level": [
+            77,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "공포의 이프리트",
+            "공포의 아그니",
+            "공포의 파이어 에그"
+          ],
+          "level": [
+            77,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "공포의 아그니",
+            "공포의 파이어 에그",
+            "공포의 켈베로스"
+          ],
+          "level": [
+            77,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "공포의 파이어 에그",
+            "공포의 켈베로스",
+            "공포의 레서 데몬"
+          ],
+          "level": [
+            77,
+            79
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "공포의 뱀파이어"
+          ],
+          "level": [
+            89,
+            89
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "공포의 뱀파이어",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low"
+        },
+        {
+          "id": "dense_hotspot",
+          "rect": [
+            3232.0,
+            3104.0,
+            448,
+            448
+          ],
+          "monster_types": [
+            "공포의 파이어 에그",
+            "공포의 켈베로스",
+            "공포의 레서 데몬",
+            "공포의 나이트메어",
+            "공포의 이프리트",
+            "공포의 아그니"
+          ],
+          "level": [
+            77,
+            81
+          ],
+          "density": 119.58,
+          "max_count": 24,
+          "respawn_time": 7,
+          "roaming_radius": 70,
+          "mode": "dense",
+          "weights": [
+            3,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_low",
+          "spawn_radius": 220,
+          "activation_distance": 1900,
+          "min_spacing": 38,
+          "source_hotspot": "oman_low"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_04": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병",
+            "죽음의 해골 저격병"
+          ],
+          "level": [
+            78,
+            80
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "죽음의 해골 돌격병",
+            "죽음의 해골 저격병",
+            "죽음의 스파토이"
+          ],
+          "level": [
+            78,
+            80
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "죽음의 해골 저격병",
+            "죽음의 스파토이",
+            "죽음의 좀비"
+          ],
+          "level": [
+            78,
+            80
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "죽음의 스파토이",
+            "죽음의 좀비",
+            "죽음의 해골 근위병"
+          ],
+          "level": [
+            78,
+            79
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "죽음의 좀비",
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병"
+          ],
+          "level": [
+            78,
+            79
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병",
+            "죽음의 해골 저격병"
+          ],
+          "level": [
+            78,
+            80
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "죽음의 해골 돌격병",
+            "죽음의 해골 저격병",
+            "죽음의 스파토이"
+          ],
+          "level": [
+            78,
+            80
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "죽음의 좀비 로드"
+          ],
+          "level": [
+            90,
+            90
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "죽음의 좀비 로드",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_05": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "지옥의 고스트",
+            "지옥의 네크로맨서",
+            "지옥의 아이언골렘"
+          ],
+          "level": [
+            79,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "지옥의 네크로맨서",
+            "지옥의 아이언골렘",
+            "지옥의 본 드래곤"
+          ],
+          "level": [
+            79,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "지옥의 아이언골렘",
+            "지옥의 본 드래곤",
+            "지옥의 레서 드래곤"
+          ],
+          "level": [
+            79,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "지옥의 본 드래곤",
+            "지옥의 레서 드래곤",
+            "지옥의 고스트"
+          ],
+          "level": [
+            79,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "지옥의 레서 드래곤",
+            "지옥의 고스트",
+            "지옥의 네크로맨서"
+          ],
+          "level": [
+            79,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "지옥의 고스트",
+            "지옥의 네크로맨서",
+            "지옥의 아이언골렘"
+          ],
+          "level": [
+            79,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "지옥의 네크로맨서",
+            "지옥의 아이언골렘",
+            "지옥의 본 드래곤"
+          ],
+          "level": [
+            79,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "지옥의 쿠거"
+          ],
+          "level": [
+            91,
+            91
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "지옥의 쿠거",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_06": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불사의 구울",
+            "불사의 좀비 병사",
+            "불사의 좀비 마법사"
+          ],
+          "level": [
+            80,
+            82
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불사의 좀비 병사",
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군"
+          ],
+          "level": [
+            80,
+            82
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군",
+            "불사의 구울"
+          ],
+          "level": [
+            80,
+            82
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불사의 좀비 장군",
+            "불사의 구울",
+            "불사의 좀비 병사"
+          ],
+          "level": [
+            80,
+            81
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불사의 구울",
+            "불사의 좀비 병사",
+            "불사의 좀비 마법사"
+          ],
+          "level": [
+            80,
+            82
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불사의 좀비 병사",
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군"
+          ],
+          "level": [
+            80,
+            82
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군",
+            "불사의 구울"
+          ],
+          "level": [
+            80,
+            82
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "불사의 머미 로드"
+          ],
+          "level": [
+            92,
+            92
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "불사의 머미 로드",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_mid"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_07": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "잔혹한 혼 켈베로스",
+            "잔혹한 샤벨타이거",
+            "잔혹한 라이칸스로프"
+          ],
+          "level": [
+            81,
+            83
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "잔혹한 샤벨타이거",
+            "잔혹한 라이칸스로프",
+            "잔혹한 아시타지오"
+          ],
+          "level": [
+            81,
+            83
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "잔혹한 라이칸스로프",
+            "잔혹한 아시타지오",
+            "잔혹한 혼 켈베로스"
+          ],
+          "level": [
+            81,
+            83
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "잔혹한 아시타지오",
+            "잔혹한 혼 켈베로스",
+            "잔혹한 샤벨타이거"
+          ],
+          "level": [
+            81,
+            82
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "잔혹한 혼 켈베로스",
+            "잔혹한 샤벨타이거",
+            "잔혹한 라이칸스로프"
+          ],
+          "level": [
+            81,
+            83
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "잔혹한 샤벨타이거",
+            "잔혹한 라이칸스로프",
+            "잔혹한 아시타지오"
+          ],
+          "level": [
+            81,
+            83
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "잔혹한 라이칸스로프",
+            "잔혹한 아시타지오",
+            "잔혹한 혼 켈베로스"
+          ],
+          "level": [
+            81,
+            83
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "잔혹한 아이리스"
+          ],
+          "level": [
+            93,
+            93
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "잔혹한 아이리스",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7"
+        },
+        {
+          "id": "dense_hotspot",
+          "rect": [
+            3232.0,
+            3104.0,
+            448,
+            448
+          ],
+          "monster_types": [
+            "잔혹한 혼 켈베로스",
+            "잔혹한 샤벨타이거",
+            "잔혹한 라이칸스로프",
+            "잔혹한 아시타지오"
+          ],
+          "level": [
+            81,
+            83
+          ],
+          "density": 119.58,
+          "max_count": 24,
+          "respawn_time": 7,
+          "roaming_radius": 70,
+          "mode": "dense",
+          "weights": [
+            3,
+            1,
+            1,
+            1
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_7",
+          "spawn_radius": 220,
+          "activation_distance": 1900,
+          "min_spacing": 38,
+          "source_hotspot": "local_layout_of_documented_hotspot"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_08": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "어둠의 불타는 전사",
+            "어둠의 불타는 궁수",
+            "암흑의 서큐버스 퀸"
+          ],
+          "level": [
+            82,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "어둠의 불타는 궁수",
+            "암흑의 서큐버스 퀸",
+            "암흑의 흑기사"
+          ],
+          "level": [
+            82,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "암흑의 서큐버스 퀸",
+            "암흑의 흑기사",
+            "어둠의 불타는 전사"
+          ],
+          "level": [
+            82,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "암흑의 흑기사",
+            "어둠의 불타는 전사",
+            "어둠의 불타는 궁수"
+          ],
+          "level": [
+            82,
+            83
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "어둠의 불타는 전사",
+            "어둠의 불타는 궁수",
+            "암흑의 서큐버스 퀸"
+          ],
+          "level": [
+            82,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "어둠의 불타는 궁수",
+            "암흑의 서큐버스 퀸",
+            "암흑의 흑기사"
+          ],
+          "level": [
+            82,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "암흑의 서큐버스 퀸",
+            "암흑의 흑기사",
+            "어둠의 불타는 전사"
+          ],
+          "level": [
+            82,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "어둠의 나이트발드"
+          ],
+          "level": [
+            94,
+            94
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "어둠의 나이트발드",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_8"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_09": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불멸의 해골 근위병",
+            "불멸의 해골 저격병",
+            "불멸의 해골 돌격병"
+          ],
+          "level": [
+            83,
+            85
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불멸의 해골 저격병",
+            "불멸의 해골 돌격병",
+            "불멸의 해골 기사"
+          ],
+          "level": [
+            83,
+            85
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불멸의 해골 돌격병",
+            "불멸의 해골 기사",
+            "불멸의 본 드래곤"
+          ],
+          "level": [
+            83,
+            85
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불멸의 해골 기사",
+            "불멸의 본 드래곤",
+            "불멸의 해골 근위병"
+          ],
+          "level": [
+            83,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불멸의 본 드래곤",
+            "불멸의 해골 근위병",
+            "불멸의 해골 저격병"
+          ],
+          "level": [
+            83,
+            84
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불멸의 해골 근위병",
+            "불멸의 해골 저격병",
+            "불멸의 해골 돌격병"
+          ],
+          "level": [
+            83,
+            85
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "불멸의 해골 저격병",
+            "불멸의 해골 돌격병",
+            "불멸의 해골 기사"
+          ],
+          "level": [
+            83,
+            85
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "불멸의 리치"
+          ],
+          "level": [
+            95,
+            95
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "불멸의 리치",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_9"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "oman_10": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "오만한 아스모데우스",
+            "오만한 플레임 팽",
+            "오만한 레비아탄"
+          ],
+          "level": [
+            84,
+            86
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "오만한 플레임 팽",
+            "오만한 레비아탄",
+            "오만한 서큐버스 퀸"
+          ],
+          "level": [
+            84,
+            86
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "오만한 레비아탄",
+            "오만한 서큐버스 퀸",
+            "오만한 아시타지오"
+          ],
+          "level": [
+            84,
+            86
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "오만한 서큐버스 퀸",
+            "오만한 아시타지오",
+            "오만한 아스모데우스"
+          ],
+          "level": [
+            84,
+            85
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "오만한 아시타지오",
+            "오만한 아스모데우스",
+            "오만한 플레임 팽"
+          ],
+          "level": [
+            84,
+            85
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "오만한 아스모데우스",
+            "오만한 플레임 팽",
+            "오만한 레비아탄"
+          ],
+          "level": [
+            84,
+            86
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "오만한 플레임 팽",
+            "오만한 레비아탄",
+            "오만한 서큐버스 퀸"
+          ],
+          "level": [
+            84,
+            86
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "오만한 우그누스"
+          ],
+          "level": [
+            96,
+            96
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "오만한 우그누스",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10"
+        },
+        {
+          "id": "dense_hotspot",
+          "rect": [
+            3232.0,
+            3104.0,
+            448,
+            448
+          ],
+          "monster_types": [
+            "오만한 아스모데우스",
+            "오만한 플레임 팽",
+            "오만한 레비아탄",
+            "오만한 서큐버스 퀸",
+            "오만한 아시타지오"
+          ],
+          "level": [
+            84,
+            86
+          ],
+          "density": 119.58,
+          "max_count": 24,
+          "respawn_time": 7,
+          "roaming_radius": 70,
+          "mode": "dense",
+          "weights": [
+            3,
+            1,
+            1,
+            1,
+            1
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "oman_10",
+          "spawn_radius": 220,
+          "activation_distance": 1900,
+          "min_spacing": 38,
+          "source_hotspot": "local_layout_of_documented_hotspot"
+        }
+      ],
+      "coordinate_note": "현재 지형의 연결된 사냥방에 원작 지역 구성을 대응. 원작 지형의 정확한 복제 좌표가 아님."
+    },
+    "faith_01": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "교만의 킬 하운드",
+            "교만의 레버넌트",
+            "교만의 제라키엘"
+          ],
+          "level": [
+            87,
+            89
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "교만의 레버넌트",
+            "교만의 제라키엘",
+            "교만의 네르갈"
+          ],
+          "level": [
+            87,
+            89
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "교만의 제라키엘",
+            "교만의 네르갈",
+            "교만의 제노사이더"
+          ],
+          "level": [
+            87,
+            89
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "교만의 네르갈",
+            "교만의 제노사이더",
+            "교만의 킬 하운드"
+          ],
+          "level": [
+            87,
+            88
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "교만의 제노사이더",
+            "교만의 킬 하운드",
+            "교만의 레버넌트"
+          ],
+          "level": [
+            87,
+            88
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "교만의 킬 하운드",
+            "교만의 레버넌트",
+            "교만의 제라키엘"
+          ],
+          "level": [
+            87,
+            89
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "교만의 레버넌트",
+            "교만의 제라키엘",
+            "교만의 네르갈"
+          ],
+          "level": [
+            87,
+            89
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "교만의 왕자 데우스"
+          ],
+          "level": [
+            99,
+            99
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "교만의 왕자 데우스",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "신념의 원작 지역과 기존 9실 지형을 대응. 실제 사냥터 도형과 좌표는 재현이 아닌 로컬 배치."
+    },
+    "faith_02": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "탐욕의 엔트키아",
+            "탐욕의 코아쿡",
+            "탐욕의 그럽"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "탐욕의 코아쿡",
+            "탐욕의 그럽",
+            "탐욕의 텐타클"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "탐욕의 그럽",
+            "탐욕의 텐타클",
+            "탐욕의 만토디아"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "탐욕의 텐타클",
+            "탐욕의 만토디아",
+            "탐욕의 엔트키아"
+          ],
+          "level": [
+            89,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "탐욕의 만토디아",
+            "탐욕의 엔트키아",
+            "탐욕의 코아쿡"
+          ],
+          "level": [
+            89,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "탐욕의 엔트키아",
+            "탐욕의 코아쿡",
+            "탐욕의 그럽"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "탐욕의 코아쿡",
+            "탐욕의 그럽",
+            "탐욕의 텐타클"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "탐욕의 여왕 벨리엘"
+          ],
+          "level": [
+            101,
+            101
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "탐욕의 여왕 벨리엘",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "신념의 원작 지역과 기존 9실 지형을 대응. 실제 사냥터 도형과 좌표는 재현이 아닌 로컬 배치."
+    },
+    "faith_03": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "질투의 스켈레톤 윙",
+            "질투의 로가리우스",
+            "질투의 좀비 메이드"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "질투의 로가리우스",
+            "질투의 좀비 메이드",
+            "질투의 감시자 알비온"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "질투의 좀비 메이드",
+            "질투의 감시자 알비온",
+            "질투의 좀비 나이트"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "질투의 감시자 알비온",
+            "질투의 좀비 나이트",
+            "질투의 아타바크"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "질투의 좀비 나이트",
+            "질투의 아타바크",
+            "질투의 스켈레톤 윙"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "질투의 아타바크",
+            "질투의 스켈레톤 윙",
+            "질투의 로가리우스"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "질투의 스켈레톤 윙",
+            "질투의 로가리우스",
+            "질투의 좀비 메이드"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "질투의 공주 이자벨"
+          ],
+          "level": [
+            103,
+            103
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "질투의 공주 이자벨",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "faith_3_names"
+        }
+      ],
+      "coordinate_note": "신념의 원작 지역과 기존 9실 지형을 대응. 실제 사냥터 도형과 좌표는 재현이 아닌 로컬 배치."
+    },
+    "faith_04": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "분노의 데스 서번트",
+            "분노의 데스 키퍼",
+            "분노의 데스 도그"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "분노의 데스 키퍼",
+            "분노의 데스 도그",
+            "분노의 데스 라이더"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            896,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "분노의 데스 도그",
+            "분노의 데스 라이더",
+            "분노의 데스 워리어"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "분노의 데스 라이더",
+            "분노의 데스 워리어",
+            "분노의 데스 리퍼"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "분노의 데스 워리어",
+            "분노의 데스 리퍼",
+            "분노의 데스 헌터"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            896,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "분노의 데스 리퍼",
+            "분노의 데스 헌터",
+            "분노의 데스 서번트"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "분노의 데스 헌터",
+            "분노의 데스 서번트",
+            "분노의 데스 키퍼"
+          ],
+          "level": [
+            93,
+            94
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "분노의 주시자 라즈엘"
+          ],
+          "level": [
+            105,
+            105
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "분노의 주시자 라즈엘",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "신념의 원작 지역과 기존 9실 지형을 대응. 실제 사냥터 도형과 좌표는 재현이 아닌 로컬 배치."
+    },
+    "escaros_01": {
+      "monster_spawn": [
+        {
+          "id": "field_0",
+          "rect": [
+            2464,
+            4000,
+            960,
+            960
+          ],
+          "monster_types": [
+            "에스카로스 솔져",
+            "에스카로스 나이트",
+            "에스카로스 매지션"
+          ],
+          "level": [
+            92,
+            94
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_1",
+          "rect": [
+            2976,
+            1056,
+            960,
+            960
+          ],
+          "monster_types": [
+            "에스카로스 나이트",
+            "에스카로스 매지션",
+            "에스카로스 어쌔신"
+          ],
+          "level": [
+            92,
+            94
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_2",
+          "rect": [
+            6432,
+            1376,
+            960,
+            960
+          ],
+          "monster_types": [
+            "에스카로스 매지션",
+            "에스카로스 어쌔신",
+            "에스카로스 치프"
+          ],
+          "level": [
+            92,
+            94
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_3",
+          "rect": [
+            7072,
+            4256,
+            960,
+            960
+          ],
+          "monster_types": [
+            "에스카로스 어쌔신",
+            "에스카로스 치프",
+            "에스카로스 솔져"
+          ],
+          "level": [
+            92,
+            93
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            7232,
+            5824,
+            640,
+            640
+          ],
+          "monster_types": [
+            "웨링"
+          ],
+          "level": [
+            104,
+            104
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "웨링",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "에스카로스 종 목록 확인. 5구역 내부 세부 소속과 보스방 좌표는 프로젝트 지형에 맞춘 로컬 배치이며 원작 정확 위치 미확인."
+    },
+    "escaros_02": {
+      "monster_spawn": [
+        {
+          "id": "field_0",
+          "rect": [
+            2208,
+            2464,
+            960,
+            960
+          ],
+          "monster_types": [
+            "톱니",
+            "스파이더",
+            "커스번"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_1",
+          "rect": [
+            5152,
+            2976,
+            960,
+            960
+          ],
+          "monster_types": [
+            "스파이더",
+            "커스번",
+            "넝마"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_2",
+          "rect": [
+            4832,
+            6432,
+            960,
+            960
+          ],
+          "monster_types": [
+            "커스번",
+            "넝마",
+            "그리미"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_3",
+          "rect": [
+            1952,
+            7072,
+            960,
+            960
+          ],
+          "monster_types": [
+            "넝마",
+            "그리미",
+            "시커"
+          ],
+          "level": [
+            93,
+            95
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            704,
+            7232,
+            640,
+            640
+          ],
+          "monster_types": [
+            "듀페리온"
+          ],
+          "level": [
+            105,
+            105
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "듀페리온",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "에스카로스 종 목록 확인. 5구역 내부 세부 소속과 보스방 좌표는 프로젝트 지형에 맞춘 로컬 배치이며 원작 정확 위치 미확인."
+    },
+    "escaros_03": {
+      "monster_spawn": [
+        {
+          "id": "field_0",
+          "rect": [
+            2464,
+            4000,
+            960,
+            960
+          ],
+          "monster_types": [
+            "패트롤",
+            "로머",
+            "가디언"
+          ],
+          "level": [
+            94,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_1",
+          "rect": [
+            2976,
+            1056,
+            960,
+            960
+          ],
+          "monster_types": [
+            "로머",
+            "가디언",
+            "패트롤"
+          ],
+          "level": [
+            94,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_2",
+          "rect": [
+            6432,
+            1376,
+            960,
+            960
+          ],
+          "monster_types": [
+            "가디언",
+            "패트롤",
+            "로머"
+          ],
+          "level": [
+            94,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_3",
+          "rect": [
+            7072,
+            4256,
+            960,
+            960
+          ],
+          "monster_types": [
+            "패트롤",
+            "로머",
+            "가디언"
+          ],
+          "level": [
+            94,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            7232,
+            5824,
+            640,
+            640
+          ],
+          "monster_types": [
+            "욥니르"
+          ],
+          "level": [
+            106,
+            106
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "욥니르",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "에스카로스 종 목록 확인. 5구역 내부 세부 소속과 보스방 좌표는 프로젝트 지형에 맞춘 로컬 배치이며 원작 정확 위치 미확인."
+    },
+    "escaros_04": {
+      "monster_spawn": [
+        {
+          "id": "field_0",
+          "rect": [
+            2464,
+            4000,
+            960,
+            960
+          ],
+          "monster_types": [
+            "커터",
+            "소울러"
+          ],
+          "level": [
+            95,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_1",
+          "rect": [
+            2976,
+            1056,
+            960,
+            960
+          ],
+          "monster_types": [
+            "소울러",
+            "커터"
+          ],
+          "level": [
+            95,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_2",
+          "rect": [
+            6432,
+            1376,
+            960,
+            960
+          ],
+          "monster_types": [
+            "커터",
+            "소울러"
+          ],
+          "level": [
+            95,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_3",
+          "rect": [
+            7072,
+            4256,
+            960,
+            960
+          ],
+          "monster_types": [
+            "소울러",
+            "커터"
+          ],
+          "level": [
+            95,
+            96
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            7232,
+            5824,
+            640,
+            640
+          ],
+          "monster_types": [
+            "살라흐"
+          ],
+          "level": [
+            107,
+            107
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "살라흐",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "에스카로스 종 목록 확인. 5구역 내부 세부 소속과 보스방 좌표는 프로젝트 지형에 맞춘 로컬 배치이며 원작 정확 위치 미확인."
+    },
+    "escaros_05": {
+      "monster_spawn": [
+        {
+          "id": "field_0",
+          "rect": [
+            2464,
+            4000,
+            960,
+            960
+          ],
+          "monster_types": [
+            "퍼포",
+            "테이너",
+            "하이드"
+          ],
+          "level": [
+            96,
+            98
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_1",
+          "rect": [
+            2976,
+            1056,
+            960,
+            960
+          ],
+          "monster_types": [
+            "테이너",
+            "하이드",
+            "퍼포"
+          ],
+          "level": [
+            96,
+            98
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_2",
+          "rect": [
+            6432,
+            1376,
+            960,
+            960
+          ],
+          "monster_types": [
+            "하이드",
+            "퍼포",
+            "테이너"
+          ],
+          "level": [
+            96,
+            98
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "field_3",
+          "rect": [
+            7072,
+            4256,
+            960,
+            960
+          ],
+          "monster_types": [
+            "퍼포",
+            "테이너",
+            "하이드"
+          ],
+          "level": [
+            96,
+            98
+          ],
+          "density": 8.68,
+          "max_count": 8,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            7232,
+            5824,
+            640,
+            640
+          ],
+          "monster_types": [
+            "그라디움"
+          ],
+          "level": [
+            108,
+            108
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "그라디움",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "regional_names"
+        }
+      ],
+      "coordinate_note": "에스카로스 종 목록 확인. 5구역 내부 세부 소속과 보스방 좌표는 프로젝트 지형에 맞춘 로컬 배치이며 원작 정확 위치 미확인."
+    },
+    "albino_01": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 플라워",
+            "알비노 드라이어드",
+            "알비노 몽크"
+          ],
+          "level": [
+            88,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            4992,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 드라이어드",
+            "알비노 몽크",
+            "알비노 디어"
+          ],
+          "level": [
+            88,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            1152,
+            3200,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 몽크",
+            "알비노 디어",
+            "알비노 도마뱀"
+          ],
+          "level": [
+            88,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3328,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 디어",
+            "알비노 도마뱀",
+            "알비노 플라워"
+          ],
+          "level": [
+            88,
+            89
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            3072,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 도마뱀",
+            "알비노 플라워",
+            "알비노 드라이어드"
+          ],
+          "level": [
+            88,
+            89
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            1024,
+            1280,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 플라워",
+            "알비노 드라이어드",
+            "알비노 몽크"
+          ],
+          "level": [
+            88,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3200,
+            896,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 드라이어드",
+            "알비노 몽크",
+            "알비노 디어"
+          ],
+          "level": [
+            88,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            1088,
+            640,
+            640
+          ],
+          "monster_types": [
+            "알비노 유니콘"
+          ],
+          "level": [
+            100,
+            100
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "알비노 유니콘",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        }
+      ],
+      "coordinate_note": "늪지/폭포/유황 몬스터 구분 확인. 원작 보스는 별도 실험실; 현재 맵 최심부를 실험실 대체 구역으로 사용한 로컬 변경."
+    },
+    "albino_02": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            5248,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 악어",
+            "알비노 개구리",
+            "알비노 심해어"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            4992,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 개구리",
+            "알비노 심해어",
+            "알비노 이구아나"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            1152,
+            2688,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 심해어",
+            "알비노 이구아나",
+            "알비노 사냥꾼"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3200,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 이구아나",
+            "알비노 사냥꾼",
+            "알비노 악어"
+          ],
+          "level": [
+            89,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            2816,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 사냥꾼",
+            "알비노 악어",
+            "알비노 개구리"
+          ],
+          "level": [
+            89,
+            90
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            1152,
+            896,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 악어",
+            "알비노 개구리",
+            "알비노 심해어"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3200,
+            1152,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 개구리",
+            "알비노 심해어",
+            "알비노 이구아나"
+          ],
+          "level": [
+            89,
+            91
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            832,
+            640,
+            640
+          ],
+          "monster_types": [
+            "알비노 피닉스"
+          ],
+          "level": [
+            101,
+            101
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "알비노 피닉스",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        }
+      ],
+      "coordinate_note": "늪지/폭포/유황 몬스터 구분 확인. 원작 보스는 별도 실험실; 현재 맵 최심부를 실험실 대체 구역으로 사용한 로컬 변경."
+    },
+    "albino_03": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            4992,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨",
+            "알비노 악어거북"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            1152,
+            3072,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 피쉬맨",
+            "알비노 악어거북",
+            "알비노 자이언트 크랩"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            2944,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 악어거북",
+            "알비노 자이언트 크랩",
+            "알비노 뿔 개구리"
+          ],
+          "level": [
+            91,
+            92
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5248,
+            3072,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 자이언트 크랩",
+            "알비노 뿔 개구리",
+            "알비노 변이된 골렘"
+          ],
+          "level": [
+            91,
+            92
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            1152,
+            1024,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            896,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨",
+            "알비노 악어거북"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            1088,
+            640,
+            640
+          ],
+          "monster_types": [
+            "알비노 데몬"
+          ],
+          "level": [
+            103,
+            103
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "알비노 데몬",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        }
+      ],
+      "coordinate_note": "늪지/폭포/유황 몬스터 구분 확인. 원작 보스는 별도 실험실; 현재 맵 최심부를 실험실 대체 구역으로 사용한 로컬 변경."
+    },
+    "albino_04": {
+      "monster_spawn": [
+        {
+          "id": "room_1",
+          "rect": [
+            3072,
+            4992,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_2",
+          "rect": [
+            5248,
+            5120,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨",
+            "알비노 악어거북"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_3",
+          "rect": [
+            1024,
+            2816,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 피쉬맨",
+            "알비노 악어거북",
+            "알비노 자이언트 크랩"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_4",
+          "rect": [
+            3072,
+            3072,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 악어거북",
+            "알비노 자이언트 크랩",
+            "알비노 뿔 개구리"
+          ],
+          "level": [
+            91,
+            92
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_5",
+          "rect": [
+            5120,
+            3072,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 자이언트 크랩",
+            "알비노 뿔 개구리",
+            "알비노 변이된 골렘"
+          ],
+          "level": [
+            91,
+            92
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_6",
+          "rect": [
+            1152,
+            1024,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "room_7",
+          "rect": [
+            3072,
+            768,
+            768,
+            768
+          ],
+          "monster_types": [
+            "알비노 변이된 골렘",
+            "알비노 피쉬맨",
+            "알비노 악어거북"
+          ],
+          "level": [
+            91,
+            93
+          ],
+          "density": 10.17,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5312,
+            1088,
+            640,
+            640
+          ],
+          "monster_types": [
+            "알비노 데몬"
+          ],
+          "level": [
+            103,
+            103
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "알비노 데몬",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "albino"
+        }
+      ],
+      "coordinate_note": "프로젝트 알비노 4구역과 대응하는 확정 원작 몬스터 목록 자료 부족. 3구역 확인 몬스터를 로컬 고난도 구역으로 임시 배치; 원작 4구역 재현은 미완료."
+    },
+    "domination_summit": {
+      "monster_spawn": [
+        {
+          "id": "bastion_0",
+          "rect": [
+            928,
+            1824,
+            960,
+            960
+          ],
+          "monster_types": [
+            "데스나이트",
+            "흑장로",
+            "정예 다크엘프"
+          ],
+          "level": [
+            32,
+            78
+          ],
+          "density": 6.51,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "legacy"
+        },
+        {
+          "id": "bastion_1",
+          "rect": [
+            5408,
+            1952,
+            960,
+            960
+          ],
+          "monster_types": [
+            "흑장로",
+            "정예 다크엘프",
+            "지룡의 정예병"
+          ],
+          "level": [
+            32,
+            81
+          ],
+          "density": 6.51,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "legacy"
+        },
+        {
+          "id": "bastion_2",
+          "rect": [
+            3616,
+            4384,
+            960,
+            960
+          ],
+          "monster_types": [
+            "정예 다크엘프",
+            "지룡의 정예병",
+            "데스나이트"
+          ],
+          "level": [
+            58,
+            81
+          ],
+          "density": 6.51,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "legacy"
+        },
+        {
+          "id": "bastion_3",
+          "rect": [
+            5920,
+            5152,
+            960,
+            960
+          ],
+          "monster_types": [
+            "지룡의 정예병",
+            "데스나이트",
+            "흑장로"
+          ],
+          "level": [
+            32,
+            81
+          ],
+          "density": 6.51,
+          "max_count": 6,
+          "respawn_time": 25,
+          "roaming_radius": 130,
+          "mode": "normal",
+          "weights": [
+            3,
+            2,
+            2
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "legacy"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            5504,
+            960,
+            640,
+            640
+          ],
+          "monster_types": [
+            "그림 리퍼"
+          ],
+          "level": [
+            95,
+            95
+          ],
+          "density": 2.44,
+          "max_count": 1,
+          "respawn_time": 900,
+          "roaming_radius": 110,
+          "mode": "boss",
+          "boss_id": "그림 리퍼",
+          "initial_delay": 0,
+          "activation_distance": 2100,
+          "schedule_reference": "boss_schedule",
+          "respawn_policy": "game_seconds",
+          "weights": [
+            3
+          ],
+          "coordinate_evidence": "local_world_pixels_not_original_coordinates",
+          "roster_evidence": "legacy"
+        }
+      ],
+      "coordinate_note": "그림 리퍼 정상 보스와 기존 지형 보존. 일반 몬스터의 정확한 정상 출현 근거는 미확인."
+    },
+    "aden_world": {
+      "monster_spawn": [
+        {
+          "id": "meadow",
+          "rect": [
+            2550,
+            4220,
+            1700,
+            850
+          ],
+          "monster_types": [
+            "말하는 섬 들개",
+            "말하는 섬 고블린",
+            "오크"
+          ],
+          "level": [
+            1,
+            7
+          ],
+          "max_count": 12,
+          "density": 8.3,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "legacy_or_inferred_field_biome",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "forest",
+          "rect": [
+            1600,
+            1300,
+            2300,
+            1500
+          ],
+          "monster_types": [
+            "오크",
+            "오크 궁수",
+            "오크 마법사"
+          ],
+          "level": [
+            4,
+            12
+          ],
+          "max_count": 12,
+          "density": 3.48,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "legacy_or_inferred_field_biome",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "riverbank",
+          "rect": [
+            3750,
+            6100,
+            1400,
+            1000
+          ],
+          "monster_types": [
+            "도마뱀",
+            "사악한 셸로브",
+            "크랩맨",
+            "라미아"
+          ],
+          "level": [
+            30,
+            30
+          ],
+          "max_count": 12,
+          "density": 8.57,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "field_2022",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "ruins",
+          "rect": [
+            7220,
+            2100,
+            1500,
+            1400
+          ],
+          "monster_types": [
+            "글루디오 던전 좀비",
+            "글루디오 던전 스켈레톤",
+            "글루디오 던전 구울"
+          ],
+          "level": [
+            15,
+            19
+          ],
+          "max_count": 12,
+          "density": 5.71,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "legacy_or_inferred_field_biome",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "east",
+          "rect": [
+            8300,
+            5600,
+            2100,
+            1400
+          ],
+          "monster_types": [
+            "오크",
+            "오크 궁수",
+            "오크 마법사"
+          ],
+          "level": [
+            4,
+            12
+          ],
+          "max_count": 12,
+          "density": 4.08,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "elf_quest",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "desert",
+          "rect": [
+            2700,
+            640,
+            1350,
+            580
+          ],
+          "monster_types": [
+            "거대 개미",
+            "개미굴 일개미",
+            "개미굴 병정개미",
+            "스콜피온"
+          ],
+          "level": [
+            22,
+            42
+          ],
+          "max_count": 12,
+          "density": 15.33,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "legacy_or_inferred_field_biome",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "bandits",
+          "rect": [
+            3400,
+            3100,
+            1700,
+            650
+          ],
+          "monster_types": [
+            "산적",
+            "산적 저격수",
+            "산적 행동대장"
+          ],
+          "level": [
+            42,
+            42
+          ],
+          "max_count": 12,
+          "density": 10.86,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "field_2022",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "dragon_valley",
+          "rect": [
+            8800,
+            2400,
+            1800,
+            1450
+          ],
+          "monster_types": [
+            "흑장로",
+            "코카트리스",
+            "오우거",
+            "해골 저격병",
+            "해골 근위병"
+          ],
+          "level": [
+            14,
+            55
+          ],
+          "max_count": 12,
+          "density": 4.6,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "field_2022",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "oren",
+          "rect": [
+            8600,
+            420,
+            2350,
+            820
+          ],
+          "monster_types": [
+            "아이스 맨",
+            "샤벨 타이거",
+            "에티",
+            "아이스 골렘",
+            "아이언 골렘",
+            "눈사람"
+          ],
+          "level": [
+            58,
+            58
+          ],
+          "max_count": 12,
+          "density": 6.23,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "field_2022",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "fire_land",
+          "rect": [
+            9700,
+            4250,
+            1500,
+            780
+          ],
+          "monster_types": [
+            "사라만다",
+            "파이어 에그",
+            "불타는 궁수",
+            "라바 골렘",
+            "혼 켈베로스"
+          ],
+          "level": [
+            8,
+            65
+          ],
+          "max_count": 12,
+          "density": 10.26,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "field_2022",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "wind_land",
+          "rect": [
+            900,
+            6600,
+            1900,
+            980
+          ],
+          "monster_types": [
+            "놀",
+            "하피",
+            "블루 하피",
+            "유니 드래곤",
+            "테라 드래곤",
+            "독침 킬러비"
+          ],
+          "level": [
+            65,
+            65
+          ],
+          "max_count": 12,
+          "density": 6.44,
+          "respawn_time": 24,
+          "roaming_radius": 120,
+          "mode": "normal",
+          "roster_evidence": "field_2022",
+          "coordinate_evidence": "local_world_pixels"
+        },
+        {
+          "id": "boss",
+          "rect": [
+            10200,
+            1330,
+            520,
+            510
+          ],
+          "monster_types": [
+            "드레이크"
+          ],
+          "level": [
+            22,
+            22
+          ],
+          "max_count": 1,
+          "density": 4,
+          "respawn_time": 600,
+          "roaming_radius": 90,
+          "mode": "boss",
+          "boss_id": "드레이크",
+          "initial_delay": 0,
+          "respawn_policy": "game_seconds"
+        },
+        {
+          "id": "desert_boss",
+          "rect": [
+            4200,
+            640,
+            500,
+            500
+          ],
+          "monster_types": [
+            "샌드 웜"
+          ],
+          "level": [
+            70,
+            70
+          ],
+          "max_count": 1,
+          "density": 4,
+          "respawn_time": 600,
+          "roaming_radius": 90,
+          "mode": "boss",
+          "boss_id": "샌드 웜",
+          "initial_delay": 0,
+          "respawn_policy": "game_seconds"
+        },
+        {
+          "id": "fire_boss",
+          "rect": [
+            10600,
+            5200,
+            500,
+            500
+          ],
+          "monster_types": [
+            "피닉스"
+          ],
+          "level": [
+            75,
+            75
+          ],
+          "max_count": 1,
+          "density": 4,
+          "respawn_time": 600,
+          "roaming_radius": 90,
+          "mode": "boss",
+          "boss_id": "피닉스",
+          "initial_delay": 0,
+          "respawn_policy": "game_seconds"
+        },
+        {
+          "id": "dragon_dense",
+          "rect": [
+            9310,
+            2960,
+            448,
+            448
+          ],
+          "monster_types": [
+            "흑장로",
+            "코카트리스",
+            "오우거",
+            "해골 저격병",
+            "해골 근위병"
+          ],
+          "level": [
+            14,
+            55
+          ],
+          "max_count": 24,
+          "density": 119.58,
+          "respawn_time": 7,
+          "roaming_radius": 70,
+          "mode": "dense",
+          "roster_evidence": "field_2022",
+          "coordinate_evidence": "local_world_pixels",
+          "spawn_radius": 220,
+          "min_spacing": 38,
+          "activation_distance": 1900,
+          "weights": [
+            2,
+            2,
+            1,
+            3,
+            3
+          ],
+          "source_hotspot": "dragon_hotspot"
+        }
+      ],
+      "region_labels": [
+        {
+          "id": "meadow",
+          "name": "은기사 마을 주변",
+          "type": "combat",
+          "center": [
+            3400.0,
+            4645.0
+          ],
+          "radius": 884.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "forest",
+          "name": "오크 숲·오크 부락",
+          "type": "combat",
+          "center": [
+            2750.0,
+            2050.0
+          ],
+          "radius": 1196.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "riverbank",
+          "name": "하이네·늪지",
+          "type": "combat",
+          "center": [
+            4450.0,
+            6600.0
+          ],
+          "radius": 728.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "ruins",
+          "name": "글루디오 던전 지상 대체",
+          "type": "combat",
+          "center": [
+            7970.0,
+            2800.0
+          ],
+          "radius": 780.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "east",
+          "name": "요정 숲 남쪽 경계",
+          "type": "combat",
+          "center": [
+            9350.0,
+            6300.0
+          ],
+          "radius": 1092.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "desert",
+          "name": "사막·개미굴 지상 대체",
+          "type": "combat",
+          "center": [
+            3375.0,
+            930.0
+          ],
+          "radius": 702.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "bandits",
+          "name": "산적 소굴",
+          "type": "combat",
+          "center": [
+            4250.0,
+            3425.0
+          ],
+          "radius": 884.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "dragon_valley",
+          "name": "용의 계곡",
+          "type": "combat",
+          "center": [
+            9700.0,
+            3125.0
+          ],
+          "radius": 936.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "oren",
+          "name": "오렌 설벽",
+          "type": "combat",
+          "center": [
+            9775.0,
+            830.0
+          ],
+          "radius": 1222.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "fire_land",
+          "name": "화룡 지역",
+          "type": "combat",
+          "center": [
+            10450.0,
+            4640.0
+          ],
+          "radius": 780.0,
+          "color": "8caa78"
+        },
+        {
+          "id": "wind_land",
+          "name": "풍룡 지역",
+          "type": "combat",
+          "center": [
+            1850.0,
+            7090.0
+          ],
+          "radius": 988.0,
+          "color": "8caa78"
+        }
+      ],
+      "coordinate_note": "아덴의 12288×8192 자체 지형에 생물군계를 대응. 글루디오 던전/개미굴은 독립 맵이 없어 지상 대체 구역. 실제 오렌/화룡/풍룡 좌표·지형은 원작과 다름."
+    }
+  },
+  "map_titles": {
+    "oman_01": "오만의 탑 1층 · 왜곡",
+    "oman_02": "오만의 탑 2층 · 불신",
+    "oman_03": "오만의 탑 3층 · 공포",
+    "oman_04": "오만의 탑 4층 · 죽음",
+    "oman_05": "오만의 탑 5층 · 지옥",
+    "oman_06": "오만의 탑 6층 · 불사",
+    "oman_07": "오만의 탑 7층 · 잔혹",
+    "oman_08": "오만의 탑 8층 · 어둠",
+    "oman_09": "오만의 탑 9층 · 불멸",
+    "oman_10": "오만의 탑 10층 · 오만"
+  }
+}

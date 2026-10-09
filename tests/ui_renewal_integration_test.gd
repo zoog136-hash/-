@@ -31,6 +31,7 @@ func _screen_point(control: Control, local_point: Vector2) -> Vector2:
 	return control.get_global_transform_with_canvas() * local_point
 
 func _run() -> void:
+	root.size = Vector2i(1280,720)
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene
 	if scene == null:
 		_check(false,"Main.tscn cannot load")
@@ -55,7 +56,14 @@ func _run() -> void:
 	_check(workspace.visible,"shop window visible")
 	var listing: ItemList = workspace.find_child("ShopItems",true,false) as ItemList
 	var buy: Button = workspace.find_child("ShopBuy",true,false) as Button
-	_check(listing != null and listing.item_count == 13,"13 original shop products")
+	_check(listing != null and listing.item_count >= 20,"original shop, blessing scroll and dragon items remain available")
+	if listing != null:
+		var blessing_in_shop: bool = false
+		for shop_index: int in range(listing.item_count):
+			if listing.get_item_text(shop_index).contains("축복 부여 주문서"):
+				blessing_in_shop = true
+				break
+		_check(blessing_in_shop, "equipment blessing scroll visible in shop")
 	_check(buy != null and not buy.disabled,"potion affordable")
 	# Real viewport GUI touch events (not direct _select or item_selected.emit).
 	if listing != null and listing.item_count > 1:
@@ -192,6 +200,7 @@ func _run() -> void:
 		_check(catalog_items.get_global_rect().end.x <= workspace.get_global_rect().end.x + 1.0, "catalog list stays inside window width")
 		var second_record: Dictionary = (hud.get("catalog_results") as Array)[1]
 		var second_point: Vector2 = _screen_point(catalog_items,catalog_items.get_item_rect(1).get_center())
+		_check(catalog_items.get_item_rect(1).get_center().y <= catalog_items.size.y,"compact catalog displays a tappable item row")
 		_touch(60,second_point,true)
 		_touch(60,second_point,false)
 		await process_frame

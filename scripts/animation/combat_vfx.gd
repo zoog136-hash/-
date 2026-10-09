@@ -13,7 +13,7 @@ func _init() -> void:
 	for i: int in range(CAPACITY): available.append({})
 
 func _ready() -> void:
-	font = ThemeDB.fallback_font
+	font = preload("res://assets/fonts/NotoSansKR.ttf")
 	set_process(false)
 
 func _record(kind: String, point: Vector2, duration: float) -> Dictionary:
@@ -34,8 +34,9 @@ func impact(point: Vector2, direction: Vector2, style: String, critical: bool = 
 func number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
 	var entry: Dictionary = _record("number", point, 0.65 if not critical else 0.8)
 	var size: int = 23 if critical else 18
-	var width: float = font.get_string_size(value, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
-	entry.merge({"text":value, "color":color, "critical":critical, "width":width})
+	var display: String = value.trim_prefix("CRIT ") if critical else value
+	var width: float = font.get_string_size(display, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
+	entry.merge({"text":value, "display":display, "color":color, "critical":critical, "width":width, "critical_width":font.get_string_size("CRITICAL",HORIZONTAL_ALIGNMENT_LEFT,-1,12).x if critical and font != null else 0.0})
 
 func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2) -> void:
 	var entry: Dictionary = _record("death", point, 0.8)
@@ -83,13 +84,17 @@ func _draw() -> void:
 			"number":
 				var critical: bool = entry.critical
 				var size: int = 23 if critical else 18
-				var text_value: String = entry.text
+				var text_value: String = entry.get("display",entry.text)
 				var width: float = entry.width
 				point += Vector2(-width * 0.5 + (int(entry.serial) % 3 - 1) * 7.0, -p * 35.0)
 				var color: Color = entry.color
 				color.a *= minf(1.0, alpha * 2.0)
 				draw_string_outline(font, point, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 4, Color(0.025, 0.025, 0.03, color.a))
 				draw_string(font, point, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
+				if critical:
+					var caption_point: Vector2 = point + Vector2((width-float(entry.get("critical_width",0)))*.5,-24)
+					draw_string_outline(font,caption_point,"CRITICAL",HORIZONTAL_ALIGNMENT_LEFT,-1,12,3,Color(0,0,0,color.a))
+					draw_string(font,caption_point,"CRITICAL",HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color(1,.80,.46,color.a))
 			"ring":
 				var color: Color = entry.color
 				color.a = alpha * 0.65

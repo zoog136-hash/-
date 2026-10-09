@@ -14,6 +14,9 @@ func _draw() -> void:
 	var shine := Color("f2d9a1")
 	var dim := Color("80653f")
 	var extent := size - Vector2(5,5)
+	for y: int in range(16,70,3):
+		var inset: float = 15+float((y*13)%19)
+		draw_line(Vector2(inset,y),Vector2(size.x-inset,y),Color(shine,.014 if y%2 == 0 else .008),1)
 	draw_rect(Rect2(Vector2(2,2),extent-Vector2(2,2)),Color(outer,.85),false,1)
 	draw_rect(Rect2(Vector2(5,5),size-Vector2(10,10)),Color(gold,.26),false,1)
 	draw_line(Vector2(27,6),Vector2(size.x-27,6),Color(shine,.42),1)

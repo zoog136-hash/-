@@ -2,6 +2,7 @@ extends VBoxContainer
 
 # Presentation options only. No gameplay/save/schema changes.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Dialog = preload("res://scripts/ui/renewal_dialog.gd")
 const SETTINGS_PATH = "user://twilight_ui_settings.cfg"
 var hud: Node
 var config: ConfigFile = ConfigFile.new()
@@ -25,19 +26,29 @@ func configure(controller: Node) -> void:
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	config.load(SETTINGS_PATH)
-	add_child(UI.label("환경 설정",23,UI.GOLD))
-	add_child(UI.label("화면 표시와 소리 설정은 이 PC에 별도로 저장됩니다.",12,UI.MUTED))
-	add_child(HSeparator.new())
-	add_child(UI.label("오디오",18,UI.GOLD))
+	var scroller := ScrollContainer.new()
+	scroller.name = "SettingsScroll"
+	scroller.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroller.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(scroller)
+	var stack := VBoxContainer.new()
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stack.add_theme_constant_override("separation",12)
+	scroller.add_child(stack)
+	stack.add_child(UI.section("환경 설정",17))
+	stack.add_child(UI.section("게임 화면 · 오디오 · 저장",12))
+	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("오디오",18,UI.GOLD))
 	var audio := HBoxContainer.new()
-	add_child(audio)
+	stack.add_child(audio)
 	audio.add_child(UI.label("전체 음량",14))
 	volume = HSlider.new()
 	volume.name = "MasterVolume"
 	volume.min_value = 0
 	volume.max_value = 100
 	volume.step = 1
-	volume.custom_minimum_size.x = 320
+	volume.custom_minimum_size.x = 120
+	volume.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	volume.value = float(config.get_value("audio","volume",100.0))
 	volume.value_changed.connect(_volume_changed)
 	audio.add_child(volume)
@@ -46,8 +57,8 @@ func configure(controller: Node) -> void:
 	mute.button_pressed = bool(config.get_value("audio","muted",false))
 	mute.toggled.connect(_mute_changed)
 	audio.add_child(mute)
-	add_child(HSeparator.new())
-	add_child(UI.label("HUD 표시",18,UI.GOLD))
+	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("HUD 표시",18,UI.GOLD))
 	var log_toggle := CheckButton.new()
 	log_toggle.name = "CombatLogToggle"
 	log_toggle.text = "전투 로그 표시"
@@ -55,7 +66,7 @@ func configure(controller: Node) -> void:
 	log_toggle.toggled.connect(func(enabled: bool) -> void:
 		hud.log_label.visible = enabled
 		_store("interface","combat_log",enabled))
-	add_child(log_toggle)
+	stack.add_child(log_toggle)
 	var coord_toggle := CheckButton.new()
 	coord_toggle.name = "CoordinateToggle"
 	coord_toggle.text = "좌표 표시"
@@ -63,16 +74,16 @@ func configure(controller: Node) -> void:
 	coord_toggle.toggled.connect(func(enabled: bool) -> void:
 		if hud.coordinates_readout != null: hud.coordinates_readout.visible = enabled
 		_store("interface","coordinates",enabled))
-	add_child(coord_toggle)
-	add_child(HSeparator.new())
-	add_child(UI.label("게임 데이터",18,UI.GOLD))
+	stack.add_child(coord_toggle)
+	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("게임 데이터",18,UI.GOLD))
 	var actions := HBoxContainer.new()
-	add_child(actions)
+	stack.add_child(actions)
 	actions.add_child(UI.button("지금 저장",func() -> void: hud.save_pressed.emit(),Vector2(180,48)))
 	actions.add_child(UI.button("저장본 불러오기",_confirm_load,Vector2(190,48)))
-	add_child(UI.label("게임 저장·불러오기는 기존 로컬 세이브 시스템을 사용합니다. 불러오면 현재 미저장 진행도가 사라질 수 있습니다.",12,UI.MUTED))
+	stack.add_child(UI.section("불러오기 전, 현재 진행도를 저장하세요.",12))
 	var nav := HBoxContainer.new()
-	add_child(nav)
+	stack.add_child(nav)
 	nav.add_child(UI.button("월드맵",func() -> void: hud._navigate("map")))
 	nav.add_child(UI.button("캐릭터 · 장비",func() -> void: hud._navigate("character")))
 
@@ -93,12 +104,8 @@ func _mute_changed(value: bool) -> void:
 	_store("audio","muted",value)
 
 func _confirm_load() -> void:
-	var dialog := ConfirmationDialog.new()
-	dialog.title = "저장된 게임 불러오기"
-	dialog.dialog_text = "현재 미저장 진행도가 사라질 수 있습니다. 저장본을 불러올까요?"
+	var dialog := Dialog.new()
+	dialog.title_text = "저장된 게임 불러오기"
+	dialog.message_text = "현재 미저장 진행도가 사라질 수 있습니다. 저장본을 불러올까요?"
 	hud.get_node("Root").add_child(dialog)
-	dialog.confirmed.connect(func() -> void:
-		hud.load_pressed.emit()
-		dialog.queue_free())
-	dialog.canceled.connect(func() -> void: dialog.queue_free())
-	dialog.popup_centered(Vector2i(450,160))
+	dialog.confirmed.connect(func() -> void: hud.load_pressed.emit())

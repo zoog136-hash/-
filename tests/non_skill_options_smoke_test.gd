@@ -34,9 +34,9 @@ func _run() -> void:
 	world.set("equipped_items", {})
 	world.set("equipped_catalog", {"변신":{},"마법인형":{},"성물":{}})
 	var max_mp_before: int = int(world.call("_effective_max_mp"))
-	world.set("equipped_items", {"tshirt":{"name":"지식의 티셔츠", "slot":"tshirt", "desc":"방어 +2 · MP +30"}})
+	world.set("equipped_items", {"tshirt":{"name":"테스트용 MP+30 티셔츠", "slot":"tshirt", "desc":"방어 +2 · MP +30"}})
 	check(int(world.call("_effective_max_mp")) == max_mp_before + 30, "item MP+30 must increase actual max MP")
-	world.set("equipped_items", {"tshirt":{"name":"지식의 티셔츠", "slot":"tshirt", "mpFlat":30, "desc":"방어 +2 · MP +30"}})
+	world.set("equipped_items", {"tshirt":{"name":"테스트용 MP+30 티셔츠", "slot":"tshirt", "mpFlat":30, "desc":"방어 +2 · MP +30"}})
 	check(int(world.call("_effective_max_mp")) == max_mp_before + 30, "typed MP bonus must not stack with same description")
 
 	var weight: Dictionary = world.call("_character_stats_snapshot")

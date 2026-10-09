@@ -3,6 +3,19 @@ class_name TwilightMonster
 
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
+const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
+const VISUAL = preload("res://scripts/monsters/monster_visual.gd")
+var ai: Dictionary = {}
+var aggro_remaining: float = 0.0
+var life_id: int = 0
+var species_visual: TwilightMonsterVisual
+var special_sequence: int = -1
+var special_cooldown: float = 3.0
+var blink_cooldown: float = 0.0
+var returning_home: bool = false
+var decision_elapsed: float = 0.0
+var sight_clock: float = 0.0
+var sight_cached: bool = false
 var motion: TwilightActorMotion = MOTION.new()
 var animation_base_scale: Vector2 = Vector2.ONE
 var attack_interval: float = 1.25
@@ -97,6 +110,31 @@ var roaming_radius: float = 180.0
 var roam_clock: float = 0.0
 
 func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, texture: Texture2D) -> void:
+	# Full reset is required when a corpse is reused by the bounded field pool.
+	life_id += 1
+	motion = MOTION.new()
+	motion_connected = false
+	dead = false
+	damage_hit_count = 0
+	attack_cooldown = 0.
+	repath_cooldown = float(get_instance_id()%11)*.025
+	path = PackedVector2Array()
+	path_index = 0
+	velocity = Vector2.ZERO
+	stun_remaining = 0.; silence_remaining = 0.; hold_remaining = 0.; fear_remaining = 0.
+	poison_remaining = 0.; poison_tick_clock = 0.; bleed_remaining = 0.; bleed_tick_clock = 0.
+	aggro_remaining = 0.; returning_home = false
+	decision_elapsed = 0.; sight_clock = 0.; sight_cached = false
+	special_sequence = -1; special_cooldown = 3.; blink_cooldown = 0.; roam_clock = 0.
+	ai = (record.get("ai",{}) as Dictionary).duplicate(true)
+	show()
+	input_pickable = true
+	collision_layer = 2
+	collision_mask = 3
+	set_physics_process(true)
+	home_position = global_position
+	name_label.show(); hp_bar.show()
+	if has_node("GroundShadow"): $GroundShadow.show()
 	monster_name = str(record.get("name", "몬스터"))
 	monster_type = str(record.get("type", record.get("race", "")))
 	undead = bool(record.get("undead", monster_type == "언데드"))
@@ -174,6 +212,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	target_player = player_ref
 	world_controller = world_ref
 	sprite.texture = texture
+	sprite.material = null
 	if texture != null:
 		var size: Vector2 = texture.get_size()
 		var largest: float = maxf(size.x, size.y)
@@ -187,6 +226,18 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 42.0
 	_setup_animation(record)
+	if record.has("visual") and motion.frame_source==null:
+		sprite.material = MONSTER_ART.material_for(record.visual,sprite.texture)
+		if not is_instance_valid(species_visual):
+			species_visual = VISUAL.new()
+			species_visual.actor = self
+			add_child(species_visual)
+		species_visual.visual = record.visual
+		species_visual.special = ai.get("special",{})
+		species_visual.warning_active = false
+		species_visual.show()
+		species_visual.update_pose()
+	elif is_instance_valid(species_visual): species_visual.hide()
 
 func _physics_process(delta: float) -> void:
 	if dead:
@@ -194,14 +245,25 @@ func _physics_process(delta: float) -> void:
 		motion.advance(delta, Vector2.ZERO)
 		motion.apply(sprite, animation_base_scale)
 		animation_state = motion.state
-		if motion.death_clock >= 1.0: queue_free()
+		if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.queue_redraw()
+		if motion.death_clock >= 1.0:
+			if world_controller.has_method("recycle_monster") and world_controller.recycle_monster(self): return
+			queue_free()
 		return
 	var previous: Vector2 = global_position
-	_tick_ai(delta)
+	decision_elapsed += delta
+	if ai.is_empty() or decision_elapsed>=.032:
+		_tick_ai(decision_elapsed)
+		decision_elapsed = 0.
+	elif not motion.active and not is_stunned() and not is_held():
+		# Decisions/status clocks run at 30 Hz. Movement, facing, animation and
+		# strike markers still advance every physics frame at the engine cadence.
+		move_and_slide()
 	if is_stunned() or is_feared(): motion.cancel_attack()
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
 	if get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
 		motion.apply(sprite, animation_base_scale)
+		if is_instance_valid(species_visual): species_visual.update_pose()
 	animation_state = motion.state
 	if not motion.active and velocity.length_squared() > 1.0:
 		animation_state = "patrol" if velocity.length() < move_speed * 0.7 else "chase"
@@ -210,95 +272,158 @@ func _tick_ai(delta: float) -> void:
 	if dead or not is_instance_valid(target_player):
 		velocity = Vector2.ZERO
 		return
-	_tick_stun(delta)
-	_tick_silence(delta)
-	_tick_hold(delta)
-	_tick_fear(delta)
-	_tick_poison(delta)
-	_tick_bleed(delta)
-	_tick_slow(delta)
-	if dead:
-		velocity = Vector2.ZERO
-		return
-	if is_stunned():
-		velocity = Vector2.ZERO
-		move_and_slide()
-		return
-	attack_cooldown = maxf(0.0, attack_cooldown - delta)
-	repath_cooldown = maxf(0.0, repath_cooldown - delta)
+	_tick_stun(delta); _tick_silence(delta); _tick_hold(delta); _tick_fear(delta)
+	_tick_poison(delta); _tick_bleed(delta); _tick_slow(delta)
+	if dead: velocity = Vector2.ZERO; return
+	attack_cooldown = maxf(0.,attack_cooldown-delta)
+	repath_cooldown = maxf(0.,repath_cooldown-delta)
+	aggro_remaining = maxf(0.,aggro_remaining-delta)
+	special_cooldown = maxf(0.,special_cooldown-delta)
+	blink_cooldown = maxf(0.,blink_cooldown-delta)
+	sight_clock = maxf(0.,sight_clock-delta)
 	var distance: float = global_position.distance_to(target_player.global_position)
-	var ui_visible: bool = distance <= 420.0
-	name_label.visible = ui_visible
-	hp_bar.visible = ui_visible
-	var effective_attack_type: String = current_attack_type()
-	var attack_range: float = current_attack_range()
-	if is_feared():
-		if is_held():
-			velocity = Vector2.ZERO
-			path = PackedVector2Array()
-			path_index = 0
-			return
-		velocity = _fear_velocity()
-		path = PackedVector2Array()
-		path_index = 0
+	name_label.visible = distance<=520.
+	hp_bar.visible = distance<=520.
+	if is_stunned() or is_feared():
+		motion.cancel_attack()
+		if is_instance_valid(species_visual): species_visual.warning_active = false
+		velocity = _fear_velocity() if is_feared() and not is_held() else Vector2.ZERO
+		path = PackedVector2Array(); path_index = 0
 		move_and_slide()
-		if absf(velocity.x) > 1.0:
-			sprite.flip_h = velocity.x < 0.0
 		return
-	if motion.active:
-		velocity = Vector2.ZERO
+	var field_active: bool = world_controller.field_map!=null
+	var concealed: bool = world_controller.has_method("is_player_concealed") and world_controller.is_player_concealed()
+	var safe: bool = field_active and world_controller.field_map.is_safe(target_player.global_position)
+	var leash: float = float(ai.get("leash_distance",1050.))
+	if field_active and (safe or concealed or global_position.distance_to(home_position)>leash or target_player.global_position.distance_to(home_position)>leash):
+		motion.cancel_attack()
+		if is_instance_valid(species_visual): species_visual.warning_active = false
+		aggro_remaining = 0.
+		if not returning_home: repath_cooldown = 0.
+		returning_home = true
+		_move_toward(home_position,delta,.8)
+		if global_position.distance_to(home_position)<24.: returning_home = false
 		return
-	# Avoid line sampling to every distant monster on every physics tick.
-	var has_sight: bool = distance <= attack_range and world_controller._has_line_of_sight_world(global_position,target_player.global_position)
-	var field_active: bool = world_controller.field_map != null
-	if world_controller != null and world_controller.has_method("is_player_concealed") and world_controller.call("is_player_concealed"):
-		if field_active:
-			_roam_field(delta)
-		else:
-			_stop_chasing_concealed_player()
+	if concealed:
+		_stop_chasing_concealed_player()
 		return
-	if field_active and (world_controller.field_map.is_safe(target_player.global_position) or distance > 550.0 or target_player.global_position.distance_to(home_position) > 1050.0):
+	var provoked: bool = aggro_remaining>0. or (bool(ai.get("aggressive",true)) and distance<=float(ai.get("aggro_radius",550.)))
+	if field_active and not provoked:
+		motion.cancel_attack()
 		_roam_field(delta)
 		return
-	if distance <= attack_range and has_sight:
+	if provoked: aggro_remaining = maxf(aggro_remaining,2.)
+	var kind: String = current_attack_type()
+	var attack_range: float = current_attack_range()
+	if motion.active:
+		# A moving melee target can invalidate the windup and trigger pursuit;
+		# an already released projectile remains independent of this pose.
+		if kind=="melee" and not motion.released and special_sequence!=motion.sequence and distance>attack_range*1.35:
+			motion.cancel_attack()
+			repath_cooldown = 0.
+		else:
+			velocity = Vector2.ZERO
+			if is_instance_valid(species_visual) and species_visual.warning_active:
+				species_visual.warning_progress = clampf(motion.attack_elapsed/maxf(.01,motion.attack_duration*motion.attack_hit_ratio),0.,1.)
+			return
+	if sight_clock<=0.:
+		sight_clock = .12+float(get_instance_id()%5)*.008
+		sight_cached = world_controller._has_line_of_sight_world(global_position,target_player.global_position) if distance<=maxf(attack_range,620. if is_boss else attack_range) else false
+	var sight: bool = sight_cached and distance<=maxf(attack_range,620. if is_boss else attack_range)
+	if is_boss and ai.has("special") and special_cooldown<=0. and distance<=620. and sight and not is_silenced():
+		_begin_special()
+		return
+	if bool(ai.get("blink",false)) and distance<105. and blink_cooldown<=0. and not is_held():
+		blink_cooldown = 8.
+		var goal: Vector2 = target_player.global_position+target_player.global_position.direction_to(global_position)*190.
+		if field_active and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and not world_controller.field_map.is_safe(goal):
+			global_position = goal
+			repath_cooldown = 0.
+			if world_controller.combat_vfx!=null: world_controller.combat_vfx.ring(global_position,40.,Color(.7,.4,1.))
+	var retreat: float = float(ai.get("retreat_distance",0))
+	if kind in ["ranged","magic"] and distance<retreat and not is_held() and field_active:
+		var goal: Vector2 = global_position+target_player.global_position.direction_to(global_position)*72.
+		if world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal):
+			_move_toward(goal,delta,.85)
+			return
+	if distance<=attack_range and sight:
 		velocity = Vector2.ZERO
-		if attack_cooldown <= 0.0:
+		if attack_cooldown<=0.:
 			attack_cooldown = attack_interval
-			var style: String = motion.profile.motion_style if effective_attack_type == "melee" else ("magic" if effective_attack_type == "magic" else "bow")
-			motion.begin_attack(minf(0.68, attack_interval * 0.75), target_player.global_position - global_position, style, motion.profile.marker_for(style))
+			var style: String = motion.profile.motion_style if kind=="melee" else ("magic" if kind=="magic" else "bow")
+			motion.begin_attack(minf(.68,attack_interval*.75),target_player.global_position-global_position,style,motion.profile.marker_for(style))
 		return
 	if is_held():
 		velocity = Vector2.ZERO
-		path = PackedVector2Array()
+		path = PackedVector2Array(); path_index = 0
+		return
+	if distance>float(ai.get("aggro_radius",760.))*1.7:
+		velocity = Vector2.ZERO
+		return
+	_move_toward(target_player.global_position,delta)
+
+func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
+	if is_held(): velocity = Vector2.ZERO; return
+	if repath_cooldown<=0.:
+		repath_cooldown = .65+float(get_instance_id()%7)*.015
+		# Most crowded fights are in one open hunting room. Avoid one expensive
+		# AStar search per creature when its straight movement corridor is clear.
+		if world_controller.field_map!=null and world_controller.field_map.line_clear(global_position,goal):
+			path = PackedVector2Array([goal])
+		else:
+			path = world_controller.find_world_path(global_position,goal)
 		path_index = 0
-		return
-	if distance > 760.0:
-		velocity = Vector2.ZERO
-		return
-
-	if repath_cooldown <= 0.0:
-		repath_cooldown = 0.65
-		navigation_agent.target_position = target_player.global_position
-		if world_controller != null and world_controller.has_method("find_world_path"):
-			var result: PackedVector2Array = world_controller.find_world_path(global_position, target_player.global_position)
-			path = result
-			path_index = 0
-
-	if path.is_empty() or path_index >= path.size():
-		velocity = Vector2.ZERO
-		return
-	var move_target: Vector2 = path[path_index]
-	if path_index < path.size():
-		move_target = path[path_index]
-		if global_position.distance_to(move_target) < 10.0:
-			path_index += 1
-			if path_index < path.size():
-				move_target = path[path_index]
-	var direction: Vector2 = global_position.direction_to(move_target)
-	velocity = direction * minf(move_speed,global_position.distance_to(move_target)/maxf(delta,.001))
+	while path_index<path.size() and global_position.distance_to(path[path_index])<8.: path_index += 1
+	if path_index>=path.size(): velocity = Vector2.ZERO; return
+	var point: Vector2 = path[path_index]
+	velocity = global_position.direction_to(point)*minf(move_speed*speed_ratio,global_position.distance_to(point)/maxf(.001,delta))
 	move_and_slide()
-	if absf(velocity.x) > 1.0:
-		sprite.flip_h = velocity.x < 0.0
+
+func _begin_special() -> void:
+	var skill: Dictionary = ai.special
+	var aim: Vector2 = target_player.global_position-global_position
+	special_cooldown = float(skill.get("cooldown",12.))*(.7 if hp*2<max_hp else 1.)
+	velocity = Vector2.ZERO
+	special_sequence = motion.begin_attack(float(skill.get("windup",1.15)),aim,"magic",.85)
+	if is_instance_valid(species_visual):
+		species_visual.warning_active = true
+		species_visual.warning_center = global_position
+		species_visual.warning_aim = aim.normalized()
+		species_visual.warning_progress = 0.
+	if world_controller.has_method("show_combat_number"):
+		world_controller.show_combat_number(global_position+Vector2(0,-visual_height-30),str(skill.get("label","특수 공격")),Color(1,.55,.2),true)
+
+func _resolve_special() -> void:
+	if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.queue_redraw()
+	if dead or is_stunned() or is_feared() or is_silenced() or not _target_attackable(): return
+	var skill: Dictionary = ai.special
+	var kind: String = str(skill.get("kind","nova"))
+	var center: Vector2 = species_visual.warning_center if is_instance_valid(species_visual) else global_position
+	var aim: Vector2 = species_visual.warning_aim if is_instance_valid(species_visual) else motion.direction
+	var relative: Vector2 = target_player.global_position-center
+	var radius: float = float(skill.get("radius",200))
+	var hit: bool = relative.length()<=radius
+	if kind in ["beam","charge","cone"]:
+		var projection: float = relative.dot(aim)
+		var width: float = 55. if kind!="cone" else 95.
+		hit = projection>=0. and projection<=radius*2. and absf(relative.cross(aim))<=width
+		if kind=="cone": hit = relative.length()<=radius*2. and relative.normalized().dot(aim)>=cos(.55)
+	if kind=="charge":
+		var goal: Vector2 = center+aim*minf(radius*2.,relative.length())
+		if world_controller.field_map!=null and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and world_controller.field_map.line_clear(center,goal):
+			global_position = goal
+	if kind=="summon":
+		if world_controller.field_population!=null: world_controller.field_population.summon_for(self)
+		hit = false
+	if kind=="volley" and world_controller.combat_flights!=null:
+		for i: int in range(3):
+			_launch_projectile(special_sequence,"ranged",float(i)*.14,.55)
+		hit = false
+	if world_controller.combat_vfx!=null:
+		world_controller.combat_vfx.ring(center,minf(radius,150.),Color(1,.34,.15))
+	if hit and world_controller._has_line_of_sight_world(center,target_player.global_position):
+		player_hit.emit(self,int(attack_power*float(skill.get("multiplier",1.6))),"magic" if kind not in ["charge","cone"] else "melee")
+		if kind=="drain": hp = mini(max_hp,hp+attack_power*2); hp_bar.value = hp
 
 func _stop_chasing_concealed_player() -> void:
 	velocity = Vector2.ZERO
@@ -314,6 +439,8 @@ func _roam_field(delta: float) -> void:
 		roam_clock = world_controller.rng.randf_range(3.5,7.0)
 		var angle: float = world_controller.rng.randf_range(0.0,TAU)
 		var goal: Vector2 = home_position + Vector2.from_angle(angle)*world_controller.rng.randf_range(30.0,roaming_radius)
+		if world_controller.field_map.is_safe(goal) or not world_controller.field_map.walkable(goal) or not world_controller.field_map.point_clear(goal):
+			goal = home_position
 		path = world_controller.find_world_path(global_position,goal)
 		path_index = 0
 	while path_index < path.size() and global_position.distance_to(path[path_index]) < 8:
@@ -524,6 +651,9 @@ func take_damage(amount: int, critical: bool = false, damage_kind: String = "") 
 	if dead:
 		return
 	damage_hit_count += 1
+	aggro_remaining = 10.
+	if world_controller!=null and world_controller.get("field_population")!=null:
+		world_controller.field_population.alert_social(self)
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
 	_show_damage_number(amount, critical)
@@ -608,6 +738,10 @@ func _setup_animation(record: Dictionary) -> void:
 	visual_height = float(record.get("visual_height", 92.0 if is_boss else (62.0 if motion.profile.motion_style == "crawl" else 72.0)))
 	if sprite.texture != null:
 		animation_base_scale = Vector2.ONE * (visual_height / maxf(1.0, maxf(sprite.texture.get_width(), sprite.texture.get_height())))
+		if record.has("visual") and motion.frame_source==null:
+			var scale_value: float = minf(visual_height/maxf(1.,sprite.texture.get_height()),visual_height*1.65/maxf(1.,sprite.texture.get_width()))
+			animation_base_scale = Vector2.ONE*scale_value
+			visual_height = sprite.texture.get_height()*scale_value
 	else:
 		animation_base_scale = Vector2.ONE
 	# Foot anchor and hit point depend on visible body size, not one fixed offset.
@@ -622,10 +756,9 @@ func _setup_animation(record: Dictionary) -> void:
 		if value is Array and value.size() == 2: motion.profile.set(property, Vector2(value[0], value[1]))
 	attack_interval = maxf(0.12, float(record.get("attack_interval", 1.25)))
 	configured_attack_range = maxf(0.0, float(record.get("attack_range", 0.0)))
-	if record.has("collision_radius"):
-		var shape: CircleShape2D = $CollisionShape2D.shape.duplicate() as CircleShape2D
-		shape.radius = maxf(1.0, float(record.collision_radius))
-		$CollisionShape2D.shape = shape
+	var shape: CircleShape2D = $CollisionShape2D.shape.duplicate() as CircleShape2D
+	shape.radius = maxf(1.0,float(record.get("collision_radius",19.)))
+	$CollisionShape2D.shape = shape
 	$CollisionShape2D.position = motion.profile.collision_offset
 	name_label.position.y = -visual_height - 20.0
 	hp_bar.position.y = -visual_height - 4.0
@@ -650,20 +783,40 @@ func combat_hit_position() -> Vector2:
 func _release_attack(id: int) -> void:
 	if dead or id != motion.sequence or not is_instance_valid(target_player): return
 	if is_stunned() or is_feared(): return
+	if id==special_sequence:
+		_resolve_special()
+		return
 	if global_position.distance_to(target_player.global_position) > current_attack_range(): return
 	if not world_controller._has_line_of_sight_world(global_position, target_player.global_position): return
 	if world_controller.is_player_concealed(): return
 	if world_controller.field_map != null and world_controller.field_map.is_safe(target_player.global_position): return
 	var kind: String = current_attack_type()
 	if kind in ["ranged", "magic"] and world_controller.combat_flights != null:
-		var offset: Vector2 = motion.profile.projectile_origin
-		offset.x *= -1.0 if motion.direction.x < 0.0 else 1.0
-		var origin: Vector2 = global_position + offset
-		world_controller.combat_flights.launch(origin, target_player, kind, _resolve_attack.bind(id, kind), 800.0 if kind == "magic" else 1100.0)
+		_launch_projectile(id,kind)
 	else:
 		_resolve_attack(id, kind)
 
-func _resolve_attack(id: int, kind: String) -> void:
-	if dead or id != motion.sequence or not is_instance_valid(target_player): return
-	if world_controller.hp <= 0: return
-	player_hit.emit(self, attack_power, kind)
+func _target_attackable() -> bool:
+	if not is_instance_valid(target_player) or world_controller.hp<=0: return false
+	if world_controller.is_player_concealed(): return false
+	return world_controller.field_map==null or not world_controller.field_map.is_safe(target_player.global_position)
+
+func _launch_projectile(id: int, kind: String, delay: float = 0., ratio: float = 1.) -> void:
+	var aim: Vector2 = target_player.combat_hit_position()
+	var origin: Vector2 = combat_hit_position()+motion.direction*visual_height*.18
+	var color: Color = {"fire":Color(1,.35,.10),"water":Color(.2,.7,1),"wind":Color(.5,1,.75),"earth":Color(.8,.65,.35),"dark":Color(.75,.4,1)}.get(attack_element,Color(1,.87,.5))
+	world_controller.combat_flights.launch(origin,target_player,kind,_resolve_attack.bind(id,kind,life_id,ratio),800. if kind=="magic" else 1100.,delay,
+		{"aim":aim,"hit_radius":30.,"obstruction":_projectile_clear,"color":color})
+
+func _projectile_clear(from: Vector2, to: Vector2) -> bool:
+	if dead: return false
+	# Projectiles draw at torso height; map obstruction checks use their ground
+	# projection, the same navigational/physical geometry as walking actors.
+	var offset: Vector2 = motion.profile.hit_position
+	return world_controller._has_line_of_sight_world(from-offset,to-offset)
+
+func _resolve_attack(id: int, kind: String, born: int = -1, ratio: float = 1.) -> void:
+	if dead or (born!=-1 and born!=life_id) or not _target_attackable(): return
+	if kind=="melee" and (id!=motion.sequence or global_position.distance_to(target_player.global_position)>current_attack_range()): return
+	if not world_controller._has_line_of_sight_world(global_position,target_player.global_position): return
+	player_hit.emit(self,maxi(1,int(attack_power*ratio)),kind)

@@ -52,6 +52,42 @@ var region_selection: ItemList
 var quest_view: Control
 var class_picker_initial: bool = false
 var class_picker_backdrop: ColorRect
+var minimap_mounted: bool = false
+var cooldown_shades: Array[ColorRect] = []
+var catalog_test_tools: VBoxContainer
+var catalog_test_toggle: Button
+var catalog_clear_button: Button
+
+func _build_v20_status() -> void:
+	super._build_v20_status()
+	var panel: PanelContainer = v20_layer.get_node("StatusPanel")
+	_place(panel,10,8,337,97)
+	var content: Control = panel.get_child(0)
+	content.custom_minimum_size = Vector2(327,89)
+	_place(content.get_child(0),6,5,70,72)
+	_place(content.get_node("CharacterShortcut"),6,5,70,72)
+	_place(v20_level_badge,58,56,86,80)
+	_place(v20_status_name,78,3,318,24)
+	v20_status_name.add_theme_font_size_override("font_size",13)
+	_place(hp_bar,78,26,318,42)
+	_place(v20_hp_text,78,25,318,43)
+	_place(mp_bar,78,46,318,62)
+	_place(v20_mp_text,78,45,318,63)
+	_place(v20_stat_text,78,66,318,85)
+	v20_stat_text.add_theme_font_size_override("font_size",11)
+	for child: Node in v20_layer.get_children():
+		if child is Button and is_equal_approx(child.position.x,380.0):
+			_place(child,348,8,397,65)
+		elif child is Button and is_equal_approx(child.position.x,442.0):
+			_place(child,403,8,452,65)
+	_place(v20_potion_count,348,47,396,69)
+	_place(v20_leaf_count,403,47,451,69)
+
+func set_auto(enabled: bool) -> void:
+	super.set_auto(enabled)
+	if v20_auto_button != null:
+		v20_auto_button.text = "AUTO\nON" if enabled else "AUTO"
+		v20_auto_button.add_theme_stylebox_override("normal",_round_button_style(.88,42,Color("69c49b") if enabled else UI.BRONZE))
 
 func _ready() -> void:
 	super._ready()
@@ -61,6 +97,7 @@ func _ready() -> void:
 	workspace.navigate.connect(_navigate)
 	workspace.closed.connect(_close_workspace)
 	workspace.resized.connect(_fit_catalog_browser_layout)
+	workspace.content.resized.connect(_fit_catalog_browser_layout)
 	get_window().size_changed.connect(_fit_catalog_browser_layout)
 	# Starting-character selection is a genuine modal on PC and Android.
 	class_picker_backdrop = ColorRect.new()
@@ -76,9 +113,9 @@ func _ready() -> void:
 	joystick.offset_top = -244
 	joystick.offset_bottom = -84
 	get_viewport().size_changed.connect(_fit_hud)
+	_polish_hud_chrome()
 	_fit_hud()
 	SettingsUI.apply_saved(self)
-	_polish_hud_chrome()
 
 func _polish_hud_chrome() -> void:
 	# The old canvas still owns all HP, MP, combat and touch signals.
@@ -93,6 +130,9 @@ func _polish_hud_chrome() -> void:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
 	if v20_map_name != null:
 		v20_map_name.add_theme_color_override("font_color",UI.GOLD)
+		_place(v20_map_name.get_parent(),755,10,933,44)
+		v20_map_name.add_theme_font_size_override("font_size",11)
+		v20_map_name.clip_text = true
 
 func _build_lineage_inventory_ui() -> void:
 	lineage_inventory_ui = Inventory.new() as TwilightInventoryUI
@@ -120,10 +160,7 @@ func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if is_instance_valid(quest_view):
 		quest_view.call("refresh", value)
-	if lineage_inventory_ui != null and lineage_side_ui != null:
-		# The world is authoritative for weight, encumbrance, item IDs and buffs.
-		# Do not recompute per-name weight or overwrite the per-instance snapshot.
-		lineage_side_ui.set_character_state(value.duplicate(true))
+	# hud_v20 already forwards this authoritative snapshot to both adapters.
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)
@@ -134,14 +171,14 @@ func _build_v20_buffs() -> void:
 	buff_row = HBoxContainer.new()
 	buff_row.name = "ActiveEffects"
 	buff_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(buff_row,12,123,430,160)
+	_place(buff_row,12,102,430,146)
 	v20_layer.add_child(buff_row)
 
 func _build_v20_quest() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "QuestTracker"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,12,188,294,318)
+	_place(panel,12,157,298,267)
 	panel.add_theme_stylebox_override("panel",_panel_style(.86))
 	v20_layer.add_child(panel)
 	var v := VBoxContainer.new()
@@ -160,7 +197,7 @@ func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "MainShortcuts"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,864,9,1268,78)
+	_place(panel,943,9,1268,78)
 	panel.add_theme_stylebox_override("panel",_panel_style(.9))
 	v20_layer.add_child(panel)
 	var row := HBoxContainer.new()
@@ -169,7 +206,7 @@ func _build_v20_top_menu() -> void:
 	panel.add_child(row)
 	for spec: Array in [["shop","상점","shop.png"],["inventory","가방","bag.png"],["skills","스킬","skill.png"],["map","지도","quest.png"],["menu","메뉴","menu.png"]]:
 		var id := str(spec[0])
-		var b := UI.button("",_navigate.bind(id),Vector2(72,53))
+		var b := UI.button("",_navigate.bind(id),Vector2(59,53))
 		b.name = "Shortcut_"+id
 		b.tooltip_text = str(spec[1])
 		b.add_theme_stylebox_override("normal",UI.slot_frame())
@@ -177,16 +214,16 @@ func _build_v20_top_menu() -> void:
 		b.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		row.add_child(b)
 		var artwork := TextureRect.new()
-		artwork.texture = _load_texture("res://assets/ui/"+str(spec[2]))
+		artwork.texture = UI.icon(id)
 		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		artwork.position = Vector2(22,3)
+		artwork.position = Vector2(14,3)
 		artwork.size = Vector2(28,28)
 		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(artwork)
 		var label := UI.label(str(spec[1]),11,UI.TEXT)
 		label.position = Vector2(0,34)
-		label.size = Vector2(72,16)
+		label.size = Vector2(59,16)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		b.add_child(label)
 
@@ -199,7 +236,7 @@ func _build_v20_right_controls() -> void:
 	v20_layer.add_child(v20_self_button)
 	var target := UI.button("대상",func() -> void: target_pressed.emit())
 	target.name = "SelectTarget"
-	target.icon = _load_texture("res://assets/ui/eye.png")
+	target.icon = UI.icon("target")
 	_place(target,1162,449,1268,491)
 	v20_layer.add_child(target)
 	v20_auto_button = UI.button("AUTO",func() -> void: auto_pressed.emit())
@@ -222,9 +259,10 @@ func _build_v20_right_controls() -> void:
 	var attack: Button = $Root/RightControls/AttackButton
 	attack.custom_minimum_size = Vector2.ZERO
 	attack.add_theme_font_size_override("font_size",14)
-	attack.icon = _load_texture("res://assets/ui/attack.png")
+	attack.text = ""
+	attack.icon = UI.icon("attack")
 	attack.expand_icon = true
-	attack.add_theme_constant_override("icon_max_width",42)
+	attack.add_theme_constant_override("icon_max_width",66)
 	_place(attack,1157,514,1268,625)
 	attack.add_theme_stylebox_override("normal",_round_button_style(.9,56,UI.GOLD))
 	attack.add_theme_stylebox_override("hover",_round_button_style(.98,56,UI.GOLD))
@@ -253,13 +291,13 @@ func _build_v20_bottom_bar() -> void:
 		var icon := TextureRect.new()
 		icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position=Vector2(22,4)
-		icon.size=Vector2(32,32)
+		icon.position=Vector2(13,4)
+		icon.size=Vector2(50,44)
 		icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		b.add_child(icon)
 		quickslot_icons.append(icon)
 		var caption := UI.label("",10)
-		caption.position=Vector2(4,38)
+		caption.position=Vector2(4,46)
 		caption.size=Vector2(68,18)
 		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		b.add_child(caption)
@@ -271,6 +309,13 @@ func _build_v20_bottom_bar() -> void:
 		badge.position=Vector2(42,1)
 		b.add_child(badge)
 		quickslot_auto_badges.append(badge)
+		var shade := ColorRect.new()
+		shade.color = Color(0,0,0,.68)
+		shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		shade.hide()
+		b.add_child(shade)
+		cooldown_shades.append(shade)
 		var cooldown := UI.label("",14,Color.WHITE)
 		cooldown.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		cooldown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -286,15 +331,20 @@ func _build_v20_bottom_bar() -> void:
 	exp_bar.show_percentage = false
 	exp_bar.add_theme_stylebox_override("background",_bar_background())
 	exp_bar.add_theme_stylebox_override("fill",_bar_fill(UI.GOLD))
-	_place(exp_bar,12,709,330,716)
+	exp_bar.name = "ExperienceGauge"
+	_place(exp_bar,0,715,1280,720)
 	v20_layer.add_child(exp_bar)
 	var sys := HBoxContainer.new()
 	_place(sys,12,638,330,679)
 	v20_layer.add_child(sys)
 	for pair: Array in [["auto","사냥 설정"],["log","기록"],["settings","설정"]]:
-		sys.add_child(UI.button(str(pair[1]),_navigate.bind(str(pair[0])),Vector2(94,36)))
+		var system_button := UI.button(str(pair[1]),_navigate.bind(str(pair[0])),Vector2(94,36))
+		system_button.icon = UI.icon(str(pair[0]))
+		system_button.add_theme_constant_override("icon_max_width",16)
+		system_button.add_theme_font_size_override("font_size",11)
+		sys.add_child(system_button)
 	currency_readout = UI.label("아데나  0",14,UI.GOLD)
-	_place(currency_readout,420,113,748,139)
+	_place(currency_readout,468,12,748,40)
 	v20_layer.add_child(currency_readout)
 	coordinates_readout = UI.label("",11,UI.MUTED)
 	_place(coordinates_readout,1038,277,1268,298)
@@ -302,7 +352,7 @@ func _build_v20_bottom_bar() -> void:
 	v20_layer.add_child(coordinates_readout)
 	var home := UI.button("귀환",func() -> void: return_pressed.emit(),Vector2(88,44))
 	home.name = "ReturnToSpawn"
-	home.icon = _load_texture("res://assets/ui/return.png")
+	home.icon = UI.icon("return")
 	_place(home,1080,649,1268,704)
 	v20_layer.add_child(home)
 
@@ -323,12 +373,45 @@ func _build_v20_message_and_log() -> void:
 	v20_layer.add_child(log_label)
 
 func _fit_hud() -> void:
-	# Project canvas_items/keep scales the 1280x720 logical canvas exactly.
-	if workspace != null:
-		workspace.fit_viewport()
+	if v20_layer == null: return
+	var view: Vector2 = get_viewport().get_visible_rect().size
+	var factor: float = minf(view.x/1280.0,view.y/720.0)
+	var logical: Vector2 = view/maxf(.01,factor)
+	v20_layer.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	v20_layer.position = Vector2.ZERO
+	v20_layer.size = logical
+	v20_layer.scale = Vector2.ONE*factor
+	var controls: Control = $Root/RightControls
+	controls.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	controls.position = Vector2.ZERO
+	controls.size = logical
+	controls.scale = Vector2.ONE*factor
+	var extra_y: float = logical.y-720
+	var extra_x: float = logical.x-1280
+	for node: Node in v20_layer.get_children()+controls.get_children():
+		if not node is Control: continue
+		var control: Control = node
+		if not control.has_meta("renewal_base_position"):
+			control.set_meta("renewal_base_position",control.position)
+		var base: Vector2 = control.get_meta("renewal_base_position")
+		control.position = base
+		if base.y >= 449: control.position.y += extra_y
+		if base.x >= 943: control.position.x += extra_x
+		elif control.name == "Quickslots" or control == v20_target_panel:
+			control.position.x += extra_x*.5
+	exp_bar.size.x = logical.x
+	joystick.scale = Vector2.ONE*factor
+	if workspace != null: workspace.fit_viewport()
 
 func _process(delta: float) -> void:
 	super._process(delta)
+	if not minimap_mounted:
+		var minimap: Control = $Root.get_node_or_null("FieldMinimap")
+		if minimap != null:
+			minimap.reparent(v20_layer)
+			_place(minimap,1042,86,1264,277)
+			minimap_mounted = true
+			_fit_hud()
 	refresh_clock -= delta
 	if refresh_clock>0:
 		return
@@ -345,6 +428,7 @@ func _process(delta: float) -> void:
 		if index<quickslot_entries.size() and quickslot_entries[index] is Dictionary:
 			remain = float(cds.get(str(quickslot_entries[index].get("id","")),0))
 		quickslot_cooldown_labels[index].text = "%.1f" % remain if remain>0 else ""
+		if index < cooldown_shades.size(): cooldown_shades[index].visible = remain > 0
 	if workspace != null and workspace.visible:
 		workspace.footer.text = "아데나  %s  ·  Lv.%d  ·  %s  ·  Esc로 닫기" % [lineage_inventory_ui._format_number(int(character_state.get("gold",0))),int(character_state.get("level",1)),v20_map_name.text]
 	if v20_target_panel.visible:
@@ -354,6 +438,13 @@ func _process(delta: float) -> void:
 
 func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience_value: int,exp_need: int,gold: int) -> void:
 	super.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
+	# Preserve latest main's HP-only combat refresh (PR #43).
+	var vitals: Dictionary = {"hp":hp,"max_hp":max_hp,"mp":mp,"max_mp":max_mp}
+	character_state.merge(vitals, true)
+	if is_instance_valid(lineage_side_ui):
+		lineage_side_ui.update_vitals(hp,max_hp,mp,max_mp)
+	if is_instance_valid(lineage_inventory_ui):
+		lineage_inventory_ui.character_state.merge(vitals,true)
 	if exp_readout != null:
 		exp_readout.text = "Lv.%d  ·  EXP %.2f%%" % [level,float(experience_value)*100/maxi(1,exp_need)]
 	if currency_readout != null:
@@ -376,8 +467,20 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 	for key: Variant in buffs.keys().slice(0,8):
 		var effect: Variant = buffs[key]
 		var time: int = int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
-		var b := UI.button("%ds" % time,open_character,Vector2(44,32))
-		b.icon = _load_texture("res://assets/ui/rune.png")
+		var b := UI.button("",open_character,Vector2(36,42))
+		var icon := TextureRect.new()
+		icon.texture = _load_texture("res://assets/ui/rune.png")
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.position = Vector2(5,2)
+		icon.size = Vector2(26,25)
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(icon)
+		var remaining := UI.label("%ds" % time,10,UI.GOLD)
+		remaining.position = Vector2(0,27)
+		remaining.size = Vector2(36,15)
+		remaining.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		b.add_child(remaining)
 		b.add_theme_font_size_override("font_size",10)
 		b.tooltip_text = str(key)+" · %d초" % time
 		buff_row.add_child(b)
@@ -503,15 +606,32 @@ func open_settings_info() -> void:
 	options.configure(self)
 
 func open_macro_info() -> void:
-	_open_window("auto","자동사냥","기존 게임의 AUTO 상태를 제어합니다.")
+	_open_window("auto","자동사냥","사냥 상태 · 전투와 습득")
 	var col: VBoxContainer = workspace.column()
 	var player: Node = get_parent().get("player")
 	var enabled := bool(player.get("auto_enabled")) if player != null else false
-	col.add_child(UI.label("AUTO 현재 상태: "+"켜짐" if enabled else "AUTO 현재 상태: 꺼짐",22,UI.GOLD))
-	col.add_child(UI.label("근처의 목표를 찾고 이동·공격하는 기존 자동사냥을 사용합니다.",13,UI.MUTED))
+	var banner := PanelContainer.new()
+	banner.add_theme_stylebox_override("panel",UI.chrome_panel(Color("151b1b"),UI.BRONZE,18))
+	col.add_child(banner)
+	var row := HBoxContainer.new()
+	banner.add_child(row)
+	var emblem := TextureRect.new()
+	emblem.texture = UI.icon("auto")
+	emblem.custom_minimum_size = Vector2(64,64)
+	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	row.add_child(emblem)
+	row.add_child(UI.section("AUTO  ·  사냥 중" if enabled else "AUTO  ·  대기 중",22))
 	col.add_child(UI.button("AUTO 끄기" if enabled else "AUTO 켜기",func() -> void:
 		auto_pressed.emit()
-		open_macro_info(),Vector2(220,52)))
+		open_macro_info(),Vector2(220,48)))
+	for pair: Array in [["목표 탐색","주변 몬스터 탐색 및 이동"],["전투","현재 장비와 스킬 · 등록된 자동 사용"],["습득","바닥 드랍을 통한 자동 아이템 습득"]]:
+		col.add_child(HSeparator.new())
+		col.add_child(UI.section(str(pair[0]),14))
+		col.add_child(UI.section(str(pair[1]),12))
+	var routes := HBoxContainer.new()
+	col.add_child(routes)
+	routes.add_child(UI.button("스킬 · 자동 사용",func() -> void: _navigate("skills")))
+	routes.add_child(UI.button("인벤토리",func() -> void: _navigate("inventory")))
 
 func open_chat_info() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
@@ -536,8 +656,17 @@ func toggle_inventory() -> void:
 func open_character() -> void:
 	_open_window("character","캐릭터 · 장비","현재 능력치와 착용 장비 · 남은 포인트로 능력치 증가")
 	var panel: PanelContainer = lineage_side_ui.character_panel
-	panel.reparent(workspace.content)
-	panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if workspace.content.size.y < 460 or workspace.content.size.x < 630:
+		var scroll := ScrollContainer.new()
+		scroll.name = "CharacterCompactScroll"
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		workspace.mount(scroll)
+		panel.reparent(scroll)
+		panel.custom_minimum_size = Vector2(0,490)
+		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	else:
+		panel.custom_minimum_size = Vector2.ZERO
+		workspace.mount(panel)
 	panel.show()
 	lineage_side_ui.show_character(character_state)
 
@@ -547,8 +676,6 @@ func toggle_menu() -> void:
 		return
 	_open_window("menu","황혼의 기록","TWILIGHT  /  ADEN CHRONICLES")
 	var col: VBoxContainer = workspace.column()
-	col.add_child(UI.label("모험의 모든 기록",28,UI.GOLD))
-	col.add_child(UI.label("장비를 정비하고, 새로운 전투를 준비하세요.",14,UI.MUTED))
 	var menu_scroll := ScrollContainer.new()
 	menu_scroll.name = "MenuContentScroll"
 	menu_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -557,21 +684,33 @@ func toggle_menu() -> void:
 	menu_scroll.scroll_deadzone = 8
 	col.add_child(menu_scroll)
 	var grid := GridContainer.new()
-	grid.columns = 3
+	grid.columns = 5
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
-	for pair: Array in [["character","캐릭터 · 장비","shield.png"],["class_select","클래스 선택","sword.png"],["inventory","인벤토리","bag.png"],["skills","스킬 · 성장","skill.png"],["변신","변신","rune.png"],["마법인형","마법인형","rune.png"],["성물","성물","energy.png"],["map","월드맵","quest.png"],["quest","퀘스트","quest.png"],["shop","잡화 상점","shop.png"],["enhance","장비 강화","sword.png"],["auto","자동사냥","macro.png"],["settings","설정","settings.png"]]:
+	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,5))
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
-		var button: Button = UI.button(str(pair[1]),func() -> void:
+		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
-				_navigate(section_id),Vector2(210,72))
+				_navigate(section_id),Vector2(92,88))
 		button.name = "MenuTile_"+section_id
-		button.icon = _load_texture("res://assets/ui/"+str(pair[2]))
-		button.expand_icon = true
-		button.add_theme_constant_override("icon_max_width",35)
 		button.add_theme_stylebox_override("normal",UI.slot_frame())
 		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
+		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
+		var artwork := TextureRect.new()
+		artwork.texture = UI.icon(section_id)
+		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		artwork.position = Vector2(26,8)
+		artwork.size = Vector2(40,40)
+		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(artwork)
+		var caption := UI.label(str(pair[1]),11)
+		caption.position = Vector2(0,58)
+		caption.size = Vector2(92,20)
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		button.add_child(caption)
 		grid.add_child(button)
 		workspace.register_scroll_drag(menu_scroll,button)
 
@@ -605,12 +744,16 @@ func open_catalog(category: String) -> void:
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
 	catalog_search.set_text("")
-	collection_status.text = "테스트 모드 · 도감에서 선택 아이템 지급 / 강화 주문서 ×10 / 아데나 1억" if category=="아이템" else "보유·획득 시스템 미연결 · 기존 로컬 도감 적용 기능"
+	collection_status.text = "아이템 원본 목록 · 보유 아이템 장착 및 사용" if category=="아이템" else "전체 도감 · 현재 적용 상태 확인"
 	playtest_grant_button.visible = category == "아이템"
 	playtest_grant_button.disabled = true
 	playtest_aden_button.visible = category == "아이템"
 	for grant: Button in playtest_scroll_buttons:
 		grant.visible = category == "아이템"
+	catalog_clear_button.visible = category != "아이템"
+	catalog_test_toggle.visible = category == "아이템"
+	catalog_test_tools.hide()
+	catalog_test_toggle.button_pressed = false
 	_refresh_catalog_list("")
 	catalog_details_active = false
 	_fit_catalog_browser_layout()
@@ -667,7 +810,7 @@ func _build_catalog_panel() -> void:
 	catalog_list.custom_minimum_size = Vector2(530,0)
 	catalog_list.max_columns = 4
 	catalog_list.fixed_column_width = 126
-	catalog_list.fixed_icon_size = Vector2i(94,94)
+	catalog_list.fixed_icon_size = Vector2i(78,78)
 	catalog_list.icon_mode = ItemList.ICON_MODE_TOP
 	catalog_list.max_text_lines = 2
 	catalog_list.same_column_width = true
@@ -698,34 +841,47 @@ func _build_catalog_panel() -> void:
 	body.add_child(right_scroll)
 	var right := VBoxContainer.new()
 	right.custom_minimum_size.x = 300
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_scroll.add_child(right)
 	catalog_preview.reparent(right)
-	catalog_preview.custom_minimum_size = Vector2(0,160)
+	catalog_preview.custom_minimum_size = Vector2(0,190)
 	catalog_detail.reparent(right)
 	catalog_detail.custom_minimum_size = Vector2(0,0)
+	catalog_detail.fit_content = true
+	catalog_detail.scroll_active = false
+	catalog_detail.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	catalog_detail.add_theme_font_size_override("normal_font_size",14)
 	catalog_equip_button.reparent(right)
 	catalog_equip_button.name = "ApplyCatalog"
-	var remove := UI.button("현재 적용 해제",func() -> void:
+	catalog_clear_button = UI.button("현재 적용 해제",func() -> void:
 		if catalog_category != "아이템": catalog_equip_requested.emit(catalog_category,{}))
-	remove.name = "ClearCatalog"
-	right.add_child(remove)
+	catalog_clear_button.name = "ClearCatalog"
+	right.add_child(catalog_clear_button)
 	# Clearly marked playtest grants. Runtime inventory and item-ID logic remain
 	# world-owned; the UI only emits requests and never writes inventory itself.
-	var test_notice := UI.label("테스트 전용 · 정식 게임에서는 제거",12,UI.GOLD)
-	right.add_child(test_notice)
+	catalog_test_toggle = UI.button("검수용 지급 도구",Callable(),Vector2(0,32))
+	catalog_test_toggle.name = "CatalogTestToolsToggle"
+	catalog_test_toggle.toggle_mode = true
+	catalog_test_toggle.add_theme_font_size_override("font_size",11)
+	right.add_child(catalog_test_toggle)
+	catalog_test_tools = VBoxContainer.new()
+	catalog_test_tools.name = "CatalogTestTools"
+	right.add_child(catalog_test_tools)
+	catalog_test_tools.hide()
+	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled)
+	catalog_test_tools.add_child(UI.label("테스트 전용 · 정식 게임에서는 제거",11,UI.GOLD))
 	playtest_grant_button = UI.button("선택 아이템 1개 임시 지급",_request_playtest_catalog_grant,Vector2(0,42))
 	playtest_grant_button.name = "PlaytestGrantSelected"
-	right.add_child(playtest_grant_button)
+	catalog_test_tools.add_child(playtest_grant_button)
 	playtest_aden_button = UI.button("아데나 1억 맞추기",func() -> void: playtest_aden_grant_requested.emit(),Vector2(0,42))
 	playtest_aden_button.name = "PlaytestAden"
-	right.add_child(playtest_aden_button)
+	catalog_test_tools.add_child(playtest_aden_button)
 	for scroll: String in ["무기 마법 주문서 (각인)","갑옷 마법 주문서 (각인)","장신구 마법 주문서 (각인)"]:
 		var grant_name: String = scroll
 		var grant := UI.button("테스트 " + grant_name.replace(" (각인)","") + " ×10",func() -> void:
 			playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
 		grant.name = "PlaytestScroll" + str(playtest_scroll_buttons.size())
-		right.add_child(grant)
+		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
 	old.queue_free()
 
@@ -738,7 +894,21 @@ func _fit_catalog_browser_layout() -> void:
 		return
 	# A fixed 530px grid + 315px preview used to spill outside portrait/small
 	# windows. On narrow viewports show either full-width grid or full-width detail.
-	var compact: bool = get_window().size.x < 1180
+	var compact: bool = get_window().size.x < 1180 or workspace.content.size.x < 840
+	var short: bool = workspace.content.size.y < 430
+	collection_status.visible = not short
+	catalog_count.visible = not short
+	catalog_preview.custom_minimum_size.y = 120 if short else 190
+	catalog_list.fixed_icon_size = Vector2i(60,60) if short else Vector2i(78,78)
+	catalog_list.add_theme_constant_override("v_separation",8 if short else 12)
+	catalog_search.custom_minimum_size.y = 32 if short else 40
+	var pager: HBoxContainer = catalog_page_label.get_parent()
+	pager.custom_minimum_size.y = 28 if short else 40
+	for button: Control in [catalog_first_button,catalog_prev_button,catalog_next_button,catalog_last_button]:
+		button.custom_minimum_size.y = 28 if short else 34
+	catalog_page_label.custom_minimum_size.y = 28 if short else 34
+	catalog_list_tab.custom_minimum_size.y = 28 if short else 34
+	catalog_details_tab.custom_minimum_size.y = 28 if short else 34
 	catalog_view_tabs.visible = compact and active_section in ["아이템", "변신", "마법인형", "성물"]
 	catalog_body_left.visible = not compact or not catalog_details_active
 	catalog_body_actions.visible = not compact or catalog_details_active

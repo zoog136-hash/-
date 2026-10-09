@@ -4,6 +4,7 @@ extends RefCounted
 # hierarchy of Lineage M: compact gold-framed panels, inset item slots and
 # legible parchment copy. No source-game textures are bundled.
 const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
+const ICONS = preload("res://scripts/ui/renewal_icons.gd")
 
 const GOLD = Color("e2c187")
 const BRONZE = Color("786342")
@@ -48,6 +49,21 @@ static func slot_frame(rim: Color = BRONZE, active: bool = false) -> StyleBoxFla
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
 	return s
+
+static func item_frame(grade_name: String, active: bool = false) -> StyleBoxFlat:
+	var tint := grade(grade_name)
+	var s := slot_frame(tint,active)
+	s.bg_color = Color("111317").lerp(tint,.055)
+	s.border_width_bottom = 2
+	s.shadow_size = 3 if grade_name in ["희귀","영웅","전설","신화","유일"] else 0
+	s.shadow_color = Color(tint,.18)
+	return s
+static func icon(kind: String) -> Texture2D:
+	return ICONS.texture(kind)
+static func section(value: String, font_size: int = 16) -> Label:
+	var l := label(value,font_size,GOLD)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	return l
 
 static func tab_frame(active: bool = false) -> StyleBoxFlat:
 	var s := box(Color("463620") if active else Color("17171b"), GOLD if active else Color("3e3529"), 7)
@@ -128,6 +144,14 @@ static func make_theme() -> Theme:
 	t.set_stylebox("grabber","VScrollBar",slot_frame(BRONZE))
 	t.set_stylebox("grabber_highlight","VScrollBar",slot_frame(GOLD,true))
 	t.set_stylebox("grabber_pressed","VScrollBar",slot_frame(GOLD,true))
+	t.set_stylebox("panel","ScrollContainer",box(Color("0e0f12"),Color("42382d"),2))
+	t.set_stylebox("panel","AcceptDialog",chrome_panel())
+	t.set_stylebox("panel","Window",chrome_panel())
+	t.set_stylebox("slider","HSlider",slot_frame(BRONZE))
+	t.set_stylebox("grabber_area","HSlider",box(Color("8f7044"),GOLD,0))
+	t.set_stylebox("grabber_area_highlight","HSlider",box(GOLD,GOLD,0))
+	t.set_color("font_outline_color","Label",Color(0,0,0,.75))
+	t.set_constant("outline_size","Label",1)
 	return t
 
 static func label(value: String, font_size: int = 14, color: Color = TEXT) -> Label:

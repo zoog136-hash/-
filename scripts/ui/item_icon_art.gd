@@ -60,7 +60,8 @@ static func _compose(original: Image, accent: Color, glow: float) -> Texture2D:
 	var art: Image = original.duplicate() as Image
 	art.convert(Image.FORMAT_RGBA8)
 	art.resize(78, 78, Image.INTERPOLATE_LANCZOS)
-	art.adjust_bcs(0.025, 1.16, 1.08)
+	# Brightness is a multiplier: 1.0 preserves the item foreground.
+	art.adjust_bcs(1.025, 1.16, 1.08)
 	for y: int in range(78):
 		for x: int in range(78):
 			var pixel: Color = art.get_pixel(x, y)

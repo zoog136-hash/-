@@ -3,6 +3,7 @@ extends VBoxContainer
 # Restored 13-class picker. Only the existing HUD signal may change the
 # authoritative job; this widget never rewrites saves, equipment or skills.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Stage = preload("res://scripts/ui/renewal_stage.gd")
 const CLASS_NAMES: Array[String] = [
 	"기사", "군주", "요정", "마법사", "다크엘프", "총사", "투사",
 	"암흑기사", "신성검사", "광전사", "사신", "뇌신", "마검사"
@@ -56,7 +57,7 @@ func configure(controller: Node, initial: bool = false) -> void:
 		var profile: Dictionary = profiles.get(job_name,{})
 		var button: Button = UI.button(job_name,func() -> void:
 			if not hud.workspace.was_scroll_dragged(class_scroll):
-				_choose(job_name),Vector2(155,50))
+				_choose(job_name),Vector2(155,46))
 		button.name = "Class_" + job_name
 		button.toggle_mode = true
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -74,7 +75,7 @@ func configure(controller: Node, initial: bool = false) -> void:
 	stack.add_child(summary)
 	portrait = TextureRect.new()
 	portrait.name = "ClassPortrait"
-	portrait.custom_minimum_size = Vector2(130,140)
+	portrait.custom_minimum_size = Vector2(170,165)
 	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -86,6 +87,11 @@ func configure(controller: Node, initial: bool = false) -> void:
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	details.custom_minimum_size.y = 140
 	summary.add_child(details)
+	var stage := PanelContainer.new()
+	stage.add_theme_stylebox_override("panel",UI.box(Color("11141b"),UI.BRONZE,8))
+	stack.add_child(stage)
+	stack.move_child(stage,0)
+	summary.reparent(stage)
 	confirm_button = UI.button("클래스를 선택하세요",_confirm,Vector2(0,54))
 	confirm_button.name = "ClassConfirm"
 	confirm_button.disabled = true
@@ -96,13 +102,14 @@ func configure(controller: Node, initial: bool = false) -> void:
 		if CLASS_NAMES.has(current):
 			_choose(current)
 	_reflow()
+	class_scroll.resized.connect(_reflow)
 	get_viewport().size_changed.connect(_reflow)
 
 func _reflow() -> void:
 	if class_grid == null:
 		return
-	var width: float = get_viewport_rect().size.x
-	class_grid.columns = 3 if width >= 1080.0 else (2 if width >= 740.0 else 1)
+	var width: float = class_scroll.size.x if class_scroll.size.x > 0 else hud.workspace.content.size.x
+	class_grid.columns = 4 if width >= 880.0 else (3 if width >= 620 else (2 if width >= 400 else 1))
 
 func _choose(job_name: String) -> void:
 	if not class_buttons.has(job_name):
