@@ -31,6 +31,7 @@ func _screen_point(control: Control, local_point: Vector2) -> Vector2:
 	return control.get_global_transform_with_canvas() * local_point
 
 func _run() -> void:
+	root.size = Vector2i(1280,720)
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene
 	if scene == null:
 		_check(false,"Main.tscn cannot load")
@@ -199,6 +200,7 @@ func _run() -> void:
 		_check(catalog_items.get_global_rect().end.x <= workspace.get_global_rect().end.x + 1.0, "catalog list stays inside window width")
 		var second_record: Dictionary = (hud.get("catalog_results") as Array)[1]
 		var second_point: Vector2 = _screen_point(catalog_items,catalog_items.get_item_rect(1).get_center())
+		_check(catalog_items.get_item_rect(1).get_center().y <= catalog_items.size.y,"compact catalog displays a tappable item row")
 		_touch(60,second_point,true)
 		_touch(60,second_point,false)
 		await process_frame

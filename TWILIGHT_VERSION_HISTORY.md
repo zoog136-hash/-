@@ -14,6 +14,8 @@
 | PR #43 재개 | 코드 `98c9e5f`; 최신 main `5596a64`의 PR #46·#48·#49를 기존 브랜치에 통합 | HP/MP 전용 갱신·피격 스탯 갱신 합치기·삭제 예약 시체 풀 수정. 새 전체 53/53, CI 12회 성공, OpenGL 106장. [증거](docs/monster-world-evidence/CI_RUNS.md). main 미병합 |
 | 몬스터 월드 후보 | `feature/twilight-monster-world-overhaul-20261009`, 기준 `82dbbdb` | 25개 맵·별도 폭젠·보스 상태 저장. [범위·미완료·검증](docs/MONSTER_WORLD_IMPLEMENTATION.md). main 미병합 |
 
+| UI 리뉴얼 후속 | PR #50 기존 `eefaf37` 유지 + 최신 main `67d69efd` 통합 | [화면별 구현 및 검증 범위](docs/UI_RENEWAL_FIDELITY_20261009.md). main 미병합; 새 SHA CI로 검증 |
+
 ## 검증 근거
 - [Stage 5 Integration CI](https://github.com/zoog136-hash/-/actions/runs/37872771613): 47/47.
 - [Playtest Godot Full CI](https://github.com/zoog136-hash/-/actions/runs/37879136512): 48/48.

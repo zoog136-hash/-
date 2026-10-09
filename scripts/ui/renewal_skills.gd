@@ -1,6 +1,7 @@
 extends VBoxContainer
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const Browser = preload("res://scripts/ui/renewal_browser.gd")
 const RULES = preload("res://scripts/skill_rules.gd")
 var hud: Node
 var records: Array = []
@@ -34,15 +35,15 @@ func configure(controller: Node) -> void:
 	type_filter.item_selected.connect(func(_index: int) -> void: refresh())
 	toolbar.add_child(type_filter)
 	var state: Dictionary = hud.character_state
-	add_child(UI.label("Lv.%d  %s · 현재 직업 스킬 사용 가능 · 스킬 습득 거래 미연결" % [state.get("level",1),state.get("job_class","기사")],12,UI.MUTED))
-	var body := HBoxContainer.new()
+	add_child(UI.section("Lv.%d  %s  /  마법과 기술" % [state.get("level",1),state.get("job_class","기사")],14))
+	var body := Browser.new()
 	body.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	add_child(body)
 	cards=ItemList.new()
 	cards.name="SkillCards"
 	cards.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	cards.max_columns=3
-	cards.fixed_column_width=165
+	cards.max_columns=4
+	cards.fixed_column_width=110
 	cards.fixed_icon_size=Vector2i(54,54)
 	cards.icon_mode=ItemList.ICON_MODE_TOP
 	cards.max_text_lines=2
@@ -51,7 +52,7 @@ func configure(controller: Node) -> void:
 	cards.gui_input.connect(_touch)
 	body.add_child(cards)
 	var side := VBoxContainer.new()
-	side.custom_minimum_size.x=298
+	side.custom_minimum_size.x=278
 	body.add_child(side)
 	side.add_child(UI.label("스킬 정보",18,UI.GOLD))
 	detail=UI.rich("")
@@ -71,6 +72,7 @@ func configure(controller: Node) -> void:
 			hud._open_quickslot_picker("skill",skill_name,skill_name))
 	quick_button.name="RegisterSkill"
 	side.add_child(quick_button)
+	body.configure(cards,side,278)
 	refresh()
 
 func refresh() -> void:

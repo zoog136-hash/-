@@ -41,6 +41,14 @@ func _verify() -> void:
 			check(rare.get_size() == Vector2(96, 96), "icon resolution: " + item_name)
 			check(rare != mythic, "grade variant cache: " + item_name)
 			check(ART.render(path, "희귀", item_name) == rare, "reuses icon cache: " + item_name)
+			var rendered: Image = rare.get_image()
+			var bright_pixels: int = 0
+			for y: int in range(20,76):
+				for x: int in range(20,76):
+					var pixel: Color = rendered.get_pixel(x,y)
+					if maxf(pixel.r,maxf(pixel.g,pixel.b)) > 0.35:
+						bright_pixels += 1
+			check(bright_pixels > 40, "visible original item foreground: " + item_name)
 		check(FileAccess.get_file_as_bytes(path) == old_image, "original PNG not modified: " + item_name)
 	# A duplicate-name PR46 record must display its pinned image, not the
 	# ambiguous name-to-image fallback from the older 2,085-entry index.

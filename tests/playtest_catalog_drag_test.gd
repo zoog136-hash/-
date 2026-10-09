@@ -14,6 +14,9 @@ func _check(ok: bool, label: String) -> void:
 		print("PLAYTEST_UI_FAIL: " + label)
 
 func _run() -> void:
+	# Headless windows default to 64x64; exercise title motion at the game's
+	# actual PC surface instead of clamping an oversized title to that stub.
+	root.size = Vector2i(1280,720)
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene
 	_check(scene != null, "Main scene available")
 	if scene == null:
