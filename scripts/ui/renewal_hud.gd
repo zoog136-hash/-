@@ -78,6 +78,21 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_fit_hud)
 	_fit_hud()
 	SettingsUI.apply_saved(self)
+	_polish_hud_chrome()
+
+func _polish_hud_chrome() -> void:
+	# The old canvas still owns all HP, MP, combat and touch signals.
+	# Restrict the pass to StyleBoxes; never duplicate gameplay state.
+	var status: PanelContainer = v20_layer.get_node_or_null("StatusPanel") as PanelContainer
+	if status != null:
+		status.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.028,.029,.034,.89),UI.BRONZE,0))
+	var mini_map: PanelContainer = v20_layer.get_node_or_null("QuestTracker") as PanelContainer
+	if mini_map != null:
+		mini_map.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.024,.024,.028,.87),UI.BRONZE,7))
+	if v20_target_panel != null:
+		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
+	if v20_map_name != null:
+		v20_map_name.add_theme_color_override("font_color",UI.GOLD)
 
 func _build_lineage_inventory_ui() -> void:
 	lineage_inventory_ui = Inventory.new() as TwilightInventoryUI
@@ -126,7 +141,7 @@ func _build_v20_quest() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "QuestTracker"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,1038,300,1268,409)
+	_place(panel,12,188,294,318)
 	panel.add_theme_stylebox_override("panel",_panel_style(.86))
 	v20_layer.add_child(panel)
 	var v := VBoxContainer.new()
@@ -145,7 +160,7 @@ func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "MainShortcuts"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,870,10,1268,78)
+	_place(panel,864,9,1268,78)
 	panel.add_theme_stylebox_override("panel",_panel_style(.9))
 	v20_layer.add_child(panel)
 	var row := HBoxContainer.new()
@@ -154,13 +169,26 @@ func _build_v20_top_menu() -> void:
 	panel.add_child(row)
 	for spec: Array in [["shop","상점","shop.png"],["inventory","가방","bag.png"],["skills","스킬","skill.png"],["map","지도","quest.png"],["menu","메뉴","menu.png"]]:
 		var id := str(spec[0])
-		var b := UI.button(str(spec[1]),_navigate.bind(id),Vector2(72,52))
+		var b := UI.button("",_navigate.bind(id),Vector2(72,53))
 		b.name = "Shortcut_"+id
-		b.icon = _load_texture("res://assets/ui/"+str(spec[2]))
-		b.expand_icon = true
-		b.add_theme_constant_override("icon_max_width",22)
-		b.add_theme_font_size_override("font_size",12)
+		b.tooltip_text = str(spec[1])
+		b.add_theme_stylebox_override("normal",UI.slot_frame())
+		b.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
+		b.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		row.add_child(b)
+		var artwork := TextureRect.new()
+		artwork.texture = _load_texture("res://assets/ui/"+str(spec[2]))
+		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		artwork.position = Vector2(22,3)
+		artwork.size = Vector2(28,28)
+		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(artwork)
+		var label := UI.label(str(spec[1]),11,UI.TEXT)
+		label.position = Vector2(0,34)
+		label.size = Vector2(72,16)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		b.add_child(label)
 
 func _build_v20_right_controls() -> void:
 	v20_self_button = UI.button("SELF",_toggle_self_mode,Vector2(68,44))
@@ -177,7 +205,10 @@ func _build_v20_right_controls() -> void:
 	v20_auto_button = UI.button("AUTO",func() -> void: auto_pressed.emit())
 	v20_auto_button.name = "AutoHunt"
 	_place(v20_auto_button,1062,532,1147,611)
-	v20_auto_button.add_theme_stylebox_override("normal",_round_button_style(.9,40,UI.BRONZE))
+	v20_auto_button.add_theme_stylebox_override("normal",_round_button_style(.92,40,UI.BRONZE))
+	v20_auto_button.add_theme_stylebox_override("hover",_round_button_style(.98,40,UI.GOLD))
+	v20_auto_button.add_theme_stylebox_override("pressed",_round_button_style(.98,40,UI.GOLD))
+	v20_auto_button.add_theme_font_size_override("font_size",15)
 	v20_layer.add_child(v20_auto_button)
 	auto_button = v20_auto_button
 	# Keep the existing wired button and input path used by touch regressions.
@@ -197,11 +228,12 @@ func _build_v20_right_controls() -> void:
 	_place(attack,1157,514,1268,625)
 	attack.add_theme_stylebox_override("normal",_round_button_style(.9,56,UI.GOLD))
 	attack.add_theme_stylebox_override("hover",_round_button_style(.98,56,UI.GOLD))
+	attack.add_theme_stylebox_override("pressed",_round_button_style(1.0,56,Color("f2d29a")))
 
 func _build_v20_bottom_bar() -> void:
 	var panel := PanelContainer.new()
 	panel.name = "Quickslots"
-	panel.add_theme_stylebox_override("panel",_panel_style(.94))
+	panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.025,.027,.032,.94),UI.BRONZE,6))
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_place(panel,360,638,1038,712)
 	v20_layer.add_child(panel)
@@ -213,6 +245,9 @@ func _build_v20_bottom_bar() -> void:
 		b.name = "Quickslot_%d" % index
 		b.add_theme_font_size_override("font_size",10)
 		b.add_theme_constant_override("icon_max_width",24)
+		b.add_theme_stylebox_override("normal",UI.slot_frame())
+		b.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
+		b.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		v20_skill_container.add_child(b)
 		v20_quickslot_buttons.append(b)
 		var icon := TextureRect.new()
@@ -526,11 +561,17 @@ func toggle_menu() -> void:
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
-	for pair: Array in [["character","캐릭터 · 장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬 · 성장"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"]]:
+	for pair: Array in [["character","캐릭터 · 장비","shield.png"],["class_select","클래스 선택","sword.png"],["inventory","인벤토리","bag.png"],["skills","스킬 · 성장","skill.png"],["변신","변신","rune.png"],["마법인형","마법인형","rune.png"],["성물","성물","energy.png"],["map","월드맵","quest.png"],["quest","퀘스트","quest.png"],["shop","잡화 상점","shop.png"],["enhance","장비 강화","sword.png"],["auto","자동사냥","macro.png"],["settings","설정","settings.png"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button(str(pair[1]),func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
-				_navigate(section_id),Vector2(238,74))
+				_navigate(section_id),Vector2(210,72))
+		button.name = "MenuTile_"+section_id
+		button.icon = _load_texture("res://assets/ui/"+str(pair[2]))
+		button.expand_icon = true
+		button.add_theme_constant_override("icon_max_width",35)
+		button.add_theme_stylebox_override("normal",UI.slot_frame())
+		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		grid.add_child(button)
 		workspace.register_scroll_drag(menu_scroll,button)
 
