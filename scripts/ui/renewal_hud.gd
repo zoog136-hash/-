@@ -548,7 +548,7 @@ func open_catalog(category: String) -> void:
 	catalog_category = category
 	catalog_grade_filter = "전체"
 	item_grade_filter = "전체"
-	item_slot_filter = "weapon"
+	item_slot_filter = "all"
 	rarity_filter.select(0)
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
@@ -573,7 +573,7 @@ func _build_catalog_panel() -> void:
 	var top := HBoxContainer.new()
 	col.add_child(top)
 	catalog_search.reparent(top)
-	catalog_search.placeholder_text = "이름 · 종류 검색"
+	catalog_search.placeholder_text = "이름 · 종류 · 상세 옵션 검색"
 	catalog_search.custom_minimum_size.y = 40
 	rarity_filter = OptionButton.new()
 	rarity_filter.name = "RarityFilter"
@@ -667,9 +667,9 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	for value: Variant in catalog_data.get(catalog_category,[]):
 		if not value is Dictionary: continue
 		var record: Dictionary = value
-		if catalog_category=="아이템" and _item_filter_group(record)!=item_slot_filter: continue
+		if catalog_category=="아이템" and item_slot_filter!="all" and _item_filter_group(record)!=item_slot_filter: continue
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
-		var searchable := "%s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type","")]
+		var searchable := "%s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("desc","")]
 		if query!="" and not searchable.to_lower().contains(query): continue
 		catalog_filtered_results.append(record)
 	catalog_page=0
