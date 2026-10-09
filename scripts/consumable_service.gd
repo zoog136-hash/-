@@ -378,7 +378,7 @@ func _use_element_management_scroll(item_name: String, spec: Dictionary) -> void
 func apply_element_management(scroll_name: String, weapon_reference: String, new_element: String = "") -> void:
 	var spec: Dictionary = RULES.definition(scroll_name)
 	var kind: String = str(spec.get("kind", ""))
-	if not kind in ["element_change", "element_reset"]:
+	if kind != "element_change" and kind != "element_reset":
 		return
 	var selection: Dictionary = world.call("_parse_enhancement_target", weapon_reference)
 	var item_id: String = str(selection.get("id", ""))
