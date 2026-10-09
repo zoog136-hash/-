@@ -44,6 +44,9 @@ const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd"
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
+const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
+var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
+var ain_refresh_clock: float = 0.0
 
 var field_map: PlayableField = null
 var field_renderer: FieldRenderer = null
@@ -224,6 +227,9 @@ var inventory: Dictionary = {
 	"총알":300,
 	"낡은 장검":1,
 	"초록 잎":200,
+	"드래곤의 루비":5,
+	"드래곤의 다이아몬드":3,
+	"드래곤의 용옥":1,
 	"무기 마법 주문서 (각인)":5,
 	"갑옷 마법 주문서 (각인)":5,
 	"장신구 마법 주문서 (각인)":3,
@@ -244,6 +250,7 @@ func _ready() -> void:
 	ThemeDB.get_default_theme().default_font = korean_font
 	ThemeDB.fallback_font = korean_font
 	rng.randomize()
+	ain_service.import_state({})
 	_load_data()
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -292,6 +299,11 @@ func _process(delta: float) -> void:
 	_tick_skill_cooldowns(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
+	ain_refresh_clock -= delta
+	if ain_refresh_clock <= 0.0:
+		ain_refresh_clock = 1.0
+		ain_service.advance_time()
+		_update_ain_hud()
 	_tick_catalog_recovery(delta)
 	_run_auto_buff_quickslots(delta)
 	save_timer += delta
@@ -396,6 +408,12 @@ func _load_data() -> void:
 	var directional_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(DIRECTIONAL_PATH))
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
+	# Use owned Twilight art as fallbacks instead of blank inventory icons.
+	var image_records: Dictionary = catalog_image_index.get("아이템", {}) as Dictionary
+	for name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드", "드래곤의 성수", "드래곤의 용옥"]:
+		if not image_records.has(name):
+			image_records[name] = "res://assets/ui/potionRed.png" if name == "드래곤의 루비" else "res://assets/ui/rune.png"
+	catalog_image_index["아이템"] = image_records
 	_build_job_classes()
 
 func _index_catalog_item_sources() -> void:
@@ -858,6 +876,12 @@ func _connect_signals() -> void:
 	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
 	hud.self_mode_changed.connect(_on_self_mode_changed)
 	hud.shop_buy_requested.connect(_buy_shop_item)
+	if hud.has_signal("ain_item_requested"):
+		hud.connect("ain_item_requested", _on_ain_item_requested)
+	if hud.has_signal("ain_shop_requested"):
+		hud.connect("ain_shop_requested", _on_ain_shop_requested)
+	if hud.has_signal("ain_auto_changed"):
+		hud.connect("ain_auto_changed", _on_ain_auto_changed)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
 	hud.enhancement_requested.connect(_attempt_enhancement)
 	# Optional validation tools live only in the isolated playtest HUD branch.
@@ -1829,15 +1853,24 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	_try_trigger_passives("on_kill", monster)
 	if field_map != null:
 		field_population.release(monster)
-	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier())))
+	# Snapshot the stage before spending so the kill that crosses 201 -> 200
+	# keeps the reward/drop eligibility it began with.
+	var can_drop_equipment: bool = ain_service.protected_drops()
+	var exp_rate: float = ain_service.experience_rate()
+	var adena_rate: float = ain_service.adena_rate()
+	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate)))
+	var gained_adena: int = maxi(0, int(round(monster.gold_reward * adena_rate)))
 	experience += gained_experience
-	gold += monster.gold_reward
-	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, monster.gold_reward])
+	gold += gained_adena
+	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	quest_kills = mini(QUEST_GOAL, quest_kills + 1)
 	if hud.has_method("set_quest_progress"):
 		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
-	_roll_drop(monster)
+	_roll_drop(monster, can_drop_equipment)
+	ain_service.consume_for_kill(int(monster.exp_reward))
 	_check_level_up()
+	if player.auto_enabled:
+		_auto_recharge_ain()
 	if monster == selected_monster:
 		selected_monster = null
 	if monster == auto_target:
@@ -1908,7 +1941,7 @@ func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
 
-func _roll_drop(monster: TwilightMonster) -> void:
+func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
 	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng)
@@ -1917,8 +1950,12 @@ func _roll_drop(monster: TwilightMonster) -> void:
 	var batch_id: String = ground_loot.begin_hunt_batch()
 	for index: int in range(earned.size()):
 		var item_name: String = earned[index]
+		if not can_drop_tradeable_equipment and not item_name.contains("각인"):
+			var drop_record: Dictionary = _find_catalog_item_record(item_name)
+			if _equipment_slot_base(drop_record) != "":
+				continue
 		_spawn_ground_drop(item_name, monster.global_position, 1, batch_id)
-	hud.show_message("아이템 %d개가 바닥에 떨어졌습니다" % earned.size())
+	hud.show_message("아이템이 바닥에 떨어졌습니다")
 
 
 func _physical_hit_chance(attacker_accuracy: int, target_ac: int, avoidance: int) -> float:
@@ -2926,17 +2963,74 @@ func _equipped_items_snapshot() -> Dictionary:
 			result[slot] = {}
 	return result
 
+func _on_ain_item_requested(item_name: String) -> void:
+	_on_inventory_item_activated(item_name)
+
+func _on_ain_shop_requested() -> void:
+	_buy_shop_item("드래곤의 용옥", AIN_SERVICE.DRAGON_ORB_PRICE)
+
+func _on_ain_auto_changed(enabled: bool) -> void:
+	ain_service.auto_recharge = enabled
+	hud.show_message("축복 자동충전 %s" % ("ON" if enabled else "OFF"))
+	_update_ain_hud()
+	_save_game(true)
+
+func _update_ain_hud() -> void:
+	if hud.has_method("set_ain_state"):
+		hud.call("set_ain_state", ain_service.snapshot(), inventory)
+
+func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
+	var kind: String = str(spec.get("kind", ""))
+	if kind == "ain_orb":
+		if not ain_service.start_dragon_orb():
+			hud.show_message("드래곤의 보호가 이미 적용 중입니다")
+			return false
+		hud.show_message("드래곤의 보호 · 30일 활성화")
+		_update_ain_hud()
+		return true
+	if kind != "ain_charge":
+		return false
+	if item_name == "드래곤의 성수" and level < 45:
+		hud.show_message("드래곤의 성수는 45레벨부터 사용 가능합니다")
+		return false
+	var amount: int = AIN_SERVICE.charge_amount(item_name, level)
+	var charged: int = ain_service.charge(amount)
+	if charged <= 0:
+		hud.show_message("아인하사드 축복이 최대치입니다")
+		return false
+	if item_name == "드래곤의 성수":
+		experience += 31920000
+		_check_level_up()
+	hud.show_message("%s 사용 · 축복 +%d" % [item_name, charged])
+	_update_ain_hud()
+	return true
+
+func _auto_recharge_ain() -> void:
+	if not ain_service.auto_recharge or ain_service.blessing > 200:
+		return
+	for item_name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드"]:
+		if int(inventory.get(item_name, 0)) > 0:
+			consumable_service.call("try_use", item_name)
+			return
+
 func _buy_shop_item(item_name: String, price: int) -> void:
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 소모품은 구매할 수 없습니다")
 		return
 	var safe_price: int = maxi(0, price)
+	if item_name == "드래곤의 용옥":
+		safe_price = AIN_SERVICE.DRAGON_ORB_PRICE
+		if not ain_service.may_purchase_orb():
+			hud.show_message("드래곤의 용옥은 월 1회 구매 가능합니다")
+			return
 	if safe_price <= 0:
 		return
 	if gold < safe_price:
 		hud.show_message("아데나가 부족합니다")
 		return
 	gold -= safe_price
+	if item_name == "드래곤의 용옥":
+		ain_service.register_orb_purchase()
 	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 구매 · %d 아데나" % [item_name, safe_price])
@@ -3012,6 +3106,7 @@ func _update_hud() -> void:
 	_sync_item_instances()
 	_refresh_speed_modifiers()
 	hud.update_player(level, hp, _effective_max_hp(), mp, _effective_max_mp(), experience, exp_need, gold)
+	_update_ain_hud()
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
 	if hud.has_method("set_quest_progress"):
@@ -3082,6 +3177,7 @@ func _save_game(quiet: bool) -> void:
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
 		"consumable_state": consumable_service.call("export_state"),
+		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
@@ -3123,6 +3219,7 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	ain_service.import_state(data.get("ainhasad_state", {}))
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
 	exp_need = maxi(1, int(data.get("exp_need", exp_need)))
