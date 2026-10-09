@@ -1,12 +1,12 @@
 # 실제 검증 증거
 
-코드 HEAD: 4f9929a7f0949246f71a9043559f751833a9a7aa
+코드 HEAD: 98c9e5f693df280f1543a6c21133095eed9a4812
 
-검사 checkout: b38a8e027819e3c076a35e158a297225d54cd78b
+검사 checkout: 65b8879f217cb03f4fb83e2ffb7ed6c8b72e1db7
 
-검사 tree: a7475c4ab72c7e6811cf416dcf4f9bf0bae0efed
+검사 tree: dcafd584c3a3af57248cda41476614485d4eb47d
 
-[GitHub Actions 실행](https://github.com/zoog136-hash/-/actions/runs/37914981394) · [전체 PNG/로그 ZIP](https://github.com/zoog136-hash/-/actions/runs/37914981394/artifacts/11609952575)
+[GitHub Actions 실행](https://github.com/zoog136-hash/-/actions/runs/37918099919) · [전체 PNG/로그 ZIP](https://github.com/zoog136-hash/-/actions/runs/37918099919/artifacts/11610324668)
 
 실제 Godot 4.7.2 전체 회귀 **53/53 passed**. 25개 맵, 폭젠 4곳 AUTO 처치·24마리 복구, 오만 보스 10종, 전체 318종의 다섯 상태를 실제 Compatibility OpenGL에서 실행했습니다. 지역/폭젠/보스/갤러리 103장과 군집 3장, 총 **106장**이 생성됐습니다. PNG 원본은 편집하지 않았으며 전체 해시는 evidence.json에 있습니다.
 
@@ -20,9 +20,9 @@ GPU: llvmpipe (LLVM 20.1.2, 256 bits). 120프레임 워밍업 뒤 240프레임�
 
 | 개체 | 프레임 중앙값 ms | 프레임 p95 ms | 물리 p95 ms | NPC 타격 | 플레이어 타격 |
 | --- | --- | --- | --- | --- | --- |
-| 32 | 58.084 | 64.278 | 32.237 | 241 | 94 |
-| 96 | 95.685 | 112.036 | 33.485 | 876 | 184 |
-| 192 | 167.202 | 182.141 | 45.715 | 1434 | 240 |
+| 32 | 56.741 | 61.325 | 7.809 | 246 | 98 |
+| 96 | 92.975 | 108.064 | 8.789 | 817 | 184 |
+| 192 | 157.402 | 178.782 | 18.319 | 1474 | 251 |
 
 세 경우 모두 실제 양방향 피해가 발생했고 투사체/VFX 풀이 반환됐으며 orphan 개체는 0입니다. 소프트웨어 GL 수치를 실제 PC/Android GPU의 60FPS 보장으로 해석하지 않습니다. 고밀도 렌더링 비용과 지역별 일반 플레이 밸런스는 추가 확인 대상입니다.
 
