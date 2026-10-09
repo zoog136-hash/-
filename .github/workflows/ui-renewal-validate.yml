@@ -28,6 +28,8 @@ jobs:
         run: |
           set -o pipefail
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee ui-parse.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --check-only --script res://scripts/ui/renewal_class_select.gd 2>&1 | tee class-parse.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" class-parse.log
           ! grep -E "SCRIPT ERROR:|ERROR:" ui-parse.log
       - name: Run UI integration assertions
         run: |
@@ -51,6 +53,7 @@ jobs:
           name: twilight-ui-renewal-evidence
           path: |
             ui-parse.log
+            class-parse.log
             ui-integration.log
             ui-capture.log
             ui-render-data/**/ui-renewal-review/*.json
