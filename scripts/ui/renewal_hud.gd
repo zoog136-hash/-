@@ -1,5 +1,9 @@
 extends "res://scripts/hud_v20.gd"
 
+# ISOLATED PLAYTEST BUILD ONLY: remove these debug signals before production.
+signal playtest_catalog_grant_requested(item_name: String, amount: int)
+signal playtest_aden_grant_requested
+
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
@@ -30,6 +34,9 @@ var catalog_grade_filter: String = "전체"
 var rarity_filter: OptionButton
 var collection_slot_filter: OptionButton
 var collection_status: Label
+var playtest_grant_button: Button
+var playtest_aden_button: Button
+var playtest_scroll_buttons: Array[Button] = []
 var skills_view: VBoxContainer
 var region_selection: ItemList
 var quest_view: Control
@@ -489,7 +496,12 @@ func open_catalog(category: String) -> void:
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
 	catalog_search.set_text("")
-	collection_status.text = "보유 수량: 인벤토리 연동 · 미보유 아이템은 조회만 가능" if category=="아이템" else "보유·획득 시스템 미연결 · 기존 로컬 도감 적용 기능"
+	collection_status.text = "테스트 모드 · 도감에서 선택 아이템 지급 / 강화 주문서 ×10 / 아데나 1억" if category=="아이템" else "보유·획득 시스템 미연결 · 기존 로컬 도감 적용 기능"
+	playtest_grant_button.visible = category == "아이템"
+	playtest_grant_button.disabled = true
+	playtest_aden_button.visible = category == "아이템"
+	for grant: Button in playtest_scroll_buttons:
+		grant.visible = category == "아이템"
 	_refresh_catalog_list("")
 
 func _build_catalog_panel() -> void:
@@ -548,9 +560,15 @@ func _build_catalog_panel() -> void:
 		control.custom_minimum_size.y = 34
 	catalog_count.reparent(left)
 	catalog_count.add_theme_font_size_override("font_size",11)
+	var right_scroll := ScrollContainer.new()
+	right_scroll.name = "CatalogActionsScroll"
+	right_scroll.custom_minimum_size.x = 315
+	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	body.add_child(right_scroll)
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 310
-	body.add_child(right)
+	right.custom_minimum_size.x = 300
+	right_scroll.add_child(right)
 	catalog_preview.reparent(right)
 	catalog_preview.custom_minimum_size = Vector2(0,160)
 	catalog_detail.reparent(right)
@@ -562,6 +580,23 @@ func _build_catalog_panel() -> void:
 		if catalog_category != "아이템": catalog_equip_requested.emit(catalog_category,{}))
 	remove.name = "ClearCatalog"
 	right.add_child(remove)
+	# Clearly marked playtest grants. Runtime inventory and item-ID logic remain
+	# world-owned; the UI only emits requests and never writes inventory itself.
+	var test_notice := UI.label("테스트 전용 · 정식 게임에서는 제거",12,UI.GOLD)
+	right.add_child(test_notice)
+	playtest_grant_button = UI.button("선택 아이템 1개 임시 지급",_request_playtest_catalog_grant,Vector2(0,42))
+	playtest_grant_button.name = "PlaytestGrantSelected"
+	right.add_child(playtest_grant_button)
+	playtest_aden_button = UI.button("아데나 1억 맞추기",func() -> void: playtest_aden_grant_requested.emit(),Vector2(0,42))
+	playtest_aden_button.name = "PlaytestAden"
+	right.add_child(playtest_aden_button)
+	for scroll: String in ["무기 마법 주문서 (각인)","갑옷 마법 주문서 (각인)","장신구 마법 주문서 (각인)"]:
+		var grant_name: String = scroll
+		var grant := UI.button("테스트 " + grant_name.replace(" (각인)","") + " ×10",func() -> void:
+			playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
+		grant.name = "PlaytestScroll" + str(playtest_scroll_buttons.size())
+		right.add_child(grant)
+		playtest_scroll_buttons.append(grant)
 	old.queue_free()
 
 func _refresh_item_filter_controls() -> void:
@@ -600,15 +635,24 @@ func _apply_catalog_page() -> void:
 		catalog_equip_button.disabled=true
 	(catalog_panel.find_child("ClearCatalog",true,false) as Button).visible=catalog_category!="아이템"
 
+func _request_playtest_catalog_grant() -> void:
+	if catalog_category != "아이템" or selected_catalog_record.is_empty():
+		return
+	playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name","")),1)
+
 func _on_catalog_item_selected(index: int) -> void:
 	super._on_catalog_item_selected(index)
-	if selected_catalog_record.is_empty(): return
+	if selected_catalog_record.is_empty():
+		if playtest_grant_button != null: playtest_grant_button.disabled = true
+		return
+	if playtest_grant_button != null:
+		playtest_grant_button.disabled = catalog_category != "아이템"
 	var item_name := str(selected_catalog_record.get("name",""))
 	var grade_name := str(selected_catalog_record.get("grade","일반"))
 	catalog_detail.text="[color=#%s]%s[/color]\n%s" % [UI.grade(grade_name).to_html(false),UI.safe(grade_name),catalog_detail.text]
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
-		catalog_detail.text+="\n보유 수량: %d\n미보유 장비는 지급하지 않습니다." % owned
+		catalog_detail.text+="\n보유 수량: %d\n테스트 지급 버튼으로 임시 획득 가능" % owned
 		catalog_equip_button.text="보유 아이템 장착 / 사용" if owned>0 else "미보유 · 조회 전용"
 		catalog_equip_button.disabled=owned<=0
 	else:

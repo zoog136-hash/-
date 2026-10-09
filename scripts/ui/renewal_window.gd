@@ -9,6 +9,9 @@ var subtitle: Label
 var footer: Label
 var content: Control
 var navigation: Dictionary = {}
+var title_dragging: bool = false
+var title_dragged: bool = false
+var viewport_fitted: bool = false
 
 func _ready() -> void:
 	name = "RenewalWindow"
@@ -22,12 +25,17 @@ func _ready() -> void:
 	layout.add_child(title_row)
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# Grab only the title area. Close/nav controls keep their own pointer events.
+	titles.mouse_filter = Control.MOUSE_FILTER_STOP
+	titles.gui_input.connect(_on_title_drag_input)
 	titles.add_theme_constant_override("separation",0)
 	title_row.add_child(titles)
 	heading = UI.label("TWILIGHT",24,UI.GOLD)
 	titles.add_child(heading)
+	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	subtitle = UI.label("황혼의 기록",12,UI.MUTED)
 	titles.add_child(subtitle)
+	subtitle.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var close := UI.button("닫기  Esc",func() -> void: closed.emit(),Vector2(106,42))
 	close.name = "CloseWindow"
 	title_row.add_child(close)
@@ -70,10 +78,41 @@ func _ready() -> void:
 
 func fit_viewport() -> void:
 	var viewport := get_viewport_rect().size
-	var extent := Vector2(minf(1160,viewport.x-48),minf(642,viewport.y-48))
+	var extent := Vector2(maxf(200.0,minf(1160.0,viewport.x-48.0)),maxf(140.0,minf(642.0,viewport.y-48.0)))
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
-	position = (viewport-extent)*.5
 	size = extent
+	if not viewport_fitted or not title_dragged:
+		position = (viewport-extent)*0.5
+	else:
+		_keep_title_visible()
+	viewport_fitted = true
+
+func _keep_title_visible() -> void:
+	var view: Vector2 = get_viewport_rect().size
+	# Keep a usable title/grab area visible even when a large desktop window
+	# is intentionally dragged partially outside the viewport.
+	position.x = clampf(position.x, minf(0.0,140.0-size.x),maxf(0.0,view.x-140.0))
+	position.y = clampf(position.y, 0.0,maxf(0.0,view.y-64.0))
+
+func _on_title_drag_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and (event as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT:
+		title_dragging = (event as InputEventMouseButton).pressed
+		if title_dragging:
+			title_dragged = true
+		accept_event()
+	elif event is InputEventMouseMotion and title_dragging:
+		position += (event as InputEventMouseMotion).relative
+		_keep_title_visible()
+		accept_event()
+	elif event is InputEventScreenTouch:
+		title_dragging = (event as InputEventScreenTouch).pressed
+		if title_dragging:
+			title_dragged = true
+		accept_event()
+	elif event is InputEventScreenDrag and title_dragging:
+		position += (event as InputEventScreenDrag).relative
+		_keep_title_visible()
+		accept_event()
 
 func open(section: String, title: String, description: String) -> void:
 	heading.text = title
