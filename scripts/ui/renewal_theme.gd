@@ -1,5 +1,7 @@
 extends RefCounted
 
+const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
+
 const GOLD = Color("d8b878")
 const BRONZE = Color("796344")
 const TEXT = Color("eee5d4")
@@ -96,6 +98,9 @@ static func safe(value: Variant) -> String:
 	return str(value).replace("[","[lb]")
 
 static func item_icon(record: Dictionary, item_name: String, images: Dictionary) -> Texture2D:
+	var polished: Texture2D = ITEM_ART.item_icon(record, item_name, images)
+	if polished != null:
+		return polished
 	var path := str(images.get(item_name,record.get("image_path","")))
 	if path!="" and ResourceLoader.exists(path): return load(path) as Texture2D
 	# Starting items do not all have an extracted catalog image. Reuse UI art.
