@@ -51,13 +51,13 @@ func configure(controller: Node, initial: bool = false) -> void:
 		if profile_value is Dictionary:
 			var profile: Dictionary = profile_value
 			profiles[str(profile.get("name",""))] = profile
-	for class_name: String in CLASS_NAMES:
+	for job_name: String in CLASS_NAMES:
 		# Classes without a mythic illustration must still remain playable.
-		var profile: Dictionary = profiles.get(class_name,{})
-		var button: Button = UI.button(class_name,func() -> void:
+		var profile: Dictionary = profiles.get(job_name,{})
+		var button: Button = UI.button(job_name,func() -> void:
 			if not hud.workspace.was_scroll_dragged(class_scroll):
-				_choose(class_name),Vector2(155,50))
-		button.name = "Class_" + class_name
+				_choose(job_name),Vector2(155,50))
+		button.name = "Class_" + job_name
 		button.toggle_mode = true
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.add_theme_font_size_override("font_size",13)
@@ -69,7 +69,7 @@ func configure(controller: Node, initial: bool = false) -> void:
 			button.add_theme_constant_override("icon_max_width",40)
 		class_grid.add_child(button)
 		hud.workspace.register_scroll_drag(class_scroll,button)
-		class_buttons[class_name] = button
+		class_buttons[job_name] = button
 	var summary := HBoxContainer.new()
 	stack.add_child(summary)
 	portrait = TextureRect.new()
