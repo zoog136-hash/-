@@ -76,7 +76,7 @@ var catalog_last_button: Button
 var item_filter_panel: VBoxContainer
 var item_slot_buttons: Dictionary = {}
 var item_grade_buttons: Dictionary = {}
-var item_slot_filter: String = "weapon"
+var item_slot_filter: String = "all"
 var item_grade_filter: String = "전체"
 
 const ITEM_SLOT_FILTERS: Array = [
@@ -522,7 +522,7 @@ func open_catalog(category: String) -> void:
 	catalog_title.text = "%s 도감" % category
 	catalog_search.text = ""
 	if category == "아이템":
-		item_slot_filter = "weapon"
+		item_slot_filter = "all"
 		item_grade_filter = "전체"
 		item_filter_panel.visible = true
 		_refresh_item_filter_controls()
@@ -575,7 +575,7 @@ func _build_catalog_panel() -> void:
 		var slot_label: String = str(slot_data[1])
 		var slot_button: Button = Button.new()
 		slot_button.text = slot_label
-		slot_button.custom_minimum_size = Vector2(150, 40)
+		slot_button.custom_minimum_size = Vector2(115, 40)
 		slot_button.toggle_mode = true
 		slot_button.pressed.connect(_set_item_slot_filter.bind(slot_id))
 		slot_row.add_child(slot_button)
@@ -681,11 +681,11 @@ func _refresh_catalog_list(filter_text: String) -> void:
 			continue
 		var record: Dictionary = value as Dictionary
 		if catalog_category == "아이템":
-			if _item_filter_group(record) != item_slot_filter:
+			if item_slot_filter != "all" and _item_filter_group(record) != item_slot_filter:
 				continue
 			if item_grade_filter != "전체" and str(record.get("grade", "")) != item_grade_filter:
 				continue
-		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", ""))).to_lower()
+		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", "")) + " " + str(record.get("sourceId", "")) + " " + str(record.get("desc", ""))).to_lower()
 		if query != "" and search_text.find(query) < 0:
 			continue
 		catalog_filtered_results.append(record)
@@ -711,7 +711,7 @@ func _refresh_item_filter_controls() -> void:
 		var slot_button_value: Variant = item_slot_buttons.get(slot_key)
 		if slot_button_value is Button:
 			var slot_button: Button = slot_button_value as Button
-			slot_button.button_pressed = str(slot_key) == item_slot_filter
+			slot_button.set_pressed_no_signal(str(slot_key) == item_slot_filter)
 
 	var available_grades: Dictionary = {}
 	var source: Array = catalog_data.get("아이템", []) as Array
@@ -719,7 +719,7 @@ func _refresh_item_filter_controls() -> void:
 		if not (value is Dictionary):
 			continue
 		var record: Dictionary = value as Dictionary
-		if _item_filter_group(record) != item_slot_filter:
+		if item_slot_filter != "all" and _item_filter_group(record) != item_slot_filter:
 			continue
 		available_grades[str(record.get("grade", ""))] = true
 
@@ -731,7 +731,7 @@ func _refresh_item_filter_controls() -> void:
 			var grade_button: Button = grade_button_value as Button
 			var grade_name: String = str(grade_key)
 			grade_button.visible = grade_name == "전체" or available_grades.has(grade_name)
-			grade_button.button_pressed = grade_name == item_grade_filter
+			grade_button.set_pressed_no_signal(grade_name == item_grade_filter)
 
 func _catalog_page_count() -> int:
 	if catalog_filtered_results.is_empty():
@@ -859,10 +859,14 @@ func _on_catalog_item_selected(index: int) -> void:
 	var options: Array = selected_catalog_record.get("sourceOptions", []) as Array
 	var option_text: String = ""
 	for value: Variant in options:
-		option_text += "• %s\n" % str(value)
-	if options.is_empty():
-		option_text = "상세 옵션 미수록 · 확인된 수치 없음\n"
-	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\nID: %s\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "")), option_text]
+		var option: String = str(value).replace("PVP", "PVE").replace("PvP", "PvE")
+		if option.contains("손상") or option.contains("저주"):
+			continue
+		var dormant: bool = option.begins_with("발동:") or option.begins_with("전용 스킬:") or option.begins_with("액티브 스킬:")
+		option_text += "• %s%s\n" % [option, " (고유효과 보류)" if dormant else ""]
+	if option_text.is_empty():
+		option_text = str(selected_catalog_record.get("desc", "옵션 없음"))
+	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\n원작 ID: %s · 원본 옵션 %d개\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "TWILIGHT")), options.size(), option_text]
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty():
