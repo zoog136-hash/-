@@ -79,7 +79,7 @@ func _run() -> void:
 	world.set("item_instances", {"11":{"name":"마법 망토","level":5}, "12":{"name":"룸티스의 보랏빛 귀걸이","level":8}})
 	world.set("equipped_items", {"cloak":{"name":"마법 망토","slot":"cloak","instance_id":"11"}, "earring1":{"name":"룸티스의 보랏빛 귀걸이","slot":"earring","instance_id":"12"}})
 	var mp_base: int = int(world.get("max_mp"))
-	assert_ok(int(world.call("_effective_max_mp")) == mp_base + 95, "enchanted earring raises effective MP by 95")
+	assert_ok(int(world.call("_effective_max_mp")) == mp_base + 100, "original purple earring MP +5 base and +95 enhancement")
 	assert_ok(int(world.call("_effective_mr")) >= 10, "special cloak enhancement MR actually applied")
 	var cloak_detail: Dictionary = {"name":"마법 망토","slot":"cloak","instance_id":"11","desc":"물리 방어력(AC) -1 · 마법 방어력(MR) +10"}
 	var only_cloak: Dictionary = {"cloak":cloak_detail}
@@ -96,7 +96,7 @@ func _run() -> void:
 	assert_ok(int(world.call("_enhancement_stat_for_slots", earring_slots, "mp_recovery")) == 3, "earring MP tick wired")
 
 	print("OPTION_FINALIZE_TRACE: enhancement MP/MR checked")
-	world.set("equipped_items", {"tshirt":{"name":"지식의 티셔츠","slot":"tshirt","desc":"방어 +2 · MP +30"}})
+	world.set("equipped_items", {"tshirt":{"name":"테스트용 MP+30 티셔츠","slot":"tshirt","desc":"방어 +2 · MP +30"}})
 	world.set("max_mp", 200)
 	world.set("mp", 200)
 	world.set("inventory", {"마녀의 마력 회복제":1})
