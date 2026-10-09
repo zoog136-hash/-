@@ -71,7 +71,9 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          cp tests/benchmark_actor_motion.gd tests/capture_combat_crowd.gd baseline/tests/
+          # Capture script imports the class-confirmation QA helper. Include it in
+          # the baseline checkout so both candidates run identical test code.
+          cp tests/benchmark_actor_motion.gd tests/capture_combat_crowd.gd tests/qa_class_selection.gd baseline/tests/
           export LIBGL_ALWAYS_SOFTWARE=1
           TWILIGHT_MOTION_BENCHMARK="$PWD/test-results/motion-baseline.json" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path baseline --script res://tests/benchmark_actor_motion.gd 2>&1 | tee test-results/motion-baseline.log
           TWILIGHT_MOTION_BENCHMARK="$PWD/test-results/motion-followup.json" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/benchmark_actor_motion.gd 2>&1 | tee test-results/motion-followup.log
