@@ -115,6 +115,10 @@ var charge_target: TwilightMonster = null
 var charge_skill: Dictionary = {}
 var charge_speed: float = 1150.0
 var save_timer: float = 0.0
+var hp_recovery_elapsed: float = 0.0
+var mp_recovery_elapsed: float = 0.0
+const UNIQUE_RECOVERY_INTERVAL: float = 30.0
+const UNIQUE_RECOVERY_AMOUNT: int = 5
 var collision_debug: bool = false
 var quest_kills: int = 0
 const QUEST_GOAL: int = 9
@@ -260,6 +264,7 @@ func _process(delta: float) -> void:
 	_tick_skill_cooldowns(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
+	_tick_catalog_recovery(delta)
 	_run_auto_buff_quickslots(delta)
 	save_timer += delta
 	if save_timer >= 30.0:
@@ -367,7 +372,18 @@ func _verified_catalog_record(category: String, source_record: Dictionary) -> Di
 	var merged: Dictionary = source_record.duplicate(true)
 	for option: Variant in stats.keys():
 		merged[str(option)] = stats[option]
-	merged["desc"] = str(override_entry.get("desc", source_record.get("desc", "")))
+	var runtime_description: String = str(override_entry.get("desc", source_record.get("desc", "")))
+	if int(stats.get("mpRecoveryTick", 0)) > 0:
+		runtime_description = runtime_description.replace(
+			"MP 회복(틱) +%d" % int(stats.get("mpRecoveryTick", 0)), "MP 자동회복(30초) +5"
+		)
+	if int(stats.get("hpAbsoluteRecovery", 0)) > 0:
+		runtime_description = runtime_description.replace(
+			"HP 절대회복 +%d" % int(stats.get("hpAbsoluteRecovery", 0)), "HP 자동회복(30초) +5"
+		)
+	if bool(stats.get("hpAbsorption", false)):
+		runtime_description = runtime_description.replace("HP 흡수", "HP 흡수(공격 적중마다 1~3)")
+	merged["desc"] = runtime_description
 	merged["reference_verified"] = true
 	merged["reference_source"] = str(override_entry.get("source", ""))
 	return merged
@@ -391,6 +407,66 @@ func _load_verified_catalog_options() -> void:
 			for index: int in range(entries.size()):
 				if entries[index] is Dictionary:
 					entries[index] = _verified_catalog_record(category, entries[index] as Dictionary)
+
+func _has_hp_absorption() -> bool:
+	for record: Dictionary in _all_equipped_records():
+		if bool(record.get("hpAbsorption", record.get("hp_absorption", false))) or str(record.get("desc", "")).contains("HP 흡수"):
+			return true
+	return false
+
+func _has_recovery_effect(key: String) -> bool:
+	for record: Dictionary in _all_equipped_records():
+		if int(record.get(key, 0)) > 0:
+			return true
+	return false
+
+func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
+	if target == null or not is_instance_valid(target) or target.dead:
+		return
+	var stolen: int = 0
+	if _has_hp_absorption():
+		# Extra damage and healing represent the exact same amount of
+		# HP stolen from the target, capped by its remaining HP.
+		stolen = mini(rng.randi_range(1, 3), maxi(0, target.hp))
+	if stolen > 0:
+		var previous_hp: int = hp
+		hp = mini(_effective_max_hp(), hp + stolen)
+		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
+	target.take_damage(maxi(1, normal_damage) + stolen, critical)
+	if stolen > 0:
+		_update_hud()
+
+func _tick_catalog_recovery(delta: float) -> void:
+	var elapsed: float = maxf(0.0, delta)
+	var hp_enabled: bool = _has_recovery_effect("hpAbsoluteRecovery") or _has_recovery_effect("hpRecoveryTick")
+	var mp_enabled: bool = _has_recovery_effect("mpRecoveryTick")
+	var changed: bool = false
+	if hp_enabled:
+		hp_recovery_elapsed += elapsed
+		if hp_recovery_elapsed >= UNIQUE_RECOVERY_INTERVAL:
+			var cycles: int = int(floor(hp_recovery_elapsed / UNIQUE_RECOVERY_INTERVAL))
+			hp_recovery_elapsed = fmod(hp_recovery_elapsed, UNIQUE_RECOVERY_INTERVAL)
+			var old_hp: int = hp
+			hp = mini(_effective_max_hp(), hp + cycles * UNIQUE_RECOVERY_AMOUNT)
+			if hp > old_hp:
+				hud.append_log("HP 자동회복 · +%d" % (hp - old_hp))
+				changed = true
+	else:
+		hp_recovery_elapsed = 0.0
+	if mp_enabled:
+		mp_recovery_elapsed += elapsed
+		if mp_recovery_elapsed >= UNIQUE_RECOVERY_INTERVAL:
+			var cycles: int = int(floor(mp_recovery_elapsed / UNIQUE_RECOVERY_INTERVAL))
+			mp_recovery_elapsed = fmod(mp_recovery_elapsed, UNIQUE_RECOVERY_INTERVAL)
+			var old_mp: int = mp
+			mp = mini(_effective_max_mp(), mp + cycles * UNIQUE_RECOVERY_AMOUNT)
+			if mp > old_mp:
+				hud.append_log("MP 자동회복 · +%d" % (mp - old_mp))
+				changed = true
+	else:
+		mp_recovery_elapsed = 0.0
+	if changed:
+		_update_hud()
 
 func _catalog_stat_sum(key: String) -> int:
 	var result: int = 0
@@ -1012,7 +1088,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _critical_damage(damage)
-	target.take_damage(damage, critical)
+	_deal_successful_player_hit(target, damage, critical)
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -1282,7 +1358,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _critical_damage(damage)
-	target.take_damage(damage, critical)
+	_deal_successful_player_hit(target, damage, critical)
 	if target.dead:
 		_update_hud()
 		_update_target_hud()
@@ -1345,7 +1421,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
 		damage = _critical_damage(damage)
-	target.take_damage(damage, critical)
+	_deal_successful_player_hit(target, damage, critical)
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
 		hit_chance * 100.0, critical_chance * 100.0
@@ -1443,7 +1519,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	if critical:
 		damage = _critical_damage(damage)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	target.take_damage(damage, critical)
+	_deal_successful_player_hit(target, damage, critical)
 	_try_trigger_passives("on_hit", target)
 	_try_extra_weapon_hit(target, damage, attack_kind)
 	hud.append_log("%s에게 %d %s 피해%s · 사거리 %d칸 · 치명타 %.1f%%" % [
@@ -2623,6 +2699,8 @@ func _save_game(quiet: bool) -> void:
 		"max_hp": max_hp,
 		"mp": mp,
 		"max_mp": max_mp,
+		"hp_recovery_elapsed": hp_recovery_elapsed,
+		"mp_recovery_elapsed": mp_recovery_elapsed,
 		"attack": attack_power,
 		"defense": defense,
 		"str": str_stat,
@@ -2680,6 +2758,8 @@ func _load_game(quiet: bool) -> void:
 	max_hp = maxi(1, int(data.get("max_hp", max_hp)))
 	mp = int(data.get("mp", mp))
 	max_mp = maxi(0, int(data.get("max_mp", max_mp)))
+	hp_recovery_elapsed = clampf(float(data.get("hp_recovery_elapsed", 0.0)), 0.0, UNIQUE_RECOVERY_INTERVAL)
+	mp_recovery_elapsed = clampf(float(data.get("mp_recovery_elapsed", 0.0)), 0.0, UNIQUE_RECOVERY_INTERVAL)
 	attack_power = maxi(1, int(data.get("attack", attack_power)))
 	defense = maxi(0, int(data.get("defense", defense)))
 	str_stat = int(data.get("str", str_stat))
@@ -2731,7 +2811,7 @@ func _load_game(quiet: bool) -> void:
 	player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
 	_refresh_skill_stealth_visual()
 	hp = clampi(hp, 0, _effective_max_hp())
-	mp = clampi(mp, 0, max_mp)
+	mp = clampi(mp, 0, _effective_max_mp())
 	var map_id: String = str(data.get("map_id", active_map_id))
 	if not maps_by_id.has(map_id):
 		map_id = active_map_id
@@ -3375,7 +3455,7 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> voi
 			"damage":
 				if target == null or not is_instance_valid(target) or target.dead:
 					continue
-				target.take_damage(maxi(1, int(skill.get("power", 1))), false)
+				_deal_successful_player_hit(target, maxi(1, int(skill.get("power", 1))), false)
 			"heal":
 				if hp >= _effective_max_hp():
 					continue
@@ -3525,7 +3605,7 @@ func _try_extra_weapon_hit(target: TwilightMonster, initial_damage: int, attack_
 		return
 	var damage: int = maxi(1, int(round(float(initial_damage) * multiplier)))
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
-	target.take_damage(damage)
+	_deal_successful_player_hit(target, damage)
 	_try_trigger_passives("on_hit", target)
 	hud.append_log("%s 추가타 +%d 피해" % [target.monster_name, damage])
 
@@ -3551,7 +3631,7 @@ func _resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
 	else:
 		var target_name: String = target.monster_name
 		hud.append_log("%s · %s 언데드 즉사!" % [str(skill.get("name", "")), target_name])
-		target.take_damage(target.hp, false)
+		_deal_successful_player_hit(target, target.hp, false)
 	_update_target_hud()
 
 func _clear_skill_charge() -> void:
@@ -3752,7 +3832,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if critical:
 				damage = _critical_damage(damage)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
-			victim.take_damage(damage, critical)
+			_deal_successful_player_hit(victim, damage, critical)
 			_try_trigger_passives("on_hit", victim)
 			_try_extra_weapon_hit(victim, damage, style)
 			if not victim.dead and rng.randf() < clampf(float(skill.get("status_chance", 0.0)), 0.0, 1.0):
@@ -3896,6 +3976,9 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 		return
 	var old_max_hp: int = _effective_max_hp()
 	equipped_catalog[category] = record.duplicate(true)
+	if category == "마법인형" or category == "성물":
+		hp_recovery_elapsed = 0.0
+		mp_recovery_elapsed = 0.0
 	if category == "변신":
 		_apply_transform_visual(record)
 	elif category == "마법인형":
@@ -3907,6 +3990,7 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	if new_max_hp > old_max_hp:
 		hp += new_max_hp - old_max_hp
 	hp = mini(hp, new_max_hp)
+	mp = mini(mp, _effective_max_mp())
 	hud.show_message("%s 장착: %s" % [category, str(record.get("name", ""))])
 	hud.append_log("%s 적용 · %s" % [category, str(record.get("name", ""))])
 	_update_hud()

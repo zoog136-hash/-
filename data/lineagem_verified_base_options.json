@@ -59,7 +59,11 @@
       },
       "desc": "경험치 +8% · 무게 보너스 +800 · Max MP +50 · SP +1 · MP 회복(틱) +12",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/",
-      "pending": "MP tick cadence must be established before regeneration loop"
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 12
+      }
     },
     "흑장로": {
       "stats": {
@@ -73,7 +77,11 @@
       },
       "desc": "경험치 +8% · 무게 보너스 +800 · SP +1 · MP 회복(틱) +15",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/",
-      "pending": "MP tick cadence pending"
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 15
+      }
     },
     "단테스": {
       "stats": {
@@ -122,7 +130,11 @@
       },
       "desc": "경험치 +16% · 무게 보너스 +1400 · PVE 대미지 리덕션 +3 · MP 회복(틱) +10 · 마법 명중 +2",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/",
-      "pending": "MP tick cadence pending"
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 10
+      }
     },
     "다크 하딘": {
       "stats": {
@@ -150,7 +162,11 @@
       },
       "desc": "경험치 +8% · 무게 보너스 +800 · 근거리 대미지 +2 · MP 회복(틱) +6",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/",
-      "pending": "MP tick cadence pending"
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 6
+      }
     },
     "드레이크": {
       "stats": {
@@ -198,7 +214,11 @@
       },
       "desc": "경험치 +16% · 무게 보너스 +1400 · 마법 대미지 +3 · 마법 명중 +2 · MP 회복(틱) +10",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/",
-      "pending": "MP tick cadence pending"
+      "runtimeRule": {
+        "mpRecovery": "30초마다 MP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_mpRecovery_source_value": 10
+      }
     },
     "타로스": {
       "stats": {
@@ -253,11 +273,17 @@
         "hpPct": 0.05,
         "skillCooldownPct": 5,
         "hpAbsoluteRecovery": 6,
-        "skillLevelBonus": 1
+        "skillLevelBonus": 1,
+        "hpAbsorption": true
       },
       "desc": "경험치 +8% · 최대 HP +5% · 스킬 쿨타임 감소 5% · HP 흡수 · HP 절대회복 +6 · 일반 스킬 레벨 +1",
       "source": "https://lineagem.inven.co.kr/db/hallows/",
-      "pending": "HP absorption chance/amount and absolute-recovery cadence are not specified"
+      "runtimeRule": {
+        "hpAbsorption": "매 적중 시 몬스터 HP 1~3 추가 소모와 같은 양 HP 회복",
+        "hpRecovery": "30초마다 HP 5 회복",
+        "configured_by": "TWILIGHT 사용자 선택",
+        "original_hpRecovery_source_value": 6
+      }
     },
     "지배자 기르타스의 뿔": {
       "stats": {
