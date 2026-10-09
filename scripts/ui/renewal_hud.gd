@@ -460,11 +460,25 @@ func toggle_menu() -> void:
 	var col: VBoxContainer = workspace.column()
 	col.add_child(UI.label("모험의 모든 기록",28,UI.GOLD))
 	col.add_child(UI.label("장비를 정비하고, 새로운 전투를 준비하세요.",14,UI.MUTED))
+	var menu_scroll := ScrollContainer.new()
+	menu_scroll.name = "MenuContentScroll"
+	menu_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	menu_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	menu_scroll.scroll_deadzone = 8
+	col.add_child(menu_scroll)
 	var grid := GridContainer.new()
 	grid.columns = 3
-	col.add_child(grid)
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.mouse_filter = Control.MOUSE_FILTER_PASS
+	menu_scroll.add_child(grid)
 	for pair: Array in [["character","캐릭터 · 장비"],["inventory","인벤토리"],["skills","스킬 · 성장"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"]]:
-		grid.add_child(UI.button(str(pair[1]),_navigate.bind(str(pair[0])),Vector2(238,74)))
+		var section_id: String = str(pair[0])
+		var button: Button = UI.button(str(pair[1]),func() -> void:
+			if not workspace.was_scroll_dragged(menu_scroll):
+				_navigate(section_id),Vector2(238,74))
+		grid.add_child(button)
+		workspace.register_scroll_drag(menu_scroll,button)
 
 func _open_utility_panel(title: String) -> void:
 	var section := "utility"
