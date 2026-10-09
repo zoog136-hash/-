@@ -43,6 +43,11 @@ func _run() -> void:
 		if not has_item:
 			_fail("default quickslots contain no consumable")
 
+	world.level = 90
+	world.equipped_items["weapon"] = {"name":"검사 양손검","type":"양손검","slot":"weapon"}
+	var counter: Dictionary = world.original_skills.catalog.record_for("카운터 배리어")
+	world.inventory[str(counter.book_name)] = 1
+	world.original_skills.catalog.learn(str(counter.id))
 	world.call("_on_quickslot_assignment_requested", 0, "skill", "카운터 배리어")
 	world.call("_on_quickslot_assignment_requested", 1, "item", "HP 물약")
 	var assigned: Array = world.get("quickslots") as Array

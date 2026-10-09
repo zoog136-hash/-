@@ -852,7 +852,7 @@ func _render_quickslots(inventory: Dictionary, active_buffs: Dictionary) -> void
 			var is_buff: bool = str(skill.get("effect", "")).find("Buff") >= 0
 			var active_text: String = " · ACTIVE" if active_buffs.has(entry_id) else ""
 			button.text = entry_id.left(5) + ("\nAUTO" if bool(entry.get("auto", false)) else "")
-			button.icon = _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
+			button.icon = load(str(skill.icon)) as Texture2D if skill.has("icon") else _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
 			button.expand_icon = true
 			button.tooltip_text = "%s · %s · MP %d%s" % [
 				entry_id, str(skill.get("type", "")), int(skill.get("mp", 0)),

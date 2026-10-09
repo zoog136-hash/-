@@ -96,6 +96,7 @@ var exp_reward: int = 25
 var gold_reward: int = 40
 var grade: String = "일반"
 var is_boss: bool = false
+var status_immunities: Array = []
 var drop_items: Array[String] = []
 var target_player: TwilightPlayer = null
 var world_controller: Node = null
@@ -127,6 +128,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	decision_elapsed = 0.; sight_clock = 0.; sight_cached = false
 	special_sequence = -1; special_cooldown = 3.; blink_cooldown = 0.; roam_clock = 0.
 	ai = (record.get("ai",{}) as Dictionary).duplicate(true)
+	status_immunities = (record.get("status_immunities", []) as Array).duplicate()
 	show()
 	input_pickable = true
 	collision_layer = 2

@@ -25,3 +25,6 @@
 
 
 UI 전면 리뉴얼 후속 PR #50의 [화면별 변경·참조·검증 범위](docs/UI_RENEWAL_FIDELITY_20261009.md)를 참고하세요. 실제 터치 입력 회귀와 작은 창/Android 크기 화면 검증은 `tests/ui_fidelity_regression_test.gd`와 `tests/capture_ui_fidelity.gd`에 포함됩니다.
+
+
+원작 스킬 이행 작업은 별도 feature 브랜치의 검증 중인 변경입니다. [조사 도감](docs/skills/CATALOG.md), [검증·미완료 보고서](docs/skills/VALIDATION.md), [구현 구조와 재개 절차](docs/skills/IMPLEMENTATION.md)를 참고하세요. 2025-06-17의 전체 스킬 목록과 원작 이펙트 복원이 완료된 상태는 아닙니다. 원본 257개 스킬 DB는 보존하고, 활성 도감은 날짜가 확인된 자료를 바탕으로 실행을 연결한 별도 DB를 사용합니다.

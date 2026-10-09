@@ -29,8 +29,13 @@ func _run() -> void:
 	world.mp = 999
 	world.inventory["화살"] = 100
 	var skill: Dictionary = world._skill_record("트리플 애로우")
+	world.level = 90
+	world.inventory[str(skill.book_name)] = 1
+	world.original_skills.catalog.learn(str(skill.id))
 	world.skills_db = [skill]
 	world.active_skill_buffs.clear()
+	world.skill_cooldowns.clear()
+	world.skill_global_cooldown = 0
 	check(world._cast_job_skill("트리플 애로우"), "triple command rejected")
 	check(mob.damage_hit_count == 0, "volley hit at command")
 	world.player.motion.advance(0.3, Vector2.ZERO)

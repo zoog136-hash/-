@@ -31,3 +31,12 @@
 5. Windows·Android GPU 실제 성능, 장시간 플레이, Android 경고 정리 및 실제 기기 실행 확인은 남은 점검입니다.
 
 마지막 수동 갱신: 2026-10-09.
+
+
+## 원작 스킬 이행 작업 — 미완료, 별도 브랜치
+
+- 기준 main: `edefc7c120b9ad4f8e211c6e36478d4afb73c21d`, 다시 확인한 main HEAD와 일치.
+- 작업 브랜치: `feature/original-lineagem-skill-complete-20261010`. main 미병합.
+- 13직업 조사 인벤토리 695개: 실행 연결 122개 PARTIAL, 571개 BLOCKED, PvP 전용 근거가 있는 2개 PVP_EXCLUDED. 전체 역사 목록의 완전성 UNKNOWN.
+- 학습·스킬북·강화 관계·수동/자동/패시브 전투 경로·슬롯 이전·별도 수치·ID별 VFX/아이콘/합성 오디오를 연결했습니다. 기존 아이템 인스턴스와 원본 스킬 DB를 보존합니다.
+- 최신 실행 결과와 정확한 CI SHA는 [검증 보고서](docs/skills/VALIDATION.md)에 기록합니다. 원작 전체 구현 완료나 출시/병합 준비 완료를 뜻하지 않습니다.

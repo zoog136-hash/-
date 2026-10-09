@@ -22,6 +22,7 @@ func _run() -> void:
 	root.add_child(world)
 	await process_frame
 	await process_frame
+	preload("res://tests/legacy_skill_fixture.gd").install(world)
 
 	var db: Array = world.get("skills_db") as Array
 	_expect(db.size() == 257, "skill DB count unexpectedly changed")
