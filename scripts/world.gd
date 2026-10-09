@@ -2211,6 +2211,8 @@ func _scroll_mode(scroll_name: String) -> String:
 	return "normal"
 
 func _on_inventory_item_activated(item_name: String) -> void:
+	var selected: Dictionary = _parse_enhancement_target(item_name)
+	item_name = str(selected.get("name", item_name))
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 상태이상 해제 물약입니다")
 		return
@@ -2230,7 +2232,7 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	var equip_slot: String = _equipment_slot_base(record)
 	if equip_slot != "":
-		_equip_or_acquire_item(record, false)
+		_equip_or_acquire_item(record, false, str(selected.get("id", "")))
 		return
 	if _is_timed_buff_item(record):
 		_use_timed_item_buff(record)
@@ -2441,13 +2443,18 @@ func _sync_item_instances() -> void:
 		for key: Variant in item_instances.keys():
 			if str((item_instances[key] as Dictionary).get("name", "")) == name_value:
 				ids.append(str(key))
+		var legacy_import: bool = ids.is_empty() and enhancement_levels.has(name_value)
 		while ids.size() < desired:
 			var unique_id: String = str(next_item_instance_id)
 			while item_instances.has(unique_id):
 				next_item_instance_id += 1
 				unique_id = str(next_item_instance_id)
 			next_item_instance_id += 1
-			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0))}
+			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0)) if legacy_import else 0, "element":"", "element_level":0}
+			if not ids.is_empty():
+				var previous: Dictionary = item_instances.get(ids[0], {}) as Dictionary
+				if previous.has("record"):
+					item_instances[unique_id]["record"] = (previous["record"] as Dictionary).duplicate(true)
 			ids.append(unique_id)
 		while ids.size() > desired:
 			var found: bool = false
@@ -2482,7 +2489,7 @@ func _chosen_instance(name_value: String, only_free: bool = false) -> String:
 func _item_instance_level(instance_id: String, fallback_name: String = "") -> int:
 	if item_instances.has(instance_id):
 		return int((item_instances[instance_id] as Dictionary).get("level", 0))
-	return int(enhancement_levels.get(fallback_name, 0))
+	return int(enhancement_levels.get(fallback_name, 0)) if instance_id == "" else 0
 
 func _parse_enhancement_target(raw_name: String) -> Dictionary:
 	var pieces: PackedStringArray = raw_name.split("@@@", false, 1)
@@ -2583,6 +2590,12 @@ func _find_catalog_item_record(item_name: String) -> Dictionary:
 			var record: Dictionary = value as Dictionary
 			if str(record.get("name", "")) == item_name:
 				return record
+	# Runtime-earned / generated equipment may not exist in either catalog.
+	for raw_instance: Variant in item_instances.values():
+		if raw_instance is Dictionary:
+			var physical: Dictionary = raw_instance as Dictionary
+			if str(physical.get("name", "")) == item_name and physical.get("record", {}) is Dictionary:
+				return (physical.get("record", {}) as Dictionary).duplicate(true)
 	return {}
 
 func _safe_enhancement_level(kind: String) -> int:
@@ -2915,6 +2928,8 @@ func _update_hud() -> void:
 	character_state["quest_kills"] = quest_kills
 	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
+	if hud.inventory_panel.visible:
+		hud.refresh_inventory(inventory)
 	if hud.has_method("set_quickslot_state"):
 		hud.call("set_quickslot_state", quickslots, inventory, _combined_active_buffs(), self_mode_enabled)
 	elif hud.has_method("set_quickslot_entries"):
@@ -3052,6 +3067,7 @@ func _load_game(quiet: bool) -> void:
 	_sync_item_instances()
 	_normalize_equipment_slots()
 	_attach_missing_equipment_instance_ids()
+	consumable_service.call("migrate_legacy_elemental")
 	_enforce_weapon_class_compatibility(true)
 	_enforce_shield_weapon_compatibility(true)
 	_restore_equipped_visuals()
@@ -4230,19 +4246,19 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	hud.append_log("%s 적용 · %s" % [category, str(record.get("name", ""))])
 	_update_hud()
 
-func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -> void:
+func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "") -> void:
 	var item_name: String = str(record.get("name", "아이템"))
 	if add_to_inventory:
 		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
-		# Reward/shop records can be dynamically generated and absent from the
-		# static catalog. They still need a unique physical enhancement ID.
+		# Generated gear without static catalog rows must also acquire a physical
+		# ID and retain its schema for reload, equip and all scroll types.
 		if _enhancement_kind_for_record(record) != "" and _find_catalog_item_record(item_name).is_empty():
-			var item_id: String = str(next_item_instance_id)
-			while item_instances.has(item_id):
+			var new_id: String = str(next_item_instance_id)
+			while item_instances.has(new_id):
 				next_item_instance_id += 1
-				item_id = str(next_item_instance_id)
+				new_id = str(next_item_instance_id)
 			next_item_instance_id += 1
-			item_instances[item_id] = {"name":item_name,"level":0}
+			item_instances[new_id] = {"name":item_name, "level":0, "element":"", "element_level":0, "record":record.duplicate(true)}
 	var source_slot: String = str(record.get("slot", ""))
 	if source_slot == "weapon" and not _weapon_allowed_for_job(record, job_class):
 		var weapon_type: String = _normalized_weapon_type(str(record.get("type", "")))
@@ -4262,11 +4278,12 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true) -
 		return
 	if equip_slot != "" and EQUIPMENT_SLOT_ORDER.has(equip_slot):
 		var old_max_hp: int = _effective_max_hp()
-		var selected_id: String = _chosen_instance(item_name, true)
-		if selected_id.is_empty() and str((equipped_items.get(equip_slot, {}) as Dictionary).get("name", "")) == item_name:
-			selected_id = str((equipped_items.get(equip_slot, {}) as Dictionary).get("instance_id", ""))
-		if selected_id.is_empty():
-			hud.show_message("장착 가능한 장비 개체가 없습니다")
+		var selected_id: String = requested_id if requested_id != "" else _chosen_instance(item_name, true)
+		if not item_instances.has(selected_id) or str((item_instances[selected_id] as Dictionary).get("name", "")) != item_name:
+			hud.show_message("착용 가능한 장비 개체가 없습니다")
+			return
+		if _is_instance_equipped(selected_id):
+			hud.show_message("이미 착용한 장비 개체입니다")
 			return
 		equipped_items[equip_slot] = record.duplicate(true)
 		equipped_items[equip_slot]["instance_id"] = selected_id
