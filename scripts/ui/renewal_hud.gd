@@ -560,9 +560,15 @@ func _build_catalog_panel() -> void:
 		control.custom_minimum_size.y = 34
 	catalog_count.reparent(left)
 	catalog_count.add_theme_font_size_override("font_size",11)
+	var right_scroll := ScrollContainer.new()
+	right_scroll.name = "CatalogActionsScroll"
+	right_scroll.custom_minimum_size.x = 315
+	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	body.add_child(right_scroll)
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 310
-	body.add_child(right)
+	right.custom_minimum_size.x = 300
+	right_scroll.add_child(right)
 	catalog_preview.reparent(right)
 	catalog_preview.custom_minimum_size = Vector2(0,160)
 	catalog_detail.reparent(right)
