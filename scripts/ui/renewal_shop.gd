@@ -1,0 +1,121 @@
+extends VBoxContainer
+
+# UI-only shop adapter: all payments go through the original shop signal.
+const UI = preload("res://scripts/ui/renewal_theme.gd")
+const GOODS = [
+	["HP 물약", 50, "물약"],
+	["강력 HP 물약", 180, "물약"],
+	["축복받은 HP 물약", 450, "물약"],
+	["초록 잎", 100, "소모품"],
+	["무기 마법 주문서 (각인)", 25000, "강화 주문서"],
+	["갑옷 마법 주문서 (각인)", 18000, "강화 주문서"],
+	["장신구 마법 주문서 (각인)", 35000, "강화 주문서"],
+	["축복받은 무기 마법 주문서 (각인)", 120000, "강화 주문서"],
+	["축복받은 갑옷 마법 주문서 (각인)", 90000, "강화 주문서"],
+	["장인의 무기 마법 주문서 (각인)", 350000, "강화 주문서"],
+	["장인의 갑옷 마법 주문서 (각인)", 300000, "강화 주문서"],
+	["오림의 장신구 마법 주문서 (각인)", 150000, "강화 주문서"],
+	["축복받은 오림의 장신구 마법 주문서 (각인)", 450000, "강화 주문서"]
+]
+
+var hud: Node
+var wallet: Label
+var search_field: LineEdit
+var category_filter: OptionButton
+var listing: ItemList
+var detail: RichTextLabel
+var purchase: Button
+var filtered: Array = []
+var selected: Array = []
+
+func configure(controller: Node) -> void:
+	hud = controller
+	size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	size_flags_vertical = Control.SIZE_EXPAND_FILL
+	add_child(UI.label("잡화 상점",22,UI.GOLD))
+	wallet = UI.label("",15,UI.GOLD)
+	add_child(wallet)
+	var filters := HBoxContainer.new()
+	add_child(filters)
+	search_field = LineEdit.new()
+	search_field.name = "ShopSearch"
+	search_field.placeholder_text = "상품 이름 검색"
+	search_field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	search_field.text_changed.connect(func(_value: String) -> void: _refresh())
+	filters.add_child(search_field)
+	category_filter = OptionButton.new()
+	category_filter.name = "ShopCategory"
+	for name: String in ["전체","물약","소모품","강화 주문서"]:
+		category_filter.add_item(name)
+	category_filter.item_selected.connect(func(_index: int) -> void: _refresh())
+	filters.add_child(category_filter)
+	var row := HBoxContainer.new()
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	add_child(row)
+	listing = ItemList.new()
+	listing.name = "ShopItems"
+	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	listing.item_selected.connect(_select)
+	row.add_child(listing)
+	var side := VBoxContainer.new()
+	side.custom_minimum_size.x = 315
+	row.add_child(side)
+	side.add_child(UI.label("선택한 상품",18,UI.GOLD))
+	detail = UI.rich("")
+	detail.fit_content = false
+	detail.scroll_active = true
+	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	side.add_child(detail)
+	purchase = UI.button("상품 선택",_buy,Vector2(0,54))
+	purchase.name = "ShopBuy"
+	side.add_child(purchase)
+	side.add_child(UI.label("구매는 기존 게임의 아데나·인벤토리·저장 처리에 연결됩니다.",11,UI.MUTED))
+	_refresh()
+
+func _refresh() -> void:
+	filtered.clear()
+	listing.clear()
+	selected.clear()
+	wallet.text = "보유 아데나  %d" % int(hud.character_state.get("gold",0))
+	var query := search_field.text.strip_edges().to_lower()
+	var category := category_filter.get_item_text(category_filter.selected)
+	for entry: Array in GOODS:
+		var name := str(entry[0])
+		if category != "전체" and str(entry[2]) != category: continue
+		if query != "" and not name.to_lower().contains(query): continue
+		filtered.append(entry)
+		var count: int = int(hud.lineage_inventory_ui.inventory.get(name,0))
+		listing.add_item("%s  ·  %d 아데나  ·  보유 %d" % [name,int(entry[1]),count])
+	if filtered.is_empty():
+		detail.text = "검색 조건에 맞는 상품이 없습니다."
+		purchase.disabled = true
+	else:
+		listing.select(0)
+		_select(0)
+
+func _select(index: int) -> void:
+	if index < 0 or index >= filtered.size(): return
+	selected = filtered[index]
+	var name := str(selected[0])
+	var price := int(selected[1])
+	var available := int(hud.character_state.get("gold",0))
+	var info: Dictionary = {}
+	for record: Variant in hud.catalog_data.get("아이템",[]):
+		if record is Dictionary and str(record.get("name","")) == name:
+			info = record
+			break
+	var count := int(hud.lineage_inventory_ui.inventory.get(name,0))
+	detail.text = "[color=#d8b878][font_size=22]%s[/font_size][/color]\n%s\n\n가격: %d 아데나\n보유 수량: %d\n보유 아데나: %d\n\n%s" % [
+		UI.safe(name), UI.safe(selected[2]), price, count, available,
+		UI.safe(info.get("desc",info.get("description","기존 게임 데이터의 소모품 / 강화 주문서")))
+	]
+	purchase.disabled = available < price
+	purchase.text = "아데나 부족" if available < price else "1개 구매 · %d 아데나" % price
+
+func _buy() -> void:
+	if selected.is_empty(): return
+	var name := str(selected[0])
+	var price := int(selected[1])
+	if price > 0 and int(hud.character_state.get("gold",0)) >= price:
+		hud.shop_buy_requested.emit(name,price)

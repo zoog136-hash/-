@@ -1,0 +1,58 @@
+name: UI Renewal Validate
+
+on:
+  push:
+    branches: ['feature/twilight-ui-renewal-restart-20261009']
+  pull_request:
+    branches: [main, 'integration/twilight-complete-20261009']
+    paths:
+      - 'scripts/ui/renewal_*.gd'
+      - 'tests/ui_renewal_integration_test.gd'
+      - 'tests/capture_ui_renewal.gd'
+  workflow_dispatch:
+
+jobs:
+  ui-renewal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot and virtual OpenGL
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+      - name: Parse project
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee ui-parse.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" ui-parse.log
+      - name: Run UI integration assertions
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$PWD/ui-integration-data"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ui_renewal_integration_test.gd 2>&1 | tee ui-integration.log
+          ! grep -E "SCRIPT ERROR:|ERROR:|UI RENEWAL FAIL:|UI_RENEWAL_INTEGRATION_FAILED" ui-integration.log
+          grep -q "UI_RENEWAL_INTEGRATION_OK" ui-integration.log
+      - name: Capture 68 OpenGL screen states
+        run: |
+          set -o pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="$PWD/ui-render-data"
+          xvfb-run -a -s "-screen 0 2560x1440x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ui_renewal.gd 2>&1 | tee ui-capture.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" ui-capture.log
+          grep -q "UI_RENEWAL_CAPTURE_OK" ui-capture.log
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-ui-renewal-evidence
+          path: |
+            ui-parse.log
+            ui-integration.log
+            ui-capture.log
+            ui-render-data/**/ui-renewal-review/*.json
+            ui-render-data/**/ui-renewal-review/*.png
+          if-no-files-found: warn
