@@ -2,9 +2,8 @@ extends RefCounted
 class_name TwilightEquipmentBlessing
 
 # Base equipment blessing: per physical item; separate from blessed enchant scrolls.
-# Original 2017 NC guide confirms common through legendary. Mythic and
-# unique are TWILIGHT extensions pending reliable contemporary option data.
-# "유일" is a TWILIGHT extension, NOT a verified official option.
+# Original 2017 NC guide confirms common through legendary. TWILIGHT applies
+# the legendary blessing effect to mythic and unique equipment by design.
 # Success rates are TWILIGHT placeholders until current NC numeric disclosure can
 # be verified. Never describe these numbers as official probabilities.
 const SUCCESS_CHANCES: Dictionary = {
@@ -13,23 +12,24 @@ const SUCCESS_CHANCES: Dictionary = {
 }
 const WEAPON_BONUSES: Dictionary = {
 	"일반": {"hp":50}, "고급": {"capacity":200}, "희귀": {"accuracy":1},
-	"영웅": {"damage":1}, "전설": {"damage":1}, "신화": {"damage":3},
-	"유일": {"damage":5}
+	"영웅": {"damage":1}, "전설": {"damage":1}
 }
 const ARMOR_BONUSES: Dictionary = {
 	"일반": {"mr":1}, "고급": {"hp":30}, "희귀": {"capacity":100},
-	"영웅": {"defense":1}, "전설": {"defense":1}, "신화": {"defense":3},
-	"유일": {"defense":5}
+	"영웅": {"defense":1}, "전설": {"defense":1}
 }
 
 static func success_chance(grade: String) -> float:
 	return float(SUCCESS_CHANCES.get(grade, 0.0))
 
 static func bonus_for(grade: String, kind: String) -> Dictionary:
+	# Mythic/unique share the legendary effect, not a separate stronger table.
+	# Success chances remain independently configured by grade.
+	var effect_grade: String = "전설" if grade in ["신화", "유일"] else grade
 	if kind == "weapon":
-		return (WEAPON_BONUSES.get(grade, {}) as Dictionary).duplicate()
+		return (WEAPON_BONUSES.get(effect_grade, {}) as Dictionary).duplicate()
 	if kind == "armor":
-		return (ARMOR_BONUSES.get(grade, {}) as Dictionary).duplicate()
+		return (ARMOR_BONUSES.get(effect_grade, {}) as Dictionary).duplicate()
 	return {}
 
 static func effect_text(grade: String, kind: String) -> String:
