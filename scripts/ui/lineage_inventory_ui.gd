@@ -316,7 +316,7 @@ func _refresh_inventory_grid() -> void:
 		var equipped := _is_item_equipped(item_name)
 		var equip_mark := "E " if equipped else ""
 		var level := _enhance_level(item_name)
-		var level_mark := "+%d " % level if level > 0 else ""
+		var level_mark := "/".join(_enhancement_copy_labels(item_name)) + " " if amount > 1 and _enhancement_copy_labels(item_name).size() > 1 else ("+%d " % level if level > 0 else "")
 		var badges := _status_badges(record, item_name)
 		var badge_mark := badges + " " if badges != "" else ""
 		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(item_name), amount]
@@ -349,20 +349,35 @@ func _refresh_inventory_grid() -> void:
 		empty.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		item_grid.add_child(empty)
 
+func _enhancement_copy_labels(item_name: String) -> PackedStringArray:
+	var labels: PackedStringArray = PackedStringArray()
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var levels: Array[int] = []
+	for raw: Variant in instances.values():
+		if raw is Dictionary and str((raw as Dictionary).get("name", "")) == item_name:
+			levels.append(int((raw as Dictionary).get("level", 0)))
+	levels.sort()
+	for rank: int in levels:
+		labels.append("+%d" % rank)
+	return labels
+
 func _enhance_level(item_name: String) -> int:
-	var levels: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
-	return maxi(0, int(levels.get(item_name, 0)))
+	var instances: Dictionary = character_state.get("item_instances", {}) as Dictionary
+	var best: int = 0
+	for raw_value: Variant in instances.values():
+		if raw_value is Dictionary and str((raw_value as Dictionary).get("name", "")) == item_name:
+			best = maxi(best, int((raw_value as Dictionary).get("level", 0)))
+	if best <= 0:
+		var legacy: Dictionary = character_state.get("enhancement_levels", {}) as Dictionary
+		return maxi(0, int(legacy.get(item_name, 0)))
+	return best
 
 func _bless_state(record: Dictionary, item_name: String) -> String:
 	var explicit := str(record.get("bless_state", "")).to_lower()
 	if explicit in ["blessed", "축복"]:
 		return "blessed"
-	if explicit in ["cursed", "저주"]:
-		return "cursed"
 	if bool(record.get("blessed", false)) or item_name.find("축복받은") >= 0:
 		return "blessed"
-	if bool(record.get("cursed", false)) or item_name.find("저주받은") >= 0:
-		return "cursed"
 	return "normal"
 
 func _is_engraved(record: Dictionary, item_name: String) -> bool:
@@ -373,8 +388,6 @@ func _status_badges(record: Dictionary, item_name: String) -> String:
 	var state := _bless_state(record, item_name)
 	if state == "blessed":
 		badges.append("✦")
-	elif state == "cursed":
-		badges.append("☠")
 	if _is_engraved(record, item_name):
 		badges.append("◆")
 	return " ".join(badges)
@@ -390,8 +403,6 @@ func _status_tooltip(record: Dictionary, item_name: String) -> String:
 	var state := _bless_state(record, item_name)
 	if state == "blessed":
 		parts.append("축복")
-	elif state == "cursed":
-		parts.append("저주")
 	if _is_engraved(record, item_name):
 		parts.append("각인")
 	return (" · " + " · ".join(parts)) if not parts.is_empty() else ""
@@ -499,12 +510,13 @@ func _refresh_detail(item_name: String) -> void:
 	detail_icon.texture = load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null
 
 	var lines := PackedStringArray()
+	var copies: PackedStringArray = _enhancement_copy_labels(item_name)
+	if copies.size() > 1:
+		lines.append("[color=#ffd36a]개체별 강화: %s[/color]" % ", ".join(copies))
 	if enhance_level > 0:
 		lines.append("[color=#ffd36a][b]강화 +%d[/b][/color]" % enhance_level)
 	if bless_state == "blessed":
 		lines.append("[color=#ffe77a]✦ 축복 아이템[/color]")
-	elif bless_state == "cursed":
-		lines.append("[color=#d76cff]☠ 저주 아이템[/color]")
 	if engraved:
 		lines.append("[color=#86d7ff]◆ 각인 아이템[/color]")
 	if enhance_level > 0 or bless_state != "normal" or engraved:

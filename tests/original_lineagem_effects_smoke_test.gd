@@ -58,7 +58,7 @@ func _run() -> void:
 	var queen: Dictionary = world.call("_verified_catalog_record", "마법인형", {"name":"서큐버스퀸"})
 	_check(int(queen.get("mpRecoveryTick",0)) == 12, "MP +12 must be recorded but not force a made-up tick cadence")
 	world.set("equipped_catalog", {"변신": {}, "마법인형":{"name":"다크 하딘"}, "성물":{}})
-	_check(int(world.call("_pve_damage_after_item_buffs", 23)) == 23, "PvP only reduction must not leak into PvE")
+	_check(int(world.call("_pve_damage_after_item_buffs", 23)) == 18, "Dark Hadin former PVP reduction +5 now applies against PvE")
 	world.set("equipped_catalog", {"변신": {}, "마법인형":{"name":"버그베어"}, "성물":{}})
 	_check(int(world.call("_carrying_capacity")) == base_capacity + 500, "Bugbear weight +500")
 	world.set("equipped_catalog", {"변신": {}, "마법인형":{}, "성물":{"name":"군터의 방패"}})
