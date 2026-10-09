@@ -4,7 +4,7 @@ on:
   push:
     branches: ['feature/twilight-ui-renewal-restart-20261009']
   pull_request:
-    branches: [main]
+    branches: [main, 'integration/twilight-complete-20261009']
     paths:
       - 'scripts/ui/renewal_*.gd'
       - 'tests/ui_renewal_integration_test.gd'
