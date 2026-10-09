@@ -7,6 +7,10 @@ on:
       - 'scripts/world.gd'
       - 'scripts/consumable_rules.gd'
       - 'scripts/consumable_service.gd'
+      - 'scripts/equipment_blessing.gd'
+      - 'scripts/ui/lineage_inventory_ui.gd'
+      - 'scripts/ui/renewal_inventory.gd'
+      - 'tests/equipment_blessing_smoke_test.gd'
       - 'tests/consumable_smoke_test.gd'
       - 'tests/per_instance_enchantments_smoke_test.gd'
       - 'scripts/hud.gd'
@@ -46,6 +50,14 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/per_instance_enchantments_smoke_test.gd 2>&1 | tee per-instance-smoke.log
           if grep -E "SCRIPT ERROR:|ERROR:|PER_INSTANCE_FAIL:|PER_INSTANCE_ENCHANTMENTS_FAILED" per-instance-smoke.log; then exit 1; fi
           grep -q "PER_INSTANCE_ENCHANTMENTS_OK" per-instance-smoke.log
+      - name: Run equipment blessing regression
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-equipment-blessing"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/equipment_blessing_smoke_test.gd 2>&1 | tee blessing-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|BLESSING FAIL:|EQUIPMENT_BLESSING_SMOKE_FAILED" blessing-smoke.log; then exit 1; fi
+          grep -q "EQUIPMENT_BLESSING_SMOKE_OK" blessing-smoke.log
       - name: Upload smoke test logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -54,4 +66,5 @@ jobs:
           path: |
             consumable-*.log
             per-instance-*.log
+            blessing-*.log
           if-no-files-found: ignore

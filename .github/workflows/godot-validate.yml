@@ -64,6 +64,17 @@ jobs:
             exit 1
           fi
 
+      - name: Ainhasad and Dragon Orb regression
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ainhasad_smoke_test.gd 2>&1 | tee godot-ainhasad-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|AIN FAIL:|AINHASAD_SMOKE_FAILED" godot-ainhasad-smoke.log; then
+            echo "Ainhasad smoke test reported an error."
+            exit 1
+          fi
+          grep -q "AINHASAD_SMOKE_OK" godot-ainhasad-smoke.log
+
       - name: Mythic job smoke test
         shell: bash
         run: |

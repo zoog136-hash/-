@@ -47,7 +47,11 @@ var stat_hud_refresh_pending: bool = false
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
+const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
+const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
+var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
+var ain_refresh_clock: float = 0.0
 
 var field_map: PlayableField = null
 var field_renderer: FieldRenderer = null
@@ -230,9 +234,13 @@ var inventory: Dictionary = {
 	"총알":300,
 	"낡은 장검":1,
 	"초록 잎":200,
+	"드래곤의 루비":5,
+	"드래곤의 다이아몬드":3,
+	"드래곤의 용옥":1,
 	"무기 마법 주문서 (각인)":5,
 	"갑옷 마법 주문서 (각인)":5,
 	"장신구 마법 주문서 (각인)":3,
+	"축복 부여 주문서 (각인)":5,
 	"축복받은 무기 마법 주문서 (각인)":2,
 	"축복받은 갑옷 마법 주문서 (각인)":2,
 	"장인의 무기 마법 주문서 (각인)":1,
@@ -250,6 +258,7 @@ func _ready() -> void:
 	ThemeDB.get_default_theme().default_font = korean_font
 	ThemeDB.fallback_font = korean_font
 	rng.randomize()
+	ain_service.import_state({})
 	_load_data()
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -300,6 +309,11 @@ func _process(delta: float) -> void:
 	_tick_skill_cooldowns(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
+	ain_refresh_clock -= delta
+	if ain_refresh_clock <= 0.0:
+		ain_refresh_clock = 1.0
+		ain_service.advance_time()
+		_update_ain_hud()
 	_tick_catalog_recovery(delta)
 	_run_auto_buff_quickslots(delta)
 	save_timer += delta
@@ -408,11 +422,17 @@ func _load_data() -> void:
 	var directional_value: Variant = JSON.parse_string(FileAccess.get_file_as_string(DIRECTIONAL_PATH))
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
+	# Use owned Twilight art as fallbacks instead of blank inventory icons.
+	var image_records: Dictionary = catalog_image_index.get("아이템", {}) as Dictionary
+	for name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드", "드래곤의 성수", "드래곤의 용옥"]:
+		if not image_records.has(name):
+			image_records[name] = "res://assets/ui/potionRed.png" if name == "드래곤의 루비" else "res://assets/ui/rune.png"
+	catalog_image_index["아이템"] = image_records
 	_build_job_classes()
 
 func _stash_inven_raw_options() -> void:
-	# Original Inven provenance is immutable, even when gameplay hides
-	# cursed / durability-only options or converts PvP descriptions to PvE.
+	# Preserve authoritative raw source clauses for audit while displaying
+	# a local single-player normalized subset in the encyclopedia.
 	for category: String in ["아이템", "변신", "마법인형", "성물"]:
 		var entries: Variant = catalog_db.get(category, [])
 		if not (entries is Array):
@@ -723,10 +743,36 @@ func _inventory_total_weight() -> int:
 	return total
 
 func _carrying_capacity() -> int:
-	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity")
+	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity") + _equipped_bless_bonus("capacity")
 
 func _inventory_encumbrance_multiplier() -> float:
 	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
+
+# Blessing is attached to one item_instances ID, not to a shared item name.
+# Only the exact equipped physical item contributes its blessing; never patch
+# a source catalog record or stack of identically named equipment.
+func _equipped_bless_bonus(stat: String) -> int:
+	var total: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var worn: Variant = equipped_items.get(slot, {})
+		if not (worn is Dictionary) or (worn as Dictionary).is_empty():
+			continue
+		var equipped: Dictionary = worn as Dictionary
+		var item_id: String = str(equipped.get("instance_id", ""))
+		if item_id.is_empty() or not item_instances.has(item_id):
+			continue
+		var physical: Dictionary = item_instances[item_id] as Dictionary
+		if str(physical.get("name", "")) != str(equipped.get("name", "")):
+			continue
+		var record: Dictionary = equipped
+		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
+			record = physical["record"] as Dictionary
+		if not EQUIPMENT_BLESSING.is_blessed(physical, record):
+			continue
+		var kind: String = _enhancement_kind_for_record(record)
+		var bonus: Dictionary = EQUIPMENT_BLESSING.bonus_for(str(record.get("grade", "")), kind)
+		total += int(bonus.get(stat, 0))
+	return total
 
 func _equipment_attribute_bonus(stat: String) -> int:
 	var result: int = 0
@@ -750,7 +796,7 @@ func _effective_attribute(stat: String) -> int:
 	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(key)
 
 func _equipment_accuracy_bonus(kind: String) -> int:
-	var result: int = 0
+	var result: int = _equipped_bless_bonus("accuracy") if kind in ["melee", "ranged"] else 0
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
@@ -770,6 +816,8 @@ func _equipment_potion_heal_stat(label: String) -> int:
 
 func _equipment_additional_damage(kind: String) -> int:
 	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage") + int(_equipment_inven_sum("pve_" + kind + "_damage")) + int(_equipment_inven_sum(kind + "_reduction_ignore"))
+	if kind in ["melee", "ranged"]:
+		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
@@ -911,6 +959,7 @@ func _merge_local_consumables_into_catalog() -> void:
 		{"name":"무기 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"무기 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
 		{"name":"갑옷 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"방어구 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
 		{"name":"장신구 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"장신구 강화에 사용. 실패 시 장비 소실 가능"},
+		{"name":"축복 부여 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"무기·방어구 축복에 사용 · 실패해도 장비 유지 · TWILIGHT 조정 확률"},
 		{"name":"축복받은 무기 마법 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"성공 시 강화 단계가 +1~+3 상승할 수 있는 무기 주문서"},
 		{"name":"축복받은 갑옷 마법 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"성공 시 강화 단계가 +1~+3 상승할 수 있는 방어구 주문서"},
 		{"name":"장인의 무기 마법 주문서 (각인)", "grade":"영웅", "type":"강화주문서", "slot":"consumable", "desc":"+9 무기 강화. 실패해도 장비가 소실되지 않음"},
@@ -985,6 +1034,12 @@ func _connect_signals() -> void:
 	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
 	hud.self_mode_changed.connect(_on_self_mode_changed)
 	hud.shop_buy_requested.connect(_buy_shop_item)
+	if hud.has_signal("ain_item_requested"):
+		hud.connect("ain_item_requested", _on_ain_item_requested)
+	if hud.has_signal("ain_shop_requested"):
+		hud.connect("ain_shop_requested", _on_ain_shop_requested)
+	if hud.has_signal("ain_auto_changed"):
+		hud.connect("ain_auto_changed", _on_ain_auto_changed)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
 	hud.enhancement_requested.connect(_attempt_enhancement)
 	# Optional validation tools live only in the isolated playtest HUD branch.
@@ -1964,15 +2019,25 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	_try_trigger_passives("on_kill", monster)
 	if field_map != null:
 		field_population.release(monster)
-	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier())))
+	# Apply the pre-consumption blessing stage, with original equipped
+	# Adena passive preserved; never replace one multiplier with the other.
+	var can_drop_equipment: bool = ain_service.protected_drops()
+	var exp_rate: float = ain_service.experience_rate()
+	var adena_rate: float = ain_service.adena_rate()
+	var item_adena_rate: float = 1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0
+	var gained_experience: int = maxi(1, int(round(monster.exp_reward * _experience_multiplier() * exp_rate)))
+	var gained_adena: int = maxi(0, int(round(float(monster.gold_reward) * adena_rate * item_adena_rate)))
 	experience += gained_experience
-	gold += maxi(0, int(round(float(monster.gold_reward) * (1.0 + clampf(_equipped_numeric_sum("adena_drop_pct"), 0.0, 500.0) / 100.0))))
-	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, monster.gold_reward])
+	gold += gained_adena
+	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	quest_kills = mini(QUEST_GOAL, quest_kills + 1)
 	if hud.has_method("set_quest_progress"):
 		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
-	_roll_drop(monster)
+	_roll_drop(monster, can_drop_equipment)
+	ain_service.consume_for_kill(int(monster.exp_reward))
 	_check_level_up()
+	if player.auto_enabled:
+		_auto_recharge_ain()
 	if monster == selected_monster:
 		selected_monster = null
 	if monster == auto_target:
@@ -2046,7 +2111,7 @@ func _restore_ground_drops(saved: Variant) -> void:
 	loot_pickup.map_changed()
 	ground_loot.restore(saved)
 
-func _roll_drop(monster: TwilightMonster) -> void:
+func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
 	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng)
@@ -2055,8 +2120,12 @@ func _roll_drop(monster: TwilightMonster) -> void:
 	var batch_id: String = ground_loot.begin_hunt_batch()
 	for index: int in range(earned.size()):
 		var item_name: String = earned[index]
+		if not can_drop_tradeable_equipment and not item_name.contains("각인"):
+			var drop_record: Dictionary = _find_catalog_item_record(item_name)
+			if _equipment_slot_base(drop_record) != "":
+				continue
 		_spawn_ground_drop(item_name, monster.global_position, 1, batch_id)
-	hud.show_message("아이템 %d개가 바닥에 떨어졌습니다" % earned.size())
+	hud.show_message("아이템이 바닥에 떨어졌습니다")
 
 
 func _physical_hit_chance(attacker_accuracy: int, target_ac: int, avoidance: int) -> float:
@@ -2669,6 +2738,8 @@ func _combined_active_buffs() -> Dictionary:
 	for key_value: Variant in active_item_buffs.keys():
 		var key: String = str(key_value)
 		result[key] = active_item_buffs[key]
+	if ain_service.orb_active():
+		result["드래곤의 보호"] = {"remaining": maxi(0, ain_service.dragon_orb_expires_at - int(Time.get_unix_time_from_system()))}
 	return result
 
 func _is_instance_equipped(id: String) -> bool:
@@ -3070,17 +3141,78 @@ func _equipped_items_snapshot() -> Dictionary:
 			result[slot] = {}
 	return result
 
+func _on_ain_item_requested(item_name: String) -> void:
+	if int(inventory.get(item_name, 0)) <= 0 and int(inventory.get(item_name + " (각인)", 0)) > 0:
+		item_name += " (각인)"
+	_on_inventory_item_activated(item_name)
+
+func _on_ain_shop_requested() -> void:
+	_buy_shop_item("드래곤의 용옥", AIN_SERVICE.DRAGON_ORB_PRICE)
+
+func _on_ain_auto_changed(enabled: bool) -> void:
+	ain_service.auto_recharge = enabled
+	hud.show_message("축복 자동충전 %s" % ("ON" if enabled else "OFF"))
+	_update_ain_hud()
+	_save_game(true)
+
+func _update_ain_hud() -> void:
+	if hud.has_method("set_ain_state"):
+		hud.call("set_ain_state", ain_service.snapshot(), inventory)
+
+func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
+	var kind: String = str(spec.get("kind", ""))
+	var base_name: String = CONSUMABLE_RULES.normalize_name(item_name)
+	if kind == "ain_orb":
+		if not ain_service.start_dragon_orb():
+			hud.show_message("드래곤의 보호가 이미 적용 중입니다")
+			return false
+		hud.show_message("드래곤의 보호 · 30일 활성화")
+		_update_ain_hud()
+		return true
+	if kind != "ain_charge":
+		return false
+	if base_name == "드래곤의 성수" and level < 45:
+		hud.show_message("드래곤의 성수는 45레벨부터 사용 가능합니다")
+		return false
+	var amount: int = AIN_SERVICE.charge_amount(base_name, level)
+	var charged: int = ain_service.charge(amount)
+	if charged <= 0:
+		hud.show_message("아인하사드 축복이 최대치입니다")
+		return false
+	if base_name == "드래곤의 성수":
+		experience += 31920000
+		_check_level_up()
+	hud.show_message("%s 사용 · 축복 +%d" % [item_name, charged])
+	_update_ain_hud()
+	return true
+
+func _auto_recharge_ain() -> void:
+	if not ain_service.auto_recharge or ain_service.blessing > 200:
+		return
+	for item_name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드"]:
+		for inventory_name: String in [item_name, item_name + " (각인)"]:
+			if int(inventory.get(inventory_name, 0)) > 0:
+				consumable_service.call("try_use", inventory_name)
+				return
+
 func _buy_shop_item(item_name: String, price: int) -> void:
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 소모품은 구매할 수 없습니다")
 		return
 	var safe_price: int = maxi(0, price)
+	if item_name == "드래곤의 용옥":
+		safe_price = AIN_SERVICE.DRAGON_ORB_PRICE
+		if not ain_service.may_purchase_orb():
+			hud.show_message("드래곤의 용옥은 월 1회 구매 가능합니다")
+			return
 	if safe_price <= 0:
 		return
 	if gold < safe_price:
 		hud.show_message("아데나가 부족합니다")
 		return
 	gold -= safe_price
+	if item_name == "드래곤의 용옥":
+		ain_service.register_orb_purchase()
 	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 구매 · %d 아데나" % [item_name, safe_price])
@@ -3159,6 +3291,7 @@ func _update_hud() -> void:
 	var display_max_hp: int = _effective_max_hp()
 	var display_max_mp: int = _effective_max_mp()
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
+	_update_ain_hud()
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
 	if hud.has_method("set_quest_progress"):
@@ -3237,6 +3370,7 @@ func _save_game(quiet: bool) -> void:
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
 		"consumable_state": consumable_service.call("export_state"),
+		"ainhasad_state": ain_service.export_state(),
 		"equipped_catalog": equipped_catalog,
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
@@ -3278,6 +3412,7 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	ain_service.import_state(data.get("ainhasad_state", {}))
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
 	exp_need = maxi(1, int(data.get("exp_need", exp_need)))
@@ -5456,6 +5591,7 @@ func _effective_mr() -> int:
 	total += _active_skill_buff_total("mrFlat")
 	total += _active_item_buff_total("mr")
 	total += _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "mr")
+	total += _equipped_bless_bonus("mr")
 	return maxi(0, total)
 
 func _record_damage_reduction(record: Dictionary) -> int:
@@ -5556,7 +5692,7 @@ func _effective_defense() -> int:
 		bonus += float(record.get("def", 0.0))
 	var armor_enhance: int = _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "defense")
 	var accessory_enhance: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "defense")
-	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def")
+	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
 func _effective_max_hp() -> int:
 	var flat_bonus: float = 0.0
@@ -5569,6 +5705,7 @@ func _effective_max_hp() -> int:
 	flat_bonus += float(_active_skill_buff_total("hp"))
 	flat_bonus += float(_passive_skill_total("hpFlat"))
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
+	flat_bonus += float(_equipped_bless_bonus("hp"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
 func _experience_multiplier() -> float:

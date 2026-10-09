@@ -5,6 +5,7 @@ class_name TwilightConsumableService
 const RULES = preload("res://scripts/consumable_rules.gd")
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
+const BLESSING = preload("res://scripts/equipment_blessing.gd")
 const ELIXIR_LIMIT: int = 10
 const STAT_CAP: int = 45
 
@@ -144,6 +145,9 @@ func try_use(item_name: String) -> bool:
 			world.call("_use_timed_item_buff", record)
 		"instant_mp":
 			_use_instant_mp(item_name, spec)
+		"ain_charge", "ain_orb":
+			if bool(world.call("_apply_ain_consumable", item_name, spec)):
+				_consume(item_name)
 		"return":
 			_use_return(item_name)
 		"teleport":
@@ -154,6 +158,8 @@ func try_use(item_name: String) -> bool:
 			_use_half_elixir(item_name, spec)
 		"element":
 			_use_elemental_scroll(item_name, spec)
+		"equipment_bless":
+			_use_bless_scroll(item_name)
 		"element_change", "element_reset":
 			_use_element_management_scroll(item_name, spec)
 	return true
@@ -337,6 +343,82 @@ func _use_half_elixir(item_name: String, spec: Dictionary) -> void:
 	_consume(item_name)
 	_message("%s 영구 대미지 +1 (%d/%d)" % [item_name, half_elixirs_used, ELIXIR_LIMIT])
 
+func _use_bless_scroll(scroll_name: String) -> void:
+	world.call("_sync_item_instances")
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	var inv: Dictionary = world.get("inventory") as Dictionary
+	var candidates: Array[String] = []
+	for raw_id: Variant in instances.keys():
+		var id: String = str(raw_id)
+		var physical: Dictionary = instances[id] as Dictionary
+		var item_name: String = str(physical.get("name", ""))
+		if int(inv.get(item_name, 0)) <= 0:
+			continue
+		var record: Dictionary = world.call("_find_catalog_item_record", item_name)
+		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
+			record = physical["record"] as Dictionary
+		var kind: String = str(world.call("_enhancement_kind_for_record", record))
+		if kind not in ["weapon", "armor"]:
+			continue
+		if BLESSING.bonus_for(str(record.get("grade", "")), kind).is_empty() or BLESSING.is_blessed(physical, record):
+			continue
+		candidates.append(item_name + "@@@" + id)
+	candidates.sort()
+	if candidates.is_empty():
+		_message("축복 부여가 가능한 미축복 무기·방어구가 없습니다")
+		return
+	_select_option(scroll_name, candidates, "blessing", false)
+
+# The physical instance ID is mandatory: two copies of the same weapon can
+# have different blessings, enchants, pinned catalog variants and equip state.
+func apply_bless_scroll(scroll_name: String, target_reference: String, forced_roll: float = -1.0) -> bool:
+	if str(RULES.definition(scroll_name).get("kind", "")) != "equipment_bless":
+		return false
+	var selected: Dictionary = world.call("_parse_enhancement_target", target_reference)
+	var item_name: String = str(selected.get("name", ""))
+	var item_id: String = str(selected.get("id", ""))
+	if item_id.is_empty():
+		_message("장비 개체 ID를 지정해야 축복을 부여할 수 있습니다")
+		return false
+	world.call("_sync_item_instances")
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	var inv: Dictionary = world.get("inventory") as Dictionary
+	if int(inv.get(scroll_name, 0)) <= 0 or int(inv.get(item_name, 0)) <= 0:
+		_message("축복 부여 주문서 또는 대상 장비가 부족합니다")
+		return false
+	if not instances.has(item_id):
+		_message("장비 개체를 찾지 못했습니다")
+		return false
+	var physical: Dictionary = instances[item_id] as Dictionary
+	if str(physical.get("name", "")) != item_name:
+		return false
+	var record: Dictionary = world.call("_find_catalog_item_record", item_name)
+	if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
+		record = physical["record"] as Dictionary
+	var kind: String = str(world.call("_enhancement_kind_for_record", record))
+	var grade: String = str(record.get("grade", ""))
+	var effect: Dictionary = BLESSING.bonus_for(grade, kind)
+	if effect.is_empty():
+		_message("무기와 방어구에만 축복을 부여할 수 있습니다")
+		return false
+	if BLESSING.is_blessed(physical, record):
+		_message("이미 축복받은 장비입니다")
+		return false
+	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
+	var roll: float = forced_roll if forced_roll >= 0.0 else rng.randf_range(0.0, 100.0)
+	var success: bool = BLESSING.roll_succeeds(grade, roll)
+	if success:
+		physical["bless_state"] = "blessed"
+		physical["blessed"] = true
+		instances[item_id] = physical
+	_message("축복 부여 %s · %s [ID %s] · %s" % [
+		"성공!" if success else "실패(장비 유지)",
+		item_name, item_id, BLESSING.effect_text(grade, kind) if success else "주문서만 소모"
+	])
+	world.hud.append_log("축복 부여 %s · %s [ID %s]" % ["성공" if success else "실패", item_name, item_id])
+	_consume(scroll_name)
+	return success
+
 func _use_elemental_scroll(item_name: String, spec: Dictionary) -> void:
 	var candidates: Array[String] = []
 	world.call("_sync_item_instances")
@@ -418,9 +500,20 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 			var instances: Dictionary = world.get("item_instances") as Dictionary
 			var entry: Dictionary = instances.get(instance_id, {}) as Dictionary
 			var grade_text: String = "+%d" % int(entry.get("level", 0))
+			if purpose == "blessing":
+				var record: Dictionary = world.call("_find_catalog_item_record", parts[0])
+				if entry.get("record", {}) is Dictionary and not (entry.get("record", {}) as Dictionary).is_empty():
+					record = entry["record"] as Dictionary
+				var grade: String = str(record.get("grade", "일반"))
+				var kind: String = str(world.call("_enhancement_kind_for_record", record))
+				display_name = "%s %s [ID %s] · %s · 축복 %0.1f%% (임시)" % [
+					grade_text, parts[0], instance_id,
+					BLESSING.effect_text(grade, kind), BLESSING.success_chance(grade)
+				]
 			var element_level: int = int(entry.get("element_level", 0))
 			var element_name: String = str(RULES.ELEMENT_NAMES.get(str(entry.get("element", "")), ""))
-			display_name = "%s %s [%s] %s" % [grade_text, parts[0], instance_id, ("%s %d단계" % [element_name, element_level]) if element_level > 0 else ""]
+			if purpose != "blessing":
+				display_name = "%s %s [%s] %s" % [grade_text, parts[0], instance_id, ("%s %d단계" % [element_name, element_level]) if element_level > 0 else ""]
 		selector.add_item(display_name)
 	dialog.get_vbox().add_child(selector)
 	var element_selector: OptionButton = null
@@ -436,6 +529,8 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 			var candidate: String = candidates[selector.selected]
 			if purpose == "elixir":
 				apply_elixir(item_name, candidate)
+			elif purpose == "blessing":
+				apply_bless_scroll(item_name, candidate)
 			elif purpose == "element":
 				var spec: Dictionary = RULES.definition(item_name)
 				var element_code: String = str(spec.get("element", ""))

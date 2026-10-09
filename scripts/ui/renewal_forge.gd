@@ -20,7 +20,7 @@ func configure_scrolls(controller: Node) -> void:
 	for name: String in hud.lineage_inventory_ui.inventory:
 		if int(hud.lineage_inventory_ui.inventory[name]) <= 0: continue
 		if not name.contains("주문서"): continue
-		if not (name.contains("무기") or name.contains("갑옷") or name.contains("장신구")): continue
+		if not (name.contains("무기") or name.contains("갑옷") or name.contains("장신구") or name.contains("축복 부여")): continue
 		values.append({"name":name,"count":int(hud.lineage_inventory_ui.inventory[name])})
 	values.sort_custom(func(a: Dictionary,b: Dictionary) -> bool: return str(a["name"]) < str(b["name"]))
 	_build()

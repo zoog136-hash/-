@@ -100,7 +100,8 @@ func _refresh_inventory_grid() -> void:
 		icon.size = Vector2(66, 60)
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(icon)
-		var caption := UI.label(item_name.left(6) + "…" if item_name.length() > 7 else item_name, 11)
+		var shown_name: String = _display_item_name(record, reference)
+		var caption := UI.label(shown_name.left(6) + "…" if shown_name.length() > 7 else shown_name, 11)
 		caption.position = Vector2(4, 75)
 		caption.size = Vector2(88, 19)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
