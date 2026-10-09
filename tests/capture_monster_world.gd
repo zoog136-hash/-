@@ -31,6 +31,9 @@ func capture(name_value: String, boss: TwilightMonster = null) -> void:
 	world.hud._hide_aux_panels()
 	await process_frame
 	world.hud._hide_aux_panels()
+	# process_frame precedes node _process callbacks. Inspect the boss HUD only
+	# after those callbacks and the actual draw have completed.
+	await RenderingServer.frame_post_draw
 	var workspace: Control = world.hud.get("workspace") as Control
 	check(not is_instance_valid(workspace) or not workspace.visible,"unobstructed capture "+name_value)
 	if is_instance_valid(boss):
@@ -38,7 +41,6 @@ func capture(name_value: String, boss: TwilightMonster = null) -> void:
 		check(root.get_visible_rect().has_point(screen_point),"boss body on screen "+name_value)
 		check(world.field_population.boss_hud.panel.visible,"boss HP panel visible "+name_value)
 		check(world.field_population.boss_hud.title.text.contains(boss.monster_name),"boss HP name matches "+name_value)
-	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
 	check(image!=null and not image.is_empty(),"render buffer "+name_value)
 	if image!=null: check(image.save_png(OUTPUT+"/"+name_value+".png")==OK,"save capture "+name_value)
