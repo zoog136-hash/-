@@ -2,6 +2,7 @@ extends SceneTree
 
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const RULES = preload("res://scripts/consumable_rules.gd")
+const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
 var failures: Array[String] = []
 
 func assert_ok(condition: bool, message: String) -> void:
@@ -14,6 +15,9 @@ func _initialize() -> void:
 
 func _run() -> void:
 	assert_ok(int(ENCHANT.stats("weapon", 10).get("damage", 0)) == 11, "official +10 weapon damage")
+	assert_ok(int(ITEM_OPTIONS.weapon_size_adjustment({"slot":"weapon","stat":"54 / 35","desc":"추가 대미지 +84"}, true)) == -19, "Inven 54/35 source stat large minus small damage")
+	assert_ok(int(ITEM_OPTIONS.weapon_size_adjustment({"slot":"weapon","desc":"작은 대상 대미지 54 · 큰 대상 대미지 35"}, true)) == -19, "Inven named size damage parses")
+	assert_ok(int(ITEM_OPTIONS.weapon_size_adjustment({"slot":"weapon","stat":"54 / 35"}, false)) == 0, "small target gets unmodified small weapon base")
 	assert_ok(int(ENCHANT.stats("armor", 5, {"name":"마법 망토"}).get("mr", 0)) == 10, "magic cloak +5 MR+10")
 	assert_ok(int(ENCHANT.stats("armor", 6, {"name":"리치 로브"}).get("sp", 0)) == 4, "lich robe +6 SP+4")
 	assert_ok(int(ENCHANT.stats("accessory", 5, {"name":"도펠겡어 보스의 오른쪽 반지"}).get("hp", 0)) == 50, "Doppel ring HP progression")
