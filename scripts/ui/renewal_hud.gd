@@ -563,6 +563,7 @@ func open_catalog(category: String) -> void:
 
 func _build_catalog_panel() -> void:
 	super._build_catalog_panel()
+	catalog_list.fixed_icon_size = Vector2i(46, 46)
 	var old: Node = catalog_panel.get_child(0)
 	var col := VBoxContainer.new()
 	catalog_panel.add_child(col)
@@ -684,8 +685,14 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_text(index,str(record.get("name","")))
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
-		var path := str(record.get("image_path",""))
-		if path!="" and ResourceLoader.exists(path): catalog_list.set_item_icon(index,load(path) as Texture2D)
+		if catalog_category == "아이템":
+			var item_texture: Texture2D = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
+			if item_texture != null:
+				catalog_list.set_item_icon(index, item_texture)
+		else:
+			var path := str(record.get("image_path", ""))
+			if path != "" and ResourceLoader.exists(path):
+				catalog_list.set_item_icon(index, load(path) as Texture2D)
 		catalog_list.set_item_tooltip(index,"%s · %s" % [grade_name,record.get("name","")])
 	if catalog_results.is_empty():
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
