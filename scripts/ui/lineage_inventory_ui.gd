@@ -334,7 +334,8 @@ func _refresh_inventory_grid() -> void:
 		var reference: String = str(entry["reference"])
 		var amount: int = int(entry["amount"])
 		var record: Dictionary = _find_item_record(reference)
-		if not _matches_category(record, item_name) or (search != "" and item_name.to_lower().find(search) < 0):
+		var shown_name: String = _display_item_name(record, reference)
+		if not _matches_category(record, item_name) or (search != "" and shown_name.to_lower().find(search) < 0):
 			continue
 		visible_count += 1
 		var button: Button = Button.new()
@@ -346,7 +347,7 @@ func _refresh_inventory_grid() -> void:
 		var level_mark: String = "+%d " % level if level > 0 else ""
 		var badges: String = _status_badges(record, reference)
 		var badge_mark: String = badges + " " if badges != "" else ""
-		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(item_name), amount]
+		button.text = "%s%s%s%s\nx%d" % [equip_mark, level_mark, badge_mark, _short_name(shown_name), amount]
 		button.tooltip_text = "%s%s%s" % [_enhanced_display_name(record, reference), " · 장착 중" if equipped else "", _status_tooltip(record, reference)]
 		button.add_theme_font_size_override("font_size", 11)
 		button.add_theme_color_override("font_color", TEXT)
@@ -404,30 +405,24 @@ func _is_engraved(record: Dictionary, item_name: String) -> bool:
 	return bool(record.get("engraved", false)) or item_name.find("(각인)") >= 0 or item_name.find("각인") >= 0
 
 func _status_badges(record: Dictionary, item_name: String) -> String:
-	var badges := PackedStringArray()
-	var state := _bless_state(record, item_name)
-	if state == "blessed":
-		badges.append("✦")
-	if _is_engraved(record, item_name):
-		badges.append("◆")
-	return " ".join(badges)
+	# Blessing is indicated by its name prefix only; engraving is independent.
+	return "◆" if _is_engraved(record, item_name) else ""
 
-func _enhanced_display_name(record: Dictionary, item_name: String) -> String:
-	var level := _enhance_level(item_name)
-	var prefix := "+%d " % level if level > 0 else ""
-	var badges := _status_badges(record, item_name)
-	var base: String = _base_item_name(item_name)
-	var blessed_name: String = "축복받은 " + base if _bless_state(record, item_name) == "blessed" and not base.begins_with("축복받은 ") else base
-	return "%s%s%s" % [prefix, badges + " " if badges != "" else "", blessed_name]
+func _display_item_name(record: Dictionary, item_reference: String) -> String:
+	var base: String = _base_item_name(item_reference)
+	if _bless_state(record, item_reference) == "blessed" and not base.begins_with("축복받은 "):
+		return "축복받은 " + base
+	return base
 
-func _status_tooltip(record: Dictionary, item_name: String) -> String:
-	var parts := PackedStringArray()
-	var state := _bless_state(record, item_name)
-	if state == "blessed":
-		parts.append("축복")
-	if _is_engraved(record, item_name):
-		parts.append("각인")
-	return (" · " + " · ".join(parts)) if not parts.is_empty() else ""
+func _enhanced_display_name(record: Dictionary, item_reference: String) -> String:
+	var level: int = _enhance_level(item_reference)
+	var prefix: String = "+%d " % level if level > 0 else ""
+	var badge: String = _status_badges(record, item_reference)
+	return "%s%s%s" % [prefix, badge + " " if badge != "" else "", _display_item_name(record, item_reference)]
+
+func _status_tooltip(record: Dictionary, item_reference: String) -> String:
+	# Do not repeat the blessing state after the blessed item name.
+	return " · 각인" if _is_engraved(record, item_reference) else ""
 
 func _grade_color(grade: String) -> Color:
 	return GRADE_COLORS.get(grade, GRADE_COLORS["일반"]) as Color
@@ -552,7 +547,6 @@ func _refresh_detail(item_name: String) -> void:
 	if enhance_level > 0:
 		lines.append("[color=#ffd36a][b]강화 +%d[/b][/color]" % enhance_level)
 	if bless_state == "blessed":
-		lines.append("[color=#ffe77a]✦ 축복받은 장비[/color]")
 		var kind: String = "weapon" if slot == "weapon" else "armor"
 		var bless_option: String = EQUIPMENT_BLESSING.effect_text(grade, kind)
 		if bless_option != "" and (slot == "weapon" or slot in ["offhand","helmet","tshirt","body","pants","cloak","shoulder","gaiters","boots","gloves"]):
