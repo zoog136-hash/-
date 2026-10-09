@@ -1,0 +1,309 @@
+﻿2026-10-09T23:08:26.5825262Z Current runner version: '2.337.0'
+2026-10-09T23:08:26.5845837Z ##[group]Runner Image Provisioner
+2026-10-09T23:08:26.5846678Z Hosted Compute Agent
+2026-10-09T23:08:26.5847173Z Version: 20261002.596
+2026-10-09T23:08:26.5847731Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T23:08:26.5848349Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T23:08:26.5848916Z Worker ID: {ef12383e-fa1d-4184-a71e-24237d16726f}
+2026-10-09T23:08:26.5849563Z Region: westus3
+2026-10-09T23:08:26.5850018Z Cloud: Azure
+2026-10-09T23:08:26.5850583Z ##[endgroup]
+2026-10-09T23:08:26.5851723Z ##[group]Operating System
+2026-10-09T23:08:26.5852256Z Ubuntu
+2026-10-09T23:08:26.5852817Z 24.04.5
+2026-10-09T23:08:26.5853242Z LTS
+2026-10-09T23:08:26.5853653Z ##[endgroup]
+2026-10-09T23:08:26.5854152Z ##[group]Runner Image
+2026-10-09T23:08:26.5854640Z Image: ubuntu-24.04
+2026-10-09T23:08:26.5855161Z Version: 20261004.327.1
+2026-10-09T23:08:26.5856249Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T23:08:26.5857548Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T23:08:26.5858352Z ##[endgroup]
+2026-10-09T23:08:26.5859389Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T23:08:26.5861308Z Contents: read
+2026-10-09T23:08:26.5861882Z Metadata: read
+2026-10-09T23:08:26.5862366Z Packages: read
+2026-10-09T23:08:26.5862831Z ##[endgroup]
+2026-10-09T23:08:26.5864590Z Secret source: Actions
+2026-10-09T23:08:26.5865361Z Cache mode: write
+2026-10-09T23:08:26.5866056Z Prepare workflow directory
+2026-10-09T23:08:26.6649378Z Prepare all required actions
+2026-10-09T23:08:26.6688158Z Getting action download info
+2026-10-09T23:08:26.9542358Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-09T23:08:27.3496526Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-09T23:08:28.2488534Z Complete job name: original-skills
+2026-10-09T23:08:28.3249884Z ##[group]Run actions/checkout@v4
+2026-10-09T23:08:28.3251271Z with:
+2026-10-09T23:08:28.3251999Z   repository: zoog136-hash/-
+2026-10-09T23:08:28.3259462Z   token: ***
+2026-10-09T23:08:28.3260192Z   ssh-strict: true
+2026-10-09T23:08:28.3261045Z   ssh-user: git
+2026-10-09T23:08:28.3261812Z   persist-credentials: true
+2026-10-09T23:08:28.3262646Z   clean: true
+2026-10-09T23:08:28.3263410Z   sparse-checkout-cone-mode: true
+2026-10-09T23:08:28.3264292Z   fetch-depth: 1
+2026-10-09T23:08:28.3265031Z   fetch-tags: false
+2026-10-09T23:08:28.3265791Z   show-progress: true
+2026-10-09T23:08:28.3266566Z   lfs: false
+2026-10-09T23:08:28.3267282Z   submodules: false
+2026-10-09T23:08:28.3268084Z   set-safe-directory: true
+2026-10-09T23:08:28.3268957Z   allow-unsafe-pr-checkout: false
+2026-10-09T23:08:28.3270154Z ##[endgroup]
+2026-10-09T23:08:28.4106156Z Syncing repository: zoog136-hash/-
+2026-10-09T23:08:28.4108900Z ##[group]Getting Git version info
+2026-10-09T23:08:28.4110012Z Working directory is '/home/runner/work/-/-'
+2026-10-09T23:08:28.4112020Z [command]/usr/bin/git version
+2026-10-09T23:08:28.4145041Z git version 2.55.0
+2026-10-09T23:08:28.4163498Z ##[endgroup]
+2026-10-09T23:08:28.4175865Z Temporarily overriding HOME='/home/runner/work/_temp/9d621872-7bb3-4b4a-aa5b-b21c77c833b4' before making global git config changes
+2026-10-09T23:08:28.4181094Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T23:08:28.4183457Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+2026-10-09T23:08:28.4227829Z Deleting the contents of '/home/runner/work/-/-'
+2026-10-09T23:08:28.4231820Z ##[group]Initializing the repository
+2026-10-09T23:08:28.4235333Z [command]/usr/bin/git init /home/runner/work/-/-
+2026-10-09T23:08:28.4408244Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T23:08:28.4411271Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T23:08:28.4414349Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T23:08:28.4416476Z hint: call:
+2026-10-09T23:08:28.4417699Z hint:
+2026-10-09T23:08:28.4419148Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T23:08:28.4421039Z hint:
+2026-10-09T23:08:28.4422695Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T23:08:28.4425485Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T23:08:28.4427570Z hint:
+2026-10-09T23:08:28.4428805Z hint: 	git branch -m <name>
+2026-10-09T23:08:28.4430234Z hint:
+2026-10-09T23:08:28.4432174Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T23:08:28.4435122Z Initialized empty Git repository in /home/runner/work/-/-/.git/
+2026-10-09T23:08:28.4439827Z [command]/usr/bin/git remote add origin https://github.com/zoog136-hash/-
+2026-10-09T23:08:28.4597686Z ##[endgroup]
+2026-10-09T23:08:28.4599271Z ##[group]Disabling automatic garbage collection
+2026-10-09T23:08:28.4608657Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T23:08:28.4687469Z ##[endgroup]
+2026-10-09T23:08:28.4688693Z ##[group]Setting up auth
+2026-10-09T23:08:28.4694426Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T23:08:28.4727756Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T23:08:28.5042846Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T23:08:28.5075114Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T23:08:28.5262861Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T23:08:28.5292686Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T23:08:28.5479903Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T23:08:28.5616790Z ##[endgroup]
+2026-10-09T23:08:28.5618917Z ##[group]Fetching the repository
+2026-10-09T23:08:28.5628832Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +64a5344bbfa5c8b28a4665b7daa18c025087866d:refs/remotes/pull/59/merge
+2026-10-09T23:08:32.3592229Z From https://github.com/zoog136-hash/-
+2026-10-09T23:08:32.3592726Z  * [new ref]         64a5344bbfa5c8b28a4665b7daa18c025087866d -> pull/59/merge
+2026-10-09T23:08:32.3594941Z ##[endgroup]
+2026-10-09T23:08:32.3595489Z ##[group]Determining the checkout info
+2026-10-09T23:08:32.3597250Z ##[endgroup]
+2026-10-09T23:08:32.3602494Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T23:08:32.3646500Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T23:08:32.3680124Z ##[group]Checking out the ref
+2026-10-09T23:08:32.3683178Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/59/merge
+2026-10-09T23:08:32.7625708Z Note: switching to 'refs/remotes/pull/59/merge'.
+2026-10-09T23:08:32.7626056Z
+2026-10-09T23:08:32.7626303Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T23:08:32.7626829Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T23:08:32.7627380Z state without impacting any branches by switching back to a branch.
+2026-10-09T23:08:32.7627697Z
+2026-10-09T23:08:32.7627959Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T23:08:32.7628470Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T23:08:32.7628762Z
+2026-10-09T23:08:32.7628892Z   git switch -c <new-branch-name>
+2026-10-09T23:08:32.7629084Z
+2026-10-09T23:08:32.7629261Z Or undo this operation with:
+2026-10-09T23:08:32.7629728Z
+2026-10-09T23:08:32.7629831Z   git switch -
+2026-10-09T23:08:32.7629993Z
+2026-10-09T23:08:32.7630220Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T23:08:32.7630806Z
+2026-10-09T23:08:32.7631194Z HEAD is now at 64a5344 Merge 4911340464177de5a22167df14aceb522818d062 into edefc7c120b9ad4f8e211c6e36478d4afb73c21d
+2026-10-09T23:08:32.7653669Z ##[endgroup]
+2026-10-09T23:08:32.7695250Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T23:08:32.7719102Z 64a5344bbfa5c8b28a4665b7daa18c025087866d
+2026-10-09T23:08:32.7909540Z ##[group]Run curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+2026-10-09T23:08:32.7910779Z curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+2026-10-09T23:08:32.7911327Z unzip -q godot.zip
+2026-10-09T23:08:32.7911582Z chmod +x Godot_v4.7.2-stable_linux.x86_64
+2026-10-09T23:08:32.8107985Z shell: /usr/bin/bash -e {0}
+2026-10-09T23:08:32.8108231Z ##[endgroup]
+2026-10-09T23:08:32.8256451Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-10-09T23:08:32.8257040Z                                  Dload  Upload   Total   Spent    Left  Speed
+2026-10-09T23:08:32.8257307Z
+2026-10-09T23:08:32.9833096Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-09T23:08:32.9833666Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-09T23:08:33.3066061Z
+2026-10-09T23:08:33.3066561Z 100 74.2M  100 74.2M    0     0   154M      0 --:--:-- --:--:-- --:--:--  154M
+2026-10-09T23:08:34.1779933Z ##[group]Run python3 tools/validate_original_skills.py --report test-results/data-validation.json
+2026-10-09T23:08:34.1780646Z python3 tools/validate_original_skills.py --report test-results/data-validation.json
+2026-10-09T23:08:34.1835974Z shell: /usr/bin/bash -e {0}
+2026-10-09T23:08:34.1836182Z ##[endgroup]
+2026-10-09T23:08:34.2595657Z {
+2026-10-09T23:08:34.2596034Z   "runtime_effects_connected": 122,
+2026-10-09T23:08:34.2596363Z   "class_counts": {
+2026-10-09T23:08:34.2596872Z     "공용": 7,
+2026-10-09T23:08:34.2597107Z     "군주": 8,
+2026-10-09T23:08:34.2597335Z     "기사": 9,
+2026-10-09T23:08:34.2597565Z     "요정": 4,
+2026-10-09T23:08:34.2597796Z     "마법사": 19,
+2026-10-09T23:08:34.2598031Z     "다크엘프": 9,
+2026-10-09T23:08:34.2598285Z     "총사": 4,
+2026-10-09T23:08:34.2598521Z     "투사": 7,
+2026-10-09T23:08:34.2598745Z     "암흑기사": 7,
+2026-10-09T23:08:34.2598961Z     "광전사": 6,
+2026-10-09T23:08:34.2599191Z     "신성검사": 4,
+2026-10-09T23:08:34.2599410Z     "사신": 6,
+2026-10-09T23:08:34.2599714Z     "뇌신": 16,
+2026-10-09T23:08:34.2599939Z     "마검사": 16
+2026-10-09T23:08:34.2600125Z   },
+2026-10-09T23:08:34.2600523Z   "audit_assignments": 695,
+2026-10-09T23:08:34.2600780Z   "audit_states": {
+2026-10-09T23:08:34.2600993Z     "BLOCKED": 571,
+2026-10-09T23:08:34.2601248Z     "PARTIAL": 122,
+2026-10-09T23:08:34.2601462Z     "PVP_EXCLUDED": 2
+2026-10-09T23:08:34.2601684Z   },
+2026-10-09T23:08:34.2601906Z   "historical_completeness": "UNKNOWN",
+2026-10-09T23:08:34.2602230Z   "vfx_reference_validation": "UNKNOWN",
+2026-10-09T23:08:34.2602523Z   "errors": []
+2026-10-09T23:08:34.2602743Z }
+2026-10-09T23:08:34.2674194Z ##[group]Run python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+2026-10-09T23:08:34.2674734Z python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+2026-10-09T23:08:34.2730443Z shell: /usr/bin/bash -e {0}
+2026-10-09T23:08:34.2730693Z ##[endgroup]
+2026-10-09T23:08:59.7981450Z PASS import
+2026-10-09T23:09:03.1225148Z PASS boot
+2026-10-09T23:09:03.7427062Z PASS actor_motion_test
+2026-10-09T23:09:06.3215130Z PASS ainhasad_smoke_test
+2026-10-09T23:09:07.7773301Z PASS animation_catalog_test
+2026-10-09T23:09:10.9166668Z PASS animation_restore_test
+2026-10-09T23:09:11.5367550Z PASS authored_frames_test
+2026-10-09T23:09:12.1562939Z PASS authored_state_motion_test
+2026-10-09T23:09:14.5487248Z PASS catalog_effects_smoke_test
+2026-10-09T23:09:17.9666007Z PASS catalog_full_browser_smoke_test
+2026-10-09T23:09:21.1048057Z PASS combat_hud_test
+2026-10-09T23:09:26.6595228Z PASS combat_timing_test
+2026-10-09T23:09:26.9041749Z PASS combat_vfx_test
+2026-10-09T23:09:30.4171971Z PASS consumable_smoke_test
+2026-10-09T23:09:33.7422606Z PASS equipment_blessing_smoke_test
+2026-10-09T23:09:37.0668797Z PASS equipment_slot_smoke_test
+2026-10-09T23:09:48.5807811Z PASS field_world_test
+2026-10-09T23:09:49.2047565Z PASS flight_lifecycle_test
+2026-10-09T23:09:50.3856316Z PASS follower_motion_test
+2026-10-09T23:09:52.8737320Z PASS full_inven_catalog_smoke_test
+2026-10-09T23:09:55.5483902Z PASS ground_drop_smoke_test
+2026-10-09T23:10:11.3367439Z PASS ground_loot_system_test
+2026-10-09T23:10:13.7313703Z PASS hp_mp_unique_effects_smoke_test
+2026-10-09T23:10:16.6838067Z PASS input_routing_test
+2026-10-09T23:10:19.4500828Z PASS inventory_db_smoke_test
+2026-10-09T23:10:22.1224015Z PASS item_buff_description_smoke_test
+2026-10-09T23:10:22.3679555Z PASS item_db_slot_smoke_test
+2026-10-09T23:10:22.6126038Z PASS item_icon_art_smoke_test
+2026-10-09T23:10:25.1003282Z PASS item_options_runtime_smoke_test
+2026-10-09T23:10:25.2529032Z PASS item_weight_smoke_test
+2026-10-09T23:10:28.4836233Z PASS job_smoke_test
+2026-10-09T23:10:28.7303099Z PASS lineage_inventory_ui_smoke_test
+2026-10-09T23:10:28.9790788Z PASS lineage_side_ui_smoke_test
+2026-10-09T23:10:29.2240851Z PASS lineagem_ui_visual_smoke_test
+2026-10-09T23:10:29.7476661Z PASS loot_balance_smoke_test
+2026-10-09T23:10:32.2341862Z PASS mobile_scroll_smoke_test
+2026-10-09T23:10:34.9997750Z PASS monster_attack_profiles_test
+2026-10-09T23:10:37.0186127Z PASS monster_motion_test
+2026-10-09T23:10:46.6742410Z PASS monster_world_test
+2026-10-09T23:10:49.1630523Z PASS non_skill_options_smoke_test
+2026-10-09T23:10:51.6504339Z PASS option_finalize_smoke_test
+2026-10-09T23:10:52.3662237Z PASS original_counter_probability_test
+2026-10-09T23:10:54.8539073Z PASS original_lineagem_effects_smoke_test
+2026-10-09T23:11:02.3647374Z PASS original_skill_catalog_runtime_test
+2026-10-09T23:11:06.9930749Z PASS original_skill_system_test
+2026-10-09T23:11:09.6661841Z PASS passive_skill_smoke_test
+2026-10-09T23:11:12.5266984Z PASS per_instance_enchantments_smoke_test
+2026-10-09T23:11:16.0375865Z PASS playtest_catalog_drag_test
+2026-10-09T23:11:18.8039201Z PASS quickslot_smoke_test
+2026-10-09T23:11:19.5185525Z PASS relic_motion_test
+2026-10-09T23:11:22.4705896Z PASS shield_rules_smoke_test
+2026-10-09T23:11:25.7029373Z PASS skill_element_integration_smoke_test
+2026-10-09T23:11:29.3051824Z PASS skill_mechanism_smoke_test
+2026-10-09T23:11:31.7921368Z PASS speed_option_smoke_test
+2026-10-09T23:11:34.8395809Z PASS stage5_save_compatibility_test
+2026-10-09T23:11:39.2803659Z PASS ui_fidelity_regression_test
+2026-10-09T23:11:42.7923610Z PASS ui_renewal_integration_test
+2026-10-09T23:11:45.4656875Z PASS ui_stage4_item_instance_test
+2026-10-09T23:11:48.1556108Z PASS volley_motion_test
+2026-10-09T23:11:50.8289022Z PASS weapon_rules_smoke_test
+2026-10-09T23:11:56.2961952Z PASS world_region_portals_test
+2026-10-09T23:12:49.5546286Z PASS world_regions_test
+2026-10-09T23:12:49.5553120Z 62/62 checks passed
+2026-10-09T23:12:49.5658158Z ##[group]Run sudo apt-get update -qq
+2026-10-09T23:12:49.5658437Z sudo apt-get update -qq
+2026-10-09T23:12:49.5658691Z sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+2026-10-09T23:12:49.5658953Z set -o pipefail
+2026-10-09T23:12:49.5659491Z xvfb-run -a ./Godot_v4.7.2-stable_linux.x86_64 --path . --audio-driver Dummy --script res://tests/capture_original_skills.gd 2>&1 | tee test-results/original-render.log
+2026-10-09T23:12:49.5660144Z ! grep -E 'SCRIPT ERROR:|ERROR:' test-results/original-render.log
+2026-10-09T23:12:49.5660648Z grep -q 'ORIGINAL_RENDER_OK' test-results/original-render.log
+2026-10-09T23:12:49.5716338Z shell: /usr/bin/bash -e {0}
+2026-10-09T23:12:49.5716538Z env:
+2026-10-09T23:12:49.5716701Z   LIBGL_ALWAYS_SOFTWARE: 1
+2026-10-09T23:12:49.5716924Z   XDG_DATA_HOME: /home/runner/work/-/-/render-save
+2026-10-09T23:12:49.5717158Z ##[endgroup]
+2026-10-09T23:12:58.4027185Z Reading package lists...
+2026-10-09T23:12:58.6157026Z Building dependency tree...
+2026-10-09T23:12:58.6163436Z Reading state information...
+2026-10-09T23:12:58.8193011Z xvfb is already the newest version (2:21.1.12-1ubuntu1.8).
+2026-10-09T23:12:58.8193577Z xauth is already the newest version (1:1.1.2-1build1).
+2026-10-09T23:12:58.8193963Z xauth set to manually installed.
+2026-10-09T23:12:58.8194376Z libgl1-mesa-dri is already the newest version (25.2.8-0ubuntu0.24.04.4).
+2026-10-09T23:12:58.8194805Z libgl1-mesa-dri set to manually installed.
+2026-10-09T23:12:58.8195202Z 0 upgraded, 0 newly installed, 0 to remove and 23 not upgraded.
+2026-10-09T23:12:58.8831581Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-09T23:13:00.6390128Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+2026-10-09T23:13:00.6390943Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+2026-10-09T23:13:01.0734563Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+2026-10-09T23:13:01.0735153Z
+2026-10-09T23:13:05.2860126Z RENDER_CAPTURE 01-knight-catalog size=(1280, 720)
+2026-10-09T23:13:05.5984834Z RENDER_CAPTURE 02-skill-preview size=(1280, 720)
+2026-10-09T23:13:06.0684418Z RENDER_CAPTURE 03-counter-aura size=(1280, 720)
+2026-10-09T23:13:08.6632382Z RENDER_CAPTURE 04-effect-crowd size=(1280, 720)
+2026-10-09T23:13:08.6633135Z ORIGINAL_RENDER_OK driver=llvmpipe (LLVM 20.1.2, 256 bits) median_ms=38.533 p95_ms=48.109 active=15 available=3
+2026-10-09T23:13:08.9814812Z ##[group]Run actions/upload-artifact@v4
+2026-10-09T23:13:08.9815042Z with:
+2026-10-09T23:13:08.9815279Z   name: original-skills-64a5344bbfa5c8b28a4665b7daa18c025087866d
+2026-10-09T23:13:08.9815606Z   path: test-results
+docs/skills/previews/*.png
+
+2026-10-09T23:13:08.9815863Z   if-no-files-found: warn
+2026-10-09T23:13:08.9816051Z   compression-level: 6
+2026-10-09T23:13:08.9816223Z   overwrite: false
+2026-10-09T23:13:08.9816394Z   include-hidden-files: false
+2026-10-09T23:13:08.9816583Z ##[endgroup]
+2026-10-09T23:13:09.1199538Z (node:3272) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-09T23:13:09.1200576Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-09T23:13:09.1343204Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-09T23:13:09.1345317Z The least common ancestor is /home/runner/work/-/-. This will be the root directory of the artifact
+2026-10-09T23:13:09.1346043Z With the provided path, there will be 69 files uploaded
+2026-10-09T23:13:09.1351118Z Artifact name is valid!
+2026-10-09T23:13:09.1351554Z Root directory input is valid!
+2026-10-09T23:13:09.4955442Z Beginning upload of artifact content to blob storage
+2026-10-09T23:13:09.6968754Z (node:3272) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-09T23:13:10.3364995Z Uploaded bytes 5549532
+2026-10-09T23:13:10.3914586Z Finished uploading artifact content to blob storage!
+2026-10-09T23:13:10.3915194Z SHA256 digest of uploaded artifact zip is 2fa768db83d58c1fe44eeb1bde203a545275b1ee396556dc0e443817a911ff69
+2026-10-09T23:13:10.3916613Z Finalizing artifact upload
+2026-10-09T23:13:10.6645747Z Artifact original-skills-64a5344bbfa5c8b28a4665b7daa18c025087866d.zip successfully finalized. Artifact ID 11650052215
+2026-10-09T23:13:10.6647034Z Artifact original-skills-64a5344bbfa5c8b28a4665b7daa18c025087866d has been successfully uploaded! Final size is 5549532 bytes. Artifact ID is 11650052215
+2026-10-09T23:13:10.6651061Z Artifact download URL: https://github.com/zoog136-hash/-/actions/runs/38002894586/artifacts/11650052215
+2026-10-09T23:13:10.6830744Z Post job cleanup.
+2026-10-09T23:13:10.7516793Z [command]/usr/bin/git version
+2026-10-09T23:13:10.7552774Z git version 2.55.0
+2026-10-09T23:13:10.7582037Z Temporarily overriding HOME='/home/runner/work/_temp/86c12c09-1282-45a4-a0a1-afe3f6123bc8' before making global git config changes
+2026-10-09T23:13:10.7583064Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T23:13:10.7586983Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+2026-10-09T23:13:10.7631038Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T23:13:10.7653858Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T23:13:10.7877447Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T23:13:10.7899864Z http.https://github.com/.extraheader
+2026-10-09T23:13:10.7908969Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-09T23:13:10.7941191Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T23:13:10.8159786Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T23:13:10.8194852Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T23:13:10.8533703Z Cleaning up orphan processes
+2026-10-09T23:13:10.8802028Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
