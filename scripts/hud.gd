@@ -78,6 +78,7 @@ var item_filter_panel: VBoxContainer
 var item_slot_buttons: Dictionary = {}
 var item_grade_buttons: Dictionary = {}
 var item_slot_filter: String = "all"
+var catalog_filter_syncing: bool = false
 var item_grade_filter: String = "전체"
 
 const ITEM_SLOT_FILTERS: Array = [
@@ -577,7 +578,7 @@ func _build_catalog_panel() -> void:
 		var slot_label: String = str(slot_data[1])
 		var slot_button: Button = Button.new()
 		slot_button.text = slot_label
-		slot_button.custom_minimum_size = Vector2(150, 40)
+		slot_button.custom_minimum_size = Vector2(128, 40)
 		slot_button.toggle_mode = true
 		slot_button.pressed.connect(_set_item_slot_filter.bind(slot_id))
 		slot_row.add_child(slot_button)
@@ -695,6 +696,8 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	_apply_catalog_page()
 
 func _set_item_slot_filter(slot_id: String) -> void:
+	if catalog_filter_syncing:
+		return
 	if item_slot_filter == slot_id:
 		_refresh_item_filter_controls()
 		return
@@ -704,11 +707,16 @@ func _set_item_slot_filter(slot_id: String) -> void:
 	_refresh_catalog_list(catalog_search.text)
 
 func _set_item_grade_filter(grade_name: String) -> void:
+	if catalog_filter_syncing:
+		return
 	item_grade_filter = grade_name
 	_refresh_item_filter_controls()
 	_refresh_catalog_list(catalog_search.text)
 
 func _refresh_item_filter_controls() -> void:
+	if catalog_filter_syncing:
+		return
+	catalog_filter_syncing = true
 	for slot_key: Variant in item_slot_buttons.keys():
 		var slot_button_value: Variant = item_slot_buttons.get(slot_key)
 		if slot_button_value is Button:
@@ -734,6 +742,7 @@ func _refresh_item_filter_controls() -> void:
 			var grade_name: String = str(grade_key)
 			grade_button.visible = grade_name == "전체" or available_grades.has(grade_name)
 			grade_button.button_pressed = grade_name == item_grade_filter
+	catalog_filter_syncing = false
 
 func _catalog_page_count() -> int:
 	if catalog_filtered_results.is_empty():
