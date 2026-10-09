@@ -2986,7 +2986,17 @@ func _load_game(quiet: bool) -> void:
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
 		return
-	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
+	# JSON.parse_string() emits an engine ERROR on invalid saves even if handled.
+	# The explicit parser returns an error code, so damaged local saves can be
+	# rejected without corrupting the current session or failing a smoke test.
+	var save_parser: JSON = JSON.new()
+	var parse_error: Error = save_parser.parse(FileAccess.get_file_as_string(SAVE_PATH))
+	if parse_error != OK:
+		if not quiet:
+			hud.show_message("저장 데이터가 손상되었습니다")
+			hud.append_log("저장 데이터 JSON 해석 실패")
+		return
+	var value: Variant = save_parser.data
 	if not (value is Dictionary):
 		if not quiet:
 			hud.show_message("저장 데이터가 손상되었습니다")
