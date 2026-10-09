@@ -2,6 +2,7 @@ extends CanvasLayer
 class_name TwilightHUD
 
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+const FULL_CATALOG_OPTIONS = preload("res://scripts/full_catalog_options.gd")
 
 signal move_vector_changed(value: Vector2)
 signal attack_pressed
@@ -76,10 +77,11 @@ var catalog_last_button: Button
 var item_filter_panel: VBoxContainer
 var item_slot_buttons: Dictionary = {}
 var item_grade_buttons: Dictionary = {}
-var item_slot_filter: String = "weapon"
+var item_slot_filter: String = "all"
 var item_grade_filter: String = "전체"
 
 const ITEM_SLOT_FILTERS: Array = [
+	["all", "전체"],
 	["weapon", "무기"],
 	["armor", "방어구"],
 	["accessory", "악세사리"],
@@ -522,7 +524,7 @@ func open_catalog(category: String) -> void:
 	catalog_title.text = "%s 도감" % category
 	catalog_search.text = ""
 	if category == "아이템":
-		item_slot_filter = "weapon"
+		item_slot_filter = "all"
 		item_grade_filter = "전체"
 		item_filter_panel.visible = true
 		_refresh_item_filter_controls()
@@ -681,11 +683,11 @@ func _refresh_catalog_list(filter_text: String) -> void:
 			continue
 		var record: Dictionary = value as Dictionary
 		if catalog_category == "아이템":
-			if _item_filter_group(record) != item_slot_filter:
+			if item_slot_filter != "all" and _item_filter_group(record) != item_slot_filter:
 				continue
 			if item_grade_filter != "전체" and str(record.get("grade", "")) != item_grade_filter:
 				continue
-		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", ""))).to_lower()
+		var search_text: String = (str(record.get("name", "")) + " " + str(record.get("grade", "")) + " " + str(record.get("type", "")) + " " + str(record.get("desc", ""))).to_lower()
 		if query != "" and search_text.find(query) < 0:
 			continue
 		catalog_filtered_results.append(record)
@@ -719,7 +721,7 @@ func _refresh_item_filter_controls() -> void:
 		if not (value is Dictionary):
 			continue
 		var record: Dictionary = value as Dictionary
-		if _item_filter_group(record) != item_slot_filter:
+		if item_slot_filter != "all" and _item_filter_group(record) != item_slot_filter:
 			continue
 		available_grades[str(record.get("grade", ""))] = true
 
@@ -856,11 +858,17 @@ func _on_catalog_item_selected(index: int) -> void:
 	var title: String = str(selected_catalog_record.get("name", ""))
 	var grade: String = str(selected_catalog_record.get("grade", ""))
 	var type_name: String = str(selected_catalog_record.get("type", ""))
-	var options: Array = selected_catalog_record.get("sourceOptions", []) as Array
+	var options: Array[String] = FULL_CATALOG_OPTIONS.visible_options(selected_catalog_record)
 	var option_text: String = ""
-	for value: Variant in options.slice(0, 16):
-		option_text += "• %s\n" % str(value)
-	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\nID: %s\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "")), option_text]
+	for value: String in options:
+		option_text += "• %s\n" % value.replace("[", "［").replace("]", "］")
+	var raw_count: int = (selected_catalog_record.get("sourceOptions", []) as Array).size()
+	var deferred_count: int = (selected_catalog_record.get("deferredOptions", []) as Array).size()
+	var numeric_count: int = int(selected_catalog_record.get("catalogNumericCount", 0))
+	var source_url: String = str(selected_catalog_record.get("sourceUrl", ""))
+	var source_label: String = "원본 %d개 · 표시 %d개 · 수치 %d개 · 특수/미분류 %d개" % [raw_count, options.size(), numeric_count, deferred_count]
+	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\nID: %s\n%s\n\n%s%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "")), source_label, option_text, ("\n원작 출처: " + source_url) if source_url != "" else ""]
+	catalog_detail.scroll_to_line(0)
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty():
