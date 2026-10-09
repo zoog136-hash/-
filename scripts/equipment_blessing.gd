@@ -2,7 +2,7 @@ extends RefCounted
 class_name TwilightEquipmentBlessing
 
 # Base equipment blessing: per physical item; separate from blessed enchant scrolls.
-# Option values follow the classic Lineage M blessing table (weapons / armor).
+# Original 2017 NC guide confirms common through legendary. Mythic and\n# unique are TWILIGHT extensions pending reliable contemporary option data.
 # "유일" is a TWILIGHT extension, NOT a verified official option.
 # Success rates are TWILIGHT placeholders until current NC numeric disclosure can
 # be verified. Never describe these numbers as official probabilities.
@@ -16,7 +16,7 @@ const WEAPON_BONUSES: Dictionary = {
 	"유일": {"damage":5}
 }
 const ARMOR_BONUSES: Dictionary = {
-	"일반": {"mr":-1}, "고급": {"hp":30}, "희귀": {"capacity":100},
+	"일반": {"mr":1}, "고급": {"hp":30}, "희귀": {"capacity":100},
 	"영웅": {"defense":1}, "전설": {"defense":1}, "신화": {"defense":3},
 	"유일": {"defense":5}
 }
@@ -46,7 +46,7 @@ static func effect_text(grade: String, kind: String) -> String:
 	if bonus.has("defense"):
 		return "AC -%d" % int(bonus["defense"])
 	if bonus.has("mr"):
-		return "MR %d" % int(bonus["mr"])
+		return "MR %+d" % int(bonus["mr"])
 	return ""
 
 static func is_blessed(physical: Dictionary, record: Dictionary) -> bool:
