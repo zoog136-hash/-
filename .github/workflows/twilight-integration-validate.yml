@@ -1,0 +1,77 @@
+name: TWILIGHT Integration Validate
+
+on:
+  push:
+    branches: ['integration/twilight-complete-20261009']
+  pull_request:
+    branches: ['integration/twilight-complete-20261009']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  godot-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out integration candidate
+        uses: actions/checkout@v4
+      - name: Install Godot 4.7.2 and software GL
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version
+      - name: Full project regression, import, boot and all smoke tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+      - name: Floor-loot visual, manual pickup and live AUTO regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-loot"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ground_loot.gd 2>&1 | tee test-results/integration-loot-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-loot-render.log; then exit 1; fi
+          grep -q 'GROUND_LOOT_RENDER_OK' test-results/integration-loot-render.log
+      - name: Combat animation and world rendering regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-combat"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat.gd 2>&1 | tee test-results/integration-combat-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-combat-render.log; then exit 1; fi
+          grep -q 'COMBAT_RENDER' test-results/integration-combat-render.log
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-regions"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee test-results/integration-regions-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-regions-render.log; then exit 1; fi
+      - name: Monster-crowd and authored-state animation regression
+        if: ${{ hashFiles('tests/capture_combat_crowd.gd') != '' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-crowd"
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/integration-crowd-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-crowd-render.log; then exit 1; fi
+          grep -q 'COMBAT_CROWD_RENDER_OK' test-results/integration-crowd-render.log
+      - name: Preserve Godot test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-integration-check-${{ github.sha }}
+          path: |
+            test-results/
+            ${{ runner.temp }}/twilight-integration-loot/**/ground-loot-review/
+            ${{ runner.temp }}/twilight-integration-combat/**/combat-review/
+            ${{ runner.temp }}/twilight-integration-regions/**/world-regions-review/
+            ${{ runner.temp }}/twilight-integration-crowd/**/combat-crowd-review/
+          if-no-files-found: warn
