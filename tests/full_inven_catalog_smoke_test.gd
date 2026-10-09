@@ -57,7 +57,7 @@ func _run() -> void:
 			if str(record.get("source","")) != "inven":
 				continue
 			source_count += 1
-			original_options += (record.get("sourceOptions",[]) as Array).size()
+			original_options += (record.get("originalSourceOptions", record.get("sourceOptions",[])) as Array).size()
 			numeric_keys += (record.get("inven_passives",{}) as Dictionary).size()
 			check(bool(record.get("inven_indexed",false)), category+" unindexed "+str(record.get("name","")))
 			check(originals_by_cat.has("id:" + str(record.get("sourceId",""))), category+" missing source ID "+str(record.get("sourceId","")))
@@ -89,7 +89,7 @@ func _run() -> void:
 	check(int(dagger.get("strFlat",0)) == 10, "Giltas dagger STR +10 applies")
 	check(int(dagger.get("damage_amp_pct",0)) == 25, "Giltas dagger percent damage +25")
 	check(int(dagger.get("additionalDamage",0)) == 84, "Giltas original item additional damage +84")
-	check((dagger.get("sourceOptions",[]) as Array).size() >= 15, "original unique item full option list preserved")
+	check((dagger.get("originalSourceOptions", dagger.get("sourceOptions",[])) as Array).size() >= 15, "original unique item full option list preserved")
 	var doll: Dictionary = world.call("_source_catalog_record", "마법인형", {"name":"할파스"})
 	check(int(doll.get("hpFlat",0)) == 3000, "Halpas HP +3000 kept")
 	check(int(doll.get("pve_damage_reduction_pct",0)) == 7, "Halpas original PvP reduction converted to PVE")
