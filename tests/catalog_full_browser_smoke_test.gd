@@ -112,6 +112,10 @@ func _run() -> void:
 			if str(entry.get("name", "")) == same_name:
 				var original_id: String = str(entry.get("sourceId", ""))
 				observed[original_id] = true
+				if original_id in duplicate_ids:
+					var inventory_ui: Node = hud.get("lineage_inventory_ui") as Node
+					var exact_record: Dictionary = inventory_ui.call("_find_item_record", same_name + "@@@" + str(raw_id))
+					_check(str(exact_record.get("sourceId", "")) == original_id, "inventory details must use physical source ID")
 		_check(observed.has(duplicate_ids[0]) and observed.has(duplicate_ids[1]), "distinct source IDs pinned to physical items")
 		var second_variant: Dictionary = world.call("_find_catalog_item_record", same_name, duplicate_ids[1])
 		_check(str(second_variant.get("sourceId", "")) == duplicate_ids[1], "source-ID lookup returns exact record")
