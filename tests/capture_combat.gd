@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+
 ## Rendered engine QA. Diagnostic hit/critical poses are separate from live AUTO.
 var failed: bool = false
 var captures: int = 0
@@ -21,6 +23,10 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
 	var world: TwilightWorld = load("res://Main.tscn").instantiate()
 	root.add_child(world)
+	if not CLASS_QA.enter_game(world):
+		push_error("Rendered gameplay class confirmation failed")
+		quit(1)
+		return
 	world.save_timer = -10000
 	world.rng.seed = 20261008
 	world._set_map("aden_world", false)
