@@ -80,7 +80,6 @@ var item_slot_filter: String = "all"
 var item_grade_filter: String = "전체"
 
 const ITEM_SLOT_FILTERS: Array = [
-	["all", "전체"],
 	["weapon", "무기"],
 	["armor", "방어구"],
 	["accessory", "악세사리"],
