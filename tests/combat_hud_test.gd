@@ -93,7 +93,12 @@ func _run() -> void:
 	world.call("reset_hud_counts")
 	world._try_trigger_passives("on_damaged",attacker)
 	check(int(world.hud.hp_bar.max_value)==pre_proc_limit+55,"stat-changing damage proc publishes fresh limit")
-	check(int(world.get("full_hud_refreshes"))==1,"stat change triggers one full refresh")
+	check(int(world.get("full_hud_refreshes"))==0 and world.stat_hud_refresh_pending,"stat proc does not rebuild UI inside the hit")
+	world.skill_cooldowns.erase("HUD QA proc")
+	world._try_trigger_passives("on_damaged",attacker)
+	world._process(0.)
+	check(int(world.get("full_hud_refreshes"))==1 and not world.stat_hud_refresh_pending,"multiple stat procs share one UI-phase refresh")
+	check(int(world.hud.character_state.max_hp)==world._effective_max_hp(),"queued snapshot uses current stats")
 	world._tick_skill_buffs(1.1)
 	check(int(world.hud.hp_bar.max_value)==pre_proc_limit,"proc expiry invalidates limit")
 	# Successful HP absorption remains exactly one after PR #46.

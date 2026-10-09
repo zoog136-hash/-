@@ -41,6 +41,7 @@ var combat_corpses: Node2D = null
 var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
+var stat_hud_refresh_pending: bool = false
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -279,6 +280,8 @@ func _process(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	if stat_hud_refresh_pending:
+		_update_hud()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
 	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
@@ -3029,6 +3032,7 @@ func _on_map_selected(map_id: String) -> void:
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
+	stat_hud_refresh_pending = false
 	_sync_item_instances()
 	_refresh_speed_modifiers()
 	var display_max_hp: int = _effective_max_hp()
@@ -3887,9 +3891,10 @@ func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> voi
 					"speed": float(skill.get("speed", 1.0))
 				}
 				player.set_skill_speed_multiplier(_active_skill_speed_multiplier())
-				# A proc that changes stats needs a fresh full snapshot; an ordinary
-				# hit/heal only updates vitals. Do not rely on a later damage flush.
-				_update_hud()
+				# Publish new HP/MP limits immediately, but coalesce the full sheet
+				# in the UI process phase instead of blocking a monster physics hit.
+				hud.update_player(level, hp, _effective_max_hp(), mp, _effective_max_mp(), experience, exp_need, gold)
+				stat_hud_refresh_pending = true
 			_:
 				continue
 		var cooldown: float = SKILL_RULES.cooldown_seconds(skill) * _skill_cooldown_factor()
