@@ -168,6 +168,53 @@ func _run() -> void:
 		hud.call(section)
 		await process_frame
 		_check(workspace.visible,"window visible "+section)
+	# The original class grid was removed from the visible character panel.
+	# Verify all 13 are restored and both startup and in-game entry work.
+	var class_shortcut: Button = workspace.find_child("ChangeClassButton",true,false) as Button
+	_check(class_shortcut != null,"character equipment view offers class selection")
+	if class_shortcut != null:
+		class_shortcut.pressed.emit()
+		await process_frame
+		_check(str(hud.get("active_section")) == "class_select","character shortcut opens class selection")
+	hud.call("open_class_selection",true)
+	await process_frame
+	var class_grid: GridContainer = workspace.find_child("ClassGrid",true,false) as GridContainer
+	var class_confirm: Button = workspace.find_child("ClassConfirm",true,false) as Button
+	_check(class_grid != null and class_grid.get_child_count() == 13,"all 13 existing classes appear")
+	_check(class_confirm != null and class_confirm.disabled,"starting character requires explicit class selection")
+	_check(bool(hud.get("class_picker_initial")) and not world.player.is_physics_processing(),"starter selection freezes game movement")
+	var protected_gold: int = int(world.get("gold"))
+	var protected_inventory: Dictionary = (world.get("inventory") as Dictionary).duplicate(true)
+	workspace.closed.emit()
+	await process_frame
+	_check(workspace.visible,"startup class selection cannot be dismissed without confirming")
+	if class_grid != null and class_confirm != null:
+		var elf_button: Button = workspace.find_child("Class_요정",true,false) as Button
+		if elf_button != null:
+			var elf_point: Vector2 = _screen_point(elf_button,elf_button.size*0.5)
+			_touch(46,elf_point,true)
+			_touch(46,elf_point,false)
+			await process_frame
+			_check(not class_confirm.disabled and class_confirm.text.contains("요정"),"native class card touch selects elf")
+			class_confirm.pressed.emit()
+			await process_frame
+			_check(str(world.get("job_class")) == "요정","selected class applied through world job signal")
+			_check(FileAccess.file_exists(world.SAVE_PATH),"selected job committed to local save")
+			_check(not bool(hud.get("class_picker_initial")) and not workspace.visible,"confirmation closes starter selection")
+			_check(world.player.is_physics_processing(),"confirmation resumes game movement")
+			_check(int(world.get("gold")) == protected_gold and (world.get("inventory") as Dictionary) == protected_inventory,"class selection preserves Adena and inventory")
+	# Current saved characters may still open and change classes via the menu.
+	hud.call("open_class_selection")
+	await process_frame
+	var mage_button: Button = workspace.find_child("Class_마법사",true,false) as Button
+	var class_confirm_again: Button = workspace.find_child("ClassConfirm",true,false) as Button
+	_check(mage_button != null and class_confirm_again != null,"saved game class picker is accessible")
+	if mage_button != null and class_confirm_again != null:
+		mage_button.pressed.emit()
+		class_confirm_again.pressed.emit()
+		await process_frame
+		_check(str(world.get("job_class")) == "마법사","existing character can change class without reset")
+		_check(int(world.get("gold")) == protected_gold and (world.get("inventory") as Dictionary) == protected_inventory,"class change keeps gold and inventory")
 	world.queue_free()
 	await process_frame
 	_finish()
