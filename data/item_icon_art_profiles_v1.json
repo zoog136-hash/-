@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "source_index": "res://data/catalog_image_index_v19.json",
+  "description": "원본 아이콘을 유지하면서 게임 안에서 동적으로 보정하는 이미지 프로필 DB. 원본 PNG, 아이템 ID 및 능력치는 변경하지 않는다.",
+  "canvas_size": 96,
+  "source_size": 78,
+  "color_grades": {
+    "일반": {
+      "accent": "a8a59b",
+      "glow": 0.15
+    },
+    "고급": {
+      "accent": "63d688",
+      "glow": 0.2
+    },
+    "희귀": {
+      "accent": "58aaff",
+      "glow": 0.3
+    },
+    "영웅": {
+      "accent": "f06a66",
+      "glow": 0.34
+    },
+    "전설": {
+      "accent": "a872ff",
+      "glow": 0.4
+    },
+    "신화": {
+      "accent": "ffd16d",
+      "glow": 0.47
+    },
+    "유일": {
+      "accent": "4bf4c7",
+      "glow": 0.54
+    }
+  },
+  "accent_overrides": {
+    "데스나이트의 불검": "ff633e",
+    "커츠의 검": "77c9fa",
+    "생명의 단검": "bbdf72",
+    "군터의 단도": "b894ff",
+    "오시리스의 단검": "f2ca69",
+    "뇌신검": "66adff",
+    "드래곤 슬레이어": "e4b77f"
+  },
+  "fidelity": {
+    "keep_original_asset": true,
+    "key_off_dark_background": true,
+    "enable_color_restoration": true,
+    "no_item_substitution": true,
+    "preserve_item_name_id_and_stats": true
+  }
+}
