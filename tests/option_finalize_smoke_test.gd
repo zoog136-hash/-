@@ -69,7 +69,8 @@ func _run() -> void:
 	var mp_base: int = int(world.get("max_mp"))
 	assert_ok(int(world.call("_effective_max_mp")) == mp_base + 95, "enchanted earring raises effective MP by 95")
 	assert_ok(int(world.call("_effective_mr")) >= 10, "special cloak enhancement MR actually applied")
-	assert_ok(int(world.call("_enhancement_stat_for_slots", ["earring1", "earring2"], "mp_recovery")) == 3, "earring MP tick wired")
+	var earring_slots: Array[String] = ["earring1", "earring2"]
+	assert_ok(int(world.call("_enhancement_stat_for_slots", earring_slots, "mp_recovery")) == 3, "earring MP tick wired")
 
 	print("OPTION_FINALIZE_TRACE: enhancement MP/MR checked")
 	world.set("equipped_items", {"tshirt":{"name":"지식의 티셔츠","slot":"tshirt","desc":"방어 +2 · MP +30"}})
