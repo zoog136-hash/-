@@ -1,0 +1,51 @@
+name: Item Codex Art Validate
+
+on:
+  push:
+    branches: ['feature/item-codex-icon-restyle-*']
+  pull_request:
+    branches: ['main']
+    paths:
+      - 'scripts/ui/item_icon_art.gd'
+      - 'scripts/ui/renewal_theme.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'data/item_icon_art_profiles_v1.json'
+      - 'tests/item_icon_art_smoke_test.gd'
+      - '.github/workflows/item-icon-art-validate.yml'
+  workflow_dispatch:
+
+jobs:
+  item-icon-art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import project
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee item-icon-import.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" item-icon-import.log
+      - name: Test item icon database and rendering
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_icon_art_smoke_test.gd 2>&1 | tee item-icon-test.log
+          ! grep -E "SCRIPT ERROR:|ERROR:|ITEM_ICON_ART_FAILED|ITEM_ICON_FAIL" item-icon-test.log
+          grep -q "ITEM_ICON_ART_OK" item-icon-test.log
+      - name: Existing project tests
+        run: |
+          python3 tools/test_project.py 2>&1 | tee item-icon-regression.log
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: item-codex-art-validation
+          path: |
+            item-icon-import.log
+            item-icon-test.log
+            item-icon-regression.log
+          if-no-files-found: warn
