@@ -200,6 +200,16 @@ func _on_title_drag_input(event: InputEvent) -> void:
 			title_dragging = true
 			title_dragged = true
 			accept_event()
+		else:
+			title_drag_mouse = false
+			if title_drag_touch == -1:
+				title_dragging = false
+	elif event is InputEventMouseMotion and title_drag_mouse and title_dragging:
+		# Native motions are handled by _input before GUI dispatch. Retain this
+		# path for direct title-gui_input calls and legacy playtest regression.
+		position += event.relative
+		_keep_title_visible()
+		accept_event()
 	elif event is InputEventScreenTouch:
 		var touch: InputEventScreenTouch = event
 		if touch.pressed and not touch.canceled and title_drag_touch == -1:
@@ -207,6 +217,13 @@ func _on_title_drag_input(event: InputEvent) -> void:
 			title_dragging = true
 			title_dragged = true
 			accept_event()
+		elif not touch.pressed and touch.index == title_drag_touch:
+			title_drag_touch = -1
+			title_dragging = false
+	elif event is InputEventScreenDrag and title_dragging and event.index == title_drag_touch:
+		position += event.relative
+		_keep_title_visible()
+		accept_event()
 
 func open(section: String, title: String, description: String) -> void:
 	heading.text = title
