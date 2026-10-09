@@ -36,7 +36,7 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ui_renewal_integration_test.gd 2>&1 | tee ui-integration.log
           ! grep -E "SCRIPT ERROR:|ERROR:|UI RENEWAL FAIL:|UI_RENEWAL_INTEGRATION_FAILED" ui-integration.log
           grep -q "UI_RENEWAL_INTEGRATION_OK" ui-integration.log
-      - name: Capture 68 OpenGL screen states
+      - name: Capture 72 OpenGL screen states including class selection
         run: |
           set -o pipefail
           export LIBGL_ALWAYS_SOFTWARE=1
