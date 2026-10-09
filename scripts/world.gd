@@ -76,6 +76,7 @@ var maps_by_id: Dictionary = {}
 var game_db: Dictionary = {}
 var loot_catalog: Dictionary = {}
 var monster_db: Array = []
+var monster_size_index: Dictionary = {}
 var item_db: Array = []
 var item_weight_index: Dictionary = {}
 var skills_db: Array = []
@@ -366,6 +367,7 @@ func _load_data() -> void:
 	if db_value is Dictionary:
 		game_db = db_value as Dictionary
 	monster_db = game_db.get("몬스터", []) as Array
+	_load_monster_sizes()
 	item_db = game_db.get("아이템", []) as Array
 	for item_index: int in range(item_db.size() - 1, -1, -1):
 		var item_value: Variant = item_db[item_index]
@@ -581,12 +583,15 @@ func _index_item_weights() -> void:
 			var name_value: String = str(record.get("name", ""))
 			if name_value.is_empty():
 				continue
-			item_weight_index[name_value] = maxi(0, int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults))))
+			var raw_weight: int = int(overrides.get(name_value, ITEM_OPTIONS.item_weight(record, type_defaults)))
+			if raw_weight <= 0 and str(record.get("slot", "")) != "currency" and str(record.get("type", "")) != "화폐":
+				raw_weight = maxi(1, int(type_defaults.get(str(record.get("type", "")), 3)))
+			item_weight_index[name_value] = maxi(0, raw_weight)
 
 func _inventory_total_weight() -> int:
 	var total: int = 0
 	for name_value: Variant in inventory.keys():
-		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0)))
+		total += maxi(0, int(inventory.get(name_value, 0))) * maxi(0, int(item_weight_index.get(str(name_value), 0 if str(name_value) == "아데나" else 3)))
 	return total
 
 func _carrying_capacity() -> int:
@@ -645,6 +650,17 @@ func _weapon_size_adjustment(target: TwilightMonster) -> int:
 	var label: String = str(target.get_meta("size_class", "small")).to_lower()
 	return ITEM_OPTIONS.weapon_size_adjustment(_equipped_weapon_record(), label == "large")
 
+func _load_monster_sizes() -> void:
+	monster_size_index.clear()
+	var filename: String = "res://data/monster_sizes_v1.json"
+	if not FileAccess.file_exists(filename):
+		return
+	var value: Variant = JSON.parse_string(FileAccess.get_file_as_string(filename))
+	if value is Dictionary:
+		var size_records: Variant = (value as Dictionary).get("monster_sizes", {})
+		if size_records is Dictionary:
+			monster_size_index = size_records as Dictionary
+
 func _monster_size_class(record: Dictionary) -> String:
 	for key: String in ["size_class", "size", "monster_size", "크기"]:
 		if record.has(key):
@@ -654,6 +670,11 @@ func _monster_size_class(record: Dictionary) -> String:
 			if raw in ["small", "소", "소형"]:
 				return "small"
 	var name_value: String = str(record.get("name", ""))
+	var known_value: Variant = monster_size_index.get(name_value, {})
+	if known_value is Dictionary:
+		var known_size: String = str((known_value as Dictionary).get("size", ""))
+		if known_size in ["small", "large"]:
+			return known_size
 	# Body-type classification, deliberately independent of 'is_boss'.
 	var big_keywords: Array[String] = ["거대", "골렘", "오우거", "사이클롭스", "에틴", "웜", "드레이크", "드래곤", "드레곤", "피닉스", "마이노", "바실리스크", "크랩맨", "에르자베"]
 	for keyword: String in big_keywords:
