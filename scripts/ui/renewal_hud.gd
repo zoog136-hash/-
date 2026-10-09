@@ -604,6 +604,7 @@ func _build_catalog_panel() -> void:
 	collection_slot_filter.item_selected.connect(_select_catalog_group_index)
 	top.add_child(collection_slot_filter)
 	collection_status = UI.label("",12,UI.MUTED)
+	collection_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	col.add_child(collection_status)
 	catalog_view_tabs = HBoxContainer.new()
 	catalog_view_tabs.name = "CatalogCompactTabs"
@@ -695,7 +696,7 @@ func _fit_catalog_browser_layout() -> void:
 		return
 	# A fixed 530px grid + 315px preview used to spill outside portrait/small
 	# windows. On narrow viewports show either full-width grid or full-width detail.
-	var compact: bool = workspace.size.x < 1030.0
+	var compact: bool = get_viewport_rect().size.x < 1180.0
 	catalog_view_tabs.visible = compact and active_section in ["아이템", "변신", "마법인형", "성물"]
 	catalog_body_left.visible = not compact or not catalog_details_active
 	catalog_body_actions.visible = not compact or catalog_details_active
