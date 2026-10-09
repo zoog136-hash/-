@@ -29,6 +29,7 @@ func _run() -> void:
 	assert_ok(str(RULES.definition("속성 초기화 주문서").get("kind", "")) == "element_reset", "reset scroll recognized")
 	for i: int in range(5):
 		assert_ok(RULES.element_success_chance(i) > 0.0, "element chance configured stage " + str(i))
+	print("OPTION_FINALIZE_TRACE: pre-scene assertions complete")
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene
 	if scene == null:
 		assert_ok(false, "Main.tscn missing")
@@ -38,6 +39,7 @@ func _run() -> void:
 	root.add_child(world)
 	await process_frame
 	await process_frame
+	print("OPTION_FINALIZE_TRACE: world scene ready")
 	var db: Array = world.get("monster_db") as Array
 	var sizes: Dictionary = world.get("monster_size_index") as Dictionary
 	assert_ok(db.size() == 163, "163 monster records expected")
@@ -58,6 +60,7 @@ func _run() -> void:
 		assert_ok(int(index.get(item_name, -1)) >= 0, "negative item weight: " + item_name)
 	assert_ok(int(index.get("도펠겡어 보스의 오른쪽 반지",0)) == 3, "verified ring weight =3")
 	assert_ok(int(index.get("다마스커스 검 (각인)",0)) == 45, "verified Damascus weight =45")
+	print("OPTION_FINALIZE_TRACE: monster and weights checked")
 	world.set("equipped_catalog", {"변신":{},"마법인형":{},"성물":{}})
 	world.set("inventory", {})
 	world.set("equipped_items", {})
@@ -68,6 +71,7 @@ func _run() -> void:
 	assert_ok(int(world.call("_effective_mr")) >= 10, "special cloak enhancement MR actually applied")
 	assert_ok(int(world.call("_enhancement_stat_for_slots", ["earring1", "earring2"], "mp_recovery")) == 3, "earring MP tick wired")
 
+	print("OPTION_FINALIZE_TRACE: enhancement MP/MR checked")
 	world.set("equipped_items", {"tshirt":{"name":"지식의 티셔츠","slot":"tshirt","desc":"방어 +2 · MP +30"}})
 	world.set("max_mp", 200)
 	world.set("mp", 200)
@@ -77,6 +81,7 @@ func _run() -> void:
 	assert_ok(int(world.get("mp")) == 230, "instant MP potion must use equipped 230 cap")
 	assert_ok(int((world.get("inventory") as Dictionary).get("마녀의 마력 회복제", 0)) == 0, "MP potion consumes one")
 
+	print("OPTION_FINALIZE_TRACE: instant MP potion checked")
 	world.set("inventory", {"낡은 장검":2, "속성 변경 주문서":1, "속성 초기화 주문서":1})
 	world.set("item_instances", {"111":{"name":"낡은 장검", "level":11,"element":"fire","element_level":4},
 		"222":{"name":"낡은 장검","level":8,"element":"earth","element_level":2}})
@@ -89,6 +94,7 @@ func _run() -> void:
 	instances = world.get("item_instances") as Dictionary
 	assert_ok(str((instances["111"] as Dictionary).get("element","")) == "" and int((instances["111"] as Dictionary).get("element_level",0)) == 0, "reset selected copy only")
 	assert_ok(int((instances["222"] as Dictionary).get("element_level",0)) == 2, "other copy stays upgraded")
+	print("OPTION_FINALIZE_TRACE: elemental change and reset checked")
 	world.queue_free()
 	await process_frame
 	_finish()
