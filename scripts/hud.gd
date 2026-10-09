@@ -576,7 +576,7 @@ func _build_catalog_panel() -> void:
 		var slot_label: String = str(slot_data[1])
 		var slot_button: Button = Button.new()
 		slot_button.text = slot_label
-		slot_button.custom_minimum_size = Vector2(150, 40)
+		slot_button.custom_minimum_size = Vector2(115, 40)
 		slot_button.toggle_mode = true
 		slot_button.pressed.connect(_set_item_slot_filter.bind(slot_id))
 		slot_row.add_child(slot_button)
