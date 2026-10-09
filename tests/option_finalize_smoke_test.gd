@@ -76,6 +76,17 @@ func _run() -> void:
 	var mp_base: int = int(world.get("max_mp"))
 	assert_ok(int(world.call("_effective_max_mp")) == mp_base + 95, "enchanted earring raises effective MP by 95")
 	assert_ok(int(world.call("_effective_mr")) >= 10, "special cloak enhancement MR actually applied")
+	var cloak_detail: Dictionary = {"name":"마법 망토","slot":"cloak","instance_id":"11","desc":"물리 방어력(AC) -1 · 마법 방어력(MR) +10"}
+	var only_cloak: Dictionary = {"cloak":cloak_detail}
+	world.set("equipped_items", only_cloak)
+	var original_mr: int = int(world.call("_effective_mr"))
+	assert_ok(original_mr >= 20, "base cloak MR+10 and +5 enhancement MR+10 both apply")
+	var blue_earring: Dictionary = {"name":"룸티스의 푸른빛 귀걸이","slot":"earring","desc":"물약 회복률 +2% · 물약 회복량 +2"}
+	var equipped_potion: Dictionary = {"earring1":blue_earring}
+	world.set("equipped_items", equipped_potion)
+	assert_ok(int(world.call("_equipment_potion_heal_stat", "물약 회복량")) == 2, "blue earring +0 base potion flat+2")
+	assert_ok(int(world.call("_equipment_potion_heal_stat", "물약 회복률")) == 2, "blue earring +0 base potion +2%")
+	world.set("equipped_items", {"cloak":{"name":"마법 망토","slot":"cloak","instance_id":"11"}, "earring1":{"name":"룸티스의 보랏빛 귀걸이","slot":"earring","instance_id":"12"}})
 	var earring_slots: Array[String] = ["earring1", "earring2"]
 	assert_ok(int(world.call("_enhancement_stat_for_slots", earring_slots, "mp_recovery")) == 3, "earring MP tick wired")
 
