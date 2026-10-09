@@ -48,11 +48,13 @@ func _run() -> void:
 	var counter: Dictionary = world.original_skills.catalog.record_for("카운터 배리어")
 	world.inventory[str(counter.book_name)] = 1
 	world.original_skills.catalog.learn(str(counter.id))
-	world.call("_on_quickslot_assignment_requested", 0, "skill", "카운터 배리어")
+	world.call("_on_quickslot_assignment_requested", 0, "skill_auto", "카운터 배리어")
 	world.call("_on_quickslot_assignment_requested", 1, "item", "HP 물약")
 	var assigned: Array = world.get("quickslots") as Array
 	if str((assigned[0] as Dictionary).get("id", "")) != "카운터 배리어":
 		_fail("skill assignment failed")
+	if not bool((assigned[0] as Dictionary).get("auto", false)):
+		_fail("automatic registration flag missing")
 	if str((assigned[1] as Dictionary).get("id", "")) != "HP 물약":
 		_fail("item assignment failed")
 

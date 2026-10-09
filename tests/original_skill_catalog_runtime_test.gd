@@ -69,6 +69,8 @@ func run() -> void:
 		for _frame: int in range(3): await process_frame
 		check(view.detail.size.y >= 120, "readable detail height " + str(extent))
 		check(view.detail.scroll_active, "full learning details remain scrollable")
+		check(browser.details is ScrollContainer, "compact actions have a scrollable detail pane")
+		check(browser.details.get_global_rect().end.y <= world.hud.workspace.content.get_global_rect().end.y + 1, "detail pane stays inside the workspace " + str(extent))
 	world.queue_free()
 	await process_frame
 	if failures.is_empty(): print("ORIGINAL_SKILL_CATALOG_RUNTIME_OK records=",catalog.records.size()," active=",active_count)

@@ -67,3 +67,6 @@
 구조화 도감은 `CATALOG.md`, 스킬별 비교는 `original-vs-twilight.csv`, 이전 처리 정책은 `legacy-disposition.csv`, 후속 절차는 `IMPLEMENTATION.md`를 참고하세요.
 
 공식 기사 영상 2개의 업로드 날짜(2024-09-24)는 확인했습니다. `vfx-reference-audit.json`에 원본 링크·영상 메타데이터와 프레임 접근 BLOCKED 사유를 기록했습니다. 각 스킬 장면의 타임스탬프·판정 프레임은 아직 UNKNOWN입니다.
+
+
+자동사용 등록 보강 뒤 `b5a6345`의 Godot Validate에서 기존 퀵슬롯 검사가 실패했습니다: `SELF OFF did not auto-cast registered buff`. 수동 `skill` 등록을 자동 등록으로 가정한 검사였으며 실제 `skill_auto` 등록과 플래그 확인으로 수정했습니다. 생산 코드의 수동 등록 무소모 검사는 유지했습니다. CI와 같은 저장 디렉터리를 공유하는 아인하사드 → 직업 → 퀵슬롯 → 원작 서비스 순서의 4개 검사도 다시 통과했습니다. 작은 창의 상세 패널 범위·스크롤과 UI 3개 검사도 통과했습니다. 최종 결과는 `evidence/registration-fix/`와 최신 CI에 기록합니다.
