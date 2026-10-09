@@ -168,6 +168,54 @@ func _run() -> void:
 		hud.call(section)
 		await process_frame
 		_check(workspace.visible,"window visible "+section)
+	# The merged 2,852-entry catalog must be visible and selectable after
+	# the icon restyle. Compact viewports must not push its list offscreen.
+	hud.call("open_catalog", "아이템")
+	await process_frame
+	var catalog_items: ItemList = hud.get("catalog_list") as ItemList
+	var catalog_source: Dictionary = world.get("catalog_db") as Dictionary
+	var raw_items: Array = catalog_source.get("아이템", []) as Array
+	_check(raw_items.size() >= 2129, "item catalog source preserved after update")
+	_check(catalog_items != null and catalog_items.item_count == mini(40,raw_items.size()), "item catalog renders first page of names")
+	_check((hud.get("catalog_filtered_results") as Array).size() == raw_items.size(), "default All filter shows every catalog item")
+	for frame: int in range(4): await process_frame
+	if catalog_items != null and catalog_items.item_count > 1:
+		_check(catalog_items.get_item_icon(0) != null, "catalog first item icon painted")
+		root.size = Vector2i(720,720)
+		await process_frame
+		await process_frame
+		var compact_tabs: HBoxContainer = workspace.find_child("CatalogCompactTabs",true,false) as HBoxContainer
+		var detail_tab: Button = hud.get("catalog_details_tab") as Button
+		var actions: ScrollContainer = workspace.find_child("CatalogActionsScroll",true,false) as ScrollContainer
+		_check(compact_tabs != null and compact_tabs.visible, "compact catalog exposes list and detail tabs")
+		_check(catalog_items.visible and catalog_items.max_columns == 2, "compact catalog keeps icon list visible")
+		_check(catalog_items.get_global_rect().end.x <= workspace.get_global_rect().end.x + 1.0, "catalog list stays inside window width")
+		var second_record: Dictionary = (hud.get("catalog_results") as Array)[1]
+		var second_point: Vector2 = _screen_point(catalog_items,catalog_items.get_item_rect(1).get_center())
+		_touch(60,second_point,true)
+		_touch(60,second_point,false)
+		await process_frame
+		_check(str((hud.get("selected_catalog_record") as Dictionary).get("sourceId","")) == str(second_record.get("sourceId","")), "touch selects source-ID-specific catalog item")
+		if detail_tab != null and actions != null:
+			detail_tab.pressed.emit()
+			await process_frame
+			_check(actions.visible and not catalog_items.visible, "compact catalog shows selected item details")
+			(hud.get("catalog_list_tab") as Button).pressed.emit()
+			await process_frame
+			_check(catalog_items.visible and not actions.visible, "compact catalog returns to items")
+		var title_control: Control = workspace.find_child("WorkspaceTitleDragArea",true,false) as Control
+		_check(title_control != null, "shared draggable title is present")
+		if title_control != null:
+			var origin: Vector2 = workspace.position
+			var title_point: Vector2 = _screen_point(title_control,Vector2(title_control.size.x*0.5,12))
+			_touch(61,title_point,true)
+			_drag(61,title_point+Vector2(18,42),Vector2(18,42))
+			_drag(61,title_point+Vector2(38,75),Vector2(20,33))
+			_touch(61,title_point+Vector2(38,75),false)
+			await process_frame
+			_check(workspace.position.distance_to(origin) > 20.0, "title drag continues after finger exits title")
+		root.size = Vector2i(1280,720)
+		await process_frame
 	# The original class grid was removed from the visible character panel.
 	# Verify all 13 are restored and both startup and in-game entry work.
 	var class_shortcut: Button = workspace.find_child("ChangeClassButton",true,false) as Button
