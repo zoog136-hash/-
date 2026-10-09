@@ -12,6 +12,8 @@ var navigation: Dictionary = {}
 var title_dragging: bool = false
 var title_dragged: bool = false
 var viewport_fitted: bool = false
+var navigation_scroll: ScrollContainer
+var scroll_gestures: Dictionary = {}
 
 func _ready() -> void:
 	name = "RenewalWindow"
@@ -43,21 +45,28 @@ func _ready() -> void:
 	var body := HBoxContainer.new()
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	layout.add_child(body)
-	var nav_scroll := ScrollContainer.new()
-	nav_scroll.custom_minimum_size.x = 132
-	nav_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	body.add_child(nav_scroll)
+	navigation_scroll = ScrollContainer.new()
+	navigation_scroll.name = "WorkspaceNavigationScroll"
+	navigation_scroll.custom_minimum_size.x = 132
+	navigation_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	navigation_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	navigation_scroll.scroll_deadzone = 8
+	body.add_child(navigation_scroll)
 	var nav := VBoxContainer.new()
 	nav.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	nav_scroll.add_child(nav)
+	nav.mouse_filter = Control.MOUSE_FILTER_PASS
+	navigation_scroll.add_child(nav)
 	for pair: Array in [["character","캐릭터 · 장비"],["inventory","인벤토리"],["skills","스킬 · 성장"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"],["log","전투 기록"]]:
 		var id := str(pair[0])
-		var b := UI.button(str(pair[1]),func() -> void: navigate.emit(id),Vector2(124,36))
+		var b := UI.button(str(pair[1]),func() -> void:
+			if not was_scroll_dragged(navigation_scroll):
+				navigate.emit(id),Vector2(124,36))
 		b.toggle_mode = true
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.add_theme_font_size_override("font_size",12)
 		b.name = "Nav_"+id
 		nav.add_child(b)
+		register_scroll_drag(navigation_scroll,b)
 		navigation[id] = b
 	body.add_child(VSeparator.new())
 	content = Control.new()
@@ -75,6 +84,50 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(fit_viewport)
 	fit_viewport()
 	hide()
+
+# A drag starting on a Button is normally swallowed before ScrollContainer
+# sees it. Forward native finger and mouse gestures from the button itself.
+# Mouse wheel / scrollbar and ordinary taps remain handled by Godot.
+func register_scroll_drag(scroll: ScrollContainer, target: Control) -> void:
+	target.mouse_filter = Control.MOUSE_FILTER_PASS
+	target.gui_input.connect(_on_scroll_drag_input.bind(scroll,target))
+
+func was_scroll_dragged(scroll: ScrollContainer) -> bool:
+	return bool((scroll_gestures.get(scroll.get_instance_id(), {}) as Dictionary).get("dragged", false))
+
+func _on_scroll_drag_input(event: InputEvent, scroll: ScrollContainer, target: Control) -> void:
+	var key: int = scroll.get_instance_id()
+	var gesture: Dictionary = scroll_gestures.get(key, {"touch":-1,"mouse":false,"distance":0.0,"dragged":false})
+	if event is InputEventScreenTouch:
+		var touch: InputEventScreenTouch = event
+		if touch.pressed and not touch.canceled and int(gesture.get("touch",-1)) == -1:
+			gesture = {"touch":touch.index,"mouse":false,"distance":0.0,"dragged":false}
+		elif (not touch.pressed or touch.canceled) and touch.index == int(gesture.get("touch",-1)):
+			gesture["touch"] = -1
+	elif event is InputEventScreenDrag and event.index == int(gesture.get("touch",-1)):
+		var drag: InputEventScreenDrag = event
+		gesture["distance"] = float(gesture.get("distance",0.0)) + absf(drag.relative.y)
+		if float(gesture["distance"]) > 8.0:
+			gesture["dragged"] = true
+			_scroll_by_drag(scroll,drag.relative.y)
+			target.accept_event()
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			gesture = {"touch":-1,"mouse":true,"distance":0.0,"dragged":false}
+		else:
+			gesture["mouse"] = false
+	elif event is InputEventMouseMotion and bool(gesture.get("mouse",false)) and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+		gesture["distance"] = float(gesture.get("distance",0.0)) + absf(event.relative.y)
+		if float(gesture["distance"]) > 8.0:
+			gesture["dragged"] = true
+			_scroll_by_drag(scroll,event.relative.y)
+			target.accept_event()
+	scroll_gestures[key] = gesture
+
+func _scroll_by_drag(scroll: ScrollContainer, delta_y: float) -> void:
+	var bar: VScrollBar = scroll.get_v_scroll_bar()
+	var max_scroll: int = maxi(0,ceili(bar.max_value-bar.page))
+	scroll.scroll_vertical = clampi(scroll.scroll_vertical-roundi(delta_y),0,max_scroll)
 
 func fit_viewport() -> void:
 	var viewport := get_viewport_rect().size
