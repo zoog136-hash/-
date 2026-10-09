@@ -701,8 +701,15 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_text(index,item_label)
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
-		var path := str(record.get("image_path",""))
-		if path!="" and ResourceLoader.exists(path): catalog_list.set_item_icon(index,load(path) as Texture2D)
+		if catalog_category == "아이템":
+			# PR46: use this sourceId record, never another item with the same name.
+			var item_texture: Texture2D = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
+			if item_texture != null:
+				catalog_list.set_item_icon(index, item_texture)
+		else:
+			var path := str(record.get("image_path", ""))
+			if path != "" and ResourceLoader.exists(path):
+				catalog_list.set_item_icon(index, load(path) as Texture2D)
 		catalog_list.set_item_tooltip(index,"%s · %s · 원본 ID: %s" % [grade_name,record.get("name",""),record.get("sourceId","")])
 	if catalog_results.is_empty():
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
@@ -754,6 +761,10 @@ func _on_catalog_item_selected(index: int) -> void:
 		playtest_grant_button.disabled = catalog_category != "아이템"
 	var item_name := str(selected_catalog_record.get("name",""))
 	var grade_name := str(selected_catalog_record.get("grade","일반"))
+	if catalog_category == "아이템":
+		var selected_texture: Texture2D = UI.item_icon(selected_catalog_record, item_name, item_image_index.get("아이템", {}))
+		if selected_texture != null:
+			catalog_preview.texture = selected_texture
 	catalog_detail.text="[color=#%s]%s[/color]\n%s" % [UI.grade(grade_name).to_html(false),UI.safe(grade_name),catalog_detail.text]
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
