@@ -4901,7 +4901,10 @@ func _catalog_damage_bonus(kind: String) -> int:
 	for category: String in ["변신", "마법인형", "성물"]:
 		var value: Variant = equipped_catalog.get(category, {})
 		if value is Dictionary and not (value as Dictionary).is_empty():
-			total += CATALOG_EFFECTS.damage_by_style(_verified_catalog_record(category, value as Dictionary), kind)
+			var original: Dictionary = _verified_catalog_record(category, value as Dictionary)
+			total += CATALOG_EFFECTS.damage_by_style(original, kind)
+			if (kind == "melee" or kind == "ranged") and _current_weapon_type() != "":
+				total += int(original.get("weapon_bonus_" + _current_weapon_type(), 0))
 	return total
 
 func _catalog_damage_adjustment(kind: String) -> int:
