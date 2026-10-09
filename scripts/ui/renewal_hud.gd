@@ -61,6 +61,7 @@ func _ready() -> void:
 	workspace.navigate.connect(_navigate)
 	workspace.closed.connect(_close_workspace)
 	workspace.resized.connect(_fit_catalog_browser_layout)
+	get_window().size_changed.connect(_fit_catalog_browser_layout)
 	# Starting-character selection is a genuine modal on PC and Android.
 	class_picker_backdrop = ColorRect.new()
 	class_picker_backdrop.name = "ClassSelectionBackdrop"
@@ -696,7 +697,7 @@ func _fit_catalog_browser_layout() -> void:
 		return
 	# A fixed 530px grid + 315px preview used to spill outside portrait/small
 	# windows. On narrow viewports show either full-width grid or full-width detail.
-	var compact: bool = get_viewport_rect().size.x < 1180.0
+	var compact: bool = mini(get_window().size.x, int(get_viewport_rect().size.x)) < 1180
 	catalog_view_tabs.visible = compact and active_section in ["아이템", "변신", "마법인형", "성물"]
 	catalog_body_left.visible = not compact or not catalog_details_active
 	catalog_body_actions.visible = not compact or catalog_details_active
