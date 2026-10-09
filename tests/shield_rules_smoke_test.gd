@@ -70,6 +70,52 @@ func _run() -> void:
 	if not (offhand is Dictionary) or (offhand as Dictionary).is_empty():
 		_fail("guarder should not auto-unequip with bow")
 
+	# Regression: a compatible offhand must pass the equip path, not just
+	# _can_equip_offhand(). Previously a misplaced return blocked every offhand.
+	var slots: Dictionary = world.call("_empty_equipment_slots")
+	slots["weapon"] = sword
+	world.set("equipped_items", slots)
+	world.call("_equip_or_acquire_item", shield)
+	equipped = world.get("equipped_items") as Dictionary
+	offhand = equipped.get("offhand", {})
+	if not (offhand is Dictionary) or str((offhand as Dictionary).get("name", "")) != "테스트 방패":
+		_fail("compatible shield did not reach the actual equip slot")
+	else:
+		var shield_id: String = str((offhand as Dictionary).get("instance_id", ""))
+		var instances: Dictionary = world.get("item_instances") as Dictionary
+		if shield_id.is_empty() or not instances.has(shield_id):
+			_fail("equipped shield must keep its physical item instance ID")
+
+	# A bow still blocks a true shield; the purchased/test-granted copy
+	# stays in inventory instead of being silently equipped or destroyed.
+	slots = world.call("_empty_equipment_slots")
+	slots["weapon"] = bow
+	world.set("equipped_items", slots)
+	var inventory_before: int = int((world.get("inventory") as Dictionary).get("테스트 방패", 0))
+	world.call("_equip_or_acquire_item", shield)
+	equipped = world.get("equipped_items") as Dictionary
+	offhand = equipped.get("offhand", {})
+	if not (offhand is Dictionary) or not (offhand as Dictionary).is_empty():
+		_fail("incompatible bow and shield combination was equipped")
+	if int((world.get("inventory") as Dictionary).get("테스트 방패", 0)) != inventory_before + 1:
+		_fail("blocked shield must remain in the inventory")
+
+	# Guarders and neutral focus offhands must remain usable with bows.
+	world.call("_equip_or_acquire_item", guarder)
+	equipped = world.get("equipped_items") as Dictionary
+	offhand = equipped.get("offhand", {})
+	if not (offhand is Dictionary) or str((offhand as Dictionary).get("name", "")) != "테스트 가더":
+		_fail("bow-compatible guarder did not equip")
+	slots = world.call("_empty_equipment_slots")
+	slots["weapon"] = bow
+	world.set("equipped_items", slots)
+	var focus: Dictionary = {"name":"테스트 수정구","type":"방패/가더","slot":"offhand","def":1}
+	world.call("_equip_or_acquire_item", focus)
+	equipped = world.get("equipped_items") as Dictionary
+	offhand = equipped.get("offhand", {})
+	if not (offhand is Dictionary) or str((offhand as Dictionary).get("name", "")) != "테스트 수정구":
+		_fail("bow-compatible neutral offhand did not equip")
+
 	world.queue_free()
 	await process_frame
 	_finish()
