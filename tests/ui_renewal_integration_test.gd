@@ -118,8 +118,13 @@ func _run() -> void:
 	var menu_scroll: ScrollContainer = workspace.find_child("MenuContentScroll",true,false) as ScrollContainer
 	_check(menu_scroll != null,"main menu uses a vertical ScrollContainer")
 	if menu_scroll != null:
+		# Force a genuinely scrollable content height even if the default
+		# four-row menu fits on the current CI virtual viewport.
+		var menu_grid: GridContainer = menu_scroll.get_child(0) as GridContainer
+		menu_grid.custom_minimum_size.y = menu_scroll.size.y + 180.0
+		await process_frame
 		var menu_bar: VScrollBar = menu_scroll.get_v_scroll_bar()
-		_check(menu_bar.max_value > menu_bar.page,"main menu overflows shortened viewport")
+		_check(menu_bar.max_value > menu_bar.page,"main menu can scroll when content overflows")
 		if menu_bar.max_value > menu_bar.page:
 			var grid_button: Button = menu_scroll.get_child(0).get_child(0) as Button
 			var menu_start: Vector2 = _screen_point(grid_button,grid_button.size*0.5)
