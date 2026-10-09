@@ -100,7 +100,8 @@ func _refresh_inventory_grid() -> void:
 		icon.size = Vector2(66, 60)
 		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		button.add_child(icon)
-		var caption := UI.label(item_name.left(6) + "…" if item_name.length() > 7 else item_name, 11)
+		var shown_name: String = _display_item_name(record, reference)
+		var caption := UI.label(shown_name.left(6) + "…" if shown_name.length() > 7 else shown_name, 11)
 		caption.position = Vector2(4, 75)
 		caption.size = Vector2(88, 19)
 		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -111,11 +112,6 @@ func _refresh_inventory_grid() -> void:
 		var badge := UI.label("+%d" % level if level > 0 else "", 12, UI.GOLD)
 		badge.position = Vector2(5, 2)
 		button.add_child(badge)
-		if _bless_state(record, reference) == "blessed":
-			var blessing_mark := UI.label("✦", 16, UI.GOLD)
-			blessing_mark.position = Vector2(74, 20)
-			blessing_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			button.add_child(blessing_mark)
 		var equipped: bool = _is_item_equipped(reference)
 		var amount: int = 1 if _ref_instance_id(reference) != "" else int(inventory.get(item_name, 0))
 		var count := UI.label("E" if equipped else "×%d" % amount, 12, UI.GOLD if equipped else UI.TEXT)
