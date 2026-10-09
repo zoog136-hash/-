@@ -31,6 +31,7 @@ func _ready() -> void:
 	var title_row := HBoxContainer.new()
 	layout.add_child(title_row)
 	var titles := VBoxContainer.new()
+	titles.name = "WorkspaceTitleDragArea"
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	# Grab only the title area. Close/nav controls keep their own pointer events.
 	titles.mouse_filter = Control.MOUSE_FILTER_STOP
