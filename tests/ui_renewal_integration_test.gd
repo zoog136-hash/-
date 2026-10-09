@@ -199,10 +199,10 @@ func _run() -> void:
 		if detail_tab != null and actions != null:
 			detail_tab.pressed.emit()
 			await process_frame
-			_check(actions.visible and not catalog_items.visible, "compact catalog shows selected item details")
+			_check(actions.is_visible_in_tree() and not catalog_items.is_visible_in_tree(), "compact catalog shows selected item details")
 			(hud.get("catalog_list_tab") as Button).pressed.emit()
 			await process_frame
-			_check(catalog_items.visible and not actions.visible, "compact catalog returns to items")
+			_check(catalog_items.is_visible_in_tree() and not actions.is_visible_in_tree(), "compact catalog returns to items")
 		var title_control: Control = workspace.find_child("WorkspaceTitleDragArea",true,false) as Control
 		_check(title_control != null, "shared draggable title is present")
 		if title_control != null:
