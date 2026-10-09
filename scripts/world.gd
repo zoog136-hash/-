@@ -4490,7 +4490,7 @@ func _all_equipped_records() -> Array[Dictionary]:
 		var item_value: Variant = equipped_items.get(slot, {})
 		if item_value is Dictionary and not (item_value as Dictionary).is_empty():
 			var entry: Dictionary = item_value as Dictionary
-				records.append(entry if entry.has("_detail_stats") else DETAIL_OPTIONS.enrich(entry))
+			records.append(entry if entry.has("_detail_stats") else DETAIL_OPTIONS.enrich(entry))
 	return records
 
 func _normalized_weapon_type(raw_type: String) -> String:
