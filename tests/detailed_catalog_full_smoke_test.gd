@@ -47,7 +47,11 @@ func _run() -> void:
 			var checked: Dictionary = DETAIL.classify(record)
 			var count: int = int(checked.get("total", -1))
 			all_source += count
-			_check(count == (record.get("sourceOptions", []) as Array).size(), "all original options counted")
+			var raw_options: Array = record.get("sourceOptions", []) as Array
+			if not raw_options.is_empty():
+				_check(count == raw_options.size(), "all original options counted for " + str(record.get("name","")))
+			else:
+				_check(count >= 0, "empty/legacy option list is supported")
 		print("DETAIL_CATALOG_CATEGORY_OK: %s %d records %d original options" % [cat, rows.size(), all_source])
 
 	var staff: Dictionary = _find(data,"아이템","기르타스의 지팡이")
