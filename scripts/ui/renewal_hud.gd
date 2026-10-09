@@ -7,6 +7,7 @@ const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
+const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var workspace: PanelContainer
@@ -639,11 +640,15 @@ func _emit_quickslot_assignment(slot_index: int,entry_kind: String,entry_id: Str
 	_close_workspace()
 
 func _open_enhance_chooser() -> void:
-	_open_utility_panel("장비 강화")
-	_utility_add_text("보유한 강화 주문서를 선택하세요.\n성공·유지·하락·소실 확률은 기존 게임 규칙을 그대로 사용합니다.")
-	var found := false
-	for item: String in lineage_inventory_ui.inventory:
-		if item.contains("주문서") and (item.contains("무기") or item.contains("갑옷") or item.contains("장신구")) and int(lineage_inventory_ui.inventory[item])>0:
-			found=true
-			_utility_add_action(item+"  ×%d" % int(lineage_inventory_ui.inventory[item]),func() -> void: inventory_item_activated.emit(item))
-	if not found: _utility_add_text("보유한 강화 주문서가 없습니다. 잡화 상점에서 구매할 수 있습니다.")
+	_open_window("enhance","장비 강화","기존 인벤토리 주문서 · 실제 게임 강화 확률")
+	var forge := ForgeUI.new()
+	workspace.mount(forge)
+	forge.configure_scrolls(self)
+
+func open_enhancement(scroll_name: String, candidates: Array) -> void:
+	enhancement_scroll_name = scroll_name
+	enhancement_candidates = candidates.duplicate(true)
+	_open_window("enhance","장비 강화",scroll_name+" · 실제 게임 강화 확률")
+	var forge := ForgeUI.new()
+	workspace.mount(forge)
+	forge.configure_targets(self,scroll_name,candidates)
