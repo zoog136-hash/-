@@ -1,0 +1,77 @@
+{
+  "before": {
+    "note": "Deterministic 192 incoming melee/ranged/magic strikes over 32 manually advanced frames. Measures HUD and real damage path, not full crowd FPS.",
+    "samples": [
+      {
+        "character_snapshots": 2,
+        "elapsed_ms": 256.32,
+        "equipment_syncs": 4,
+        "full_hud_refreshes": 2,
+        "hit_p95_ms": 1.298,
+        "hp_after": 16078,
+        "hud_hp": 16078.0,
+        "hud_max_hp": 20000.0,
+        "incoming_strikes": 192,
+        "max_hp_queries": 110,
+        "max_mp_queries": 110,
+        "panel_open": false,
+        "simulated_frames": 32,
+        "tick_p95_ms": 40.215
+      },
+      {
+        "character_snapshots": 2,
+        "elapsed_ms": 249.746,
+        "equipment_syncs": 4,
+        "full_hud_refreshes": 2,
+        "hit_p95_ms": 1.277,
+        "hp_after": 16078,
+        "hud_hp": 16078.0,
+        "hud_max_hp": 20000.0,
+        "incoming_strikes": 192,
+        "max_hp_queries": 110,
+        "max_mp_queries": 110,
+        "panel_open": true,
+        "simulated_frames": 32,
+        "tick_p95_ms": 39.311
+      }
+    ]
+  },
+  "after": {
+    "note": "Deterministic 192 incoming melee/ranged/magic strikes over 32 manually advanced frames. Measures HUD and real damage path, not full crowd FPS.",
+    "samples": [
+      {
+        "character_snapshots": 0,
+        "elapsed_ms": 144.059,
+        "equipment_syncs": 0,
+        "full_hud_refreshes": 0,
+        "hit_p95_ms": 1.018,
+        "hp_after": 16078,
+        "hud_hp": 16078.0,
+        "hud_max_hp": 20000.0,
+        "incoming_strikes": 192,
+        "max_hp_queries": 0,
+        "max_mp_queries": 0,
+        "panel_open": false,
+        "simulated_frames": 32,
+        "tick_p95_ms": 0.07
+      },
+      {
+        "character_snapshots": 0,
+        "elapsed_ms": 144.049,
+        "equipment_syncs": 0,
+        "full_hud_refreshes": 0,
+        "hit_p95_ms": 1.025,
+        "hp_after": 16078,
+        "hud_hp": 16078.0,
+        "hud_max_hp": 20000.0,
+        "incoming_strikes": 192,
+        "max_hp_queries": 0,
+        "max_mp_queries": 0,
+        "panel_open": true,
+        "simulated_frames": 32,
+        "tick_p95_ms": 0.084
+      }
+    ]
+  },
+  "note": "Same engine/runner and deterministic input; equal real HP damage and HUD limits. Timings are not GPU FPS guarantees."
+}
