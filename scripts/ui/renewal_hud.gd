@@ -405,13 +405,19 @@ func open_class_selection(initial: bool = false) -> void:
 	picker.configure(self,initial)
 	class_picker_initial = initial
 	class_picker_backdrop.visible = initial
-	# The backdrop is below the workspace but above gameplay HUD.
+	# Prevent moving or attacking before a starter class is committed.
 	if initial:
+		var actor: Node = get_parent().get_node_or_null("Player")
+		if actor != null:
+			actor.set_physics_process(false)
 		workspace.move_to_front()
 
 func complete_class_selection() -> void:
 	class_picker_initial = false
 	class_picker_backdrop.hide()
+	var actor: Node = get_parent().get_node_or_null("Player")
+	if actor != null:
+		actor.set_physics_process(true)
 	_close_workspace()
 
 func _navigate(section: String) -> void:
