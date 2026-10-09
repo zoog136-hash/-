@@ -697,7 +697,7 @@ func _fit_catalog_browser_layout() -> void:
 		return
 	# A fixed 530px grid + 315px preview used to spill outside portrait/small
 	# windows. On narrow viewports show either full-width grid or full-width detail.
-	var compact: bool = mini(get_window().size.x, int(get_viewport_rect().size.x)) < 1180
+	var compact: bool = get_window().size.x < 1180
 	catalog_view_tabs.visible = compact and active_section in ["아이템", "변신", "마법인형", "성물"]
 	catalog_body_left.visible = not compact or not catalog_details_active
 	catalog_body_actions.visible = not compact or catalog_details_active
