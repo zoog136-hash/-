@@ -1,7 +1,55 @@
-# 검증 증거
+# 실제 검증 증거
 
-기준 main에서 새 Godot 4.7.2로 기존 검사 48/48을 실행했습니다. 변경 후 첫 전체 검사는 45/48, 두 번째는 49/50으로 실패했고, 삭제된 보스 참조·지연된 리스폰·알비노 공유 종의 오래된 레벨 범위를 수정했습니다. 이후 전체 50/50을 실행했습니다. 이 결과는 마지막 아트 plate/메타데이터 추가 전 실행이며 최종 SHA의 CI 결과로 다시 검증합니다.
+코드 HEAD: 539e932b98d86db3d41bba84a07ce3d0704ba4ea
 
-신규 monster_world_test는 몬스터 외형·8방향 상태, 25개 맵 안전/통행 스폰, 폭젠 생성·처치·풀링·복원, 27개 보스 구역, HP/대기 상태 저장과 중복 방지, 바닥 드랍 보존을 검사합니다. monster_attack_profiles_test는 근접 마커·취소, 조준 발사체·장애물·회피, 마법, 재사용된 개체의 이전 공격, 비선공·복귀와 보스 7패턴을 검사합니다.
+검사 checkout: 0c5828cff739efccf4689ce250c1bc6fe40fabd1
 
-로컬 환경의 화면 서버 소켓 생성이 제한되어 OpenGL 화면 검사는 GitHub Actions에서 실행합니다. 실제 성공한 실행의 URL·SHA·로그·PNG·성능 JSON을 이 문서에 추가합니다. 생성 원화나 headless 결과를 실제 게임 OpenGL 캡처로 대체하지 않습니다.
+검사 tree: a5047bc37ee579d5ae91eefabe82a43433037fac
+
+[GitHub Actions 실행](https://github.com/zoog136-hash/-/actions/runs/37907038735) · [전체 PNG/로그 ZIP](https://github.com/zoog136-hash/-/actions/runs/37907038735/artifacts/11604914472)
+
+실제 Godot 4.7.2 전체 회귀 **50/50 통과**. 25개 맵, 폭젠 4곳 AUTO 처치·24마리 복구, 오만 보스 10종, 전체 318종의 다섯 상태를 실제 Compatibility OpenGL에서 실행했습니다. 지역/폭젠/보스/갤러리 103장과 군집 3장, 총 **106장**이 생성됐습니다. PNG 원본은 편집하지 않았으며 전체 해시는 evidence.json에 있습니다.
+
+이 증거를 기록한 뒤 자동 문서 커밋만 브랜치에 추가됩니다. 검사한 코드는 위 HEAD/checkout으로 구별하며 문서 커밋을 다시 실행한 게임 검사로 주장하지 않습니다.
+
+## 현재 고밀도 전투
+
+GPU: llvmpipe (LLVM 20.1.2, 256 bits). 120프레임 워밍업 뒤 240프레임을 측정했습니다. HP/AC/공격 유형을 제어한 QA 전투이며 일반 플레이 밸런스 검사가 아닙니다.
+
+| 개체 | 프레임 중앙값 ms | 프레임 p95 ms | 물리 p95 ms | NPC 타격 | 플레이어 타격 |
+| --- | --- | --- | --- | --- | --- |
+| 32 | 43.284 | 77.258 | 5.112 | 204 | 81 |
+| 96 | 76.211 | 112.83 | 7.098 | 706 | 159 |
+| 192 | 109.021 | 147.872 | 11.883 | 1351 | 229 |
+
+세 경우 모두 실제 양방향 피해가 발생했고 투사체/VFX 풀이 반환됐으며 orphan 개체는 0입니다. 소프트웨어 GL 수치를 실제 PC/Android GPU의 60FPS 보장으로 해석하지 않습니다. 고밀도 렌더링 비용과 지역별 일반 플레이 밸런스는 추가 확인 대상입니다.
+
+## 셰이더 변경 전 비교
+
+이전 코드 89ec40e, [실제 이전 실행](https://github.com/zoog136-hash/-/actions/runs/37903218088)의 같은 Monster World 군집 검사입니다. 러너 간 하드웨어/부하 차이가 있으므로 단독 변경의 정밀 인과 측정으로 보지 않습니다.
+
+| 개체 | 중앙값 ms | p95 ms | 물리 p95 ms |
+| --- | --- | --- | --- |
+| 32 | 57.705 | 104.685 | 7.216 |
+| 96 | 98.216 | 151.024 | 9.059 |
+| 192 | 155.713 | 201.896 | 14.405 |
+
+## 원본 캡처
+
+- [map-aden_world.png](map-aden_world.png)
+- [dense-aden_world.png](dense-aden_world.png)
+- [dense-auto-oman_03.png](dense-auto-oman_03.png)
+- [dense-oman_07.png](dense-oman_07.png)
+- [boss-oman_01.png](boss-oman_01.png)
+- [boss-oman_08.png](boss-oman_08.png)
+- [boss-oman_10.png](boss-oman_10.png)
+- [map-faith_03.png](map-faith_03.png)
+- [map-escaros_01.png](map-escaros_01.png)
+- [map-albino_02.png](map-albino_02.png)
+- [catalog-01-attack.png](catalog-01-attack.png)
+- [catalog-04-walk.png](catalog-04-walk.png)
+- [crowd-32.png](crowd-32.png)
+- [crowd-96.png](crowd-96.png)
+- [crowd-192.png](crowd-192.png)
+
+종별 상세는 ../MONSTER_SPECIES.md, 좌표·보스 설정은 ../MONSTER_SPAWN_TABLES.md, 미확인/추정 범위는 ../MONSTER_WORLD_SOURCES.md를 참고합니다. 계열 원화 공유·독립 8시점 프레임·일부 원작 지역/보스 기술 고증은 여전히 미완료이며 전면 완료로 주장하지 않습니다.

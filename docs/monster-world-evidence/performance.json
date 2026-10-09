@@ -1,0 +1,55 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"note": "32/96/192 controlled-HP monsters, real combat; software GL runner, not a PC GPU FPS guarantee",
+	"rendered": true,
+	"samples": [
+		{
+			"flights_returned": true,
+			"frames": 240,
+			"median_ms": 43.284,
+			"monster_released_hits": 204,
+			"orphans": 0,
+			"p95_ms": 77.258,
+			"peak_flights": 3,
+			"peak_nodes": 2719,
+			"physics_p95_ms": 5.112,
+			"player_landed_hits": 81,
+			"population": 32,
+			"process_p95_ms": 76.04,
+			"vfx_high_water": 24,
+			"vfx_returned": true
+		},
+		{
+			"flights_returned": true,
+			"frames": 240,
+			"median_ms": 76.211,
+			"monster_released_hits": 706,
+			"orphans": 0,
+			"p95_ms": 112.83,
+			"peak_flights": 8,
+			"peak_nodes": 3231,
+			"physics_p95_ms": 7.098,
+			"player_landed_hits": 159,
+			"population": 96,
+			"process_p95_ms": 93.938,
+			"vfx_high_water": 39,
+			"vfx_returned": true
+		},
+		{
+			"flights_returned": true,
+			"frames": 240,
+			"median_ms": 109.021,
+			"monster_released_hits": 1351,
+			"orphans": 0,
+			"p95_ms": 147.872,
+			"peak_flights": 8,
+			"peak_nodes": 4072,
+			"physics_p95_ms": 11.883,
+			"player_landed_hits": 229,
+			"population": 192,
+			"process_p95_ms": 125.532,
+			"vfx_high_water": 53,
+			"vfx_returned": true
+		}
+	]
+}
