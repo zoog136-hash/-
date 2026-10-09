@@ -498,7 +498,7 @@ func set_ain_state(value: Dictionary, inventory: Dictionary) -> void:
 		int(float(value.get("exp_rate", 1.0)) * 100.0), int(float(value.get("adena_rate", 1.0)) * 100.0), orb_text, regen_text]
 	for item_name: String in v20_ain_item_buttons:
 		var button: Button = v20_ain_item_buttons[item_name] as Button
-		var held: int = int(inventory.get(item_name, 0))
+		var held: int = int(inventory.get(item_name, 0)) + int(inventory.get(item_name + " (각인)", 0))
 		button.text = "%s · 보유 %d" % [item_name, held]
 		button.disabled = held <= 0 or (item_name == "드래곤의 용옥" and remaining_orb > 0)
 	if v20_ain_auto_check != null:
