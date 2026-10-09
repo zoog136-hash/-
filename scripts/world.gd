@@ -670,7 +670,7 @@ func _equipment_attribute_bonus(stat: String) -> int:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
-			result += ITEM_OPTIONS.attribute(entry as Dictionary, stat)
+			result += ITEM_OPTIONS.attribute(_source_catalog_record("아이템", entry as Dictionary), stat)
 	return result
 
 func _effective_attribute(stat: String) -> int:
@@ -691,7 +691,7 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
-			result += ITEM_OPTIONS.accuracy(entry as Dictionary, kind)
+			result += ITEM_OPTIONS.accuracy(_source_catalog_record("아이템", entry as Dictionary), kind)
 	return result
 
 func _equipment_potion_heal_stat(label: String) -> int:
@@ -4785,7 +4785,7 @@ func _enforce_shield_weapon_compatibility(quiet: bool = false) -> void:
 func _equipped_weapon_record() -> Dictionary:
 	var value: Variant = equipped_items.get("weapon", {})
 	if value is Dictionary:
-		return value as Dictionary
+		return _source_catalog_record("아이템", value as Dictionary)
 	return {}
 
 func _weapon_allowed_for_job(record: Dictionary, target_job: String) -> bool:
