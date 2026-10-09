@@ -145,6 +145,9 @@ func try_use(item_name: String) -> bool:
 			world.call("_use_timed_item_buff", record)
 		"instant_mp":
 			_use_instant_mp(item_name, spec)
+		"ain_charge", "ain_orb":
+			if bool(world.call("_apply_ain_consumable", item_name, spec)):
+				_consume(item_name)
 		"return":
 			_use_return(item_name)
 		"teleport":
