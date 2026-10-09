@@ -1,6 +1,7 @@
 extends SceneTree
 
 const BLESSING = preload("res://scripts/equipment_blessing.gd")
+const INVENTORY_UI = preload("res://scripts/ui/lineage_inventory_ui.gd")
 var failures: Array[String] = []
 
 func _initialize() -> void:
@@ -15,7 +16,11 @@ func _run() -> void:
 	# Equipment and grade effects do not cumulatively include lower grades.
 	_check(int(BLESSING.bonus_for("일반", "weapon").get("hp", 0)) == 50, "normal weapon HP")
 	_check(int(BLESSING.bonus_for("희귀", "weapon").get("accuracy", 0)) == 1, "rare weapon hit")
-	_check(int(BLESSING.bonus_for("신화", "weapon").get("damage", 0)) == 3, "mythic weapon damage")
+	for high_grade: String in ["신화", "유일"]:
+		_check(BLESSING.bonus_for(high_grade, "weapon") == BLESSING.bonus_for("전설", "weapon"), high_grade + " weapon must match legendary")
+		_check(BLESSING.bonus_for(high_grade, "armor") == BLESSING.bonus_for("전설", "armor"), high_grade + " armor must match legendary")
+		_check(BLESSING.effect_text(high_grade, "weapon") == "추가 대미지 +1", high_grade + " weapon blessing label")
+		_check(BLESSING.effect_text(high_grade, "armor") == "AC -1", high_grade + " armor blessing label")
 	_check(int(BLESSING.bonus_for("영웅", "armor").get("defense", 0)) == 1, "hero armor AC")
 	_check(int(BLESSING.bonus_for("고급", "armor").get("hp", 0)) == 30, "advanced armor HP")
 	_check(BLESSING.bonus_for("희귀", "accessory").is_empty(), "accessory cannot use basic scroll")
@@ -69,6 +74,16 @@ func _run() -> void:
 	instances = world.get("item_instances") as Dictionary
 	_check(BLESSING.is_blessed(instances[a] as Dictionary, weapon), "selected sword has blessing")
 	_check(not BLESSING.is_blessed(instances[b] as Dictionary, weapon), "second sword inherited blessing")
+	# Blessing must appear in the item name only: no star or duplicate prefix.
+	var ui: Control = INVENTORY_UI.new()
+	ui.set("character_state", {"item_instances": instances, "enhancement_levels": {}})
+	var blessed_name: String = str(ui.call("_enhanced_display_name", weapon, "낡은 장검@@@" + a))
+	var ordinary_name: String = str(ui.call("_enhanced_display_name", weapon, "낡은 장검@@@" + b))
+	_check(blessed_name == "축복받은 낡은 장검", "blessed item name or duplicate decorations")
+	_check(ordinary_name == "낡은 장검", "ordinary copy inherited blessing label")
+	_check(str(ui.call("_status_badges", weapon, "낡은 장검@@@" + a)) == "", "blessing star still rendered")
+	_check(not blessed_name.contains("✦"), "star remained in blessed name")
+	ui.queue_free()
 	_check(int(inv.get(scroll, 0)) == 4, "successful blessing must consume exactly one scroll")
 	_check(int(world.call("_effective_max_hp")) == base_hp + expected_hp, "equipped HP blessing missing")
 	_check(int(world.call("_equipped_bless_bonus", "accuracy")) == expected_hit, "equipped weapon accuracy bonus missing")
