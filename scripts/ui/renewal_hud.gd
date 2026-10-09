@@ -695,7 +695,10 @@ func _apply_catalog_page() -> void:
 		var record: Dictionary = catalog_results[index]
 		var grade_name := str(record.get("grade","일반"))
 		var color: Color = UI.grade(grade_name)
-		catalog_list.set_item_text(index,str(record.get("name","")))
+		var item_label: String = str(record.get("name", ""))
+		if catalog_category == "아이템" and _catalog_variant_count(item_label) > 1:
+			item_label += "\nID " + str(record.get("sourceId", ""))
+		catalog_list.set_item_text(index,item_label)
 		catalog_list.set_item_custom_fg_color(index,color)
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
 		var path := str(record.get("image_path",""))
