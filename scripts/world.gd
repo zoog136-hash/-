@@ -628,6 +628,17 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 			result += ITEM_OPTIONS.accuracy(entry as Dictionary, kind)
 	return result
 
+func _equipment_potion_heal_stat(label: String) -> int:
+	var sum: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var entry: Variant = equipped_items.get(slot, {})
+		if not (entry is Dictionary) or (entry as Dictionary).is_empty():
+			continue
+		var record: Dictionary = entry as Dictionary
+		var typed_key: String = "potionHealFlat" if label == "물약 회복량" else "potionHealPct"
+		sum += int(record.get(typed_key, ITEM_OPTIONS._description_bonus(record, label)))
+	return sum
+
 func _equipment_additional_damage(kind: String) -> int:
 	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
@@ -2919,8 +2930,8 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP가 가득 찼습니다")
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat"))
-	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
+	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat"))
+	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
 	hud.refresh_inventory(inventory)
 	hud.show_message("%s 사용" % item_name)
@@ -5219,7 +5230,7 @@ func _record_mr(record: Dictionary) -> int:
 		return maxi(0, int(record.get("MR", 0)))
 	if record.has("마법 방어력"):
 		return maxi(0, int(record.get("마법 방어력", 0)))
-	return 0
+	return maxi(0, int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력(MR)")) + int(CATALOG_EFFECTS.numeric_description_option(record, "마법 방어력")) )
 
 func _effective_mr() -> int:
 	var total: int = 10 + level + _effective_attribute("WIS") * 2
