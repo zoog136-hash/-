@@ -1,7 +1,7 @@
 extends Control
+class_name TwilightInventoryUI
 
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
-class_name TwilightInventoryUI
 
 signal item_activate_requested(item_name: String)
 signal quickslot_requested(item_name: String)
