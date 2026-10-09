@@ -1,7 +1,7 @@
 {
   "version": 1,
   "unit": "weight_point",
-  "policy": "Weights are based primarily on item form/type, not rarity. Named overrides are used only when physical size/load clearly differs.",
+  "policy": "Every catalog item resolves to a nonnegative point-weight. Explicit source-backed overrides take priority; otherwise authored type defaults or record weights are TWILIGHT balance values, NOT original verified weights.",
   "design_ranges": {
     "dagger": [
       20,
@@ -106,6 +106,13 @@
     "왕실 회복 물약": 7,
     "신성 회복 물약": 8,
     "엘릭서 회복 물약": 10,
-    "아데나": 0
+    "아데나": 0,
+    "다마스커스 검 (각인)": 45,
+    "다마스커스 검": 45,
+    "도펠겡어 보스의 오른쪽 반지": 3
+  },
+  "verified_sources": {
+    "다마스커스 검 (각인)": "https://lineagem.inven.co.kr/dataninfo/item/detail.php?code=248",
+    "도펠겡어 보스의 오른쪽 반지": "https://lineagem.inven.co.kr/db/item/665?vtype=pc"
   }
 }
