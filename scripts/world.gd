@@ -207,7 +207,7 @@ var wis_stat: int = 10
 var cha_stat: int = 9
 var stat_points: int = 0
 
-var gold: int = 12000
+var gold: int = 100000000 # Playtest-only starting funds; existing saved funds still load unchanged.
 var inventory: Dictionary = {
 	"HP 물약":100,
 	"마나 회복 물약":10,
@@ -813,6 +813,11 @@ func _connect_signals() -> void:
 	hud.shop_buy_requested.connect(_buy_shop_item)
 	hud.inventory_item_activated.connect(_on_inventory_item_activated)
 	hud.enhancement_requested.connect(_attempt_enhancement)
+	# Optional validation tools live only in the isolated playtest HUD branch.
+	if hud.has_signal("playtest_catalog_grant_requested"):
+		hud.connect("playtest_catalog_grant_requested",_grant_playtest_catalog_item)
+	if hud.has_signal("playtest_aden_grant_requested"):
+		hud.connect("playtest_aden_grant_requested",_grant_playtest_aden)
 
 func _set_map(map_id: String, keep_position: bool) -> void:
 	_clear_combat_actions()
@@ -2198,6 +2203,33 @@ func _scroll_mode(scroll_name: String) -> String:
 	if scroll_name.find("축복받은") >= 0:
 		return "blessed"
 	return "normal"
+
+# Temporary catalog test grants. Never available in the production/main HUD.
+# Only catalog-backed names and the three known enhancement scrolls are accepted.
+func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
+	if item_name.is_empty() or CONSUMABLE_RULES.is_removed_item(item_name):
+		hud.show_message("테스트 지급 불가 아이템")
+		return
+	var permitted: bool = not _find_catalog_item_record(item_name).is_empty()
+	if not permitted:
+		permitted = item_name in ["무기 마법 주문서 (각인)", "갑옷 마법 주문서 (각인)", "장신구 마법 주문서 (각인)"]
+	if not permitted:
+		hud.show_message("도감에 없는 아이템은 지급할 수 없습니다")
+		return
+	var quantity: int = clampi(amount,1,10)
+	inventory[item_name] = int(inventory.get(item_name,0)) + quantity
+	_sync_item_instances()
+	hud.refresh_inventory(inventory)
+	_update_hud()
+	hud.show_message("테스트 지급 · %s ×%d" % [item_name,quantity])
+	hud.append_log("테스트 도감 지급 · %s ×%d" % [item_name,quantity])
+	_save_game(true)
+
+func _grant_playtest_aden() -> void:
+	gold = maxi(gold,100000000)
+	_update_hud()
+	hud.show_message("테스트 아데나 · 현재 %d" % gold)
+	_save_game(true)
 
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
