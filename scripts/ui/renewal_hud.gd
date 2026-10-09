@@ -73,14 +73,11 @@ func _build_lineage_side_ui() -> void:
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
 	if is_instance_valid(quest_view):
-		quest_view.call("refresh",value)
-	if lineage_inventory_ui!=null:
-		var view := value.duplicate(true)
-		var weight: float=0
-		for item: String in lineage_inventory_ui.inventory:
-			weight+=float(lineage_inventory_ui._find_item_record(item).get("weight",0))*int(lineage_inventory_ui.inventory[item])
-		view["current_weight"]=weight
-		lineage_side_ui.set_character_state(view)
+		quest_view.call("refresh", value)
+	if lineage_inventory_ui != null and lineage_side_ui != null:
+		# The world is authoritative for weight, encumbrance, item IDs and buffs.
+		# Do not recompute per-name weight or overwrite the per-instance snapshot.
+		lineage_side_ui.set_character_state(value.duplicate(true))
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)
