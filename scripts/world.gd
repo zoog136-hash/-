@@ -4335,8 +4335,8 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 			hud.show_message("%s 무기에는 방패를 착용할 수 없습니다" % _current_weapon_type())
 			hud.append_log("방패 착용 불가 · %s + %s" % [_current_weapon_type(), item_name])
 			hud.refresh_inventory(inventory)
-		_update_hud()
-		return
+			_update_hud()
+			return
 	if equip_slot != "" and EQUIPMENT_SLOT_ORDER.has(equip_slot):
 		var old_max_hp: int = _effective_max_hp()
 		var selected_id: String = requested_id if requested_id != "" else _chosen_instance(item_name, true)
