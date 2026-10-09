@@ -111,6 +111,11 @@ func _refresh_inventory_grid() -> void:
 		var badge := UI.label("+%d" % level if level > 0 else "", 12, UI.GOLD)
 		badge.position = Vector2(5, 2)
 		button.add_child(badge)
+		if _bless_state(record, reference) == "blessed":
+			var blessing_mark := UI.label("✦", 16, UI.GOLD)
+			blessing_mark.position = Vector2(74, 20)
+			blessing_mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			button.add_child(blessing_mark)
 		var equipped: bool = _is_item_equipped(reference)
 		var amount: int = 1 if _ref_instance_id(reference) != "" else int(inventory.get(item_name, 0))
 		var count := UI.label("E" if equipped else "×%d" % amount, 12, UI.GOLD if equipped else UI.TEXT)
