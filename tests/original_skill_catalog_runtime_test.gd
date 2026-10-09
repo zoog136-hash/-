@@ -59,6 +59,16 @@ func run() -> void:
 	var view: Node = world.hud.skills_view
 	check(is_instance_valid(view.learn_button) and is_instance_valid(view.preview_vfx), "learning and VFX preview mounted")
 	check(view.cards.item_count > 0, "original records displayed")
+	for extent: Vector2i in [Vector2i(1280,720),Vector2i(854,480)]:
+		root.size = extent
+		world.hud._fit_hud()
+		for _frame: int in range(3): await process_frame
+		var browser: Control = view.cards.get_parent().get_parent()
+		browser.detail_active = true
+		browser.reflow()
+		for _frame: int in range(3): await process_frame
+		check(view.detail.size.y >= 120, "readable detail height " + str(extent))
+		check(view.detail.scroll_active, "full learning details remain scrollable")
 	world.queue_free()
 	await process_frame
 	if failures.is_empty(): print("ORIGINAL_SKILL_CATALOG_RUNTIME_OK records=",catalog.records.size()," active=",active_count)

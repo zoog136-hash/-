@@ -3983,6 +3983,8 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not _is_buff_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
+		if skill.get("origin", "") == "LINEAGEM_20250617" and not bool(entry.get("auto", false)):
+			continue
 		if not _skill_ready(skill):
 			continue
 		if _cast_job_skill(skill_name):

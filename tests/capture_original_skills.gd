@@ -23,12 +23,17 @@ func run() -> void:
 	root.add_child(world)
 	if not QA.enter_game(world): quit(1); return
 	world.save_timer = -100000
+	world.self_mode_enabled = false
+	world.player.set_auto_enabled(false)
+	for entry: Dictionary in world.quickslots: entry["auto"] = false
 	world.level = 90
 	world.gold = 10000000
 	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3300,4370)))
 	world.player.camera.reset_smoothing()
 	world.player.camera.force_update_scroll()
 	world.field_renderer.refresh_visible()
+	world.set_process(false)
+	for monster: Node in world.monsters_root.get_children(): monster.set_physics_process(false)
 	world.equipped_items["weapon"] = {"name":"검사 양손검","type":"양손검","slot":"weapon"}
 	var catalog := world.original_skills.catalog
 	for skill: Dictionary in catalog.records:
@@ -45,7 +50,12 @@ func run() -> void:
 	for _frame: int in range(3): await process_frame
 	await capture("02-skill-preview")
 	world.hud._close_workspace()
-	world._cast_job_skill("카운터 배리어")
+	world.skill_cooldowns.clear()
+	world.skill_global_cooldown = 0
+	if not world._cast_job_skill("카운터 배리어"):
+		push_error("Counter aura capture requires a successful cast")
+		quit(1)
+		return
 	for _frame: int in range(4): await process_frame
 	await capture("03-counter-aura")
 	var samples: Array[float] = []

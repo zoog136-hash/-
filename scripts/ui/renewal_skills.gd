@@ -29,11 +29,12 @@ var touch_active: bool = false
 func configure(controller: Node) -> void:
 	hud=controller
 	records=hud.job_skills
-	var toolbar := HBoxContainer.new()
+	var toolbar := HFlowContainer.new()
 	add_child(toolbar)
 	search=LineEdit.new()
 	search.name="SkillSearch"
 	search.placeholder_text="스킬 이름 · 효과 검색"
+	search.custom_minimum_size.x = 150
 	search.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	search.text_changed.connect(func(_value: String) -> void: refresh())
 	toolbar.add_child(search)
@@ -87,25 +88,32 @@ func configure(controller: Node) -> void:
 	detail=UI.rich("")
 	detail.fit_content=false
 	detail.scroll_active=true
+	detail.custom_minimum_size.y = 120
 	detail.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	side.add_child(detail)
 	cooldown=UI.label("",13,UI.MUTED)
 	side.add_child(cooldown)
-	learn_button = UI.button("스킬북으로 습득", func() -> void:
+	var actions := GridContainer.new()
+	actions.columns = 2
+	side.add_child(actions)
+	learn_button = UI.button("스킬 습득", func() -> void:
 		if selected.is_empty(): return
 		hud.get_parent().original_skills.catalog.learn(str(selected.id))
 		select(cards.get_selected_items()[0]))
 	learn_button.name = "LearnOriginalSkill"
-	side.add_child(learn_button)
+	learn_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.add_child(learn_button)
 	book_button = UI.button("스킬북 구입", func() -> void:
 		if selected.is_empty(): return
 		hud.get_parent().original_skills.catalog.buy_book(str(selected.id))
 		select(cards.get_selected_items()[0]))
 	book_button.name = "BuyOriginalSkillBook"
-	side.add_child(book_button)
+	book_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.add_child(book_button)
 	var preview_container := SubViewportContainer.new()
 	preview_container.custom_minimum_size = Vector2(278,85)
 	preview_container.stretch = true
+	preview_container.visible = false
 	side.add_child(preview_container)
 	var viewport := SubViewport.new()
 	viewport.size = Vector2i(278,85)
@@ -115,6 +123,7 @@ func configure(controller: Node) -> void:
 	viewport.add_child(preview_vfx)
 	preview_button = UI.button("이펙트 프리뷰", func() -> void:
 		if selected.is_empty(): return
+		preview_container.visible = true
 		preview_vfx.clear()
 		preview_vfx.emit_skill(str(selected.id), "cast", Vector2(90,45))
 		preview_vfx.emit_skill(str(selected.id), "impact", Vector2(180,45)))
@@ -122,13 +131,15 @@ func configure(controller: Node) -> void:
 	use_button=UI.button("스킬 사용",func() -> void:
 		if not selected.is_empty(): hud.job_skill_pressed.emit(str(selected.get("name",""))))
 	use_button.name="UseSkill"
-	side.add_child(use_button)
-	quick_button=UI.button("퀵슬롯 · 자동사용 등록",func() -> void:
+	use_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.add_child(use_button)
+	quick_button=UI.button("퀵슬롯 · 자동",func() -> void:
 		if not selected.is_empty():
 			var skill_name := str(selected.get("name",""))
 			hud._open_quickslot_picker("skill",skill_name,skill_name))
 	quick_button.name="RegisterSkill"
-	side.add_child(quick_button)
+	quick_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	actions.add_child(quick_button)
 	body.configure(cards,side,278)
 	refresh()
 
@@ -198,6 +209,7 @@ func select_original() -> void:
 	var base: Dictionary = catalog.record_for(str(relation.get("upgrades_from", "")))
 	var weapon_text := "제한 없음" if skill.get("weapons", []).is_empty() else " · ".join(skill.weapons)
 	detail.text = "[font_size=22][color=#%s]%s[/color][/font_size]\n%s · %s · %s\n%s / 단계 %d\n\n%s\n\nMP %d / HP %d / 재사용 %.1f초\n지속 %.1f초 · 무기 %s\n\nLv.%d · %s\n%s\n선행 조건: %s\n%s\n\n수치: 원작 미확인 값은 TWILIGHT 밸런스\n시각 자료 대조: 진행 중" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),UI.safe(selected.get("class", "")),UI.safe(selected.grade),"패시브" if passive else "액티브",UI.safe(selected.school),int(selected.stage),UI.safe(selected.desc),int(skill.get("mp",0)),int(skill.get("hp",0)),float(skill.get("cooldown",0)),float(skill.get("duration",0)),weapon_text,int(selected.minimum_level),UI.safe(selected.book_name),"습득 완료" if learned else catalog.reason(selected),"원작 미확인" if relation.get("requires_status", "UNKNOWN") == "UNKNOWN" else "없음","강화 대상: " + str(base.get("name", "")) if not base.is_empty() else ""]
+	detail.text += "\n스킬북 가격 %d 아데나" % int(selected.book_cost)
 	if skill.mode == "counter": detail.text += "\n반격 발동 %.0f%% · 피해 배율 %.2f" % [float(skill.counter_chance)*100,float(skill.counter_multiplier)]
 	var sources: Dictionary = catalog.read_json("sources.json")
 	for id: String in selected.source_ids:
@@ -205,8 +217,9 @@ func select_original() -> void:
 		detail.text += "\n[url=%s]%s 원작 자료[/url]" % [str(source.get("url", "")),str(source.get("effective", ""))]
 	learn_button.disabled = not catalog.reason(selected).is_empty()
 	book_button.disabled = not catalog.reason(selected, true).is_empty() or int(world.gold) < int(selected.book_cost)
-	book_button.text = "스킬북 구입 · %d 아데나" % int(selected.book_cost)
+	book_button.text = "스킬북 구입"
 	use_button.disabled = passive or not learned
+	use_button.text = "패시브 적용" if passive else "스킬 사용"
 	quick_button.disabled = passive or not learned
 	clock = 0
 

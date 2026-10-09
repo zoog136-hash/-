@@ -78,6 +78,15 @@ func run() -> void:
 	check(is_equal_approx(float(resolved.counter_chance), .2), "highest counter tier replaces chance")
 	check(is_equal_approx(float(resolved.counter_multiplier), 1.3), "counter multiplier separate from chance")
 	reset_cast()
+	world.quickslots = [{"kind":"skill","id":"카운터 배리어","auto":false}]
+	world.auto_buff_check_timer = 0
+	world._run_auto_buff_quickslots(1)
+	check(world.active_skill_buffs.is_empty() and world.mp == 999, "manual buff slot never spends MP automatically")
+	world.quickslots[0]["auto"] = true
+	world.auto_buff_check_timer = 0
+	world._run_auto_buff_quickslots(1)
+	check(world.active_skill_buffs.has("카운터 배리어") and world.mp == 999 - int(counter.mp), "registered automatic buff uses the shared cost path")
+	reset_cast()
 	check(world._cast_job_skill("카운터 배리어"), "base counter retains quickslot cast")
 	check(world.active_skill_buffs.size() == 1, "upgrade passives do not stack buff instances")
 	world.original_skills.counter_depth = 1
