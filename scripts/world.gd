@@ -43,6 +43,7 @@ var resolving_combat_action: bool = false
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
+const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 
 var field_map: PlayableField = null
@@ -227,6 +228,7 @@ var inventory: Dictionary = {
 	"무기 마법 주문서 (각인)":5,
 	"갑옷 마법 주문서 (각인)":5,
 	"장신구 마법 주문서 (각인)":3,
+	"축복 부여 주문서 (각인)":5,
 	"축복받은 무기 마법 주문서 (각인)":2,
 	"축복받은 갑옷 마법 주문서 (각인)":2,
 	"장인의 무기 마법 주문서 (각인)":1,
@@ -624,10 +626,36 @@ func _inventory_total_weight() -> int:
 	return total
 
 func _carrying_capacity() -> int:
-	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity")
+	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity") + _equipped_bless_bonus("capacity")
 
 func _inventory_encumbrance_multiplier() -> float:
 	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
+
+# Blessing is attached to one item_instances ID, not to a shared item name.
+# Only the exact equipped physical item contributes its blessing; never patch
+# a source catalog record or stack of identically named equipment.
+func _equipped_bless_bonus(stat: String) -> int:
+	var total: int = 0
+	for slot: String in EQUIPMENT_SLOT_ORDER:
+		var worn: Variant = equipped_items.get(slot, {})
+		if not (worn is Dictionary) or (worn as Dictionary).is_empty():
+			continue
+		var equipped: Dictionary = worn as Dictionary
+		var item_id: String = str(equipped.get("instance_id", ""))
+		if item_id.is_empty() or not item_instances.has(item_id):
+			continue
+		var physical: Dictionary = item_instances[item_id] as Dictionary
+		if str(physical.get("name", "")) != str(equipped.get("name", "")):
+			continue
+		var record: Dictionary = equipped
+		if physical.get("record", {}) is Dictionary and not (physical.get("record", {}) as Dictionary).is_empty():
+			record = physical["record"] as Dictionary
+		if not EQUIPMENT_BLESSING.is_blessed(physical, record):
+			continue
+		var kind: String = _enhancement_kind_for_record(record)
+		var bonus: Dictionary = EQUIPMENT_BLESSING.bonus_for(str(record.get("grade", "")), kind)
+		total += int(bonus.get(stat, 0))
+	return total
 
 func _equipment_attribute_bonus(stat: String) -> int:
 	var result: int = 0
@@ -650,7 +678,7 @@ func _effective_attribute(stat: String) -> int:
 	return base + _equipment_attribute_bonus(stat)
 
 func _equipment_accuracy_bonus(kind: String) -> int:
-	var result: int = 0
+	var result: int = _equipped_bless_bonus("accuracy") if kind in ["melee", "ranged"] else 0
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
@@ -659,6 +687,8 @@ func _equipment_accuracy_bonus(kind: String) -> int:
 
 func _equipment_additional_damage(kind: String) -> int:
 	var result: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, kind + "_damage")
+	if kind in ["melee", "ranged"]:
+		result += _equipped_bless_bonus("damage")
 	for slot: String in EQUIPMENT_SLOT_ORDER:
 		var entry: Variant = equipped_items.get(slot, {})
 		if entry is Dictionary and not (entry as Dictionary).is_empty():
@@ -784,6 +814,7 @@ func _merge_local_consumables_into_catalog() -> void:
 		{"name":"무기 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"무기 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
 		{"name":"갑옷 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"방어구 강화에 사용. 안전강화 이후 실패 시 장비 소실 가능"},
 		{"name":"장신구 마법 주문서 (각인)", "grade":"일반", "type":"강화주문서", "slot":"consumable", "desc":"장신구 강화에 사용. 실패 시 장비 소실 가능"},
+		{"name":"축복 부여 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"무기·방어구 축복에 사용 · 실패해도 장비 유지 · TWILIGHT 조정 확률"},
 		{"name":"축복받은 무기 마법 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"성공 시 강화 단계가 +1~+3 상승할 수 있는 무기 주문서"},
 		{"name":"축복받은 갑옷 마법 주문서 (각인)", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "desc":"성공 시 강화 단계가 +1~+3 상승할 수 있는 방어구 주문서"},
 		{"name":"장인의 무기 마법 주문서 (각인)", "grade":"영웅", "type":"강화주문서", "slot":"consumable", "desc":"+9 무기 강화. 실패해도 장비가 소실되지 않음"},
@@ -5286,6 +5317,7 @@ func _effective_mr() -> int:
 		total += _record_mr(record)
 	total += _active_skill_buff_total("mrFlat")
 	total += _active_item_buff_total("mr")
+	total += _equipped_bless_bonus("mr")
 	return maxi(0, total)
 
 func _record_damage_reduction(record: Dictionary) -> int:
@@ -5386,7 +5418,7 @@ func _effective_defense() -> int:
 		bonus += float(record.get("def", 0.0))
 	var armor_enhance: int = _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "defense")
 	var accessory_enhance: int = _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "defense")
-	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def")
+	return defense + int(round(bonus)) + armor_enhance + accessory_enhance + _active_skill_buff_total("def") + _passive_skill_total("def") + _equipped_bless_bonus("defense")
 
 func _effective_max_hp() -> int:
 	var flat_bonus: float = 0.0
@@ -5399,6 +5431,7 @@ func _effective_max_hp() -> int:
 	flat_bonus += float(_active_skill_buff_total("hp"))
 	flat_bonus += float(_passive_skill_total("hpFlat"))
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
+	flat_bonus += float(_equipped_bless_bonus("hp"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
 func _experience_multiplier() -> float:
