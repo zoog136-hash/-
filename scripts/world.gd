@@ -423,6 +423,17 @@ func _normalize_option_policies() -> void:
 						continue
 					kept.append(part.replace("PVP", "PVE").replace("PvP", "PvE"))
 				entry["desc"] = " · ".join(kept)
+				# Keep the encyclopedia detail lines aligned with the single-player
+				# policies, not just the summary description.
+				var options_value: Variant = entry.get("sourceOptions", null)
+				if options_value is Array:
+					var normalized_options: Array = []
+					for raw_option: Variant in options_value as Array:
+						var option_text: String = str(raw_option).strip_edges()
+						if option_text.contains("손상") or option_text.contains("저주"):
+							continue
+						normalized_options.append(option_text.replace("PVP", "PVE").replace("PvP", "PvE"))
+					entry["sourceOptions"] = normalized_options
 
 func _verified_catalog_record(category: String, source_record: Dictionary) -> Dictionary:
 	var category_values: Dictionary = verified_catalog_options.get(category, {}) as Dictionary
@@ -445,7 +456,7 @@ func _verified_catalog_record(category: String, source_record: Dictionary) -> Di
 			"HP 절대회복 +%d" % int(stats.get("hpAbsoluteRecovery", 0)), "HP 자동회복(30초) +5"
 		)
 	if bool(stats.get("hpAbsorption", false)):
-		runtime_description = runtime_description.replace("HP 흡수", "HP 흡수(공격 적중마다 1~3)")
+		runtime_description = runtime_description.replace("HP 흡수", "HP 흡수(공격 적중마다 1)")
 	merged["desc"] = runtime_description.replace("PVP", "PVE").replace("PvP", "PvE")
 	if not merged.has("damage_reduction_ignore"):
 		for part: String in str(merged.get("desc", "")).split("·"):
@@ -495,7 +506,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 	if _has_hp_absorption():
 		# Extra damage and healing represent the exact same amount of
 		# HP stolen from the target, capped by its remaining HP.
-		stolen = mini(rng.randi_range(1, 3), maxi(0, target.hp))
+		stolen = mini(1, maxi(0, target.hp))
 	if stolen > 0:
 		var previous_hp: int = hp
 		hp = mini(_effective_max_hp(), hp + stolen)
