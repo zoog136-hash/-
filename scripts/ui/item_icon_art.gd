@@ -9,9 +9,9 @@ static var profile_loaded: bool = false
 
 static func item_icon(record: Dictionary, name: String, index: Dictionary) -> Texture2D:
 	# PR46 retains per-source-ID images. Always prefer the selected record.
-\tvar path: String = str(record.get("image_path", ""))
-\tif path.is_empty():
-\t\tpath = str(index.get(name, ""))
+	var path: String = str(record.get("image_path", ""))
+	if path.is_empty():
+		path = str(index.get(name, ""))
 	return render(path, str(record.get("grade", "일반")), name)
 
 static func render(path: String, grade: String = "일반", name: String = "") -> Texture2D:
