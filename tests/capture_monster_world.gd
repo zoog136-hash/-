@@ -25,8 +25,19 @@ func land_near(mob: TwilightMonster) -> void:
 	world.player.camera.force_update_scroll()
 	world.field_renderer.refresh_visible()
 
-func capture(name_value: String) -> void:
+func capture(name_value: String, boss: TwilightMonster = null) -> void:
+	# AUTO can level up and defer the existing character workspace. Close it
+	# before and after the frame so the capture actually shows the battlefield.
+	world.hud._hide_aux_panels()
 	await process_frame
+	world.hud._hide_aux_panels()
+	var workspace: Control = world.hud.get("workspace") as Control
+	check(not is_instance_valid(workspace) or not workspace.visible,"unobstructed capture "+name_value)
+	if is_instance_valid(boss):
+		var screen_point: Vector2 = boss.get_global_transform_with_canvas()*Vector2(0,-boss.visual_height*.5)
+		check(root.get_visible_rect().has_point(screen_point),"boss body on screen "+name_value)
+		check(world.field_population.boss_hud.panel.visible,"boss HP panel visible "+name_value)
+		check(world.field_population.boss_hud.title.text.contains(boss.monster_name),"boss HP name matches "+name_value)
 	await RenderingServer.frame_post_draw
 	var image: Image = root.get_texture().get_image()
 	check(image!=null and not image.is_empty(),"render buffer "+name_value)
@@ -88,6 +99,7 @@ func _run() -> void:
 		world.player.set_auto_enabled(true)
 		for frame: int in range(360): await physics_frame
 		world.player.set_auto_enabled(false)
+		world.player.clear_click_path()
 		check(kills[0]>0,"actual AUTO dense kills "+id)
 		world.field_population._process(float(region.respawn_time)+.5)
 		pause_actors()
@@ -100,6 +112,7 @@ func _run() -> void:
 	for floor: int in range(1,11):
 		var id: String = "oman_%02d" % floor
 		world._set_map(id,false); pause_actors()
+		world.hp = world._effective_max_hp()
 		var boss: TwilightMonster
 		for slot: Dictionary in world.field_population.slots:
 			if str(slot.region.get("mode",""))=="boss": boss = slot.monster; break
@@ -110,12 +123,12 @@ func _run() -> void:
 		boss.motion.apply(boss.sprite,boss.animation_base_scale)
 		boss.species_visual.warning_progress = .45
 		boss.species_visual.update_pose()
-		await capture("boss-"+id)
+		await capture("boss-"+id,boss)
 		var hits: Array[int] = [0]
 		boss.player_hit.connect(func(_b: TwilightMonster,_d: int,_k: String) -> void: hits[0]+=1)
 		boss.motion.advance(.7,Vector2.ZERO)
 		for frame: int in range(40): await physics_frame
-		report.bosses.append({"map":id,"name":boss.monster_name,"pattern":boss.ai.special.kind,"skill_hits":hits[0]})
+		report.bosses.append({"map":id,"name":boss.monster_name,"pattern":boss.ai.special.kind,"skill_hits":hits[0],"on_screen":true,"overlay_closed":true,"hud_name":world.field_population.boss_hud.title.text})
 	# Render every catalog entry, including DB-only species, inside a clearly
 	# labelled inspection gallery. This is art QA, separate from map screenshots.
 	world._set_map("aden_world",false); pause_actors()
