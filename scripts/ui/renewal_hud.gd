@@ -10,6 +10,7 @@ const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
 const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
+const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
@@ -40,6 +41,8 @@ var playtest_scroll_buttons: Array[Button] = []
 var skills_view: VBoxContainer
 var region_selection: ItemList
 var quest_view: Control
+var class_picker_initial: bool = false
+var class_picker_backdrop: ColorRect
 
 func _ready() -> void:
 	super._ready()
@@ -48,6 +51,15 @@ func _ready() -> void:
 	$Root.add_child(workspace)
 	workspace.navigate.connect(_navigate)
 	workspace.closed.connect(_close_workspace)
+	# Starting-character selection is a genuine modal on PC and Android.
+	class_picker_backdrop = ColorRect.new()
+	class_picker_backdrop.name = "ClassSelectionBackdrop"
+	class_picker_backdrop.color = Color(0.0,0.0,0.0,0.78)
+	class_picker_backdrop.set_anchors_preset(Control.PRESET_FULL_RECT)
+	class_picker_backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
+	class_picker_backdrop.z_index = 149
+	$Root.add_child(class_picker_backdrop)
+	class_picker_backdrop.hide()
 	joystick.offset_left = 20
 	joystick.offset_right = 180
 	joystick.offset_top = -244
@@ -70,6 +82,7 @@ func _build_lineage_side_ui() -> void:
 	lineage_side_ui.name="LineageSideUI"
 	lineage_side_ui.action_requested.connect(_on_lineage_side_action)
 	lineage_side_ui.stat_increase_requested.connect(func(value: String) -> void: stat_increase_requested.emit(value))
+	lineage_side_ui.connect("class_selection_requested",func() -> void: open_class_selection())
 	lineage_side_ui.equipment_requested.connect(func(item: String) -> void:
 		if active_section=="inventory": _close_workspace()
 		toggle_inventory()
@@ -355,6 +368,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
+	if class_picker_initial:
+		return
 	if workspace != null:
 		workspace.hide()
 	active_section = ""
@@ -380,8 +395,36 @@ func _open_window(section: String,title: String,description: String) -> void:
 	workspace.open(section,title,description)
 	active_section = section
 
+func open_class_selection(initial: bool = false) -> void:
+	# In the first session there is no class decision until the user confirms.
+	if class_picker_initial:
+		return
+	_open_window("class_select","클래스 선택","13개 직업 · 주무기 · 스탯 · 대표 변신")
+	var picker := ClassSelectUI.new()
+	workspace.mount(picker)
+	picker.configure(self,initial)
+	class_picker_initial = initial
+	class_picker_backdrop.visible = initial
+	# Prevent moving or attacking before a starter class is committed.
+	if initial:
+		var actor: Node = get_parent().get_node_or_null("Player")
+		if actor != null:
+			actor.set_physics_process(false)
+		workspace.move_to_front()
+
+func complete_class_selection() -> void:
+	class_picker_initial = false
+	class_picker_backdrop.hide()
+	var actor: Node = get_parent().get_node_or_null("Player")
+	if actor != null:
+		actor.set_physics_process(true)
+	_close_workspace()
+
 func _navigate(section: String) -> void:
+	if class_picker_initial:
+		return
 	match section:
+		"class_select": open_class_selection()
 		"inventory": inventory_pressed.emit()
 		"character": open_character()
 		"skills": open_skills()
@@ -472,7 +515,7 @@ func toggle_menu() -> void:
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
-	for pair: Array in [["character","캐릭터 · 장비"],["inventory","인벤토리"],["skills","스킬 · 성장"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"]]:
+	for pair: Array in [["character","캐릭터 · 장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬 · 성장"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button(str(pair[1]),func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):

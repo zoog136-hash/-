@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+
 var world: TwilightWorld
 var directory: String
 var results: Array = []
@@ -23,6 +25,11 @@ func _run() -> void:
 	root.add_child(world)
 	world.save_timer = -10000
 	for i: int in range(12): await process_frame
+	# Benchmarks must explicitly confirm a starter class before rendering.
+	if not CLASS_QA.enter_game(world):
+		push_error("UI capture class confirmation failed")
+		quit(1)
+		return
 	world.set_process(false)
 	world.field_population.set_process(false)
 	for monster: Node in world.monsters_root.get_children(): monster.set_physics_process(false)
@@ -36,6 +43,8 @@ func _run() -> void:
 		await _capture("inventory-%dx%d" % [extent.x,extent.y])
 		world.hud.open_character()
 		await _capture("character-%dx%d" % [extent.x,extent.y])
+		world.hud.open_class_selection()
+		await _capture("class-select-%dx%d" % [extent.x,extent.y])
 		world.hud.open_catalog("변신")
 		await _capture("transform-%dx%d" % [extent.x,extent.y])
 		world.hud.open_skills()
@@ -64,8 +73,8 @@ func _run() -> void:
 		await _capture("auto-%dx%d" % [extent.x,extent.y])
 		world.hud.open_chat_info()
 		await _capture("log-%dx%d" % [extent.x,extent.y])
-	if results.size() != 68:
-		push_error("UI review expected 68 captures; got %d" % results.size())
+	if results.size() != 72:
+		push_error("UI review expected 72 captures; got %d" % results.size())
 		quit(1)
 		return
 	var file := FileAccess.open(directory+"/render-results.json",FileAccess.WRITE)

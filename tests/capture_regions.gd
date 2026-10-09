@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+
 # Exact GL screenshots and frame timings of real gameplay, not concept art.
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const DETAIL_KINDS: Dictionary = {"oman_01":"tomb", "domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
@@ -101,6 +103,10 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 func _run() -> void:
 	var world: TwilightWorld = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
+	if not CLASS_QA.enter_game(world):
+		push_error("Rendered gameplay class confirmation failed")
+		quit(1)
+		return
 	world.save_timer=-10000
 	var directory: String = "user://world-regions-review"
 	DirAccess.make_dir_recursive_absolute(directory)

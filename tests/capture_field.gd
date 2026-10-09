@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+
 # Run on a real GL display (or Xvfb), not --headless. Writes user://field-review/.
 func _initialize() -> void:
 	call_deferred("_run")
@@ -7,6 +9,10 @@ func _initialize() -> void:
 func _run() -> void:
 	var world: TwilightWorld = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
+	if not CLASS_QA.enter_game(world):
+		push_error("Rendered gameplay class confirmation failed")
+		quit(1)
+		return
 	world._set_map("aden_world",false)
 	world.save_timer = -10000
 	var directory: String = "user://field-review"
