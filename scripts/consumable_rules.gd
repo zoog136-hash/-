@@ -3,7 +3,8 @@ class_name TwilightConsumableRules
 
 # Data-only rules for user consumables; no map, HUD, monster or animation dependencies.
 # Lineage M reference: 2017 official powerbook (duration/effects), adjusted for offline game.
-# Community-reported legacy 1–3 chances: 30/10/5. Stage 4–5: TWILIGHT placeholders, NOT official rates.
+# TWILIGHT fixed balance table (30/10/5/2/1%), not falsely labeled as official NC rates.
+# The 4th/5th stages are consciously TWILIGHT values until NC stage-specific rates can be verified.
 const ELEMENT_CHANCES: Array[float] = [30.0, 10.0, 5.0, 2.0, 1.0]
 const ELEMENT_NAMES: Dictionary = {"fire":"화령", "water":"수령", "earth":"지령", "wind":"풍령"}
 const STAT_KEYS: Array[String] = ["STR", "DEX", "CON", "INT", "WIS", "CHA"]
@@ -57,6 +58,10 @@ static func records() -> Array[Dictionary]:
 		 "kind":"element", "element":"earth", "desc":"무기 땅 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
 		{"name":"풍령의 무기 강화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable",
 		 "kind":"element", "element":"wind", "desc":"무기 바람 속성 강화 · 일반 최대 3단계 · 실패 시 무기 유지"},
+		{"name":"속성 변경 주문서", "grade":"희귀", "type":"강화주문서", "slot":"consumable", "kind":"element_change",
+		 "desc":"동일 무기의 속성 단계 유지, 화/수/지/풍 속성 변경 (TWILIGHT 확정 규칙)"},
+		{"name":"속성 초기화 주문서", "grade":"고급", "type":"강화주문서", "slot":"consumable", "kind":"element_reset",
+		 "desc":"무기 속성 단계 및 속성 초기화 (TWILIGHT 확정 규칙)"},
 		{"name":"엘릭서", "grade":"희귀", "type":"성장소모품", "slot":"consumable", "kind":"elixir",
 		 "desc":"50레벨 이상 · 선택한 기본 스탯 영구 +1 · TWILIGHT 최대 10회 / 스탯 45 제한"},
 		{"name":"힘의 엘릭서", "grade":"희귀", "type":"성장소모품", "slot":"consumable", "kind":"elixir", "stat":"STR",
