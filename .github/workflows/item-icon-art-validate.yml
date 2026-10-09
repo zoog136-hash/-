@@ -38,7 +38,7 @@ jobs:
           grep -q "ITEM_ICON_ART_OK" item-icon-test.log
       - name: Existing project tests
         run: |
-          python3 tools/test_project.py 2>&1 | tee item-icon-regression.log
+          python3 tools/test_project.py --godot ./Godot_v4.7.2-stable_linux.x86_64 2>&1 | tee item-icon-regression.log
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
