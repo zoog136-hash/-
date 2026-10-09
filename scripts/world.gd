@@ -2554,7 +2554,9 @@ func _sync_item_instances() -> void:
 			item_instances[unique_id] = {"name":name_value,"level":int(enhancement_levels.get(name_value, 0)) if legacy_import else 0, "element":"", "element_level":0}
 			if not ids.is_empty():
 				var previous: Dictionary = item_instances.get(ids[0], {}) as Dictionary
-				if previous.has("record"):
+				# Only propagate custom/unique records; name-only loot cannot
+				# safely inherit one variant of several different source IDs.
+				if previous.has("record") and int(catalog_item_variant_count.get(name_value, 0)) <= 1:
 					item_instances[unique_id]["record"] = (previous["record"] as Dictionary).duplicate(true)
 			ids.append(unique_id)
 		while ids.size() > desired:
