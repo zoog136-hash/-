@@ -1,5 +1,9 @@
 extends "res://scripts/hud.gd"
 
+signal ain_item_requested(item_name: String)
+signal ain_shop_requested
+signal ain_auto_changed(enabled: bool)
+
 const LineageSideUI = preload("res://scripts/ui/lineage_side_ui.gd")
 const LineageInventoryUI = preload("res://scripts/ui/lineage_inventory_ui.gd")
 
@@ -16,6 +20,13 @@ var v20_map_name: Label
 var v20_quest_text: RichTextLabel
 var v20_potion_count: Label
 var v20_leaf_count: Label
+var v20_leaf_button: Button
+var v20_ain_panel: PanelContainer
+var v20_ain_status: Label
+var v20_ain_info: Label
+var v20_ain_auto_check: CheckBox
+var v20_ain_item_buttons: Dictionary = {}
+var v20_ain_state: Dictionary = {}
 var v20_quick_item_buttons: Dictionary = {}
 var v20_auto_button: Button
 var v20_target_name: Label
@@ -69,6 +80,7 @@ func _build_v20_gameplay_hud() -> void:
 	$Root.move_child(v20_layer, 0)
 
 	_build_v20_status()
+	_build_ain_window()
 	_build_v20_buffs()
 	_build_v20_quest()
 	_build_v20_top_menu()
@@ -384,9 +396,14 @@ func _build_v20_status() -> void:
 	v20_layer.add_child(v20_potion_count)
 
 	var leaf: Button = _make_icon_button(v20_layer, "res://assets/ui/leaf.png", "", Rect2(442.0, 15.0, 58.0, 66.0), 12)
-	leaf.pressed.connect(func() -> void: show_message("가속 아이템 사용 준비중"))
+	v20_leaf_button = leaf
+	leaf.name = "AinhasadLeaf"
+	leaf.tooltip_text = "아인하사드의 축복 · 눌러서 상세 정보와 충전 아이템 보기"
+	leaf.pressed.connect(_toggle_ain_window)
 	v20_leaf_count = Label.new()
 	v20_leaf_count.text = "200"
+	v20_leaf_count.name = "AinhasadCount"
+	v20_leaf_count.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v20_leaf_count.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	v20_leaf_count.add_theme_font_size_override("font_size", 14)
 	v20_leaf_count.add_theme_color_override("font_color", Color(0.98, 0.90, 0.72, 1.0))
@@ -394,6 +411,98 @@ func _build_v20_status() -> void:
 	v20_leaf_count.add_theme_constant_override("outline_size", 3)
 	_place(v20_leaf_count, 442.0, 61.0, 498.0, 82.0)
 	v20_layer.add_child(v20_leaf_count)
+
+func _build_ain_window() -> void:
+	v20_ain_panel = PanelContainer.new()
+	v20_ain_panel.name = "AinhasadDetail"
+	v20_ain_panel.add_theme_stylebox_override("panel", _panel_style(0.98, 6, Color(0.71, 0.56, 0.25, 1.0)))
+	_place(v20_ain_panel, 442.0, 88.0, 810.0, 569.0)
+	v20_ain_panel.z_index = 160
+	v20_ain_panel.visible = false
+	$Root.add_child(v20_ain_panel)
+	var margin: MarginContainer = MarginContainer.new()
+	for side: String in ["left", "top", "right", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 12)
+	v20_ain_panel.add_child(margin)
+	var column: VBoxContainer = VBoxContainer.new()
+	column.add_theme_constant_override("separation", 6)
+	margin.add_child(column)
+	var title: Label = Label.new()
+	title.text = "아인하사드의 축복"
+	title.add_theme_font_size_override("font_size", 19)
+	title.add_theme_color_override("font_color", Color("eace87"))
+	column.add_child(title)
+	v20_ain_status = Label.new()
+	v20_ain_status.name = "AinhasadStage"
+	v20_ain_status.add_theme_font_size_override("font_size", 16)
+	column.add_child(v20_ain_status)
+	v20_ain_info = Label.new()
+	v20_ain_info.name = "AinhasadEffects"
+	v20_ain_info.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v20_ain_info.custom_minimum_size = Vector2(325.0, 80.0)
+	v20_ain_info.add_theme_font_size_override("font_size", 13)
+	column.add_child(v20_ain_info)
+	var section: Label = Label.new()
+	section.text = "보유 충전 아이템  ·  누르면 사용"
+	section.add_theme_font_size_override("font_size", 13)
+	column.add_child(section)
+	for item_name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드", "드래곤의 성수", "드래곤의 용옥"]:
+		var item_button: Button = Button.new()
+		item_button.name = "Use_" + item_name
+		item_button.text = item_name
+		item_button.custom_minimum_size = Vector2(320.0, 27.0)
+		item_button.add_theme_font_size_override("font_size", 12)
+		item_button.pressed.connect(func() -> void: ain_item_requested.emit(item_name))
+		column.add_child(item_button)
+		v20_ain_item_buttons[item_name] = item_button
+	v20_ain_auto_check = CheckBox.new()
+	v20_ain_auto_check.name = "AinhasadAutoRecharge"
+	v20_ain_auto_check.text = "자동사냥 시 축복 200 이하 보석 자동 사용"
+	v20_ain_auto_check.toggled.connect(func(checked: bool) -> void: ain_auto_changed.emit(checked))
+	column.add_child(v20_ain_auto_check)
+	var buy: Button = Button.new()
+	buy.name = "BuyDragonOrb"
+	buy.text = "용옥 구매  ·  1,000,000 아데나 (월 1회)"
+	buy.pressed.connect(func() -> void: ain_shop_requested.emit())
+	column.add_child(buy)
+	var close: Button = Button.new()
+	close.text = "닫기"
+	close.pressed.connect(func() -> void: v20_ain_panel.hide())
+	column.add_child(close)
+
+func _toggle_ain_window() -> void:
+	if v20_ain_panel == null:
+		return
+	v20_ain_panel.visible = not v20_ain_panel.visible
+
+func set_ain_state(value: Dictionary, inventory: Dictionary) -> void:
+	v20_ain_state = value.duplicate(true)
+	var remaining: int = maxi(0, int(value.get("blessing", 200)))
+	var stage_color: Color = Color("d9ad45") if remaining > 200 else (Color("68d77b") if remaining > 0 else Color("a1a6a8"))
+	if v20_leaf_count != null:
+		v20_leaf_count.text = str(remaining)
+		v20_leaf_count.add_theme_color_override("font_color", stage_color)
+	if v20_leaf_button != null:
+		v20_leaf_button.modulate = stage_color
+		v20_leaf_button.tooltip_text = "축복 %d · 경험치 %d%% · 아데나 %d%%" % [
+			remaining, int(float(value.get("exp_rate", 1.0)) * 100.0), int(float(value.get("adena_rate", 1.0)) * 100.0)]
+	if v20_ain_status == null:
+		return
+	var phase: String = "황금 축복" if remaining > 200 else ("녹색 축복" if remaining > 0 else "축복 없음")
+	v20_ain_status.text = "%s · %d" % [phase, remaining]
+	v20_ain_status.add_theme_color_override("font_color", stage_color)
+	var remaining_orb: int = maxi(0, int(value.get("dragon_orb_remaining", 0)))
+	var orb_text: String = "%d일 %d시간" % [int(remaining_orb / 86400), int((remaining_orb % 86400) / 3600)] if remaining_orb > 0 else "비활성"
+	var regen_text: String = "200 미만 자연회복 · %d초 후 +1" % int(value.get("next_regen_seconds", 0)) if remaining < 200 else "자연회복 상한 200"
+	v20_ain_info.text = "경험치 획득 %d%%  |  아데나 획득 %d%%\n드래곤의 보호: %s\n%s\n※ 축복 소모량은 TWILIGHT 조정값" % [
+		int(float(value.get("exp_rate", 1.0)) * 100.0), int(float(value.get("adena_rate", 1.0)) * 100.0), orb_text, regen_text]
+	for item_name: String in v20_ain_item_buttons:
+		var button: Button = v20_ain_item_buttons[item_name] as Button
+		var held: int = int(inventory.get(item_name, 0)) + int(inventory.get(item_name + " (각인)", 0))
+		button.text = "%s · 보유 %d" % [item_name, held]
+		button.disabled = held <= 0 or (item_name == "드래곤의 용옥" and remaining_orb > 0)
+	if v20_ain_auto_check != null:
+		v20_ain_auto_check.set_pressed_no_signal(bool(value.get("auto_recharge", false)))
 
 func _build_v20_buffs() -> void:
 	var panel: PanelContainer = PanelContainer.new()
@@ -865,8 +974,6 @@ func _update_v20_portrait(class_index_value: int) -> void:
 func set_quick_items(inventory: Dictionary) -> void:
 	if v20_potion_count != null:
 		v20_potion_count.text = str(int(inventory.get("HP 물약", 0)))
-	if v20_leaf_count != null:
-		v20_leaf_count.text = str(int(inventory.get("초록 잎", 0)))
 	for item_name: String in v20_quick_item_buttons:
 		var button: Button = v20_quick_item_buttons[item_name] as Button
 		if button != null:
