@@ -1,0 +1,40 @@
+name: TWILIGHT Full Inven Catalog Integration
+
+on:
+  push:
+    branches: ['codex/full-inven-catalog-passives-*']
+  workflow_dispatch:
+
+jobs:
+  full-catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -fsSL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and parse all scenes and scripts
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee import.log
+          if grep -E "SCRIPT ERROR:|ERROR:" import.log; then exit 1; fi
+      - name: Verify every source catalog entry and option effect
+        shell: bash
+        run: |
+          set -o pipefail
+          XDG_DATA_HOME="$RUNNER_TEMP/full-inven" timeout 90s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/full_inven_catalog_smoke_test.gd 2>&1 | tee full-inven.log
+          if grep -E "SCRIPT ERROR:|ERROR:|INVEN_CATALOG_FAIL:|INVEN_CATALOG_SMOKE_FAILED" full-inven.log; then exit 1; fi
+          grep -q "INVEN_CATALOG_OK" full-inven.log
+      - name: Item, enhancement, MP/HP, consumable and combat regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          for test in option_finalize_smoke_test original_option_comparison_audit non_skill_options_smoke_test per_instance_enchantments_smoke_test consumable_smoke_test equipment_slot_smoke_test catalog_effects_smoke_test original_lineagem_effects_smoke_test hp_mp_unique_effects_smoke_test; do
+            XDG_DATA_HOME="$RUNNER_TEMP/inven-${test}" timeout 80s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
+            if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|OPTION_FINALIZE_FAIL:|OPTION_AUDIT_FAILED|INVEN_CATALOG_FAIL:" "${test}.log"; then exit 1; fi
+            grep -q "_OK" "${test}.log"
+          done
