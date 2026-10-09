@@ -398,6 +398,7 @@ func _load_data() -> void:
 	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
 	_index_catalog_item_sources()
 	_load_verified_catalog_options()
+	_stash_inven_raw_options()
 	_normalize_option_policies()
 	_enrich_inven_catalog()
 	_index_item_weights()
@@ -408,6 +409,22 @@ func _load_data() -> void:
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
 	_build_job_classes()
+
+func _stash_inven_raw_options() -> void:
+	# Original Inven provenance is immutable, even when gameplay hides
+	# cursed / durability-only options or converts PvP descriptions to PvE.
+	for category: String in ["아이템", "변신", "마법인형", "성물"]:
+		var entries: Variant = catalog_db.get(category, [])
+		if not (entries is Array):
+			continue
+		for value: Variant in entries as Array:
+			if not (value is Dictionary):
+				continue
+			var record: Dictionary = value as Dictionary
+			if str(record.get("source", "")) != "inven":
+				continue
+			if not record.has("originalSourceOptions"):
+				record["originalSourceOptions"] = (record.get("sourceOptions", []) as Array).duplicate(true)
 
 func _enrich_inven_catalog() -> void:
 	# Keep the entire Inven source catalog, including every original option;
