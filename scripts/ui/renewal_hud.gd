@@ -610,10 +610,17 @@ func open_settings_info() -> void:
 
 func open_macro_info() -> void:
 	_open_window("auto","자동사냥","사냥 상태 · 전투와 습득")
-	var col: VBoxContainer = workspace.column()
+	var scroll := ScrollContainer.new()
+	scroll.name = "AutoSettingsScroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	workspace.mount(scroll)
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(col)
 	var player: Node = get_parent().get("player")
 	var enabled := bool(player.get("auto_enabled")) if player != null else false
 	var banner := PanelContainer.new()
+	banner.name = "AutoStatusBanner"
 	banner.add_theme_stylebox_override("panel",UI.chrome_panel(Color("151b1b"),UI.BRONZE,18))
 	col.add_child(banner)
 	var row := HBoxContainer.new()
@@ -622,19 +629,32 @@ func open_macro_info() -> void:
 	emblem.texture = UI.icon("auto")
 	emblem.custom_minimum_size = Vector2(64,64)
 	emblem.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	emblem.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	row.add_child(emblem)
-	row.add_child(UI.section("AUTO  ·  사냥 중" if enabled else "AUTO  ·  대기 중",22))
-	col.add_child(UI.button("AUTO 끄기" if enabled else "AUTO 켜기",func() -> void:
+	var status := UI.section("AUTO  ·  사냥 중" if enabled else "AUTO  ·  대기 중",22)
+	status.name = "AutoStatusTitle"
+	status.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	status.autowrap_mode = TextServer.AUTOWRAP_OFF
+	row.add_child(status)
+	var toggle := UI.button("AUTO 끄기" if enabled else "AUTO 켜기",func() -> void:
+		if workspace.was_scroll_dragged(scroll): return
 		auto_pressed.emit()
-		open_macro_info(),Vector2(220,48)))
+		open_macro_info(),Vector2(220,48))
+	toggle.name = "AutoSettingToggle"
+	col.add_child(toggle)
+	workspace.register_scroll_drag(scroll,toggle)
 	for pair: Array in [["목표 탐색","주변 몬스터 탐색 및 이동"],["전투","현재 장비와 스킬 · 등록된 자동 사용"],["습득","바닥 드랍을 통한 자동 아이템 습득"]]:
 		col.add_child(HSeparator.new())
 		col.add_child(UI.section(str(pair[0]),14))
 		col.add_child(UI.section(str(pair[1]),12))
 	var routes := HBoxContainer.new()
 	col.add_child(routes)
-	routes.add_child(UI.button("스킬 · 자동 사용",func() -> void: _navigate("skills")))
-	routes.add_child(UI.button("인벤토리",func() -> void: _navigate("inventory")))
+	for target: Array in [["skills","스킬 · 자동 사용"],["inventory","인벤토리"]]:
+		var id: String = str(target[0])
+		var route := UI.button(str(target[1]),func() -> void:
+			if not workspace.was_scroll_dragged(scroll): _navigate(id))
+		routes.add_child(route)
+		workspace.register_scroll_drag(scroll,route)
 
 func open_chat_info() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")

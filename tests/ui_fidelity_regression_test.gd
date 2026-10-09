@@ -113,6 +113,12 @@ func _run() -> void:
 			_check(not cards.is_visible_in_tree() and browser.details.is_visible_in_tree(),"compact skill detail accessible "+str(extent))
 			browser.detail_active=false; browser.reflow()
 			_check(cards.is_visible_in_tree(),"compact skills returns to list "+str(extent))
+		hud.open_macro_info()
+		for frame: int in range(3): await process_frame
+		var auto_status: Label = hud.workspace.find_child("AutoStatusTitle",true,false)
+		_check(auto_status.size.y < 40,"AUTO status stays one horizontal line "+str(extent))
+		var settings_toggle: Button = hud.workspace.find_child("AutoSettingToggle",true,false)
+		_check(settings_toggle.get_global_rect().end.y <= hud.workspace.content.get_global_rect().end.y,"AUTO setting toggle visible without scrolling "+str(extent))
 	root.size=Vector2i(1280,720)
 	await process_frame
 	hud._close_workspace()
@@ -123,6 +129,14 @@ func _run() -> void:
 	_touch(77,_point(auto),true); _touch(77,_point(auto),false)
 	await process_frame
 	_check(world.player.auto_enabled != original_auto,"native AUTO touch changes actual hunt state")
+	hud.open_macro_info()
+	for frame: int in range(3): await process_frame
+	var settings_toggle: Button = hud.workspace.find_child("AutoSettingToggle",true,false)
+	original_auto = world.player.auto_enabled
+	_touch(80,_point(settings_toggle),true); _touch(80,_point(settings_toggle),false)
+	await process_frame
+	_check(world.player.auto_enabled != original_auto,"native settings AUTO toggle changes actual hunt state")
+	hud._close_workspace()
 	var attack_count: Array[int]=[0]
 	hud.attack_pressed.connect(func() -> void: attack_count[0]+=1)
 	var attack: Button=hud.get_node("Root/RightControls/AttackButton")
@@ -130,7 +144,8 @@ func _run() -> void:
 	await process_frame
 	_check(attack_count[0] == 1,"original attack signal emitted once by native touch")
 	var modal := Dialog.new()
-	modal.title_text="확인"; modal.message_text="검수용 확인창"
+	modal.title_text="저장된 게임 불러오기"
+	modal.message_text="현재 미저장 진행도가 사라질 수 있습니다. 저장본을 불러올까요?"
 	hud.get_node("Root").add_child(modal)
 	await process_frame
 	for extent: Vector2i in [Vector2i(1280,720),Vector2i(854,480),Vector2i(720,720)]:

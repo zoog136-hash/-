@@ -15,7 +15,7 @@ func _capture(label: String) -> void:
 	var path: String = folder+"/"+label+".png"
 	var result: Error = pixels.save_png(path)
 	if result != OK: failed=true; push_error("Fidelity capture failed: "+label)
-	captures.append({"name":label,"width":pixels.get_width(),"height":pixels.get_height(),"path":path,"save_error":result})
+	captures.append({"name":label,"requested_window":str(DisplayServer.window_get_size()),"active_viewport":str(root.get_visible_rect()),"width":pixels.get_width(),"height":pixels.get_height(),"path":path,"save_error":result})
 
 func _run() -> void:
 	folder = ProjectSettings.globalize_path("user://ui-fidelity-review")
@@ -101,7 +101,7 @@ func _run() -> void:
 		hud.open_chat_info()
 		await _capture("log"+suffix)
 	var report := FileAccess.open(folder+"/render-results.json",FileAccess.WRITE)
-	report.store_string(JSON.stringify({"engine":Engine.get_version_info().string,"renderer":RenderingServer.get_video_adapter_name(),"fixture":"isolated source-record equipment granted through existing world logic","captures":captures},"\t"))
+	report.store_string(JSON.stringify({"engine":Engine.get_version_info().string,"renderer":RenderingServer.get_video_adapter_name(),"stretch_aspect":ProjectSettings.get_setting("display/window/stretch/aspect"),"note":"File suffix is requested window size; width/height are the unedited active game texture. Keep aspect letterboxes square/ultrawide windows.","fixture":"isolated source-record equipment granted through existing world logic","captures":captures},"\t"))
 	report.close()
 	if captures.size() != 156: failed=true; push_error("Expected 156 fidelity captures; got %d" % captures.size())
 	world.queue_free()
