@@ -42,6 +42,15 @@ func _verify() -> void:
 			check(rare != mythic, "grade variant cache: " + item_name)
 			check(ART.render(path, "희귀", item_name) == rare, "reuses icon cache: " + item_name)
 		check(FileAccess.get_file_as_bytes(path) == old_image, "original PNG not modified: " + item_name)
+	# A duplicate-name PR46 record must display its pinned image, not the
+	# ambiguous name-to-image fallback from the older 2,085-entry index.
+	var record_path: String = str(items.get("생명의 단검", ""))
+	var fallback_path: String = str(items.get("군터의 단도", ""))
+	if not record_path.is_empty() and not fallback_path.is_empty():
+		var pinned: Texture2D = ART.item_icon({"image_path": record_path, "sourceId": "demo-source-1", "grade": "전설"}, "동명이품", {"동명이품": fallback_path})
+		var expected: Texture2D = ART.render(record_path, "전설", "동명이품")
+		check(pinned == expected, "source-ID image always overrides name index")
+		check(pinned != ART.render(fallback_path, "전설", "동명이품"), "duplicate variants do not alias their art")
 	check(ART.render("res://missing.png") == null, "missing icon is safe")
 	if failures.is_empty():
 		print("ITEM_ICON_ART_OK checks=%d" % checks)
