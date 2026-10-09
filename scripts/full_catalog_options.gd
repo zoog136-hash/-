@@ -117,7 +117,10 @@ static func enrich(source: Dictionary) -> Dictionary:
 		var percent: bool = bool(data.get("percent", false))
 		var effect: String = ""
 		var value: Variant = number
-		if DIRECT_LABELS.has(label):
+		if (label == "PVE대미지리덕션" or label == "PVE대미지감소") and percent:
+			effect = "pve_damage_reduction_pct"
+			value = int(round(number))
+		elif DIRECT_LABELS.has(label):
 			effect = str(DIRECT_LABELS[label])
 			value = int(round(number))
 			if label == "MP회복" or label == "HP회복":
@@ -144,8 +147,6 @@ static func enrich(source: Dictionary) -> Dictionary:
 		elif label == "PVE대미지리덕션무시" and not percent:
 			effect = "damage_reduction_ignore"
 			value = int(round(number))
-		elif label == "근거리명중":
-			effect = "meleeHit"
 		elif label == "PVE대미지감소무시" or label == "대미지감소무시":
 			# Percent mitigation bypass is not the same as flat +N damage.
 			deferred.append(option)
