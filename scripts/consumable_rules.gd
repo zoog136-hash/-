@@ -19,6 +19,18 @@ static func is_removed_item(item_name: String) -> bool:
 
 static func records() -> Array[Dictionary]:
 	return [
+		{"name":"드래곤의 루비", "grade":"고급", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":30,
+		 "desc":"아인하사드 축복 +30 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 사파이어", "grade":"희귀", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":50,
+		 "desc":"아인하사드 축복 +50 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 다이아몬드", "grade":"희귀", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":100,
+		 "desc":"아인하사드 축복 +100 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 고급 다이아몬드", "grade":"영웅", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":500,
+		 "desc":"아인하사드 축복 +500 · 85레벨부터 레벨별 충전 증가"},
+		{"name":"드래곤의 성수", "grade":"영웅", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":1500,
+		 "desc":"45레벨 이상 · 아인하사드 축복 +1,500 · 경험치 +31,920,000"},
+		{"name":"드래곤의 용옥", "grade":"희귀", "type":"축복버프", "slot":"consumable", "kind":"ain_orb",
+		 "desc":"30일간 드래곤의 보호 · 축복 0에서도 EXP 400% / 아데나 150% · 캐릭터별 실제 시간 적용"},
 		{"name":"마나 회복 물약", "grade":"일반", "type":"회복물약", "slot":"consumable", "kind":"regen",
 		 "duration":300.0, "group":"mana_potion", "buff":{"mp_regen_tick":5, "tick_interval":30.0},
 		 "desc":"지속 시간 300초 · 30초마다 MP 5 회복 (TWILIGHT 밸런스)"},
