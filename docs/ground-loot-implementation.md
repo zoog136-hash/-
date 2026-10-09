@@ -1,102 +1,98 @@
-# Ground loot and pickup implementation
+# 바닥 드랍 및 자동·수동 습득
 
-Baseline: `18161dc1ae0b268e660f19e1817983c71e166562` (latest main, combat animation merge).
+기준 저장소는 `zoog136-hash/-`, 작업 시작 main은
+`18161dc1ae0b268e660f19e1817983c71e166562`이다. 이 기준에는 전투 애니메이션
+PR #13이 병합되어 있다. 작업 브랜치는 `feature/ground-loot-pickup-20261009`이다.
 
-Monster death keeps the existing loot rolls, experience and gold. Equipment and
-potions become persistent world drops. The inventory changes only after a valid
-world ID is claimed within 60 world pixels with clear line of sight. Each new or
-restored visible drop remains on screen for at least 850 ms before pickup.
+## 실제 흐름
 
-## Changed files
+몬스터 사망 시 기존 `LOOT_DROP.roll()` 결과만 사용하여 바닥 개체를 생성한다.
+이 단계에서는 인벤토리를 변경하지 않는다. 아데나·경험치 보상은 기존 경로를 유지한다.
+습득 시에는 유효한 개체 ID, 소속 맵, 수명, 실제 거리 60px, 장애물 시야를 검사한다.
+바닥의 권위 있는 ID를 먼저 제거한 뒤 수량을 인벤토리에 한 번만 지급한다.
 
-- `scripts/world.gd`: thin adapters for drops, AUTO pickup, input cancellation,
-  map switching, existing inventory grants and close/suspend saving.
-- `scripts/loot/ground_loot_manager.gd`: IDs, quantities, walkable spread,
-  per-map records, validation, atomic claims, ten-minute real-time expiry and
-  save migration from the original drop format.
-- `scripts/loot/ground_loot.gd`: native mouse/touch selection and world-space
-  sprite/effect display.
-- `scripts/loot/drop_visual.gd`: original procedural beam, glow, particles,
-  pulse, dual rays and emerald aura. Existing item image DB is reused;
-  missing images use a drawn weapon, bottle or equipment fallback.
-- `scripts/loot/loot_pickup_controller.gd`: manual selection/confirmation
-  overlay and distinct manual/AUTO pickup states with existing pathfinding.
-- `tests/ground_drop_smoke_test.gd`: preserve prior regression coverage with
-  the new selection-then-pickup and visible-time requirements.
-- `tests/ground_loot_system_test.gd`: expanded engine integration coverage.
-- `tests/capture_ground_loot.gd`: actual engine screenshots of seven grades,
-  manual selection and AUTO approach, using development-only forced drops.
-- `.github/workflows/ground-loot-validate.yml`: engine integration and actual
-  OpenGL capture, plus uploaded review evidence.
-- Associated Godot-generated UID files and this report.
+AUTO는 기존 `_run_auto_hunt()`에서 별도 습득 제어기를 호출한다. `idle`,
+`manual`, `auto` 상태를 분리하고 기존 플레이어 물리 이동과 `find_world_path()`를
+재사용한다. 최근 처치 배치, 거리, 동거리 등급 순으로 선택한다. 아이템 하나를
+주운 뒤 즉시 다음 아이템을 검사하고, 남은 대상이 없으면 원래 사냥을 재개한다.
 
-## Pickup behavior
+전체 후보 탐색 간격은 0.25초, 경로 갱신 간격은 0.65초다. 탐색 한 번의 경로
+시도는 최대 8개다. 접근 불가 또는 2.2초 이동 정체 대상에는 15초 재시도 제한을
+적용한다. 사라진 대상과 끝난 제한 기록을 정리한다. 상태이상으로 인한 이동 정지는
+경로 정체로 오판하지 않는다. AUTO OFF, 수동 이동, 지역 변경 시 습득 경로를 취소한다.
 
-Manual: select the floor item with mouse/touch; see its name, grade and quantity;
-press **줍기** or click/tap the item again. The existing player walks along the
-existing world path. The grant occurs only upon arrival. Expiry, map changes,
-manual movement and a vanished ID cancel the selection and owned pickup path.
+수동 조작은 첫 클릭·터치로 선택 표시와 이름·등급·수량·줍기 창을 표시한다.
+재클릭·재터치 또는 줍기 버튼으로 실제 이동을 시작한다. 선택만으로 지급하지 않는다.
+네이티브 터치와 마우스 에뮬레이션을 구분하여 한 터치의 중복 처리를 방지한다.
 
-AUTO: the existing combat loop delegates to pickup while loot is pending. New
-items from the current kill batch take precedence, followed by distance and
-higher grade on a tied distance. The controller retains one target through the
-walk, then picks remaining drops before returning control to combat. Scans are
-throttled to 250 ms, repaths to 650 ms and path attempts to eight per scan.
-Unreachable/stalled IDs receive a 15-second retry cooldown. Status effects pause
-stall counting. AUTO OFF immediately cancels the pickup path; native manual
-movement retains its existing behavior of turning AUTO off.
+## 아이템 이미지와 연출
 
-## Visuals
+드랍 추첨에 사용한 아이템 카탈로그의 등급을 표시에도 사용한다. 기존 이미지 DB에
+이미지가 있으면 실제 아이콘을 표시하고, 없으면 종류에 따른 프로젝트 전용 도형을
+사용한다. 월드 부모 아래에서 그리므로 기존 카메라 이동·줌·화면 좌표 변환을 따른다.
 
-| Grade | Floor effect |
-| --- | --- |
-| 일반 / 고급 | Item image only; no beam or grade glow |
-| 희귀 | Blue beam, floor glow, particles and pulse |
-| 영웅 | Red beam, floor glow, particles and pulse |
-| 전설 | Purple dual beam and extra sparkles |
-| 신화 | Gold dual beam and extra sparkles |
-| 유일 | Emerald/teal rays, bright core, star particles and outer aura |
+| 등급 | 바닥 표시 |
+|---|---|
+| 일반·고급 | 아이템 이미지, 기둥 없음 |
+| 희귀 | 파란 광선·바닥 글로우·입자·맥동 |
+| 영웅 | 붉은 광선·바닥 글로우·입자·맥동 |
+| 전설 | 보라 이중 광선과 반짝임 |
+| 신화 | 금색 이중 광선과 반짝임 |
+| 유일 | 에메랄드·청록 오라, 밝은 중심부, 별빛 입자 |
 
-The image, shadow and beam stay in the world canvas and therefore follow camera
-pan, zoom and viewport stretch. Collection/expiry detaches the complete view
-immediately. Low grades do not run an animation process. Drop grades are read
-from the same item catalog used by the original probability roll.
+효과는 Canvas2D 도형으로 구현하고 외부 원본 에셋을 새로 복제하지 않았다.
+생성 후 최소 0.85초는 표시하며, 습득 또는 만료 시 아이템과 효과를 함께 제거한다.
 
-## Persistence and compatibility
+## 저장·지역 이동
 
-All unclaimed items from all maps are included in `ground_drops`, with stable ID,
-map, quantity, creation/expiry timestamp and ground state. Switching maps only
-rebuilds visible views and keeps the records. Expiry uses real time, including
-when the app is closed. Restoring skips expired, collected and duplicate IDs;
-original `{item_name, position}` snapshots remain supported. Inventory and
-remaining floor records are serialized together by the existing save method.
-Window close and mobile suspend save before leaving the game.
+각 개체에 128비트 무작위 고유 ID, 이름·등급·수량, 월드 위치·맵 ID,
+생성·만료 Unix 시각, 상태, 처치 배치 ID를 보관한다. 기본 유지 시간은 실제 시간
+600초다. 지역을 떠날 때 표시만 제거하고 기록은 유지한다. 저장은 모든 맵의
+미습득 기록을 포함하며, 재방문·불러오기에서도 ID와 만료 시각을 유지한다.
+만료·이미 습득·중복 ID·잘못된 위치의 저장 항목은 복원에서 제외한다.
+이전 이름·위치 형식의 저장은 현재 맵의 새 ID 기록으로 이전한다.
+기존 자동 저장과 저장 버튼을 유지하고 정상 창 닫기 및 모바일 앱 중단 요청에도 저장한다.
 
-No changes to `scripts/loot_drop.gd`, the probability table, item DB, maps,
-player, monsters, actor motion, pooled combat effects, scenes or existing HUD
-files. The central world adapters are intentionally the only shared gameplay
-file changed. Unmerged consumable and enchantment branches were not incorporated.
+## 드랍률과 보호 범위
 
-## Validation
+`scripts/loot_drop.gd`와 실제 확률은 변경하지 않았다. 일반 몬스터 장비 추첨 1회,
+보스 장비 추첨 3회, 물약 추첨 45%·90%를 그대로 사용한다. 희귀 이상 연출은
+개발용 강제 생성으로 확인하며, 보스 3장비+1물약은 개발 fixture의 난수 시드로
+기존 확률을 재현한다. 게임에서 강제 생성하거나 확률을 높이지 않는다.
 
-- Godot **4.7.2** import and boot succeed.
-- Full project regression suite: **36/36 checks**.
-- Ground loot integration: **145 assertions** covering actual CharacterBody2D
-  manual/AUTO movement, sequence and kill-batch order, stalled/inaccessible
-  targets, duplicate/unknown IDs, expiry and stale selection, real save/load,
-  map travel and viewport GUI mouse/touch dispatch at 1280×720, 960×540,
-  1920×1080 and camera zoom 0.8/1.3.
-- Live ranged AUTO flow: real attack/impact, kill, visible floor drops, walk,
-  pickup, then attack against the next monster.
-- Boss seed **146103** produces three equipment pieces plus one potion using
-  the unchanged production rates. Visual grade samples are forced only in
-  development capture/tests; production rates are never increased.
-- All **24 regions / 5,882 assertions** pass, along with combat timing,
-  projectiles, animation, skills, inventory, equipment and input regressions.
-- Capture script parses locally. Actual OpenGL capture runs in GitHub CI;
-  review images and logs are uploaded by `Ground Loot Validate`.
+맵 코드·데이터·아트, `scripts/player.gd`, `scripts/monster.gd`,
+`scripts/animation/**`, 기존 HUD, 장면과 `project.godot`에는 변경이 없다.
+`scripts/world.gd`에서 드랍·습득·저장 연결만 교체하며 최신 전투 코드를 유지한다.
 
-GitHub PR checks must pass before merging. The branch is based on the current
-main rather than an older project archive. The unpublished previous scratch
-implementation was unavailable; all results above refer to this recovered,
-reimplemented and independently tested change.
+## 변경 파일
+
+- `scripts/world.gd`: 생성·습득·AUTO·지역 이동·저장 서비스 연결.
+- `scripts/loot/ground_loot.gd`: ID를 가진 선택 가능 바닥 개체와 터치 입력.
+- `scripts/loot/ground_loot_manager.gd`: 분산 생성·만료·ID 검증·저장·복원.
+- `scripts/loot/drop_visual.gd`: 실제 DB 아이콘과 등급별 절차적 효과.
+- `scripts/loot/loot_pickup_controller.gd`: 선택 창·수동 이동·AUTO 우선순위·정체 처리.
+- `tests/ground_drop_smoke_test.gd`: 새 선택·재클릭과 표시 유지 규칙 반영.
+- `tests/ground_loot_system_test.gd`: 실제 물리·GUI 입력·보스·저장·전체 AUTO 흐름 검사.
+- `tests/capture_ground_loot.gd`: 실제 Godot 화면 3장 캡처.
+- `.github/workflows/ground-loot-validate.yml`: Godot 검사 및 GL 캡처 CI.
+- `docs/ground-loot-implementation.md`: 구현·검증·변경 범위 보고서.
+- `docs/ground_loot_validation.json`: 전체 검사별 통과와 검증 환경 기록.
+
+## 재현과 검증 범위
+
+최종 코드의 로컬 검증은 전체 **36/36 검사**, 바닥 습득 **172항목**, 전체
+**24개 지역 5,882항목**을 통과했다. 이전 대화의 검사 수를 재사용하지 않고,
+이번 재개본에서 전체 검사를 다시 실행하여 결과를 기록했다.
+
+Godot 4.7.2에서 `project.godot`을 열고 실행한다. 저장 데이터를 분리한 전체 검사는
+`python3 tools/test_project.py --godot /path/to/godot`으로 실행한다. 모든 기존 검사와
+새 습득 검사를 유지한다. 핵심 검사는 실제 물리 프레임으로 걸어가며, 화면 크기
+1280×720·960×540·1920×1080 및 줌 0.8·1.3에서 마우스·터치 선택, 재클릭과
+줍기 버튼을 확인한다. 보스 원거리 AUTO 처치·바닥 생성·여러 아이템 순차 습득·다음
+사냥을 하나의 흐름으로 검사하고, 아데나·경험치와 수량별 단일 지급을 검증한다.
+
+실제 GL 렌더는 디스플레이가 있는 환경에서 `tests/capture_ground_loot.gd`로
+실행한다. 7개 등급, 수동 선택, AUTO 접근의 PNG를 생성한다. CI는 원래의
+전투·지역 회귀 워크플로도 함께 수행한다. Windows·Android 실기기의 장시간
+플레이와 터치 하드웨어 검수는 별도 범위이며, 자동 GUI 검사는 실제 모바일 기기
+검사를 대신하지 않는다.

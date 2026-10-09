@@ -38,11 +38,11 @@ func configure(owner_world: Node, service: TwilightGroundLootManager) -> void:
 	root_control.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(root_control)
 	overlay = PanelContainer.new()
-	overlay.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	overlay.offset_left = -350
-	overlay.offset_right = -24
-	overlay.offset_top = 166
-	overlay.offset_bottom = 246
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	overlay.offset_left = 16
+	overlay.offset_right = 342
+	overlay.offset_top = 304
+	overlay.offset_bottom = 384
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color("181a20ed")
 	style.border_color = Color("a58b52")

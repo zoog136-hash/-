@@ -268,6 +268,13 @@ func _run() -> void:
 				pointer(view, use_touch)
 				check(int(world.inventory.get("HP 물약", 0)) == before + 1, "second pointer interaction collects once")
 				clear()
+				view = world._spawn_ground_drop("HP 물약", origin + Vector2(35,0))
+				age(view)
+				await process_frame
+				pointer(view, use_touch)
+				pointer(world.loot_pickup.pickup_button, use_touch)
+				check(int(world.inventory.get("HP 물약", 0)) == before + 2, "pickup button supports viewport %s zoom %s touch %s" % [viewport_size,zoom,use_touch])
+				clear()
 	root.size = Vector2i(1280,720)
 	world.player.camera.zoom = Vector2.ONE
 
@@ -297,12 +304,17 @@ func _run() -> void:
 	live.setup({"name":"연속 사냥 검증", "hp":1, "atk":1, "ac":0, "is_boss":true, "drop":["HP 물약"]}, world.player, world, null)
 	live.global_position = point_at(230)
 	live.set_physics_process(false)
-	live.died.connect(world._on_monster_died)
+	live.died.connect(func(monster: TwilightMonster) -> void:
+		world.rng.seed = 146103
+		world._on_monster_died(monster))
 	world.auto_target = live
 	world.selected_monster = live
 	world.auto_attack_timer = 0
 	world.rng.seed = 146103
 	before = int(world.inventory.get("HP 물약", 0))
+	var inventory_before: Dictionary = world.inventory.duplicate(true)
+	var xp_before: int = world.experience
+	var gold_before: int = world.gold
 	world.player.set_auto_enabled(true)
 	for i: int in range(360):
 		world._process(1.0 / 60.0)
@@ -310,6 +322,14 @@ func _run() -> void:
 		if world.drops_root.get_child_count() > 0: break
 	check(world.drops_root.get_child_count() > 0, "real ranged AUTO attack kills and creates ground loot")
 	check(int(world.inventory.get("HP 물약", 0)) == before, "real ranged kill does not grant before pickup")
+	check(world.ground_loot.records.size() == 4, "real death retains three independent equipment rolls and one potion roll")
+	check(world.experience > xp_before and world.gold > gold_before, "real death retains experience and adena")
+	var expected_grants: Dictionary = {}
+	for record: Dictionary in world.ground_loot.records.values():
+		var item_name: String = str(record["item_name"])
+		expected_grants[item_name] = int(expected_grants.get(item_name, 0)) + int(record["quantity"])
+		check(int(world.inventory.get(item_name, 0)) == int(inventory_before.get(item_name, 0)), "real drop remains ungranted before walking " + item_name)
+		check(world.ground_loot.views.has(str(record["id"])), "real drop creates a visible ID-backed view")
 	var chase: TwilightMonster = world.MONSTER_SCENE.instantiate()
 	world.monsters_root.add_child(chase)
 	chase.setup({"name":"다음 사냥 대상", "hp":999999, "atk":1, "ac":0}, world.player, world, null)
@@ -317,6 +337,9 @@ func _run() -> void:
 	chase.set_physics_process(false)
 	await walk_until_empty(720)
 	check(world.ground_loot.views.is_empty() and world.player.global_position.distance_to(origin) > 80, "real kill loot is collected by walking")
+	check(chase.damage_hit_count == 0, "all remaining drops precede the next attack")
+	for item_name: String in expected_grants:
+		check(int(world.inventory.get(item_name, 0)) == int(inventory_before.get(item_name, 0)) + int(expected_grants[item_name]), "real AUTO batch grants exactly once " + item_name)
 	var resumed: bool = false
 	for i: int in range(180):
 		world._process(1.0 / 60.0)
