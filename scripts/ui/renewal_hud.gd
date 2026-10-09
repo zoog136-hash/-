@@ -548,7 +548,7 @@ func open_catalog(category: String) -> void:
 	catalog_category = category
 	catalog_grade_filter = "전체"
 	item_grade_filter = "전체"
-	item_slot_filter = "weapon"
+	item_slot_filter = "all"
 	rarity_filter.select(0)
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
@@ -586,9 +586,10 @@ func _build_catalog_panel() -> void:
 	top.add_child(rarity_filter)
 	collection_slot_filter = OptionButton.new()
 	collection_slot_filter.name = "EquipmentTypeFilter"
+	collection_slot_filter.add_item("전체")
 	for pair: Array in ITEM_SLOT_FILTERS:
 		collection_slot_filter.add_item(str(pair[1]))
-	collection_slot_filter.item_selected.connect(func(index: int) -> void: _set_item_slot_filter(str(ITEM_SLOT_FILTERS[index][0])))
+	collection_slot_filter.item_selected.connect(_select_catalog_group_index)
 	top.add_child(collection_slot_filter)
 	collection_status = UI.label("",12,UI.MUTED)
 	col.add_child(collection_status)
@@ -656,6 +657,18 @@ func _build_catalog_panel() -> void:
 		playtest_scroll_buttons.append(grant)
 	old.queue_free()
 
+func _select_catalog_group_index(index: int) -> void:
+	item_slot_filter = "all" if index == 0 else str(ITEM_SLOT_FILTERS[index - 1][0])
+	item_grade_filter = "전체"
+	catalog_grade_filter = "전체"
+	rarity_filter.select(0)
+	_refresh_catalog_list(catalog_search.text)
+
+func _item_slot_label(slot_id: String) -> String:
+	if slot_id == "all":
+		return "전체"
+	return super._item_slot_label(slot_id)
+
 func _refresh_item_filter_controls() -> void:
 	if rarity_filter != null:
 		rarity_filter.select(maxi(0,["전체","일반","고급","희귀","영웅","전설","신화","유일"].find(item_grade_filter)))
@@ -667,9 +680,9 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	for value: Variant in catalog_data.get(catalog_category,[]):
 		if not value is Dictionary: continue
 		var record: Dictionary = value
-		if catalog_category=="아이템" and _item_filter_group(record)!=item_slot_filter: continue
+		if catalog_category=="아이템" and item_slot_filter!="all" and _item_filter_group(record)!=item_slot_filter: continue
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
-		var searchable := "%s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type","")]
+		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
 		if query!="" and not searchable.to_lower().contains(query): continue
 		catalog_filtered_results.append(record)
 	catalog_page=0
