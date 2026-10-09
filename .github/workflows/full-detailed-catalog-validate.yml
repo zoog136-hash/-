@@ -1,0 +1,40 @@
+name: TWILIGHT Full Detailed Catalog Validation
+
+on:
+  push:
+    branches: ['codex/full-detailed-catalog-runtime-*']
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -fsSL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and syntax check
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee import.log
+          if grep -E "SCRIPT ERROR:|ERROR:" import.log; then exit 1; fi
+      - name: Full original source catalog and gameplay integration
+        shell: bash
+        run: |
+          set -o pipefail
+          timeout 90s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/full_detailed_catalog_smoke_test.gd 2>&1 | tee full-catalog.log
+          if grep -E "SCRIPT ERROR:|ERROR:|FULL_CATALOG_FAIL:|FULL_CATALOG_FAILED" full-catalog.log; then exit 1; fi
+          grep -q "FULL_CATALOG_OK" full-catalog.log
+      - name: Related source-backed option and UI regressions
+        shell: bash
+        run: |
+          set -o pipefail
+          for test in catalog_effects_smoke_test original_lineagem_effects_smoke_test inventory_db_smoke_test lineage_inventory_ui_smoke_test non_skill_options_smoke_test item_options_runtime_smoke_test hp_mp_unique_effects_smoke_test; do
+            XDG_DATA_HOME="$RUNNER_TEMP/twilight-catalog-${test}" timeout 90s ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
+            if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|FULL_CATALOG_FAIL:|TEST_FAIL:" "${test}.log"; then exit 1; fi
+            grep -q "_OK" "${test}.log"
+          done
