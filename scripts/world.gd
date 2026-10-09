@@ -2296,7 +2296,8 @@ func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
 				continue
 			entry["record"] = record.duplicate(true)
 			entry["sourceId"] = source_id
-		# The legacy grant saved before variant metadata was attached.
+		# Publish and save the pinned source record after the legacy grant.
+		_update_hud()
 		_save_game(true)
 
 func _grant_playtest_aden() -> void:
