@@ -34,6 +34,9 @@ func _run() -> void:
 	for i: int in range(5):
 		assert_ok(RULES.element_success_chance(i) > 0.0, "element chance configured stage " + str(i))
 	print("OPTION_FINALIZE_TRACE: pre-scene assertions complete")
+	var save_file: String = "user://twilight_v20_save.json"
+	var had_previous_save: bool = FileAccess.file_exists(save_file)
+	var previous_save: String = FileAccess.get_file_as_string(save_file) if had_previous_save else ""
 	var scene: PackedScene = load("res://Main.tscn") as PackedScene
 	if scene == null:
 		assert_ok(false, "Main.tscn missing")
@@ -102,6 +105,13 @@ func _run() -> void:
 	print("OPTION_FINALIZE_TRACE: elemental change and reset checked")
 	world.queue_free()
 	await process_frame
+	if had_previous_save:
+		var restore_file: FileAccess = FileAccess.open(save_file, FileAccess.WRITE)
+		if restore_file != null:
+			restore_file.store_string(previous_save)
+			restore_file.close()
+	else:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(save_file))
 	_finish()
 
 func _finish() -> void:
