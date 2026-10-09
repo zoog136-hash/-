@@ -258,7 +258,7 @@ for i,roster in enumerate(ESCAROS):
 for i,roster in enumerate(ALBINO):
     add_map('albino_%02d'%(i+1),roster,['알비노 유니콘','알비노 피닉스','알비노 데몬'][i],'albino',88+i,
             ['charge','nova','cone'][i],note='늪지/폭포/유황 몬스터 구분 확인. 원작 보스는 별도 실험실; 현재 맵 최심부를 실험실 대체 구역으로 사용한 로컬 변경.')
-add_map('albino_04',ALBINO[2],'알비노 데몬','albino',91,'cone',note='2026-10 신설 4구역의 확정 몬스터 목록 자료 부족. 3구역 확인 몬스터를 로컬 고난도 구역으로 임시 배치; 원작 4구역 재현은 미완료.')
+add_map('albino_04',ALBINO[2],'알비노 데몬','albino',91,'cone',note='프로젝트 알비노 4구역과 대응하는 확정 원작 몬스터 목록 자료 부족. 3구역 확인 몬스터를 로컬 고난도 구역으로 임시 배치; 원작 4구역 재현은 미완료.')
 add_map('domination_summit',['데스나이트','흑장로','정예 다크엘프','지룡의 정예병'],'그림 리퍼','legacy',90,'summon',
         note='그림 리퍼 정상 보스와 기존 지형 보존. 일반 몬스터의 정확한 정상 출현 근거는 미확인.')
 

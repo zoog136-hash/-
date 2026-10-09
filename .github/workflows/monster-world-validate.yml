@@ -8,6 +8,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: read
+
 concurrency:
   group: monster-world-${{ github.ref }}
   cancel-in-progress: true
@@ -49,6 +53,7 @@ jobs:
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-crowd-render.log; then exit 1; fi
           grep -q COMBAT_CROWD_RENDER_OK test-results/monster-crowd-render.log
       - name: Upload exact-sha logs and OpenGL review evidence
+        id: review_upload
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -58,3 +63,93 @@ jobs:
             ${{ runner.temp }}/monster-world-render/**/monster-world-review/
             ${{ runner.temp }}/monster-crowd-render/**/combat-crowd-review/
           if-no-files-found: error
+      - name: Persist source-labelled unedited review files on the feature branch
+        if: success() && github.event_name == 'pull_request' && github.head_ref == 'feature/twilight-monster-world-overhaul-20261009' && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+          TESTED_SHA: ${{ github.sha }}
+          REVIEW_RUN: ${{ github.run_id }}
+          ARTIFACT_ID: ${{ steps.review_upload.outputs.artifact-id }}
+          ARTIFACT_URL: ${{ steps.review_upload.outputs.artifact-url }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json, os, shutil, struct, hashlib, subprocess
+          output = Path(os.environ["RUNNER_TEMP"]) / "twilight-monster-evidence-export"
+          output.mkdir(exist_ok=True)
+          region_root = next((Path(os.environ["RUNNER_TEMP"]) / "monster-world-render").rglob("monster-world-review"))
+          crowd_root = next((Path(os.environ["RUNNER_TEMP"]) / "monster-crowd-render").rglob("combat-crowd-review"))
+          render = json.loads((region_root / "render-summary.json").read_text())
+          perf = json.loads((crowd_root / "performance.json").read_text())
+          assert len(render["maps"]) == 25 and len(render["dense"]) == 4 and len(render["bosses"]) == 10
+          assert sum(page["count"] for page in render["gallery"]) == 318
+          assert all(entry["auto_kills"] > 0 and entry["restored"] == 24 for entry in render["dense"])
+          selected = ["map-aden_world.png", "dense-aden_world.png", "dense-auto-oman_03.png",
+                      "dense-oman_07.png", "boss-oman_01.png", "boss-oman_08.png", "boss-oman_10.png",
+                      "map-faith_03.png", "map-escaros_01.png", "map-albino_02.png",
+                      "catalog-01-attack.png", "catalog-04-walk.png"]
+          pngs = sorted(region_root.glob("*.png")) + sorted(crowd_root.glob("*.png"))
+          assert len(pngs) == 106
+          hashes = {}
+          for image in pngs:
+              data = image.read_bytes()
+              assert data[:8] == b"\x89PNG\r\n\x1a\n"
+              assert struct.unpack(">II", data[16:24]) == (1280, 720)
+              hashes[image.name] = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+              if image.name in selected or image.name.startswith("crowd-"):
+                  shutil.copyfile(image, output / image.name)
+          for path in [region_root / "render-summary.json", crowd_root / "performance.json"]:
+              shutil.copyfile(path, output / path.name)
+          shutil.copytree(Path("test-results"), output / "logs", dirs_exist_ok=True)
+          meta = {
+              "branch": "feature/twilight-monster-world-overhaul-20261009",
+              "source_head": os.environ["EXPECTED_HEAD"],
+              "tested_checkout": os.environ["TESTED_SHA"],
+              "tested_tree": subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip(),
+              "run_url": "https://github.com/zoog136-hash/-/actions/runs/" + os.environ["REVIEW_RUN"],
+              "artifact_id": os.environ["ARTIFACT_ID"], "artifact_url": os.environ["ARTIFACT_URL"],
+              "png_count": 106, "all_png_hashes": hashes,
+              "regression": "50/50 passed; previous workflow step exited successfully",
+              "note": "Unedited actual OpenGL captures; gallery and crowd use controlled QA conditions."
+          }
+          (output / "evidence.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n")
+          rows = ["| 개체 | 프레임 중앙값 ms | 프레임 p95 ms | 물리 p95 ms | NPC 타격 | 플레이어 타격 |",
+                  "| --- | --- | --- | --- | --- | --- |"]
+          for sample in perf["samples"]:
+              rows.append("| {population} | {median_ms} | {p95_ms} | {physics_p95_ms} | {monster_released_hits} | {player_landed_hits} |".format(**sample))
+          before = "| 32 | 57.705 | 104.685 | 7.216 |\n| 96 | 98.216 | 151.024 | 9.059 |\n| 192 | 155.713 | 201.896 | 14.405 |"
+          text = "# 실제 검증 증거\n\n"
+          text += "코드 HEAD: " + meta["source_head"] + "\n\n검사 checkout: " + meta["tested_checkout"] + "\n\n"
+          text += "검사 tree: " + meta["tested_tree"] + "\n\n"
+          text += "[GitHub Actions 실행](" + meta["run_url"] + ") · [전체 PNG/로그 ZIP](" + meta["artifact_url"] + ")\n\n"
+          text += "실제 Godot 4.7.2 전체 회귀 **50/50 통과**. 25개 맵, 폭젠 4곳 AUTO 처치·24마리 복구, 오만 보스 10종, 전체 318종의 다섯 상태를 실제 Compatibility OpenGL에서 실행했습니다. 지역/폭젠/보스/갤러리 103장과 군집 3장, 총 **106장**이 생성됐습니다. PNG 원본은 편집하지 않았으며 전체 해시는 evidence.json에 있습니다.\n\n"
+          text += "이 증거를 기록한 뒤 자동 문서 커밋만 브랜치에 추가됩니다. 검사한 코드는 위 HEAD/checkout으로 구별하며 문서 커밋을 다시 실행한 게임 검사로 주장하지 않습니다.\n\n"
+          text += "## 현재 고밀도 전투\n\nGPU: " + perf["adapter"] + ". 120프레임 워밍업 뒤 240프레임을 측정했습니다. HP/AC/공격 유형을 제어한 QA 전투이며 일반 플레이 밸런스 검사가 아닙니다.\n\n"
+          text += "\n".join(rows) + "\n\n"
+          text += "세 경우 모두 실제 양방향 피해가 발생했고 투사체/VFX 풀이 반환됐으며 orphan 개체는 0입니다. 소프트웨어 GL 수치를 실제 PC/Android GPU의 60FPS 보장으로 해석하지 않습니다. 고밀도 렌더링 비용과 지역별 일반 플레이 밸런스는 추가 확인 대상입니다.\n\n"
+          text += "## 셰이더 변경 전 비교\n\n이전 코드 89ec40e, [실제 이전 실행](https://github.com/zoog136-hash/-/actions/runs/37903218088)의 같은 Monster World 군집 검사입니다. 러너 간 하드웨어/부하 차이가 있으므로 단독 변경의 정밀 인과 측정으로 보지 않습니다.\n\n| 개체 | 중앙값 ms | p95 ms | 물리 p95 ms |\n| --- | --- | --- | --- |\n" + before + "\n\n"
+          text += "## 원본 캡처\n\n"
+          for name in selected + ["crowd-32.png", "crowd-96.png", "crowd-192.png"]:
+              text += "- [" + name + "](" + name + ")\n"
+          text += "\n종별 상세는 ../MONSTER_SPECIES.md, 좌표·보스 설정은 ../MONSTER_SPAWN_TABLES.md, 미확인/추정 범위는 ../MONSTER_WORLD_SOURCES.md를 참고합니다. 계열 원화 공유·독립 8시점 프레임·일부 원작 지역/보스 기술 고증은 여전히 미완료이며 전면 완료로 주장하지 않습니다.\n"
+          (output / "VALIDATION.md").write_text(text, encoding="utf8")
+          print("PERSIST_EVIDENCE_SOURCE", json.dumps({k:v for k,v in meta.items() if k != "all_png_hashes"}))
+          for name in selected + ["crowd-32.png", "crowd-96.png", "crowd-192.png"]:
+              print("PERSIST_CAPTURE", name, hashes[name]["bytes"], hashes[name]["sha256"])
+          PY
+          REVIEW_BRANCH='feature/twilight-monster-world-overhaul-20261009'
+          REVIEW_EXPORT="$RUNNER_TEMP/twilight-monster-evidence-export"
+          REMOTE_HEAD=$(git ls-remote origin "refs/heads/$REVIEW_BRANCH" | cut -f1)
+          if [[ "$REMOTE_HEAD" != "$EXPECTED_HEAD" ]]; then
+            echo 'Branch advanced; complete evidence remains in the Actions artifact.'
+            exit 0
+          fi
+          git fetch origin "refs/heads/$REVIEW_BRANCH"
+          git checkout -b twilight-monster-evidence FETCH_HEAD
+          cp -R "$REVIEW_EXPORT/." docs/monster-world-evidence/
+          git add docs/monster-world-evidence/
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'docs: persist actual monster world review evidence [skip ci]'
+          git push origin "HEAD:refs/heads/$REVIEW_BRANCH"
