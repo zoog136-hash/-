@@ -65,7 +65,7 @@ func _build() -> void:
 			listing.add_item("%s  ×%d" % [str(entry.get("name","")),int(entry.get("count",0))])
 		else:
 			listing.add_item("%s  +%d%s" % [
-				str(entry.get("name","")),int(entry.get("level",0)),
+				str(entry.get("name","")) + (" [ID:%s]" % str(entry.get("instance_id", "")) if str(entry.get("instance_id", "")) != "" else ""), int(entry.get("level",0)),
 				"  [장착]" if bool(entry.get("equipped",false)) else ""
 			])
 	if values.is_empty():
@@ -104,6 +104,6 @@ func _execute() -> void:
 		if int(hud.lineage_inventory_ui.inventory.get(item,0)) > 0:
 			hud.inventory_item_activated.emit(item)
 	else:
-		var target := str(entry.get("name",""))
+		var target := str(entry.get("target_id", entry.get("name","")))
 		if target != "":
 			hud.enhancement_requested.emit(scroll_name,target)
