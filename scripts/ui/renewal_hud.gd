@@ -8,6 +8,7 @@ const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
+const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
 var workspace: PanelContainer
@@ -30,6 +31,7 @@ var collection_slot_filter: OptionButton
 var collection_status: Label
 var skills_view: VBoxContainer
 var region_selection: ItemList
+var quest_view: Control
 
 func _ready() -> void:
 	super._ready()
@@ -68,6 +70,8 @@ func _build_lineage_side_ui() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
+	if is_instance_valid(quest_view):
+		quest_view.call("refresh",value)
 	if lineage_inventory_ui!=null:
 		var view := value.duplicate(true)
 		var weight: float=0
@@ -390,6 +394,12 @@ func open_shop() -> void:
 	var shop := ShopUI.new()
 	workspace.mount(shop)
 	shop.configure(self)
+
+func open_quest_info() -> void:
+	_open_window("quest","퀘스트","기존 게임의 사냥 퀘스트 진행도")
+	quest_view = QuestUI.new()
+	workspace.mount(quest_view)
+	quest_view.call("configure",self)
 
 func toggle_inventory() -> void:
 	if active_section=="inventory" and workspace.visible:
