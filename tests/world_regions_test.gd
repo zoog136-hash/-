@@ -55,13 +55,15 @@ func _run() -> void:
 		var cache: SubViewport = world.field_renderer.landmark_cache
 		check(cache != null and cache.size.x*cache.size.y*4 <= 5*1024*1024,id+" active-map art cache stays within 5 MiB")
 		var count: int = 0
+		var eager_count: int = 0
 		for region: Dictionary in field.data["monster_spawn"]:
 			count += int(region["max_count"])
+			if str(region.get("mode","normal"))!="dense": eager_count += int(region["max_count"])
 			check(not field.spawn_cells[str(region["id"])].is_empty(),id+" nonempty connected spawn area "+str(region["id"]))
 			for i: int in range(8):
 				var p: Vector2 = field.sample_spawn(str(region["id"]),rng)
 				check(p.is_finite() and field.walkable(p) and field.point_clear(p) and not field.is_safe(p),id+" valid monster spawn")
-		check(world.monsters_root.get_child_count()==count,id+" population matches region caps")
+		check(world.monsters_root.get_child_count()==eager_count and world.field_population.slots.size()==count,id+" ordinary population fills caps; distant dense slots stay dormant")
 		for monster: TwilightMonster in world.monsters_root.get_children():
 			var slot: Dictionary = world.field_population.slots[int(monster.get_meta("field_slot"))]
 			var levels: Array = slot["region"]["level"]
@@ -103,7 +105,7 @@ func _run() -> void:
 		world.player.camera.zoom=Vector2.ONE*.78
 		check(COORD.minimap_to_world(COORD.world_to_minimap(spawn,field.bounds,world.field_minimap.area),field.bounds,world.field_minimap.area).distance_to(spawn)<.01,id+" minimap round trip")
 		check(world.use_field_portal("advance_waystone"),id+" intra-map teleport accepted")
-		check(world.field_map==field and world.monsters_root.get_child_count()==count,id+" local teleport preserves map/population")
+		check(world.field_map==field and world.monsters_root.get_child_count()==eager_count,id+" local teleport preserves map/population")
 		check(field.walkable(world.player.global_position) and field.point_clear(world.player.global_position),id+" local teleport clear landing")
 		check(world.use_field_portal("entry_waystone"),id+" local teleport returns to entry")
 		world._set_click_destination(spawn+Vector2(96,0))

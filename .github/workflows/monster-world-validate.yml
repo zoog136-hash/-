@@ -1,0 +1,60 @@
+name: Monster World Validate
+
+on:
+  push:
+    branches: ['feature/twilight-monster-world-overhaul-20261009']
+    paths-ignore: ['docs/**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: monster-world-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2 and software OpenGL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Reproducible catalog and all regressions
+        run: |
+          python3 tools/build_monster_world.py
+          git diff --exit-code -- data/monsters/monster_world_catalog.json data/monsters/world_spawn_profiles.json
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
+      - name: Actual OpenGL regions, AUTO dense hunts, bosses, all species poses
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/monster-world-render"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_monster_world.gd 2>&1 | tee test-results/monster-world-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-world-render.log; then exit 1; fi
+          grep -q MONSTER_WORLD_RENDER_OK test-results/monster-world-render.log
+      - name: Actual 32, 96, 192 creature combat and movement
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/monster-crowd-render"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/monster-crowd-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-crowd-render.log; then exit 1; fi
+          grep -q COMBAT_CROWD_RENDER_OK test-results/monster-crowd-render.log
+      - name: Upload exact-sha logs and OpenGL review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monster-world-review-${{ github.sha }}
+          path: |
+            test-results/
+            ${{ runner.temp }}/monster-world-render/**/monster-world-review/
+            ${{ runner.temp }}/monster-crowd-render/**/combat-crowd-review/
+          if-no-files-found: error

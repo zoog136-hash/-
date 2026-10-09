@@ -14,6 +14,8 @@ const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
+const MONSTER_CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
+const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
@@ -38,6 +40,8 @@ var combat_corpses: Node2D = null
 var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
+var combat_hud_dirty: bool = false
+var combat_hud_clock: float = 0.0
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -274,6 +278,11 @@ func _process(delta: float) -> void:
 	# chosen. Otherwise a default-class save can silently bypass creation.
 	if bool(hud.get("class_picker_initial")):
 		return
+	combat_hud_clock = maxf(0.,combat_hud_clock-delta)
+	if combat_hud_dirty and combat_hud_clock<=0.:
+		combat_hud_dirty = false
+		combat_hud_clock = .25
+		_update_hud()
 	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	auto_repath_timer = maxf(0.0, auto_repath_timer - delta)
 	if player.auto_enabled and player.global_position.distance_squared_to(auto_last_position) < 1.0:
@@ -366,6 +375,7 @@ func _load_data() -> void:
 	if db_value is Dictionary:
 		game_db = db_value as Dictionary
 	monster_db = game_db.get("몬스터", []) as Array
+	monster_db = MONSTER_CATALOG.expand(monster_db)
 	item_db = game_db.get("아이템", []) as Array
 	for item_index: int in range(item_db.size() - 1, -1, -1):
 		var item_value: Variant = item_db[item_index]
@@ -875,7 +885,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		shape.queue_free()
 	if not requested_field.is_empty():
 		field_map = FIELD_SCRIPT.new()
-		field_map.configure(requested_field)
+		field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
 		astar = field_map.astar
 		field_physics = field_map.build_physics(self)
 		map_background.texture = null
@@ -1103,6 +1113,8 @@ func _spawn_monsters(count: int) -> void:
 		monster.selected.connect(_select_monster)
 
 func _monster_texture(record: Dictionary) -> Texture2D:
+	var original_art: Texture2D = MONSTER_ART.texture_for(record)
+	if original_art != null: return original_art
 	var monster_name: String = str(record.get("name", ""))
 	var visual_index: int = 5
 	if monster_name.contains("뱀") or monster_name.contains("드레이크") or monster_name.contains("용") or monster_name.contains("리자드"):
@@ -1790,6 +1802,12 @@ func _update_target_hud() -> void:
 		hud.clear_target()
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	if bool(monster.get_meta("summoned",false)):
+		# Bounded boss helpers cannot become an unlimited XP/equipment farm.
+		if monster==selected_monster: selected_monster = null
+		if monster==auto_target: auto_target = null
+		if is_instance_valid(combat_corpses): monster.reparent(combat_corpses,true)
+		return
 	_try_trigger_passives("on_kill", monster)
 	if field_map != null:
 		field_population.release(monster)
@@ -1810,6 +1828,9 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 		monster.reparent(combat_corpses, true)
 	_update_hud()
 	call_deferred("_ensure_monster_count")
+
+func recycle_monster(monster: TwilightMonster) -> bool:
+	return field_population!=null and field_population.recycle(monster)
 
 func _ensure_monster_count() -> void:
 	if field_map != null:
@@ -2007,7 +2028,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 		_try_active_counterattack(attacker, normalized_type, reduced)
 	if attacker.dead:
 		player.show_received_damage(reduced, critical, normalized_type, attacker.combat_hit_position())
-		_update_hud()
+		_refresh_combat_hud()
 		return
 	if hp > 0:
 		_try_trigger_passives("on_damaged", attacker)
@@ -2133,7 +2154,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 			])
 	if hp <= 0:
 		_respawn_player("사망 후 부활했습니다")
-	_update_hud()
+	_refresh_combat_hud()
 
 func _stat_points_for_level_up(new_level: int) -> int:
 	# Every level-up grants one allocatable point so the stat-growth screen is
@@ -2970,6 +2991,13 @@ func _update_hud() -> void:
 	elif hud.has_method("set_quickslot_entries"):
 		hud.call("set_quickslot_entries", quickslots)
 
+func _refresh_combat_hud() -> void:
+	# HP/MP bars update on the hit. Rebuilding equipment IDs, quickslot icons and
+	# the full character sheet for every crowd strike is unnecessary; coalesce
+	# that presentation work while keeping all combat/stat formulas unchanged.
+	hud.update_player(level,hp,_effective_max_hp(),mp,_effective_max_mp(),experience,exp_need,gold)
+	combat_hud_dirty = true
+
 func _save_game(quiet: bool) -> void:
 	_sync_item_instances()
 	var data: Dictionary = {
@@ -2997,6 +3025,7 @@ func _save_game(quiet: bool) -> void:
 		"gold": gold,
 		"inventory": inventory,
 		"ground_drops": _ground_drops_snapshot(),
+		"monster_world": field_population.export_state(),
 		"class_index": class_index,
 		"job_class": job_class,
 		"quickslots": quickslots,
@@ -3124,6 +3153,10 @@ func _load_game(quiet: bool) -> void:
 	var map_id: String = str(data.get("map_id", active_map_id))
 	if not maps_by_id.has(map_id):
 		map_id = active_map_id
+	# Capture outgoing actors before importing; otherwise map teardown could
+	# overwrite the loaded boss snapshot with the pre-load HP/cooldown.
+	field_population.configure(self,null)
+	field_population.import_state(data.get("monster_world",{}))
 	_set_map(map_id, false)
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])

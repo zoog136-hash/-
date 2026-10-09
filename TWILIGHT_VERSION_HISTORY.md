@@ -11,6 +11,7 @@
 | 통합 5 | 구버전 저장 이전, 손상 파일 오류 처리; `d923aa2`; PR #30 | 47/47 회귀 및 렌더 검사 |
 | 플레이테스트 | 도감 임시 아이템·주문서 지급, 시작 아데나 1억, 공통 창 드래그; PR #32, `455a5f1` | 48/48 회귀, UI 68장, Windows 부팅 검증 |
 | Android | Android ARM64 디버그 APK, Godot 4.7.2 export preset 및 ETC2/ASTC 설정; 원본 `2157cb3` | APK 제작/검사 성공. 기기 실사용 미확인 |
+| 몬스터 월드 후보 | `feature/twilight-monster-world-overhaul-20261009`, 기준 `82dbbdb` | 25개 맵·별도 폭젠·보스 상태 저장. [범위·미완료·검증](docs/MONSTER_WORLD_IMPLEMENTATION.md). main 미병합 |
 
 ## 검증 근거
 - [Stage 5 Integration CI](https://github.com/zoog136-hash/-/actions/runs/37872771613): 47/47.

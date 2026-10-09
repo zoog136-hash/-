@@ -88,15 +88,18 @@ func _run() -> void:
 		for i: int in range(24):
 			var p: Vector2 = field.sample_spawn(str(region["id"]),random)
 			check(field.walkable(p) and field.point_clear(p) and not field.is_safe(p),"spawn validity: "+str(region["id"]))
-	check(world.monsters_root.get_child_count()==81,"region max population")
+	var eager_count: int = 0
+	for region: Dictionary in field.data.monster_spawn:
+		if str(region.get("mode","normal"))!="dense": eager_count += int(region.max_count)
+	check(world.monsters_root.get_child_count()==eager_count,"ordinary population; distant dense slots dormant")
 	var respawn_slot: Dictionary = world.field_population.slots[0]
 	var original_monster: TwilightMonster = respawn_slot["monster"]
 	var original_id: int = original_monster.get_instance_id()
 	original_monster.take_damage(999999)
-	check(world.monsters_root.get_child_count()==80,"death reduces population until respawn timer")
+	check(world.monsters_root.get_child_count()==eager_count-1,"death reduces population until respawn timer")
 	check(float(respawn_slot["remaining"])>0,"authored respawn delay")
 	world.field_population._process(float(respawn_slot["remaining"])+.01)
-	check(world.monsters_root.get_child_count()==81,"delayed respawn restores region cap")
+	check(world.monsters_root.get_child_count()==eager_count,"delayed respawn restores region cap")
 	check((respawn_slot["monster"] as Node).get_instance_id()!=original_id,"new spawn belongs to released slot")
 	for monster: TwilightMonster in world.monsters_root.get_children():
 		monster.set_physics_process(false)
@@ -152,7 +155,7 @@ func _run() -> void:
 	check(world.player.collision_mask==4,"tower field collision configuration")
 	check(world.use_field_portal("aden_return"),"tower has an authored usable return portal")
 	check(world.active_map_id=="aden_world" and world.field_map!=null,"portal returns to Aden")
-	check(world.monsters_root.get_child_count()==81,"fresh map population after return")
+	check(world.monsters_root.get_child_count()==eager_count,"fresh map population after return")
 	check(world.field_renderer.visible_props<1000,"streaming limits instantiated props")
 	check(world.field_renderer.chunks.size()<25,"streaming limits active chunks")
 	# Large foreground foliage must fade while the actor is behind its canopy.

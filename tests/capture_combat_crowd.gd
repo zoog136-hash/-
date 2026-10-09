@@ -5,6 +5,8 @@ const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 ## Diagnostic populations use real AI, hit signals, AUTO, projectiles and existing art.
 ## Controlled HP avoids deaths changing the population during a short sample.
 const OUTPUT = "user://combat-crowd-review"
+const WARMUP_FRAMES: int = 120
+const SAMPLE_FRAMES: int = 240
 var failed: bool = false
 
 func _initialize() -> void: call_deferred("_run")
@@ -47,11 +49,24 @@ func _run() -> void:
 		world.mp = 999999
 		var hits: Array[int] = [0]
 		for index: int in range(population):
-			var record: Dictionary = {"name":"군집 검증 " + str(index), "hp":999999, "atk":3,
-				"lv":1, "ac":0, "attack_type":["melee", "ranged", "magic"][index % 3]}
+			# Same first 38 original DB species exist in the baseline checkout.
+			# Controlled HP/stats keep the population fixed; appearance and attack
+			# cadence/rigs are the actual runtime catalog, not placeholder art.
+			var record: Dictionary = (world.monster_db[index%38] as Dictionary).duplicate(true)
+			record.merge({"hp":999999,"atk":3,"lv":1,"ac":0,
+				"attack_type":["melee","ranged","magic"][index%3]},true)
+			if record.has("ai"):
+				record.ai = {"aggressive":true,"aggro_radius":600,"leash_distance":900}
 			var mob: TwilightMonster = load("res://scenes/Monster.tscn").instantiate()
 			world.monsters_root.add_child(mob)
 			mob.setup(record, world.player, world, world._monster_texture(record))
+			mob.attack_cooldown = mob.attack_interval*float(index)/float(population)
+			# Synthetic alternating combat modes intentionally use matching visual
+			# weapons for crowd QA while retaining each species body and intervals.
+			var rig: Node = mob.get("species_visual")
+			if is_instance_valid(rig):
+				rig.visual = rig.visual.duplicate(true)
+				rig.visual.weapon = ["sword","bow","staff"][index%3]
 			var angle: float = TAU * float(index) / float(population)
 			mob.global_position = point + Vector2.from_angle(angle) * (45.0 + float(index % 6) * 38.0)
 			mob.home_position = mob.global_position
@@ -65,10 +80,10 @@ func _run() -> void:
 		var physics_times: Array[float] = []
 		var peak_flights: int = 0
 		var peak_nodes: int = 0
-		for frame: int in range(180):
+		for frame: int in range(WARMUP_FRAMES+SAMPLE_FRAMES):
 			var start: int = Time.get_ticks_usec()
 			await process_frame
-			if frame >= 30:
+			if frame >= WARMUP_FRAMES:
 				times.append(float(Time.get_ticks_usec() - start) / 1000.0)
 				process_times.append(Performance.get_monitor(Performance.TIME_PROCESS) * 1000.0)
 				physics_times.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0)

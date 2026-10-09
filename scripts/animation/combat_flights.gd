@@ -13,11 +13,12 @@ var visual_limit: int = 64
 func _ready() -> void:
 	set_physics_process(false)
 
-func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, speed: float = 1100.0, delay: float = 0.0) -> void:
+func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, speed: float = 1100.0, delay: float = 0.0, options: Dictionary = {}) -> void:
 	if not is_instance_valid(target): return
 	var record: Dictionary = available.pop_back() if not available.is_empty() else {}
 	record.merge({"position":origin, "previous":origin, "target":weakref(target), "kind":kind,
 		"callback":impact, "speed":speed, "age":-maxf(0.0, delay)})
+	record.merge(options,true)
 	flights.append(record)
 	set_physics_process(true)
 
@@ -55,9 +56,17 @@ func _physics_process(delta: float) -> void:
 			_retire(i)
 			continue
 		var end: Vector2 = target.combat_hit_position() if target.has_method("combat_hit_position") else target.global_position + Vector2(0, -24)
+		if flight.has("aim"): end = flight.aim
 		flight.previous = flight.position
 		flight.position = (flight.position as Vector2).move_toward(end, float(flight.speed) * delta)
+		var obstruction: Callable = flight.get("obstruction",Callable())
+		if obstruction.is_valid() and not obstruction.call(flight.previous,flight.position):
+			_retire(i)
+			continue
 		if (flight.position as Vector2).distance_squared_to(end) <= 0.25:
+			if flight.has("aim") and end.distance_to(target.combat_hit_position())>float(flight.get("hit_radius",28.)):
+				_retire(i)
+				continue
 			var callback: Callable = _retire(i)
 			resolved_count += 1
 			if callback.is_valid(): callback.call()
@@ -71,7 +80,7 @@ func _draw() -> void:
 		var tip: Vector2 = to_local(flight.position)
 		var direction: Vector2 = (flight.position as Vector2) - (flight.previous as Vector2)
 		direction = direction.normalized()
-		var color: Color = Color(0.5, 0.75, 1.0) if flight.kind == "magic" else Color(1.0, 0.85, 0.5)
+		var color: Color = flight.get("color",Color(0.5, 0.75, 1.0) if flight.kind == "magic" else Color(1.0, 0.85, 0.5))
 		draw_line(tip - direction * 18.0, tip, color, 2.0, true)
 		if flight.kind == "magic": draw_circle(tip, 3.5, color)
 		else:
