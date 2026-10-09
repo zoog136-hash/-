@@ -61,13 +61,30 @@ jobs:
           set -euo pipefail
           timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { echo "IMPORT_FAILED"; tail -n 100 /tmp/import-android.txt; exit 1; }
           echo "ANDROID_IMPORT_DONE"
-      - name: Configure Android export settings
+      - name: Configure Android SDK in Godot editor settings
         shell: bash
         run: |
           set -euo pipefail
-          timeout 75 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --script /tmp/config-editor.gd > /tmp/android-settings.txt 2>&1 || { echo "SETTINGS_FAILED"; tail -n 100 /tmp/android-settings.txt; exit 1; }
-          cat /tmp/android-settings.txt
-          echo "ANDROID_SETTINGS_DONE"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,re
+          p=Path.home()/'.config/godot/editor_settings-4.tres'
+          p.parent.mkdir(parents=True,exist_ok=True)
+          data=p.read_text() if p.exists() else '[gd_resource type="EditorSettings" format=3]\n\n[resource]\n'
+          if '[resource]' not in data:
+              data+='\n[resource]\n'
+          for key,value in [('export/android/android_sdk_path',os.environ['ANDROID_HOME']),('export/android/java_sdk_path',os.environ['JAVA_HOME'])]:
+              entry=key+' = "'+value.replace('\\','/')+'"'
+              reg=r'^'+re.escape(key)+r'\s*=.*$'
+              if re.search(reg,data,re.M):
+                  data=re.sub(reg,lambda _:entry,data,flags=re.M)
+              else:
+                  data+='\n'+entry+'\n'
+          p.write_text(data)
+          print('EDITOR_CONFIG_OK',p, 'bytes',p.stat().st_size)
+          for line in data.splitlines():
+              if line.startswith('export/android/'):print(line)
+          PY
       - name: Build and inspect APK
         shell: bash
         run: |
