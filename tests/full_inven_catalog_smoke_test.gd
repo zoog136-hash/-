@@ -64,6 +64,22 @@ func _run() -> void:
 		total_originals += source_count
 		check(source_count == int(expected[category]), category + " all source records visible: " + str(source_count))
 	check(total_originals == 2852, "2,852 entries ingested")
+	var hud: Node = world.get("hud") as Node
+	hud.call("open_catalog", "아이템")
+	check(str(hud.get("item_slot_filter")) == "all", "all original item types accessible without slot filter")
+	var staff: Dictionary = world.call("_source_catalog_record", "아이템", {"name":"기르타스의 지팡이"})
+	check((staff.get("sourceOptions", []) as Array).size() >= 17, "original Giltas staff has over 16 source options")
+	hud.set("catalog_category", "아이템")
+	hud.set("catalog_results", [staff])
+	hud.call("_on_catalog_item_selected", 0)
+	var full_description: String = str((hud.get("catalog_detail") as RichTextLabel).text)
+	for raw_opt: Variant in staff.get("sourceOptions", []) as Array:
+		var text_option: String = str(raw_opt)
+		if text_option.contains("손상") or text_option.contains("저주"):
+			continue
+		check(full_description.contains(text_option.replace("PVP", "PVE").replace("PvP", "PvE")),
+			"catalog UI truncated source option: " + text_option)
+
 	check(original_options >= 9500, "9,600 original options preserved")
 	check(numeric_keys > 1500, "numeric passive normalization coverage")
 	print("INVEN_CATALOG_AUDIT source_records=" + str(total_originals) + " raw_options=" + str(original_options) + " typed_stats=" + str(numeric_keys))
