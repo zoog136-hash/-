@@ -154,6 +154,8 @@ func try_use(item_name: String) -> bool:
 			_use_half_elixir(item_name, spec)
 		"element":
 			_use_elemental_scroll(item_name, spec)
+		"element_change", "element_reset":
+			_use_element_management_scroll(item_name, spec)
 	return true
 
 func _message(value: String) -> void:
@@ -354,6 +356,52 @@ func _use_elemental_scroll(item_name: String, spec: Dictionary) -> void:
 		return
 	_select_option(item_name, candidates, "element", str(spec.get("element", "")) == "")
 
+func _use_element_management_scroll(item_name: String, spec: Dictionary) -> void:
+	world.call("_sync_item_instances")
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	var candidates: Array[String] = []
+	for key: Variant in instances.keys():
+		var id: String = str(key)
+		var entry: Dictionary = instances[key] as Dictionary
+		var name_value: String = str(entry.get("name", ""))
+		if int(entry.get("element_level", 0)) <= 0 or int((world.get("inventory") as Dictionary).get(name_value, 0)) <= 0:
+			continue
+		if str(world.call("_enhancement_kind_for_record", world.call("_find_catalog_item_record", name_value))) == "weapon":
+			candidates.append(name_value + "@@@" + id)
+	candidates.sort()
+	if candidates.is_empty():
+		_message("속성 강화된 무기가 없습니다")
+		return
+	var kind: String = str(spec.get("kind", ""))
+	_select_option(item_name, candidates, kind, kind == "element_change")
+
+func apply_element_management(scroll_name: String, weapon_reference: String, new_element: String = "") -> void:
+	var spec: Dictionary = RULES.definition(scroll_name)
+	var kind: String = str(spec.get("kind", ""))
+	if not kind in ["element_change", "element_reset"]:
+		return
+	var selection: Dictionary = world.call("_parse_enhancement_target", weapon_reference)
+	var item_id: String = str(selection.get("id", ""))
+	var item_name: String = str(selection.get("name", ""))
+	var inventory: Dictionary = world.get("inventory") as Dictionary
+	var instances: Dictionary = world.get("item_instances") as Dictionary
+	if not instances.has(item_id) or int(inventory.get(scroll_name, 0)) <= 0 or int(inventory.get(item_name, 0)) <= 0:
+		return
+	var item: Dictionary = instances[item_id] as Dictionary
+	if str(item.get("name", "")) != item_name or int(item.get("element_level", 0)) <= 0:
+		return
+	if kind == "element_change":
+		if not RULES.ELEMENT_NAMES.has(new_element) or new_element == str(item.get("element", "")):
+			_message("기존 속성과 다른 속성을 선택하세요")
+			return
+		item["element"] = new_element
+	else:
+		item["element"] = ""
+		item["element_level"] = 0
+	instances[item_id] = item
+	_consume(scroll_name)
+	_message("%s [%s] 속성 %s" % [item_name, item_id, "변경 완료" if kind == "element_change" else "초기화 완료"])
+
 func _select_option(item_name: String, candidates: Array[String], purpose: String, choose_element: bool) -> void:
 	if candidates.is_empty():
 		return
@@ -394,6 +442,11 @@ func _select_option(item_name: String, candidates: Array[String], purpose: Strin
 				if choose_element and element_selector != null:
 					element_code = ["fire", "water", "earth", "wind"][element_selector.selected]
 				apply_element_scroll(item_name, candidate, element_code)
+			elif purpose in ["element_change", "element_reset"]:
+				var new_element: String = ""
+				if choose_element and element_selector != null:
+					new_element = ["fire", "water", "earth", "wind"][element_selector.selected]
+				apply_element_management(item_name, candidate, new_element)
 		dialog.queue_free()
 	)
 	dialog.canceled.connect(func() -> void: dialog.queue_free())
