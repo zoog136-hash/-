@@ -95,7 +95,15 @@ func _spawn_slot(slot: Dictionary) -> void:
 		record["lv"] = int(variant.get("level",record.get("lv",1)))
 		record["hp"] = int(float(record.get("hp",100))*ratio)
 		record["atk"] = int(float(record.get("atk",10))*sqrt(ratio))
-	var monster: TwilightMonster = available.pop_back() if not available.is_empty() else world.MONSTER_SCENE.instantiate()
+	# A node queued by combat/map cleanup can still receive its last physics
+	# callback before deletion. Never cast a stale pool entry to a live actor.
+	var monster: TwilightMonster = null
+	while not available.is_empty():
+		var candidate: Variant = available.pop_back()
+		if not is_instance_valid(candidate) or candidate.is_queued_for_deletion(): continue
+		monster = candidate as TwilightMonster
+		break
+	if monster == null: monster = world.MONSTER_SCENE.instantiate()
 	if monster.get_parent() != null: monster.reparent(world.monsters_root,false)
 	else: world.monsters_root.add_child(monster)
 	monster.global_position = p
@@ -146,7 +154,10 @@ func release(monster: TwilightMonster) -> void:
 		_clear_summons(monster.get_instance_id())
 
 func recycle(monster: TwilightMonster) -> bool:
-	if not monster.dead or int(monster.get_meta("population_generation",-1))!=generation or available.size()>=MAX_POOL: return false
+	if not is_instance_valid(monster) or monster.is_queued_for_deletion(): return false
+	if not monster.dead or int(monster.get_meta("population_generation",-1))!=generation: return false
+	if available.has(monster): return true
+	if available.size()>=MAX_POOL: return false
 	monster.hide()
 	monster.set_physics_process(false)
 	monster.reparent(pool_root,false)

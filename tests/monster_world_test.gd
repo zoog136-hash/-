@@ -111,6 +111,36 @@ func _run() -> void:
 	check(map_count==25 and dense_count==4 and boss_count==27,"all maps/four dense/twenty-seven boss zones covered")
 	world._set_map("oman_10",false)
 	pause_actors()
+	# Reproduce cleanup at the corpse-return boundary. A queued actor must never
+	# enter the pool, and an already invalidated entry must not abort spawning.
+	var pool: FieldPopulation = world.field_population
+	var doomed: TwilightMonster = world.MONSTER_SCENE.instantiate()
+	pool.pool_root.add_child(doomed)
+	var doomed_record: Dictionary = world.monster_db[0]
+	doomed.setup(doomed_record,world.player,world,world._monster_texture(doomed_record))
+	doomed.dead = true
+	doomed.motion.die()
+	doomed.set_meta("population_generation",pool.generation)
+	var before_cleanup: int = pool.available.size()
+	doomed.queue_free()
+	doomed._physics_process(1.1)
+	check(not pool.recycle(doomed) and pool.available.size()==before_cleanup,"queued corpse cannot reenter pool")
+	pool.available.append(doomed) # deliberately simulate an invalidated old entry
+	await process_frame
+	await process_frame
+	var replacement_slot: Dictionary = {}
+	for slot: Dictionary in pool.slots:
+		if str(slot.region.get("mode","normal"))=="normal": replacement_slot = slot; break
+	var outgoing: TwilightMonster = replacement_slot.monster
+	pool.release(outgoing)
+	outgoing.queue_free()
+	await process_frame
+	pool._spawn_slot(replacement_slot)
+	check(is_instance_valid(replacement_slot.monster) and not replacement_slot.monster.is_queued_for_deletion(),"stale pool entry does not lose respawn")
+	var healthy_pool: bool = true
+	for candidate: Variant in pool.available:
+		healthy_pool = healthy_pool and is_instance_valid(candidate) and not candidate.is_queued_for_deletion()
+	check(healthy_pool,"available pool contains only live dormant nodes")
 	var boss_slot: Dictionary = {}
 	for slot: Dictionary in world.field_population.slots:
 		if str(slot.region.get("mode",""))=="boss": boss_slot = slot
