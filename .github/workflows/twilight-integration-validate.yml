@@ -2,9 +2,9 @@ name: TWILIGHT Integration Validate
 
 on:
   push:
-    branches: ['integration/twilight-complete-20261009']
+    branches: ['main', 'integration/twilight-complete-20261009']
   pull_request:
-    branches: ['integration/twilight-complete-20261009']
+    branches: ['main', 'integration/twilight-complete-20261009']
   workflow_dispatch:
 
 permissions:
