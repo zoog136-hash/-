@@ -2,7 +2,7 @@
 
 ## 참고한 리니지M 규칙과 주의사항
 
-- NC 공식 가이드북: https://lineagem.plaync.com/guidebook/view?title=%EC%B6%95%EB%B3%B5%20%EC%8B%9C%EC%8A%A4%ED%85%9C
+- NC 공식 가이드북: https://rc-wstatic.plaync.co.kr/lineagem/guidebook/game_system_blessing.html
 - NC 공식 확률 공개 메뉴(축복 부여 확률·축복 부여 옵션): https://probability.plaync.com/lineagem/view?probCategoryId=6a02882bbaf6a619213b5843
 - 원작 사용 방법 및 구등급 기본 축복 옵션 정리: https://jessinews.tistory.com/82
 - 원작 초기 도입/외형/제작 재료 안내: https://www.gamechosun.co.kr/webzine/article/view.php?no=143528
