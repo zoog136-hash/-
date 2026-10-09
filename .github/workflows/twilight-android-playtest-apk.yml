@@ -1,0 +1,116 @@
+name: TWILIGHT Android ARM64 APK Playtest
+
+on:
+  pull_request:
+    branches:
+      - integration/twilight-complete-20261009
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-android-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - name: Checkout isolated validated playtest
+        uses: actions/checkout@v4
+      - name: Install Godot 4.7.2 and export templates
+        shell: bash
+        run: |
+          set -euo pipefail
+          GODOT_VER=4.7.2-stable
+          curl -fL --retry 4 -o /tmp/godot-linux.zip "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VER}/Godot_v4.7.2-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot-linux.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --version
+          curl -fL --retry 4 -o /tmp/godot-templates.tpz "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VER}/Godot_v4.7.2-stable_export_templates.tpz"
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          unzip -q /tmp/godot-templates.tpz -d /tmp/godot-export-unpack
+          find /tmp/godot-export-unpack -maxdepth 2 -type f | head -n 12
+          cp -a /tmp/godot-export-unpack/templates/. "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          test -f "$HOME/.local/share/godot/export_templates/4.7.2.stable/android_debug.apk"
+      - name: Set up Android SDK and Java
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -version
+          echo "ANDROID_HOME=${ANDROID_HOME:-}" >> "$GITHUB_ENV"
+          echo "JAVA_HOME=${JAVA_HOME:-}" >> "$GITHUB_ENV"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-35" "build-tools;35.0.1" "platform-tools"
+          mkdir -p "$HOME/.android"
+          keytool -genkeypair -noprompt -validity 1000 -keyalg RSA -keysize 2048 -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keystore "$HOME/.android/debug.keystore" -storepass android -keypass android
+          cat > /tmp/config-editor.gd <<'GDSCRIPT'
+          extends SceneTree
+          func _initialize() -> void:
+              var settings = EditorInterface.get_editor_settings()
+              settings.set_setting("export/android/android_sdk_path", OS.get_environment("ANDROID_HOME"))
+              settings.set_setting("export/android/java_sdk_path", OS.get_environment("JAVA_HOME"))
+              settings.save()
+              print("ANDROID_EDITOR_SETTINGS_OK")
+              quit()
+          GDSCRIPT
+          # Android signing credentials supplied only via workflow env, not in repository.
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$HOME/.android/debug.keystore" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> "$GITHUB_ENV"
+      - name: Import Android game resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { echo "IMPORT_FAILED"; tail -n 100 /tmp/import-android.txt; exit 1; }
+          echo "ANDROID_IMPORT_DONE"
+      - name: Configure Android SDK in Godot editor settings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import os,re
+          p=Path.home()/'.config/godot/editor_settings-4.tres'
+          p.parent.mkdir(parents=True,exist_ok=True)
+          data=p.read_text() if p.exists() else '[gd_resource type="EditorSettings" format=3]\n\n[resource]\n'
+          if '[resource]' not in data:
+              data+='\n[resource]\n'
+          for key,value in [('export/android/android_sdk_path',os.environ['ANDROID_HOME']),('export/android/java_sdk_path',os.environ['JAVA_HOME'])]:
+              entry=key+' = "'+value.replace('\\','/')+'"'
+              reg=r'^'+re.escape(key)+r'\s*=.*$'
+              if re.search(reg,data,re.M):
+                  data=re.sub(reg,lambda _:entry,data,flags=re.M)
+              else:
+                  data+='\n'+entry+'\n'
+          p.write_text(data)
+          print('EDITOR_CONFIG_OK',p, 'bytes',p.stat().st_size)
+          for line in data.splitlines():
+              if line.startswith('export/android/'):print(line)
+          PY
+      - name: Build and inspect APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
+          test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
+          unzip -tqq build/TWILIGHT_ANDROID_PLAYTEST.apk
+          "$ANDROID_HOME/build-tools/35.0.1/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16
+          echo "TWILIGHT_ANDROID_APK_BUILD_OK"
+          ls -lh build/TWILIGHT_ANDROID_PLAYTEST.apk
+      - name: Upload signed Android debug APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT_ANDROID_APK_PLAYTEST_20261009
+          path: build/TWILIGHT_ANDROID_PLAYTEST.apk
+          if-no-files-found: error
+          compression-level: 0
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TWILIGHT_ANDROID_EXPORT_LOGS
+          path: |
+            /tmp/import-android.txt
+            /tmp/export-android.txt
+            /tmp/android-settings.txt
+          if-no-files-found: ignore
