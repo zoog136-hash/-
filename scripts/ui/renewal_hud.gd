@@ -82,7 +82,7 @@ func _build_lineage_side_ui() -> void:
 	lineage_side_ui.name="LineageSideUI"
 	lineage_side_ui.action_requested.connect(_on_lineage_side_action)
 	lineage_side_ui.stat_increase_requested.connect(func(value: String) -> void: stat_increase_requested.emit(value))
-	lineage_side_ui.class_selection_requested.connect(open_class_selection)
+	lineage_side_ui.connect("class_selection_requested",func() -> void: open_class_selection())
 	lineage_side_ui.equipment_requested.connect(func(item: String) -> void:
 		if active_section=="inventory": _close_workspace()
 		toggle_inventory()
