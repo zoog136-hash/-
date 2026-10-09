@@ -548,7 +548,7 @@ func open_catalog(category: String) -> void:
 	catalog_category = category
 	catalog_grade_filter = "전체"
 	item_grade_filter = "전체"
-	item_slot_filter = "weapon"
+	item_slot_filter = "all"
 	rarity_filter.select(0)
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
@@ -667,9 +667,9 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	for value: Variant in catalog_data.get(catalog_category,[]):
 		if not value is Dictionary: continue
 		var record: Dictionary = value
-		if catalog_category=="아이템" and _item_filter_group(record)!=item_slot_filter: continue
+		if catalog_category=="아이템" and item_slot_filter!="all" and _item_filter_group(record)!=item_slot_filter: continue
 		if catalog_grade_filter!="전체" and str(record.get("grade",""))!=catalog_grade_filter: continue
-		var searchable := "%s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type","")]
+		var searchable := "%s %s %s %s %s" % [record.get("name",""),record.get("grade",""),record.get("type",""),record.get("sourceId",""),record.get("desc","")]
 		if query!="" and not searchable.to_lower().contains(query): continue
 		catalog_filtered_results.append(record)
 	catalog_page=0
@@ -686,7 +686,7 @@ func _apply_catalog_page() -> void:
 		catalog_list.set_item_custom_bg_color(index,Color(color,.08))
 		var path := str(record.get("image_path",""))
 		if path!="" and ResourceLoader.exists(path): catalog_list.set_item_icon(index,load(path) as Texture2D)
-		catalog_list.set_item_tooltip(index,"%s · %s" % [grade_name,record.get("name","")])
+		catalog_list.set_item_tooltip(index,"%s · %s · 원작 ID %s" % [grade_name,record.get("name",""),record.get("sourceId","TWILIGHT")])
 	if catalog_results.is_empty():
 		catalog_detail.text="검색 조건에 맞는 기록이 없습니다."
 		catalog_equip_button.disabled=true
