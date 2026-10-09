@@ -12,7 +12,7 @@ Prior uncommitted image SHA values remain unavailable: no recovery is claimed.
 No new image generation is needed for the planned Theme/vector interface.
 `ui-renewal-assets.json` records reused image SHA-256 values.
 
-Only UI scripts/resources, the HUD scene's script reference, UI tests, UI CI,
+Only UI scripts/resources, the HUD scene/control layout, UI tests/tools, UI CI,
 and evidence/documentation may change. Gameplay/animation/map/save files must
 remain byte-identical to the base. All interaction uses the existing HUD signals.
 
@@ -48,15 +48,23 @@ displayed when supplied, without migrating or writing inventory data.
 
 ## Checkpoints
 
-1. Analysis/resource manifest: complete; engine/runtime being prepared.
-2. Common Theme and workspace: pending.
-3. HUD: pending.
-4. Inventory/character: pending.
-5. Skills/catalogs: pending.
-6. Remaining panels and integration: pending.
+1. Analysis/resource manifest: complete (`0a7e7fe`).
+2. Common Theme and workspace: complete (`052aa60`).
+3. HUD: connected; real GL screenshots captured at all four sizes.
+   Original viewport input test passes all 399 checks. Corrected shared-panel
+   reparenting and integer `wght` font axis; GUI click surfaces are preserved.
+4. Inventory/character: connected. Fresh-game inventory now reads the existing
+   quickslot snapshot; no gameplay initialization or inventory writes added.
+5. Skills/catalogs: searchable card lists connected to original signals. Item
+   catalog no longer invokes the legacy free acquisition action; only owned
+   items can be used/equipped. Native catalog touch scroll smoke test passes.
+6. Remaining panels and integration: in progress.
 7. Regression, real GL renders at 1280x720/1600x900/1920x1080/2560x1440,
    verification evidence and PR: pending.
 
 Resume from the last successful branch commit; never regenerate existing art.
+Current checkpoint: HUD, inventory, character, catalog cards, skill cards and
+current-region map are wired; finish shop/forge/quest/settings, then add full
+functional UI assertions and final screenshot checks. No new image art created.
 Image processing batches are limited to five, with SHA-256 deduplication and
 commit/tree verification. Screenshots are test evidence, not generated UI art.

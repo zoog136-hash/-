@@ -89,7 +89,10 @@ func clear() -> void:
 		child.queue_free()
 
 func mount(control: Control) -> void:
-	content.add_child(control)
+	if control.get_parent() != null:
+		control.reparent(content)
+	else:
+		content.add_child(control)
 	control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 func column() -> VBoxContainer:

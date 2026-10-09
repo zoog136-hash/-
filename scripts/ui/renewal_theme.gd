@@ -27,7 +27,11 @@ static func box(bg: Color = Color(0.035,0.045,0.055,0.96), border: Color = BRONZ
 
 static func make_theme() -> Theme:
 	var t := Theme.new()
-	t.default_font = FONT
+	var readable := FontVariation.new()
+	readable.base_font = FONT
+	# Font axes use integer OpenType tags (wght), not string keys.
+	readable.variation_opentype = {2003265652:500.0}
+	t.default_font = readable
 	t.default_font_size = 14
 	for type: String in ["Label","Button","CheckButton","LineEdit","OptionButton","ItemList"]:
 		t.set_color("font_color",type,TEXT)
@@ -90,3 +94,16 @@ static func rich(value: String) -> RichTextLabel:
 
 static func safe(value: Variant) -> String:
 	return str(value).replace("[","[lb]")
+
+static func item_icon(record: Dictionary, item_name: String, images: Dictionary) -> Texture2D:
+	var path := str(images.get(item_name,record.get("image_path","")))
+	if path!="" and ResourceLoader.exists(path): return load(path) as Texture2D
+	# Starting items do not all have an extracted catalog image. Reuse UI art.
+	var file := "bag.png"
+	if item_name.contains("물약"): file="potionRed.png"
+	elif item_name.contains("잎"): file="leaf.png"
+	elif item_name.contains("주문서"): file="quest.png"
+	elif str(record.get("slot",""))=="weapon": file="attack.png"
+	elif str(record.get("slot","")) not in ["","consumable"]: file="shield.png"
+	elif item_name in ["화살","총알"]: file="attack.png"
+	return load("res://assets/ui/"+file) as Texture2D
