@@ -55,7 +55,7 @@ func _run() -> void:
 	_check(workspace.visible,"shop window visible")
 	var listing: ItemList = workspace.find_child("ShopItems",true,false) as ItemList
 	var buy: Button = workspace.find_child("ShopBuy",true,false) as Button
-	_check(listing != null and listing.item_count >= 14,"original shop products plus blessing scroll")
+	_check(listing != null and listing.item_count >= 20,"original shop, blessing scroll and dragon items remain available")
 	if listing != null:
 		var blessing_in_shop: bool = false
 		for shop_index: int in range(listing.item_count):
