@@ -55,7 +55,14 @@ func _run() -> void:
 	_check(workspace.visible,"shop window visible")
 	var listing: ItemList = workspace.find_child("ShopItems",true,false) as ItemList
 	var buy: Button = workspace.find_child("ShopBuy",true,false) as Button
-	_check(listing != null and listing.item_count == 13,"13 original shop products")
+	_check(listing != null and listing.item_count >= 14,"original shop products plus blessing scroll")
+	if listing != null:
+		var blessing_in_shop: bool = false
+		for shop_index: int in range(listing.item_count):
+			if listing.get_item_text(shop_index).contains("축복 부여 주문서"):
+				blessing_in_shop = true
+				break
+		_check(blessing_in_shop, "equipment blessing scroll visible in shop")
 	_check(buy != null and not buy.disabled,"potion affordable")
 	# Real viewport GUI touch events (not direct _select or item_selected.emit).
 	if listing != null and listing.item_count > 1:
