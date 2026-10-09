@@ -19,6 +19,7 @@ const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
+const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -91,6 +92,8 @@ var quickslots: Array = []
 var self_mode_enabled: bool = false
 var auto_buff_check_timer: float = 0.0
 var catalog_db: Dictionary = {}
+var catalog_item_by_source_id: Dictionary = {} # stable Inven ID -> full record
+var catalog_item_variant_count: Dictionary = {} # name -> count; never dedupe rows
 var verified_catalog_options: Dictionary = {}
 var catalog_image_index: Dictionary = {}
 var directional_art: Dictionary = {}
@@ -382,6 +385,8 @@ func _load_data() -> void:
 	if catalog_items_value is Array:
 		_enrich_weapon_records(catalog_items_value as Array)
 	_merge_local_consumables_into_catalog()
+	CATALOG_GRADES.apply(catalog_db.get("아이템", []) as Array)
+	_index_catalog_item_sources()
 	_load_verified_catalog_options()
 	_normalize_option_policies()
 	_index_item_weights()
@@ -392,6 +397,24 @@ func _load_data() -> void:
 	if directional_value is Dictionary:
 		directional_art = directional_value as Dictionary
 	_build_job_classes()
+
+func _index_catalog_item_sources() -> void:
+	catalog_item_by_source_id.clear()
+	catalog_item_variant_count.clear()
+	for value: Variant in catalog_db.get("아이템", []) as Array:
+		if not (value is Dictionary):
+			continue
+		var record: Dictionary = value as Dictionary
+		var source_id: String = str(record.get("sourceId", ""))
+		var item_name: String = str(record.get("name", ""))
+		if source_id != "" and not catalog_item_by_source_id.has(source_id):
+			catalog_item_by_source_id[source_id] = record
+		if item_name != "":
+			catalog_item_variant_count[item_name] = int(catalog_item_variant_count.get(item_name, 0)) + 1
+
+func _catalog_item_from_source_id(source_id: String) -> Dictionary:
+	var source: Variant = catalog_item_by_source_id.get(source_id, {})
+	return source as Dictionary if source is Dictionary else {}
 
 func _normalize_option_policies() -> void:
 	# Single-player rule: original PvP numerical bonuses become PvE bonuses;
@@ -840,6 +863,8 @@ func _connect_signals() -> void:
 	# Optional validation tools live only in the isolated playtest HUD branch.
 	if hud.has_signal("playtest_catalog_grant_requested"):
 		hud.connect("playtest_catalog_grant_requested",_grant_playtest_catalog_item)
+	if hud.has_signal("playtest_catalog_variant_grant_requested"):
+		hud.connect("playtest_catalog_variant_grant_requested",_grant_playtest_catalog_variant)
 	if hud.has_signal("playtest_aden_grant_requested"):
 		hud.connect("playtest_aden_grant_requested",_grant_playtest_aden)
 
@@ -2249,6 +2274,31 @@ func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
 	hud.append_log("테스트 도감 지급 · %s ×%d" % [item_name,quantity])
 	_save_game(true)
 
+func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
+	var record: Dictionary = _catalog_item_from_source_id(source_id)
+	if record.is_empty() or str(record.get("name", "")) == "":
+		hud.show_message("유효하지 않은 도감 원본 ID")
+		return
+	var item_name: String = str(record.get("name", ""))
+	# Non-equipment inventory is still name-keyed: do not merge distinct
+	# source records into a counterfeit legacy item stack.
+	if _enhancement_kind_for_record(record) == "" and int(catalog_item_variant_count.get(item_name, 0)) > 1:
+		hud.show_message("동명이인 비장비 아이템은 ID별 지급 준비 중")
+		return
+	var old_ids: Dictionary = item_instances.duplicate()
+	_grant_playtest_catalog_item(item_name, amount)
+	if _enhancement_kind_for_record(record) != "":
+		for raw_id: Variant in item_instances.keys():
+			if old_ids.has(raw_id):
+				continue
+			var entry: Dictionary = item_instances[raw_id] as Dictionary
+			if str(entry.get("name", "")) != item_name:
+				continue
+			entry["record"] = record.duplicate(true)
+			entry["sourceId"] = source_id
+		# The legacy grant saved before variant metadata was attached.
+		_save_game(true)
+
 func _grant_playtest_aden() -> void:
 	gold = maxi(gold,100000000)
 	_update_hud()
@@ -2272,6 +2322,11 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		hud.call("open_enhancement", item_name, candidates)
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
+	var requested_id: String = str(selected.get("id", ""))
+	if requested_id != "" and item_instances.has(requested_id):
+		var pinned: Variant = (item_instances[requested_id] as Dictionary).get("record", {})
+		if pinned is Dictionary and not (pinned as Dictionary).is_empty():
+			record = pinned as Dictionary
 	if record.is_empty():
 		hud.show_message("아이템 DB에서 정보를 찾을 수 없습니다")
 		return
@@ -2563,6 +2618,9 @@ func _enhancement_candidates(kind: String, mode: String = "normal") -> Array:
 		if int(inventory.get(item_name, 0)) <= 0:
 			continue
 		var record: Dictionary = _find_catalog_item_record(item_name)
+		var pinned: Variant = (item_instances[instance_id] as Dictionary).get("record", {})
+		if pinned is Dictionary and not (pinned as Dictionary).is_empty():
+			record = pinned as Dictionary
 		if record.is_empty() or _enhancement_kind_for_record(record) != kind:
 			continue
 		var level_value: int = _item_instance_level(instance_id, item_name)
@@ -2622,7 +2680,10 @@ func _roll_enhancement_gain(mode: String, current_level: int) -> int:
 		return 1 if roll < 50.0 else 2
 	return 1
 
-func _find_catalog_item_record(item_name: String) -> Dictionary:
+func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dictionary:
+	if source_id != "":
+		var identified: Dictionary = _catalog_item_from_source_id(source_id)
+		return identified if str(identified.get("name", "")) == item_name else {}
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		return {}
 	var sources: Array = [catalog_db.get("아이템", []), item_db]
@@ -4319,6 +4380,11 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	_update_hud()
 
 func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "") -> void:
+	# A physical item with a source ID outranks the legacy name-only lookup.
+	if requested_id != "" and item_instances.has(requested_id):
+		var pinned: Variant = (item_instances[requested_id] as Dictionary).get("record", {})
+		if pinned is Dictionary and not (pinned as Dictionary).is_empty():
+			record = pinned as Dictionary
 	var item_name: String = str(record.get("name", "아이템"))
 	if add_to_inventory:
 		inventory[item_name] = int(inventory.get(item_name, 0)) + 1
