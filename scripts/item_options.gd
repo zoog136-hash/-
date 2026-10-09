@@ -75,7 +75,21 @@ static func weapon_size_adjustment(record: Dictionary, is_large: bool) -> int:
 		return 0
 	if record.has("large_damage") and record.has("small_damage"):
 		return int(record.get("large_damage", 0)) - int(record.get("small_damage", 0))
-	# Historical descriptions encode base weapon damage as small/large (21/13).
+	# Inven's 2,129-item source records encode the actual 54 / 35 in
+	# 'stat', or in named desc options rather than the first desc fragment.
+	var small_named: int = _description_bonus(record, "작은 대상 대미지")
+	var large_named: int = _description_bonus(record, "큰 대상 대미지")
+	if small_named > 0 and large_named > 0:
+		return large_named - small_named
+	var stat_value: String = str(record.get("stat", "")).strip_edges()
+	if stat_value.contains("/"):
+		var stat_parts: PackedStringArray = stat_value.split("/")
+		if stat_parts.size() == 2:
+			var stat_small: String = stat_parts[0].strip_edges()
+			var stat_large: String = stat_parts[1].strip_edges()
+			if stat_small.is_valid_int() and stat_large.is_valid_int():
+				return int(stat_large) - int(stat_small)
+	# Legacy simplified descriptions encode base weapon damage as 21/13.
 	var head: String = str(record.get("desc", "")).split("·")[0].strip_edges()
 	var pieces: PackedStringArray = head.split("/")
 	if pieces.size() < 2:

@@ -64,7 +64,7 @@ func _run() -> void:
 	inv["마녀의 마력 회복제"] = 2
 	world.set("mp", 0)
 	world.call("_on_inventory_item_activated", "마녀의 마력 회복제")
-	_check(int(world.get("mp")) == int(world.get("max_mp")), "Instant MP potion not capped at MP max")
+	_check(int(world.get("mp")) == int(world.call("_effective_max_mp")), "Instant MP potion not capped at MP max")
 	_check(int(inv.get("마녀의 마력 회복제", 0)) == 1, "Instant MP potion did not consume once")
 	world.call("_on_inventory_item_activated", "마녀의 마력 회복제")
 	_check(int(inv.get("마녀의 마력 회복제", 0)) == 1, "Cooldown bypass consumed a second instant potion")
