@@ -216,6 +216,8 @@ func _run() -> void:
 			_check(workspace.position.distance_to(origin) > 20.0, "title drag continues after finger exits title")
 		root.size = Vector2i(1280,720)
 		await process_frame
+	hud.call("open_character")
+	await process_frame
 	# The original class grid was removed from the visible character panel.
 	# Verify all 13 are restored and both startup and in-game entry work.
 	var class_shortcut: Button = workspace.find_child("ChangeClassButton",true,false) as Button
