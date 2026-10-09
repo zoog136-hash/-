@@ -17,6 +17,7 @@ const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
+const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
 const LOOT_PICKUP_CONTROLLER = preload("res://scripts/loot/loot_pickup_controller.gd")
@@ -4298,6 +4299,40 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	var chance_percent: float = 75.0 + float(accuracy - target_ac_abs) * 0.7
 	return clampf(chance_percent / 100.0, 0.05, 0.95)
 
+func _catalog_damage_bonus(kind: String) -> int:
+	var total: int = 0
+	for category: String in ["변신", "마법인형", "성물"]:
+		var value: Variant = equipped_catalog.get(category, {})
+		if value is Dictionary and not (value as Dictionary).is_empty():
+			total += CATALOG_EFFECTS.damage_by_style(value as Dictionary, kind)
+	return total
+
+func _catalog_damage_adjustment(kind: String) -> int:
+	# _effective_attack includes catalog atk; compensate for wrong weapon
+	# styles without disturbing the pre-existing attack-stat calculation.
+	var original_bonus: int = 0
+	for category: String in ["변신", "마법인형", "성물"]:
+		var value: Variant = equipped_catalog.get(category, {})
+		if value is Dictionary and not (value as Dictionary).is_empty():
+			original_bonus += int((value as Dictionary).get("atk", 0))
+	return _catalog_damage_bonus(kind) - original_bonus
+
+func _catalog_accuracy_bonus(kind: String) -> int:
+	var total: int = 0
+	for category: String in ["변신", "마법인형", "성물"]:
+		var value: Variant = equipped_catalog.get(category, {})
+		if value is Dictionary and not (value as Dictionary).is_empty():
+			total += CATALOG_EFFECTS.accuracy_by_style(value as Dictionary, kind)
+	return total
+
+func _catalog_critical_bonus(kind: String) -> int:
+	var total: int = 0
+	for category: String in ["변신", "마법인형", "성물"]:
+		var value: Variant = equipped_catalog.get(category, {})
+		if value is Dictionary and not (value as Dictionary).is_empty():
+			total += CATALOG_EFFECTS.critical_by_style(value as Dictionary, kind)
+	return total
+
 func _ranged_normal_damage_stat() -> int:
 	return _ranged_damage_stat()
 
@@ -4308,7 +4343,7 @@ func _record_move_speed_multiplier(record: Dictionary) -> float:
 	return clampf(value, 0.5, 2.0)
 
 func _record_attack_speed_percent(record: Dictionary) -> float:
-	var value: float = float(record.get("attackSpeed", record.get("attack_speed", 0.0)))
+	var value: float = CATALOG_EFFECTS.attack_speed_percent(record)
 	if str(record.get("slot", "")) == "weapon":
 		value += _weapon_intrinsic_attack_speed_percent(record)
 	return maxf(0.0, value)
@@ -4347,22 +4382,22 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage")
+	return _effective_attack() + _catalog_damage_adjustment("melee") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage")
 
 func _melee_accuracy_stat() -> int:
-	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + 10 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage")
+	return _effective_attack() + _catalog_damage_adjustment("ranged") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage")
 
 func _ranged_accuracy_stat() -> int:
-	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + 5 + _equipment_enhancement_level("weapon") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
-	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
+	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _equipment_additional_damage("magic") + _active_item_buff_total("sp")
 
 func _magic_accuracy_stat() -> int:
-	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _equipment_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
+	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -4398,6 +4433,7 @@ func _player_critical_rate(attack_type: String) -> int:
 			base += _stat_step_bonus(_effective_attribute("STR"), 16, 5.0)
 	for record: Dictionary in _all_equipped_records():
 		base += _record_critical_bonus(record, attack_type)
+	base += _catalog_critical_bonus(attack_type)
 	return clampi(base, 0, 50)
 
 func _record_stun_accuracy(record: Dictionary) -> int:
@@ -4681,7 +4717,7 @@ func _record_damage_reduction(record: Dictionary) -> int:
 		return maxi(0, int(record.get("reduction", 0)))
 	if record.has("리덕션"):
 		return maxi(0, int(record.get("리덕션", 0)))
-	return 0
+	return CATALOG_EFFECTS.flat_reduction(record)
 
 func _damage_reduction_stat() -> int:
 	var total: int = 0

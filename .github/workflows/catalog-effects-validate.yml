@@ -1,0 +1,43 @@
+name: Twilight Catalog Effects Validation
+
+on:
+  push:
+    branches: ['codex/catalog-options-runtime-*']
+  pull_request:
+    branches: ['codex/item-options-runtime-*']
+  workflow_dispatch:
+
+jobs:
+  catalog-effects:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and parse
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee catalog-import.log
+          if grep -E "SCRIPT ERROR:|ERROR:" catalog-import.log; then exit 1; fi
+      - name: Catalog runtime smoke
+        shell: bash
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/catalog_effects_smoke_test.gd 2>&1 | tee catalog-smoke.log
+          if grep -E "SCRIPT ERROR:|ERROR:|CATALOG_EFFECTS_FAIL|CATALOG_EFFECTS_SMOKE_FAILED" catalog-smoke.log; then exit 1; fi
+          grep -q "CATALOG_EFFECTS_SMOKE_OK" catalog-smoke.log
+      - name: Existing system regression
+        shell: bash
+        run: |
+          set -o pipefail
+          for test in item_options_runtime_smoke_test speed_option_smoke_test passive_skill_smoke_test skill_mechanism_smoke_test skill_element_integration_smoke_test item_buff_description_smoke_test ground_drop_smoke_test; do
+            ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"
+            if grep -E "SCRIPT ERROR:|ERROR:|SMOKE_FAILED|SMOKE FAIL|GROUND_DROP_FAIL:|ELEMENT INTEGRATION FAIL:|ITEM_OPTIONS_FAIL:" "${test}.log"; then exit 1; fi
+            grep -q "_OK" "${test}.log"
+          done
