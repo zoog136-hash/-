@@ -58,6 +58,6 @@ python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 
 
 [Monster World Validate](../.github/workflows/monster-world-validate.yml)는 전체 회귀 후 실제 Compatibility OpenGL에서 25개 지역, 폭젠 AUTO, 오만 보스 10개, 모든 카탈로그 종의 다섯 모션 화면과 32/96/192 전투를 실행해 PNG/JSON/로그를 올립니다. 밀집 AUTO 검사는 경로·공격·처치·재출현을 격리하기 위해 HP/AC를 제어합니다. 군집은 공격 유형을 교차 배치한 제어 수치 테스트이며 일반 플레이 밸런스 보장이 아닙니다. 소프트웨어 GL 결과를 실제 PC/Android GPU의 60FPS 보장으로 해석하지 않습니다.
 
-최종 조사 시 장비 옵션 관련 병행 PR #41~#45가 열려 있었습니다. #41·#45는 `scripts/world.gd`를 함께 수정하므로 이후 병합할 때 저장·HUD·아이템 계산 연결부를 함께 검토해야 합니다. 해당 미병합 브랜치의 코드는 이 후보에 섞지 않았습니다. 기준 main `82dbbdb`와는 GitHub 병합 충돌이 없습니다.
+최종 조사 시 장비 옵션 관련 병행 PR #41~#46가 열려 있었습니다. #41·#45·#46은 `scripts/world.gd`를 함께 수정하므로 이후 병합할 때 저장·HUD·아이템 계산 연결부를 함께 검토해야 합니다. 해당 미병합 브랜치의 코드는 이 후보에 섞지 않았습니다. 기준 main `82dbbdb`와는 GitHub 병합 충돌이 없습니다.
 
 고밀도 OpenGL 측정 후 몬스터 셰이더의 방향·보행 상수 계산을 픽셀 단계에서 꼭짓점 단계로 옮겼으며, 공격 변형의 픽셀별 삼각함수를 다항식으로 바꿨습니다. 이전/변경 후 수치와 실제 캡처는 검증 증거에 기록합니다.

@@ -1,0 +1,442 @@
+﻿2026-10-09T08:50:22.2599533Z Current runner version: '2.337.0'
+2026-10-09T08:50:22.2639385Z ##[group]Runner Image Provisioner
+2026-10-09T08:50:22.2640084Z Hosted Compute Agent
+2026-10-09T08:50:22.2640551Z Version: 20261002.596
+2026-10-09T08:50:22.2641325Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-09T08:50:22.2641972Z Build Date: 2026-10-02T22:28:27Z
+2026-10-09T08:50:22.2642562Z Worker ID: {618aa6e9-9530-4302-9405-b89111ff833d}
+2026-10-09T08:50:22.2643130Z Region: westus3
+2026-10-09T08:50:22.2643565Z Cloud: Azure
+2026-10-09T08:50:22.2644061Z ##[endgroup]
+2026-10-09T08:50:22.2645171Z ##[group]Operating System
+2026-10-09T08:50:22.2645703Z Ubuntu
+2026-10-09T08:50:22.2646139Z 24.04.5
+2026-10-09T08:50:22.2646566Z LTS
+2026-10-09T08:50:22.2647035Z ##[endgroup]
+2026-10-09T08:50:22.2647546Z ##[group]Runner Image
+2026-10-09T08:50:22.2648061Z Image: ubuntu-24.04
+2026-10-09T08:50:22.2648535Z Version: 20261004.327.1
+2026-10-09T08:50:22.2649580Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-09T08:50:22.2650995Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-09T08:50:22.2651789Z ##[endgroup]
+2026-10-09T08:50:22.2652731Z ##[group]GITHUB_TOKEN Permissions
+2026-10-09T08:50:22.2654488Z Actions: read
+2026-10-09T08:50:22.2655101Z Contents: write
+2026-10-09T08:50:22.2655562Z Metadata: read
+2026-10-09T08:50:22.2656078Z ##[endgroup]
+2026-10-09T08:50:22.2657683Z Secret source: Actions
+2026-10-09T08:50:22.2658504Z Cache mode: write
+2026-10-09T08:50:22.2659080Z Prepare workflow directory
+2026-10-09T08:50:22.3004901Z Prepare all required actions
+2026-10-09T08:50:22.3042995Z Getting action download info
+2026-10-09T08:50:22.5990751Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-10-09T08:50:23.0120077Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-09T08:50:24.0101722Z Complete job name: validate
+2026-10-09T08:50:24.1001980Z ##[group]Run actions/checkout@v4
+2026-10-09T08:50:24.1002734Z with:
+2026-10-09T08:50:24.1003145Z   repository: zoog136-hash/-
+2026-10-09T08:50:24.1006325Z   token: ***
+2026-10-09T08:50:24.1006731Z   ssh-strict: true
+2026-10-09T08:50:24.1007138Z   ssh-user: git
+2026-10-09T08:50:24.1007552Z   persist-credentials: true
+2026-10-09T08:50:24.1007995Z   clean: true
+2026-10-09T08:50:24.1008402Z   sparse-checkout-cone-mode: true
+2026-10-09T08:50:24.1008872Z   fetch-depth: 1
+2026-10-09T08:50:24.1009271Z   fetch-tags: false
+2026-10-09T08:50:24.1009673Z   show-progress: true
+2026-10-09T08:50:24.1010084Z   lfs: false
+2026-10-09T08:50:24.1010479Z   submodules: false
+2026-10-09T08:50:24.1011146Z   set-safe-directory: true
+2026-10-09T08:50:24.1011617Z   allow-unsafe-pr-checkout: false
+2026-10-09T08:50:24.1012415Z ##[endgroup]
+2026-10-09T08:50:24.1814567Z Syncing repository: zoog136-hash/-
+2026-10-09T08:50:24.1816753Z ##[group]Getting Git version info
+2026-10-09T08:50:24.1817801Z Working directory is '/home/runner/work/-/-'
+2026-10-09T08:50:24.1819120Z [command]/usr/bin/git version
+2026-10-09T08:50:24.1913611Z git version 2.55.0
+2026-10-09T08:50:24.1953114Z ##[endgroup]
+2026-10-09T08:50:24.1959680Z Temporarily overriding HOME='/home/runner/work/_temp/b496b708-9b2d-4e33-ad71-0f789708eeb3' before making global git config changes
+2026-10-09T08:50:24.1961711Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T08:50:24.1963162Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+2026-10-09T08:50:24.2014033Z Deleting the contents of '/home/runner/work/-/-'
+2026-10-09T08:50:24.2018553Z ##[group]Initializing the repository
+2026-10-09T08:50:24.2022591Z [command]/usr/bin/git init /home/runner/work/-/-
+2026-10-09T08:50:24.3113571Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-09T08:50:24.3119134Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-09T08:50:24.3120603Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-09T08:50:24.3122259Z hint: call:
+2026-10-09T08:50:24.3123002Z hint:
+2026-10-09T08:50:24.3123798Z hint: 	git config --global init.defaultBranch <name>
+2026-10-09T08:50:24.3124750Z hint:
+2026-10-09T08:50:24.3125574Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-09T08:50:24.3126867Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-09T08:50:24.3127931Z hint:
+2026-10-09T08:50:24.3128584Z hint: 	git branch -m <name>
+2026-10-09T08:50:24.3129293Z hint:
+2026-10-09T08:50:24.3130203Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-09T08:50:24.3131777Z Initialized empty Git repository in /home/runner/work/-/-/.git/
+2026-10-09T08:50:24.3134033Z [command]/usr/bin/git remote add origin https://github.com/zoog136-hash/-
+2026-10-09T08:50:24.3206581Z ##[endgroup]
+2026-10-09T08:50:24.3207959Z ##[group]Disabling automatic garbage collection
+2026-10-09T08:50:24.3213207Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-09T08:50:24.3805355Z ##[endgroup]
+2026-10-09T08:50:24.3806079Z ##[group]Setting up auth
+2026-10-09T08:50:24.3812231Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T08:50:24.3845746Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T08:50:24.4580989Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T08:50:24.4610586Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T08:50:24.4798305Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T08:50:24.4829850Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T08:50:24.5018045Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-09T08:50:24.5051440Z ##[endgroup]
+2026-10-09T08:50:24.5052185Z ##[group]Fetching the repository
+2026-10-09T08:50:24.5060530Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +0c5828cff739efccf4689ce250c1bc6fe40fabd1:refs/remotes/pull/43/merge
+2026-10-09T08:50:27.9773370Z From https://github.com/zoog136-hash/-
+2026-10-09T08:50:27.9775350Z  * [new ref]         0c5828cff739efccf4689ce250c1bc6fe40fabd1 -> pull/43/merge
+2026-10-09T08:50:27.9779821Z ##[endgroup]
+2026-10-09T08:50:27.9781417Z ##[group]Determining the checkout info
+2026-10-09T08:50:27.9783057Z ##[endgroup]
+2026-10-09T08:50:27.9784256Z [command]/usr/bin/git sparse-checkout disable
+2026-10-09T08:50:27.9865617Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-09T08:50:27.9893192Z ##[group]Checking out the ref
+2026-10-09T08:50:27.9896058Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/43/merge
+2026-10-09T08:50:28.3262538Z Note: switching to 'refs/remotes/pull/43/merge'.
+2026-10-09T08:50:28.3262980Z 
+2026-10-09T08:50:28.3263253Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-09T08:50:28.3263886Z changes and commit them, and you can discard any commits you make in this
+2026-10-09T08:50:28.3264330Z state without impacting any branches by switching back to a branch.
+2026-10-09T08:50:28.3264599Z 
+2026-10-09T08:50:28.3264820Z If you want to create a new branch to retain commits you create, you may
+2026-10-09T08:50:28.3265245Z do so (now or later) by using -c with the switch command. Example:
+2026-10-09T08:50:28.3265495Z 
+2026-10-09T08:50:28.3265609Z   git switch -c <new-branch-name>
+2026-10-09T08:50:28.3265778Z 
+2026-10-09T08:50:28.3265955Z Or undo this operation with:
+2026-10-09T08:50:28.3266368Z 
+2026-10-09T08:50:28.3266464Z   git switch -
+2026-10-09T08:50:28.3266599Z 
+2026-10-09T08:50:28.3266853Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-09T08:50:28.3267158Z 
+2026-10-09T08:50:28.3267451Z HEAD is now at 0c5828c Merge 539e932b98d86db3d41bba84a07ce3d0704ba4ea into 82dbbdb18ec3088fcf521ce887af61c0c48c5a28
+2026-10-09T08:50:28.3286155Z ##[endgroup]
+2026-10-09T08:50:28.3329370Z [command]/usr/bin/git log -1 --format=%H
+2026-10-09T08:50:28.3351686Z 0c5828cff739efccf4689ce250c1bc6fe40fabd1
+2026-10-09T08:50:28.3541162Z ##[group]Run curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+2026-10-09T08:50:28.3542213Z [36;1mcurl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip[0m
+2026-10-09T08:50:28.3542840Z [36;1munzip -q /tmp/godot.zip -d /tmp[0m
+2026-10-09T08:50:28.3543172Z [36;1mchmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64[0m
+2026-10-09T08:50:28.3543471Z [36;1msudo apt-get update -qq[0m
+2026-10-09T08:50:28.3543773Z [36;1msudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri[0m
+2026-10-09T08:50:28.3758673Z shell: /usr/bin/bash -e {0}
+2026-10-09T08:50:28.3758997Z ##[endgroup]
+2026-10-09T08:50:28.3911563Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-10-09T08:50:28.3912239Z                                  Dload  Upload   Total   Spent    Left  Speed
+2026-10-09T08:50:28.3912557Z 
+2026-10-09T08:50:28.5457662Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-09T08:50:28.5458094Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-09T08:50:28.7972826Z 
+2026-10-09T08:50:28.7973304Z 100 74.2M  100 74.2M    0     0   182M      0 --:--:-- --:--:-- --:--:--  182M
+2026-10-09T08:50:37.3103964Z ##[group]Run python3 tools/build_monster_world.py
+2026-10-09T08:50:37.3104317Z [36;1mpython3 tools/build_monster_world.py[0m
+2026-10-09T08:50:37.3104747Z [36;1mgit diff --exit-code -- data/monsters/monster_world_catalog.json data/monsters/world_spawn_profiles.json[0m
+2026-10-09T08:50:37.3105293Z [36;1mpython3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results[0m
+2026-10-09T08:50:37.3160462Z shell: /usr/bin/bash -e {0}
+2026-10-09T08:50:37.3160672Z ##[endgroup]
+2026-10-09T08:50:37.3899078Z MONSTER_WORLD_DATA_OK 318 species 25 maps 192 zones
+2026-10-09T08:51:02.4394804Z PASS import
+2026-10-09T08:51:05.2934910Z PASS boot
+2026-10-09T08:51:05.8183173Z PASS actor_motion_test
+2026-10-09T08:51:07.1802513Z PASS animation_catalog_test
+2026-10-09T08:51:09.8502029Z PASS animation_restore_test
+2026-10-09T08:51:10.3746770Z PASS authored_frames_test
+2026-10-09T08:51:10.8993252Z PASS authored_state_motion_test
+2026-10-09T08:51:12.8236054Z PASS catalog_effects_smoke_test
+2026-10-09T08:51:17.8159988Z PASS combat_timing_test
+2026-10-09T08:51:17.9646629Z PASS combat_vfx_test
+2026-10-09T08:51:20.9131454Z PASS consumable_smoke_test
+2026-10-09T08:51:23.6754327Z PASS equipment_slot_smoke_test
+2026-10-09T08:51:34.5304652Z PASS field_world_test
+2026-10-09T08:51:35.0553186Z PASS flight_lifecycle_test
+2026-10-09T08:51:36.1493526Z PASS follower_motion_test
+2026-10-09T08:51:38.2594129Z PASS ground_drop_smoke_test
+2026-10-09T08:51:52.8333902Z PASS ground_loot_system_test
+2026-10-09T08:51:55.3168307Z PASS hp_mp_unique_effects_smoke_test
+2026-10-09T08:51:57.8001866Z PASS input_routing_test
+2026-10-09T08:52:00.0029616Z PASS inventory_db_smoke_test
+2026-10-09T08:52:02.0206662Z PASS item_buff_description_smoke_test
+2026-10-09T08:52:02.2633449Z PASS item_db_slot_smoke_test
+2026-10-09T08:52:04.1872270Z PASS item_options_runtime_smoke_test
+2026-10-09T08:52:04.3359222Z PASS item_weight_smoke_test
+2026-10-09T08:52:07.0041512Z PASS job_smoke_test
+2026-10-09T08:52:07.2465157Z PASS lineage_inventory_ui_smoke_test
+2026-10-09T08:52:07.4885835Z PASS lineage_side_ui_smoke_test
+2026-10-09T08:52:08.0095066Z PASS loot_balance_smoke_test
+2026-10-09T08:52:09.9331542Z PASS mobile_scroll_smoke_test
+2026-10-09T08:52:12.2303269Z PASS monster_attack_profiles_test
+2026-10-09T08:52:14.0574131Z PASS monster_motion_test
+2026-10-09T08:52:22.2170333Z PASS monster_world_test
+2026-10-09T08:52:24.1408036Z PASS non_skill_options_smoke_test
+2026-10-09T08:52:26.0640714Z PASS original_lineagem_effects_smoke_test
+2026-10-09T08:52:28.1751508Z PASS passive_skill_smoke_test
+2026-10-09T08:52:30.5657438Z PASS per_instance_enchantments_smoke_test
+2026-10-09T08:52:33.4213010Z PASS playtest_catalog_drag_test
+2026-10-09T08:52:35.5309843Z PASS quickslot_smoke_test
+2026-10-09T08:52:36.1499989Z PASS relic_motion_test
+2026-10-09T08:52:38.6320798Z PASS shield_rules_smoke_test
+2026-10-09T08:52:41.3015581Z PASS skill_element_integration_smoke_test
+2026-10-09T08:52:44.3422673Z PASS skill_mechanism_smoke_test
+2026-10-09T08:52:46.2660091Z PASS speed_option_smoke_test
+2026-10-09T08:52:48.8436196Z PASS stage5_save_compatibility_test
+2026-10-09T08:52:51.4186970Z PASS ui_renewal_integration_test
+2026-10-09T08:52:53.5284420Z PASS ui_stage4_item_instance_test
+2026-10-09T08:52:55.5459906Z PASS volley_motion_test
+2026-10-09T08:52:57.6571807Z PASS weapon_rules_smoke_test
+2026-10-09T08:53:02.5588305Z PASS world_region_portals_test
+2026-10-09T08:53:53.7588856Z PASS world_regions_test
+2026-10-09T08:53:53.7594897Z 50/50 checks passed
+2026-10-09T08:53:53.7675977Z ##[group]Run set -o pipefail
+2026-10-09T08:53:53.7676236Z [36;1mset -o pipefail[0m
+2026-10-09T08:53:53.7676489Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/monster-world-render"[0m
+2026-10-09T08:53:53.7676779Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+2026-10-09T08:53:53.7677514Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_monster_world.gd 2>&1 | tee test-results/monster-world-render.log[0m
+2026-10-09T08:53:53.7678357Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-world-render.log; then exit 1; fi[0m
+2026-10-09T08:53:53.7678801Z [36;1mgrep -q MONSTER_WORLD_RENDER_OK test-results/monster-world-render.log[0m
+2026-10-09T08:53:53.7736976Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-09T08:53:53.7737250Z ##[endgroup]
+2026-10-09T08:53:53.8527078Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-09T08:53:54.5237669Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+2026-10-09T08:53:54.5239960Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+2026-10-09T08:53:55.2245387Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+2026-10-09T08:53:55.2245951Z 
+2026-10-09T08:53:59.0667330Z MONSTER_MAP_RENDER aden_world
+2026-10-09T08:53:59.7033074Z MONSTER_MAP_RENDER albino_01
+2026-10-09T08:54:00.1451358Z MONSTER_MAP_RENDER albino_02
+2026-10-09T08:54:00.5604093Z MONSTER_MAP_RENDER albino_03
+2026-10-09T08:54:01.0041688Z MONSTER_MAP_RENDER albino_04
+2026-10-09T08:54:01.4458355Z MONSTER_MAP_RENDER domination_summit
+2026-10-09T08:54:01.9234819Z MONSTER_MAP_RENDER escaros_01
+2026-10-09T08:54:02.3835701Z MONSTER_MAP_RENDER escaros_02
+2026-10-09T08:54:02.8293011Z MONSTER_MAP_RENDER escaros_03
+2026-10-09T08:54:03.2811333Z MONSTER_MAP_RENDER escaros_04
+2026-10-09T08:54:03.7279839Z MONSTER_MAP_RENDER escaros_05
+2026-10-09T08:54:04.1648044Z MONSTER_MAP_RENDER faith_01
+2026-10-09T08:54:04.5996687Z MONSTER_MAP_RENDER faith_02
+2026-10-09T08:54:05.0592127Z MONSTER_MAP_RENDER faith_03
+2026-10-09T08:54:05.4969605Z MONSTER_MAP_RENDER faith_04
+2026-10-09T08:54:05.9290465Z MONSTER_MAP_RENDER oman_01
+2026-10-09T08:54:06.3703840Z MONSTER_MAP_RENDER oman_02
+2026-10-09T08:54:06.8029323Z MONSTER_MAP_RENDER oman_03
+2026-10-09T08:54:07.2354951Z MONSTER_MAP_RENDER oman_04
+2026-10-09T08:54:07.6786646Z MONSTER_MAP_RENDER oman_05
+2026-10-09T08:54:08.0993678Z MONSTER_MAP_RENDER oman_06
+2026-10-09T08:54:08.5269007Z MONSTER_MAP_RENDER oman_07
+2026-10-09T08:54:08.9670436Z MONSTER_MAP_RENDER oman_08
+2026-10-09T08:54:09.4045565Z MONSTER_MAP_RENDER oman_09
+2026-10-09T08:54:09.8370514Z MONSTER_MAP_RENDER oman_10
+2026-10-09T08:54:57.3761609Z MONSTER_WORLD_RENDER_OK
+2026-10-09T08:54:57.6189285Z ##[group]Run set -o pipefail
+2026-10-09T08:54:57.6189552Z [36;1mset -o pipefail[0m
+2026-10-09T08:54:57.6189810Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/monster-crowd-render"[0m
+2026-10-09T08:54:57.6190099Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+2026-10-09T08:54:57.6191220Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --rendering-method gl_compatibility --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/monster-crowd-render.log[0m
+2026-10-09T08:54:57.6192063Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/monster-crowd-render.log; then exit 1; fi[0m
+2026-10-09T08:54:57.6192491Z [36;1mgrep -q COMBAT_CROWD_RENDER_OK test-results/monster-crowd-render.log[0m
+2026-10-09T08:54:57.6247564Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-09T08:54:57.6247832Z ##[endgroup]
+2026-10-09T08:54:57.6718498Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+2026-10-09T08:54:57.8089343Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+2026-10-09T08:54:57.8090038Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+2026-10-09T08:54:57.8722129Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+2026-10-09T08:54:57.8722739Z 
+2026-10-09T08:55:17.8556859Z CROWD_SAMPLE {"flights_returned":true,"frames":240,"median_ms":43.284,"monster_released_hits":204,"orphans":0,"p95_ms":77.258,"peak_flights":3,"peak_nodes":2719,"physics_p95_ms":5.112,"player_landed_hits":81,"population":32,"process_p95_ms":76.04,"vfx_high_water":24,"vfx_returned":true}
+2026-10-09T08:55:48.6458488Z CROWD_SAMPLE {"flights_returned":true,"frames":240,"median_ms":76.211,"monster_released_hits":706,"orphans":0,"p95_ms":112.83,"peak_flights":8,"peak_nodes":3231,"physics_p95_ms":7.098,"player_landed_hits":159,"population":96,"process_p95_ms":93.938,"vfx_high_water":39,"vfx_returned":true}
+2026-10-09T08:56:31.6706397Z CROWD_SAMPLE {"flights_returned":true,"frames":240,"median_ms":109.021,"monster_released_hits":1351,"orphans":0,"p95_ms":147.872,"peak_flights":8,"peak_nodes":4072,"physics_p95_ms":11.883,"player_landed_hits":229,"population":192,"process_p95_ms":125.532,"vfx_high_water":53,"vfx_returned":true}
+2026-10-09T08:56:31.7190030Z COMBAT_CROWD_RENDER_OK
+2026-10-09T08:56:31.9118879Z ##[group]Run actions/upload-artifact@v4
+2026-10-09T08:56:31.9119118Z with:
+2026-10-09T08:56:31.9119372Z   name: monster-world-review-0c5828cff739efccf4689ce250c1bc6fe40fabd1
+2026-10-09T08:56:31.9119996Z   path: test-results/
+/home/runner/work/_temp/monster-world-render/**/monster-world-review/
+/home/runner/work/_temp/monster-crowd-render/**/combat-crowd-review/
+
+2026-10-09T08:56:31.9120542Z   if-no-files-found: error
+2026-10-09T08:56:31.9120734Z   compression-level: 6
+2026-10-09T08:56:31.9121022Z   overwrite: false
+2026-10-09T08:56:31.9121200Z   include-hidden-files: false
+2026-10-09T08:56:31.9121393Z ##[endgroup]
+2026-10-09T08:56:32.0394801Z (node:3232) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-09T08:56:32.0395546Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-09T08:56:32.0809792Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-09T08:56:32.0811899Z The least common ancestor is /home/runner/work. This will be the root directory of the artifact
+2026-10-09T08:56:32.0812520Z With the provided path, there will be 160 files uploaded
+2026-10-09T08:56:32.0816580Z Artifact name is valid!
+2026-10-09T08:56:32.0817748Z Root directory input is valid!
+2026-10-09T08:56:32.4246720Z Beginning upload of artifact content to blob storage
+2026-10-09T08:56:32.6847133Z (node:3232) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-09T08:56:33.4128298Z Uploaded bytes 8388608
+2026-10-09T08:56:33.6458198Z Uploaded bytes 16777216
+2026-10-09T08:56:33.8104065Z Uploaded bytes 25165824
+2026-10-09T08:56:33.8976864Z Uploaded bytes 33554432
+2026-10-09T08:56:34.0155920Z Uploaded bytes 41943040
+2026-10-09T08:56:34.1124073Z Uploaded bytes 50331648
+2026-10-09T08:56:34.2082967Z Uploaded bytes 58720256
+2026-10-09T08:56:34.4577738Z Uploaded bytes 67108864
+2026-10-09T08:56:34.6151879Z Uploaded bytes 75497472
+2026-10-09T08:56:34.8912175Z Uploaded bytes 83886080
+2026-10-09T08:56:35.0497476Z Uploaded bytes 92274688
+2026-10-09T08:56:35.2521673Z Uploaded bytes 97463401
+2026-10-09T08:56:35.3189612Z Finished uploading artifact content to blob storage!
+2026-10-09T08:56:35.3192051Z SHA256 digest of uploaded artifact zip is 71dd712f2ca4b287aa9fdff1b5f754c0cd98e1570b6c666eff7edd687ec79cbb
+2026-10-09T08:56:35.3194105Z Finalizing artifact upload
+2026-10-09T08:56:35.5645873Z Artifact monster-world-review-0c5828cff739efccf4689ce250c1bc6fe40fabd1.zip successfully finalized. Artifact ID 11604914472
+2026-10-09T08:56:35.5647371Z Artifact monster-world-review-0c5828cff739efccf4689ce250c1bc6fe40fabd1 has been successfully uploaded! Final size is 97463401 bytes. Artifact ID is 11604914472
+2026-10-09T08:56:35.5653260Z Artifact download URL: https://github.com/zoog136-hash/-/actions/runs/37907038735/artifacts/11604914472
+2026-10-09T08:56:35.5821750Z ##[group]Run python3 - <<'PY'
+2026-10-09T08:56:35.5822054Z [36;1mpython3 - <<'PY'[0m
+2026-10-09T08:56:35.5822260Z [36;1mfrom pathlib import Path[0m
+2026-10-09T08:56:35.5822538Z [36;1mimport json, os, shutil, struct, hashlib, subprocess[0m
+2026-10-09T08:56:35.5822921Z [36;1moutput = Path(os.environ["RUNNER_TEMP"]) / "twilight-monster-evidence-export"[0m
+2026-10-09T08:56:35.5823300Z [36;1moutput.mkdir(exist_ok=True)[0m
+2026-10-09T08:56:35.5823693Z [36;1mregion_root = next((Path(os.environ["RUNNER_TEMP"]) / "monster-world-render").rglob("monster-world-review"))[0m
+2026-10-09T08:56:35.5824238Z [36;1mcrowd_root = next((Path(os.environ["RUNNER_TEMP"]) / "monster-crowd-render").rglob("combat-crowd-review"))[0m
+2026-10-09T08:56:35.5824693Z [36;1mrender = json.loads((region_root / "render-summary.json").read_text())[0m
+2026-10-09T08:56:35.5825068Z [36;1mperf = json.loads((crowd_root / "performance.json").read_text())[0m
+2026-10-09T08:56:35.5825488Z [36;1massert len(render["maps"]) == 25 and len(render["dense"]) == 4 and len(render["bosses"]) == 10[0m
+2026-10-09T08:56:35.5825894Z [36;1massert sum(page["count"] for page in render["gallery"]) == 318[0m
+2026-10-09T08:56:35.5826304Z [36;1massert all(entry["auto_kills"] > 0 and entry["restored"] == 24 for entry in render["dense"])[0m
+2026-10-09T08:56:35.5826770Z [36;1mselected = ["map-aden_world.png", "dense-aden_world.png", "dense-auto-oman_03.png",[0m
+2026-10-09T08:56:35.5827208Z [36;1m            "dense-oman_07.png", "boss-oman_01.png", "boss-oman_08.png", "boss-oman_10.png",[0m
+2026-10-09T08:56:35.5827610Z [36;1m            "map-faith_03.png", "map-escaros_01.png", "map-albino_02.png",[0m
+2026-10-09T08:56:35.5827948Z [36;1m            "catalog-01-attack.png", "catalog-04-walk.png"][0m
+2026-10-09T08:56:35.5828302Z [36;1mpngs = sorted(region_root.glob("*.png")) + sorted(crowd_root.glob("*.png"))[0m
+2026-10-09T08:56:35.5828637Z [36;1massert len(pngs) == 106[0m
+2026-10-09T08:56:35.5828835Z [36;1mhashes = {}[0m
+2026-10-09T08:56:35.5829017Z [36;1mfor image in pngs:[0m
+2026-10-09T08:56:35.5829219Z [36;1m    data = image.read_bytes()[0m
+2026-10-09T08:56:35.5829457Z [36;1m    assert data[:8] == b"\x89PNG\r\n\x1a\n"[0m
+2026-10-09T08:56:35.5829732Z [36;1m    assert struct.unpack(">II", data[16:24]) == (1280, 720)[0m
+2026-10-09T08:56:35.5830258Z [36;1m    hashes[image.name] = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}[0m
+2026-10-09T08:56:35.5830646Z [36;1m    if image.name in selected or image.name.startswith("crowd-"):[0m
+2026-10-09T08:56:35.5831158Z [36;1m        shutil.copyfile(image, output / image.name)[0m
+2026-10-09T08:56:35.5831520Z [36;1mfor path in [region_root / "render-summary.json", crowd_root / "performance.json"]:[0m
+2026-10-09T08:56:35.5831885Z [36;1m    shutil.copyfile(path, output / path.name)[0m
+2026-10-09T08:56:35.5832222Z [36;1mshutil.copytree(Path("test-results"), output / "logs", dirs_exist_ok=True)[0m
+2026-10-09T08:56:35.5832520Z [36;1mmeta = {[0m
+2026-10-09T08:56:35.5832777Z [36;1m    "branch": "feature/twilight-monster-world-overhaul-20261009",[0m
+2026-10-09T08:56:35.5833101Z [36;1m    "source_head": os.environ["EXPECTED_HEAD"],[0m
+2026-10-09T08:56:35.5833381Z [36;1m    "tested_checkout": os.environ["TESTED_SHA"],[0m
+2026-10-09T08:56:35.5833764Z [36;1m    "tested_tree": subprocess.check_output(["git", "rev-parse", "HEAD^{tree}"], text=True).strip(),[0m
+2026-10-09T08:56:35.5834263Z [36;1m    "run_url": "https://github.com/zoog136-hash/-/actions/runs/" + os.environ["REVIEW_RUN"],[0m
+2026-10-09T08:56:35.5834719Z [36;1m    "artifact_id": os.environ["ARTIFACT_ID"], "artifact_url": os.environ["ARTIFACT_URL"],[0m
+2026-10-09T08:56:35.5835071Z [36;1m    "png_count": 106, "all_png_hashes": hashes,[0m
+2026-10-09T08:56:35.5835395Z [36;1m    "regression": "50/50 passed; previous workflow step exited successfully",[0m
+2026-10-09T08:56:35.5835831Z [36;1m    "note": "Unedited actual OpenGL captures; gallery and crowd use controlled QA conditions."[0m
+2026-10-09T08:56:35.5836311Z [36;1m}[0m
+2026-10-09T08:56:35.5836605Z [36;1m(output / "evidence.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n")[0m
+2026-10-09T08:56:35.5837020Z [36;1mrows = ["| 개체 | 프레임 중앙값 ms | 프레임 p95 ms | 물리 p95 ms | NPC 타격 | 플레이어 타격 |",[0m
+2026-10-09T08:56:35.5837345Z [36;1m        "| --- | --- | --- | --- | --- | --- |"][0m
+2026-10-09T08:56:35.5837602Z [36;1mfor sample in perf["samples"]:[0m
+2026-10-09T08:56:35.5838054Z [36;1m    rows.append("| {population} | {median_ms} | {p95_ms} | {physics_p95_ms} | {monster_released_hits} | {player_landed_hits} |".format(**sample))[0m
+2026-10-09T08:56:35.5838617Z [36;1mbefore = "| 32 | 57.705 | 104.685 | 7.216 |\n| 96 | 98.216 | 151.024 | 9.059 |\n| 192 | 155.713 | 201.896 | 14.405 |"[0m
+2026-10-09T08:56:35.5838955Z [36;1mtext = "# 실제 검증 증거\n\n"[0m
+2026-10-09T08:56:35.5839309Z [36;1mtext += "코드 HEAD: " + meta["source_head"] + "\n\n검사 checkout: " + meta["tested_checkout"] + "\n\n"[0m
+2026-10-09T08:56:35.5839703Z [36;1mtext += "검사 tree: " + meta["tested_tree"] + "\n\n"[0m
+2026-10-09T08:56:35.5840090Z [36;1mtext += "[GitHub Actions 실행](" + meta["run_url"] + ") · [전체 PNG/로그 ZIP](" + meta["artifact_url"] + ")\n\n"[0m
+2026-10-09T08:56:35.5840818Z [36;1mtext += "실제 Godot 4.7.2 전체 회귀 **50/50 통과**. 25개 맵, 폭젠 4곳 AUTO 처치·24마리 복구, 오만 보스 10종, 전체 318종의 다섯 상태를 실제 Compatibility OpenGL에서 실행했습니다. 지역/폭젠/보스/갤러리 103장과 군집 3장, 총 **106장**이 생성됐습니다. PNG 원본은 편집하지 않았으며 전체 해시는 evidence.json에 있습니다.\n\n"[0m
+2026-10-09T08:56:35.5841771Z [36;1mtext += "이 증거를 기록한 뒤 자동 문서 커밋만 브랜치에 추가됩니다. 검사한 코드는 위 HEAD/checkout으로 구별하며 문서 커밋을 다시 실행한 게임 검사로 주장하지 않습니다.\n\n"[0m
+2026-10-09T08:56:35.5842278Z [36;1mtext += "## 현재 고밀도 전투\n\nGPU: " + perf["adapter"] + ". 120프레임 워밍업 뒤 240프레임을 측정했습니다. HP/AC/공격 유형을 제어한 QA 전투이며 일반 플레이 밸런스 검사가 아닙니다.\n\n"[0m
+2026-10-09T08:56:35.5842651Z [36;1mtext += "\n".join(rows) + "\n\n"[0m
+2026-10-09T08:56:35.5843146Z [36;1mtext += "세 경우 모두 실제 양방향 피해가 발생했고 투사체/VFX 풀이 반환됐으며 orphan 개체는 0입니다. 소프트웨어 GL 수치를 실제 PC/Android GPU의 60FPS 보장으로 해석하지 않습니다. 고밀도 렌더링 비용과 지역별 일반 플레이 밸런스는 추가 확인 대상입니다.\n\n"[0m
+2026-10-09T08:56:35.5844057Z [36;1mtext += "## 셰이더 변경 전 비교\n\n이전 코드 89ec40e, [실제 이전 실행](https://github.com/zoog136-hash/-/actions/runs/37903218088)의 같은 Monster World 군집 검사입니다. 러너 간 하드웨어/부하 차이가 있으므로 단독 변경의 정밀 인과 측정으로 보지 않습니다.\n\n| 개체 | 중앙값 ms | p95 ms | 물리 p95 ms |\n| --- | --- | --- | --- |\n" + before + "\n\n"[0m
+2026-10-09T08:56:35.5844917Z [36;1mtext += "## 원본 캡처\n\n"[0m
+2026-10-09T08:56:35.5845290Z [36;1mfor name in selected + ["crowd-32.png", "crowd-96.png", "crowd-192.png"]:[0m
+2026-10-09T08:56:35.5845636Z [36;1m    text += "- [" + name + "](" + name + ")\n"[0m
+2026-10-09T08:56:35.5846189Z [36;1mtext += "\n종별 상세는 ../MONSTER_SPECIES.md, 좌표·보스 설정은 ../MONSTER_SPAWN_TABLES.md, 미확인/추정 범위는 ../MONSTER_WORLD_SOURCES.md를 참고합니다. 계열 원화 공유·독립 8시점 프레임·일부 원작 지역/보스 기술 고증은 여전히 미완료이며 전면 완료로 주장하지 않습니다.\n"[0m
+2026-10-09T08:56:35.5846764Z [36;1m(output / "VALIDATION.md").write_text(text, encoding="utf8")[0m
+2026-10-09T08:56:35.5847217Z [36;1mprint("PERSIST_EVIDENCE_SOURCE", json.dumps({k:v for k,v in meta.items() if k != "all_png_hashes"}))[0m
+2026-10-09T08:56:35.5847662Z [36;1mfor name in selected + ["crowd-32.png", "crowd-96.png", "crowd-192.png"]:[0m
+2026-10-09T08:56:35.5848060Z [36;1m    print("PERSIST_CAPTURE", name, hashes[name]["bytes"], hashes[name]["sha256"])[0m
+2026-10-09T08:56:35.5848375Z [36;1mPY[0m
+2026-10-09T08:56:35.5848630Z [36;1mREVIEW_BRANCH='feature/twilight-monster-world-overhaul-20261009'[0m
+2026-10-09T08:56:35.5849015Z [36;1mREVIEW_EXPORT="$RUNNER_TEMP/twilight-monster-evidence-export"[0m
+2026-10-09T08:56:35.5849401Z [36;1mREMOTE_HEAD=$(git ls-remote origin "refs/heads/$REVIEW_BRANCH" | cut -f1)[0m
+2026-10-09T08:56:35.5849737Z [36;1mif [[ "$REMOTE_HEAD" != "$EXPECTED_HEAD" ]]; then[0m
+2026-10-09T08:56:35.5850076Z [36;1m  echo 'Branch advanced; complete evidence remains in the Actions artifact.'[0m
+2026-10-09T08:56:35.5850377Z [36;1m  exit 0[0m
+2026-10-09T08:56:35.5850539Z [36;1mfi[0m
+2026-10-09T08:56:35.5851013Z [36;1mgit fetch origin "refs/heads/$REVIEW_BRANCH"[0m
+2026-10-09T08:56:35.5851320Z [36;1mgit checkout -b twilight-monster-evidence FETCH_HEAD[0m
+2026-10-09T08:56:35.5851634Z [36;1mcp -R "$REVIEW_EXPORT/." docs/monster-world-evidence/[0m
+2026-10-09T08:56:35.5851925Z [36;1mgit add docs/monster-world-evidence/[0m
+2026-10-09T08:56:35.5852195Z [36;1mif git diff --cached --quiet; then exit 0; fi[0m
+2026-10-09T08:56:35.5852462Z [36;1mgit config user.name 'github-actions[bot]'[0m
+2026-10-09T08:56:35.5852801Z [36;1mgit config user.email '41898282+github-actions[bot]@users.noreply.github.com'[0m
+2026-10-09T08:56:35.5853211Z [36;1mgit commit -m 'docs: persist actual monster world review evidence [skip ci]'[0m
+2026-10-09T08:56:35.5853557Z [36;1mgit push origin "HEAD:refs/heads/$REVIEW_BRANCH"[0m
+2026-10-09T08:56:35.5908345Z shell: /usr/bin/bash -e {0}
+2026-10-09T08:56:35.5908548Z env:
+2026-10-09T08:56:35.5908768Z   EXPECTED_HEAD: 539e932b98d86db3d41bba84a07ce3d0704ba4ea
+2026-10-09T08:56:35.5909071Z   TESTED_SHA: 0c5828cff739efccf4689ce250c1bc6fe40fabd1
+2026-10-09T08:56:35.5909310Z   REVIEW_RUN: 37907038735
+2026-10-09T08:56:35.5909489Z   ARTIFACT_ID: 11604914472
+2026-10-09T08:56:35.5909818Z   ARTIFACT_URL: https://github.com/zoog136-hash/-/actions/runs/37907038735/artifacts/11604914472
+2026-10-09T08:56:35.5910154Z ##[endgroup]
+2026-10-09T08:56:35.7030142Z PERSIST_EVIDENCE_SOURCE {"branch": "feature/twilight-monster-world-overhaul-20261009", "source_head": "539e932b98d86db3d41bba84a07ce3d0704ba4ea", "tested_checkout": "0c5828cff739efccf4689ce250c1bc6fe40fabd1", "tested_tree": "a5047bc37ee579d5ae91eefabe82a43433037fac", "run_url": "https://github.com/zoog136-hash/-/actions/runs/37907038735", "artifact_id": "11604914472", "artifact_url": "https://github.com/zoog136-hash/-/actions/runs/37907038735/artifacts/11604914472", "png_count": 106, "regression": "50/50 passed; previous workflow step exited successfully", "note": "Unedited actual OpenGL captures; gallery and crowd use controlled QA conditions."}
+2026-10-09T08:56:35.7032317Z PERSIST_CAPTURE map-aden_world.png 1991305 3ce4bc2ee7db51813195289e63f38ebff9b0c7edb23c53425f9902e8d7a3780e
+2026-10-09T08:56:35.7032906Z PERSIST_CAPTURE dense-aden_world.png 2022469 dd5a7252fb909b87f3d4c1527bf8ce358b31a29fbe7494fe2dd3c43e494deb8f
+2026-10-09T08:56:35.7033473Z PERSIST_CAPTURE dense-auto-oman_03.png 1593817 c7bb7a89f588aae1897cf94a65d10d3c55058cbacca7669c557059c48c5eef47
+2026-10-09T08:56:35.7034258Z PERSIST_CAPTURE dense-oman_07.png 1635473 636b828d3e1c7ab1a2c42f21739e199b963e50353e6dd3e0d8809cd60fe2559f
+2026-10-09T08:56:35.7034786Z PERSIST_CAPTURE boss-oman_01.png 1569319 67b560beaff0a0a2f053245eb614c2b1db430cf9b7b2646c3cd249211e9929ed
+2026-10-09T08:56:35.7035335Z PERSIST_CAPTURE boss-oman_08.png 1526203 44f3e90024b45fb45f92cdc1bd1ba4ce2ad7f6c7df132be49ceb2124079faa44
+2026-10-09T08:56:35.7035868Z PERSIST_CAPTURE boss-oman_10.png 1475155 d31a4fbd8d2b3c497e9600f6f6199c4bae87ded7108fdf3e711a19e32f689c4f
+2026-10-09T08:56:35.7036404Z PERSIST_CAPTURE map-faith_03.png 1620822 f39bef21ea36c21b8dc1f8dfbf64e38cf626c19d8ef0d9b48877d597b957a84e
+2026-10-09T08:56:35.7036949Z PERSIST_CAPTURE map-escaros_01.png 1728262 9d86298f0ed0ddadb39e122aa3bfc0b19849004f3215cf9083afa3208fc21a6f
+2026-10-09T08:56:35.7037488Z PERSIST_CAPTURE map-albino_02.png 1573401 2e3fe0e2b70dffa56d1d30ae939f635a5ae77bbe6e234e6e28d07d0e70963776
+2026-10-09T08:56:35.7038040Z PERSIST_CAPTURE catalog-01-attack.png 464836 47c98c57fd38acd1861c0738b98fdb3152e61e11ba6a217d18e41cc09d17a63d
+2026-10-09T08:56:35.7038587Z PERSIST_CAPTURE catalog-04-walk.png 420014 c13461e9eb4cd3fe576690400eadb1bf976fb7a5bf5368a7debb589fc8184719
+2026-10-09T08:56:35.7039110Z PERSIST_CAPTURE crowd-32.png 1974148 d9fcb26b4f9412a6f5aeebd953ad1c248fc3842c216d9cf58dbf173d0aaaad46
+2026-10-09T08:56:35.7039613Z PERSIST_CAPTURE crowd-96.png 2000974 135f366b3a18723f7aaf601d6bdf9bbfadf123b0b812082114fb903a428e8eb0
+2026-10-09T08:56:35.7040113Z PERSIST_CAPTURE crowd-192.png 2025015 451a3f4b0cb448b0505b9a3e636ce51e53de01fe4c8dd874a08fe0fbb278a2fc
+2026-10-09T08:56:37.0971449Z From https://github.com/zoog136-hash/-
+2026-10-09T08:56:37.0971886Z  * branch            feature/twilight-monster-world-overhaul-20261009 -> FETCH_HEAD
+2026-10-09T08:56:37.0972465Z  * [new branch]      feature/twilight-monster-world-overhaul-20261009 -> origin/feature/twilight-monster-world-overhaul-20261009
+2026-10-09T08:56:37.1048122Z Previous HEAD position was 0c5828c Merge 539e932b98d86db3d41bba84a07ce3d0704ba4ea into 82dbbdb18ec3088fcf521ce887af61c0c48c5a28
+2026-10-09T08:56:37.1054558Z Switched to a new branch 'twilight-monster-evidence'
+2026-10-09T08:56:37.7832903Z [twilight-monster-evidence 18e7e8e] docs: persist actual monster world review evidence [skip ci]
+2026-10-09T08:56:37.7833650Z  19 files changed, 1032 insertions(+), 4 deletions(-)
+2026-10-09T08:56:37.7834126Z  create mode 100644 docs/monster-world-evidence/boss-oman_01.png
+2026-10-09T08:56:37.7834641Z  create mode 100644 docs/monster-world-evidence/boss-oman_08.png
+2026-10-09T08:56:37.7835167Z  create mode 100644 docs/monster-world-evidence/boss-oman_10.png
+2026-10-09T08:56:37.7835658Z  create mode 100644 docs/monster-world-evidence/catalog-01-attack.png
+2026-10-09T08:56:37.7836113Z  create mode 100644 docs/monster-world-evidence/catalog-04-walk.png
+2026-10-09T08:56:37.7836441Z  create mode 100644 docs/monster-world-evidence/crowd-192.png
+2026-10-09T08:56:37.7836774Z  create mode 100644 docs/monster-world-evidence/crowd-32.png
+2026-10-09T08:56:37.7837081Z  create mode 100644 docs/monster-world-evidence/crowd-96.png
+2026-10-09T08:56:37.7837395Z  create mode 100644 docs/monster-world-evidence/dense-aden_world.png
+2026-10-09T08:56:37.7837776Z  create mode 100644 docs/monster-world-evidence/dense-auto-oman_03.png
+2026-10-09T08:56:37.7838119Z  create mode 100644 docs/monster-world-evidence/dense-oman_07.png
+2026-10-09T08:56:37.7838438Z  create mode 100644 docs/monster-world-evidence/evidence.json
+2026-10-09T08:56:37.7838756Z  create mode 100644 docs/monster-world-evidence/map-aden_world.png
+2026-10-09T08:56:37.7839086Z  create mode 100644 docs/monster-world-evidence/map-albino_02.png
+2026-10-09T08:56:37.7839400Z  create mode 100644 docs/monster-world-evidence/map-escaros_01.png
+2026-10-09T08:56:37.7839713Z  create mode 100644 docs/monster-world-evidence/map-faith_03.png
+2026-10-09T08:56:37.7840023Z  create mode 100644 docs/monster-world-evidence/performance.json
+2026-10-09T08:56:37.7840575Z  create mode 100644 docs/monster-world-evidence/render-summary.json
+2026-10-09T08:56:42.0292855Z To https://github.com/zoog136-hash/-
+2026-10-09T08:56:42.0293440Z    539e932..18e7e8e  HEAD -> feature/twilight-monster-world-overhaul-20261009
+2026-10-09T08:56:42.0415828Z Post job cleanup.
+2026-10-09T08:56:42.1092222Z [command]/usr/bin/git version
+2026-10-09T08:56:42.1123287Z git version 2.55.0
+2026-10-09T08:56:42.1155063Z Temporarily overriding HOME='/home/runner/work/_temp/ec55f45c-7992-4808-ad68-66fbcf67e034' before making global git config changes
+2026-10-09T08:56:42.1155957Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-09T08:56:42.1159532Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+2026-10-09T08:56:42.1191196Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-09T08:56:42.1220029Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-09T08:56:42.1424466Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-09T08:56:42.1449180Z http.https://github.com/.extraheader
+2026-10-09T08:56:42.1458740Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-09T08:56:42.1494122Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-09T08:56:42.1707472Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-09T08:56:42.1740172Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-09T08:56:42.2117862Z Cleaning up orphan processes
+2026-10-09T08:56:42.2382365Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
