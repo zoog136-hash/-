@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+
 const OUTPUT: String = "user://ground-loot-review"
 var world: TwilightWorld
 var captures: int = 0
@@ -21,6 +23,10 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
+	if not CLASS_QA.enter_game(world):
+		push_error("Rendered gameplay class confirmation failed")
+		quit(1)
+		return
 	world.set_process(false)
 	world.save_timer = -10000
 	world.field_population.set_process(false)
