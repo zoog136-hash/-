@@ -432,6 +432,11 @@ func next_chain_target(previous: TwilightMonster, visited: Array[TwilightMonster
 			distance = d
 	return result
 
+func target_damage(amount: int, target: TwilightMonster) -> int:
+	# One common successful-hit boundary covers normal attacks, skills and
+	# equipment procs. Instant death intentionally bypasses that boundary.
+	return status.damage_after_reduction(amount, target)
+
 func outgoing_damage(amount: int) -> int:
 	if proc_depth > 0 or counter_depth > 0: return amount
 	var multiplier := 1.0

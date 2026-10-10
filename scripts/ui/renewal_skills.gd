@@ -221,6 +221,15 @@ func select(index: int) -> void:
 	use_button.text="패시브 · 자동 적용" if passive else "스킬 사용"
 	clock=0
 
+func original_field_text(value: String, field: Dictionary) -> String:
+	var display := UI.safe(value)
+	match str(field.get("status", "UNKNOWN")):
+		"VERIFIED": return display + " (원작 확인)"
+		"INFERRED": return display + " (추정)"
+		"CUSTOM_BALANCE": return display + " (TWILIGHT 설정)"
+		"NOT_APPLICABLE": return "해당 없음"
+	return "원작 미확인" if value.is_empty() else "원작 미확인 (게임 표시: %s)" % display
+
 func select_original() -> void:
 	var world: Node = hud.get_parent()
 	var service: TwilightOriginalSkillService = world.original_skills
@@ -236,9 +245,28 @@ func select_original() -> void:
 	var base: Dictionary = catalog.record_for(str(relation.get("upgrades_from", "")))
 	var weapon_text := "제한 없음" if skill.get("weapons", []).is_empty() else " · ".join(skill.weapons)
 	var school_text := str({"general_magic":"일반 마법","class":"직업 기술","rune":"룬 마법","water":"물 정령","earth":"땅 정령","wind":"바람 정령","fire":"불 정령"}.get(str(selected.school), selected.school))
-	var stage_text := "단계 %d" % int(selected.stage) if selected.fields.basic.stage.status == "VERIFIED" else "단계 미확인"
-	detail.text = "[font_size=22][color=#%s]%s[/color][/font_size]\n%s · %s · %s\n%s / %s\n\n%s\n\nMP %d / HP %d / 재사용 %.1f초\n지속 %.1f초 · 무기 %s\n\nLv.%d · %s\n%s\n선행 조건: %s\n%s\n\n수치: 원작 미확인 값은 TWILIGHT 밸런스\n시각 자료 대조: 진행 중" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),UI.safe(selected.get("class", "")),UI.safe(selected.grade),"패시브" if passive else "액티브",UI.safe(school_text),UI.safe(stage_text),UI.safe(selected.desc),int(skill.get("mp",0)),int(skill.get("hp",0)),float(skill.get("cooldown",0)),float(skill.get("duration",0)),weapon_text,int(selected.minimum_level),UI.safe(selected.book_name),"습득 완료" if learned else catalog.reason(selected),"원작 미확인" if relation.get("requires_status", "UNKNOWN") == "UNKNOWN" else "없음","강화 대상: " + str(base.get("name", "")) if not base.is_empty() else ""]
-	detail.text += "\n스킬북 가격 %d 아데나" % int(selected.book_cost)
+	var fields: Dictionary = selected.get("fields", {})
+	var basic: Dictionary = fields.get("basic", {})
+	var learning: Dictionary = fields.get("learning", {})
+	var acquisition: Dictionary = learning.get("book_acquisition", {})
+	var acquisition_text := "" if acquisition.get("value") == null else str(acquisition.value)
+	var lines: Array[String] = [
+		"[font_size=22][color=#%s]%s[/color][/font_size]" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name)],
+		"%s · %s · %s" % [UI.safe(selected.get("class", "")),original_field_text(str(selected.grade),basic.get("grade", {})),original_field_text("패시브" if passive else "액티브",basic.get("activation", {}))],
+		"%s / %s" % [UI.safe(school_text),original_field_text("단계 %d" % int(selected.stage),basic.get("stage", {}))],
+		"", UI.safe(selected.desc), "",
+		"사용 수치: TWILIGHT 설정",
+		"MP %d / HP %d / 재사용 %.1f초" % [int(skill.get("mp",0)),int(skill.get("hp",0)),float(skill.get("cooldown",0))],
+		"지속 %.1f초 · 무기 %s" % [float(skill.get("duration",0)),UI.safe(weapon_text)], "",
+		"습득 %s · %s" % [original_field_text("Lv.%d" % int(selected.minimum_level),learning.get("minimum_level", {})),original_field_text(str(selected.book_name),learning.get("book_name", {}))],
+		"습득 완료" if learned else UI.safe(catalog.reason(selected)),
+		"선행 조건: " + ("원작 미확인" if relation.get("requires_status", "UNKNOWN") == "UNKNOWN" else "없음"),
+		"강화 대상: " + UI.safe(base.get("name", "")) if not base.is_empty() else "",
+		"스킬북 가격 " + original_field_text("%d 아데나" % int(selected.book_cost),learning.get("adena_cost", {})),
+		"원작 입수처: " + original_field_text(acquisition_text,acquisition),
+		"시각 자료 대조: 진행 중"
+	]
+	detail.text = "\n".join(lines)
 	if passive:
 		detail.text = detail.text.replace("재사용 %.1f초" % float(skill.get("cooldown",0)), "패시브 · 수동 재사용 없음")
 	if skill.mode == "counter": detail.text += "\n반격 발동 %.0f%% · 피해 배율 %.2f" % [float(skill.counter_chance)*100,float(skill.counter_multiplier)]

@@ -658,6 +658,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	var amplification: float = clampf(_equipped_numeric_sum("damage_amp_pct"), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
+	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	target.take_damage(adjusted_damage + stolen, critical)
 	if stolen > 0:
 		_refresh_combat_hud()

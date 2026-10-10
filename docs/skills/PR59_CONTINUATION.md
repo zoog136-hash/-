@@ -3,7 +3,7 @@
 This file records actual recovery and executable validation. PR #59 remains Draft;
 do not merge it or commit to main without the user's separate approval.
 
-Latest completed **code** checkpoint:
+Prior completed **code** checkpoint (before the recovery below):
 `f318161dedbd4fc0c19ef0a0dd25e6a420200abc`, tree
 `3be64c50e581193f0855fad6b82f0a44accf6dcf`.
 [GitHub CI run 38048993582](https://github.com/zoog136-hash/-/actions/runs/38048993582)
@@ -264,3 +264,53 @@ activating these records. Original video frames,
 undocumented levels/cost/formula/prerequisites, final main integration and
 Windows physical playthrough remain unfinished. The session does not continue
 automatically after it ends.
+
+
+## Recovery resumed — 2026-10-11 KST
+
+Remote evidence HEAD `2194242d18e68c19c82d4ffe6917c2197eb73059` and the prior
+`f318161d` CI job were verified. No accessible PR59 uncommitted files were found;
+the other accessible checkouts contain separate map/resource work and were left
+untouched. The cause of the unresponsive session is **UNKNOWN**. The same existing
+branch was checked out, without resetting another task or deleting its results.
+Sixteen attached ZIP central directories can be opened, including all four newly
+split ZIPs. Only the original `a2(1).zip` was not delivered into this workspace;
+complete equivalence of its splits was not established. The current code fixes
+use the existing checked-in skill data and do not depend on that original ZIP.
+
+The next documented unfinished work was implemented, without adding skill names
+or declaring any record COMPLETE:
+
+- `status_service.gd:damage_after_reduction()`, `skill_service.gd:target_damage()`
+  and one line in `world.gd:_deal_successful_player_hit()` consume the previously
+  ignored `reduction` field of Dark Stun and Thunder Stun. Their existing **-3
+  CUSTOM_BALANCE** value is an explicit flat +3 received-damage modifier after
+  critical/weapon amplification and before HP absorption. This is an offline
+  fallback, not an original NPC defense formula. Normal player hits, original
+  damage skills and equipment procs share one application; Turn Undead's exact-HP
+  death path bypasses it. Existing lifetime/respawn and cleanup checks still apply.
+- `renewal_skills.gd:select_original()` displays per-field original confirmation,
+  inference, unknown fallback and TWILIGHT settings beside grade, activation,
+  stage, learning level, book and price. Original acquisition is displayed apart
+  from the local book shop. This does not unlock unlearned/passive skills.
+- New actual-engine suites `original_skill_reduction_test.gd` (35 assertions)
+  and `original_skill_provenance_test.gd` (13 assertions) first reproduced **8
+  damage failures / 10 UI failures** before the production patch, then passed.
+
+Validation actually finished on this successor to `2194242d`: Godot 4.7.2 full
+**69/69 PASS**, focused **8/8 PASS**, data **0 errors**, actual OpenGL **11 PNGs**,
+guardian hit/shield and Turn Undead **HP=0 / MP spent=20**. The learning PNG was
+visually inspected. Full validation includes 200,000 production-path Turn Undead
+trials. Isolated XDG save directories were used. Detailed checks, pre-fix failures
+and screenshot hashes are in `evidence/pr59-resume-20261011/verification.json`.
+Linux llvmpipe timing and Dummy audio do not prove Windows performance/listening.
+The 125 PARTIAL / 568 BLOCKED / 2 PVP_EXCLUDED counts remain unchanged.
+
+Latest observed main is `88d1c68e2a497fb540461a3e1dfa6cba2e1d38f4`. A read-only
+merge simulation identified one textual conflict in `_load_game()`, between the
+old-save backup guard and warehouse/crafting restoration. Continue by saving this
+verified patch on the existing PR, then integrate that main **into this feature
+branch only**, preserving the backup guard before both restoration paths. Add a
+joint persistence regression and rerun the merged project's complete suite.
+Do not merge PR59 into main. All 568 blocked research records, original visual
+verification and the remaining condition/upgrade audits are still unfinished.
