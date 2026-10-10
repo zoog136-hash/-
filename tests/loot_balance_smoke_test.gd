@@ -102,6 +102,75 @@ func _run() -> void:
 		_check(source_spatoy_ids.has(required_spatoy_id), "missing verified Spatoy item source ID " + str(required_spatoy_id))
 
 	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마족의 단검", "legacy registered rare item remains available")
+	# Every catalog equipment item must be present in at least one usable
+	# monster pool (audited L1J, legacy record, or balance supplement).
+	var registered: Dictionary = {}
+	var l1j_live: Dictionary = catalog["l1j_monster_drops"]
+	var balance_equipment: Dictionary = catalog["twilight_coverage_equipment"]
+	var balance_potions: Dictionary = catalog["twilight_coverage_potions"]
+	var registered_potions: Dictionary = {"HP 물약":true, "강력 HP 물약":true}
+	for monster_value: Variant in monsters:
+		var mob: Dictionary = monster_value as Dictionary
+		var mob_name: String = str(mob.get("name", ""))
+		var boss: bool = LOOT.is_boss_record(mob)
+		var direct: Array = mob.get("drop", [])
+		for item_value: Variant in direct:
+			var item_name: String = str(item_value)
+			if not by_name.has(item_name):
+				continue
+			var item: Dictionary = by_name[item_name] as Dictionary
+			if LOOT._is_equipment(item) and (boss or str(item.get("grade", "")) in ["일반","고급","희귀","영웅"]):
+				registered[item_name] = true
+			elif LOOT._is_potion(item):
+				registered_potions[item_name] = true
+		for source_group: Dictionary in [l1j_live, balance_equipment]:
+			var rows: Variant = source_group.get(mob_name, [])
+			if rows is Array:
+				for row_value: Variant in rows:
+					if not (row_value is Dictionary):
+						continue
+					var item_name: String = str((row_value as Dictionary).get("item_name", ""))
+					if by_name.has(item_name):
+						var item: Dictionary = by_name[item_name] as Dictionary
+						_check(LOOT._is_equipment(item), "coverage cannot include non-equipment: " + item_name)
+						_check(boss or str(item.get("grade", "")) in ["일반","고급","희귀","영웅"], "field coverage cannot exceed Hero: " + item_name)
+						registered[item_name] = true
+		var potion_rows: Variant = balance_potions.get(mob_name, [])
+		if potion_rows is Array:
+			for raw_row: Variant in potion_rows:
+				if raw_row is Dictionary:
+					var potion_name: String = str((raw_row as Dictionary).get("item_name", ""))
+					_check(by_name.has(potion_name), "unknown balance potion: " + potion_name)
+					if by_name.has(potion_name):
+						var potion_record: Dictionary = by_name[potion_name] as Dictionary
+						_check(LOOT._is_potion(potion_record), "balance potion must heal: " + potion_name)
+						_check(boss or str(potion_record.get("grade", "")) != "유일", "Unique potion must be boss-only")
+						registered_potions[potion_name] = true
+	var equip_total: int = 0
+	var potion_total: int = 0
+	for item_value: Variant in data.get("아이템", []):
+		var item: Dictionary = item_value as Dictionary
+		var name_value: String = str(item.get("name", ""))
+		if LOOT._is_equipment(item):
+			equip_total += 1
+			_check(registered.has(name_value), "unreachable equipment: " + name_value)
+		elif LOOT._is_potion(item):
+			potion_total += 1
+			_check(registered_potions.has(name_value), "unreachable potion: " + name_value)
+	_check(equip_total == 458, "catalog equipment count must stay 458")
+	_check(potion_total == 11, "catalog healing potion count must stay 11")
+	# Select a balance-only item through the same in-game equipment-picker.
+	var balance_mob_names: Array = balance_equipment.keys()
+	_check(not balance_mob_names.is_empty(), "balance registry must be loaded")
+	if not balance_mob_names.is_empty():
+		var first_mob: String = str(balance_mob_names[0])
+		var first_row: Dictionary = (balance_equipment[first_mob] as Array)[0] as Dictionary
+		var first_name: String = str(first_row["item_name"])
+		var first_grade: String = str((by_name[first_name] as Dictionary).get("grade", ""))
+		var first_pick: Dictionary = LOOT._pick_equipment_entry(first_grade, [], catalog, strict_rng, first_mob)
+		_check(not first_pick.is_empty() and by_name.has(str(first_pick.get("item_name", ""))), "supplemental item enters real loot picker")
+
+
 	var boss_count: int = 0
 	var normal_count: int = 0
 	var gear_count: int = 0
@@ -133,7 +202,7 @@ func _run() -> void:
 				if LOOT._is_potion(item):
 					potion_count += 1
 					potions_in_kill += 1
-					_check(grade != "유일", "Unique potions remain outside potion drops")
+					_check(grade != "유일" or is_boss, "Unique consumables must be boss-only")
 				else:
 					gear_count += 1
 					gear_in_kill += 1
