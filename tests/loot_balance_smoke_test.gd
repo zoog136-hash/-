@@ -56,6 +56,25 @@ func _run() -> void:
 	_check(LOOT._pick_equipment("고급", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "수정 단검", "configured grade must select exactly registered equipment")
 	_check(LOOT._pick_equipment("유일", ["HP 물약"], catalog, strict_rng, "고스트") == "", "potion-only monster must not inherit Unique equipment")
 	_check(LOOT._pick_equipment("일반", ["없는 아이템"], catalog, strict_rng, "잘못된 몬스터") == "", "unmapped item must be rejected")
+	# The optional L1J mapping changes ONLY item selection within the grade,
+	# not absolute rarity probability or number of equipment rolls.
+	var mapped_catalog: Dictionary = catalog.duplicate(false)
+	mapped_catalog["l1j_monster_drops"] = {
+		"스파토이":[
+			{"item_name":"수정 단검", "weight":9, "min":2, "max":4},
+			{"item_name":"강철 판금 갑옷", "weight":1, "min":1, "max":1}
+		]
+	}
+	var samples: Dictionary = {}
+	for sample_index: int in range(500):
+		var pick: Dictionary = LOOT._pick_equipment_entry("고급", ["마족의 단검"], mapped_catalog, strict_rng, "스파토이")
+		var pick_name: String = str(pick.get("item_name", ""))
+		_check(pick_name in ["수정 단검", "강철 판금 갑옷"], "mapping must override unrelated legacy drop")
+		if pick_name == "수정 단검":
+			_check(int(pick.get("quantity", 0)) >= 2 and int(pick.get("quantity", 0)) <= 4, "mapped count range preserved")
+		samples[pick_name] = int(samples.get(pick_name, 0)) + 1
+	_check(int(samples.get("수정 단검",0)) > int(samples.get("강철 판금 갑옷",0)) * 5, "within-grade weights honored")
+	_check(LOOT._pick_equipment_entry("유일", ["기르타스의 단검"], mapped_catalog, strict_rng, "스파토이").is_empty(), "registered mob missing grade cannot fall back to legacy Unique")
 	var boss_count: int = 0
 	var normal_count: int = 0
 	var gear_count: int = 0
