@@ -10,6 +10,7 @@ var action: Button
 var recipe_ids: Array[String] = []
 var all_recipe_ids: Array[String] = []
 var category_filter: OptionButton
+var grade_filter: OptionButton
 var name_filter: LineEdit
 var current_id: String = ""
 
@@ -29,6 +30,13 @@ func configure(controller: Node) -> void:
 	category_filter.select(0)
 	category_filter.item_selected.connect(func(_selected: int) -> void: _rebuild_listing())
 	filters.add_child(category_filter)
+	grade_filter = OptionButton.new()
+	grade_filter.name = "CraftGradeFilter"
+	for grade_title: String in ["전체 등급","일반","고급","희귀","영웅","전설","신화","유일"]:
+		grade_filter.add_item(grade_title)
+	grade_filter.select(0)
+	grade_filter.item_selected.connect(func(_selection: int) -> void: _rebuild_listing())
+	filters.add_child(grade_filter)
 	name_filter = LineEdit.new()
 	name_filter.name = "CraftNameFilter"
 	name_filter.placeholder_text = "제작법 / 결과 아이템 검색"
@@ -78,6 +86,8 @@ func _rebuild_listing() -> void:
 	listing.clear()
 	recipe_ids.clear()
 	var selected_category: String = category_filter.get_item_text(category_filter.selected)
+	var selected_grade: String = grade_filter.get_item_text(grade_filter.selected)
+	var item_records: Dictionary = world.call("_craft_item_index")
 	var needle: String = name_filter.text.strip_edges().to_lower()
 	var service: Object = world.get("crafting")
 	var registry: Dictionary = service.get("recipes")
@@ -87,10 +97,14 @@ func _rebuild_listing() -> void:
 		var match_text: String = (str(recipe.get("name","")) + " " + str(output.get("item",""))).to_lower()
 		if selected_category != "전체" and str(recipe.get("category","")) != selected_category:
 			continue
+		var output_name: String = str(output.get("item",""))
+		var grade: String = str((item_records.get(output_name,{}) as Dictionary).get("grade","일반"))
+		if selected_grade != "전체 등급" and grade != selected_grade:
+			continue
 		if not needle.is_empty() and not match_text.contains(needle):
 			continue
 		recipe_ids.append(id)
-		listing.add_item(str(recipe.get("name",id)))
+		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))])
 	if recipe_ids.is_empty():
 		current_id = ""
 		detail.text = "조건에 맞는 제작법이 없습니다."
