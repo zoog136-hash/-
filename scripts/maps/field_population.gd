@@ -5,6 +5,7 @@ const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const DIRECTOR = preload("res://scripts/monsters/boss_director.gd")
 const BOSS_HUD = preload("res://scripts/monsters/boss_hud.gd")
 const MAX_POOL: int = 64
+const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 var world: Node
 var field: PlayableField
 var slots: Array[Dictionary] = []
@@ -165,13 +166,42 @@ func recycle(monster: TwilightMonster) -> bool:
 	return true
 
 func alert_social(source: TwilightMonster) -> void:
-	var radius: float = float(source.ai.get("social_radius",0))
-	if radius<=0.: return
+	# Bound pack assistance and reject retired, returning, unsafe or unrelated
+	# helpers. A wall blocks local aggro propagation just like movement.
+	if field==null or not is_instance_valid(source) or source.dead or source.returning_home:
+		return
+	if not is_instance_valid(world) or not is_instance_valid(world.player):
+		return
+	var radius: float = clampf(float(source.ai.get("social_radius",0)),0.0,360.0)
+	var group: String = str(source.ai.get("social_group",""))
+	if radius <= 0.0 or group.strip_edges().is_empty():
+		return
+	var safe: bool = field.is_safe(world.player.global_position)
+	var hidden: bool = world.has_method("is_player_concealed") and world.is_player_concealed()
+	if safe or hidden:
+		return
+	var candidates: Array[TwilightMonster] = []
 	for slot: Dictionary in slots:
 		var other: TwilightMonster = slot.monster as TwilightMonster if is_instance_valid(slot.monster) else null
-		if not is_instance_valid(other) or other.dead or other==source: continue
-		if str(other.ai.get("social_group",""))!=str(source.ai.get("social_group","")): continue
-		if other.global_position.distance_to(source.global_position)<=radius: other.aggro_remaining = 8.
+		if not is_instance_valid(other) or other.dead or other==source or not other.is_physics_processing():
+			continue
+		var leash: float = float(other.ai.get("leash_distance",1050.))
+		if not AI_POLICY.can_assist(group,str(other.ai.get("social_group","")),
+			other.global_position.distance_to(source.global_position),
+			other.global_position.distance_to(other.home_position),
+			world.player.global_position.distance_to(other.home_position),
+			leash,radius,safe,hidden,other.returning_home):
+			continue
+		if not field.line_clear(source.global_position,other.global_position):
+			continue
+		candidates.append(other)
+	# Nearest valid allies receive the call, not arbitrary spawn-slot order.
+	candidates.sort_custom(func(a: TwilightMonster,b: TwilightMonster) -> bool:
+		return a.global_position.distance_squared_to(source.global_position) < b.global_position.distance_squared_to(source.global_position))
+	for index: int in range(mini(AI_POLICY.MAX_SOCIAL_ASSIST,candidates.size())):
+		var ally: TwilightMonster = candidates[index]
+		ally.aggro_remaining = maxf(ally.aggro_remaining,8.0)
+		ally.repath_cooldown = 0.0
 
 func summon_for(owner: TwilightMonster) -> void:
 	var owned: int = 0

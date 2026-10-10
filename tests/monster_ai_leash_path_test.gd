@@ -32,9 +32,32 @@ func _run() -> void:
 	_check(not AI.should_repath(0.32),"one blocked frame does not thrash pathfinding")
 	_check(AI.next_stuck_elapsed(elapsed,2.0,90.0,0.033) == 0.0,"successful movement clears stuck timer")
 	_check(AI.next_stuck_elapsed(elapsed,0.0,0.0,0.033) == 0.0,"idle actor is never marked stuck")
+	# Social help is bounded and never overrides concealment, safe areas,
+	# empty factions, the individual leash, or the monster's return state.
+	_check(AI.MAX_SOCIAL_ASSIST == 4,"at most four nearby allies answer one hit")
+	_check(AI.can_assist("ant","ant",90,120,160,760,180,false,false,false),"nearby same-pack member may assist")
+	_check(not AI.can_assist("","",90,120,160,760,180,false,false,false),"empty groups cannot summon unrelated creatures")
+	_check(not AI.can_assist("ant","orc",90,120,160,760,180,false,false,false),"unrelated species cannot join the pack")
+	_check(not AI.can_assist("ant","ant",181,120,160,760,180,false,false,false),"out-of-hearing ally ignored")
+	_check(not AI.can_assist("ant","ant",90,120,160,760,180,true,false,false),"safe player cannot trigger social chase")
+	_check(not AI.can_assist("ant","ant",90,120,160,760,180,false,true,false),"hidden player cannot trigger social chase")
+	_check(not AI.can_assist("ant","ant",90,120,160,760,180,false,false,true),"returning ally cannot be re-aggroed")
+	_check(not AI.can_assist("ant","ant",90,120,761,760,180,false,false,false),"ally never helps outside home leash")
+	# Local boss tactics: a single threshold transition, no attack outside
+	# attackable state and no changes to the base animation timing markers.
+	_check(not AI.should_enrage(false,10,100),"field monsters never enrage by default")
+	_check(not AI.should_enrage(true,0,100),"dead bosses cannot enrage")
+	_check(not AI.should_enrage(true,50,100),"healthy bosses use normal combat")
+	_check(AI.should_enrage(true,35,100),"boss enrages at 35 percent HP")
+	_check(AI.should_enrage(true,34,100),"wounded boss remains enraged")
+	_check(not AI.should_enrage(true,20,100,{"enabled":false}),"boss enrage can be disabled by AI record")
+	_check(AI.should_enrage(true,45,100,{"hp_ratio":0.45}),"boss threshold can be overridden per record")
+	_check(AI.attack_interval(1.25,true)<AI.attack_interval(1.25,false),"enrage speeds up attacks")
+	_check(AI.chase_speed_factor(true)>1.0 and AI.chase_speed_factor(false)==1.0,"enrage improves chase without teleportation")
 	var instance: TwilightMonster = MONSTER.new()
 	_check(instance != null,"main TwilightMonster scene script still instantiates")
 	_check(instance.has_method("_tick_ai") and instance.has_method("_move_toward"),"existing combat/animation entrypoints preserved")
+	_check(not instance.enraged and instance.social_alert_cooldown == 0.0,"recycled monster tactics default to neutral state")
 	instance.free()
 	if failures.is_empty():
 		print("MONSTER_AI_OK: leash, stealth, safe zones, sticky return, obstacle repath and unchanged attack interfaces")

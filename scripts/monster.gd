@@ -14,6 +14,8 @@ var special_sequence: int = -1
 var special_cooldown: float = 3.0
 var blink_cooldown: float = 0.0
 var returning_home: bool = false
+var enraged: bool = false
+var social_alert_cooldown: float = 0.0
 var decision_elapsed: float = 0.0
 var sight_clock: float = 0.0
 var sight_cached: bool = false
@@ -127,6 +129,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	stun_remaining = 0.; silence_remaining = 0.; hold_remaining = 0.; fear_remaining = 0.
 	poison_remaining = 0.; poison_tick_clock = 0.; bleed_remaining = 0.; bleed_tick_clock = 0.
 	aggro_remaining = 0.; returning_home = false
+	enraged = false; social_alert_cooldown = 0.0
 	decision_elapsed = 0.; sight_clock = 0.; sight_cached = false
 	special_sequence = -1; special_cooldown = 3.; blink_cooldown = 0.; roam_clock = 0.
 	ai = (record.get("ai",{}) as Dictionary).duplicate(true)
@@ -281,10 +284,17 @@ func _tick_ai(delta: float) -> void:
 	attack_cooldown = maxf(0.,attack_cooldown-delta)
 	repath_cooldown = maxf(0.,repath_cooldown-delta)
 	aggro_remaining = maxf(0.,aggro_remaining-delta)
+	social_alert_cooldown = maxf(0.0, social_alert_cooldown-delta)
 	special_cooldown = maxf(0.,special_cooldown-delta)
 	blink_cooldown = maxf(0.,blink_cooldown-delta)
 	sight_clock = maxf(0.,sight_clock-delta)
 	var distance: float = global_position.distance_to(target_player.global_position)
+	var enrage_value: Variant = ai.get("enrage", {})
+	var enrage_settings: Dictionary = enrage_value as Dictionary if enrage_value is Dictionary else {}
+	var next_enraged: bool = AI_POLICY.should_enrage(is_boss, hp, max_hp, enrage_settings)
+	if next_enraged and not enraged:
+		show_status_text("ENRAGE")
+	enraged = next_enraged
 	name_label.visible = distance<=520.
 	hp_bar.visible = distance<=520.
 	if is_stunned() or is_feared():
@@ -369,7 +379,7 @@ func _tick_ai(delta: float) -> void:
 	if distance<=attack_range and sight:
 		velocity = Vector2.ZERO
 		if attack_cooldown<=0.:
-			attack_cooldown = attack_interval
+			attack_cooldown = AI_POLICY.attack_interval(attack_interval, enraged)
 			var style: String = motion.profile.motion_style if kind=="melee" else ("magic" if kind=="magic" else "bow")
 			motion.begin_attack(minf(.68,attack_interval*.75),target_player.global_position-global_position,style,motion.profile.marker_for(style))
 		return
@@ -400,7 +410,8 @@ func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 		return
 	var point: Vector2 = path[path_index]
 	var before_move: Vector2 = global_position
-	velocity = global_position.direction_to(point)*minf(move_speed*speed_ratio,global_position.distance_to(point)/maxf(.001,delta))
+	var tactical_speed: float = move_speed * speed_ratio * AI_POLICY.chase_speed_factor(enraged and not returning_home)
+	velocity = global_position.direction_to(point)*minf(tactical_speed,global_position.distance_to(point)/maxf(.001,delta))
 	move_and_slide()
 	path_stuck_elapsed = AI_POLICY.next_stuck_elapsed(path_stuck_elapsed,
 		global_position.distance_to(before_move),velocity.length(),delta)
@@ -684,7 +695,8 @@ func take_damage(amount: int, critical: bool = false, damage_kind: String = "") 
 		return
 	damage_hit_count += 1
 	aggro_remaining = 10.
-	if world_controller!=null and world_controller.get("field_population")!=null:
+	if social_alert_cooldown <= 0.0 and is_instance_valid(world_controller) and world_controller.get("field_population")!=null:
+		social_alert_cooldown = AI_POLICY.SOCIAL_ALERT_DELAY
 		world_controller.field_population.alert_social(self)
 	hp = maxi(0, hp - amount)
 	hp_bar.value = hp
