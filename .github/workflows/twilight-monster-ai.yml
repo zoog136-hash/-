@@ -1,0 +1,35 @@
+name: TWILIGHT Monster AI Leash and Path
+
+on:
+  push:
+    branches:
+      - feature/twilight-monster-ai-leash-path-20261010
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  monster-ai:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Full project import, boot and GDScript regression suite
+        run: |
+          set -o pipefail
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results 2>&1 | tee monster-ai-tests.log
+          grep -q MONSTER_AI_OK test-results/monster_ai_leash_path_test.log
+      - name: Archive exact test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-monster-ai-full-validation
+          path: |
+            test-results
+            monster-ai-tests.log

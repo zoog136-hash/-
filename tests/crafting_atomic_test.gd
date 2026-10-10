@@ -1,5 +1,5 @@
 extends SceneTree
-const CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
+const CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
 var failures: Array[String] = []
 
 func _initialize() -> void:
@@ -123,7 +123,7 @@ func _run() -> void:
 	var found: bool = false
 	if map_data is Dictionary:
 		for raw: Variant in (map_data as Dictionary).get("npc_spawn",[]):
-			if raw is Dictionary and str((raw as Dictionary).get("id","")) == "craft_master":
+			if raw is Dictionary and str((raw as Dictionary).get("id","")) == "craft_artisan":
 				found = str((raw as Dictionary).get("role","")) == "craft"
 	_check(found, "real craft master connected in Aden NPC data")
 	if failures.is_empty():

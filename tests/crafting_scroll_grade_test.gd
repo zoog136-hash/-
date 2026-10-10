@@ -1,5 +1,5 @@
 extends SceneTree
-const CRAFT = preload("res://scripts/crafting/local_crafting.gd")
+const CRAFT = preload("res://scripts/crafting/expanded_crafting.gd")
 const LOOT = preload("res://scripts/loot_drop.gd")
 const MONSTERS = preload("res://scripts/monsters/monster_catalog.gd")
 const GRADES: Array[String] = ["희귀","영웅","전설","신화","유일"]

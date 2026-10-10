@@ -6,7 +6,10 @@ signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
 signal shop_bulk_buy_requested(item_name: String, quantity: int)
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
-signal craft_requested(recipe_id: String, quantity: int)
+signal npc_teleport_requested(map_id: String)
+signal craft_requested(recipe_id: String, batch: int)
+signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
+signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: String)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -16,8 +19,11 @@ const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
+const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
-const CraftingUI = preload("res://scripts/ui/renewal_crafting.gd")
+const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
+const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
+const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
@@ -607,11 +613,29 @@ func open_warehouse() -> void:
 	workspace.mount(screen)
 	screen.configure(self)
 
-func open_crafting() -> void:
-	_open_window("crafting","제작 장인","재료 확인 · 아데나 소모 · 아이템 제작")
-	var screen := CraftingUI.new()
+func open_npc_teleport() -> void:
+	_open_window("teleport","텔레포트 안내인","기존 25개 맵으로 이동 · 기존 충돌/좌표 보존")
+	var screen := TeleportUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+
+func open_crafting() -> void:
+	_open_window("crafting","제작 장인","재료·비용 검사 · TWILIGHT 자체 제작식")
+	var screen := CraftUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_item_sell() -> void:
+	_open_window("sell","아이템 매입","아이템 검색 · 강화 장비 ID 확인 · 판매")
+	var screen := SellUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_npc_dialogue(npc_id: String) -> void:
+	_open_window("dialogue","NPC 대화","레벨 · 직업 · 퀘스트 · 아이템 보유 분기")
+	var screen := DialogueUI.new()
+	workspace.mount(screen)
+	screen.configure(self,npc_id)
 
 func open_quest_info() -> void:
 	_open_window("quest","퀘스트","기존 게임의 사냥 퀘스트 진행도")

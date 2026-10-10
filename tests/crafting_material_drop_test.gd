@@ -1,6 +1,6 @@
 extends SceneTree
 const LOOT = preload("res://scripts/loot_drop.gd")
-const CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
+const CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
 const MONSTER_CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 var failures: Array[String] = []
 

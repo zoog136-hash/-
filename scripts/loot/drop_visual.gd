@@ -10,6 +10,7 @@ var slot: String = ""
 var selected: bool = false
 var clock: float = 0.0
 var redraw_time: float = 0.0
+var source_icon: Sprite2D
 
 static func grade_color(grade: String) -> Color:
 	return COLORS[maxi(0, GRADES.find(grade))]
@@ -18,6 +19,20 @@ func configure(grade: String, icon: Texture2D, kind: String) -> void:
 	rank = maxi(0, GRADES.find(grade))
 	texture = icon
 	slot = kind
+	if is_instance_valid(source_icon):
+		remove_child(source_icon)
+		source_icon.queue_free()
+		source_icon = null
+	if texture != null and texture.resource_path.begins_with("res://assets/l1j/verified/ground/"):
+		source_icon = Sprite2D.new()
+		source_icon.texture = texture
+		source_icon.position = Vector2(0, -12)
+		source_icon.scale = Vector2(32,32) / texture.get_size()
+		var key_material := ShaderMaterial.new()
+		key_material.shader = preload("res://addons/twilight_l1j/source_color_key.gdshader")
+		key_material.set_shader_parameter("background_key", Vector3.ONE)
+		source_icon.material = key_material
+		add_child(source_icon)
 	set_process(rank >= 2)
 	queue_redraw()
 
@@ -61,7 +76,9 @@ func _draw() -> void:
 			if rank >= 4 and particle % 2 == 0:
 				draw_line(point - Vector2(3, 0), point + Vector2(3, 0), Color(color.lightened(0.6), alpha), 1, true)
 				draw_line(point - Vector2(0, 3), point + Vector2(0, 3), Color(color.lightened(0.6), alpha), 1, true)
-	if texture != null:
+	if is_instance_valid(source_icon):
+		pass
+	elif texture != null:
 		draw_texture_rect(texture, Rect2(-16, -28, 32, 32), false)
 	elif slot == "scroll":
 		# A folded parchment with a colored seal; beam still follows item grade.

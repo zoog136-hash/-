@@ -19,6 +19,7 @@ const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
+const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd")
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
@@ -52,9 +53,15 @@ const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
-var warehouse = LOCAL_WAREHOUSE.new()
+const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
+const NPC_DIALOGUE_SERVICE = preload("res://scripts/npc/dialogue_service.gd")
+var dialogue_service = NPC_DIALOGUE_SERVICE.new()
 const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
-var crafting = LOCAL_CRAFTING.new()
+const EXPANDED_CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
+var crafting = EXPANDED_CRAFTING.new()
+const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
+var crafting_log: Array[Dictionary] = []
+var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
 
@@ -264,6 +271,7 @@ func _ready() -> void:
 	ThemeDB.fallback_font = korean_font
 	rng.randomize()
 	ain_service.import_state({})
+	dialogue_service.load_dialogues()
 	crafting.load_recipes()
 	_load_data()
 	consumable_service = CONSUMABLE_SERVICE.new()
@@ -1044,8 +1052,14 @@ func _connect_signals() -> void:
 		hud.connect("shop_bulk_buy_requested", _buy_shop_bulk)
 	if hud.has_signal("warehouse_transfer_requested"):
 		hud.connect("warehouse_transfer_requested", _warehouse_transfer)
+	if hud.has_signal("npc_teleport_requested"):
+		hud.connect("npc_teleport_requested", _npc_teleport_requested)
 	if hud.has_signal("craft_requested"):
-		hud.connect("craft_requested", _craft_execute)
+		hud.connect("craft_requested", _craft_requested)
+	if hud.has_signal("shop_sell_requested"):
+		hud.connect("shop_sell_requested", _sell_shop_item)
+	if hud.has_signal("npc_dialogue_action_requested"):
+		hud.connect("npc_dialogue_action_requested", _npc_dialogue_action)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -1145,6 +1159,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
+		_apply_saved_visual_mode()
 		field_population.configure(self, field_map)
 	else:
 		_spawn_monsters(9)
@@ -1154,6 +1169,19 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+
+func _set_visual_mode(mode: String) -> void:
+	if is_instance_valid(field_renderer):
+		field_renderer.set_visual_mode(mode)
+
+func _apply_saved_visual_mode() -> void:
+	if not is_instance_valid(field_renderer):
+		return
+	var options := ConfigFile.new()
+	var mode: String = "twilight"
+	if options.load("user://twilight_ui_settings.cfg") == OK:
+		mode = str(options.get_value("visual","map_mode","twilight"))
+	_set_visual_mode(mode)
 
 func _apply_map_background() -> void:
 	var path: String = str(active_map.get("image_path", ""))
@@ -1298,6 +1326,33 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 					return cell
 	return origin
 
+func _npc_dialogue_state() -> Dictionary:
+	return {"level":level,"job_class":job_class,"quest_kills":quest_kills,"inventory":inventory.duplicate(true)}
+
+func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void:
+	# The UI cannot authorize an NPC service. Revalidate player proximity and
+	# the conditional dialogue choice against CURRENT world state.
+	if field_map == null:
+		return
+	var valid_npc: bool = false
+	for npc: Dictionary in field_map.data.get("npc_spawn",[]):
+		if str(npc.get("id","")) != npc_id:
+			continue
+		if player.global_position.distance_to(COORD.array_vector(npc["position"])) <= 190.0:
+			valid_npc = true
+		break
+	if not valid_npc or not dialogue_service.allowed_action(npc_id,node_id,action,_npc_dialogue_state()):
+		hud.show_message("대화 조건 또는 NPC 접근 거리가 맞지 않습니다")
+		return
+	match action:
+		"shop": hud.open_shop()
+		"warehouse": hud.call("open_warehouse")
+		"craft": hud.call("open_crafting")
+		"buyback": hud.call("open_item_sell")
+		"teleport": hud.call("open_npc_teleport")
+		"quest": hud.call("open_quest_info")
+		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
+
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
 	if field_map != null:
@@ -1308,8 +1363,14 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.open_shop()
 				elif str(npc["role"]) == "warehouse":
 					hud.call("open_warehouse")
+				elif str(npc["role"]) == "teleport":
+					hud.call("open_npc_teleport")
 				elif str(npc["role"]) == "craft":
 					hud.call("open_crafting")
+				elif str(npc["role"]) == "buyback":
+					hud.call("open_item_sell")
+				elif str(npc["role"]) == "guide":
+					hud.call("open_npc_dialogue",str(npc.get("id","")))
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
@@ -1399,8 +1460,7 @@ func _clear_drops() -> void:
 	ground_loot.clear_map(active_map_id)
 
 func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
-	var chance_percent: float = 75.0 + float(attacker_magic_accuracy - maxi(0, target_mr)) * 0.7
-	return clampf(chance_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.magic_hit_chance(attacker_magic_accuracy,target_mr)
 
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
@@ -1793,10 +1853,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 func _melee_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	var accuracy: int = _melee_accuracy_stat()
-	var target_ac_abs: int = absi(target.armor_class)
-	var chance_percent: float = 75.0 + float(accuracy - target_ac_abs) * 0.7
-	return clampf(chance_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.armor_class,0)
 
 func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
@@ -2130,25 +2187,23 @@ func _restore_ground_drops(saved: Variant) -> void:
 func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name)
+	var earned: Array[Dictionary] = LOOT_DROP.roll_detailed(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name)
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()
-	for index: int in range(earned.size()):
-		var item_name: String = earned[index]
+	for entry: Dictionary in earned:
+		var item_name: String = str(entry["item_name"])
+		var quantity: int = maxi(1, int(entry.get("quantity", 1)))
 		if not can_drop_tradeable_equipment and not item_name.contains("각인"):
 			var drop_record: Dictionary = _find_catalog_item_record(item_name)
-			var gear_source: Dictionary = (loot_catalog.get("by_name",{}) as Dictionary).get(item_name,{})
-			if _equipment_slot_base(drop_record) != "" or bool(gear_source.get("crafting_scroll",false)):
+			if _equipment_slot_base(drop_record) != "":
 				continue
-		_spawn_ground_drop(item_name, monster.global_position, 1, batch_id)
+		_spawn_ground_drop(item_name, monster.global_position, quantity, batch_id)
 	hud.show_message("아이템이 바닥에 떨어졌습니다")
 
 
 func _physical_hit_chance(attacker_accuracy: int, target_ac: int, avoidance: int) -> float:
-	var base_percent: float = 75.0 + float(attacker_accuracy - absi(target_ac)) * 0.7
-	var final_percent: float = base_percent - float(maxi(0, avoidance))
-	return clampf(final_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(attacker_accuracy,target_ac,avoidance)
 
 func _avoidance_for_attack_type(attack_type: String) -> int:
 	return _effective_er() if attack_type == "ranged" else _effective_dg()
@@ -2547,10 +2602,6 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
-	var crafting_record: Dictionary = _find_catalog_item_record(item_name)
-	if bool(crafting_record.get("crafting_scroll",false)):
-		hud.show_message("제작 비법서는 착용/사용할 수 없으며 제작창에서 소비합니다")
-		return
 	var kind: String = _scroll_kind(item_name)
 	if kind != "":
 		var candidates: Array = _enhancement_candidates(kind, _scroll_mode(item_name))
@@ -2920,11 +2971,6 @@ func _roll_enhancement_gain(mode: String, current_level: int) -> int:
 	return 1
 
 func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dictionary:
-	# Source catalogs may contain namesake recipes, but local scroll rules are
-	# authoritative for non-wearability and stackable crafting consumption.
-	var local_lookup: Dictionary = (loot_catalog.get("by_name",{}) as Dictionary).get(item_name,{})
-	if bool(local_lookup.get("crafting_scroll",false)):
-		return local_lookup
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
@@ -3226,6 +3272,28 @@ func _buy_shop_item(item_name: String, _ui_price: int) -> void:
 	# authority. Never debit a price supplied by a screen or external caller.
 	_buy_shop_bulk(item_name, 1)
 
+func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
+	# Validate the current inventory, bound flags and exact instance ID at
+	# commit time. The UI never submits the price or enhancement bonus.
+	_sync_item_instances()
+	var records: Dictionary = loot_catalog.get("by_name", {})
+	var quote: Dictionary = LOCAL_BUYBACK.quote(item_name,quantity,instance_id,inventory,records,item_instances,equipped_items,gold)
+	if not bool(quote.get("ok",false)):
+		hud.show_message(str(quote.get("reason","매입할 수 없습니다")))
+		return
+	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,inventory,item_instances,gold)
+	if not bool(transaction.get("ok",false)):
+		hud.show_message(str(transaction.get("reason","거래에 실패했습니다")))
+		return
+	gold = int(transaction["wallet"])
+	_update_hud()
+	_save_game(true)
+	hud.refresh_inventory(inventory)
+	hud.append_log("아이템 매입 · %s ×%d (+%d 아데나)" % [item_name,quantity,int(transaction["payment"])])
+	hud.show_message("매입 완료 · %d 아데나" % int(transaction["payment"]))
+	if hud.has_method("open_item_sell"):
+		hud.call("open_item_sell")
+
 func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 소모품은 구매할 수 없습니다")
@@ -3267,6 +3335,69 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 		hud.call("open_shop")
 
 
+# The original static crafting service remains available for saved-game and
+# regression compatibility. The expanded 413-recipe service is a separate instance.
+func _craft_item_index() -> Dictionary:
+	return loot_catalog.get("by_name", {}) as Dictionary
+
+func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
+	_sync_item_instances()
+	return crafting.quote(
+		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
+		equipped_items, _inventory_total_weight(), _carrying_capacity()
+	)
+
+func _craft_requested(recipe_id: String, batches: int) -> void:
+	# Revalidate authoritative ingredients, wallet, weight and physical IDs.
+	# The service stages mutations and commits only if every check succeeds.
+	_sync_item_instances()
+	var transaction: Dictionary = crafting.execute(
+		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
+		equipped_items, _inventory_total_weight(), _carrying_capacity(), next_item_instance_id
+	)
+	if not bool(transaction.get("ok", false)):
+		hud.show_message(str(transaction.get("reason", "제작에 실패했습니다")))
+		return
+	gold = int(transaction["gold_after"])
+	next_item_instance_id = int(transaction["next_instance_id"])
+	var output_name: String = str(transaction["result_name"])
+	var output_quantity: int = int(transaction["result_quantity"])
+	crafting_log.append({
+		"recipe_id":recipe_id, "batch":batches, "output":output_name,
+		"quantity":output_quantity, "gold":int(transaction["cost"]),
+		"at":Time.get_unix_time_from_system()
+	})
+	if crafting_log.size() > 200:
+		crafting_log.pop_front()
+	hud.refresh_inventory(inventory)
+	hud.append_log("제작 완료 · %s ×%d" % [output_name,output_quantity])
+	hud.show_message("제작 완료 · %s ×%d" % [output_name,output_quantity])
+	_update_hud()
+	_save_game(true)
+	if hud.has_method("open_crafting"):
+		hud.call("open_crafting")
+
+func _npc_teleport_requested(map_id: String) -> void:
+	if player.is_stunned() or player.is_feared() or player.is_held():
+		hud.show_message("이동 불가 상태에서는 텔레포트할 수 없습니다")
+		return
+	var quote: Dictionary = NPC_TELEPORT_POLICY.quote(map_id,maps_by_id,active_map_id,level,gold)
+	if not bool(quote.get("ok",false)):
+		hud.show_message(str(quote.get("reason","텔레포트할 수 없습니다")))
+		return
+	# Existing map loader validates its own field and destination before
+	# changing active_map_id. Only debit after a confirmed transition.
+	var cost: int = int(quote["price"])
+	_set_map(map_id,false)
+	if active_map_id != map_id:
+		hud.show_message("목적지 맵을 불러올 수 없습니다")
+		return
+	gold -= cost
+	_update_hud()
+	_save_game(true)
+	hud.show_message("텔레포트 완료 · %d 아데나" % cost)
+
+
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
 	if item_name == "아데나" or item_name.is_empty():
 		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
@@ -3301,49 +3432,10 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	if hud.has_method("open_warehouse"):
 		hud.call("open_warehouse")
 
-
-func _craft_item_index() -> Dictionary:
-	var index: Dictionary = {}
-	for raw: Variant in item_db:
-		if raw is Dictionary:
-			var record: Dictionary = raw as Dictionary
-			var item_name: String = str(record.get("name",""))
-			if not item_name.is_empty():
-				index[item_name] = record
-	return index
-
-func _craft_quote(recipe_id: String, count: int) -> Dictionary:
-	_sync_item_instances()
-	return crafting.quote(recipe_id,count,inventory,gold,_craft_item_index(),item_instances,equipped_items,_inventory_total_weight(),_carrying_capacity())
-
-func _craft_execute(recipe_id: String, count: int) -> void:
-	# All parameters are revalidated by the service before touching a wallet,
-	# stack or individual physical equipment record.
-	_sync_item_instances()
-	var transaction: Dictionary = crafting.execute(recipe_id,count,inventory,gold,_craft_item_index(),
-		item_instances,equipped_items,_inventory_total_weight(),_carrying_capacity(),next_item_instance_id)
-	if not bool(transaction.get("ok",false)):
-		hud.show_message(str(transaction.get("reason","제작에 실패했습니다")))
-		return
-	gold = int(transaction["gold_after"])
-	next_item_instance_id = int(transaction["next_instance_id"])
-	_update_hud()
-	_save_game(true)
-	hud.append_log("제작 성공 · %s ×%d (-%d 아데나)" % [
-		str(transaction["result_name"]),int(transaction["result_quantity"]),int(transaction["cost"])
-	])
-	hud.show_message("%s 제작 완료" % str(transaction["result_name"]))
-	if hud.has_method("open_crafting"):
-		hud.call("open_crafting")
-
-
 func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
-	if bool(_find_catalog_item_record(item_name).get("crafting_scroll",false)):
-		hud.show_message("제작 비법서는 제작창에서만 소비할 수 있습니다")
-		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -3478,6 +3570,7 @@ func _save_game(quiet: bool) -> void:
 		"inventory": inventory,
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
+		"crafting_log": crafting_log,
 		"monster_world": field_population.export_state(),
 		"class_index": class_index,
 		"job_class": job_class,
@@ -3532,6 +3625,12 @@ func _load_game(quiet: bool) -> void:
 		return
 	var data: Dictionary = value as Dictionary
 	warehouse.restore(data.get("warehouse", {}))
+	crafting_log.clear()
+	var old_log: Variant = data.get("crafting_log", [])
+	if old_log is Array:
+		for raw_log: Variant in old_log:
+			if raw_log is Dictionary and crafting_log.size() < 200:
+				crafting_log.append((raw_log as Dictionary).duplicate(true))
 	ain_service.import_state(data.get("ainhasad_state", {}))
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
@@ -4969,7 +5068,7 @@ func _weapon_ammo_from_type(weapon_type: String) -> String:
 	return ""
 
 func _equipment_slot_base(record: Dictionary) -> String:
-	if record.is_empty() or bool(record.get("crafting_scroll",false)):
+	if record.is_empty():
 		return ""
 	var item_type: String = str(record.get("type", "")).strip_edges()
 	var source_slot: String = str(record.get("slot", "")).strip_edges().to_lower()
@@ -5292,9 +5391,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	if target == null:
 		return 0.05
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
-	var target_ac_abs: int = absi(target.armor_class)
-	var chance_percent: float = 75.0 + float(accuracy - target_ac_abs) * 0.7
-	return clampf(chance_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.armor_class,0)
 
 func _catalog_damage_bonus(kind: String) -> int:
 	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
@@ -5741,7 +5838,7 @@ func _pve_damage_after_item_buffs(raw_damage: int) -> int:
 	return reduced
 
 func _physical_damage_after_reduction(raw_damage: int) -> int:
-	return maxi(1, raw_damage - _damage_reduction_stat() - _active_skill_buff_total("damage_reduction"))
+	return PHYSICAL_RESOLUTION.physical_after_flat_reduction(raw_damage,_damage_reduction_stat(),_active_skill_buff_total("damage_reduction"))
 
 func _character_stats_snapshot() -> Dictionary:
 	return {
