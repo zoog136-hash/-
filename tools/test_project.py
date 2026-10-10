@@ -1,7 +1,7 @@
 """Godot 4.7.2 import, boot, every original smoke test, and the field suite.
 
 Usage: python3 tools/test_project.py --godot /path/to/godot
-Each test receives a temporary XDG data directory, never the player's save.
+Each test receives temporary Linux and Windows data directories, never the player's save.
 """
 import argparse
 import os
@@ -23,7 +23,12 @@ tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'
 failed=[]
 for name,extra in tests:
     with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
-        env=os.environ.copy();env['XDG_DATA_HOME']=user_data
+        env=os.environ.copy()
+        env['XDG_DATA_HOME']=user_data
+        # Godot Windows uses APPDATA, not XDG_DATA_HOME. Every process, including
+        # the PCK probe child, must inherit its own empty save/config directory.
+        env['APPDATA']=user_data
+        env['LOCALAPPDATA']=user_data
         try:
             p=subprocess.run([args.godot,'--headless','--path',str(root),*extra],capture_output=True,text=True,env=env,timeout=args.timeout)
             output=p.stdout+p.stderr

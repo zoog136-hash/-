@@ -12,7 +12,10 @@ def main():
                 destination=root/record[key].removeprefix('res://')
                 if destination.exists(): raise ValueError('refusing to overwrite original art '+str(destination))
                 destination.parent.mkdir(parents=True,exist_ok=True)
-                blob=png_bytes((180,120,30,255));destination.write_bytes(blob);record[digest]=hashlib.sha256(blob).hexdigest()
+                # Keep the existing visible-body regression meaningful. The tiny
+                # preview fixture is unsuitable for a live monster portrait.
+                size = (48, 64) if section == 'monsters' else (32, 32)
+                blob=png_bytes((180,120,30,255),*size);destination.write_bytes(blob);record[digest]=hashlib.sha256(blob).hexdigest()
                 raw=root/'data/l1j/verified_bytes'/(record[digest]+'.l1jpng')
                 raw.parent.mkdir(parents=True,exist_ok=True);raw.write_bytes(blob)
     manifest['synthetic_fixture_only']=True
