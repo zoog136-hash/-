@@ -67,9 +67,15 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 	var distance: float = 0.0
 	var previous: Vector2 = world.player.global_position
 	var xp_before: int = world.experience
+	var target_seen_frames: int = 0
+	var damage_hits_before: int = 0
+	for existing_monster: TwilightMonster in world.monsters_root.get_children():
+		damage_hits_before += existing_monster.damage_hit_count
 	for i: int in range(210):
 		var start: int = Time.get_ticks_usec()
 		await process_frame
+		if i >= 30 and is_instance_valid(world.auto_target) and not world.auto_target.dead:
+			target_seen_frames += 1
 		if i >= 30:
 			frames.append(float(Time.get_ticks_usec()-start)/1000.0)
 			process_ms.append(Performance.get_monitor(Performance.TIME_PROCESS)*1000.0)
@@ -89,6 +95,13 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 		failed = true
 	world.player.set_auto_enabled(false)
 	world.player.clear_click_path()
+	var damage_hits_after: int = 0
+	for active_monster: TwilightMonster in world.monsters_root.get_children():
+		damage_hits_after += active_monster.damage_hit_count
+	var player_landed_hits: int = maxi(0, damage_hits_after - damage_hits_before)
+	if distance < 1.0:
+		print("REGION_AUTO_STATIONARY ", map_id, " target_frames=", target_seen_frames,
+			" damage_hits=", player_landed_hits, " active_monsters=", active_monsters)
 	frames.sort()
 	process_ms.sort()
 	physics_ms.sort()
@@ -96,7 +109,8 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 		"median_ms":frames[frames.size()/2], "p95_ms":frames[int(frames.size()*.95)],
 		"process_p95_ms":process_ms[int(process_ms.size()*.95)], "physics_p95_ms":physics_ms[int(physics_ms.size()*.95)],
 		"peak_draw_calls":peak_calls, "active_monsters":active_monsters,
-		"distance_world_pixels":snappedf(distance,.1), "xp_gained":world.experience-xp_before}
+		"distance_world_pixels":snappedf(distance,.1), "xp_gained":world.experience-xp_before,
+		"auto_target_frames":target_seen_frames, "player_landed_hits":player_landed_hits}
 	print("ACTIVE_PLAY ",JSON.stringify(report))
 	return report
 
@@ -107,6 +121,15 @@ func _run() -> void:
 		push_error("Rendered gameplay class confirmation failed")
 		quit(1)
 		return
+	# Class confirmation can leave the character/equipment workspace open.
+	# Dismiss it before rendering maps; otherwise most of the 37 screenshots
+	# photograph a UI overlay instead of playable scenery.
+	var workspace: Control = world.hud.get("workspace") as Control
+	if workspace != null and workspace.visible:
+		world.hud.call("_close_workspace")
+		if workspace.visible:
+			push_error("World-region capture is obscured by an open workspace")
+			failed = true
 	world.save_timer=-10000
 	var directory: String = "user://world-regions-review"
 	DirAccess.make_dir_recursive_absolute(directory)
