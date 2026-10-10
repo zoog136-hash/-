@@ -3,6 +3,16 @@
 This file records actual recovery and executable validation. PR #59 remains Draft;
 do not merge it or commit to main without the user's separate approval.
 
+Latest completed **code** checkpoint:
+`f318161dedbd4fc0c19ef0a0dd25e6a420200abc`, tree
+`3be64c50e581193f0855fad6b82f0a44accf6dcf`.
+[GitHub CI run 38048993582](https://github.com/zoog136-hash/-/actions/runs/38048993582)
+passed **67/67** checks and actual Godot 4.7.2 OpenGL rendering of all **11**
+screens. The later `[skip ci]` evidence-only commit changes this report,
+version history and evidence JSON; scripts/data/tests/resources stay identical
+to this tested code. The previous two code commits are `3264fec3` and `bbc08e9a`,
+whose separate 64/64 and 65/65 CI runs also succeeded.
+
 ## Recovery boundary
 
 - Started from remote `b69adeb95b1782b34d56d36c2255bd3616f32b97`,
@@ -189,11 +199,16 @@ Actual local OpenGL rendering again passed **11** captures and guardian/Turn
 Undead markers; the final impact image was inspected and visibly retains the
 wizard class label. Data validator has **0 errors**.
 
-The sequential full runner finished **66/66 passed** with no failed checks.
+The local sequential full runner finished **66/66 passed** with no failed checks.
 It enumerated its scripts before the new rewards fixture was added; no
 production source was changed during that run. The rewards fixture passed
-separately with 24 assertions. The next GitHub full run will enumerate all
-**67** checks; that number is not reported as a CI pass before it actually runs.
+separately with 24 assertions. The subsequent exact-code GitHub run finished
+**67/67 PASS** with no failed checks and all 11 actual OpenGL captures. It
+included both new state and reward suites. Artifact ID `11669215009` contains
+the individual test logs and PNGs (SHA-256
+`5897e9608dac858dc78522e7b95958b6cc7f6db784c073666da82ef90b427d1b`,
+expiry 2027-01-08). Metadata/check names/render markers are committed in
+`github-ci-third.json` and `github-ci-third-artifacts.json`.
 
 Failures are preserved, not counted as passes: the new pre-fix class regression
 reported 24 label failures; stable-slot refresh and old-life mark/duration tests
@@ -216,11 +231,22 @@ merge was performed and main was not changed.
 ## Next execution
 
 ```sh
+git fetch origin feature/original-lineagem-skill-complete-20261010
 git checkout feature/original-lineagem-skill-complete-20261010
 git pull --ff-only
+git status --short
+git log -4 --oneline
 python3 tools/validate_original_skills.py --report test-results/data-validation.json
 python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
 ```
+
+Start from the existing branch, compare local changes before pulling, and keep
+an isolated `XDG_DATA_HOME` for manual engine tests. For actual render evidence,
+set `TWILIGHT_SKILL_CAPTURE_DIR` outside the repo and run
+`--audio-driver Dummy --script res://tests/capture_original_skills.gd` with a
+working OpenGL display. Public fetch works here; plain Git push lacks credentials.
+This session published through authenticated Git blob/tree/commit/ref APIs,
+verifying exact local hashes and the expected remote parent without force.
 
 Next actual paths: `scripts/skills/skill_service.gd:deal_damage()` and
 `scripts/skills/status_service.gd` for the stored but currently unconsumed
@@ -229,8 +255,12 @@ inline UNKNOWN/INFERRED grade/activation and CUSTOM_BALANCE learning labels;
 `scripts/skills/skill_catalog.gd:learn()/resolve()` for remaining condition and
 upgrade audits; `scripts/world.gd:_load_game()` for the documented main conflict;
 then missing dated class effects in
-`data/skills/research_inventory.json`. All **568 BLOCKED
-records** there are the explicit unfinished list. Original video frames,
+`data/skills/research_inventory.json`. All **568 BLOCKED records** there are
+the explicit unfinished list: **549** need pre-cutoff effect/PvE verification;
+**19** need historical rename/rework/continuity verification. The first such
+record is knight `데몬 대시`, stable ID `lm_bf27d9216c1bd228`; its PvE and
+historical presence remain UNKNOWN. Check official dated descriptions before
+activating these records. Original video frames,
 undocumented levels/cost/formula/prerequisites, final main integration and
 Windows physical playthrough remain unfinished. The session does not continue
 automatically after it ends.
