@@ -2138,7 +2138,8 @@ func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = t
 		var item_name: String = earned[index]
 		if not can_drop_tradeable_equipment and not item_name.contains("각인"):
 			var drop_record: Dictionary = _find_catalog_item_record(item_name)
-			if _equipment_slot_base(drop_record) != "" or bool(drop_record.get("crafting_scroll",false)):
+			var gear_source: Dictionary = (loot_catalog.get("by_name",{}) as Dictionary).get(item_name,{})
+			if _equipment_slot_base(drop_record) != "" or bool(gear_source.get("crafting_scroll",false)):
 				continue
 		_spawn_ground_drop(item_name, monster.global_position, 1, batch_id)
 	hud.show_message("아이템이 바닥에 떨어졌습니다")
@@ -2919,6 +2920,11 @@ func _roll_enhancement_gain(mode: String, current_level: int) -> int:
 	return 1
 
 func _find_catalog_item_record(item_name: String, source_id: String = "") -> Dictionary:
+	# Source catalogs may contain namesake recipes, but local scroll rules are
+	# authoritative for non-wearability and stackable crafting consumption.
+	var local_lookup: Dictionary = (loot_catalog.get("by_name",{}) as Dictionary).get(item_name,{})
+	if bool(local_lookup.get("crafting_scroll",false)):
+		return local_lookup
 	if source_id != "":
 		var identified: Dictionary = _catalog_item_from_source_id(source_id)
 		return identified if str(identified.get("name", "")) == item_name else {}
