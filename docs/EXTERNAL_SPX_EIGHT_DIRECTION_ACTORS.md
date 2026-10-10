@@ -8,7 +8,7 @@ Using the repository's bounded `tools/l1j/spx_decode.py`, the optional pack deco
 - `21624`: 232 frames, 32 action/direction sequences
 - `21653`: 256 frames, 32 action/direction sequences
 
-Both are mapped into `idle_0..7`, `walk_0..7`, `attack_0..7`, and `hit_0..7` SpriteFrames animations. The source contains different action ordering for each reviewed actor. Source direction ordering starts south and is remapped to TWILIGHT's E,SE,S,SW,W,NW,N,NE. Hit and attack semantics derive from inspected frame progression, not from a filename alone. **This is an appearance option, not automatic class identification.**
+Both are mapped into `idle_0..7`, `walk_0..7`, `attack_0..7`, and `hit_0..7` SpriteFrames animations. The source contains different action ordering for each reviewed actor. Source direction order is N,NW,W,SW,S,SE,E,NE; conversion to TWILIGHT's E,SE,S,SW,W,NW,N,NE is **source = (6 - facing) mod 8**. The first visual preview exposed an inverted north/south mapping, now corrected before delivery. Hit and attack semantics derive from inspected frame progression, not from a filename alone. **This is an appearance option, not automatic class identification.**
 
 ## Use on an offline PC
 
