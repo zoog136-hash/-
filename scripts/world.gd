@@ -52,6 +52,7 @@ const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
+const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
@@ -1041,6 +1042,8 @@ func _connect_signals() -> void:
 		hud.connect("shop_bulk_buy_requested", _buy_shop_bulk)
 	if hud.has_signal("warehouse_transfer_requested"):
 		hud.connect("warehouse_transfer_requested", _warehouse_transfer)
+	if hud.has_signal("npc_teleport_requested"):
+		hud.connect("npc_teleport_requested", _npc_teleport_requested)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -1303,6 +1306,8 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.open_shop()
 				elif str(npc["role"]) == "warehouse":
 					hud.call("open_warehouse")
+				elif str(npc["role"]) == "teleport":
+					hud.call("open_npc_teleport")
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
@@ -3248,6 +3253,27 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	_save_game(true)
 	if hud.has_method("open_shop"):
 		hud.call("open_shop")
+
+
+func _npc_teleport_requested(map_id: String) -> void:
+	if player.is_stunned() or player.is_feared() or player.is_held():
+		hud.show_message("이동 불가 상태에서는 텔레포트할 수 없습니다")
+		return
+	var quote: Dictionary = NPC_TELEPORT_POLICY.quote(map_id,maps_by_id,active_map_id,level,gold)
+	if not bool(quote.get("ok",false)):
+		hud.show_message(str(quote.get("reason","텔레포트할 수 없습니다")))
+		return
+	# Existing map loader validates its own field and destination before
+	# changing active_map_id. Only debit after a confirmed transition.
+	var cost: int = int(quote["price"])
+	_set_map(map_id,false)
+	if active_map_id != map_id:
+		hud.show_message("목적지 맵을 불러올 수 없습니다")
+		return
+	gold -= cost
+	_update_hud()
+	_save_game(true)
+	hud.show_message("텔레포트 완료 · %d 아데나" % cost)
 
 
 func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
