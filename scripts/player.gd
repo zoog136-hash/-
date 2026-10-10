@@ -78,6 +78,11 @@ func _ready() -> void:
 	var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
 	shadow.name = "GroundShadow"
 	add_child(shadow)
+	var action_fx: TwilightPlayerActionFX = preload("res://scripts/animation/player_action_fx.gd").new()
+	action_fx.name = "PlayerActionFX"
+	action_fx.actor = self
+	action_fx.z_index = 6
+	add_child(action_fx)
 
 func _physics_process(delta: float) -> void:
 	physics_delta = delta

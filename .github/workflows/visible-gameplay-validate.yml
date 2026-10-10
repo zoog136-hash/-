@@ -1,0 +1,33 @@
+name: TWILIGHT Visible Gameplay Smoke
+on:
+  pull_request:
+    paths:
+      - 'scripts/animation/actor_motion.gd'
+      - 'scripts/animation/player_action_fx.gd'
+      - 'scripts/player.gd'
+      - 'scripts/maps/field_renderer.gd'
+      - 'scripts/ui/renewal_inventory.gd'
+      - 'scripts/ui/renewal_shop.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'tests/visible_gameplay_smoke_test.gd'
+      - '.github/workflows/visible-gameplay-validate.yml'
+  workflow_dispatch:
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Godot 4.7.2
+        run: |
+          curl -fL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import project
+        run: ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import
+      - name: Compile and exercise changed gameplay scripts
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/visible_gameplay_smoke_test.gd 2>&1 | tee visual-smoke.log
+          grep -q 'VISIBLE_GAMEPLAY_SMOKE_OK' visual-smoke.log
+          ! grep -E 'SCRIPT ERROR:|Parse Error:|ERROR:' visual-smoke.log

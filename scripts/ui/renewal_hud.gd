@@ -48,6 +48,13 @@ var catalog_grade_filter: String = "전체"
 var rarity_filter: OptionButton
 var collection_slot_filter: OptionButton
 var collection_status: Label
+var catalog_drag_icon: TextureRect
+var catalog_drag_touch: int = -1
+var catalog_drag_mouse: bool = false
+var catalog_drag_index: int = -1
+var catalog_drag_origin: Vector2 = Vector2.ZERO
+var catalog_drag_position: Vector2 = Vector2.ZERO
+var catalog_drag_ready: bool = false
 var playtest_grant_button: Button
 var playtest_aden_button: Button
 var playtest_scroll_buttons: Array[Button] = []
@@ -104,6 +111,17 @@ func set_auto(enabled: bool) -> void:
 func _ready() -> void:
 	super._ready()
 	$Root.theme = UI.make_theme()
+	catalog_drag_icon = TextureRect.new()
+	catalog_drag_icon.name = "CatalogDragPreview"
+	catalog_drag_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	catalog_drag_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	catalog_drag_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	catalog_drag_icon.custom_minimum_size = Vector2(76, 76)
+	catalog_drag_icon.size = Vector2(76, 76)
+	catalog_drag_icon.modulate = Color(1,1,1,.86)
+	catalog_drag_icon.z_index = 250
+	$Root.add_child(catalog_drag_icon)
+	catalog_drag_icon.hide()
 	workspace = RenewalWindowScript.new()
 	$Root.add_child(workspace)
 	workspace.navigate.connect(_navigate)
@@ -386,6 +404,15 @@ func _build_v20_message_and_log() -> void:
 	log_label.add_theme_color_override("default_color",UI.MUTED)
 	_place(log_label,197,536,595,625)
 	v20_layer.add_child(log_label)
+
+	# Combat history must not cover the playable world with an opaque panel.
+	# Full logs remain accessible in the workspace's 전투 기록 tab.
+	var clear_panel := StyleBoxEmpty.new()
+	log_label.add_theme_stylebox_override("normal",clear_panel)
+	log_label.add_theme_stylebox_override("focus",clear_panel)
+	log_label.add_theme_color_override("default_color",Color("ebdcbd"))
+	log_label.add_theme_font_size_override("normal_font_size",11)
+	log_label.modulate.a = .82
 
 func _fit_hud() -> void:
 	if v20_layer == null: return
@@ -798,6 +825,7 @@ func _open_utility_panel(title: String) -> void:
 	(box.get_child(box.get_child_count()-1) as Control).hide()
 
 func open_catalog(category: String) -> void:
+	_reset_catalog_drag()
 	_open_window(category,category+" 도감","등급 · 이름으로 검색 / 로컬 도감 데이터")
 	workspace.mount(catalog_panel)
 	catalog_panel.show()
@@ -809,7 +837,7 @@ func open_catalog(category: String) -> void:
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
 	catalog_search.set_text("")
-	collection_status.text = "아이템 원본 목록 · 보유 아이템 장착 및 사용" if category=="아이템" else "전체 도감 · 현재 적용 상태 확인"
+	collection_status.text = "아이콘 오른쪽 드래그로 장착/사용 · 보유 아이템만 적용" if category=="아이템" else "아이콘을 오른쪽으로 끌면 적용 · 선택 후 장착 버튼도 사용 가능"
 	playtest_grant_button.visible = category == "아이템"
 	playtest_grant_button.disabled = true
 	playtest_aden_button.visible = category == "아이템"
@@ -949,6 +977,84 @@ func _build_catalog_panel() -> void:
 		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
 	old.queue_free()
+
+func _reset_catalog_drag() -> void:
+	catalog_drag_touch = -1
+	catalog_drag_mouse = false
+	catalog_drag_index = -1
+	catalog_drag_ready = false
+	if is_instance_valid(catalog_drag_icon): catalog_drag_icon.hide()
+
+func _inside_catalog_control(control: Control, canvas_point: Vector2) -> bool:
+	if not is_instance_valid(control) or not control.is_visible_in_tree(): return false
+	var local: Vector2 = control.get_global_transform_with_canvas().affine_inverse() * canvas_point
+	return Rect2(Vector2.ZERO, control.size).has_point(local)
+
+func _begin_catalog_drag(point: Vector2, touch_index: int, is_mouse: bool) -> void:
+	if catalog_list == null or not _inside_catalog_control(catalog_list, point): return
+	var local: Vector2 = catalog_list.get_global_transform_with_canvas().affine_inverse() * point
+	var index: int = catalog_list.get_item_at_position(local, true)
+	if index < 0 or index >= catalog_results.size(): return
+	catalog_drag_touch = touch_index
+	catalog_drag_mouse = is_mouse
+	catalog_drag_index = index
+	catalog_drag_origin = point
+	catalog_drag_position = point
+	catalog_drag_ready = false
+
+func _continue_catalog_drag(point: Vector2) -> void:
+	if catalog_drag_index < 0: return
+	catalog_drag_position = point
+	var delta: Vector2 = point - catalog_drag_origin
+	if not catalog_drag_ready and delta.length() > 22.0 and delta.x > absf(delta.y) * 1.15:
+		catalog_drag_ready = true
+		var record: Dictionary = catalog_results[catalog_drag_index] as Dictionary
+		var path: String = str(record.get("image_path", ""))
+		var art: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+		if catalog_category == "아이템":
+			art = UI.item_icon(record, str(record.get("name", "")), item_image_index.get("아이템", {}))
+		catalog_drag_icon.texture = art
+		catalog_drag_icon.show()
+	if catalog_drag_ready:
+		catalog_drag_icon.position = point - Vector2(38, 38)
+
+func _end_catalog_drag(point: Vector2) -> void:
+	var index: int = catalog_drag_index
+	var delta: Vector2 = point - catalog_drag_origin
+	var can_apply: bool = catalog_drag_ready and (delta.x >= 96.0 and delta.x > absf(delta.y) * 1.15 or _inside_catalog_control(catalog_equip_button, point))
+	_reset_catalog_drag()
+	if can_apply and index >= 0 and index < catalog_results.size():
+		_select_catalog_index(index)
+		if not catalog_equip_button.disabled:
+			_equip_selected_catalog()
+		if catalog_view_tabs.visible:
+			_set_catalog_detail_view(true)
+		get_viewport().set_input_as_handled()
+
+func _input(event: InputEvent) -> void:
+	# Preserve normal left/right swipe scrolling, taps, input focus and all World actions.
+	if not is_instance_valid(workspace) or not workspace.visible or catalog_list == null or not catalog_list.is_visible_in_tree():
+		if catalog_drag_index >= 0: _reset_catalog_drag()
+		return
+	if active_section not in ["변신","마법인형","성물","아이템"]:
+		if catalog_drag_index >= 0: _reset_catalog_drag()
+		return
+	if event is InputEventScreenTouch:
+		var touch: InputEventScreenTouch = event
+		if touch.device == InputEvent.DEVICE_ID_EMULATION: return
+		if touch.pressed and not touch.canceled and catalog_drag_index == -1:
+			_begin_catalog_drag(touch.position,touch.index,false)
+		elif touch.index == catalog_drag_touch and (not touch.pressed or touch.canceled):
+			if not touch.canceled: _end_catalog_drag(touch.position)
+			else: _reset_catalog_drag()
+	elif event is InputEventScreenDrag and event.index == catalog_drag_touch and catalog_drag_index >= 0:
+		_continue_catalog_drag(event.position)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed and catalog_drag_index == -1:
+			_begin_catalog_drag(event.position,-1,true)
+		elif not event.pressed and catalog_drag_mouse: _end_catalog_drag(event.position)
+	elif event is InputEventMouseMotion and catalog_drag_mouse and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
+		_continue_catalog_drag(event.position)
 
 func _set_catalog_detail_view(show_details: bool) -> void:
 	catalog_details_active = show_details

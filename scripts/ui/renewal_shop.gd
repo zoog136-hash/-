@@ -23,6 +23,11 @@ var list_touch_travel: float = 0.0
 var list_touch_dragging: bool = false
 var list_mouse_dragging: bool = false
 var list_mouse_travel: float = 0.0
+# Native touches can be consumed by ItemList before its gui_input callback.
+# Track taps at the regular input phase as a second selection path; never buy here.
+var raw_touch_index: int = -1
+var raw_touch_start: Vector2 = Vector2.ZERO
+var raw_touch_travel: float = 0.0
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -146,6 +151,31 @@ func _goods() -> Array:
 		for offer: Dictionary in profile.goods:
 			result.append([str(offer.game_name), int(offer.price), str(offer.category)])
 	return result
+
+func _raw_touch_local(point: Vector2) -> Vector2:
+	return listing.get_global_transform_with_canvas().affine_inverse() * point
+
+func _input(event: InputEvent) -> void:
+	if listing == null or not is_visible_in_tree() or not listing.visible:
+		raw_touch_index = -1
+		return
+	if event is InputEventScreenTouch:
+		var touch: InputEventScreenTouch = event
+		if touch.device == InputEvent.DEVICE_ID_EMULATION: return
+		if touch.pressed and not touch.canceled and raw_touch_index == -1:
+			var local: Vector2 = _raw_touch_local(touch.position)
+			if Rect2(Vector2.ZERO, listing.size).has_point(local):
+				raw_touch_index = touch.index
+				raw_touch_start = touch.position
+				raw_touch_travel = 0.0
+		elif touch.index == raw_touch_index and (not touch.pressed or touch.canceled):
+			var local: Vector2 = _raw_touch_local(touch.position)
+			var is_tap: bool = not touch.canceled and raw_touch_travel < 12.0 and raw_touch_start.distance_to(touch.position) < 18.0
+			raw_touch_index = -1
+			if is_tap and Rect2(Vector2.ZERO, listing.size).has_point(local):
+				_select_at_position(local)
+	elif event is InputEventScreenDrag and event.index == raw_touch_index:
+		raw_touch_travel += event.relative.length()
 
 # ItemList mouse selection works in the editor but a native Android
 # InputEventScreenTouch does not necessarily emit item_selected. Treat a tap

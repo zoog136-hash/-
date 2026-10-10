@@ -129,7 +129,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 			return
 	if move_ratio > 0.01:
 		face(real_velocity)
-		_set_state("run" if move_ratio > 1.12 else "walk", delta)
+		_set_state("run" if move_ratio > 1.12 or (profile.reference_speed >= 180.0 and move_ratio >= 0.92) else "walk", delta)
 	elif hit_clock > 0.0:
 		_set_state("hit", delta)
 	else:
@@ -153,8 +153,12 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	else:
 		bob = sin(idle_clock * 2.5) * (2.2 if profile.floating else 0.4)
 		if move_ratio > 0.01 and not active:
-			bob -= absf(sin(gait * PI)) * (1.2 if profile.floating else 2.3)
-			lean = sin(gait * PI) * (0.025 if profile.motion_style != "crawl" else 0.05)
+			var footfall: float = absf(sin(gait * PI))
+			var running: bool = state == "run"
+			bob -= footfall * (1.2 if profile.floating else (4.6 if running else 2.3))
+			lean = sin(gait * PI) * (0.050 if running else (0.025 if profile.motion_style != "crawl" else 0.05))
+			if running and not profile.floating:
+				stretch = Vector2(1.0 + footfall * .035, 1.0 - footfall * .044)
 		if active:
 			var p: float = visual_progress
 			var impact: float = sin(clampf(p / attack_hit_ratio, 0.0, 1.0) * PI * 0.5) if p <= attack_hit_ratio else 1.0 - smoothstep(attack_hit_ratio, 1.0, p)
