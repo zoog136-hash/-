@@ -53,7 +53,10 @@ func _run() -> void:
 	var strict_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	strict_rng.seed = 3189
 	_check(LOOT._pick_equipment("희귀", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "", "grade miss must not substitute unrelated rare equipment")
-	_check(LOOT._pick_equipment("고급", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "수정 단검", "configured grade must select exactly registered equipment")
+	var live_spatoy_low: String = LOOT._pick_equipment("일반", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이")
+	_check(live_spatoy_low in ["청동 이도류", "청동 크로우"], "verified Spatoy common L1J source must not roll unrelated equipment")
+	var live_spatoy_mid: String = LOOT._pick_equipment("고급", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이")
+	_check(live_spatoy_mid in ["강철 이도류", "강철 크로우", "수정 단검"], "verified Spatoy uncommon L1J source coexists with registered legacy item")
 	_check(LOOT._pick_equipment("유일", ["HP 물약"], catalog, strict_rng, "고스트") == "", "potion-only monster must not inherit Unique equipment")
 	_check(LOOT._pick_equipment("일반", ["없는 아이템"], catalog, strict_rng, "잘못된 몬스터") == "", "unmapped item must be rejected")
 	# The optional L1J mapping changes ONLY item selection within the grade,
@@ -84,6 +87,19 @@ func _run() -> void:
 	_check(str(queen_loot.get("item_name", "")) == "수정 단검", "L1J Crystal Dagger mapped through live catalog")
 	_check(int(queen_loot.get("quantity", 0)) == 1, "real source quantity preserved")
 	_check(LOOT._pick_equipment_entry("희귀", ["마법 망토"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마법 망토", "Ice Queen retains her preexisting rare cloak with L1J import")
+	var live_death_knight: Dictionary = LOOT._pick_equipment_entry("영웅", ["진명황의 집행검"], catalog, strict_rng, "데스나이트")
+	_check(str(live_death_knight.get("item_name", "")) == "론드의 이도류", "source mob 45601 / weapon 76 must map to real Death Knight drop")
+	_check(int(live_death_knight.get("quantity", 0)) == 1, "source Death Knight quantity must survive equipment pick")
+	_check(LOOT._pick_equipment_entry("신화", ["진명황의 집행검"], catalog, strict_rng, "데스나이트").get("item_name", "") == "진명황의 집행검", "Death Knight legacy mythic gear must remain configured")
+	var real_spatoy_rows: Array = live_map.get("스파토이", [])
+	_check(real_spatoy_rows.size() == 4, "four explicit original Spatoy weapons must load")
+	var source_spatoy_ids: Dictionary = {}
+	for raw_spatoy: Variant in real_spatoy_rows:
+		if raw_spatoy is Dictionary:
+			source_spatoy_ids[int((raw_spatoy as Dictionary).get("l1j_item_id", 0))] = true
+	for required_spatoy_id: int in [69, 71, 152, 153]:
+		_check(source_spatoy_ids.has(required_spatoy_id), "missing verified Spatoy item source ID " + str(required_spatoy_id))
+
 	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마족의 단검", "legacy registered rare item remains available")
 	var boss_count: int = 0
 	var normal_count: int = 0
