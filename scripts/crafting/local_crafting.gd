@@ -56,6 +56,23 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 	var output_count: int = int((result as Dictionary).get("quantity",0))
 	if output_count <= 0 or output_count > 99 or _item(items,output).is_empty():
 		return _error("제작 결과물이 실제 아이템 DB에 없습니다")
+	var output_record: Dictionary = _item(items,output)
+	if bool(output_record.get("crafting_scroll",false)):
+		return _error("비법서를 장비처럼 제작할 수 없습니다")
+	var output_grade: String = str(output_record.get("grade",""))
+	if _is_equipment(output_record) and output_grade in ["희귀","영웅","전설","신화","유일"]:
+		var scroll_name: String = output_grade + " 제작 비법서"
+		var scroll_item: Dictionary = _item(items,scroll_name)
+		if not bool(scroll_item.get("crafting_scroll",false)) or str(scroll_item.get("slot","")) != "consumable" or str(scroll_item.get("grade","")) != output_grade:
+			return _error("해당 등급 비법서 데이터가 없습니다")
+		if str(recipe.get("required_scroll_grade","")) != output_grade:
+			return _error("제작 비법서 조건이 누락되었습니다")
+		var found: int = 0
+		for entry: Variant in recipe.get("materials",[]):
+			if entry is Dictionary and str((entry as Dictionary).get("item","")) == scroll_name and int((entry as Dictionary).get("quantity",0)) == 1:
+				found += 1
+		if found != 1:
+			return _error("해당 등급 제작 비법서 1장이 필요합니다")
 	var unit_cost: int = int(recipe.get("adena",-1))
 	if unit_cost < 0 or unit_cost > 100000000:
 		return _error("제작 비용이 올바르지 않습니다")
