@@ -38,7 +38,8 @@ func _run() -> void:
 	_check(int(inventory["HP 물약"]) == 4 and int(inventory["강력 HP 물약"]) == 2, "ingredients consumed and result awarded once")
 	_check(not bool(CRAFT.quote("hp_blessed",1,inventory,9999,catalog,weights,100,100).get("ok")), "missing intermediate components reject")
 	_check(not bool(CRAFT.quote("hp_mid",1,inventory,119,catalog,weights,10,100).get("ok")), "insufficient Adena reject")
-	_check(not bool(CRAFT.quote("hp_mid",1,inventory,9999,catalog,weights,100,100).get("ok")), "encumbrance prevents over-capacity result")
+	var heavy_weights: Dictionary = {"HP 물약":1,"강력 HP 물약":20,"축복받은 HP 물약":30}
+	_check(not bool(CRAFT.quote("hp_mid",1,inventory,9999,catalog,heavy_weights,100,100).get("ok")), "encumbrance prevents over-capacity result")
 	_check(not bool(CRAFT.quote("__forged__",1,inventory,9999,catalog,weights,0,100).get("ok")), "unlisted recipe rejected")
 	for amount: int in [-1,0,51,1000]:
 		_check(not bool(CRAFT.quote("hp_mid",amount,inventory,99999,catalog,weights,0,9999).get("ok")), "invalid count: " + str(amount))
