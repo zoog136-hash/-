@@ -2138,7 +2138,7 @@ func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = t
 		var item_name: String = earned[index]
 		if not can_drop_tradeable_equipment and not item_name.contains("각인"):
 			var drop_record: Dictionary = _find_catalog_item_record(item_name)
-			if _equipment_slot_base(drop_record) != "":
+			if _equipment_slot_base(drop_record) != "" or bool(drop_record.get("crafting_scroll",false)):
 				continue
 		_spawn_ground_drop(item_name, monster.global_position, 1, batch_id)
 	hud.show_message("아이템이 바닥에 떨어졌습니다")
@@ -2545,6 +2545,10 @@ func _on_inventory_item_activated(item_name: String) -> void:
 		hud.show_message("아이템이 없습니다")
 		return
 	if bool(consumable_service.call("try_use", item_name)):
+		return
+	var crafting_record: Dictionary = _find_catalog_item_record(item_name)
+	if bool(crafting_record.get("crafting_scroll",false)):
+		hud.show_message("제작 비법서는 착용/사용할 수 없으며 제작창에서 소비합니다")
 		return
 	var kind: String = _scroll_kind(item_name)
 	if kind != "":
@@ -3331,6 +3335,9 @@ func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
+	if bool(_find_catalog_item_record(item_name).get("crafting_scroll",false)):
+		hud.show_message("제작 비법서는 제작창에서만 소비할 수 있습니다")
+		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -4956,7 +4963,7 @@ func _weapon_ammo_from_type(weapon_type: String) -> String:
 	return ""
 
 func _equipment_slot_base(record: Dictionary) -> String:
-	if record.is_empty():
+	if record.is_empty() or bool(record.get("crafting_scroll",false)):
 		return ""
 	var item_type: String = str(record.get("type", "")).strip_edges()
 	var source_slot: String = str(record.get("slot", "")).strip_edges().to_lower()
