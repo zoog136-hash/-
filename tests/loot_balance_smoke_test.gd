@@ -90,6 +90,7 @@ func _run() -> void:
 	var live_death_knight: Dictionary = LOOT._pick_equipment_entry("영웅", ["진명황의 집행검"], catalog, strict_rng, "데스나이트")
 	_check(str(live_death_knight.get("item_name", "")) == "론드의 이도류", "source mob 45601 / weapon 76 must map to real Death Knight drop")
 	_check(int(live_death_knight.get("quantity", 0)) == 1, "source Death Knight quantity must survive equipment pick")
+	_check(LOOT._pick_equipment_entry("희귀", ["진명황의 집행검"], catalog, strict_rng, "데스나이트").get("item_name", "") == "완력의 목걸이", "Death Knight source strength amulet uses its rare grade")
 	_check(LOOT._pick_equipment_entry("신화", ["진명황의 집행검"], catalog, strict_rng, "데스나이트").get("item_name", "") == "진명황의 집행검", "Death Knight legacy mythic gear must remain configured")
 	var real_spatoy_rows: Array = live_map.get("스파토이", [])
 	_check(real_spatoy_rows.size() == 4, "four explicit original Spatoy weapons must load")
