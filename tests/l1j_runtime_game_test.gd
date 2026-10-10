@@ -147,6 +147,13 @@ func _run() -> void:
 		actor.died.connect(world._on_monster_died)
 		var inventory_before: int = int(world.inventory.get(name_value,0))
 		world.player.set_auto_enabled(true)
+		# Regression for the observed stall: directly visible targets must not
+		# send AUTO to a stale/distant first waypoint.
+		world.auto_repath_timer = 0.0
+		world._run_auto_hunt()
+		if world._has_line_of_sight_world(world.player.global_position, actor.global_position):
+			check(world.player.click_path.size() == 1 and world.player.click_path[0].distance_to(actor.global_position) < 1.0,
+				"visible target uses direct pursuit waypoint " + mob_name)
 		var ticks: int = 0
 		while not actor.dead and ticks < 900:
 			world.auto_attack_timer = maxf(0.0,world.auto_attack_timer-1.0/60.0)
@@ -168,6 +175,7 @@ func _run() -> void:
 				"active_target":world.auto_target == actor,
 				"auto_enabled":world.player.auto_enabled,
 				"click_path_length":world.player.click_path.size(),
+				"first_waypoint":[world.player.click_path[0].x,world.player.click_path[0].y] if not world.player.click_path.is_empty() else [],
 				"path_index":world.player.path_index,
 				"repath_timer":world.auto_repath_timer,
 				"world_path_length":world.find_world_path(world.player.global_position,actor.global_position).size(),
