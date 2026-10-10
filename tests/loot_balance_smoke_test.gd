@@ -76,6 +76,15 @@ func _run() -> void:
 	_check(int(samples.get("수정 단검",0)) > int(samples.get("강철 판금 갑옷",0)) * 5, "within-grade weights honored")
 	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], mapped_catalog, strict_rng, "스파토이").get("item_name", "") == "마족의 단검", "partial L1J mapping preserves legacy monster items")
 	_check(LOOT._pick_equipment_entry("유일", ["HP 물약"], mapped_catalog, strict_rng, "스파토이").is_empty(), "registered mob without Unique source or legacy entry cannot substitute")
+	# Verified L1J 46141 Ice Queen -> 11 Crystal Dagger: real opt-in registry
+	# enters the same selection path without dropping TWILIGHT's own boss loot.
+	var live_map: Dictionary = catalog.get("l1j_monster_drops", {})
+	_check(live_map.has("얼음 여왕"), "real Ice Queen source mapping loaded from JSON")
+	var queen_loot: Dictionary = LOOT._pick_equipment_entry("고급", ["마법 망토"], catalog, strict_rng, "얼음 여왕")
+	_check(str(queen_loot.get("item_name", "")) == "수정 단검", "L1J Crystal Dagger mapped through live catalog")
+	_check(int(queen_loot.get("quantity", 0)) == 1, "real source quantity preserved")
+	_check(LOOT._pick_equipment_entry("희귀", ["마법 망토"], catalog, strict_rng, "얼음 여왕").is_empty(), "Ice Queen cannot inherit unrelated rare gear")
+	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마족의 단검", "legacy registered rare item remains available")
 	var boss_count: int = 0
 	var normal_count: int = 0
 	var gear_count: int = 0
