@@ -48,7 +48,7 @@ func _run() -> void:
 		var recipe: Dictionary = service.recipes[id]
 		var name: String = str((recipe.get("result",{}) as Dictionary).get("item",""))
 		var item: Dictionary = items.get(name,{})
-		if item.is_empty() or CRAFT._is_equipment(item) == false or not str(item.get("grade","")) in GRADES:
+		if item.is_empty() or CRAFT._is_equipment(item) == false or not (str(item.get("grade","")) in GRADES):
 			continue
 		var grade: String = str(item["grade"])
 		var scroll_name: String = grade+" 제작 비법서"
