@@ -42,7 +42,21 @@ def main():
     if reg.exists():
         raise SystemExit("Fixture registry collision: " + str(reg))
     reg.write_text(json.dumps(records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("synthetic_rgba_pngs=2 registry_records=2 third_party_assets=0")
+    spx = root / "assets/l1j/candidates/spx_converted/99999-0"
+    spx.mkdir(parents=True, exist_ok=True)
+    path_refs = []
+    for frame_no, color in enumerate(((90, 60, 180, 255), (200, 120, 30, 255))):
+        file = spx / ("frame_%03d.png" % frame_no)
+        if file.exists():
+            raise SystemExit("Existing SpriteFrames fixture collision: " + str(file))
+        file.write_bytes(png_bytes(color))
+        path_refs.append("res://assets/l1j/candidates/spx_converted/99999-0/frame_%03d.png" % frame_no)
+    tres = ("[gd_resource type=\"SpriteFrames\" load_steps=3 format=3]\\n\\n"
+            + "\\n".join('[ext_resource type="Texture2D" path="%s" id="%d"]' % (p, i+1) for i,p in enumerate(path_refs))
+            + '\\n\\n[resource]\\nanimations = [{\\n"frames": [{"duration": 1.0, "texture": ExtResource("1")}, {"duration": 1.0, "texture": ExtResource("2")}],\\n"loop": true,\\n"name": &"default",\\n"speed": 8.0\\n}]\\n')
+    # Interpret escaped separators as line breaks, matching the sample converter.
+    (spx / "SpriteFrames.tres").write_text(tres.replace('\\n', '\n'), encoding="utf-8")
+    print("synthetic_rgba_pngs=4 registry_records=2 spriteframe_fixture=1 third_party_assets=0")
 
 if __name__ == "__main__":
     main()
