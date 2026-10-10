@@ -56,7 +56,12 @@ def main():
             + '\\n\\n[resource]\\nanimations = [{\\n"frames": [{"duration": 1.0, "texture": ExtResource("1")}, {"duration": 1.0, "texture": ExtResource("2")}],\\n"loop": true,\\n"name": &"default",\\n"speed": 8.0\\n}]\\n')
     # Interpret escaped separators as line breaks, matching the sample converter.
     (spx / "SpriteFrames.tres").write_text(tres.replace('\\n', '\n'), encoding="utf-8")
-    print("synthetic_rgba_pngs=4 registry_records=2 spriteframe_fixture=1 third_party_assets=0")
+    raw_map = root / "data/l1j/maps/raw/4.bin"
+    raw_map.parent.mkdir(parents=True, exist_ok=True)
+    if raw_map.exists():
+        raise SystemExit("Map grid fixture collision: " + str(raw_map))
+    raw_map.write_bytes(bytes(range(12)))
+    print("synthetic_rgba_pngs=4 registry_records=2 spriteframe_fixture=1 tile_grid=4x3 third_party_assets=0")
 
 if __name__ == "__main__":
     main()
