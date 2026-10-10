@@ -81,38 +81,29 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 			return name_value
 	return ""
 
-static func _pick_equipment(grade: String, monster_drops: Array[String], catalog: Dictionary, rng: RandomNumberGenerator) -> String:
+# No cross-grade or catalog-wide fallback: a monster may only yield registered gear.
+# Failed grade rolls remain failures. Missing grades are reported once per monster
+# and grade so high-volume deterministic tests do not spam the console.
+static var unavailable_grade_reports: Dictionary = {}
+
+static func _pick_equipment(grade: String, monster_drops: Array[String], catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> String:
 	var by_name: Dictionary = catalog.get("by_name", {})
-	var grade_pools: Dictionary = catalog.get("equipment_by_grade", {})
 	var exact: Array[String] = []
-	var preferred_types: Dictionary = {}
 	for item_name: String in monster_drops:
 		if not by_name.has(item_name):
 			continue
-		var record: Dictionary = by_name[item_name] as Dictionary
-		if not _is_equipment(record):
-			continue
-		preferred_types[str(record.get("type", ""))] = true
-		if str(record.get("grade", "")) == grade:
+		var item: Dictionary = by_name[item_name] as Dictionary
+		if _is_equipment(item) and str(item.get("grade", "일반")) == grade:
 			exact.append(item_name)
-	if not exact.is_empty():
-		return exact[rng.randi_range(0, exact.size() - 1)]
-	var pool: Array = grade_pools.get(grade, [])
-	if pool.is_empty():
+	if exact.is_empty():
+		var report_id: String = (monster_name if not monster_name.is_empty() else "(unknown)") + ":" + grade
+		if not unavailable_grade_reports.has(report_id):
+			unavailable_grade_reports[report_id] = true
+			push_warning("TWILIGHT_DROP_UNMAPPED_GRADE: " + report_id + " — skipped; no arbitrary substitution")
 		return ""
-	var related: Array[String] = []
-	if not preferred_types.is_empty():
-		for value: Variant in pool:
-			var item_name: String = str(value)
-			var record: Dictionary = by_name[item_name] as Dictionary
-			if preferred_types.has(str(record.get("type", ""))):
-				related.append(item_name)
-	if not related.is_empty():
-		return related[rng.randi_range(0, related.size() - 1)]
-	# Monsters with only potion entries still have a small equipment drop chance.
-	return str(pool[rng.randi_range(0, pool.size() - 1)])
+	return exact[rng.randi_range(0, exact.size() - 1)]
 
-static func roll(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator) -> Array[String]:
+static func roll(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> Array[String]:
 	var earned: Array[String] = []
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
@@ -124,7 +115,7 @@ static func roll(monster_drops: Array[String], is_boss: bool, catalog: Dictionar
 		var equipment_grade: String = _roll_equipment_grade(is_boss, rng)
 		if equipment_grade.is_empty():
 			continue
-		var equipment: String = _pick_equipment(equipment_grade, monster_drops, catalog, rng)
+		var equipment: String = _pick_equipment(equipment_grade, monster_drops, catalog, rng, monster_name)
 		if not equipment.is_empty():
 			earned.append(equipment)
 	return earned
