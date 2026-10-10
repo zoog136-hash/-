@@ -129,7 +129,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 			return
 	if move_ratio > 0.01:
 		face(real_velocity)
-		_set_state("run" if move_ratio >= 0.92 else "walk", delta)
+		_set_state("run" if move_ratio > 1.12 or (profile.reference_speed >= 180.0 and move_ratio >= 0.92) else "walk", delta)
 	elif hit_clock > 0.0:
 		_set_state("hit", delta)
 	else:
