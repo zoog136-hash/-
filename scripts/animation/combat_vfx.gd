@@ -38,9 +38,12 @@ func number(point: Vector2, value: String, color: Color, critical: bool = false)
 	var width: float = font.get_string_size(display, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
 	entry.merge({"text":value, "display":display, "color":color, "critical":critical, "width":width, "critical_width":font.get_string_size("CRITICAL",HORIZONTAL_ALIGNMENT_LEFT,-1,12).x if critical and font != null else 0.0})
 
-func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2) -> void:
+func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2, frames: SpriteFrames = null, animation: String = "") -> void:
 	var entry: Dictionary = _record("death", point, 0.8)
 	entry.merge({"texture":texture, "scale":scale_value, "offset":offset})
+	if frames != null and not animation.is_empty() and frames.has_animation(animation):
+		entry["frames"] = frames
+		entry["animation"] = animation
 
 func ring(point: Vector2, radius: float, color: Color) -> void:
 	var entry: Dictionary = _record("ring", point, 0.3)
@@ -78,6 +81,12 @@ func _draw() -> void:
 			"death":
 				var texture: Texture2D = entry.texture
 				var lean: float = minf(1.0, p * 2.0) * 1.3
+				if entry.has("frames"):
+					var frames: SpriteFrames = entry.frames
+					var animation: String = entry.animation
+					var count: int = frames.get_frame_count(animation)
+					texture = frames.get_frame_texture(animation, mini(count - 1, int(minf(1.0, p * 2.0) * count)))
+					lean = 0.0 # authored body fall must not be rotated a second time
 				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, entry.scale)
 				draw_texture(texture, -texture.get_size() * 0.5, Color(1.0, 0.7, 0.65, alpha))
 				draw_set_transform(Vector2.ZERO)

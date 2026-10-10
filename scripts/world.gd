@@ -2254,12 +2254,19 @@ func _roll_monster_hit(attacker: TwilightMonster, attack_type: String = "melee")
 func _respawn_player(message_text: String) -> void:
 	var death_position: Vector2 = player.global_position
 	var death_sprite: AnimatedSprite2D = player.transform_sprite if player.transform_active else player.class_sprite
+	if not player.transform_active and player.spx_sprite != null and player.spx_sprite.visible:
+		death_sprite = player.spx_sprite
 	var death_texture: Texture2D = death_sprite.sprite_frames.get_frame_texture(death_sprite.animation, death_sprite.frame) if death_sprite.sprite_frames != null else null
 	var death_scale: Vector2 = death_sprite.scale
 	var death_offset: Vector2 = death_sprite.position
 	_clear_combat_actions()
 	if combat_vfx != null and death_texture != null:
-		combat_vfx.death_pose(death_position, death_texture, death_scale, death_offset)
+		var death_animation: String = ""
+		for candidate: String in ["death_" + str(player.facing8), "death" + ["_down", "_up", "_left", "_right"][player.facing], "death"]:
+			if death_sprite.sprite_frames.has_animation(candidate):
+				death_animation = candidate
+				break
+		combat_vfx.death_pose(death_position, death_texture, death_scale, death_offset, death_sprite.sprite_frames, death_animation)
 	hp = _effective_max_hp()
 	mp = max_mp
 	gold = maxi(0, gold - 500)
@@ -5523,6 +5530,7 @@ func _normal_attack_interval() -> float:
 func _refresh_speed_modifiers() -> void:
 	if player == null:
 		return
+	player.set_source_weapon_visual(_current_weapon_type())
 	player.set_equipment_speed_multipliers(_effective_move_speed_multiplier(), _effective_attack_speed_multiplier())
 
 func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:

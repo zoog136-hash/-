@@ -239,6 +239,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 			species_visual.actor = self
 			add_child(species_visual)
 		species_visual.visual = record.visual
+		species_visual.original_source = not preload("res://scripts/animation/visual_manifest.gd").monster_binding(record).is_empty()
 		species_visual.special = ai.get("special",{})
 		species_visual.warning_active = false
 		species_visual.show()

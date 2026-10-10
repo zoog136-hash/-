@@ -8,6 +8,7 @@ var warning_center: Vector2 = Vector2.ZERO
 var warning_aim: Vector2 = Vector2.RIGHT
 var warning_progress: float = 0.0
 var warning_active: bool = false
+var original_source: bool = false
 
 func update_pose() -> void:
 	if not is_instance_valid(actor): return
@@ -45,6 +46,9 @@ func _draw() -> void:
 			draw_arc(center,radius,0.,TAU,64,Color(1,.42,.18,.85),2.,true)
 			draw_arc(center,radius*.90,-PI*.5,-PI*.5+TAU*warning_progress,48,Color(1,.8,.3),3.,true)
 	if actor.dead: return
+	# Source-only normal monsters must not acquire the old invented weapons
+	# and crests. Boss warning geometry remains above this early return.
+	if original_source: return
 	var body: String = str(visual.get("body",""))
 	var height: float = actor.visual_height
 	var accent := Color(str(visual.get("accent","c4aa64")))

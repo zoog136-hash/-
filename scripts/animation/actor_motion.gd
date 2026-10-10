@@ -63,6 +63,7 @@ func begin_attack(total: float, aim: Vector2, style: String = "", marker: float 
 	attack_elapsed = 0.0
 	attack_duration = maxf(0.06, total)
 	attack_style = profile.motion_style if style.is_empty() else style
+	invalidate_pose()
 	attack_hit_ratio = profile.attack_hit_ratio if marker < 0.0 else clampf(marker, 0.1, 0.85)
 	active = true
 	released = false
@@ -71,6 +72,20 @@ func begin_attack(total: float, aim: Vector2, style: String = "", marker: float 
 	state_clock = 0.0
 	state = "attack"
 	return sequence
+
+func invalidate_pose() -> void:
+	# A different weapon/cast can begin in the same state and facing direction.
+	_resolved_state = ""
+
+static func presentation_seconds(frames: SpriteFrames, role: String, fallback: float) -> float:
+	if frames == null: return fallback
+	for key: String in frames.get_animation_names():
+		if key == role or key.begins_with(role + "_"):
+			var weight: float = 0.0
+			for index: int in range(frames.get_frame_count(key)):
+				weight += frames.get_frame_duration(key, index)
+			return clampf(weight / maxf(1.0, frames.get_animation_speed(key)), 0.1, 2.0)
+	return fallback
 
 func cancel_attack() -> void:
 	if active: cancelled.emit(sequence)
@@ -203,11 +218,15 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	_resolved_role = "legacy"
 	_resolved_directional = false
 	var roles: Array[String] = [state]
+	if active and state in ["attack", "recovery"]:
+		if attack_style == "bow": roles.push_front("ranged_attack")
+		elif attack_style == "magic": roles.push_front("cast")
 	match state:
 		"recovery": roles.append("attack")
 		"run": roles.append("walk")
 		"turn": roles.append("idle")
 		"corpse": roles.append("death")
+		"float", "energy", "equip", "unequip", "activate", "summon", "despawn": roles.append("idle")
 	for role: String in roles:
 		var candidates: Array[String] = [str(profile.animation_names.get(role + ":" + str(facing8), "")),
 			str(profile.animation_names.get(role, "")), role + "_" + str(facing8),
@@ -277,7 +296,7 @@ func apply_frames(sprite: Node2D) -> void:
 	var track: Dictionary = _track(frames, key)
 	var count: int = track.count
 	var frame_value: int = 0
-	if active and _resolved_role == "attack":
+	if active and _resolved_role in ["attack", "ranged_attack", "cast"]:
 		var marker_frame: int = clampi(profile.attack_hit_frame, 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))

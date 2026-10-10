@@ -56,7 +56,9 @@ func _run() -> void:
 	check(world.companion_sprite.global_position.distance_to(world.relic_sprite.global_position) > 50.0, "restored companions overlap")
 	world._apply_doll_visual({})
 	world._apply_relic_visual({})
-	for i: int in range(30): world._update_companion(1.0 / 60.0)
+	check(not world.doll_motion.enabled and not world.relic_motion.enabled, "dismissal retained equipped presentation")
+	var dismissal_seconds: float = maxf(1.0 / world.doll_motion.disappear_speed, 1.0 / world.relic_motion.disappear_speed)
+	for i: int in range(ceili(dismissal_seconds * 60.0) + 2): world._update_companion(1.0 / 60.0)
 	check(not world.companion_sprite.visible and not world.relic_sprite.visible, "companion dismissal stayed visible")
 	world.queue_free()
 	await process_frame

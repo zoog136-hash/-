@@ -32,11 +32,21 @@ func _run() -> void:
 		check(actor.motion.sequence == sequence and actor.motion.active, "switch cancelled combat " + id)
 		check(not actor.class_sprite.visible, "old class still visible " + id)
 		var frames: SpriteFrames = actor.transform_sprite.sprite_frames
+		var generated: Dictionary = preload("res://scripts/animation/visual_manifest.gd").record(id)
 		if art.has(id):
 			directional_count += 1
-			check(frames.get_animation_names().size() == 4, "directional layout " + id)
+			if generated.is_empty():
+				check(frames.get_animation_names().size() == 4, "directional layout " + id)
+			else:
+				for suffix: String in ["_down", "_up", "_left", "_right"]:
+					for role: String in ["idle", "walk", "run", "attack", "hit", "death"]:
+						check(frames.has_animation(role + suffix) and frames.get_frame_count(role + suffix) >= 2, "authored directional action " + id + role + suffix)
 		else:
-			check(frames.has_animation("still") and frames.get_frame_count("still") == 1, "single-image fallback cut into tiles " + id)
+			if generated.is_empty():
+				check(frames.has_animation("still") and frames.get_frame_count("still") == 1, "single-image fallback cut into tiles " + id)
+			else:
+				for role: String in ["idle", "walk", "run", "attack", "hit", "death"]:
+					check(frames.has_animation(role) and frames.get_frame_count(role) >= 2, "authored single-view action " + id + role)
 	check(directional_count == 78, "directional coverage changed")
 	check(CATALOG.frame_cache.size() <= CATALOG.MAX_FRAME_CACHE, "unbounded frame cache")
 	actor.clear_transform_visual()
