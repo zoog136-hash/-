@@ -1,0 +1,48 @@
+{
+  "recovery_branch": "feature/twilight-map-recovery-20261011",
+  "base_sha": "88d1c68e2a497fb540461a3e1dfa6cba2e1d38f4",
+  "protected_remote_heads": {
+    "PR59": "e7d64f4ecd45546a0e3f3d6753cf20327d31cb87",
+    "PR76": "3d341a9704f84d61e2e15f2e9d012e757a3ac0db",
+    "PR80": "7167daa5eb3930c9e10c8c428aab3eaa43c11252"
+  },
+  "previous_map_work_uncommitted_files_recovered": false,
+  "previous_map_work_remote_branch_found": false,
+  "previous_map_work_unresponsive_cause": "UNKNOWN",
+  "previous_PR80_separate_session_note": "file transmission failure and disconnected environment; not evidence of the map Work cause",
+  "expected_missing_attachment": "a2(1).zip",
+  "source_summary": {
+    "archives": 16,
+    "nested_archives": 33,
+    "entries": {
+      "S32": 1848,
+      "TEXT": 7118,
+      "CACHE": 1850
+    },
+    "validated_grid_entries": 8968,
+    "selected_maps": 1376,
+    "a3_navigation_maps": 1000,
+    "empty_edge_maps": [
+      997,
+      998
+    ],
+    "parsed_s32": 1846,
+    "blocked_entries": 2,
+    "required_tile_ids": 2683,
+    "tile_graphic_files": 0,
+    "archive_errors": [],
+    "game_maps": 25,
+    "restored_game_maps": 0
+  },
+  "a3_required_tile_ids": 2651,
+  "actual_game_map_restoration": "BLOCKED: visual tile pack, edition and pixel/placement calibration absent",
+  "next_steps": [
+    "Restore the missing attachment without replacing the existing project.",
+    "Supply the original visual tile pack matching the recorded tile IDs.",
+    "Verify client edition and source-map IDs; do not guess modern LineageM map associations.",
+    "Calibrate each original projection, then verify NPC/portal placement and dynamic doors before live collision integration.",
+    "Resume from this branch HEAD and the saved original grid pack; reuse the inventory and do not rescan unchanged sources."
+  ],
+  "private_pack_directory": "data/l1j/recovered_maps",
+  "public_report_directory": "docs/map-recovery-20261011"
+}

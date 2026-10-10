@@ -1,0 +1,53 @@
+name: TWILIGHT Source Map Recovery
+on:
+  pull_request:
+    paths:
+      - 'addons/twilight_l1j/twilight_map_attributes.gd'
+      - 'addons/twilight_l1j/twilight_tile_coordinates.gd'
+      - 'addons/twilight_l1j/twilight_source_navigation.gd'
+      - 'addons/twilight_l1j/twilight_source_map_catalog.gd'
+      - 'tools/l1j/recover_map_catalog.py'
+      - 'tools/l1j/map_segment_reader.py'
+      - 'tools/l1j/test_recover_map_catalog.py'
+      - 'tests/l1j_map_recovery_test.gd'
+      - 'tests/l1j_source_map_catalog_test.gd'
+      - '.github/workflows/twilight-map-recovery.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-map-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify strict source conversion using original synthetic test data
+        run: |
+          python3 -m pip install numpy
+          python3 tools/l1j/test_recover_map_catalog.py
+      - name: Install Godot 4.7.2
+        run: |
+          curl -fL --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import existing project
+        run: /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import > /tmp/map-import.log 2>&1
+      - name: Exercise coordinates, bounded paths and private-pack guards
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p recovery-test-results
+          for test in l1j_source_navigation l1j_map_recovery l1j_source_map_catalog; do
+            export XDG_DATA_HOME="$(mktemp -d)"
+            /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" > "recovery-test-results/${test}.log" 2>&1
+            cat "recovery-test-results/${test}.log"
+            grep -q '_OK' "recovery-test-results/${test}.log"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "recovery-test-results/${test}.log"; then exit 1; fi
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: twilight-source-map-recovery-${{ github.sha }}
+          path: |
+            recovery-test-results/
+            /tmp/map-import.log
