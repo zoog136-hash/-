@@ -123,13 +123,22 @@ static func _pick_equipment_entry(grade: String, monster_drops: Array[String], c
 				var min_count: int = clampi(int(row.get("min", 1)), 1, 10000)
 				var max_count: int = clampi(int(row.get("max", 1)), min_count, 10000)
 				candidates.append({"item_name":item_name, "weight":weight, "min":min_count, "max":max_count})
-	else:
-		for item_name: String in monster_drops:
-			if not by_name.has(item_name):
-				continue
-			var item: Dictionary = by_name[item_name] as Dictionary
-			if _is_equipment(item) and str(item.get("grade", "일반")) == grade:
-				candidates.append({"item_name":item_name, "weight":1, "min":1, "max":1})
+	# Keep TWILIGHT's own explicitly registered per-monster items, even when
+	# a partial L1J source mapping exists for this monster. Never substitute
+	# items from a global grade list or an unrelated monster.
+	for item_name: String in monster_drops:
+		if not by_name.has(item_name):
+			continue
+		var item: Dictionary = by_name[item_name] as Dictionary
+		if not _is_equipment(item) or str(item.get("grade", "일반")) != grade:
+			continue
+		var duplicate: bool = false
+		for candidate: Dictionary in candidates:
+			if str(candidate["item_name"]) == item_name:
+				duplicate = true
+				break
+		if not duplicate:
+			candidates.append({"item_name":item_name, "weight":1, "min":1, "max":1})
 	if candidates.is_empty():
 		return _missing(monster_name, grade)
 	var total_weight: int = 0
