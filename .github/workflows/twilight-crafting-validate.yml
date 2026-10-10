@@ -1,0 +1,46 @@
+name: TWILIGHT Atomic Crafting
+
+on:
+  push:
+    branches:
+      - feature/twilight-crafting-atomic-20261010
+  pull_request:
+    branches:
+      - main
+      - feature/twilight-warehouse-persistent-instances-20261010
+  workflow_dispatch:
+
+jobs:
+  atomic-crafting:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import project and GDScript
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee crafting-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' crafting-import.log
+      - name: Crafting + warehouse + shop regressions
+        run: |
+          set -o pipefail
+          for test in tests/crafting_atomic_test.gd tests/warehouse_persistence_test.gd tests/shop_authority_test.gd; do
+            /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://$test" 2>&1 | tee -a crafting-test.log
+          done
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' crafting-test.log
+          grep -q CRAFTING_OK crafting-test.log
+          grep -q WAREHOUSE_OK crafting-test.log
+          grep -q SHOP_AUTHORITY_OK crafting-test.log
+      - name: Persist CI logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-crafting-evidence
+          path: |
+            crafting-import.log
+            crafting-test.log
