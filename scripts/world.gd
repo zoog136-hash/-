@@ -2114,7 +2114,7 @@ func _restore_ground_drops(saved: Variant) -> void:
 func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = true) -> void:
 	if monster == null or not is_instance_valid(monster):
 		return
-	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng)
+	var earned: Array[String] = LOOT_DROP.roll(monster.drop_items, monster.is_boss, loot_catalog, rng, monster.monster_name)
 	if earned.is_empty():
 		return
 	var batch_id: String = ground_loot.begin_hunt_batch()
