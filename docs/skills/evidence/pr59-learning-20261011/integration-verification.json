@@ -1,0 +1,949 @@
+{
+  "recorded_at": "2026-10-10T23:48:58.263293+00:00",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "engine_sha256": "8d106cbe6144c2dc7e881d61d2429c1a8a76e6b22ef48bd5e48dcf934953f71e",
+  "learning_checkpoint": {
+    "remote": "5288fe6ab5dca0e43c5223424606e077bc5384a6",
+    "local": "7d86312c12d7c1fa33203959108a4873610f5209",
+    "tree": "5b009ac20adcb1f90aae975e72233f528cedb4f2"
+  },
+  "integration": {
+    "main": "bc6b59baac786913ea0112ab3bd7f8bf278e474f",
+    "local_learning_checkpoint": "7d86312c12d7c1fa33203959108a4873610f5209",
+    "merged_index_tree": "962b7255e455b8ff6845efef26761da403609a69",
+    "changed_runtime_sha256": {
+      "scripts/skills/skill_catalog.gd": "b841014b7aca472d034c9b7c98ba3577b0a8192b7a25ccf7ad021f667592bdab",
+      "scripts/skills/skill_service.gd": "383ba5f121acc999940c5cd485eac4e3d57770831d27753d20508162e92a740c",
+      "scripts/world.gd": "93ba7d6c5efc647197384be322ab87f0c8576037ff2b3425cdab0fd2ecb17ba8",
+      "scripts/monster.gd": "5e2adfbc8dde61dca2671d587b2d0cbedeefd5d29e0f5b4f290b0c7410a43e0d",
+      "tests/original_skill_learning_conditions_test.gd": "3024596048d86da90c70c3a53f5c2e41d26206653456bd2d11ba628a789701e4"
+    }
+  },
+  "scope": "Latest pinned main integrated into existing feature only; Draft PR #59 unmerged; main not modified. Git auto-merge had no text conflicts.",
+  "full": {
+    "summary": {
+      "total": 98,
+      "passed": 98,
+      "failed": [],
+      "checks": [
+        "import",
+        "boot",
+        "actor_motion_test",
+        "ainhasad_smoke_test",
+        "animation_catalog_test",
+        "animation_restore_test",
+        "authored_frames_test",
+        "authored_state_motion_test",
+        "catalog_effects_smoke_test",
+        "catalog_full_browser_smoke_test",
+        "combat_hud_test",
+        "combat_resolution_equivalence_test",
+        "combat_timing_test",
+        "combat_vfx_test",
+        "consumable_smoke_test",
+        "crafting_atomic_test",
+        "crafting_material_drop_test",
+        "crafting_scroll_grade_test",
+        "equipment_blessing_smoke_test",
+        "equipment_slot_smoke_test",
+        "external_a2_bridge_smoke_test",
+        "external_spx_actor_runtime_test",
+        "field_world_test",
+        "flight_lifecycle_test",
+        "follower_motion_test",
+        "full_inven_catalog_smoke_test",
+        "full_visual_manifest_test",
+        "ground_drop_smoke_test",
+        "ground_loot_system_test",
+        "hp_mp_unique_effects_smoke_test",
+        "input_routing_test",
+        "inventory_db_smoke_test",
+        "item_buff_description_smoke_test",
+        "item_db_slot_smoke_test",
+        "item_icon_art_smoke_test",
+        "item_options_runtime_smoke_test",
+        "item_weight_smoke_test",
+        "job_smoke_test",
+        "l1j_full_source_data_test",
+        "l1j_map_grid_test",
+        "l1j_optional_bridge_test",
+        "l1j_packed_assets_test",
+        "l1j_png_load_test",
+        "l1j_reviewed_shop_test",
+        "l1j_runtime_game_test",
+        "l1j_source_navigation_test",
+        "l1j_spx_frames_test",
+        "l1j_visual_link_test",
+        "lineage_inventory_ui_smoke_test",
+        "lineage_side_ui_smoke_test",
+        "lineagem_ui_visual_smoke_test",
+        "local_crafting_test",
+        "loot_balance_smoke_test",
+        "map_visual_toggle_test",
+        "mobile_scroll_smoke_test",
+        "monster_ai_leash_path_test",
+        "monster_attack_profiles_test",
+        "monster_motion_test",
+        "monster_world_test",
+        "non_skill_options_smoke_test",
+        "npc_dialogue_branching_test",
+        "npc_teleport_test",
+        "option_finalize_smoke_test",
+        "original_counter_probability_test",
+        "original_lineagem_effects_smoke_test",
+        "original_skill_audio_test",
+        "original_skill_catalog_runtime_test",
+        "original_skill_learning_conditions_test",
+        "original_skill_provenance_test",
+        "original_skill_reduction_test",
+        "original_skill_status_coexistence_test",
+        "original_skill_summon_test",
+        "original_skill_system_test",
+        "original_skill_target_state_test",
+        "original_skill_warehouse_migration_test",
+        "original_turn_undead_rewards_test",
+        "original_turn_undead_test",
+        "passive_skill_smoke_test",
+        "per_instance_enchantments_smoke_test",
+        "playtest_catalog_drag_test",
+        "quickslot_smoke_test",
+        "relic_motion_test",
+        "shield_rules_smoke_test",
+        "shop_authority_test",
+        "shop_buyback_test",
+        "skill_element_integration_smoke_test",
+        "skill_mechanism_smoke_test",
+        "speed_option_smoke_test",
+        "stage5_save_compatibility_test",
+        "ui_fidelity_regression_test",
+        "ui_renewal_integration_test",
+        "ui_stage4_item_instance_test",
+        "visible_gameplay_smoke_test",
+        "volley_motion_test",
+        "warehouse_persistence_test",
+        "weapon_rules_smoke_test",
+        "world_region_portals_test",
+        "world_regions_test"
+      ]
+    },
+    "logs": {
+      "actor_motion_test": {
+        "sha256": "4f998ea231973d6c7d1e92678a327fb09bb5fb81fbba6af34bfe89a3cfc8520a",
+        "markers": [
+          "ACTOR_MOTION_OK"
+        ]
+      },
+      "ainhasad_smoke_test": {
+        "sha256": "bfe6116174b23b1803695e23d71d1732defb79cfc9429ac84473c35c8597a0eb",
+        "markers": [
+          "AINHASAD_SMOKE_OK: 26 assertions"
+        ]
+      },
+      "animation_catalog_test": {
+        "sha256": "d62d43d1b87ab95f3b1287202568e5897a39bf761306c93ae155ad70e6da0a14",
+        "markers": [
+          "ANIMATION_CATALOG_OK transforms=413 directional=78 shared_attack=413"
+        ]
+      },
+      "animation_restore_test": {
+        "sha256": "a398754954159f625dd1eed875afbc5e1a2f883a5c942105d2a06e90d0829bc4",
+        "markers": [
+          "ANIMATION_RESTORE_OK transform_doll_relic=true speeds=true stale_actions=false"
+        ]
+      },
+      "authored_frames_test": {
+        "sha256": "407ba23ae266cca9611ee0defab2d2fffcd1e204fe3a535a7d48954d35df6af9",
+        "markers": [
+          "AUTHORED_FRAMES_OK native_resources=true configurable_hit_frame=true"
+        ]
+      },
+      "authored_state_motion_test": {
+        "sha256": "aaa298c77770f43bb16d0eb4159f830d24145c987e27641c8f1d60d49bb506c6",
+        "markers": [
+          "AUTHORED_STATE_MOTION_OK directions=8 assertions=102 monster_native=true relic_native=true"
+        ]
+      },
+      "boot": {
+        "sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+        "markers": []
+      },
+      "catalog_effects_smoke_test": {
+        "sha256": "99a3ca2264a848d5adfbc60d7a6a8044f6a1b7c01583a1fde78d86545940f820",
+        "markers": [
+          "CATALOG_EFFECTS_SMOKE_OK: transformation, doll, relic and unknown-effect boundaries verified"
+        ]
+      },
+      "catalog_full_browser_smoke_test": {
+        "sha256": "09f5d66dfceb6622d23ad619a0fe69b1428b3c551098f1db78a09015c0c305c1",
+        "markers": [
+          "CATALOG_BROWSER_SMOKE_OK: full browsing, search, details and option policies verified"
+        ]
+      },
+      "combat_hud_test": {
+        "sha256": "78b41e5ba30784e7da0cb3572577aba506ad92dec75fb7ccc14a5861d39a74d1",
+        "markers": [
+          "COMBAT_HUD_OK checks=1200"
+        ]
+      },
+      "combat_resolution_equivalence_test": {
+        "sha256": "e7d3a6151cf55e73f5db15c5db122537fb30d69b24e7d8345e012af3fae85964",
+        "markers": [
+          "COMBAT_RESOLUTION_OK: 346 exact formula comparisons, separate AC/MR hit and one reduction stage"
+        ]
+      },
+      "combat_timing_test": {
+        "sha256": "261360c7a9ad2c672957da0b4c07a7ee773bb2f9972d73f67c0dfdc982b0335b",
+        "markers": [
+          "COMBAT_TIMING_OK real_physics_frames=true"
+        ]
+      },
+      "combat_vfx_test": {
+        "sha256": "3fc26ad32314063b8dc39492551e298fde13c732ae6e6193b0b64c0146d79e66",
+        "markers": [
+          "COMBAT_VFX_OK stress=3000 pool=160 per_hit_nodes=0"
+        ]
+      },
+      "consumable_smoke_test": {
+        "sha256": "d7f683e996fdcbfbc9c5746f42237839e8fc1879a903541298db58273671cafb",
+        "markers": [
+          "CONSUMABLE_SMOKE_OK: MP, cooking, removals, elixir, elemental scrolls, random/return teleport"
+        ]
+      },
+      "crafting_atomic_test": {
+        "sha256": "140167844ed910640cdd79795f0a7a38a0517219b1eb4d5da9c3c7628700943b",
+        "markers": [
+          "CRAFTING_OK: 413 DB-backed recipes, batches, weight, enchant safety, atomic inventory and save"
+        ]
+      },
+      "crafting_material_drop_test": {
+        "sha256": "0cdcbf2186eff5eae1ac27d198af9224c71ff9da3a81cac4fced1b548a9bd4a6",
+        "markers": [
+          "CRAFT_MATERIAL_OK: 10 materials, 413 recipes, 84 equipment sources, 318 monster sources, independent ground-loot rolls"
+        ]
+      },
+      "crafting_scroll_grade_test": {
+        "sha256": "e2943da665d0680a52e005e5c2633937389e909de2d345a4ec70a0e4397b09ea",
+        "markers": [
+          "CRAFT_SCROLL_OK: five nonwearable scrolls, same-rarity gear drops, 355 rare-plus equipment recipes, atomic consumption"
+        ]
+      },
+      "equipment_blessing_smoke_test": {
+        "sha256": "2ed4777d7e44d8b7b0a98116740a00a5f6358f7728d6872cbca7f05cdc962bc5",
+        "markers": [
+          "EQUIPMENT_BLESSING_SMOKE_OK: per-instance, chance, scroll costs, equipped stats, save/load"
+        ]
+      },
+      "equipment_slot_smoke_test": {
+        "sha256": "d91cf2af5dcdee119160f13acf90cf66b90d95669b88da70020457358214325e",
+        "markers": [
+          "EQUIPMENT_SLOT_SMOKE_OK: DB-driven equipment slots and migration validated"
+        ]
+      },
+      "external_a2_bridge_smoke_test": {
+        "sha256": "ada50d22c552a1f8500ae9247006148986ec5f41f370518f64fcbed6cefa6029",
+        "markers": [
+          "EXTERNAL_A2_BRIDGE_OK {\"item_names\":0,\"monster_names\":0,\"ready\":false}"
+        ]
+      },
+      "external_spx_actor_runtime_test": {
+        "sha256": "2dfe2091581f1abfb39afd7ec4c61361a6a2b7625d988cafd8f0816c64b1f2bf",
+        "markers": [
+          "EXTERNAL_SPX_ACTOR_RUNTIME_OK mode=missing_pack_fallback"
+        ]
+      },
+      "field_world_test": {
+        "sha256": "5ebbed064828c2bd16b27bf20b196420d97689f11dda329ff3741be09fdf2fa5",
+        "markers": [
+          "FIELD_WORLD_OK"
+        ]
+      },
+      "flight_lifecycle_test": {
+        "sha256": "14e866f2966c01a2f1418352a5977a3e04c187bcc25ba6a8331a0329f5a886dd",
+        "markers": [
+          "FLIGHT_LIFECYCLE_OK logical_hits=256 visual_cap=64 reuse_cap=128"
+        ]
+      },
+      "follower_motion_test": {
+        "sha256": "3a49f0e4c3f5dfe9d315cbaa2aaf5db9f758fb040e4c090e77bf2e96de92196d",
+        "markers": [
+          "FOLLOWER_MOTION_OK dolls=166"
+        ]
+      },
+      "full_inven_catalog_smoke_test": {
+        "sha256": "8b93401636d31d954e8e0928ec3a5d606b4c882bc38418a12761764f6bf93da2",
+        "markers": [
+          "INVEN_CATALOG_OK"
+        ]
+      },
+      "full_visual_manifest_test": {
+        "sha256": "b31489dcb0ca1a92d7bb8241d7fcdef19f005df5afd973092aea9704ccc5d9cd",
+        "markers": [
+          "FULL_VISUAL_MANIFEST_OK art=absent fallback=true"
+        ]
+      },
+      "ground_drop_smoke_test": {
+        "sha256": "f32bdc27322e225149f1ad748fe538b30ffd618885b3c385c9c4a0ac350b8217",
+        "markers": [
+          "GROUND_DROP_SMOKE_OK: manual/auto/loot/snapshot pickup validated"
+        ]
+      },
+      "ground_loot_system_test": {
+        "sha256": "2912039b86db18fe0bf780149e5c029f066baab889141208563717ada5269f1f",
+        "markers": [
+          "GROUND_LOOT_SYSTEM_OK: movement, GUI input, effects, IDs, AUTO, save and maps"
+        ]
+      },
+      "hp_mp_unique_effects_smoke_test": {
+        "sha256": "dad5efc3a662023be5e8a11b0fd90335178026286e719a6945f3f0cb9fa9de3b",
+        "markers": [
+          "HP_MP_UNIQUE_EFFECTS_SMOKE_OK: successful hit HP steal, 30-second HP/MP ticks and caps validated"
+        ]
+      },
+      "import": {
+        "sha256": "eebd22c531bc36c8956efde59c1c5c049aca887ef1174fcf3968202a99dd4b5d",
+        "markers": []
+      },
+      "input_routing_test": {
+        "sha256": "b986a874d55511626d9bca7a26372fcc0745f5e7d96ab61ca878e5d50aceb2d9",
+        "markers": [
+          "INPUT_ROUTING_OK"
+        ]
+      },
+      "inventory_db_smoke_test": {
+        "sha256": "88188cd0026773caf6ba88a621f4ed32d76067ca40407a48095912c4d3ec9caf",
+        "markers": [
+          "INVENTORY_DB_SMOKE_OK: local DB merge, inventory equip and enhancement lookup validated"
+        ]
+      },
+      "item_buff_description_smoke_test": {
+        "sha256": "054b36061058d3ecf9041bd2ef299ea01e48248b7a3d71b13d559b7805107332",
+        "markers": [
+          "ITEM_BUFF_SMOKE_OK: DB-description timed item buffs validated"
+        ]
+      },
+      "item_db_slot_smoke_test": {
+        "sha256": "ffe0cb8f5689252d41149223dc707a382a6f881407f998bc5f4224e6953d0aed",
+        "markers": [
+          "ITEM_DB_SLOT_SMOKE_OK: item databases use granular equipment slots"
+        ]
+      },
+      "item_icon_art_smoke_test": {
+        "sha256": "d0d8f8f7f49e939df8cd5d6236c41f45c25c602ed7ca578c02a8958eed326907",
+        "markers": [
+          "ITEM_ICON_ART_OK checks=28"
+        ]
+      },
+      "item_options_runtime_smoke_test": {
+        "sha256": "a43017382c17acbd1b3bbfeba6b05516df27964fed45f331ddcea7aa7332ae51",
+        "markers": [
+          "ITEM_OPTIONS_SMOKE_OK: equipped bonuses, effective attributes, size rules and burden verified"
+        ]
+      },
+      "item_weight_smoke_test": {
+        "sha256": "8ef8f48c64d12ddce405baff9e9c4217f539b9aed51781ed79ebd48155e57000",
+        "markers": [
+          "ITEM_WEIGHT_SMOKE_OK: all database items have deterministic weights"
+        ]
+      },
+      "job_smoke_test": {
+        "sha256": "a914abc23c471763a12cc3bad4bd9b654d71d44a8ab6cff1ca4ce3ba264703cc",
+        "markers": [
+          "JOB_SMOKE_OK: 13 jobs, mythic visuals, class skills and quickbars validated"
+        ]
+      },
+      "l1j_full_source_data_test": {
+        "sha256": "c3cc1c93a1248c0cf5717bb65b18ecadd60a3bd1673ec172abb92c3ed5b2c296",
+        "markers": [
+          "L1J_FULL_SOURCE_OK optional source archive absent; normal game preserved"
+        ]
+      },
+      "l1j_map_grid_test": {
+        "sha256": "03a707e428e68e0602aebdbba4c39ef94034fb3d2d9dd2590445546b2f6566bc",
+        "markers": [
+          "L1J_MAP_GRID_OK"
+        ]
+      },
+      "l1j_optional_bridge_test": {
+        "sha256": "0fcc276e470cfb8e4b2f8b85368a04a197d27dfc0d43d5bff0561de4ea292e6b",
+        "markers": [
+          "L1J_OPTIONAL_BRIDGE_OK"
+        ]
+      },
+      "l1j_packed_assets_test": {
+        "sha256": "27b8f6332c819a05f1dc0357b5c9f0f454463c11f8ff7b7c557288569fa63401",
+        "markers": [
+          "L1J_PACKED_ASSETS_OK bundle_absent=1 actual_export_test=SKIPPED"
+        ]
+      },
+      "l1j_png_load_test": {
+        "sha256": "cf92d419c9ff21e1a2ee29ab961f2e5a5ac16dba37b7e8f94d3d5ef21aa75bb5",
+        "markers": [
+          "L1J_PNG_LOAD_OK"
+        ]
+      },
+      "l1j_reviewed_shop_test": {
+        "sha256": "fc5bb796721824295767c0bf0bf82cc02f8ad1f29700733d7c03451a65ec8f4c",
+        "markers": [
+          "L1J_REVIEWED_SHOP_OK {\"checks\":99,\"distinct_game_items\":1,\"engine\":\"4.7.2-stable (official)\",\"failures\":[],\"profiles\":4,\"real_hud_purchases\":4}"
+        ]
+      },
+      "l1j_runtime_game_test": {
+        "sha256": "2ada515cb015844ad020a55bea42414622bd3efae785a19c8e173ff51cf69a1e",
+        "markers": [
+          "L1J_RUNTIME_OK {\"auto_hunt_combat_actors\":2,\"checks\":67,\"combat_fixture_hp\":80,\"engine\":\"4.7.2-stable (official)\",\"failures\":[],\"installed_item_images\":0,\"production_balance_validation\":false,\"source_art\":true}"
+        ]
+      },
+      "l1j_source_navigation_test": {
+        "sha256": "cd033ae3be929d276588b33742fb5a80d2b18c111c96dd5d914d4ca23bd2a404",
+        "markers": [
+          "L1J_SOURCE_NAV_OK {\"checks\":15,\"failures\":[]}"
+        ]
+      },
+      "l1j_spx_frames_test": {
+        "sha256": "3b4be1cca216b1d60e57c0e3677c631a57f675958ab1ff9830bd84a534330a36",
+        "markers": [
+          "L1J_SPX_FRAMES_OK"
+        ]
+      },
+      "l1j_visual_link_test": {
+        "sha256": "1d07506e145bb9bd6826be6d28613c57365b7c0b7b0c82dfff32434e4668241e",
+        "markers": [
+          "L1J_VISUAL_LINK_OK"
+        ]
+      },
+      "lineage_inventory_ui_smoke_test": {
+        "sha256": "a72c825a5ed76db7b1c16d6783f8f9be898422ee58fd837e80986b6a9f40eae5",
+        "markers": [
+          "LINEAGE_INVENTORY_UI_SMOKE_OK"
+        ]
+      },
+      "lineage_side_ui_smoke_test": {
+        "sha256": "6c51e7533131003aca0ccc09a6b4c12dd6316dc8669a893adba56fe718db9f99",
+        "markers": [
+          "LINEAGE_SIDE_UI_SMOKE_OK"
+        ]
+      },
+      "lineagem_ui_visual_smoke_test": {
+        "sha256": "cc8f0b724d0a38e0e967be0006b3b0de974131ba0a1da8922295f0fb428ede12",
+        "markers": [
+          "LINEAGEM_UI_VISUAL_OK"
+        ]
+      },
+      "local_crafting_test": {
+        "sha256": "6ee662e0bb6bcec1d82f34667c2fc01abbb42eb28ebe8671bf5353bf4574c9c4",
+        "markers": [
+          "CRAFT_OK: 2 real-item recipes, costs, exact item counts, forged inputs, capacity and artisan NPC"
+        ]
+      },
+      "loot_balance_smoke_test": {
+        "sha256": "1dbf35c374d376dbc30eccb38ccff56a6bf5f54a550d3637325b7da29e407476",
+        "markers": [
+          "LOOT_BALANCE_OK: 0.1% common/advanced/rare, halved high grades, boss Unique 0.001%, 3 equipment rolls"
+        ]
+      },
+      "map_visual_toggle_test": {
+        "sha256": "1207a1f895bef26f9048a2e06a9baf3fec712446383c0f0f9b88a29a4767e7df",
+        "markers": [
+          "MAP_VISUAL_OK: runtime modes, role-distinct art, original style restore and all 25 map paths"
+        ]
+      },
+      "mobile_scroll_smoke_test": {
+        "sha256": "05b45d43f451ef8d74ccacc3d4d5f95a87728d3c1fbb806404fd557b5da05f80",
+        "markers": [
+          "MOBILE_SCROLL_SMOKE_OK: inventory, skill and catalog touch scrolling validated"
+        ]
+      },
+      "monster_ai_leash_path_test": {
+        "sha256": "c7d48db4a3e65660e5ddc1577e5ad74d8fe3751d1ce34f4d348f7be47fa72390",
+        "markers": [
+          "MONSTER_AI_OK: leash, stealth, safe zones, sticky return, obstacle repath and unchanged attack interfaces"
+        ]
+      },
+      "monster_attack_profiles_test": {
+        "sha256": "fe65e23fb413dbd3d015c427854a57097b934e0b28e39218c6770d896fd050f5",
+        "markers": [
+          "MONSTER_ATTACK_PROFILES_OK checks=48"
+        ]
+      },
+      "monster_motion_test": {
+        "sha256": "962044fe3c69957b6a68e3bae42abccf50d3a859f4f56c729a21582a6d0d9862",
+        "markers": [
+          "MONSTER_MOTION_OK records=163 attack_once=true corpse_lifetime=true"
+        ]
+      },
+      "monster_world_test": {
+        "sha256": "af8cc5aa834959b513a754c17864101babdedfce3965638c33789ebdf874f718",
+        "markers": [
+          "MONSTER_WORLD_OK"
+        ]
+      },
+      "non_skill_options_smoke_test": {
+        "sha256": "e2caa143515fd3557175488a1a8782c0dfef94d5f22f394a1b0a6f61938474df",
+        "markers": [
+          "NON_SKILL_OPTIONS_SMOKE_OK"
+        ]
+      },
+      "npc_dialogue_branching_test": {
+        "sha256": "c0195525364dd2828c1e905a3c2ad27701b1190e0c533114b2a7338bdd7726e3",
+        "markers": [
+          "NPC_DIALOGUE_OK: live six NPCs, conditional quest/level/class/item branches and action checks"
+        ]
+      },
+      "npc_teleport_test": {
+        "sha256": "f8e36ab52ab31720acd611fc45e91881d5e68b231eea011b1c7fd03a8d032151",
+        "markers": [
+          "NPC_TELEPORT_OK: 25 maps, costs, level gates, forged IDs and preserved NPC placement"
+        ]
+      },
+      "option_finalize_smoke_test": {
+        "sha256": "b0466a596e6fed4a16452cdcde2c53bb2f9964771358026300c6fc6a63ffeeeb",
+        "markers": [
+          "OPTION_FINALIZE_OK: original tables, monsters, inventory weight, MP and elemental manage"
+        ]
+      },
+      "original_counter_probability_test": {
+        "sha256": "dd038344c32c3619f99ef9e8a831f9b09348b5b33834864cb26c1afcd2841281",
+        "markers": [
+          "ORIGINAL_COUNTER_PROBABILITY_OK"
+        ]
+      },
+      "original_lineagem_effects_smoke_test": {
+        "sha256": "f0d3946fa7b9db7f5835ffb67f18dddfb14ae01d36dc5eab85a5a8bb3a8f40e7",
+        "markers": [
+          "ORIGINAL_LINEAGEM_EFFECTS_OK: verified doll and relic runtime bonuses checked"
+        ]
+      },
+      "original_skill_audio_test": {
+        "sha256": "4cd95e1d5346f6cc26e1d2a0e1d20d0b9736d3357f0c74c487a5c7153f6ab0c8",
+        "markers": [
+          "ORIGINAL_SKILL_AUDIO_OK checks=392 resources=125 voices=6"
+        ]
+      },
+      "original_skill_catalog_runtime_test": {
+        "sha256": "8aaa9ecef5de7290ac45afc4b9c036be4fa9c00a4e45a3871558e6416c1ddb5f",
+        "markers": [
+          "ORIGINAL_SKILL_CATALOG_RUNTIME_OK records=125 active=63"
+        ]
+      },
+      "original_skill_learning_conditions_test": {
+        "sha256": "c891510084d535e5970d787447297cd4236120dcf7be4be8a6b63a33782bd3e0",
+        "markers": [
+          "LEARNING_AUDIT_COUNTS records=125 upgrades=10 weapons=4",
+          "ORIGINAL_SKILL_LEARNING_CONDITIONS_OK checks=1689 records=125 upgrades=10 weapons=4"
+        ]
+      },
+      "original_skill_provenance_test": {
+        "sha256": "4f7296b19efd201192b8d493e68ddd9347c4baa9291644ed48a64e4205909831",
+        "markers": [
+          "ORIGINAL_SKILL_PROVENANCE_OK checks=13"
+        ]
+      },
+      "original_skill_reduction_test": {
+        "sha256": "f1db67b1f4a313b754f0d0dd49de7bdd6c7079c8d118315e87043922f2cffa48",
+        "markers": [
+          "ORIGINAL_SKILL_REDUCTION_OK checks=35"
+        ]
+      },
+      "original_skill_status_coexistence_test": {
+        "sha256": "a2d5ee1b9f4f356d4e0679142195769dd61bec8d0764ddd8fcea9fc0226e0a22",
+        "markers": [
+          "ORIGINAL_SKILL_STATUS_COEXISTENCE_OK checks=40"
+        ]
+      },
+      "original_skill_summon_test": {
+        "sha256": "886111a84e386c334b63ee5295530fbfdb928398f405491a691eeadc5478c806",
+        "markers": [
+          "ORIGINAL_SKILL_SUMMON_OK hit_events=1 shield_events=1"
+        ]
+      },
+      "original_skill_system_test": {
+        "sha256": "fd3100e27a5d52c31d2201f789c17e6b4b9546b06dc9cc2021c84a076fba3446",
+        "markers": [
+          "ORIGINAL_SKILL_SYSTEM_OK"
+        ]
+      },
+      "original_skill_target_state_test": {
+        "sha256": "12186c9ac024122d9284119ead9e9e7b4002465b8647e9379d21aa11976d3cf2",
+        "markers": [
+          "ORIGINAL_SKILL_TARGET_STATE_OK checks=19"
+        ]
+      },
+      "original_skill_warehouse_migration_test": {
+        "sha256": "8216cfd8808ef1d668b1afc5bccf809a63aebafaad4fb9e00153badaf5bb604b",
+        "markers": [
+          "ORIGINAL_SKILL_WAREHOUSE_MIGRATION_OK checks=23"
+        ]
+      },
+      "original_turn_undead_rewards_test": {
+        "sha256": "8adee00e2b68c6c65807f0f13bb85aadf6cb964c9a3ff468a6c5abaf3e49a124",
+        "markers": [
+          "ORIGINAL_TURN_UNDEAD_REWARDS_OK checks=24"
+        ]
+      },
+      "original_turn_undead_test": {
+        "sha256": "889b19e16bb1e9c1d0bb9a6eaecc2c9708f35fb150dfd916fa5cf222d7df4c85",
+        "markers": [
+          "ORIGINAL_TURN_UNDEAD_OK checks=69 trials=200000"
+        ]
+      },
+      "passive_skill_smoke_test": {
+        "sha256": "ff5d6b3d0b348856c53286d4b5a3a54ea7b33e05e7dc2cca62fa1fcb2aa98013",
+        "markers": [
+          "PASSIVE_SKILL_SMOKE_OK: passive ownership and active-use separation validated"
+        ]
+      },
+      "per_instance_enchantments_smoke_test": {
+        "sha256": "585ae8333f2b1e087b7c0ef119bc13f1422d042e2addaf3996f5e0281ee59566",
+        "markers": [
+          "PER_INSTANCE_ENCHANTMENTS_OK: all enchantment targets, equip, loss, elemental, migration and persistence"
+        ]
+      },
+      "playtest_catalog_drag_test": {
+        "sha256": "78f3e82ac86afc07c60d7cbcd399b9c6606ffe340a8de0396c4982c936e5f4db",
+        "markers": [
+          "PLAYTEST_CATALOG_DRAG_OK 16 checks"
+        ]
+      },
+      "quickslot_smoke_test": {
+        "sha256": "fa061dc49d0bb17906a7e6df421315b550ed6e73b4864cc904322e22a86a8475",
+        "markers": [
+          "QUICKSLOT_SMOKE_OK: mixed slots and SELF auto-buff behavior validated"
+        ]
+      },
+      "relic_motion_test": {
+        "sha256": "0fb6a3d321e6bf8bc9f7ecfdea8019a9a2615780c94e569e8d4f349b8cdbd480",
+        "markers": [
+          "RELIC_MOTION_OK relics=144 simultaneous_doll=true"
+        ]
+      },
+      "shield_rules_smoke_test": {
+        "sha256": "877ca870cedd9f2c920b030b5e334d5a193e51469a4378d781c6e0249507cd77",
+        "markers": [
+          "SHIELD_RULE_SMOKE_OK: shield/offhand weapon compatibility validated"
+        ]
+      },
+      "shop_authority_test": {
+        "sha256": "022580d2283a15c3e331c98ab9222b17abfce5736d9f49f370218975e653635f",
+        "markers": [
+          "SHOP_AUTHORITY_OK: whitelist, quantity, wallet, encumbrance, orb and price integrity"
+        ]
+      },
+      "shop_buyback_test": {
+        "sha256": "b8535290dc56ee9150a15f25181ef80f62b34d34c4368ec8d28473e81c244685",
+        "markers": [
+          "BUYBACK_OK: enchanted instance, equipped, anti-duplication, potion stack, money and merchant"
+        ]
+      },
+      "skill_element_integration_smoke_test": {
+        "sha256": "9bebc537109fb370c30c491d72868346d94f42b6bea957edc26260896347f7ca",
+        "markers": [
+          "SKILL_ELEMENT_INTEGRATION_OK: elements, AoE, chaining, status, buffs, passives and weapon ammunition"
+        ]
+      },
+      "skill_mechanism_smoke_test": {
+        "sha256": "ed66e692c2bce01c9f8590ad7b35bc6c4775b57f62cf55b9a1ef339143c05b68",
+        "markers": [
+          "SKILL_MECHANISM_SMOKE_OK: active, passive, status, MP, cooldown and AUTO validated"
+        ]
+      },
+      "speed_option_smoke_test": {
+        "sha256": "84cc163e7cc26abd3d68e7a459277580c7b70654774f99d4eee891e018d71e21",
+        "markers": [
+          "SPEED_OPTION_SMOKE_OK: attack/move speed options validated"
+        ]
+      },
+      "stage5_save_compatibility_test": {
+        "sha256": "c986193889a2ea44d5f1c5d06fd321313259807ad4873248d36baaf774e0107d",
+        "markers": [
+          "STAGE5_SAVE_COMPATIBILITY_OK 27 checks"
+        ]
+      },
+      "ui_fidelity_regression_test": {
+        "sha256": "eacea007d89bc6e31ad79abaf5929962baf52108237526518325013bc3b4a176",
+        "markers": [
+          "UI_FIDELITY_REGRESSION_OK 75 assertions"
+        ]
+      },
+      "ui_renewal_integration_test": {
+        "sha256": "47946462c4f78789a679010981d62821978b84d7ca5731044484fc7f56fcc731",
+        "markers": [
+          "UI_RENEWAL_INTEGRATION_OK 59 assertions"
+        ]
+      },
+      "ui_stage4_item_instance_test": {
+        "sha256": "703e195da3aa375c9b0245816a8fcd557a5e9e3ce8cdfe7f43e72505ba349e09",
+        "markers": [
+          "UI_STAGE4_ITEM_INSTANCE_OK 17 checks"
+        ]
+      },
+      "visible_gameplay_smoke_test": {
+        "sha256": "4cc846a25d1be2a6633a9420bda7c2a9dbe08bfd18319ec961e2031b952b2af8",
+        "markers": [
+          "VISIBLE_GAMEPLAY_SMOKE_OK"
+        ]
+      },
+      "volley_motion_test": {
+        "sha256": "a0cc5bf5dbe28913a489fc672abe8fe83913b70f5c62417b5d64c20025cc35bd",
+        "markers": [
+          "VOLLEY_MOTION_OK projectiles=3 staggered=true critical_visual_only=true"
+        ]
+      },
+      "warehouse_persistence_test": {
+        "sha256": "dcdf271ee4d0499f2f42c167937d0cc08ae30f87e187c58b152f9624d97fb8a5",
+        "markers": [
+          "WAREHOUSE_OK: exact physical IDs, enchantment, persistence, stack transfer, weight and NPC"
+        ]
+      },
+      "weapon_rules_smoke_test": {
+        "sha256": "779ff50465bbcd0485cb511dee60a287c8ae216893d98e43747cb3496f7a546c",
+        "markers": [
+          "WEAPON_RULE_SMOKE_OK: class limits, weapon range, attack type and ammo validated"
+        ]
+      },
+      "world_region_portals_test": {
+        "sha256": "aae158713a6dfd997259e98f64a5a20a3ce5dc2338a9523770484c3c62a74512",
+        "markers": [
+          "WORLD_REGION_PORTALS_OK"
+        ]
+      },
+      "world_regions_test": {
+        "sha256": "b4338c92daba80b33aa2c8c088c01d2dde4de5a1eb548dcd582c0fd97f9bdf1e",
+        "markers": [
+          "WORLD_REGIONS_OK"
+        ]
+      }
+    },
+    "command": "GITHUB_ACTIONS=true python3 tools/test_project.py --godot <Godot 4.7.2> --logs test-results/pr59-learning/integration",
+    "limits": "Existing per-check timeout 150 seconds and all assertions retained; isolated saves; existing synthetic fixtures."
+  },
+  "optional_resource_scope": {
+    "full_visual_manifest": "FULL_VISUAL_MANIFEST_OK art=absent fallback=true",
+    "l1j_full_source_data": "L1J_FULL_SOURCE_OK optional source archive absent; normal game preserved",
+    "limitation": "Private original pack absent: does not validate all 413 transformations, original art fidelity, or reconstruction of 1000 maps."
+  },
+  "data": {
+    "runtime_effects_connected": 125,
+    "class_counts": {
+      "공용": 7,
+      "군주": 8,
+      "기사": 9,
+      "요정": 4,
+      "마법사": 22,
+      "다크엘프": 9,
+      "총사": 4,
+      "투사": 7,
+      "암흑기사": 7,
+      "광전사": 6,
+      "신성검사": 4,
+      "사신": 6,
+      "뇌신": 16,
+      "마검사": 16
+    },
+    "audit_assignments": 695,
+    "audit_states": {
+      "BLOCKED": 568,
+      "PARTIAL": 125,
+      "PVP_EXCLUDED": 2
+    },
+    "historical_completeness": "UNKNOWN",
+    "vfx_reference_validation": "UNKNOWN",
+    "errors": []
+  },
+  "fixture_precheck": {
+    "data/l1j/maps/raw/4.bin": false,
+    "data/l1j/registry/a2_visuals_normalized.json": false,
+    "assets/l1j/preview/a2/items/34.png": false,
+    "assets/l1j/preview/a2/monsters/ms852.png": false,
+    "assets/l1j/candidates/spx_converted/99999-0/SpriteFrames.tres": false,
+    "assets/l1j/candidates/spx_converted/99999-0/frame_000.png": false,
+    "assets/l1j/candidates/spx_converted/99999-0/frame_001.png": false
+  },
+  "fixture_cleanup": {
+    "removed": [
+      "data/l1j/maps/raw/4.bin",
+      "data/l1j/registry/a2_visuals_normalized.json",
+      "assets/l1j/preview/a2/items/34.png",
+      "assets/l1j/preview/a2/items/34.png.import",
+      "assets/l1j/preview/a2/monsters/ms852.png",
+      "assets/l1j/preview/a2/monsters/ms852.png.import",
+      "assets/l1j/candidates/spx_converted/99999-0/SpriteFrames.tres",
+      "assets/l1j/candidates/spx_converted/99999-0/frame_000.png",
+      "assets/l1j/candidates/spx_converted/99999-0/frame_000.png.import",
+      "assets/l1j/candidates/spx_converted/99999-0/frame_001.png",
+      "assets/l1j/candidates/spx_converted/99999-0/frame_001.png.import"
+    ],
+    "verified": "All 7 fixture files were absent before setup and byte-equal to independently generated synthetic fixtures before removal. Only those files and their 4 PNG import sidecars were removed; main item identity registry preserved."
+  },
+  "render": {
+    "markers": [
+      "ORIGINAL_RENDER_OK driver=llvmpipe (LLVM 20.1.2, 256 bits) median_ms=27.397 p95_ms=41.138 active=20 available=6",
+      "ORIGINAL_GUARDIAN_RENDER_OK npc_hits=1 shield_events=1 mp_spent=60",
+      "ORIGINAL_TURN_UNDEAD_RENDER_OK hp=0 mp_spent=20 audio_phase=impact"
+    ],
+    "images": [
+      {
+        "path": "test-results/pr59-learning/integration-previews/01-knight-catalog.png",
+        "sha256": "cfaa154933e7aaaead40ac17b9d2e0c2e50843253b5065c0416e8d8a7b79ac02",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/02-skill-preview.png",
+        "sha256": "d2bd3d24e5ac101ac92986b6a27f72dc59b69afe8dda2d4f7c2a5cdbd172021a",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/03-counter-aura.png",
+        "sha256": "cbbac5ed459d56a17b7d93ba025a4f28f38a8565a93fe4e9f8ef14e8d40c6901",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/04-effect-crowd.png",
+        "sha256": "08cd279dde2cac3c04c0e3dba3efb98d810a0628b3e7aa3c63312e580b4c0a6d",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/05-guardian-summon.png",
+        "sha256": "bd936946ee1632c9141cc5c8dd7e7e5f8cd0b0ab6afe6ce6fb29bb8624f6221f",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/06-guardian-hit.png",
+        "sha256": "3f46d224c0329a3c18b6b5e7103849a5e330d6fb7b5c04e86e9b392a274d5e2a",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/07-guardian-shield.png",
+        "sha256": "5dccaf8058bdb9c0c1007c181c7f469f69aa3239c3d2a36e535e268f71af9ba2",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/08-guardian-commands.png",
+        "sha256": "613adbc9c27a6aaae315a3703fda6865388e8c226d75216636ce9de472b62e79",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/09-turn-undead-learning.png",
+        "sha256": "01129b2779898c9bba7588f3990721066064ad7a797829f0a3d1d89d03b43f14",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/10-turn-undead-projectile.png",
+        "sha256": "f72322630fe244c68d0dbef9f49a59ad6714eb36c41768131a0196ceb99aa0b2",
+        "size": [
+          1280,
+          720
+        ]
+      },
+      {
+        "path": "test-results/pr59-learning/integration-previews/11-turn-undead-ancient-impact.png",
+        "sha256": "202e552da10b952ea1dfab21be13ff0d33c039e43212c5ad5cc7aa69e2c5c16c",
+        "size": [
+          1280,
+          720
+        ]
+      }
+    ],
+    "limitations": "llvmpipe OpenGL and Dummy audio; no real pack, Windows GPU or listening-quality claim"
+  },
+  "render_log": {
+    "sha256": "3fc63ff243d928b9167d6e2afc2c49a29b3086625a907a6c1b9bd16703d38bec",
+    "markers": [
+      "ORIGINAL_RENDER_OK driver=llvmpipe (LLVM 20.1.2, 256 bits) median_ms=27.397 p95_ms=41.138 active=20 available=6",
+      "ORIGINAL_GUARDIAN_RENDER_OK npc_hits=1 shield_events=1 mp_spent=60",
+      "ORIGINAL_TURN_UNDEAD_RENDER_OK hp=0 mp_spent=20 audio_phase=impact"
+    ]
+  },
+  "visual_review": [
+    "09-turn-undead-learning.png",
+    "11-turn-undead-ancient-impact.png"
+  ],
+  "render_setup": {
+    "initial_failure": "apt-get download failed once: setgroups/setegid/seteuid Operation not permitted",
+    "alternative": "Downloaded 6 public Ubuntu packages directly, verified package SHA256 metadata, unpacked into private runtime path, resolved dependencies and used run_visual_capture.py with private Xvfb TCP display. No system install or privilege escalation.",
+    "result": "Render exit 0; 11 valid 1280x720 PNGs; no SCRIPT ERROR/ERROR/FAIL",
+    "limitation": "Software llvmpipe with Dummy audio; no physical Windows GPU, FPS guarantee, original pack fidelity or audio listening claim."
+  },
+  "remote_ci_observation": {
+    "run": 38095963112,
+    "job": 114341796902,
+    "head": "5288fe6ab5dca0e43c5223424606e077bc5384a6",
+    "markers": [
+      "2026-10-10T23:43:49.0632777Z \u001b[36;1mgrep -q \"SPEED_OPTION_SMOKE_OK\" godot-speed-option-smoke.log\u001b[0m",
+      "2026-10-10T23:43:53.1982158Z SPEED_OPTION_SMOKE_OK: attack/move speed options validated",
+      "2026-10-10T23:43:53.2168597Z ERROR: 1 resources still in use at exit (run with --verbose for details).",
+      "2026-10-10T23:43:53.2487179Z ERROR: 1 resources still in use at exit (run with --verbose for details)."
+    ],
+    "interpretation": "Assertions passed; workflow failed on a shutdown resource-use error. Root cause under investigation; not claimed fixed.",
+    "synthetic_commit": "fc77a22588f7b9b6810d01a5e48c7449ba313174",
+    "synthetic_tree": "962b7255e455b8ff6845efef26761da403609a69",
+    "tree_matches_local_integration_before_evidence_and_verbose_workflow": true,
+    "local_same_sequence": {
+      "commands": "Godot --headless --verbose; same temporary save directory across boot(30), ainhasad, job, quickslot, speed tests; each exit code 0, no ERROR/WARNING/FAIL",
+      "result": "NOT_REPRODUCED",
+      "logs": {
+        "ainhasad_smoke_test": {
+          "sha256": "e81c84bdc5706f39c157738e977e247efd1f7ba67a359db8caec319b4cd892eb",
+          "markers": [
+            "AINHASAD_SMOKE_OK: 26 assertions"
+          ]
+        },
+        "boot": {
+          "sha256": "3d4927b15f2f39527d685186aeb5216a1a9e11e77ce4216dd1038cf579806ab2",
+          "markers": []
+        },
+        "job_smoke_test": {
+          "sha256": "1bb9fe2828f0b3831dc6ce9388bd67953c42e56803c0ad64468c7f0cc2e28ed3",
+          "markers": [
+            "JOB_SMOKE_OK: 13 jobs, mythic visuals, class skills and quickbars validated"
+          ]
+        },
+        "quickslot_smoke_test": {
+          "sha256": "b842e27eb1bd8df73e6c5d6c90372061eafad397c9b1f3557766b313cea5956c",
+          "markers": [
+            "QUICKSLOT_SMOKE_OK: mixed slots and SELF auto-buff behavior validated"
+          ]
+        },
+        "speed_option_smoke_test": {
+          "sha256": "271365d6b062516e806e3f80219817c59c89fb7704b1df059bd95ebec31b21cf",
+          "markers": [
+            "SPEED_OPTION_SMOKE_OK: attack/move speed options validated"
+          ]
+        }
+      }
+    },
+    "followup": "Enabled --verbose for the existing speed workflow step only, preserving assertions and ERROR failure policy. A successful local run does not establish the remote shutdown error is fixed."
+  },
+  "remaining": [
+    "Investigate any repeated CI resource-at-exit failure using new verbose logs; do not relax error checks.",
+    "Audit restored buff/toggle/shield ownership and eligibility in skill_service.gd:import_state().",
+    "Continue dated original prerequisite and rename evidence; 125 PARTIAL / 568 BLOCKED / 2 PVP_EXCLUDED, zero COMPLETE."
+  ],
+  "interruption_cause": "Original Work interruption cause remains unknown."
+}

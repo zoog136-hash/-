@@ -357,6 +357,8 @@ func _refresh_inventory_grid() -> void:
 		button.add_theme_stylebox_override("pressed", _slot_pressed_style(grade))
 		var path: String = str(images.get(item_name, ""))
 		var bridge_icon: Texture2D = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd").item_icon(record, item_name)
+		var original_icon: Texture2D = preload("res://scripts/animation/visual_manifest.gd").item_icon(record, item_name)
+		if original_icon != null: bridge_icon = original_icon
 		if bridge_icon != null or (path != "" and ResourceLoader.exists(path)):
 			button.icon = bridge_icon if bridge_icon != null else load(path) as Texture2D
 			button.expand_icon = true
@@ -536,6 +538,8 @@ func _refresh_detail(item_name: String) -> void:
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
 	var path := str(images.get(item_name, ""))
 	var bridge_icon: Texture2D = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd").item_icon(record, item_name)
+	var original_icon: Texture2D = preload("res://scripts/animation/visual_manifest.gd").item_icon(record, item_name)
+	if original_icon != null: bridge_icon = original_icon
 	detail_icon.texture = bridge_icon if bridge_icon != null else (load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null)
 
 	var lines := PackedStringArray()

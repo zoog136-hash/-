@@ -524,3 +524,51 @@ During this task main advanced to `bc6b59baac786913ea0112ab3bd7f8bf278e474f`
 mergeable=false, but a local read-only merge-tree calculation found **no text
 conflicts**, resulting tree `3ef0aa3e254def09f827f1fc6bb266e67e258814` before
 adding this learning fix. Do not infer a file conflict from that API flag.
+
+
+## Resource-runtime integration after learning checkpoint — 2026-10-11 KST
+
+The verified learning fix was first saved remotely as
+`5288fe6ab5dca0e43c5223424606e077bc5384a6` (tree
+`5b009ac20adcb1f90aae975e72233f528cedb4f2`, local equivalent `7d86312c`).
+Then main `bc6b59baac786913ea0112ab3bd7f8bf278e474f` was integrated into the
+existing feature branch with no text conflicts. The combined player/monster
+resource hooks and previous skill behavior are retained. Main was not changed
+and Draft PR #59 remains unmerged.
+
+- Combined-code whole regression: **98/98 PASS**, Godot 4.7.2, unchanged
+  assertions and 150-second per-check limit, isolated saves, data errors **0**.
+  The skill learning audit still passes all **1,689** assertions.
+- Actual software OpenGL capture: **11/11 valid 1280x720 PNGs**. Guardian hit,
+  shield and MP markers and Turn Undead impact/HP/MP markers passed; learning
+  and ancient-impact images were visually inspected. Dummy audio and llvmpipe
+  do not establish listening quality or physical Windows GPU performance.
+- Both new main resource checks passed their explicitly reported **absent-pack
+  fallback** paths. This does not verify 413 original transformations or 1000
+  restored source maps. Synthetic fixtures were byte-compared against a fresh
+  independent generator, then only their 7 files and 4 import sidecars removed.
+- Runtime hashes match the tested index. Evidence, all 98 log hashes, capture
+  hashes, resource limits and fixture cleanup are in
+  `evidence/pr59-learning-20261011/integration-verification.json`.
+
+### Remote shutdown error still under observation
+
+Learning-checkpoint [Godot Validate run 38095963112](https://github.com/zoog136-hash/-/actions/runs/38095963112),
+job `114341796902`, passed the speed assertions but failed with
+`ERROR: 1 resources still in use at exit` (also 2 leaked ObjectDB instances).
+Its synthetic commit `fc77a22588f7b9b6810d01a5e48c7449ba313174`, tree
+`962b7255e455b8ff6845efef26761da403609a69`, exactly matches the locally tested
+integration tree before evidence/docs and the following diagnostic-only edit.
+A local verbose replay of boot -> Ainhasad -> jobs -> quickslots -> speed with
+one shared isolated save passed all five processes, with no errors or warnings.
+The full isolated 98-test run also passed speed. This failure was **not
+reproduced and is not claimed fixed**. The workflow speed step now adds
+`--verbose` to identify remaining resources if it recurs; all error checks and
+assertions are preserved. Check CI for the final remote feature SHA before
+claiming remote success. Do not repeatedly rerun a failing job without new evidence.
+
+To resume: inspect PR #59 head and local changes first, preserve existing code,
+use the current feature and the remote learning checkpoint above if necessary.
+Read the final commit's CI logs, then audit restored buff/toggle/shield eligibility
+and the dated original skill prerequisites. Counts remain **125 PARTIAL /
+568 BLOCKED / 2 PVP_EXCLUDED**. Original Work interruption cause is unknown.

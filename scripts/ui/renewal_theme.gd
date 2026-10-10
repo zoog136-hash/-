@@ -186,6 +186,8 @@ static func safe(value: Variant) -> String:
 static func item_icon(record: Dictionary, item_name: String, images: Dictionary) -> Texture2D:
 	var external: Texture2D = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd").item_icon(record, item_name)
 	if external != null: return external
+	var original: Texture2D = preload("res://scripts/animation/visual_manifest.gd").item_icon(record, item_name)
+	if original != null: return original
 	var from_a2: Texture2D = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd").item_icon(record, item_name)
 	if from_a2 != null: return from_a2
 	var polished: Texture2D = ITEM_ART.item_icon(record, item_name, images)

@@ -9,6 +9,8 @@ static var plates: Dictionary = {}
 const SHADER = preload("res://scripts/monsters/monster_body.gdshader")
 
 static func texture_for(record: Dictionary) -> Texture2D:
+	var family: Texture2D = preload("res://scripts/animation/visual_manifest.gd").monster_texture(record)
+	if family != null: return family
 	var external: Texture2D = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd").monster_texture(record)
 	if external != null: return external
 	var from_a2: Texture2D = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd").monster_texture(record)
