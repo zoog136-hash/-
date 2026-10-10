@@ -54,6 +54,7 @@ const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
 const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
+const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
@@ -1048,6 +1049,8 @@ func _connect_signals() -> void:
 		hud.connect("npc_teleport_requested", _npc_teleport_requested)
 	if hud.has_signal("craft_requested"):
 		hud.connect("craft_requested", _craft_requested)
+	if hud.has_signal("shop_sell_requested"):
+		hud.connect("shop_sell_requested", _sell_shop_item)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -1314,6 +1317,8 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_npc_teleport")
 				elif str(npc["role"]) == "craft":
 					hud.call("open_crafting")
+				elif str(npc["role"]) == "buyback":
+					hud.call("open_item_sell")
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
@@ -3219,6 +3224,28 @@ func _buy_shop_item(item_name: String, _ui_price: int) -> void:
 	# Legacy HUD signal remains compatible but the transmitted price has no
 	# authority. Never debit a price supplied by a screen or external caller.
 	_buy_shop_bulk(item_name, 1)
+
+func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
+	# Validate the current inventory, bound flags and exact instance ID at
+	# commit time. The UI never submits the price or enhancement bonus.
+	_sync_item_instances()
+	var records: Dictionary = loot_catalog.get("by_name", {})
+	var quote: Dictionary = LOCAL_BUYBACK.quote(item_name,quantity,instance_id,inventory,records,item_instances,equipped_items,gold)
+	if not bool(quote.get("ok",false)):
+		hud.show_message(str(quote.get("reason","매입할 수 없습니다")))
+		return
+	var transaction: Dictionary = LOCAL_BUYBACK.apply(quote,inventory,item_instances,gold)
+	if not bool(transaction.get("ok",false)):
+		hud.show_message(str(transaction.get("reason","거래에 실패했습니다")))
+		return
+	gold = int(transaction["wallet"])
+	_update_hud()
+	_save_game(true)
+	hud.refresh_inventory(inventory)
+	hud.append_log("아이템 매입 · %s ×%d (+%d 아데나)" % [item_name,quantity,int(transaction["payment"])])
+	hud.show_message("매입 완료 · %d 아데나" % int(transaction["payment"]))
+	if hud.has_method("open_item_sell"):
+		hud.call("open_item_sell")
 
 func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	if CONSUMABLE_RULES.is_removed_item(item_name):
