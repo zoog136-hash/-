@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "source": "TWILIGHT original local recipes (not L1J official crafting rates)",
+  "recipes": [
+    {
+      "id": "healing_plus",
+      "name": "강력 HP 물약 조제",
+      "category": "물약",
+      "result": {
+        "item": "강력 HP 물약",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "HP 물약",
+          "quantity": 3
+        }
+      ],
+      "adena": 80
+    },
+    {
+      "id": "healing_blessed",
+      "name": "축복받은 HP 물약 조제",
+      "category": "물약",
+      "result": {
+        "item": "축복받은 HP 물약",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강력 HP 물약",
+          "quantity": 3
+        }
+      ],
+      "adena": 350
+    },
+    {
+      "id": "blade_steel",
+      "name": "강철 한손검 제작",
+      "category": "무기",
+      "result": {
+        "item": "강철 한손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 한손검",
+          "quantity": 2
+        },
+        {
+          "item": "HP 물약",
+          "quantity": 4
+        }
+      ],
+      "adena": 850
+    },
+    {
+      "id": "blade_mithril",
+      "name": "미스릴 한손검 제작",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 한손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 한손검",
+          "quantity": 2
+        },
+        {
+          "item": "강력 HP 물약",
+          "quantity": 5
+        }
+      ],
+      "adena": 3600
+    },
+    {
+      "id": "dual_steel",
+      "name": "강철 이도류 제작",
+      "category": "무기",
+      "result": {
+        "item": "강철 이도류",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 이도류",
+          "quantity": 2
+        },
+        {
+          "item": "HP 물약",
+          "quantity": 4
+        }
+      ],
+      "adena": 1000
+    }
+  ]
+}
