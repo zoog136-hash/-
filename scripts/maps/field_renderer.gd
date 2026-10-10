@@ -457,7 +457,7 @@ func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
 	if not local_bounds.intersects(field.bounds): return
 	var style: Dictionary = field.data.get("render_style", {})
 	var wilderness: bool = bool(style.get("wild_ground",true))
-	var field_id: String = str(field.data.get("id",field.data.get("name","")))
+	var field_id: String = str(field.data.get("map_id",field.data.get("id",field.data.get("name",""))))
 	var frozen: bool = field_id.contains("albino")
 	var volcanic: bool = field_id.contains("escaros")
 	var random := RandomNumberGenerator.new()
