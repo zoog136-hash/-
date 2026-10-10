@@ -6,6 +6,7 @@ signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
 signal shop_bulk_buy_requested(item_name: String, quantity: int)
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
+signal craft_requested(recipe_id: String, quantity: int)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -16,6 +17,7 @@ const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
+const CraftingUI = preload("res://scripts/ui/renewal_crafting.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
@@ -602,6 +604,12 @@ func open_shop() -> void:
 func open_warehouse() -> void:
 	_open_window("warehouse","창고지기","아이템 보관/찾기 · 개별 강화 상태 보존")
 	var screen := WarehouseUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_crafting() -> void:
+	_open_window("crafting","제작 장인","재료 확인 · 아데나 소모 · 아이템 제작")
+	var screen := CraftingUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
 
