@@ -908,7 +908,7 @@ func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, exper
 	if v20_mp_text != null:
 		v20_mp_text.text = "%d / %d" % [mp, max_mp]
 	if v20_status_name != null:
-		v20_status_name.text = "황혼의 기사"
+		v20_status_name.text = "황혼의 %s" % str(character_state.get("job_class", "기사"))
 
 func set_map_name(value: String) -> void:
 	super.set_map_name(value)

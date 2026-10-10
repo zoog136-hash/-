@@ -207,5 +207,8 @@ func capture_turn_undead(world: TwilightWorld, dummy: TwilightMonster) -> void:
 	if not dummy.dead or dummy.hp != 0 or service.vfx.audio_pool.last_phase != "impact":
 		push_error("Turn Undead impact capture requires actual death and confirmed-hit sound")
 		quit(1); return
+	if str(world.hud.v20_status_name.text) != "황혼의 마법사":
+		push_error("Combat HP refresh must preserve the visible wizard class name")
+		quit(1); return
 	await capture("11-turn-undead-ancient-impact")
 	print("ORIGINAL_TURN_UNDEAD_RENDER_OK hp=", dummy.hp, " mp_spent=", 999 - world.mp, " audio_phase=", service.vfx.audio_pool.last_phase)

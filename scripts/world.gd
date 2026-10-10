@@ -3740,7 +3740,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		var entry: Dictionary = value as Dictionary
 		if entry.is_empty() or str(entry.get("kind", "")) != "skill":
 			continue
-		var skill_name: String = str(entry.get("id", ""))
+		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or _is_passive_skill(skill):
 			quickslots[index] = {}
@@ -3749,6 +3749,9 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class != "공용" and skill_class != job_class:
 			quickslots[index] = {}
+			changed = true
+		elif skill.get("origin", "") == "LINEAGEM_20250617" and str(entry.get("id", "")) != str(skill.name):
+			entry["id"] = str(skill.name)
 			changed = true
 	return changed
 

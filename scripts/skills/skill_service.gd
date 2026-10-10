@@ -65,7 +65,7 @@ func tick(delta: float) -> void:
 	for key: int in marks.keys():
 		marks[key].remaining -= delta
 		var target: Node = marks[key].target.get_ref()
-		if not is_instance_valid(target) or target.dead or float(marks[key].remaining) <= 0: marks.erase(key)
+		if not Status.same_life(marks[key], target) or target.dead or float(marks[key].remaining) <= 0: marks.erase(key)
 	for name: String in world.active_skill_buffs.keys():
 		var buff: Dictionary = world.active_skill_buffs[name]
 		var id := str(buff.get("skill_id", ""))
@@ -361,9 +361,10 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 			"mark":
 				if is_instance_valid(target) and not target.dead:
 					var key := target.get_instance_id()
-					var count := int(marks.get(key, {}).get("count", 0)) + 1
-					marks[key] = {"target":weakref(target),"count":count,"remaining":10.0}
-					status.debuffs[key] = {"target":weakref(target),"remaining":10.0,"values":{"ac":int(abs(target.armor_class) * .05) * count,"dg":-3 * count}}
+					var previous: Dictionary = marks.get(key, {})
+					var count := (int(previous.get("count", 0)) if Status.same_life(previous, target) else 0) + 1
+					marks[key] = {"target":weakref(target),"life_id":target.life_id,"count":count,"remaining":10.0}
+					status.debuffs[key] = {"target":weakref(target),"life_id":target.life_id,"remaining":10.0,"values":{"ac":int(abs(target.armor_class) * .05) * count,"dg":-3 * count}}
 					if count >= int(skill.get("stacks", 3)):
 						deal_damage(skill, target)
 						var control := skill.duplicate(true)
@@ -490,7 +491,7 @@ func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 		"buff", "counter": return not world.active_skill_buffs.has(str(skill.name))
 		"summon": return not summons.active() and not world.active_skill_buffs.has(str(skill.name))
 		"status":
-			if not is_instance_valid(target) or target.dead: return false
+			if not status.can_affect(skill, target): return false
 			var kind := str(skill.get("status", ""))
 			if kind in ["stun","hold","fear","silence","poison","bleed","slow"] and float(target.get(kind + "_remaining")) > 0: return false
 		"attack":

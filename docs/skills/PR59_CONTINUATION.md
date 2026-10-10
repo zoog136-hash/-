@@ -148,9 +148,70 @@ Tests actually run on this second checkpoint:
   rather than duplicating multi-megabyte generated images in the Git history.
 
 Machine-readable summaries, text logs and screenshot hashes are in
-`docs/skills/evidence/pr59-continuation`. The rendered HUD also exposed an
-existing hardcoded knight label in `scripts/hud.gd:update_player()` after a
-wizard combat HP refresh; correcting that is the next small UI task.
+`docs/skills/evidence/pr59-continuation`.
+
+The exact second code SHA is `bbc08e9a589ce4426ef26fe83282e7d630ea870a`;
+[CI run 38047604342](https://github.com/zoog136-hash/-/actions/runs/38047604342)
+succeeded with **65/65** checks and all **11** actual OpenGL captures, including
+the real Turn Undead death marker. Artifact ID `11668700984`, SHA-256
+`1059921f5f5fdd40da03e0ad720e79f1ba90fba3ef5370eb8bcb99c028ec307c`, is recorded
+with its expiry in `github-ci-second-artifacts.json`.
+
+## Third code checkpoint: state lifetime, AUTO and visible class
+
+- `scripts/hud.gd:set_character_state()/update_player()` and
+  `scripts/hud_v20.gd:update_player()` use the authoritative class name.
+  HP/MP-only combat refresh no longer turns every class label into knight.
+  The same hardcoded lines were checked in latest main before the minimal edit.
+  The existing lightweight combat HUD path remains covered by its regression.
+- `scripts/world.gd:_sanitize_quickslots_for_current_job()` now resolves the
+  stable skill ID and repairs an old displayed name. The slot's AUTO flag and
+  skill ID survive skillbar refresh, rather than only direct click/cast.
+- `status_service.gd` and `skill_service.gd`: modifier/mark entries are tied
+  to `life_id`, checked during lookup, ticking and reapplication. Actual pooled
+  NPC `setup()` resets cannot carry a previous life's MR/AC/DG modifier,
+  third-hit mark burst or modifier duration into the new life.
+- `status_service.gd:can_affect()` is shared by actual status application and
+  AUTO selection. AUTO skips explicit immunity and 100% resistance without
+  MP/cooldown/RNG expenditure. Manual status probability and cost semantics
+  remain as before; this is not a new original hit formula.
+- `original_turn_undead_rewards_test.gd` connects the NPC's real death signal
+  to the same world handler as field monsters. Failed and successful real
+  paid casts validate XP/Adena/quest/ground loot, no weapon HP absorption,
+  duplicate-callback safety, pickup and save/load of reward/skill/slot/cooldown.
+  Fixture seeds are selected using the production Turn Undead and loot helpers;
+  neither probability table is replaced or copied.
+
+Third-checkpoint focused tests: **10/10**, including **69** Turn Undead checks
+and **200,000** trials, **19** pooled-target/AUTO checks, **24** reward checks,
+all 13 job changes, combat HUD, audio, catalog, save and quickslot regressions.
+Actual local OpenGL rendering again passed **11** captures and guardian/Turn
+Undead markers; the final impact image was inspected and visibly retains the
+wizard class label. Data validator has **0 errors**.
+
+The sequential full runner finished **66/66 passed** with no failed checks.
+It enumerated its scripts before the new rewards fixture was added; no
+production source was changed during that run. The rewards fixture passed
+separately with 24 assertions. The next GitHub full run will enumerate all
+**67** checks; that number is not reported as a CI pass before it actually runs.
+
+Failures are preserved, not counted as passes: the new pre-fix class regression
+reported 24 label failures; stable-slot refresh and old-life mark/duration tests
+also failed. The first target-state fixture changed the catalog dictionary but
+the world casts a deep copy; its intended forced-success setting did not reach
+that cast. The two impact assertions initially failed because of this test
+fixture error. The fixture was corrected to configure the actual world cast
+record, then the production-path test passed. No production status formula was
+changed to make that fixture succeed.
+
+Main comparison was refreshed to `1947469b4bd817ffd2b1c9e42ac28c90d154c25b`.
+A read-only merge-tree simulation from `bbc08e9a` found one textual conflict in
+`scripts/world.gd:_load_game()`: original-skill pre-migration save backup versus
+main's warehouse/crafting-log restoration. Any later permitted integration must
+retain the backup guard **before** restoring warehouse/crafting state; choosing
+only one side loses a system. Monster and HUD changes merged automatically in
+that simulation, which is not an engine validation of a merged project. No
+merge was performed and main was not changed.
 
 ## Next execution
 
@@ -161,10 +222,13 @@ python3 tools/validate_original_skills.py --report test-results/data-validation.
 python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
 ```
 
-Next actual paths: `scripts/hud.gd:update_player()` for the hardcoded combat
-label; then `scripts/skills/skill_service.gd:can_cast()/auto_wants()` and
+Next actual paths: `scripts/skills/skill_service.gd:deal_damage()` and
+`scripts/skills/status_service.gd` for the stored but currently unconsumed
+`reduction` debuff field; `scripts/ui/renewal_skills.gd:select_original()` for
+inline UNKNOWN/INFERRED grade/activation and CUSTOM_BALANCE learning labels;
 `scripts/skills/skill_catalog.gd:learn()/resolve()` for remaining condition and
-upgrade audits, followed by missing dated class effects in
+upgrade audits; `scripts/world.gd:_load_game()` for the documented main conflict;
+then missing dated class effects in
 `data/skills/research_inventory.json`. All **568 BLOCKED
 records** there are the explicit unfinished list. Original video frames,
 undocumented levels/cost/formula/prerequisites, final main integration and

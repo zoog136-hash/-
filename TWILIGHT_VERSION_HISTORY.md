@@ -30,12 +30,12 @@
 4. 도감 지급과 아데나 1억은 **개발 전용**이며 출시 전에 분리/제거하도록 별도 작업합니다.
 5. Windows·Android GPU 실제 성능, 장시간 플레이, Android 경고 정리 및 실제 기기 실행 확인은 남은 점검입니다.
 
-마지막 수동 갱신: 2026-10-09.
+마지막 수동 갱신: 2026-10-10.
 
 
 ## 원작 스킬 이행 작업 — 미완료, 별도 브랜치
 
-- 기준 main: `edefc7c120b9ad4f8e211c6e36478d4afb73c21d`, 다시 확인한 main HEAD와 일치.
+- 최초 작업 시점 기준 main: `edefc7c120b9ad4f8e211c6e36478d4afb73c21d`. 후속 비교 시점 SHA는 아래 재개 기록 참조.
 - 작업 브랜치: `feature/original-lineagem-skill-complete-20261010`. main 미병합.
 - 13직업 조사 인벤토리 695개: 실행 연결 123개 PARTIAL, 570개 BLOCKED, PvP 전용 근거가 있는 2개 PVP_EXCLUDED. 전체 역사 목록의 완전성 UNKNOWN.
 - 학습·스킬북·강화 관계·수동/자동/패시브 전투 경로·슬롯 이전·별도 수치·ID별 VFX/아이콘/합성 오디오를 연결했습니다. 기존 아이템 인스턴스와 원본 스킬 DB를 보존합니다.
@@ -43,3 +43,12 @@
 - [Draft PR #59](https://github.com/zoog136-hash/-/pull/59): 코드 `4911340`의 전체 62/62와 실제 OpenGL 화면 4장 확인 PASS. 상세창/작은 창 스크롤과 자동등록 경로를 보강했습니다. 최신 코드의 [CI 로그·해시](docs/skills/evidence/ci-4911340/manifest.json)와 [실제 화면](docs/skills/previews/README.md)을 보존했습니다.
 
 - 가디언 후속: 서먼 가디언 독립 소환 NPC·명령·HP 조건 SP 보호막·안전 저장/종료·자동사용 연결. 새 Godot 4.7.2 headless 전체 **63/63 PASS**, [로그/해시](docs/skills/evidence/guardian-local/manifest.json). 새 가디언 OpenGL 캡처는 CI 대기, 전체 원작 복원은 미완료. 첨부 a2(1).zip을 포함한 13개 조사 기록 보존.
+
+### PR #59 재개 — 2026-10-10
+
+- 이전 미커밋 턴 언데드 패치·WAV 중간 파일은 찾지 못해 실제 원격 `b69adeb9`에서 재구성했습니다. 기존 브랜치와 가디언 코드·자료는 보존했습니다.
+- `3264fec3`: 턴 언데드 기본/에이션트의 실제 시전 마커·투사체·확률 판정·NPC HP/사망 경로. [CI](https://github.com/zoog136-hash/-/actions/runs/38046643647) **64/64 + 실제 OpenGL/가디언 SUCCESS**.
+- `bbc08e9a`: 안정 ID 기반 수동/AUTO 슬롯, 이전 생명 대상 투사체 차단, 시전·상태·저항·적중 오디오. [CI](https://github.com/zoog136-hash/-/actions/runs/38047604342) **65/65 + 실제 OpenGL 11장 SUCCESS**. 앞선 가디언 렌더 대기도 이 실행에서 검증됐습니다.
+- 후속 수정: HP/MP 갱신 후 직업명 유지, 스킬바 갱신 시 이름 변경 슬롯 보존, 재생성 몬스터의 약화/표식 분리, 면역 대상 상태 AUTO 제외. 로컬 전체 **66/66**, 집중 검사 **10/10**, 실제 보상·드랍·습득·저장 검사 **24개** 및 실제 OpenGL 11장 통과. 새 보상 검사는 전체 66개 열거 이후 추가되어 별도로 실행했습니다. 다음 전체 CI 대상은 67개입니다.
+- 현재 조사 배정 695개 / 실행 **125 PARTIAL(63 액티브·62 패시브/강화)** / **568 BLOCKED** / **2 PVP_EXCLUDED**. 원작 전체 완성은 미확인이고 자체 수치는 CUSTOM_BALANCE입니다.
+- 최신 main 비교 `1947469b4bd817ffd2b1c9e42ac28c90d154c25b`의 저장 백업 대 창고·제작 복원 충돌은 남겨 두었습니다. PR Draft와 main 미병합을 유지합니다. [재개 파일·함수·명령·실패 기록](docs/skills/PR59_CONTINUATION.md).

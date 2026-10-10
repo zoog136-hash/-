@@ -157,6 +157,11 @@ func run() -> void:
 	world._on_quickslot_pressed(0)
 	check(not world.pending_attack.is_empty() and world.mp == 999 - int(base.mp), "manual quickslot resolves the stable ID despite an old label")
 	fresh()
+	world.quickslots[0].id = "이전 버전의 표시 이름"
+	world._update_job_skillbar()
+	check(world.quickslots[0].get("skill_id") == base.id and world.quickslots[0].get("auto", false), "skillbar refresh preserves a renamed stable AUTO slot")
+	check(world.quickslots[0].get("id") == base.name, "skillbar refresh canonicalizes the display name")
+	world._on_quickslot_assignment_requested(0, "skill_auto", str(base.id))
 	# A race change during flight must be validated again at the hit event.
 	check(world._cast_job_skill(str(base.name)), "cast before race change")
 	world._release_player_attack(int(world.pending_attack.id))
