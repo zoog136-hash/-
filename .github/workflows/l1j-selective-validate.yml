@@ -1,0 +1,45 @@
+name: TWILIGHT L1J Selective Integration
+
+on:
+  push:
+    branches:
+      - feature/twilight-l1j-selective-systems-20261010
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  strict-loot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit L1J SQL converter fixture
+        run: python3 tools/test_import_l1j_drops.py
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and parse scripts
+        run: |
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee godot-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' godot-import.log
+      - name: Loot + ground item regressions
+        run: |
+          set -o pipefail
+          for test in tests/loot_balance_smoke_test.gd tests/ground_loot_system_test.gd; do
+            /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://$test" 2>&1 | tee -a godot-tests.log
+          done
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' godot-tests.log
+          grep -q LOOT_BALANCE_OK godot-tests.log
+          grep -q GROUND_LOOT_SYSTEM_OK godot-tests.log
+      - name: Preserve logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l1j-selective-evidence
+          path: |
+            godot-import.log
+            godot-tests.log
