@@ -63,6 +63,14 @@ func _draw() -> void:
 				draw_line(point - Vector2(0, 3), point + Vector2(0, 3), Color(color.lightened(0.6), alpha), 1, true)
 	if texture != null:
 		draw_texture_rect(texture, Rect2(-16, -28, 32, 32), false)
+	elif slot == "scroll":
+		# A folded parchment with a colored seal; beam still follows item grade.
+		draw_colored_polygon(PackedVector2Array([Vector2(-13,-27),Vector2(11,-27),Vector2(14,-4),Vector2(-13,-4)]),Color("e3cca0"))
+		draw_rect(Rect2(-10,-24,17,3),Color("897156"))
+		draw_line(Vector2(-9,-18),Vector2(9,-18),Color("968466"),1.5,true)
+		draw_line(Vector2(-9,-13),Vector2(5,-13),Color("968466"),1.5,true)
+		draw_circle(Vector2(5,-6),5,Color(color))
+		draw_circle(Vector2(5,-6),2,Color("fff5d7"))
 	elif slot == "material":
 		# Raw ore/wood/fabric icon rather than the potion bottle fallback.
 		draw_colored_polygon(PackedVector2Array([
