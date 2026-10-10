@@ -1,0 +1,50 @@
+name: TWILIGHT AUTO Pursuit Reliability
+on:
+  pull_request:
+    paths:
+      - 'tests/l1j_runtime_game_test.gd'
+      - 'scripts/world.gd'
+      - 'scripts/player.gd'
+      - '.github/workflows/auto-hunt-reliability.yml'
+  workflow_dispatch:
+jobs:
+  deterministic-pursuit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build source-independent fixture
+        run: python3 tools/l1j_ci_make_fixture.py --root .
+      - name: Install Godot 4.7.2
+        run: |
+          curl -fL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import all resources
+        run: ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import > import.log 2>&1
+      - name: Run eight independent live AUTO-hunt simulations
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p pursuit-results
+          for attempt in $(seq 1 8); do
+            echo "AUTO_PURSUIT_ATTEMPT_${attempt}"
+            userdata="$(mktemp -d)"
+            export XDG_DATA_HOME="$userdata"
+            export APPDATA="$userdata"
+            export LOCALAPPDATA="$userdata"
+            if ! ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/l1j_runtime_game_test.gd > "pursuit-results/run_${attempt}.log" 2>&1; then
+              cat "pursuit-results/run_${attempt}.log"
+              exit 1
+            fi
+            cat "pursuit-results/run_${attempt}.log" | grep -E 'L1J_COMBAT_TRACE|L1J_RUNTIME_OK' || true
+            grep -q 'L1J_RUNTIME_OK' "pursuit-results/run_${attempt}.log"
+            rm -rf "$userdata"
+          done
+          echo 'AUTO_PURSUIT_RELIABILITY_OK 8/8'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: twilight-auto-pursuit-reliability-logs
+          path: pursuit-results/*.log
+          if-no-files-found: warn
