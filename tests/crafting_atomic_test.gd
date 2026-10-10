@@ -37,7 +37,7 @@ func _run() -> void:
 		var recipe: Dictionary = service.recipes[id]
 		if (recipe.get("materials",[]) as Array).any(func(raw: Variant) -> bool: return str((raw as Dictionary).get("item","")) in resource_names):
 			resource_recipes += 1
-	_check(resource_recipes == 81, "all crafting recipes now require obtainable harvested resources")
+	_check(resource_recipes == 413, "all 413 recipes require obtainable harvested resources")
 	var category_counts: Dictionary = {}
 	for id: String in service.recipes:
 		var record: Dictionary = service.recipes[id]
