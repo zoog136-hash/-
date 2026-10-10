@@ -1,11 +1,18 @@
 {
   "schema_version": 1,
-  "monster_id_to_twilight": {},
+  "monster_id_to_twilight": {
+    "46141": "얼음 여왕"
+  },
   "item_id_to_twilight": {
+    "11": {
+      "name": "수정 단검",
+      "kind": "equipment",
+      "verified_in": "L1j-TW-main/db/InnoDB_TW/weapon.sql: 水晶短劍"
+    },
     "40308": {
       "name": "아데나",
       "kind": "currency",
-      "verified_in": "L1j-TW-main/db/InnoDB_TW/etcitem.sql; 金幣"
+      "verified_in": "L1j-TW-main/db/InnoDB_TW/etcitem.sql: 金幣"
     }
   }
 }
