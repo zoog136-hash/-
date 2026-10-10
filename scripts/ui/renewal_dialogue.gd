@@ -47,10 +47,11 @@ func _show_node(id: String) -> void:
 		var next_id: String = str(choice.get("next",""))
 		var action: String = str(choice.get("action",""))
 		var button: Button = UI.button(str(choice.get("label","계속")),
-			func() -> void:
-				if not next_id.is_empty():
-					_show_node(next_id)
-				elif not action.is_empty() and hud.has_signal("npc_dialogue_action_requested"):
-					hud.emit_signal("npc_dialogue_action_requested",npc_id,current_node,action)
-			,Vector2(0,40))
+			_choice_picked.bind(next_id,action),Vector2(0,40))
 		options.add_child(button)
+
+func _choice_picked(next_id: String,action: String) -> void:
+	if not next_id.is_empty():
+		_show_node(next_id)
+	elif not action.is_empty() and hud.has_signal("npc_dialogue_action_requested"):
+		hud.emit_signal("npc_dialogue_action_requested",npc_id,current_node,action)
