@@ -13,6 +13,17 @@ def read(path):
 
 def normalize(previous: Path, source: Path, output: Path):
     records = read(previous)
+    # The saved phase-3 registry predates source_type/display_name/stats.
+    # Adapt its explicit table/ID fields without guessing from numeric IDs.
+    for row in records:
+        row.setdefault('source_type', row.get('source_table'))
+        row.setdefault('display_name', row.get('name_ko'))
+        row.setdefault('stats', {})
+        if row['source_type'] not in ('weapon', 'armor', 'etcitem') or not isinstance(row['display_name'], str):
+            raise ValueError('Unsupported previous registry schema')
+        expected = f"ext:a3:{row['source_type']}:{int(row['source_item_id'])}"
+        if row.get('canonical_candidate_id') != expected:
+            raise ValueError('Previous registry identity mismatch: ' + expected)
     indexed = {(r['source_type'], int(r['source_item_id'])): r for r in records}
     if len(indexed) != len(records):
         raise ValueError('Duplicate namespaced source IDs in previous registry')

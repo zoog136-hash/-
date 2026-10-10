@@ -2,6 +2,7 @@ extends SceneTree
 ## Real Main.tscn flow. Private bundle = original art; CI fixture = synthetic art.
 const ASSETS = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const THEME = preload("res://scripts/ui/renewal_theme.gd")
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 var failures: Array[String] = []
 var checks: int = 0
 var world: TwilightWorld
@@ -17,6 +18,7 @@ func _run() -> void:
 	ASSETS.reset()
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
+	check(CLASS_QA.enter_game(world), "class confirmation before real gameplay")
 	await process_frame
 	await process_frame
 	world.set_process(false)
@@ -124,9 +126,13 @@ func _run() -> void:
 	# Real auto-hunt approach and basic attack markers. Test HP is bounded to 80;
 	# production stats, AI and drop tables are never edited by this fixture.
 	world.quickslots.clear()
+	world.rng.seed = 20261010
 	for mob_name: String in ["버그베어", "데스나이트"]:
 		world._clear_drops()
 		world._clear_combat_actions()
+		world.player.cancel_attack()
+		world.auto_target = null
+		world.selected_monster = null
 		world.player.global_position = origin
 		var combat_record: Dictionary = {}
 		for value: Dictionary in world.monster_db:
@@ -150,6 +156,7 @@ func _run() -> void:
 			ticks += 1
 		world.player.set_auto_enabled(false)
 		world.player.clear_click_path()
+		print("L1J_COMBAT_TRACE ", mob_name, " ticks=", ticks, " hp=", actor.hp, " hits=", actor.damage_hit_count)
 		check(world.player.global_position.distance_to(origin)>40,"auto hunt physically approaches "+mob_name)
 		check(actor.damage_hit_count>0 and actor.dead,"basic hit markers kill source-image actor "+mob_name)
 		check(int(world.inventory.get(name_value,0))==inventory_before,"death cannot directly grant representative gear")

@@ -2,10 +2,15 @@ name: L1J Runtime and Recovery Validation
 
 on:
   pull_request:
-    branches: [main, feature/twilight-l1j-map-grid-adapter-20261010]
+    branches: [main, feature/twilight-l1j-map-grid-adapter-20261010, feature/twilight-l1j-recovery-runtime-20261010]
     paths:
       - 'addons/twilight_l1j/**'
       - 'data/l1j/live_visual_bindings.json'
+      - 'data/l1j/reviewed_shop_bindings.json'
+      - 'scripts/shop/**'
+      - 'scripts/ui/renewal_shop.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/world.gd'
       - 'scripts/loot/**'
       - 'scripts/monsters/monster_art.gd'
       - 'scripts/ui/renewal_theme.gd'
@@ -68,7 +73,7 @@ jobs:
           set -o pipefail
           xvfb-run -a engine/${{ matrix.executable }} --path . --audio-driver Dummy --rendering-method gl_compatibility --resolution 1280x720 --script res://tests/capture_l1j_runtime.gd 2>&1 | tee l1j-render.log
           grep -q 'L1J_RUNTIME_RENDER_OK' l1j-render.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:' l1j-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' l1j-render.log; then exit 1; fi
       - name: Preserve evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -114,7 +119,7 @@ jobs:
         run: |
           set -euo pipefail
           engine/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit > android-import.log 2>&1
-          ! grep -E 'SCRIPT ERROR:|ERROR:' android-import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' android-import.log; then exit 1; fi
           python3 - <<'PY'
           import os, re
           from pathlib import Path
@@ -134,7 +139,7 @@ jobs:
           set -euo pipefail
           mkdir -p build
           engine/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug Android build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk > android-export.log 2>&1
-          ! grep -E 'SCRIPT ERROR:|ERROR:' android-export.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' android-export.log; then exit 1; fi
           python3 tools/l1j/inspect_apk.py --apk build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk --bindings data/l1j/live_visual_bindings.json | tee android-inspection.json
           "$ANDROID_HOME/build-tools/35.0.1/apksigner" verify build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk
       - name: Preserve Android export evidence (synthetic art; no device execution)

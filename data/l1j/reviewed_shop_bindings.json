@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "enabled": true,
+  "source_sql_sha256": "819c1741e815321cf083aaba65aa5698f2be350cca37533a1e94da8121a351b8",
+  "price_policy": "SOURCE_BASE_PRICE_OFFLINE_ADENA_NO_TAX",
+  "source_pack_policy": "ShopTable.java: pack_count 0 becomes 1",
+  "scope": "Four merchant profiles, four offers, one existing game item. No NPC field spawns, source stat conversion, resale, tax or skills.",
+  "profiles": [
+    {
+      "source_npc_id": "ext:a3:npc:70039",
+      "name": "워너",
+      "source_npc_row": {
+        "npcid": 70039,
+        "desc_kr": "워너",
+        "spriteId": 1208,
+        "impl": "L1Merchant"
+      },
+      "goods": [
+        {
+          "game_source_id": "6391",
+          "game_name": "은장검",
+          "source_item_id": "ext:a3:weapon:29",
+          "category": "무기",
+          "price": 16250,
+          "quantity": 1,
+          "enchant": 0,
+          "source_shop_row": {
+            "npc_id": 70039,
+            "item_id": 29,
+            "order_id": 21,
+            "selling_price": 16250,
+            "pack_count": 0,
+            "purchasing_price": 6500,
+            "enchant": 0,
+            "pledge_rank": "NONE(없음)",
+            "note": "0xC0BAC0E5B0CB"
+          }
+        }
+      ]
+    },
+    {
+      "source_npc_id": "ext:a3:npc:70047",
+      "name": "데프만",
+      "source_npc_row": {
+        "npcid": 70047,
+        "desc_kr": "데프만",
+        "spriteId": 1254,
+        "impl": "L1Merchant"
+      },
+      "goods": [
+        {
+          "game_source_id": "6391",
+          "game_name": "은장검",
+          "source_item_id": "ext:a3:weapon:29",
+          "category": "무기",
+          "price": 30000,
+          "quantity": 1,
+          "enchant": 0,
+          "source_shop_row": {
+            "npc_id": 70047,
+            "item_id": 29,
+            "order_id": 9,
+            "selling_price": 30000,
+            "pack_count": 0,
+            "purchasing_price": -1,
+            "enchant": 0,
+            "pledge_rank": "NONE(없음)",
+            "note": "0xC0BAC0E5B0CB"
+          }
+        }
+      ]
+    },
+    {
+      "source_npc_id": "ext:a3:npc:70068",
+      "name": "프랑코",
+      "source_npc_row": {
+        "npcid": 70068,
+        "desc_kr": "프랑코",
+        "spriteId": 3232,
+        "impl": "L1Merchant"
+      },
+      "goods": [
+        {
+          "game_source_id": "6391",
+          "game_name": "은장검",
+          "source_item_id": "ext:a3:weapon:29",
+          "category": "무기",
+          "price": 101200,
+          "quantity": 1,
+          "enchant": 0,
+          "source_shop_row": {
+            "npc_id": 70068,
+            "item_id": 29,
+            "order_id": 3,
+            "selling_price": 101200,
+            "pack_count": 0,
+            "purchasing_price": -1,
+            "enchant": 0,
+            "pledge_rank": "NONE(없음)",
+            "note": "0xC0BAC0E5B0CB"
+          }
+        }
+      ]
+    },
+    {
+      "source_npc_id": "ext:a3:npc:70095",
+      "name": "듀론",
+      "source_npc_row": {
+        "npcid": 70095,
+        "desc_kr": "듀론",
+        "spriteId": 1045,
+        "impl": "L1Merchant"
+      },
+      "goods": [
+        {
+          "game_source_id": "6391",
+          "game_name": "은장검",
+          "source_item_id": "ext:a3:weapon:29",
+          "category": "무기",
+          "price": 30000,
+          "quantity": 1,
+          "enchant": 0,
+          "source_shop_row": {
+            "npc_id": 70095,
+            "item_id": 29,
+            "order_id": 9,
+            "selling_price": 30000,
+            "pack_count": 0,
+            "purchasing_price": -1,
+            "enchant": 0,
+            "pledge_rank": "NONE(없음)",
+            "note": "0xC0BAC0E5B0CB"
+          }
+        }
+      ]
+    }
+  ]
+}

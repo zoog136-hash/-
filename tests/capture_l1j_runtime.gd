@@ -2,6 +2,7 @@ extends SceneTree
 ## Screenshots of Main.tscn, not a substitute mockup. Use an isolated XDG_DATA_HOME.
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 const ASSETS = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
+const SHOPS = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 const OUTPUT: String = "user://l1j-runtime-review"
 var world: TwilightWorld
 var captures: int = 0
@@ -69,8 +70,22 @@ func _run() -> void:
 	world.hud.refresh_inventory(world.inventory)
 	world.hud.toggle_inventory()
 	await capture("03-bound-icons-inventory")
+	world.hud.inventory_panel.hide()
+	var profiles: Array = SHOPS.profiles(world.catalog_db.get("아이템", []))
+	var expected: int = 3
+	if not profiles.is_empty():
+		expected = 5
+		world.gold = 200000
+		world._update_hud()
+		world.hud.open_shop()
+		var selector: OptionButton = world.hud.workspace.find_child("ShopVendor",true,false)
+		selector.select(1)
+		selector.item_selected.emit(1)
+		await capture("04-reviewed-npc-offer")
+		selector.get_parent().call("_buy")
+		await capture("05-reviewed-npc-purchase")
 	print("L1J_RUNTIME_RENDER_OK captures=",captures," directory=",ProjectSettings.globalize_path(OUTPUT),
 		" synthetic=",bool(bindings.get("synthetic_fixture_only",false)))
 	world.queue_free()
 	await process_frame
-	quit(1 if failed or captures != 3 else 0)
+	quit(1 if failed or captures != expected else 0)

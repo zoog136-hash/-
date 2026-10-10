@@ -4,6 +4,8 @@ extends "res://scripts/hud_v20.gd"
 signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
+signal shop_bulk_buy_requested(item_name: String, quantity: int)
+signal reviewed_shop_buy_requested(vendor_id: String, item_name: String, quantity: int)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -591,7 +593,7 @@ func _navigate(section: String) -> void:
 		_: open_catalog(section)
 
 func open_shop() -> void:
-	_open_window("shop","잡화 상점","보유 아데나 · 아이템 검색 · 구매")
+	_open_window("shop","상점","판매자 선택 · 아이템 검색 · 구매")
 	var shop := ShopUI.new()
 	workspace.mount(shop)
 	shop.configure(self)

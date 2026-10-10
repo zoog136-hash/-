@@ -50,6 +50,7 @@ const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
+const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
 
@@ -1034,6 +1035,10 @@ func _connect_signals() -> void:
 	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
 	hud.self_mode_changed.connect(_on_self_mode_changed)
 	hud.shop_buy_requested.connect(_buy_shop_item)
+	if hud.has_signal("shop_bulk_buy_requested"):
+		hud.connect("shop_bulk_buy_requested", _buy_shop_bulk)
+	if hud.has_signal("reviewed_shop_buy_requested"):
+		hud.connect("reviewed_shop_buy_requested", _buy_reviewed_shop_item)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -3195,28 +3200,67 @@ func _auto_recharge_ain() -> void:
 				consumable_service.call("try_use", inventory_name)
 				return
 
-func _buy_shop_item(item_name: String, price: int) -> void:
+func _buy_shop_item(item_name: String, _ui_price: int) -> void:
+	# Legacy HUD signal remains compatible but the transmitted price has no
+	# authority. Never debit a price supplied by a screen or external caller.
+	_buy_shop_bulk(item_name, 1)
+
+func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 소모품은 구매할 수 없습니다")
 		return
-	var safe_price: int = maxi(0, price)
+	if SHOP_CATALOG.price_for(item_name) <= 0:
+		hud.show_message("상점에 등록되지 않은 아이템입니다")
+		return
 	if item_name == "드래곤의 용옥":
-		safe_price = AIN_SERVICE.DRAGON_ORB_PRICE
+		if quantity != 1:
+			hud.show_message("드래곤의 용옥은 1개씩만 구매할 수 있습니다")
+			return
 		if not ain_service.may_purchase_orb():
 			hud.show_message("드래곤의 용옥은 월 1회 구매 가능합니다")
 			return
-	if safe_price <= 0:
+		if SHOP_CATALOG.price_for(item_name) != AIN_SERVICE.DRAGON_ORB_PRICE:
+			hud.show_message("용옥 상점 가격 데이터가 일치하지 않습니다")
+			return
+	# Server-side item index is the source of truth for capacity and price;
+	# never use a total, discount or item count from the UI.
+	var unit_weight: int = maxi(0, int(item_weight_index.get(item_name, 3)))
+	var quote: Dictionary = SHOP_CATALOG.quote(
+		item_name, quantity, gold, _inventory_total_weight(), _carrying_capacity(), unit_weight
+	)
+	if not bool(quote.get("ok", false)):
+		hud.show_message(str(quote.get("reason", "구매할 수 없습니다")))
 		return
-	if gold < safe_price:
-		hud.show_message("아데나가 부족합니다")
+	_finish_shop_purchase(item_name, quantity, quote)
+
+func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int) -> void:
+	var quote: Dictionary = SHOP_CATALOG.quote_reviewed(vendor_id, item_name, quantity,
+		catalog_db.get("아이템", []), gold, _inventory_total_weight(), _carrying_capacity(),
+		maxi(0, int(item_weight_index.get(item_name, 3))))
+	if not bool(quote.get("ok", false)):
+		hud.show_message(str(quote.get("reason", "구매할 수 없습니다")))
 		return
-	gold -= safe_price
+	var record: Dictionary = quote.offer.record
+	_finish_shop_purchase(item_name, quantity, quote, record)
+
+func _finish_shop_purchase(item_name: String, quantity: int, quote: Dictionary, reviewed_record: Dictionary = {}) -> void:
+	var total: int = int(quote["total"])
+	var old_ids: Dictionary = item_instances.duplicate()
+	# No awaits/callbacks between final validation and atomic local mutation.
+	gold -= total
+	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	_sync_item_instances()
+	if not reviewed_record.is_empty():
+		for raw_id: Variant in item_instances.keys():
+			if old_ids.has(raw_id) or str(item_instances[raw_id].get("name", "")) != item_name: continue
+			item_instances[raw_id]["level"] = 0
+			item_instances[raw_id]["record"] = reviewed_record.duplicate(true)
+			item_instances[raw_id]["sourceId"] = str(reviewed_record.get("sourceId", ""))
 	if item_name == "드래곤의 용옥":
 		ain_service.register_orb_purchase()
-	inventory[item_name] = int(inventory.get(item_name, 0)) + 1
 	hud.refresh_inventory(inventory)
-	hud.show_message("%s 구매 · %d 아데나" % [item_name, safe_price])
-	hud.append_log("상점 구매 · %s (-%d)" % [item_name, safe_price])
+	hud.show_message("%s ×%d 구매 · %d 아데나" % [item_name, quantity, total])
+	hud.append_log("상점 구매 · %s ×%d (-%d)" % [item_name, quantity, total])
 	_update_hud()
 	_save_game(true)
 	if hud.has_method("open_shop"):
