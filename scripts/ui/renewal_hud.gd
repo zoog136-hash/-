@@ -405,8 +405,6 @@ func _build_v20_message_and_log() -> void:
 	_place(log_label,197,536,595,625)
 	v20_layer.add_child(log_label)
 
-func _build_v20_message_and_log() -> void:
-	super._build_v20_message_and_log()
 	# Combat history must not cover the playable world with an opaque panel.
 	# Full logs remain accessible in the workspace's 전투 기록 tab.
 	var clear_panel := StyleBoxEmpty.new()
