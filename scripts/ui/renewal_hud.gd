@@ -8,6 +8,7 @@ signal shop_bulk_buy_requested(item_name: String, quantity: int)
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
 signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
+signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -20,6 +21,7 @@ const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
+const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
@@ -618,6 +620,12 @@ func open_npc_teleport() -> void:
 func open_crafting() -> void:
 	_open_window("crafting","제작 장인","재료·비용 검사 · TWILIGHT 자체 제작식")
 	var screen := CraftUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_item_sell() -> void:
+	_open_window("sell","아이템 매입","아이템 검색 · 강화 장비 ID 확인 · 판매")
+	var screen := SellUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
 
