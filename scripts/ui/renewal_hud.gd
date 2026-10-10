@@ -7,6 +7,7 @@ signal playtest_aden_grant_requested
 signal shop_bulk_buy_requested(item_name: String, quantity: int)
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
 signal npc_teleport_requested(map_id: String)
+signal craft_requested(recipe_id: String, batch: int)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -18,6 +19,7 @@ const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
+const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
@@ -610,6 +612,12 @@ func open_warehouse() -> void:
 func open_npc_teleport() -> void:
 	_open_window("teleport","텔레포트 안내인","기존 25개 맵으로 이동 · 기존 충돌/좌표 보존")
 	var screen := TeleportUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
+
+func open_crafting() -> void:
+	_open_window("crafting","제작 장인","재료·비용 검사 · TWILIGHT 자체 제작식")
+	var screen := CraftUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
 
