@@ -180,6 +180,7 @@ func cast(record: Dictionary) -> bool:
 				if kind not in ["magic", "ranged", "melee"]: kind = "melee"
 				world._queue_player_attack(target, kind, impact.bind(skill, target), float(skill.cast_time), false, float(skill.range))
 				world.pending_attack["original_skill"] = skill
+				world.pending_attack["original_target_life_id"] = target.life_id
 		"buff", "counter", "stealth": apply_buff(skill)
 		"heal":
 			Status.cleanse(world.player, skill.get("statuses", []))
@@ -208,11 +209,13 @@ func cast(record: Dictionary) -> bool:
 	return true
 
 func launch_at_marker(action: Dictionary, target: TwilightMonster) -> void:
+	var target_life := int(action.get("original_target_life_id", target.life_id))
+	if target.life_id != target_life: return
 	var skill: Dictionary = action.original_skill
 	var hits := clampi(int(skill.get("hits", 1)), 1, 12)
 	for hit: int in range(hits):
 		var shot_action := action.duplicate(false)
-		shot_action["callback"] = impact.bind(skill, target)
+		shot_action["callback"] = impact.bind(skill, target, target_life)
 		var kind := str(action.kind) if str(action.kind) in ["magic","ranged"] else "timed"
 		var visual_id := presentation_id(skill)
 		world.combat_flights.launch(world.player.combat_projectile_origin(), target, kind, world._impact_player_attack.bind(shot_action), 1050, hit * .08, {"color":vfx.color_for(visual_id),"motif":vfx.presets.get(visual_id, {}).get("motif", ""),"obstruction":world._has_line_of_sight_world})
@@ -242,7 +245,8 @@ func targets(skill: Dictionary, primary: TwilightMonster) -> Array[TwilightMonst
 	if result.size() > int(skill.get("targets", 6)): result.resize(int(skill.get("targets", 6)))
 	return result
 
-func impact(skill: Dictionary, primary: TwilightMonster) -> void:
+func impact(skill: Dictionary, primary: TwilightMonster, expected_life: int = -1) -> void:
+	if expected_life >= 0 and (not is_instance_valid(primary) or primary.life_id != expected_life): return
 	combat_elapsed = 0
 	for target: TwilightMonster in targets(skill, primary):
 		if not is_instance_valid(target) or target.dead: continue

@@ -3870,6 +3870,11 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 	else:
 		return
 	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
+	if str(quickslots[slot_index].kind) == "skill":
+		var slotted := _skill_record(entry_id)
+		if slotted.get("origin", "") == "LINEAGEM_20250617":
+			quickslots[slot_index]["skill_id"] = str(slotted.id)
+			quickslots[slot_index]["id"] = str(slotted.name)
 	_update_hud()
 	_save_game(true)
 
@@ -3884,7 +3889,7 @@ func _on_quickslot_pressed(slot_index: int) -> void:
 		hud.show_message("빈 퀵슬롯입니다")
 		return
 	var kind: String = str(entry.get("kind", ""))
-	var entry_id: String = str(entry.get("id", ""))
+	var entry_id: String = str(entry.get("skill_id", entry.get("id", ""))) if kind == "skill" else str(entry.get("id", ""))
 	if kind == "skill":
 		_cast_job_skill(entry_id)
 	elif kind == "item":
@@ -3977,12 +3982,14 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 		var entry: Dictionary = value as Dictionary
 		if str(entry.get("kind", "")) != "skill":
 			continue
-		var skill_name: String = str(entry.get("id", ""))
-		if skill_name == "" or active_skill_buffs.has(skill_name):
+		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
+		if skill_name == "":
 			continue
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not _is_buff_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
+		skill_name = str(skill.name)
+		if active_skill_buffs.has(skill_name): continue
 		if skill.get("origin", "") == "LINEAGEM_20250617" and not bool(entry.get("auto", false)):
 			continue
 		if not _skill_ready(skill):
@@ -4059,7 +4066,7 @@ func _run_auto_heal_quickslots() -> void:
 		var entry: Dictionary = value as Dictionary
 		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
 			continue
-		var skill: Dictionary = _skill_record(str(entry.get("id", "")))
+		var skill: Dictionary = _skill_record(str(entry.get("skill_id", entry.get("id", ""))))
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
 			continue
 		if skill.get("origin", "") == "LINEAGEM_20250617":
@@ -4080,7 +4087,7 @@ func _run_auto_combat_quickslots() -> bool:
 		var entry: Dictionary = value as Dictionary
 		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
 			continue
-		var skill_name: String = str(entry.get("id", ""))
+		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal":
 			continue

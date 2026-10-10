@@ -1,12 +1,15 @@
 extends SceneTree
 const QA = preload("res://tests/qa_class_selection.gd")
+var capture_dir: String = "res://docs/skills/previews"
 
-func _initialize() -> void: call_deferred("run")
+func _initialize() -> void:
+	if not OS.get_environment("TWILIGHT_SKILL_CAPTURE_DIR").is_empty(): capture_dir = OS.get_environment("TWILIGHT_SKILL_CAPTURE_DIR")
+	call_deferred("run")
 
 func capture(name: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
-	var path := "res://docs/skills/previews/" + name + ".png"
+	var path := capture_dir + "/" + name + ".png"
 	if image.save_png(path) != OK:
 		push_error("Cannot preserve rendered preview: " + path)
 		quit(1)
@@ -18,7 +21,7 @@ func run() -> void:
 		push_error("Real GL rendering required")
 		quit(1)
 		return
-	DirAccess.make_dir_recursive_absolute("res://docs/skills/previews")
+	DirAccess.make_dir_recursive_absolute(capture_dir)
 	var world: TwilightWorld = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	if not QA.enter_game(world): quit(1); return
@@ -126,6 +129,83 @@ func run() -> void:
 	for _frame: int in range(3): await process_frame
 	await capture("07-guardian-shield")
 	print("ORIGINAL_GUARDIAN_RENDER_OK npc_hits=",dummy.damage_hit_count-hits," shield_events=",summons.shield_events," mp_spent=",999-world.mp)
+	await capture_turn_undead(world, dummy)
 	world.queue_free()
 	await process_frame
 	quit()
+
+func capture_turn_undead(world: TwilightWorld, dummy: TwilightMonster) -> void:
+	world._clear_combat_actions()
+	world.set_process(false)
+	world.player.set_physics_process(false)
+	world.player.set_auto_enabled(false)
+	world.active_skill_buffs.clear()
+	world.skill_cooldowns.clear()
+	world.skill_global_cooldown = 0
+	world.mp = 999
+	world.hp = world._effective_max_hp()
+	var service := world.original_skills
+	var catalog := service.catalog
+	var base := catalog.record_for("턴 언데드")
+	var ancient := catalog.record_for("턴 언데드(에이션트)")
+	catalog.learned.clear()
+	catalog.seed_starters()
+	catalog.learned[str(base.id)] = 1
+	catalog.learned[str(ancient.id)] = 1
+	dummy.undead = true
+	dummy.monster_type = "언데드"
+	dummy.monster_name = "턴 언데드 검증 대상"
+	dummy.magic_resistance = 150
+	dummy.hp = 10000
+	dummy.max_hp = 10000
+	world.selected_monster = dummy
+	world._update_hud()
+	world._on_quickslot_assignment_requested(0, "skill_auto", str(base.id))
+	world.hud.open_skills()
+	for _frame: int in range(3): await process_frame
+	var view: Node = world.hud.skills_view
+	view.class_filter.select(0)
+	view.type_filter.select(0)
+	view.grade_filter.select(0)
+	view.search.text = "턴 언데드"
+	view.refresh()
+	var selected := false
+	for index: int in range(view.filtered.size()):
+		if str(view.filtered[index].id) == str(base.id):
+			view.cards.select(index)
+			view.select(index)
+			selected = true
+	if not selected or world.quickslots[0].get("skill_id") != base.id:
+		push_error("Turn Undead UI requires learned records and stable AUTO slot")
+		quit(1); return
+	await capture("09-turn-undead-learning")
+	world.hud._close_workspace()
+	if not world._cast_job_skill(str(base.id)) or world.mp != 999 - int(base.mp):
+		push_error("Turn Undead render requires a real paid cast")
+		quit(1); return
+	for _step: int in range(90):
+		world.player.motion.advance(1.0 / 60.0, Vector2.ZERO)
+		if world.pending_attack.is_empty(): break
+	world.combat_flights.set_physics_process(false)
+	world.combat_flights._physics_process(.005)
+	if world.combat_flights.flights.size() != 1 or dummy.hp != 10000:
+		push_error("Turn Undead capture requires a real pending projectile without early damage")
+		quit(1); return
+	await capture("10-turn-undead-projectile")
+	var chance := service.turn_undead_chance(catalog.resolve(base), dummy)
+	var forced := false
+	for seed_value: int in range(10000):
+		world.rng.seed = seed_value
+		if service.roll_turn_undead(world.rng, chance):
+			world.rng.seed = seed_value
+			forced = true
+			break
+	if not forced:
+		push_error("No valid deterministic Turn Undead success seed")
+		quit(1); return
+	for _step: int in range(20): world.combat_flights._physics_process(.02)
+	if not dummy.dead or dummy.hp != 0 or service.vfx.audio_pool.last_phase != "impact":
+		push_error("Turn Undead impact capture requires actual death and confirmed-hit sound")
+		quit(1); return
+	await capture("11-turn-undead-ancient-impact")
+	print("ORIGINAL_TURN_UNDEAD_RENDER_OK hp=", dummy.hp, " mp_spent=", 999 - world.mp, " audio_phase=", service.vfx.audio_pool.last_phase)

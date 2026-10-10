@@ -18,7 +18,7 @@ do not merge it or commit to main without the user's separate approval.
 - Main was fetched for comparison (observed `df02a89fd4c5b7c2e59772dcfce492e46495d377`).
   At that comparison the branches differed by 5 feature commits / 194 main
   commits. Both branches modified `scripts/world.gd` and `scripts/monster.gd`.
-  This patch does not modify those files or resolve the PR's existing merge
+  The first Turn Undead patch did not modify those files or resolve the PR's existing merge
   conflicts. The later integration must preserve main's NPC/crafting/AI work.
 
 ## Reconstructed code
@@ -96,6 +96,62 @@ Current counts: **695 audit assignments / 125 PARTIAL runtime records
 (63 active, 62 passive/upgrade), 568 BLOCKED, 2 PVP_EXCLUDED**. UNKNOWN original
 fields are still UNKNOWN. No skill is declared COMPLETE.
 
+## Second code checkpoint: audio, stable slots and stale targets
+
+The first reconstructed code is published at
+`3264fec3e961a3fbd59c79a8ad6c515e131ad6da`. The local equivalent
+`5fa77a9127196bc6a31a65cd7917e0aa92ff0dfd` is preserved by a local tag;
+both trees are `ffd5064a083b06ab50ba001500a7089dadae1776`.
+Plain Git push had no credentials. Authenticated Git data publication compared
+every blob and the full tree, then advanced only the existing feature ref with
+an expected-head check and no force. Main and the PR's Draft state are retained.
+
+That exact first GitHub SHA passed [push CI run 38046643647](https://github.com/zoog136-hash/-/actions/runs/38046643647):
+**64/64 checks**, actual Godot 4.7.2 OpenGL rendering, eight 1280x720 captures,
+one real guardian attack and one damage-triggered shield conversion.
+
+The second checkpoint changes:
+
+- `scripts/skills/skill_audio.gd` and `skill_vfx.gd`: bounded six-voice audio
+  pool now plays cast, status, impact and resist phases. Pitch/volume distinguish
+  phases; denied casts emit no sound. The audio path runs before the optional
+  VFX budget check and clears active voices on combat/map/class cleanup.
+  Audio resources are authored approximations, not verified original recordings.
+- `skill_service.gd`: save the target's `life_id` at queue time and validate it
+  at both release and impact. A respawned NPC cannot receive an attack or an
+  instant-death RNG roll belonging to its previous life.
+- `scripts/world.gd`: a limited 17-line change stores original skill IDs when
+  assigning slots and uses those IDs for manual, combat, heal and buff AUTO
+  lookup. Original displayed names are canonicalized separately. The known
+  overlap with main remains unresolved; this change does not integrate main's
+  NPC/crafting/AI code.
+- `tests/capture_original_skills.gd` and CI: require actual paid Turn Undead
+  cast, animation-marker release, pending projectile with unchanged HP, and
+  real Ancient impact/death. Capture output can be redirected outside the repo.
+
+Tests actually run on this second checkpoint:
+
+- Targeted **8/8** suites passed, including **67** Turn Undead assertions and
+  **392** audio assertions covering all 125 WAVs and the six-voice pool.
+- Complete isolated-save Godot 4.7.2 suite: **65/65 passed**, with no failed
+  checks. This includes import, boot, movement, combat, drops, inventory,
+  equipment, NPC/world portals, AUTO, passive skills, class/slot and save tests.
+- Production-path probability sample: **200,000** trials with the same
+  expected/measured results listed above. Data validator: **0 errors**.
+- Actual local OpenGL llvmpipe render: **11** 1280x720 captures, guardian
+  hit/shield and Turn Undead `hp=0 mp_spent=20 audio_phase=impact`.
+  New learning, projectile and Ancient impact PNGs were visually inspected.
+  Unix-socket X11 setup failed; supported local X11 TCP transport succeeded.
+  Dummy audio verifies resource playback events, not listening quality.
+  The software-render sample ran alongside regression tests; its timing is
+  not a hardware FPS claim. CI is configured to retain the new screenshots,
+  rather than duplicating multi-megabyte generated images in the Git history.
+
+Machine-readable summaries, text logs and screenshot hashes are in
+`docs/skills/evidence/pr59-continuation`. The rendered HUD also exposed an
+existing hardcoded knight label in `scripts/hud.gd:update_player()` after a
+wizard combat HP refresh; correcting that is the next small UI task.
+
 ## Next execution
 
 ```sh
@@ -105,10 +161,11 @@ python3 tools/validate_original_skills.py --report test-results/data-validation.
 python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
 ```
 
-Next actual paths: `scripts/skills/skill_audio.gd` and `skill_vfx.gd` for cast,
-buff, failure and impact audio coverage; `tests/original_turn_undead_test.gd`
-and `tests/capture_original_skills.gd` for rendered evidence; then the missing
-dated class effects in `data/skills/research_inventory.json`. All **568 BLOCKED
+Next actual paths: `scripts/hud.gd:update_player()` for the hardcoded combat
+label; then `scripts/skills/skill_service.gd:can_cast()/auto_wants()` and
+`scripts/skills/skill_catalog.gd:learn()/resolve()` for remaining condition and
+upgrade audits, followed by missing dated class effects in
+`data/skills/research_inventory.json`. All **568 BLOCKED
 records** there are the explicit unfinished list. Original video frames,
 undocumented levels/cost/formula/prerequisites, final main integration and
 Windows physical playthrough remain unfinished. The session does not continue

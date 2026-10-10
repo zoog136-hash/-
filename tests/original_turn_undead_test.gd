@@ -147,9 +147,15 @@ func run() -> void:
 	check(Rules.can_auto_cast(base) and not Rules.can_auto_cast(ancient), "only base can be registered for AUTO")
 	world._on_quickslot_assignment_requested(0, "skill_auto", str(base.name))
 	check(world.quickslots[0].get("id") == base.name and world.quickslots[0].get("auto", false), "register base AUTO quickslot")
+	check(world.quickslots[0].get("skill_id") == base.id, "assignment immediately stores stable ID")
+	world.quickslots[0].id = "이전 버전의 표시 이름"
 	check(world._run_auto_combat_quickslots(), "actual AUTO combat invokes shared cast")
 	check(world.mp == 999 - int(base.mp), "AUTO uses exact manual cost")
 	release_and_land(false)
+	fresh()
+	world.quickslots[0].id = "이전 버전의 표시 이름"
+	world._on_quickslot_pressed(0)
+	check(not world.pending_attack.is_empty() and world.mp == 999 - int(base.mp), "manual quickslot resolves the stable ID despite an old label")
 	fresh()
 	# A race change during flight must be validated again at the hit event.
 	check(world._cast_job_skill(str(base.name)), "cast before race change")
@@ -159,6 +165,19 @@ func run() -> void:
 	hp_before = dummy.hp
 	for _step: int in range(12): world.combat_flights._physics_process(.02)
 	check(dummy.hp == hp_before, "race change cancels instant death at impact")
+	fresh()
+	check(world._cast_job_skill(str(base.name)), "cast before respawn at release")
+	dummy.life_id += 1
+	world._release_player_attack(int(world.pending_attack.id))
+	check(world.combat_flights.flights.is_empty(), "respawned NPC cannot receive a previous life's queued projectile")
+	fresh()
+	check(world._cast_job_skill(str(base.name)), "cast before respawn in flight")
+	world._release_player_attack(int(world.pending_attack.id))
+	dummy.life_id += 1
+	hp_before = dummy.hp
+	rng_state = world.rng.state
+	for _step: int in range(12): world.combat_flights._physics_process(.02)
+	check(dummy.hp == hp_before and world.rng.state == rng_state, "respawned NPC cannot receive previous life's instant-death roll")
 	fresh()
 	check(world._cast_job_skill(str(base.name)), "cast before class change")
 	world._release_player_attack(int(world.pending_attack.id))

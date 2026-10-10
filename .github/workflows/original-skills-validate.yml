@@ -32,6 +32,7 @@ jobs:
           ! grep -E 'SCRIPT ERROR:|ERROR:' test-results/original-render.log
           grep -q 'ORIGINAL_RENDER_OK' test-results/original-render.log
           grep -q 'ORIGINAL_GUARDIAN_RENDER_OK' test-results/original-render.log
+          grep -q 'ORIGINAL_TURN_UNDEAD_RENDER_OK' test-results/original-render.log
       - name: Preserve test logs and actual rendered previews
         if: always()
         uses: actions/upload-artifact@v4
