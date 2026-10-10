@@ -39,7 +39,7 @@ static func next_stuck_elapsed(previous: float, moved: float, requested_speed: f
 
 static func should_repath(stuck_elapsed: float) -> bool:
 	return stuck_elapsed >= PATH_STUCK_RETRY
-\n
+
 static func can_assist(
     source_group: String, ally_group: String, distance_to_source: float,
     ally_from_home: float, target_from_ally_home: float,
