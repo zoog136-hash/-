@@ -364,12 +364,13 @@ func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = 
 					var previous: Dictionary = marks.get(key, {})
 					var count := (int(previous.get("count", 0)) if Status.same_life(previous, target) else 0) + 1
 					marks[key] = {"target":weakref(target),"life_id":target.life_id,"count":count,"remaining":10.0}
-					status.debuffs[key] = {"target":weakref(target),"life_id":target.life_id,"remaining":10.0,"values":{"ac":int(abs(target.armor_class) * .05) * count,"dg":-3 * count}}
+					status.set_modifiers(target, "mark:" + id, 10.0, {"ac":int(abs(target.armor_class) * .05) * count,"dg":-3 * count})
 					if count >= int(skill.get("stacks", 3)):
 						deal_damage(skill, target)
 						var control := skill.duplicate(true)
 						control.merge({"status":"stun","status_chance":1.0,"duration":.5},true)
 						status.apply(control, target, world)
+						status.remove_modifiers(target, "mark:" + id)
 						marks.erase(key)
 			"toggle_proc":
 				if not is_instance_valid(target) or target.dead: continue

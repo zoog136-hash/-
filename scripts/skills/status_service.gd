@@ -17,8 +17,58 @@ func tick(delta: float) -> void:
 	for key: int in debuffs.keys():
 		var entry: Dictionary = debuffs[key]
 		var target: Node = entry.target.get_ref()
-		entry.remaining -= delta
-		if not same_life(entry, target) or target.dead or float(entry.remaining) <= 0: debuffs.erase(key)
+		if not same_life(entry, target) or target.dead:
+			debuffs.erase(key)
+			continue
+		for effect: Dictionary in entry.sources.values():
+			effect.remaining -= delta
+		refresh_entry(key)
+
+func refresh_entry(key: int) -> void:
+	var entry: Dictionary = debuffs[key]
+	var sources: Dictionary = entry.sources
+	var values: Dictionary = {}
+	var remaining := 0.0
+	for source: String in sources.keys():
+		var effect: Dictionary = sources[source]
+		if float(effect.remaining) <= 0:
+			sources.erase(source)
+			continue
+		remaining = maxf(remaining, float(effect.remaining))
+		# CUSTOM_BALANCE: keep the latest live value for an overlapping field,
+		# without adding sources together or erasing unrelated modifier fields.
+		values.merge(effect.values, true)
+	if sources.is_empty():
+		debuffs.erase(key)
+	else:
+		entry.remaining = remaining
+		entry.values = values
+
+func set_modifiers(target: Node, source: String, duration: float, values: Dictionary) -> void:
+	if not is_instance_valid(target) or target.dead: return
+	var key := target.get_instance_id()
+	var entry: Dictionary = debuffs.get(key, {})
+	if not same_life(entry, target):
+		entry = {"target":weakref(target),"life_id":target.life_id,"sources":{}}
+	var sources: Dictionary = entry.sources
+	var remaining := maxf(duration, float(sources.get(source, {}).get("remaining", 0)))
+	# Reinsert the refreshed source last so collisions retain latest-value
+	# precedence. Refresh only this source's timer, never another skill's timer.
+	sources.erase(source)
+	if duration > 0 and not values.is_empty():
+		sources[source] = {"remaining":remaining,"values":values.duplicate(true)}
+	debuffs[key] = entry
+	refresh_entry(key)
+
+func remove_modifiers(target: Node, source: String) -> void:
+	if not is_instance_valid(target): return
+	var key := target.get_instance_id()
+	var entry: Dictionary = debuffs.get(key, {})
+	if not same_life(entry, target):
+		debuffs.erase(key)
+		return
+	entry.sources.erase(source)
+	refresh_entry(key)
 
 func modifier(target: Node, key: String) -> float:
 	if not is_instance_valid(target): return 0.0
@@ -63,10 +113,7 @@ func apply(skill: Dictionary, target: TwilightMonster, world: Node) -> bool:
 		"poison": target.apply_poison(duration, int(skill.get("tick_damage", 8)), float(skill.get("tick_interval", 1)))
 		"bleed": target.apply_bleed(duration, int(skill.get("tick_damage", 8)), float(skill.get("tick_interval", 1)))
 		_: return false
-	var key := target.get_instance_id()
-	var previous: Dictionary = debuffs.get(key, {})
-	if not same_life(previous, target): previous = {}
-	debuffs[key] = {"target":weakref(target),"life_id":target.life_id,"remaining":maxf(duration, float(previous.get("remaining", 0))),"values":skill.get("debuff", {}).duplicate(true)}
+	set_modifiers(target, "status:" + str(skill.get("id", kind)), duration, skill.get("debuff", {}))
 	return true
 
 static func cleanse(player: TwilightPlayer, kinds: Array) -> void:

@@ -231,11 +231,13 @@ merge was performed and main was not changed.
 ## Next execution
 
 ```sh
-git fetch origin feature/original-lineagem-skill-complete-20261010
-git checkout feature/original-lineagem-skill-complete-20261010
-git pull --ff-only
 git status --short
+git branch --show-current
 git log -4 --oneline
+git fetch origin feature/original-lineagem-skill-complete-20261010
+# Compare/preserve local changes before switching branches or pulling.
+# On the clean existing feature branch only:
+git pull --ff-only
 python3 tools/validate_original_skills.py --report test-results/data-validation.json
 python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --logs test-results
 ```
@@ -249,8 +251,7 @@ This session published through authenticated Git blob/tree/commit/ref APIs,
 verifying exact local hashes and the expected remote parent without force.
 
 Next actual paths after the recovery below: `scripts/skills/skill_catalog.gd:learn()/resolve()`
-for the remaining ownership/weapon/upgrade audits; `scripts/skills/status_service.gd:apply()`
-for the unverified policy when different debuffs coexist; then dated class effects in
+for the remaining ownership/weapon/upgrade audits; then dated class effects in
 `data/skills/research_inventory.json`. All **568 BLOCKED records** are the explicit
 unfinished list: **549** need pre-cutoff effect/PvE verification; **19** need historical
 rename/rework/continuity verification. The first record is knight `데몬 대시`, stable
@@ -366,3 +367,71 @@ directory and `TWILIGHT_SKILL_CAPTURE_DIR` outside committed sources. Continue
 `skill_catalog.gd:learn()/resolve()` audits and official dated/PvE verification of
 the explicit blocked inventory. Do not activate UNKNOWN effects, add PvP-only
 mechanics, merge PR59 into main, or claim unattended development after this session.
+
+
+## Recovery and coexisting status modifiers — 2026-10-11 KST
+
+### Preserved checkpoint and environment
+
+- Confirmed PR #59 still open/Draft/unmerged at
+  `e7d64f4ecd45546a0e3f3d6753cf20327d31cb87`, tree
+  `20e10b33d5821067d3ac399b5ca55cd5cc8b886d`. All **25/25** workflows on that
+  checkpoint now report success, including the three previously pending checks.
+- The current scratch directory contained the 16 reference archives, but neither
+  the prior checkout nor the old Godot runtime path existed. Restored the exact
+  remote feature head in a new checkout and downloaded the same official
+  `4.7.2.stable.official.ed1daf0bf` engine. No prior checkout was reset.
+- Initial process creation failed at the absent working directory. A shell
+  fallback also reported that this environment supports only `bash`; explicit
+  `bash`, a valid directory and disabled login restored command execution.
+  These observations do **not** establish the cause of the earlier silent Work
+  interruption. That cause remains unknown.
+- All 16 attached ZIP central directories and a sample member could be read.
+  This is accessibility validation, not a full CRC check or proof that the four
+  split archives reconstruct the missing `a2(1).zip`. Original art recovery is
+  not required for this modifier fix and remains outside its completion claim.
+
+### Reproduced behavior and correction
+
+Applying Dark Hand after Dark Stun removed the still-live MR/reduction values.
+An unrelated longer status could also keep a short modifier alive. Thunder Mark
+and its modifier-free burst stun replaced the entire target modifier record.
+The new real-game regression reproduced **10 failures** before production edits.
+
+`status_service.gd` now retains modifier sources with independent timers and the
+existing per-source `max_remaining` refresh rule. Distinct fields coexist.
+Overlapping fields use the most recently applied live source without adding
+values; if it expires, a still-live earlier source becomes visible again. This
+is explicitly **CUSTOM_BALANCE**, not verified original-game stacking behavior.
+Modifier-free statuses cannot erase or extend another source. Source values
+are copied, and pooled life IDs, death, class switches and combat cleanup still
+remove stale state. No save schema changes are needed for transient NPC state.
+
+`skill_service.gd` routes Thunder Mark values through the same source API. Its
+burst explicitly removes only the consumed mark, preserving other live sources.
+The existing mark damage/control/numerical values are unchanged.
+
+### Actual validation and remaining work
+
+- New regression: **40 assertions passed**, including real book learning, paid
+  Dark Stun/Dark Hand casts, marker/projectile impacts, independent expiry,
+  refresh, immunity, pooled lives, overlapping fields, and real on-hit mark
+  application/burst. Six focused suites passed, including prior reduction,
+  target-state, catalog, skill-system and warehouse/save regressions.
+- Data validator: **0 errors**. Final whole-project regression: **95/95 PASS**
+  in isolated save directories. Used the existing CI synthetic fixture setup
+  only after confirming all seven paths absent. Compared generated content
+  against a separate fresh fixture and removed only those files/import sidecars
+  after the tests; no private resource files were overwritten or committed.
+- No new local visual capture was needed for this state-only change. The last
+  completed OpenGL 11-screen evidence remains the prior `e7d64f4e` CI result.
+- Counts remain **125 PARTIAL / 568 BLOCKED / 2 PVP_EXCLUDED**, with zero skills
+  newly declared COMPLETE. Continue ownership/weapon/upgrade audits in
+  `skill_catalog.gd:learn()/resolve()` and the dated original PvE investigations
+  listed above. Original collision/stacking rules still need primary evidence.
+
+To resume, verify remote PR #59 head and local changes before any pull, use the
+existing branch, and run the new `original_skill_status_coexistence_test.gd` with
+an isolated save directory. The machine-readable evidence for this checkpoint
+is `evidence/pr59-coexistence-20261011/verification.json`. Do not merge into main
+without the user's separate instruction.
