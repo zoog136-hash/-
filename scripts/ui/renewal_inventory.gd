@@ -15,6 +15,10 @@ var gesture_distance: float = 0
 var gesture_dragged: bool = false
 var gesture_reference: String = ""
 var gesture_button: Control
+var gesture_origin: Vector2 = Vector2.ZERO
+var gesture_last: Vector2 = Vector2.ZERO
+var gesture_horizontal: float = 0.0
+var gesture_equipping: bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -65,44 +69,89 @@ func _reflow() -> void:
 	item_grid.columns = clampi(floori(width/77.0),2,7)
 	for button: Button in tab_buttons.values(): button.custom_minimum_size.x = 68
 
+# Swipe a slot horizontally to equip; vertical gestures remain native scrolling.
+# We emit the same authoritative inventory signal as the visible detail button.
 func _gesture_start(event: InputEvent, reference: String, button: Control) -> void:
 	if event is InputEventScreenTouch and event.pressed and not event.canceled and gesture_index == -1:
 		gesture_index = event.index
-		gesture_distance = 0
+		gesture_mouse = false
+		gesture_origin = event.position
+		gesture_last = event.position
+		gesture_distance = 0.0
+		gesture_horizontal = 0.0
 		gesture_dragged = false
+		gesture_equipping = false
 		gesture_reference = reference
 		gesture_button = button
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		gesture_mouse = true
-		gesture_distance = 0
+		gesture_origin = event.position
+		gesture_last = event.position
+		gesture_distance = 0.0
+		gesture_horizontal = 0.0
 		gesture_dragged = false
+		gesture_equipping = false
+		gesture_reference = reference
+		gesture_button = button
+
+func _activate_dragged_equipment(reference: String) -> void:
+	if reference.is_empty(): return
+	var record: Dictionary = _find_item_record(reference)
+	var slot: String = str(record.get("slot", ""))
+	# Never use/purchase a potion because someone scrolled the inventory.
+	gesture_dragged = false
+	_select_item(reference)
+	if not slot.is_empty() and slot not in ["none", "consumable", "material"]:
+		item_activate_requested.emit(reference)
 
 func _input(event: InputEvent) -> void:
-	if not is_visible_in_tree() or not inventory_panel.visible: return
-	var motion: float = 0
+	if not is_visible_in_tree() or not inventory_panel.visible:
+		gesture_index = -1
+		gesture_mouse = false
+		return
+	var drag_delta: Vector2 = Vector2.ZERO
 	if event is InputEventScreenDrag and event.index == gesture_index:
-		motion = event.relative.y
+		drag_delta = event.relative
+		gesture_last = event.position
 	elif event is InputEventMouseMotion and gesture_mouse and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
-		motion = event.relative.y
-	if motion != 0:
-		gesture_distance += absf(motion)
-		if gesture_distance > 8:
+		drag_delta = event.relative
+		gesture_last = event.position
+	if drag_delta != Vector2.ZERO:
+		gesture_horizontal += absf(drag_delta.x)
+		gesture_distance += absf(drag_delta.y)
+		var net: Vector2 = gesture_last - gesture_origin
+		if gesture_equipping or (net.x > 72.0 and net.x > absf(net.y) * 1.2):
+			gesture_dragged = true
+			gesture_equipping = true
+			get_viewport().set_input_as_handled()
+		elif not gesture_equipping and gesture_distance > 8.0 and gesture_distance >= gesture_horizontal:
 			gesture_dragged = true
 			var bar: VScrollBar = grid_scroll.get_v_scroll_bar()
-			grid_scroll.scroll_vertical = clampi(grid_scroll.scroll_vertical-roundi(motion),0,maxi(0,ceili(bar.max_value-bar.page)))
+			grid_scroll.scroll_vertical = clampi(grid_scroll.scroll_vertical - roundi(drag_delta.y), 0, maxi(0, ceili(bar.max_value - bar.page)))
 			get_viewport().set_input_as_handled()
 	elif event is InputEventScreenTouch and event.index == gesture_index and (not event.pressed or event.canceled):
+		var was_equip: bool = gesture_equipping and not event.canceled
 		var tapped: bool = not gesture_dragged and not event.canceled and is_instance_valid(gesture_button)
 		if tapped:
 			var local_point: Vector2 = gesture_button.get_global_transform_with_canvas().affine_inverse() * event.position
-			tapped = Rect2(Vector2.ZERO,gesture_button.size).has_point(local_point)
+			tapped = Rect2(Vector2.ZERO, gesture_button.size).has_point(local_point)
+		var reference: String = gesture_reference
 		gesture_index = -1
 		gesture_button = null
+		gesture_equipping = false
 		get_viewport().set_input_as_handled()
-		if tapped: _select_item(gesture_reference)
-	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+		if was_equip: _activate_dragged_equipment(reference)
+		elif tapped: _select_item(reference)
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed and gesture_mouse:
+		var was_equip: bool = gesture_equipping
+		var reference: String = gesture_reference
 		gesture_mouse = false
-		if gesture_dragged: get_viewport().set_input_as_handled()
+		gesture_button = null
+		gesture_equipping = false
+		if was_equip:
+			get_viewport().set_input_as_handled()
+			_activate_dragged_equipment(reference)
+		elif gesture_dragged: get_viewport().set_input_as_handled()
 
 func _select_item(item_name: String) -> void:
 	if gesture_dragged: return
@@ -186,6 +235,7 @@ func _refresh_inventory_grid() -> void:
 		button.text = ""
 		button.custom_minimum_size = Vector2(72,82)
 		button.gui_input.connect(_gesture_start.bind(reference,button))
+		button.tooltip_text += " · 아이콘을 오른쪽으로 끌면 장착/사용"
 		var icon := TextureRect.new()
 		icon.texture = texture
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
