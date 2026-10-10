@@ -133,6 +133,8 @@ func _run() -> void:
 		world.player.cancel_attack()
 		world.auto_target = null
 		world.selected_monster = null
+		world.auto_stuck_time = 0.0
+		world.auto_last_position = origin
 		world.player.global_position = origin
 		var combat_record: Dictionary = {}
 		for value: Dictionary in world.monster_db:
@@ -149,6 +151,14 @@ func _run() -> void:
 		world.player.set_auto_enabled(true)
 		var ticks: int = 0
 		while not actor.dead and ticks < 900:
+			# _process() is disabled for deterministic test isolation. Mirror the
+			# actual AUTO stuck-recovery clock before invoking _run_auto_hunt(),
+			# otherwise an obstacle can strand the harness forever.
+			if world.player.global_position.distance_squared_to(world.auto_last_position) < 1.0:
+				world.auto_stuck_time += 1.0 / 60.0
+			else:
+				world.auto_stuck_time = 0.0
+			world.auto_last_position = world.player.global_position
 			world.auto_attack_timer = maxf(0.0,world.auto_attack_timer-1.0/60.0)
 			world.auto_repath_timer = maxf(0.0,world.auto_repath_timer-1.0/60.0)
 			world._run_auto_hunt()
@@ -156,7 +166,13 @@ func _run() -> void:
 			ticks += 1
 		world.player.set_auto_enabled(false)
 		world.player.clear_click_path()
-		print("L1J_COMBAT_TRACE ", mob_name, " ticks=", ticks, " hp=", actor.hp, " hits=", actor.damage_hit_count)
+		var remaining_path: PackedVector2Array = world.find_world_path(world.player.global_position, actor.global_position)
+		var selected_id: String = world.auto_target.monster_name if is_instance_valid(world.auto_target) else "(none)"
+		print("L1J_COMBAT_TRACE ", mob_name, " ticks=", ticks, " hp=", actor.hp,
+			" hits=", actor.damage_hit_count, " auto_target=", selected_id,
+			" remaining_path=", remaining_path.size(),
+			" target_distance=", snappedf(world.player.global_position.distance_to(actor.global_position), 0.1),
+			" stuck_seconds=", snappedf(world.auto_stuck_time, 0.01))
 		check(world.player.global_position.distance_to(origin)>40,"auto hunt physically approaches "+mob_name)
 		check(actor.damage_hit_count>0 and actor.dead,"basic hit markers kill source-image actor "+mob_name)
 		check(int(world.inventory.get(name_value,0))==inventory_before,"death cannot directly grant representative gear")
