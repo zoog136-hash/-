@@ -148,7 +148,8 @@ static func _pick_equipment_entry(grade: String, monster_drops: Array[String], c
 	for item: Dictionary in candidates:
 		choice -= int(item["weight"])
 		if choice <= 0:
-			return {"item_name":str(item["item_name"]), "quantity":rng.randi_range(int(item["min"]), int(item["max"]))}
+			var count: int = int(item["min"]) if int(item["min"]) == int(item["max"]) else rng.randi_range(int(item["min"]), int(item["max"]))
+			return {"item_name":str(item["item_name"]), "quantity":count}
 	return {}
 
 # Compatibility wrapper for existing callers and tests.
