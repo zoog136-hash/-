@@ -6,6 +6,7 @@ const GROUND_SHADER = preload("res://assets/maps/aden/ground.gdshader")
 const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
 const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
+const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
 const LANDMARK_BAKE_SCALE: float = 1.5
 const LANDMARK_CELL: Vector2 = Vector2(256,256)
 const LANDMARK_ORIGIN: Vector2 = Vector2(128,224)
@@ -38,6 +39,8 @@ var stream_clock: float = 0.0
 var faded: Array[Node2D] = []
 var visible_props: int = 0
 var chunk_size: float = 1024.0
+var visual_mode: String = VISUAL_STYLE.TWILIGHT
+var npc_visuals: Array[Sprite2D] = []
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field = value
@@ -64,7 +67,28 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		buckets[key].append(record)
 	_build_landmark_cache()
 	_build_markers()
+	_apply_visual_mode()
 	refresh_visible()
+
+func set_visual_mode(requested: String) -> void:
+	visual_mode = VISUAL_STYLE.normalize(requested)
+	_apply_visual_mode()
+
+func _apply_visual_mode() -> void:
+	# Only CanvasItem modulation / ground shader appearance changes here.
+	# No field map navigation, collision, portal or actor coordinates touched.
+	if is_instance_valid(terrain_root):
+		terrain_root.modulate = VISUAL_STYLE.ground_tint(visual_mode)
+	for raw: Variant in chunks.values():
+		if raw is Node2D and is_instance_valid(raw):
+			(raw as Node2D).modulate = VISUAL_STYLE.prop_tint(visual_mode)
+	for npc: Sprite2D in npc_visuals:
+		if is_instance_valid(npc):
+			npc.modulate = VISUAL_STYLE.npc_render_tint(str(npc.get_meta("npc_role","")),visual_mode)
+	if field != null:
+		for raw: Variant in ground_materials.values():
+			if raw is ShaderMaterial:
+				_style_material(raw as ShaderMaterial)
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_RESUMED,NOTIFICATION_WM_WINDOW_FOCUS_IN] and is_instance_valid(landmark_cache):
@@ -272,8 +296,8 @@ func _build_ground() -> void:
 func _style_material(material: ShaderMaterial) -> void:
 	var style: Dictionary = field.data.get("render_style",{})
 	material.set_shader_parameter("wild_ground",bool(style.get("wild_ground",true)))
-	material.set_shader_parameter("palette",Color(str(style.get("palette","ffffff"))))
-	material.set_shader_parameter("saturation",float(style.get("saturation",1.0)))
+	material.set_shader_parameter("palette",Color(str(style.get("palette","ffffff"))) * VISUAL_STYLE.palette_tint(visual_mode))
+	material.set_shader_parameter("saturation",float(style.get("saturation",1.0)) * VISUAL_STYLE.saturation_multiplier(visual_mode))
 	material.set_shader_parameter("brightness_lift",float(style.get("brightness_lift",0.0)))
 
 func _courtyard(box: Rect2) -> void:
@@ -300,7 +324,8 @@ func _build_markers() -> void:
 	for npc: Dictionary in field.data["npc_spawn"]:
 		var p: Vector2 = COORD.array_vector(npc["position"])
 		var sprite := Sprite2D.new()
-		var tex: Texture2D = load("res://assets/sprites/classes/warrior.png") as Texture2D
+		var npc_role: String = str(npc.get("role","guide"))
+		var tex: Texture2D = load(VISUAL_STYLE.npc_class_art(npc_role)) as Texture2D
 		var part := AtlasTexture.new()
 		part.atlas = tex
 		part.region = Rect2(0,0,148,116)
@@ -308,7 +333,10 @@ func _build_markers() -> void:
 		sprite.position = p
 		sprite.offset = Vector2(0,-52)
 		sprite.scale = Vector2.ONE*.78
+		sprite.set_meta("npc_role",npc_role)
+		sprite.modulate = VISUAL_STYLE.npc_render_tint(npc_role,visual_mode)
 		add_child(sprite)
+		npc_visuals.append(sprite)
 		_label(str(npc["name"]),p+Vector2(-90,-107),Color("dfc58a"))
 
 func _label(text_value: String, at: Vector2, color: Color) -> void:
@@ -356,7 +384,7 @@ func refresh_visible() -> void:
 		for x: int in range(lo.x,hi.x+1):
 			var key := Vector2i(x,y)
 			wanted[key] = true
-			if not chunks.has(key) and buckets.has(key):
+			if not chunks.has(key) and field.bounds.intersects(Rect2(Vector2(key)*chunk_size,Vector2.ONE*chunk_size)):
 				_load_chunk(key)
 	for key: Vector2i in chunks.keys():
 		if not wanted.has(key):
@@ -376,9 +404,11 @@ func _load_chunk(key: Vector2i) -> void:
 	var node := Node2D.new()
 	node.name = "Chunk_%d_%d" % [key.x,key.y]
 	node.y_sort_enabled = true
+	node.modulate = VISUAL_STYLE.prop_tint(visual_mode)
 	add_child(node)
 	chunks[key] = node
-	for record: Dictionary in buckets[key]:
+	_scatter_chunk_groundcover(node,key)
+	for record: Dictionary in buckets.get(key, []):
 		var kind: String = str(record["kind"])
 		if not textures.has(kind):
 			var accent := Sprite2D.new()
@@ -395,6 +425,7 @@ func _load_chunk(key: Vector2i) -> void:
 			if kind in ["rubble","rune"]:
 				accent.z_index = -8
 			node.add_child(accent)
+			_scatter_ambient_details(node, record, kind)
 			continue
 		var sprite := Sprite2D.new()
 		sprite.texture = textures[kind]
@@ -415,6 +446,88 @@ func _load_chunk(key: Vector2i) -> void:
 		if kind in ["grass","bush"]:
 			sprite.z_index = -8
 		node.add_child(sprite)
+		_scatter_ambient_details(node, record, kind)
+
+# Map-wide authored-atlas accents, not just around objects. Previously empty
+# dungeon floor chunks had zero props and consequently zero new visible pixels.
+# Preserve all collision, source map, tile, navigation and spawn coordinates.
+func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
+	var origin: Vector2 = Vector2(key) * chunk_size
+	var local_bounds := Rect2(origin,Vector2.ONE*chunk_size)
+	if not local_bounds.intersects(field.bounds): return
+	var cover_layer := Node2D.new()
+	cover_layer.name = "GroundCoverLayer"
+	cover_layer.z_index = -10
+	parent.add_child(cover_layer)
+	var style: Dictionary = field.data.get("render_style", {})
+	var wilderness: bool = bool(style.get("wild_ground",true))
+	var field_id: String = str(field.data.get("map_id",field.data.get("id",field.data.get("name",""))))
+	var frozen: bool = field_id.contains("albino")
+	var volcanic: bool = field_id.contains("escaros")
+	var random := RandomNumberGenerator.new()
+	random.seed = absi(key.x*73856093 + key.y*19349663 + field_id.hash()) + 101
+	var count: int = 68 if wilderness else (49 if frozen else 58)
+	for index: int in range(count):
+		var position_value: Vector2 = origin + Vector2(random.randf_range(8.0,chunk_size-8.0),random.randf_range(8.0,chunk_size-8.0))
+		if not field.bounds.has_point(position_value) or not field.point_clear(position_value,4.0): continue
+		var decoration_kind: String = "grass" if wilderness and random.randf() < .72 else ("rock" if random.randf() > .45 else "rocks")
+		var source_texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		if source_texture == null: continue
+		var marker := Sprite2D.new()
+		marker.name = "GroundCover"
+		marker.texture = source_texture
+		marker.position = position_value
+		marker.offset = Vector2(0,-source_texture.get_height()*.34)
+		var target_height: float = random.randf_range(37.0,73.0) if wilderness else random.randf_range(34.0,63.0)
+		marker.scale = Vector2.ONE * target_height / maxf(1.0,source_texture.get_height())
+		marker.rotation = random.randf_range(-.20,.20)
+		marker.flip_h = random.randf() > .5
+		if frozen:
+			marker.modulate = Color(random.randf_range(.73,.92),random.randf_range(.80,.99),1.0,.66)
+		elif volcanic:
+			marker.modulate = Color(random.randf_range(.55,.78),random.randf_range(.43,.60),random.randf_range(.34,.49),.73)
+		elif wilderness:
+			marker.modulate = Color(random.randf_range(.60,.91),random.randf_range(.72,.99),random.randf_range(.47,.67),.78)
+		else:
+			var shade: float = random.randf_range(.54,.79)
+			marker.modulate = Color(shade,shade*.98,shade*1.03,.75)
+		# One dedicated draw layer stays under actors/props and counts as one
+		# streamed decoration group, not dozens of gameplay props.
+		cover_layer.add_child(marker)
+
+# Purely visual ground cover: reuse the existing licensed-in-project prop atlas
+# and exact world positions without ever modifying tiles, paths or collision.
+# Deterministic local seeds prevent foliage popping into new random positions
+# whenever a chunk streams out and back in.
+func _scatter_ambient_details(parent: Node2D, record: Dictionary, kind: String) -> void:
+	if kind not in ["oak","oak2","pine","birch","rocks","rock","bush","grass","rubble","ruin_wall","arch","pillar"]:
+		return
+	var anchor: Vector2 = COORD.array_vector(record["position"])
+	var seed_value: int = int(absf(anchor.x * 19.0 + anchor.y * 31.0)) + kind.hash()
+	var random := RandomNumberGenerator.new()
+	random.seed = absi(seed_value) + 3
+	var wilderness: bool = bool(field.data.get("render_style", {}).get("wild_ground", true))
+	for index: int in range(2):
+		if random.randf() < 0.30: continue
+		var offset := Vector2(random.randf_range(-98.0,98.0),random.randf_range(-50.0,65.0))
+		var position_value: Vector2 = anchor + offset
+		if not field.bounds.has_point(position_value) or not field.point_clear(position_value, 5.0):
+			continue
+		var decoration_kind: String = "grass" if wilderness and random.randf() > 0.35 else ("rock" if wilderness else "rocks")
+		var texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		if texture == null: continue
+		var little := Sprite2D.new()
+		little.name = "FoliageDetail"
+		little.texture = texture
+		little.position = position_value
+		little.offset = Vector2(0.0, -texture.get_height() * .35)
+		var detail_height: float = random.randf_range(18.0,35.0) if wilderness else random.randf_range(13.0,28.0)
+		little.scale = Vector2.ONE * detail_height / maxf(1.0, texture.get_height())
+		little.rotation = random.randf_range(-.10,.10)
+		little.flip_h = random.randf() > .5
+		little.modulate = Color(random.randf_range(.68,.90),random.randf_range(.71,.96),random.randf_range(.58,.80),.90) if wilderness else Color(.72,.72,.69,.74)
+		little.z_index = -9
+		parent.add_child(little)
 
 func _select_layer(layer_name: String) -> void:
 	ground = Node2D.new()

@@ -1,0 +1,155 @@
+name: L1J Runtime and Recovery Validation
+
+on:
+  pull_request:
+    branches: [main, feature/twilight-l1j-map-grid-adapter-20261010, feature/twilight-l1j-recovery-runtime-20261010]
+    paths:
+      - 'addons/twilight_l1j/**'
+      - 'data/l1j/live_visual_bindings.json'
+      - 'data/l1j/reviewed_shop_bindings.json'
+      - 'scripts/shop/**'
+      - 'scripts/ui/renewal_shop.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/world.gd'
+      - 'scripts/loot/**'
+      - 'scripts/monsters/monster_art.gd'
+      - 'scripts/ui/renewal_theme.gd'
+      - 'tests/l1j_*'
+      - 'tests/capture_l1j_runtime.gd'
+      - 'tools/l1j/**'
+      - 'tools/test_project.py'
+      - 'export_presets.cfg'
+      - '.github/workflows/l1j-runtime-validate.yml'
+  workflow_dispatch:
+
+jobs:
+  regression:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact: linux.x86_64
+            executable: Godot_v4.7.2-stable_linux.x86_64
+          - os: windows-latest
+            artifact: win64.exe
+            executable: Godot_v4.7.2-stable_win64_console.exe
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    env:
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download official Godot 4.7.2
+        shell: python
+        run: |
+          import pathlib, urllib.request, zipfile
+          url = 'https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_${{ matrix.artifact }}.zip'
+          urllib.request.urlretrieve(url, 'godot.zip')
+          with zipfile.ZipFile('godot.zip') as z: z.extractall('engine')
+          exe = pathlib.Path('engine/${{ matrix.executable }}')
+          exe.chmod(0o755)
+      - name: Generate synthetic fixtures (no third-party game art)
+        run: |
+          python tools/l1j_ci_make_fixture.py --root .
+          python tools/l1j/make_live_fixture.py --root .
+      - name: Verify resource installation safety
+        if: runner.os == 'Linux'
+        run: python tools/l1j/test_pack_install.py
+      - name: Import, boot and all regression checks with isolated saves
+        run: python tools/test_project.py --godot engine/${{ matrix.executable }} --logs l1j-test-results --timeout 450
+      - name: Install software OpenGL capture dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri
+      - name: Render the actual game with synthetic CI fixtures
+        if: runner.os == 'Linux'
+        env:
+          XDG_DATA_HOME: ${{ github.workspace }}/l1j-render-userdata
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -o pipefail
+          xvfb-run -a engine/${{ matrix.executable }} --path . --audio-driver Dummy --rendering-method gl_compatibility --resolution 1280x720 --script res://tests/capture_l1j_runtime.gd 2>&1 | tee l1j-render.log
+          grep -q 'L1J_RUNTIME_RENDER_OK' l1j-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' l1j-render.log; then exit 1; fi
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l1j-runtime-${{ runner.os }}-synthetic
+          path: |
+            l1j-test-results/
+            l1j-render-userdata/
+            l1j-render.log
+          if-no-files-found: warn
+
+  android-export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Download official engine and Android templates
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip -d engine
+          chmod +x engine/Godot_v4.7.2-stable_linux.x86_64
+          curl -fL --retry 3 -o templates.tpz https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_export_templates.tpz
+          unzip -q templates.tpz -d template-unpack
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.7.2.stable"
+          cp template-unpack/templates/android_debug.apk "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+          cp template-unpack/templates/android_release.apk "$HOME/.local/share/godot/export_templates/4.7.2.stable/"
+      - name: Prepare SDK, signing and synthetic image fixtures
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-35" "build-tools;35.0.1" "platform-tools"
+          mkdir -p "$HOME/.android"
+          keytool -genkeypair -noprompt -validity 1000 -keyalg RSA -keysize 2048 -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keystore "$HOME/.android/l1j-debug.keystore" -storepass android -keypass android
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$HOME/.android/l1j-debug.keystore" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_USER=androiddebugkey" >> "$GITHUB_ENV"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD=android" >> "$GITHUB_ENV"
+          python3 tools/l1j/make_live_fixture.py --root .
+      - name: Import game and configure Android editor paths
+        run: |
+          set -euo pipefail
+          engine/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit > android-import.log 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:' android-import.log; then exit 1; fi
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          directory = Path.home()/'.config/godot'
+          candidates = list(directory.glob('editor_settings-*.tres'))
+          if not candidates: raise RuntimeError('Editor settings were not generated')
+          for path in candidates:
+              text = path.read_text()
+              for key, value in [('export/android/android_sdk_path',os.environ['ANDROID_HOME']),('export/android/java_sdk_path',os.environ['JAVA_HOME'])]:
+                  line = key + ' = "' + value.replace('\\','/') + '"'
+                  pattern = '^' + re.escape(key) + r'\s*=.*$'
+                  text = re.sub(pattern, lambda _: line, text, flags=re.M) if re.search(pattern,text,re.M) else text+'\n'+line+'\n'
+              path.write_text(text)
+          PY
+      - name: Export and inspect signed ARM64 debug APK
+        run: |
+          set -euo pipefail
+          mkdir -p build
+          engine/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug Android build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk > android-export.log 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:' android-export.log; then exit 1; fi
+          python3 tools/l1j/inspect_apk.py --apk build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk --bindings data/l1j/live_visual_bindings.json | tee android-inspection.json
+          "$ANDROID_HOME/build-tools/35.0.1/apksigner" verify build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk
+      - name: Preserve Android export evidence (synthetic art; no device execution)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l1j-android-arm64-synthetic-export
+          path: |
+            build/TWILIGHT_L1J_SYNTHETIC_ARM64.apk
+            android-import.log
+            android-export.log
+            android-inspection.json
+          if-no-files-found: warn

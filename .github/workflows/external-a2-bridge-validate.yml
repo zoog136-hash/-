@@ -1,0 +1,30 @@
+name: Optional A2-A3 resource bridge
+on:
+  pull_request:
+    paths:
+      - 'addons/twilight_l1j/twilight_external_a2_bridge.gd'
+      - 'scripts/monsters/monster_art.gd'
+      - 'scripts/loot/ground_loot_manager.gd'
+      - 'scripts/ui/renewal_theme.gd'
+      - 'scripts/ui/lineage_inventory_ui.gd'
+      - 'tests/external_a2_bridge_smoke_test.gd'
+      - '.github/workflows/external-a2-bridge-validate.yml'
+  workflow_dispatch:
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download Godot 4.7.2
+        run: |
+          curl --fail -L --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import Godot project
+        run: ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import
+      - name: Verify optional bridge and no-pack fallback
+        run: |
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/external_a2_bridge_smoke_test.gd 2>&1 | tee bridge.log
+          grep -q 'EXTERNAL_A2_BRIDGE_OK' bridge.log
+          ! grep -E 'SCRIPT ERROR:|Parse Error:|ERROR:' bridge.log

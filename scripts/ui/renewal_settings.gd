@@ -4,10 +4,13 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Dialog = preload("res://scripts/ui/renewal_dialog.gd")
 const SETTINGS_PATH = "user://twilight_ui_settings.cfg"
+const SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
 var hud: Node
 var config: ConfigFile = ConfigFile.new()
 var volume: HSlider
 var mute: CheckButton
+var map_visual_mode: OptionButton
+var spx_actor_mode: OptionButton
 
 static func apply_saved(controller: Node) -> void:
 	var saved := ConfigFile.new()
@@ -76,6 +79,33 @@ func configure(controller: Node) -> void:
 		_store("interface","coordinates",enabled))
 	stack.add_child(coord_toggle)
 	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("월드 외형",18,UI.GOLD))
+	stack.add_child(UI.section("지도 좌표·충돌·몬스터 배치를 변경하지 않는 시각 설정입니다.",12))
+	map_visual_mode = OptionButton.new()
+	map_visual_mode.name = "MapVisualMode"
+	map_visual_mode.add_item("기존 TWILIGHT 외형")
+	map_visual_mode.add_item("클래식 판타지 외형")
+	map_visual_mode.select(1 if str(config.get_value("visual","map_mode","twilight")) == "classic" else 0)
+	map_visual_mode.item_selected.connect(_map_visual_mode_changed)
+	stack.add_child(map_visual_mode)
+	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("캐릭터 8방향 애니메이션",18,UI.GOLD))
+	stack.add_child(UI.section("외부 SPX 리소스 팩이 있을 때만 선택할 수 있습니다. 변신 중에는 기존 변신 외형이 우선합니다.",12))
+	spx_actor_mode = OptionButton.new()
+	spx_actor_mode.name = "ExternalSPXActorMode"
+	spx_actor_mode.add_item("기본 TWILIGHT 캐릭터",0)
+	spx_actor_mode.add_item("외부 SPX 전사 외형 · 21624",1)
+	spx_actor_mode.add_item("외부 SPX 전사 외형 · 21653",2)
+	for actor_index: int in range(2):
+		var id: String = "21624" if actor_index == 0 else "21653"
+		spx_actor_mode.set_item_disabled(actor_index+1,not SPX.available(id))
+	var selected_id: String = str(config.get_value("visual","spx_actor",""))
+	spx_actor_mode.select(1 if selected_id == "21624" and SPX.available(selected_id) else (2 if selected_id == "21653" and SPX.available(selected_id) else 0))
+	spx_actor_mode.item_selected.connect(_spx_actor_changed)
+	stack.add_child(spx_actor_mode)
+	if not SPX.available("21624") and not SPX.available("21653"):
+		stack.add_child(UI.section("팩 미설치: twilight_external_spx_actor_pack.zip 의 assets/를 프로젝트에 복사한 후 다시 실행하세요.",12))
+	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("게임 데이터",18,UI.GOLD))
 	var actions := HBoxContainer.new()
 	stack.add_child(actions)
@@ -86,6 +116,24 @@ func configure(controller: Node) -> void:
 	stack.add_child(nav)
 	nav.add_child(UI.button("월드맵",func() -> void: hud._navigate("map")))
 	nav.add_child(UI.button("캐릭터 · 장비",func() -> void: hud._navigate("character")))
+
+func _spx_actor_changed(index: int) -> void:
+	var id: String = "" if index == 0 else ("21624" if index == 1 else "21653")
+	var world: Node = hud.get_parent()
+	if world == null: return
+	var character: Node = world.get("player") as Node
+	if character == null or not character.has_method("select_external_spx_actor"): return
+	if not bool(character.call("select_external_spx_actor",id)):
+		spx_actor_mode.select(0)
+		return
+	_store("visual","spx_actor",id)
+
+func _map_visual_mode_changed(index: int) -> void:
+	var mode: String = "classic" if index == 1 else "twilight"
+	_store("visual","map_mode",mode)
+	var world: Node = hud.get_parent()
+	if world != null and world.has_method("_set_visual_mode"):
+		world.call("_set_visual_mode",mode)
 
 func _store(section: String,key: String,value: Variant) -> void:
 	config.set_value(section,key,value)

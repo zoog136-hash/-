@@ -8,9 +8,14 @@ signal attack_cancelled(sequence: int)
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ANIMATION_PROFILE = preload("res://scripts/animation/animation_profile.gd")
+const EXTERNAL_SPX = preload("res://addons/twilight_l1j/twilight_external_spx_actor.gd")
+const VISUAL_CONFIG_PATH := "user://twilight_ui_settings.cfg"
 var motion: TwilightActorMotion = MOTION.new()
 var class_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var transform_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
+var spx_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
+var spx_sprite: AnimatedSprite2D = null
+var spx_actor_id: String = ""
 var animation_state: String:
 	get: return motion.state
 var facing8: int:
@@ -78,6 +83,20 @@ func _ready() -> void:
 	var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
 	shadow.name = "GroundShadow"
 	add_child(shadow)
+	var action_fx: TwilightPlayerActionFX = preload("res://scripts/animation/player_action_fx.gd").new()
+	action_fx.name = "PlayerActionFX"
+	action_fx.actor = self
+	action_fx.z_index = 6
+	add_child(action_fx)
+	spx_sprite = AnimatedSprite2D.new()
+	spx_sprite.name = "ExternalSPXActor"
+	spx_sprite.z_index = class_sprite.z_index
+	# AnimatedSprite2D uses the actor's foot anchor; physics and click targets stay unchanged.
+	add_child(spx_sprite)
+	spx_sprite.hide()
+	var visual_settings := ConfigFile.new()
+	if visual_settings.load(VISUAL_CONFIG_PATH) == OK:
+		select_external_spx_actor(str(visual_settings.get_value("visual","spx_actor","")))
 
 func _physics_process(delta: float) -> void:
 	physics_delta = delta
@@ -164,13 +183,15 @@ func _update_facing(motion_vector: Vector2) -> void:
 	facing = motion.facing4
 
 func _update_visual(delta: float) -> void:
-	motion.profile = transform_profile if transform_active else class_profile
+	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
+	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
 	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0
-	class_sprite.visible = not transform_active
+	class_sprite.visible = not transform_active and not show_spx
 	transform_sprite.visible = transform_active
-	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else class_sprite
+	if spx_sprite != null: spx_sprite.visible = show_spx
+	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else (spx_sprite if show_spx else class_sprite)
 	motion.apply(active_sprite, active_sprite.get_meta("base_scale", Vector2.ONE))
 
 func face_target(position_value: Vector2) -> void:
@@ -231,6 +252,30 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	transform_sprite.visible = true
 	# Keep position, current attack sequence, AUTO and all combat stats intact.
 	motion.apply(transform_sprite, Vector2.ONE * scale_value)
+
+# Returns false if no complete local-only 8-direction pack is installed.
+# This changes presentation only; transform, collisions, stats and combat stay authoritative.
+func select_external_spx_actor(id: String) -> bool:
+	if id.is_empty() or id == "default":
+		spx_actor_id = ""
+		if spx_sprite != null: spx_sprite.hide()
+		return true
+	var frames: SpriteFrames = EXTERNAL_SPX.frames(id)
+	if frames == null or spx_sprite == null: return false
+	spx_profile = ANIMATION_PROFILE.new()
+	spx_profile.profile_id = "spx-local:" + id
+	spx_profile.layout = "directional8"
+	spx_profile.reference_speed = class_profile.reference_speed
+	spx_profile.movement_fps = class_profile.movement_fps
+	spx_profile.attack_hit_ratio = class_profile.attack_hit_ratio
+	spx_profile.attack_hit_frame = 4
+	spx_profile.sprite_offset = Vector2(0, -63)
+	spx_profile.shadow_size = class_profile.shadow_size
+	spx_sprite.stop()
+	spx_sprite.sprite_frames = frames
+	spx_sprite.set_meta("base_scale", Vector2.ONE * 125.0 / maxf(1.0, float(frames.get_frame_texture("idle_2", 0).get_height())))
+	spx_actor_id = id
+	return true
 
 func _class_direction_animation_name(direction_value: int) -> String:
 	match direction_value:

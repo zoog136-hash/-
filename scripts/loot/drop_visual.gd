@@ -10,6 +10,7 @@ var slot: String = ""
 var selected: bool = false
 var clock: float = 0.0
 var redraw_time: float = 0.0
+var source_icon: Sprite2D
 
 static func grade_color(grade: String) -> Color:
 	return COLORS[maxi(0, GRADES.find(grade))]
@@ -18,6 +19,20 @@ func configure(grade: String, icon: Texture2D, kind: String) -> void:
 	rank = maxi(0, GRADES.find(grade))
 	texture = icon
 	slot = kind
+	if is_instance_valid(source_icon):
+		remove_child(source_icon)
+		source_icon.queue_free()
+		source_icon = null
+	if texture != null and texture.resource_path.begins_with("res://assets/l1j/verified/ground/"):
+		source_icon = Sprite2D.new()
+		source_icon.texture = texture
+		source_icon.position = Vector2(0, -12)
+		source_icon.scale = Vector2(32,32) / texture.get_size()
+		var key_material := ShaderMaterial.new()
+		key_material.shader = preload("res://addons/twilight_l1j/source_color_key.gdshader")
+		key_material.set_shader_parameter("background_key", Vector3.ONE)
+		source_icon.material = key_material
+		add_child(source_icon)
 	set_process(rank >= 2)
 	queue_redraw()
 
@@ -61,8 +76,28 @@ func _draw() -> void:
 			if rank >= 4 and particle % 2 == 0:
 				draw_line(point - Vector2(3, 0), point + Vector2(3, 0), Color(color.lightened(0.6), alpha), 1, true)
 				draw_line(point - Vector2(0, 3), point + Vector2(0, 3), Color(color.lightened(0.6), alpha), 1, true)
-	if texture != null:
+	if is_instance_valid(source_icon):
+		pass
+	elif texture != null:
 		draw_texture_rect(texture, Rect2(-16, -28, 32, 32), false)
+	elif slot == "scroll":
+		# A folded parchment with a colored seal; beam still follows item grade.
+		draw_colored_polygon(PackedVector2Array([Vector2(-13,-27),Vector2(11,-27),Vector2(14,-4),Vector2(-13,-4)]),Color("e3cca0"))
+		draw_rect(Rect2(-10,-24,17,3),Color("897156"))
+		draw_line(Vector2(-9,-18),Vector2(9,-18),Color("968466"),1.5,true)
+		draw_line(Vector2(-9,-13),Vector2(5,-13),Color("968466"),1.5,true)
+		draw_circle(Vector2(5,-6),5,Color(color))
+		draw_circle(Vector2(5,-6),2,Color("fff5d7"))
+	elif slot == "material":
+		# Raw ore/wood/fabric icon rather than the potion bottle fallback.
+		draw_colored_polygon(PackedVector2Array([
+			Vector2(-14,-4),Vector2(-12,-18),Vector2(0,-29),
+			Vector2(12,-19),Vector2(15,-5),Vector2(2,1)
+		]),Color("8ba4a7"))
+		draw_colored_polygon(PackedVector2Array([
+			Vector2(-12,-18),Vector2(0,-29),Vector2(0,-10),Vector2(-14,-4)
+		]),Color("d2deda"))
+		draw_line(Vector2(0,-28),Vector2(0,-10),Color("344e58"),1.5,true)
 	elif slot == "consumable":
 		draw_rect(Rect2(-7, -21, 14, 20), Color("bb334e"))
 		draw_rect(Rect2(-4, -26, 8, 6), Color("d2bd91"))

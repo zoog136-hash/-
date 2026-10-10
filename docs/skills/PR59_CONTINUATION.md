@@ -248,23 +248,16 @@ working OpenGL display. Public fetch works here; plain Git push lacks credential
 This session published through authenticated Git blob/tree/commit/ref APIs,
 verifying exact local hashes and the expected remote parent without force.
 
-Next actual paths: `scripts/skills/skill_service.gd:deal_damage()` and
-`scripts/skills/status_service.gd` for the stored but currently unconsumed
-`reduction` debuff field; `scripts/ui/renewal_skills.gd:select_original()` for
-inline UNKNOWN/INFERRED grade/activation and CUSTOM_BALANCE learning labels;
-`scripts/skills/skill_catalog.gd:learn()/resolve()` for remaining condition and
-upgrade audits; `scripts/world.gd:_load_game()` for the documented main conflict;
-then missing dated class effects in
-`data/skills/research_inventory.json`. All **568 BLOCKED records** there are
-the explicit unfinished list: **549** need pre-cutoff effect/PvE verification;
-**19** need historical rename/rework/continuity verification. The first such
-record is knight `데몬 대시`, stable ID `lm_bf27d9216c1bd228`; its PvE and
-historical presence remain UNKNOWN. Check official dated descriptions before
-activating these records. Original video frames,
-undocumented levels/cost/formula/prerequisites, final main integration and
-Windows physical playthrough remain unfinished. The session does not continue
-automatically after it ends.
-
+Next actual paths after the recovery below: `scripts/skills/skill_catalog.gd:learn()/resolve()`
+for the remaining ownership/weapon/upgrade audits; `scripts/skills/status_service.gd:apply()`
+for the unverified policy when different debuffs coexist; then dated class effects in
+`data/skills/research_inventory.json`. All **568 BLOCKED records** are the explicit
+unfinished list: **549** need pre-cutoff effect/PvE verification; **19** need historical
+rename/rework/continuity verification. The first record is knight `데몬 대시`, stable
+ID `lm_bf27d9216c1bd228`; its PvE and historical presence remain UNKNOWN. Check official
+dated descriptions before activating it. Original videos, undocumented learning/cost/
+formula/prerequisite values and Windows physical playthrough remain unfinished.
+The session does not develop automatically after it ends.
 
 ## Recovery resumed — 2026-10-11 KST
 
@@ -314,3 +307,62 @@ branch only**, preserving the backup guard before both restoration paths. Add a
 joint persistence regression and rerun the merged project's complete suite.
 Do not merge PR59 into main. All 568 blocked research records, original visual
 verification and the remaining condition/upgrade audits are still unfinished.
+
+
+## Current-world integration on the same feature branch — 2026-10-11 KST
+
+The new reduction/provenance code was published as
+`8935ef6c86f7a13b07930bc26add7dfbe66d6cd0`, exact tree
+`987ebf7dc2025f0f98c7f8e84d199ef23560463b`. Its [GitHub push CI](https://github.com/zoog136-hash/-/actions/runs/38065103681)
+completed **69/69 + actual OpenGL 11 captures SUCCESS**. Every new blob and the
+whole tree were compared with local checkpoint `c3f798c`, retained by local tag
+`checkpoint/pr59-resume-first-c3f798c`. Authenticated API publication advanced only
+the existing feature ref, with an expected-parent check and no force.
+
+Main `88d1c68e2a497fb540461a3e1dfa6cba2e1d38f4` was integrated **into this same feature**.
+Main itself and other resource/map checkouts were not modified. The only textual
+conflict was `world.gd:_load_game()`. Both sides are preserved: create/check the
+pre-original-skills save backup first, then restore warehouse and crafting history.
+The main AI/movement/SPX/crafting/shop/drop work and the original skill services
+remain in the resulting tree; this is a merge, not a replacement of one side.
+
+New `tests/original_skill_warehouse_migration_test.gd` ran **23 assertions** on real
+save/load: learned stable ID, AUTO slot, cooldown, actual paid shield buff, stored
+physical ID/enchant/element, crafting history and gold. It also checks the exact
+old-save backup, no overwrite on later migration, and complete non-mutation of
+warehouse/crafting/character/source-save when the backup destination is unwritable.
+That deliberate native copy error is suppressed only inside its expected-failure
+fixture. Actual unexpected engine errors remain fatal to the runner.
+
+The initial joint fixture reported four comparisons as failures: JSON reloads
+integer literals as floats (5 becomes 5.0). Diagnostic output confirmed the correct
+persisted values. The fixture now compares JSON values; no production storage
+behavior was altered to make those comparisons pass. The first merged full run
+was **91/94**, missing only three L1J positive-path fixture inputs. The existing
+main runner creates those synthetic inputs only in CI mode. All destinations were
+confirmed absent before enabling that mode, and the original generator refuses
+collisions. No private data/art was overwritten, no test was skipped, and no
+passing condition was relaxed.
+
+Final merged validation actually completed: **94/94 PASS** with the existing CI
+preparation, data **0 errors**, actual OpenGL **11 captures**, guardian hit/shield
+and Turn Undead **HP0 / MP20**. The learning screen was directly inspected. Core
+movement, AI, 125 skill records, 200,000 production probability trials, inventory,
+physical equipment, warehouse, crafting, shop, loot, portals and old/current save
+checks are included. Synthetic L1J fixtures test adapters; they are not evidence
+of restored original art/maps. Temporary save directories protect player saves.
+See `evidence/pr59-resume-20261011/integration-verification.json` and the first
+published code's `github-first-ci.json`. Windows physical play and original audio/
+video fidelity remain unverified. Skill counts stay **125 PARTIAL / 568 BLOCKED /
+2 PVP_EXCLUDED**; this is not complete original skill implementation.
+
+Next recovery: check `git status --short` and save any local changes first, fetch
+the existing feature branch, then fast-forward only after comparing its tree. Run
+`python3 tools/validate_original_skills.py --report test-results/data-validation.json`.
+For a clean checkout without private L1J assets, reproduce the existing CI setup
+with `GITHUB_ACTIONS=true python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --logs test-results`.
+Do not generate over an installed private pack. Render with an isolated XDG data
+directory and `TWILIGHT_SKILL_CAPTURE_DIR` outside committed sources. Continue
+`skill_catalog.gd:learn()/resolve()` audits and official dated/PvE verification of
+the explicit blocked inventory. Do not activate UNKNOWN effects, add PvP-only
+mechanics, merge PR59 into main, or claim unattended development after this session.

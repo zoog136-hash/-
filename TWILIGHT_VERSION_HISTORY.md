@@ -54,3 +54,5 @@
 - 최신 main 비교 `1947469b4bd817ffd2b1c9e42ac28c90d154c25b`의 저장 백업 대 창고·제작 복원 충돌은 남겨 두었습니다. PR Draft와 main 미병합을 유지합니다. [재개 파일·함수·명령·실패 기록](docs/skills/PR59_CONTINUATION.md).
 
 - 2026-10-11 PR #59 추가 재개: 기존 저장 HEAD `2194242d`부터 다크/썬더 스턴의 리덕션 약화 피해 연결과 원작 검증 상태의 스킬 UI 표시를 수정. 새 회귀 48개, 전체 **69/69**, 집중 **8/8**, 실제 OpenGL 11장 및 데이터 오류 0. 실행 연결 수는 125 PARTIAL로 유지. 최신 main을 기존 feature에 통합하는 저장 복원 충돌은 다음 단계이며 main에는 반영하지 않았습니다. [실제 검사·실패 재현·화면 해시](docs/skills/evidence/pr59-resume-20261011/verification.json).
+
+- 2026-10-11 PR #59 통합 재개: 검증 코드 `8935ef6c`의 [GitHub CI](https://github.com/zoog136-hash/-/actions/runs/38065103681) **69/69 + OpenGL 11장 SUCCESS** 확인 후 main `88d1c68`을 기존 feature에 통합. 저장 백업과 창고·제작 복원을 모두 보존해 충돌 해결. 실제 공동 저장 23개, 최종 전체 **94/94**(기존 CI fixture 준비), 실제 OpenGL 11장·데이터 오류 0. 초기 91/94의 검사 입력 누락과 JSON 숫자 비교 실패도 [통합 검증](docs/skills/evidence/pr59-resume-20261011/integration-verification.json)에 보존. main 미수정·PR 미병합·125 PARTIAL/568 BLOCKED 유지.
