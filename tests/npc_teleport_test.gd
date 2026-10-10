@@ -45,7 +45,11 @@ func _run() -> void:
 					present = str(v.get("role","")) == "teleport"
 		_check(present, "NPC teleport guide connected in actual Aden field")
 		_check(existing.has("merchant") and existing.has("warden") and existing.has("warehouse_keeper"), "existing NPCs preserved")
-		_check(existing.get("merchant",{}).get("position",[]) == [1980,3840], "merchant original coordinates unchanged")
+		var position: Variant = existing.get("merchant",{}).get("position",[])
+		var unchanged: bool = position is Array and position.size() == 2
+		if unchanged:
+			unchanged = is_equal_approx(float(position[0]),1980.0) and is_equal_approx(float(position[1]),3840.0)
+		_check(unchanged, "merchant original coordinates unchanged")
 	if failures.is_empty():
 		print("NPC_TELEPORT_OK: 25 maps, costs, level gates, forged IDs and preserved NPC placement")
 		quit(0)
