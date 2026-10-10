@@ -384,7 +384,7 @@ func refresh_visible() -> void:
 		for x: int in range(lo.x,hi.x+1):
 			var key := Vector2i(x,y)
 			wanted[key] = true
-			if not chunks.has(key) and buckets.has(key):
+			if not chunks.has(key) and field.bounds.intersects(Rect2(Vector2(key)*chunk_size,Vector2.ONE*chunk_size)):
 				_load_chunk(key)
 	for key: Vector2i in chunks.keys():
 		if not wanted.has(key):
@@ -407,7 +407,8 @@ func _load_chunk(key: Vector2i) -> void:
 	node.modulate = VISUAL_STYLE.prop_tint(visual_mode)
 	add_child(node)
 	chunks[key] = node
-	for record: Dictionary in buckets[key]:
+	_scatter_chunk_groundcover(node,key)
+	for record: Dictionary in buckets.get(key, []):
 		var kind: String = str(record["kind"])
 		if not textures.has(kind):
 			var accent := Sprite2D.new()
@@ -446,6 +447,48 @@ func _load_chunk(key: Vector2i) -> void:
 			sprite.z_index = -8
 		node.add_child(sprite)
 		_scatter_ambient_details(node, record, kind)
+
+# Map-wide authored-atlas accents, not just around objects. Previously empty
+# dungeon floor chunks had zero props and consequently zero new visible pixels.
+# Preserve all collision, source map, tile, navigation and spawn coordinates.
+func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
+	var origin: Vector2 = Vector2(key) * chunk_size
+	var local_bounds := Rect2(origin,Vector2.ONE*chunk_size)
+	if not local_bounds.intersects(field.bounds): return
+	var style: Dictionary = field.data.get("render_style", {})
+	var wilderness: bool = bool(style.get("wild_ground",true))
+	var field_id: String = str(field.data.get("id",field.data.get("name","")))
+	var frozen: bool = field_id.contains("albino")
+	var volcanic: bool = field_id.contains("escaros")
+	var random := RandomNumberGenerator.new()
+	random.seed = absi(key.x*73856093 + key.y*19349663 + field_id.hash()) + 101
+	var count: int = 68 if wilderness else (49 if frozen else 58)
+	for index: int in range(count):
+		var position_value: Vector2 = origin + Vector2(random.randf_range(8.0,chunk_size-8.0),random.randf_range(8.0,chunk_size-8.0))
+		if not field.bounds.has_point(position_value) or not field.point_clear(position_value,4.0): continue
+		var decoration_kind: String = "grass" if wilderness and random.randf() < .72 else ("rock" if random.randf() > .45 else "rocks")
+		var source_texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		if source_texture == null: continue
+		var marker := Sprite2D.new()
+		marker.name = "GroundCover"
+		marker.texture = source_texture
+		marker.position = position_value
+		marker.offset = Vector2(0,-source_texture.get_height()*.34)
+		var target_height: float = random.randf_range(37.0,73.0) if wilderness else random.randf_range(34.0,63.0)
+		marker.scale = Vector2.ONE * target_height / maxf(1.0,source_texture.get_height())
+		marker.rotation = random.randf_range(-.20,.20)
+		marker.flip_h = random.randf() > .5
+		if frozen:
+			marker.modulate = Color(random.randf_range(.73,.92),random.randf_range(.80,.99),1.0,.66)
+		elif volcanic:
+			marker.modulate = Color(random.randf_range(.55,.78),random.randf_range(.43,.60),random.randf_range(.34,.49),.73)
+		elif wilderness:
+			marker.modulate = Color(random.randf_range(.60,.91),random.randf_range(.72,.99),random.randf_range(.47,.67),.78)
+		else:
+			var shade: float = random.randf_range(.54,.79)
+			marker.modulate = Color(shade,shade*.98,shade*1.03,.75)
+		marker.z_index = -10
+		parent.add_child(marker)
 
 # Purely visual ground cover: reuse the existing licensed-in-project prop atlas
 # and exact world positions without ever modifying tiles, paths or collision.
