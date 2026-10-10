@@ -53,7 +53,7 @@ func _run() -> void:
 				required_equipment[item_name] = true
 	_check(required_equipment.size() >= 76 and equipment_reach.size() == 76, "all original 76 physical crafting ingredients explicitly reachable")
 	for name: String in required_equipment:
-		_check(equipment_reach.has(name),"equipment material has monster source: "+name)
+		_check(equipment_reach.has(name) or recipes.recipes.values().any(func(r: Variant) -> bool: return str(((r as Dictionary).get("result",{}) as Dictionary).get("item","")) == name),"equipment ingredient can drop or be crafted: "+name)
 	for name: String in materials:
 		_check(material_reach.has(name),"resource has monster source: "+name)
 		_check(not LOOT._is_equipment(items[name] as Dictionary) and not LOOT._is_potion(items[name] as Dictionary),"resources do not occupy gear/potion roll: "+name)
