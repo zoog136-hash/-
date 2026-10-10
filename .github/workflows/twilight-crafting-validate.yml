@@ -29,11 +29,14 @@ jobs:
       - name: Crafting + warehouse + shop regressions
         run: |
           set -o pipefail
-          for test in tests/crafting_atomic_test.gd tests/warehouse_persistence_test.gd tests/shop_authority_test.gd; do
+          for test in tests/crafting_atomic_test.gd tests/crafting_material_drop_test.gd tests/loot_balance_smoke_test.gd tests/ground_loot_system_test.gd tests/warehouse_persistence_test.gd tests/shop_authority_test.gd; do
             /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://$test" 2>&1 | tee -a crafting-test.log
           done
           ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' crafting-test.log
           grep -q CRAFTING_OK crafting-test.log
+          grep -q CRAFT_MATERIAL_OK crafting-test.log
+          grep -q LOOT_BALANCE_OK crafting-test.log
+          grep -q GROUND_LOOT_OK crafting-test.log
           grep -q WAREHOUSE_OK crafting-test.log
           grep -q SHOP_AUTHORITY_OK crafting-test.log
       - name: Persist CI logs
