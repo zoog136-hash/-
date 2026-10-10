@@ -1050,6 +1050,8 @@ func _connect_signals() -> void:
 	hud.shop_buy_requested.connect(_buy_shop_item)
 	if hud.has_signal("shop_bulk_buy_requested"):
 		hud.connect("shop_bulk_buy_requested", _buy_shop_bulk)
+	if hud.has_signal("reviewed_shop_buy_requested"):
+		hud.connect("reviewed_shop_buy_requested", _buy_reviewed_shop_item)
 	if hud.has_signal("warehouse_transfer_requested"):
 		hud.connect("warehouse_transfer_requested", _warehouse_transfer)
 	if hud.has_signal("npc_teleport_requested"):
@@ -3337,6 +3339,42 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 
 # The original static crafting service remains available for saved-game and
 # regression compatibility. The expanded 413-recipe service is a separate instance.
+# Original NPC merchandise uses an independent audited seller/price path.
+# No UI-submitted unit price, item record or enhancement is trusted.
+func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int) -> void:
+	var quote: Dictionary = SHOP_CATALOG.quote_reviewed(
+		vendor_id, item_name, quantity, catalog_db.get("아이템", []),
+		gold, _inventory_total_weight(), _carrying_capacity(),
+		maxi(0, int(item_weight_index.get(item_name, 3)))
+	)
+	if not bool(quote.get("ok", false)):
+		hud.show_message(str(quote.get("reason", "구매할 수 없습니다")))
+		return
+	var record: Dictionary = (quote["offer"] as Dictionary).get("record", {})
+	_sync_item_instances()
+	var old_ids: Dictionary = item_instances.duplicate(true)
+	var total: int = int(quote["total"])
+	gold -= total
+	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
+	_sync_item_instances()
+	for raw_id: Variant in item_instances.keys():
+		if old_ids.has(raw_id):
+			continue
+		var physical: Dictionary = item_instances[raw_id] as Dictionary
+		if str(physical.get("name", "")) != item_name:
+			continue
+		physical["level"] = 0
+		physical["record"] = record.duplicate(true)
+		physical["sourceId"] = str(record.get("sourceId", ""))
+	hud.refresh_inventory(inventory)
+	hud.show_message("%s ×%d 구매 · %d 아데나" % [item_name, quantity, total])
+	hud.append_log("원본 NPC 상점 구매 · %s ×%d (-%d)" % [item_name, quantity, total])
+	_update_hud()
+	_save_game(true)
+	if hud.has_method("open_shop"):
+		hud.call("open_shop")
+
+
 func _craft_item_index() -> Dictionary:
 	return loot_catalog.get("by_name", {}) as Dictionary
 

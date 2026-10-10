@@ -4,6 +4,8 @@ extends VBoxContainer
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Browser = preload("res://scripts/ui/renewal_browser.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
+const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
+static var selected_vendor_id: String = ""
 var hud: Node
 var wallet: Label
 var search_field: LineEdit
@@ -12,6 +14,8 @@ var listing: ItemList
 var detail: RichTextLabel
 var purchase: Button
 var purchase_quantity: SpinBox
+var vendor_filter: OptionButton
+var vendor_profiles: Array = []
 var filtered: Array = []
 var selected: Array = []
 var list_touch_index: int = -1
@@ -24,12 +28,24 @@ func configure(controller: Node) -> void:
 	hud = controller
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(UI.section("ADEN  /  잡화 상점",16))
+	add_child(UI.section("ADEN  /  상점",16))
+	vendor_profiles = REVIEWED.profiles(hud.catalog_data.get("아이템", []))
+	vendor_filter = OptionButton.new()
+	vendor_filter.name = "ShopVendor"
+	vendor_filter.add_item("잡화 상점")
+	vendor_filter.set_item_metadata(0, "")
+	var restored_index: int = 0
+	for profile: Dictionary in vendor_profiles:
+		vendor_filter.add_item(str(profile.name) + " · 무기 상점")
+		var index: int = vendor_filter.item_count - 1
+		vendor_filter.set_item_metadata(index, str(profile.source_npc_id))
+		if str(profile.source_npc_id) == selected_vendor_id: restored_index = index
+	vendor_filter.select(restored_index)
+	selected_vendor_id = str(vendor_filter.get_item_metadata(restored_index))
+	vendor_filter.item_selected.connect(_change_vendor)
+	add_child(vendor_filter)
 	wallet = UI.label("",15,UI.GOLD)
 	add_child(wallet)
-	var buyback := UI.button("아이템 매입 · 보유 장비/소모품 판매",func() -> void: hud.call("open_item_sell"),Vector2(0,44))
-	buyback.name = "OpenBuyback"
-	add_child(buyback)
 	var filters := HBoxContainer.new()
 	add_child(filters)
 	search_field = LineEdit.new()
@@ -40,7 +56,7 @@ func configure(controller: Node) -> void:
 	filters.add_child(search_field)
 	category_filter = OptionButton.new()
 	category_filter.name = "ShopCategory"
-	for name: String in ["전체","물약","소모품","강화 주문서"]:
+	for name: String in ["전체","물약","소모품","강화 주문서","무기"]:
 		category_filter.add_item(name)
 	category_filter.item_selected.connect(func(_index: int) -> void: _refresh())
 	filters.add_child(category_filter)
@@ -80,6 +96,8 @@ func configure(controller: Node) -> void:
 	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY
 	purchase_quantity.step = 1
 	purchase_quantity.value = 1
+	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY if selected_vendor_id.is_empty() else 1
+	purchase_quantity.editable = selected_vendor_id.is_empty()
 	purchase_quantity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	purchase_quantity.value_changed.connect(func(_value: float) -> void: _refresh_selection())
 	amount_row.add_child(purchase_quantity)
@@ -93,11 +111,11 @@ func configure(controller: Node) -> void:
 func _refresh() -> void:
 	filtered.clear()
 	listing.clear()
-	selected.clear()
+	selected = []
 	wallet.text = "보유 아데나  %d" % int(hud.character_state.get("gold",0))
 	var query := search_field.text.strip_edges().to_lower()
 	var category := category_filter.get_item_text(category_filter.selected)
-	for entry: Array in SHOP_CATALOG.GOODS:
+	for entry: Array in _goods():
 		var name := str(entry[0])
 		if category != "전체" and str(entry[2]) != category: continue
 		if query != "" and not name.to_lower().contains(query): continue
@@ -110,6 +128,24 @@ func _refresh() -> void:
 	else:
 		listing.select(0)
 		_select(0)
+
+func _change_vendor(index: int) -> void:
+	selected_vendor_id = str(vendor_filter.get_item_metadata(index))
+	search_field.text = ""
+	category_filter.select(0)
+	purchase_quantity.value = 1
+	purchase_quantity.max_value = SHOP_CATALOG.MAX_QUANTITY if selected_vendor_id.is_empty() else 1
+	purchase_quantity.editable = selected_vendor_id.is_empty()
+	_refresh()
+
+func _goods() -> Array:
+	if selected_vendor_id.is_empty(): return SHOP_CATALOG.GOODS.duplicate(true)
+	var result: Array = []
+	for profile: Dictionary in vendor_profiles:
+		if str(profile.source_npc_id) != selected_vendor_id: continue
+		for offer: Dictionary in profile.goods:
+			result.append([str(offer.game_name), int(offer.price), str(offer.category)])
+	return result
 
 # ItemList mouse selection works in the editor but a native Android
 # InputEventScreenTouch does not necessarily emit item_selected. Treat a tap
@@ -160,13 +196,16 @@ func _on_listing_input(event: InputEvent) -> void:
 
 func _select(index: int) -> void:
 	if index < 0 or index >= filtered.size(): return
-	selected = filtered[index]
+	selected = filtered[index].duplicate(true)
 	_refresh_selection()
 
 func _refresh_selection() -> void:
 	if selected.is_empty() or purchase_quantity == null: return
 	var name: String = str(selected[0])
 	var price: int = SHOP_CATALOG.price_for(name)
+	if not selected_vendor_id.is_empty():
+		var offer: Dictionary = REVIEWED.offer_for(selected_vendor_id, name, hud.catalog_data.get("아이템", []))
+		price = int(offer.get("price", -1))
 	var quantity: int = int(purchase_quantity.value)
 	var available: int = int(hud.character_state.get("gold",0))
 	var info: Dictionary = {}
@@ -180,6 +219,8 @@ func _refresh_selection() -> void:
 		UI.safe(name), UI.safe(selected[2]), price, quantity, total, count, available,
 		UI.safe(info.get("desc",info.get("description","기존 게임 데이터의 소모품 / 강화 주문서")))
 	]
+	if not selected_vendor_id.is_empty():
+		detail.text += "\n\n기본 판매가 · 1개 · 강화 +0 · 세금 없음"
 	purchase.disabled = price <= 0 or available < total or (name == "드래곤의 용옥" and quantity != 1)
 	purchase.text = "구매 불가" if purchase.disabled else "%d개 구매 · %d 아데나" % [quantity,total]
 
@@ -189,6 +230,7 @@ func _buy() -> void:
 	var quantity: int = int(purchase_quantity.value)
 	# Never send a payment amount from the UI. World rechecks the price, stock
 	# rules, wallet, weight and special consumable restrictions atomically.
-	if hud.has_signal("shop_bulk_buy_requested"):
+	if not selected_vendor_id.is_empty() and hud.has_signal("reviewed_shop_buy_requested"):
+		hud.emit_signal("reviewed_shop_buy_requested", selected_vendor_id, name, quantity)
+	elif hud.has_signal("shop_bulk_buy_requested"):
 		hud.emit_signal("shop_bulk_buy_requested", name, quantity)
-

@@ -2,6 +2,7 @@ extends RefCounted
 # Server-authoritative price and quantity policy. Values are TWILIGHT's
 # existing local shop prices, not claims about official Lineage prices.
 const MAX_QUANTITY: int = 99
+const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 const GOODS = [
 	["HP 물약", 50, "물약"],
 	["강력 HP 물약", 180, "물약"],
@@ -35,6 +36,17 @@ static func price_for(item_name: String) -> int:
 # authority. Counts are bounded before multiplication.
 static func quote(item_name: String, quantity: int, wallet: int, carried_weight: int, capacity: int, unit_weight: int) -> Dictionary:
 	var unit_price: int = price_for(item_name)
+	return _quote_at_price(item_name, unit_price, quantity, wallet, carried_weight, capacity, unit_weight)
+
+static func quote_reviewed(vendor_id: String, item_name: String, quantity: int, catalog: Array, wallet: int, carried_weight: int, capacity: int, unit_weight: int) -> Dictionary:
+	var offer: Dictionary = REVIEWED.offer_for(vendor_id, item_name, catalog)
+	if offer.is_empty(): return {"ok":false, "reason":"상점에 등록되지 않은 아이템입니다"}
+	if quantity != 1: return {"ok":false, "reason":"이 상품은 한 번에 1개씩 구매할 수 있습니다"}
+	var result: Dictionary = _quote_at_price(item_name, int(offer.price), quantity, wallet, carried_weight, capacity, unit_weight)
+	if bool(result.get("ok", false)): result["offer"] = offer
+	return result
+
+static func _quote_at_price(item_name: String, unit_price: int, quantity: int, wallet: int, carried_weight: int, capacity: int, unit_weight: int) -> Dictionary:
 	if unit_price <= 0:
 		return {"ok":false, "reason":"판매하지 않는 상품입니다"}
 	if quantity < 1 or quantity > MAX_QUANTITY:

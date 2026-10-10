@@ -5,6 +5,7 @@ signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
 signal shop_bulk_buy_requested(item_name: String, quantity: int)
+signal reviewed_shop_buy_requested(vendor_id: String, item_name: String, quantity: int)
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
 signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
