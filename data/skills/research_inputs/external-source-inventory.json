@@ -1,0 +1,587 @@
+[
+  {
+    "file": "01-l1j-rust-main.zip",
+    "sha256": "a5b9d99664590b7cc11646cf2302c87cb8b0e837d2619342967de3c7b23334f6",
+    "files": 95,
+    "size": 131329,
+    "expanded_bytes": 395489,
+    "licenses": [
+      "l1j-rust-main/README.md"
+    ],
+    "skill_files": [
+      "l1j-rust-main/src/data/skill_table.rs",
+      "l1j-rust-main/src/ecs/class_skills.rs",
+      "l1j-rust-main/src/ecs/components/skill.rs",
+      "l1j-rust-main/src/ecs/darkelf_skills.rs",
+      "l1j-rust-main/src/ecs/skill_executor.rs",
+      "l1j-rust-main/src/protocol/client/skill.rs",
+      "l1j-rust-main/src/protocol/server/skill.rs",
+      "l1j-rust-main/src/protocol/server/skill_effect.rs"
+    ]
+  },
+  {
+    "file": "02-movan-l1j-tw-rust-main.zip",
+    "sha256": "549cdfea06f8ee54c2c6683a99f6ce131f9873ece9c70845f774738b23e84532",
+    "files": 37,
+    "size": 34982,
+    "expanded_bytes": 96812,
+    "licenses": [
+      "movan-l1j-tw-rust-main/README.md"
+    ],
+    "skill_files": []
+  },
+  {
+    "file": "03-L1MapViewer-main.zip",
+    "sha256": "af04061b375d99cd94cfd95b18686bab358e01cac6d46d7cd9b57358f31794fa",
+    "files": 145,
+    "size": 697405,
+    "expanded_bytes": 3460436,
+    "licenses": [
+      "L1MapViewer-main/README.md"
+    ],
+    "skill_files": []
+  },
+  {
+    "file": "04-L1JGO-Whale-master.zip",
+    "sha256": "b3107fb17f9f1e63b8d5aea921b506c34d327778d5511a2e3555779b8c8c389a",
+    "files": 1766,
+    "size": 7277612,
+    "expanded_bytes": 184867107,
+    "licenses": [
+      "L1JGO-Whale-master/README.md"
+    ],
+    "skill_files": [
+      "L1JGO-Whale-master/data/yaml/buff_icon_map.yaml",
+      "L1JGO-Whale-master/data/yaml/mob_skill_list.yaml",
+      "L1JGO-Whale-master/data/yaml/skill_list.yaml",
+      "L1JGO-Whale-master/data/yaml/weapon_skill.yaml",
+      "L1JGO-Whale-master/docs/RANGE_SKILL_DAMAGE_PROTOCOL.md",
+      "L1JGO-Whale-master/docs/yiwei_range_skill_damage_packet.md",
+      "L1JGO-Whale-master/internal/data/bufficon.go",
+      "L1JGO-Whale-master/internal/data/mobskill.go",
+      "L1JGO-Whale-master/internal/data/mobskill_test.go",
+      "L1JGO-Whale-master/internal/data/skill.go",
+      "L1JGO-Whale-master/internal/data/weapon_skill.go",
+      "L1JGO-Whale-master/internal/dialog/effect.go",
+      "L1JGO-Whale-master/internal/handler/buff_persist.go",
+      "L1JGO-Whale-master/internal/handler/ground_effect_pack_test.go",
+      "L1JGO-Whale-master/internal/handler/range_skill_test.go",
+      "L1JGO-Whale-master/internal/handler/skill.go"
+    ]
+  },
+  {
+    "file": "05-l1j-tw-99nets-master.zip",
+    "sha256": "0a2d9f28bc992720bad258dd5206bd51712cfacfe303a7a71f7dd31972897ae0",
+    "files": 2188,
+    "size": 26651309,
+    "expanded_bytes": 62576787,
+    "licenses": [
+      "l1j-tw-99nets-master/L1J-TW_3.50c/build/ant/LICENSE",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/license.txt",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/tool/L1J_Telnet/readme.txt",
+      "l1j-tw-99nets-master/L1J-TW_3.80c/build/ant/LICENSE",
+      "l1j-tw-99nets-master/L1J-TW_3.80c/license.txt",
+      "l1j-tw-99nets-master/L1J-TW_3.80c/tool/L1J_Telnet/readme.txt"
+    ],
+    "skill_files": [
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Japan/MyISAM/character_buff.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Japan/MyISAM/character_skills.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Japan/MyISAM/mobskill.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Japan/MyISAM/skills.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Japan/MyISAM/weapon_skill.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Taiwan/character_buff.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Taiwan/character_skills.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Taiwan/magic_doll.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Taiwan/mobskill.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Taiwan/skills.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/db/Taiwan/weapon_skill.sql",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/docs/magicdoll.txt",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/etc/text/MobSkillテーブルの使い方.txt",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/src/l1j/server/server/clientpackets/C_SkillBuy.java",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/src/l1j/server/server/clientpackets/C_SkillBuyOK.java",
+      "l1j-tw-99nets-master/L1J-TW_3.50c/src/l1j/server/server/clientpackets/C_UseSkill.java"
+    ]
+  },
+  {
+    "file": "06-L1J-JP_3.63c-master.zip",
+    "sha256": "f59bde48898cb543007ea11686c276b7852d11cd0401ec194152f9986f0ced47",
+    "files": 2872,
+    "size": 22896578,
+    "expanded_bytes": 231105502,
+    "licenses": [
+      "L1J-JP_3.63c-master/launcher/README.md",
+      "L1J-JP_3.63c-master/license.txt"
+    ],
+    "skill_files": [
+      "L1J-JP_3.63c-master/data/xml/Item/MagicEye.xml",
+      "L1J-JP_3.63c-master/data/xml/Item/MagicPotion.xml",
+      "L1J-JP_3.63c-master/db/csv/ja/magic_dolls.csv",
+      "L1J-JP_3.63c-master/db/csv/ja/mob_skills.csv",
+      "L1J-JP_3.63c-master/db/csv/ja/skills.csv",
+      "L1J-JP_3.63c-master/db/csv/ja/weapon_skills.csv",
+      "L1J-JP_3.63c-master/db/csv/ko/magic_dolls.csv",
+      "L1J-JP_3.63c-master/db/csv/ko/mob_skills.csv",
+      "L1J-JP_3.63c-master/db/csv/ko/skills.csv",
+      "L1J-JP_3.63c-master/db/csv/ko/weapon_skills.csv",
+      "L1J-JP_3.63c-master/db/csv/tw/magic_dolls.csv",
+      "L1J-JP_3.63c-master/db/csv/tw/mob_skills.csv",
+      "L1J-JP_3.63c-master/db/csv/tw/skills.csv",
+      "L1J-JP_3.63c-master/db/csv/tw/weapon_skills.csv",
+      "L1J-JP_3.63c-master/db/schema/mysql/character_buffs.sql",
+      "L1J-JP_3.63c-master/db/schema/mysql/character_skills.sql"
+    ]
+  },
+  {
+    "file": "07-jp-master.zip",
+    "sha256": "828d18a6600671c4ab35e460e693a0e4b6569d838b8c5eea58aabfcc3db152d7",
+    "files": 2006,
+    "size": 17485419,
+    "expanded_bytes": 170275956,
+    "licenses": [
+      "jp-master/license.txt"
+    ],
+    "skill_files": [
+      "jp-master/data/xml/Item/MagicEye.xml",
+      "jp-master/data/xml/Item/MagicPotion.xml",
+      "jp-master/db/csv/ja/magic_dolls.csv",
+      "jp-master/db/csv/ja/mob_skills.csv",
+      "jp-master/db/csv/ja/skills.csv",
+      "jp-master/db/csv/ja/weapon_skills.csv",
+      "jp-master/db/csv/ko/magic_dolls.csv",
+      "jp-master/db/csv/ko/mob_skills.csv",
+      "jp-master/db/csv/ko/skills.csv",
+      "jp-master/db/csv/ko/weapon_skills.csv",
+      "jp-master/db/csv/tw/magic_dolls.csv",
+      "jp-master/db/csv/tw/mob_skills.csv",
+      "jp-master/db/csv/tw/skills.csv",
+      "jp-master/db/csv/tw/weapon_skills.csv",
+      "jp-master/db/schema/mysql/character_buffs.sql",
+      "jp-master/db/schema/mysql/character_skills.sql"
+    ]
+  },
+  {
+    "file": "08-L1j-TW-main.zip",
+    "sha256": "46df90f46bc2bd8b5c57fdb55da8153defe7a94c265ca6640e88f6e5f85c1e07",
+    "files": 1450,
+    "size": 46086120,
+    "expanded_bytes": 67874640,
+    "licenses": [
+      "L1j-TW-main/L1jWeb/ASP.net/Readme.txt",
+      "L1j-TW-main/L1jWeb/PHP/Documents/readme.txt",
+      "L1j-TW-main/README.md",
+      "L1j-TW-main/tool/L1J_Telnet/readme.txt",
+      "L1j-TW-main/tool/l1jtw_quick_build/apache-ant-1.8.2/LICENSE"
+    ],
+    "skill_files": [
+      "L1j-TW-main/L1jWeb/PHP/trade/char_skill.php",
+      "L1j-TW-main/db/InnoDB_TW/character_buff.sql",
+      "L1j-TW-main/db/InnoDB_TW/character_skills.sql",
+      "L1j-TW-main/db/InnoDB_TW/mobskill.sql",
+      "L1j-TW-main/db/InnoDB_TW/skills.sql",
+      "L1j-TW-main/db/InnoDB_TW/weapon_skill.sql",
+      "L1j-TW-main/db/MyISAM/character_buff.sql",
+      "L1j-TW-main/db/MyISAM/character_skills.sql",
+      "L1j-TW-main/db/MyISAM/mobskill.sql",
+      "L1j-TW-main/db/MyISAM/skills.sql",
+      "L1j-TW-main/db/MyISAM/weapon_skill.sql",
+      "L1j-TW-main/db/mobskill_test/skill_test.sql",
+      "L1j-TW-main/src/net/l1j/server/clientpackets/C_SkillBuy.java",
+      "L1j-TW-main/src/net/l1j/server/clientpackets/C_SkillBuyOK.java",
+      "L1j-TW-main/src/net/l1j/server/clientpackets/C_UseSkill.java",
+      "L1j-TW-main/src/net/l1j/server/command/executor/L1AddSkill.java"
+    ]
+  },
+  {
+    "file": "09-LineageMSimulator-master.zip",
+    "sha256": "9ebe869db45a2143a8bd24f0f47a7184f5bbf903255612c32ea589df28571191",
+    "archive_entries": 21,
+    "files": 17,
+    "size": 53058,
+    "expanded_bytes": 64061,
+    "licenses": [
+      "LineageMSimulator-master/README.md",
+      "LineageMSimulator-master/README_KR.md"
+    ],
+    "license_status": "UNKNOWN",
+    "skill_files": [],
+    "extensions": {
+      "": 2,
+      ".toml": 1,
+      ".md": 2,
+      ".xlsx": 4,
+      ".csv": 1,
+      ".jl": 7
+    },
+    "inspected_text": [
+      {
+        "path": "LineageMSimulator-master/README.md",
+        "sha256": "51c3ebd87d53fe4dfd4843826276850807ecc1c60fe97aadb1af50fcc1d3120e",
+        "bytes": 1592,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2021,
+          2,
+          16,
+          6,
+          38,
+          30
+        ],
+        "historical_date_status": "UNKNOWN"
+      },
+      {
+        "path": "LineageMSimulator-master/README_KR.md",
+        "sha256": "afebea90f8955cc2b852afa97d26dbe953bca11f517d7bc7f42746449edef774",
+        "bytes": 1822,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2021,
+          2,
+          16,
+          6,
+          38,
+          30
+        ],
+        "historical_date_status": "UNKNOWN"
+      }
+    ],
+    "lineagem_cutoff_validity": "UNKNOWN",
+    "adopted_original_skill_values": 0,
+    "adopted_publisher_assets": 0,
+    "notes": "2017 변신카드 확률 시뮬레이터. 2025 스킬 DB가 아님."
+  },
+  {
+    "file": "10-PakViewer-main.zip",
+    "sha256": "a1b838a7df831c43e833d6ccea41ffd26e3f039f45277685cd4426fad82d47b4",
+    "archive_entries": 173,
+    "files": 140,
+    "size": 2559052,
+    "expanded_bytes": 11545226,
+    "licenses": [
+      "PakViewer-main/README.md",
+      "PakViewer-main/src/Lin.Helper.Core/README.md"
+    ],
+    "license_status": "UNKNOWN",
+    "skill_files": [],
+    "extensions": {
+      ".yml": 1,
+      "": 2,
+      ".cs": 100,
+      ".csproj": 7,
+      ".sln": 2,
+      ".resx": 10,
+      ".user": 2,
+      ".entitlements": 1,
+      ".pdb": 1,
+      ".pfx": 1,
+      ".json": 1,
+      ".md": 4,
+      ".htm": 1,
+      ".ps1": 1,
+      ".txt": 1,
+      ".bin": 5
+    },
+    "inspected_text": [
+      {
+        "path": "PakViewer-main/README.md",
+        "sha256": "909e32e9e8fc8c48e6afaefc03be3168f7e6fffae104b5548c266a11035a160a",
+        "bytes": 2722,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          7,
+          16,
+          8,
+          29,
+          34
+        ],
+        "historical_date_status": "UNKNOWN"
+      },
+      {
+        "path": "PakViewer-main/src/Lin.Helper.Core/README.md",
+        "sha256": "0225b8ea94bdeeb276e541c6e5b399cdb55e4fca6e690d8e189144e37fbede5f",
+        "bytes": 10202,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          7,
+          16,
+          8,
+          29,
+          34
+        ],
+        "historical_date_status": "UNKNOWN"
+      }
+    ],
+    "lineagem_cutoff_validity": "UNKNOWN",
+    "adopted_original_skill_values": 0,
+    "adopted_publisher_assets": 0,
+    "notes": "PC 리니지 PAK/DAT 도구. README 확인; 실행·복호화·게임 에셋 추출 없음."
+  },
+  {
+    "file": "11-a1.zip",
+    "sha256": "d6ecb1ee3e290c9073b04690ebc9f413f7c04939d18cb24c68d140d31666f79e",
+    "archive_entries": 456,
+    "files": 449,
+    "size": 106879415,
+    "expanded_bytes": 107414120,
+    "licenses": [],
+    "license_status": "UNKNOWN",
+    "skill_files": [],
+    "extensions": {
+      ".png": 446,
+      ".jpg": 2,
+      ".psd": 1
+    },
+    "inspected_text": [],
+    "lineagem_cutoff_validity": "UNKNOWN",
+    "adopted_original_skill_values": 0,
+    "adopted_publisher_assets": 0,
+    "notes": "PC 리니지 버그 화면 이미지 중심. 파일 목록만 확인; 원작 스킬 프레임 근거로 채택하지 않음."
+  },
+  {
+    "file": "12-a3.zip",
+    "sha256": "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20",
+    "archive_entries": 7472,
+    "files": 7207,
+    "size": 159837941,
+    "expanded_bytes": 801755998,
+    "licenses": [],
+    "license_status": "UNKNOWN",
+    "skill_files": [
+      "src/l1j/server/server/templates/CharacterSkillInfo.java",
+      "src/l1j/server/server/templates/L1MobSkill.java",
+      "src/l1j/server/server/templates/L1PassiveSkills.java",
+      "src/l1j/server/server/templates/L1Skills.java",
+      "src/l1j/server/server/templates/L1SkillsInfo.java",
+      "src/l1j/server/server/templates/L1WeaponSkillTemp.java",
+      "src/l1j/server/server/serverpackets/S_SkillBuy.java",
+      "src/l1j/server/server/serverpackets/S_SkillBrave.java",
+      "src/l1j/server/server/serverpackets/S_SkillHaste.java",
+      "src/l1j/server/server/serverpackets/companion/S_CompanionSkillEnchant.java",
+      "src/l1j/server/server/serverpackets/companion/S_CompanionSkillNoti.java",
+      "src/l1j/server/server/serverpackets/action/S_RangeSkill.java",
+      "src/l1j/server/server/serverpackets/action/S_UseArrowSkill.java",
+      "src/l1j/server/server/serverpackets/action/S_UseAttackSkill.java",
+      "src/l1j/server/server/serverpackets/spell/S_SkillIconAura.java",
+      "src/l1j/server/server/serverpackets/spell/S_SkillIconBlessOfEva.java",
+      "src/l1j/server/server/serverpackets/spell/S_SkillIconGFX.java",
+      "src/l1j/server/server/serverpackets/spell/S_SkillIconShield.java",
+      "src/l1j/server/server/serverpackets/spell/S_SkillIconWindShackle.java",
+      "src/l1j/server/server/serverpackets/spell/S_SkillIconWisdomPotion.java",
+      "src/l1j/server/server/model/L1ArmorSkill.java",
+      "src/l1j/server/server/model/L1MobSkillUse.java",
+      "src/l1j/server/server/model/L1SkillStatus.java",
+      "src/l1j/server/server/model/L1WeaponSkill.java",
+      "src/l1j/server/server/model/trap/L1SkillTrap.java",
+      "src/l1j/server/server/model/skill/L1PassiveSkillHandler.java",
+      "src/l1j/server/server/model/skill/L1SkillActionFactory.java",
+      "src/l1j/server/server/model/skill/L1SkillActionHandler.java",
+      "src/l1j/server/server/model/skill/L1SkillDelay.java",
+      "src/l1j/server/server/model/skill/L1SkillId.java",
+      "src/l1j/server/server/model/skill/L1SkillStop.java",
+      "src/l1j/server/server/model/skill/L1SkillTimer.java",
+      "src/l1j/server/server/model/skill/L1SkillType.java",
+      "src/l1j/server/server/model/skill/L1SkillUse.java",
+      "src/l1j/server/server/model/skill/L1SkillUseType.java",
+      "src/l1j/server/server/model/skill/action/TarosSkill.java",
+      "src/l1j/server/server/model/item/ablity/ItemHitupSkill.java",
+      "src/l1j/server/server/model/item/ablity/ItemIncreaseArmorSkillProb.java",
+      "src/l1j/server/server/model/item/ablity/ItemToleranceSkill.java",
+      "src/l1j/server/server/datatables/MobSkillTable.java",
+      "src/l1j/server/server/datatables/SkillsInfoTable.java",
+      "src/l1j/server/server/datatables/SkillsTable.java",
+      "src/l1j/server/server/datatables/WeaponSkillTable.java",
+      "src/l1j/server/server/construct/skill/L1SkillInfo.java",
+      "src/l1j/server/server/command/executor/L1AddSkill.java",
+      "src/l1j/server/server/command/executor/L1SkillEffect.java",
+      "src/l1j/server/server/command/executor/L1SkillIcon.java",
+      "src/l1j/server/server/clientpackets/C_SkillBuy.java",
+      "src/l1j/server/server/clientpackets/C_SkillBuyOK.java",
+      "src/l1j/server/server/clientpackets/C_UseSkill.java",
+      "src/l1j/server/server/clientpackets/proto/A_CompanionSkillEnchant.java",
+      "src/l1j/server/server/clientpackets/proto/A_CompanionSkillNextTierOpen.java",
+      "src/l1j/server/common/bin/companion/CompanionSkillCommonBin.java",
+      "src/l1j/server/common/bin/companion/CompanionSkillEnchantCommonBin.java",
+      "src/l1j/server/GameSystem/ai/bean/AiSkillObject.java"
+    ],
+    "extensions": {
+      ".txt": 1037,
+      ".exe": 5,
+      ".spz": 1,
+      "": 9,
+      ".sql": 29,
+      ".zip": 5,
+      ".tbl": 18,
+      ".java": 3031,
+      ".mf": 1,
+      ".png": 44,
+      ".psd": 1,
+      ".7z": 1,
+      ".doc": 3,
+      ".0": 2,
+      ".lck": 2,
+      ".1": 2,
+      ".2": 2,
+      ".3": 2,
+      ".4": 2,
+      ".jar": 20,
+      ".bat": 2,
+      ".xlsx": 1,
+      ".csv": 1,
+      ".docx": 1,
+      ".xml": 11,
+      ".crt": 1,
+      ".csr": 1,
+      ".pem": 2,
+      ".org": 1,
+      ".jpg": 46,
+      ".map": 1000,
+      ".gif": 7,
+      ".s32": 1847,
+      ".dat": 2,
+      ".bin": 31,
+      ".properties": 36
+    },
+    "inspected_text": [
+      {
+        "path": "src/l1j/server/server/serverpackets/S_ShowSummonList.java",
+        "sha256": "da720733f3c567e0bea9a818a0438810a9c785ad3653eb9eb14a4f089cb934da",
+        "bytes": 465,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          10,
+          10,
+          8,
+          50,
+          4
+        ],
+        "historical_date_status": "UNKNOWN"
+      },
+      {
+        "path": "src/l1j/server/server/model/skill/action/SummonElemental.java",
+        "sha256": "e2ffe56f8bf2dd41dc587272c7e567ac0f89bde44191f7a538bf68e48f3d695c",
+        "bytes": 2652,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          10,
+          10,
+          8,
+          50,
+          6
+        ],
+        "historical_date_status": "UNKNOWN"
+      },
+      {
+        "path": "src/l1j/server/server/model/Instance/L1SummonInstance.java",
+        "sha256": "f9995215890411355b67f142c08622417ea137777a6245f0f5074aaeb2c72223",
+        "bytes": 17190,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          10,
+          10,
+          8,
+          50,
+          8
+        ],
+        "historical_date_status": "UNKNOWN"
+      }
+    ],
+    "lineagem_cutoff_validity": "UNKNOWN",
+    "adopted_original_skill_values": 0,
+    "adopted_publisher_assets": 0,
+    "notes": "PC L1J Java 서버. 소환 인스턴스의 주인·타겟·추종·종료 구조만 참고; 코드·수치·에셋 이식 없음."
+  },
+  {
+    "file": "13-a2-1-.zip",
+    "sha256": "cfea6e88864987454f63fe8d367e65a7133c0685685045ce40bb20942a6968bd",
+    "archive_entries": 8130,
+    "files": 8033,
+    "size": 446375472,
+    "expanded_bytes": 460640735,
+    "licenses": [
+      "README.md"
+    ],
+    "license_status": "UNKNOWN",
+    "skill_files": [],
+    "extensions": {
+      ".bmp": 692,
+      ".html": 70,
+      ".xml": 2,
+      ".ico": 2,
+      ".txt": 32,
+      ".png": 6922,
+      ".jpg": 180,
+      "": 7,
+      ".js": 42,
+      ".svg": 8,
+      ".gif": 12,
+      ".psd": 2,
+      ".woff": 4,
+      ".zip": 13,
+      ".exe": 4,
+      ".css": 27,
+      ".asi": 1,
+      ".bin": 5,
+      ".dll": 1,
+      ".md": 3,
+      ".bat": 1,
+      ".tbl": 1,
+      ".sh": 1,
+      ".jar": 1
+    },
+    "inspected_text": [
+      {
+        "path": "video_info.md",
+        "sha256": "abb2bf47fc3ed67e74ecb934849b7324525905253714082e87d832fe9e8e0d3c",
+        "bytes": 7865,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          10,
+          10,
+          8,
+          52,
+          44
+        ],
+        "historical_date_status": "UNKNOWN"
+      },
+      {
+        "path": "wiki.md",
+        "sha256": "1fc05b53e470c0bfd5f6d94b8d79edbaf8f3b68fa89744aee87849fa6d282773",
+        "bytes": 68741,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          10,
+          10,
+          8,
+          52,
+          44
+        ],
+        "historical_date_status": "UNKNOWN"
+      },
+      {
+        "path": "README.md",
+        "sha256": "f8313adc95862ea0505f8362ac832227ec15dcbe88a939add74b96e0df831760",
+        "bytes": 5358,
+        "inspection": "TEXT_REFERENCE",
+        "archive_timestamp": [
+          2026,
+          10,
+          10,
+          8,
+          52,
+          44
+        ],
+        "historical_date_status": "UNKNOWN"
+      }
+    ],
+    "lineagem_cutoff_validity": "UNKNOWN",
+    "adopted_original_skill_values": 0,
+    "adopted_publisher_assets": 0,
+    "notes": "PC 리니지 리마스터 웹·런처·위키 및 이미지 자료. README/wiki/video_info를 확인; 모바일 원작 수치·아트로 채택하지 않음."
+  }
+]

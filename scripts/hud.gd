@@ -226,6 +226,7 @@ func set_catalog_data(value: Dictionary, image_index: Dictionary) -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	character_state = value
+	player_label.text = "황혼의 %s  Lv.%d" % [str(value.get("job_class", "기사")), int(value.get("level", 1))]
 	if character_panel != null and character_panel.visible:
 		_refresh_character_panel()
 
@@ -327,7 +328,7 @@ func _job_profile(job_name: String) -> Dictionary:
 	return {}
 
 func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, experience_value: int, exp_need: int, gold: int) -> void:
-	player_label.text = "황혼의 기사  Lv.%d" % level
+	player_label.text = "황혼의 %s  Lv.%d" % [str(character_state.get("job_class", "기사")), level]
 	hp_bar.max_value = maxi(1, max_hp)
 	hp_bar.value = hp
 	mp_bar.max_value = maxi(1, max_mp)

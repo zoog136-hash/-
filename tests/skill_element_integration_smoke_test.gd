@@ -34,6 +34,7 @@ func _run() -> void:
 	root.add_child(world)
 	await process_frame
 	await process_frame
+	preload("res://tests/legacy_skill_fixture.gd").install(world)
 	var spells: Array = world.get("skills_db") as Array
 	var passive_total: int = 0
 	for value: Variant in spells:

@@ -18,6 +18,9 @@ const MONSTER_CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+const ORIGINAL_SKILLS = preload("res://scripts/skills/skill_service.gd")
+var original_skills: TwilightOriginalSkillService = null
+var legacy_skills_db: Array = []
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
 const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd")
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
@@ -320,6 +323,7 @@ func _process(delta: float) -> void:
 	auto_attack_timer = maxf(0.0, auto_attack_timer - delta)
 	_tick_skill_buffs(delta)
 	_tick_skill_cooldowns(delta)
+	if original_skills != null: original_skills.tick(delta)
 	_advance_skill_charge(delta)
 	_tick_item_buffs(delta)
 	ain_refresh_clock -= delta
@@ -411,7 +415,11 @@ func _load_data() -> void:
 		var item_value: Variant = item_db[item_index]
 		if item_value is Dictionary and CONSUMABLE_RULES.is_removed_item(str((item_value as Dictionary).get("name", ""))):
 			item_db.remove_at(item_index)
-	skills_db = game_db.get("스킬", []) as Array
+	legacy_skills_db = (game_db.get("스킬", []) as Array).duplicate(true)
+	if original_skills == null:
+		original_skills = ORIGINAL_SKILLS.new()
+		original_skills.configure(self)
+	skills_db = original_skills.catalog.records.duplicate(true)
 	_ensure_ammo_items()
 	_enrich_weapon_records(item_db)
 	loot_catalog = LOOT_DROP.build_catalog(item_db)
@@ -651,6 +659,7 @@ func _has_recovery_effect(key: String) -> bool:
 func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, critical: bool = false) -> void:
 	if target == null or not is_instance_valid(target) or target.dead:
 		return
+	if original_skills != null: normal_damage = original_skills.outgoing_damage(normal_damage)
 	var stolen: int = 0
 	if _has_hp_absorption():
 		# Extra damage and healing represent the exact same amount of
@@ -662,6 +671,7 @@ func _deal_successful_player_hit(target: TwilightMonster, normal_damage: int, cr
 		hud.append_log("HP 흡수 · %s HP -%d / 내 HP +%d" % [target.monster_name, stolen, hp - previous_hp])
 	var amplification: float = clampf(_equipped_numeric_sum("damage_amp_pct"), 0.0, 300.0)
 	var adjusted_damage: int = maxi(1, int(round(float(normal_damage) * (1.0 + amplification / 100.0))))
+	if original_skills != null: adjusted_damage = original_skills.target_damage(adjusted_damage, target)
 	target.take_damage(adjusted_damage + stolen, critical)
 	if stolen > 0:
 		_refresh_combat_hud()
@@ -721,7 +731,7 @@ func _effective_max_mp() -> int:
 				var segment: String = fragment.strip_edges()
 				if typed_mp == 0 and (segment.begins_with("MP ") or segment.begins_with("Max MP ")):
 					added += maxi(0, ITEM_OPTIONS._signed_integer(segment.substr(3 if segment.begins_with("MP ") else 7)))
-	var flat: int = max_mp + added + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp")
+	var flat: int = max_mp + added + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "mp") + int(original_skills.stat("mp") if original_skills != null else 0)
 	return maxi(1, int(round(float(flat) * (1.0 + _equipped_numeric_sum("mpPct")))))
 
 func _index_item_weights() -> void:
@@ -756,7 +766,8 @@ func _inventory_total_weight() -> int:
 	return total
 
 func _carrying_capacity() -> int:
-	return ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity") + _equipped_bless_bonus("capacity")
+	var skill_capacity := int(original_skills.stat("weight")) if original_skills != null else 0
+	return skill_capacity + ITEM_OPTIONS.carrying_capacity(_effective_attribute("CON")) + _catalog_stat_sum("weightBonus") + int(_equipment_inven_sum("weightBonus")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "capacity") + _equipped_bless_bonus("capacity")
 
 func _inventory_encumbrance_multiplier() -> float:
 	return ITEM_OPTIONS.encumbrance_multiplier(_inventory_total_weight(), _carrying_capacity())
@@ -806,7 +817,7 @@ func _effective_attribute(stat: String) -> int:
 		"CHA": base = cha_stat
 		_: return 0
 	var key: String = stat.to_lower() + "Flat"
-	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(key)
+	return base + _equipment_attribute_bonus(stat) + _catalog_stat_sum(key) + int(original_skills.stat(stat.to_lower()) if original_skills != null else 0)
 
 func _equipment_accuracy_bonus(kind: String) -> int:
 	var result: int = _equipped_bless_bonus("accuracy") if kind in ["melee", "ranged"] else 0
@@ -2308,6 +2319,7 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	var accuracy: int = _monster_accuracy_for_attack_type(attacker, normalized_type)
 	var hit_chance: float = _monster_hit_chance(attacker, normalized_type)
 	if not _roll_monster_hit(attacker, normalized_type):
+		if original_skills != null: original_skills.on_evaded(attacker)
 		player.show_miss()
 		if normalized_type == "magic":
 			hud.append_log("%s 마법 MISS · 마법 명중 %d / 내 MR %d / %.1f%%" % [
@@ -2335,6 +2347,12 @@ func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: S
 	if attack_element != "physical":
 		reduced = ELEMENT_RULES.damage_after_resistance(reduced, _player_element_resistance(attack_element))
 	reduced = _pve_damage_after_item_buffs(reduced)
+	if original_skills != null:
+		reduced = original_skills.incoming_damage(attacker, normalized_type, reduced)
+		if original_skills.last_evaded:
+			player.show_miss()
+			_refresh_combat_hud()
+			return
 	hp = maxi(0, hp - reduced)
 	if hp > 0:
 		_try_active_counterattack(attacker, normalized_type, reduced)
@@ -3509,7 +3527,7 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 		hud.show_message("HP가 가득 찼습니다")
 		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
-	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat"))
+	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
 	hud.refresh_inventory(inventory)
@@ -3629,6 +3647,8 @@ func _save_game(quiet: bool) -> void:
 		"active_skill_buffs": active_skill_buffs,
 		"skill_cooldowns": skill_cooldowns,
 		"skill_global_cooldown": skill_global_cooldown,
+		"original_skill_state": original_skills.catalog.export_state() if original_skills != null else {},
+		"original_combat_state": original_skills.export_state() if original_skills != null else {},
 		"active_item_buffs": active_item_buffs,
 		"item_use_cooldowns": item_use_cooldowns,
 		"consumable_state": consumable_service.call("export_state"),
@@ -3640,14 +3660,11 @@ func _save_game(quiet: bool) -> void:
 		"next_item_instance_id":next_item_instance_id,
 		"quest_kills": quest_kills
 	}
-	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file == null:
-		if not quiet:
-			hud.show_message("저장 실패")
-		hud.append_log("저장 파일을 열 수 없습니다")
+	var result: Error = preload("res://scripts/skills/save_writer.gd").write(SAVE_PATH, data)
+	if result != OK:
+		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
+		if not quiet: hud.show_message("저장 실패")
 		return
-	file.store_string(JSON.stringify(data))
-	file.close()
 	if not quiet:
 		hud.show_message("저장 완료")
 
@@ -3674,6 +3691,12 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(SAVE_PATH + ".pre-original-skills"):
+		var backup_error := DirAccess.copy_absolute(SAVE_PATH, SAVE_PATH + ".pre-original-skills")
+		if backup_error != OK:
+			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
+			if not quiet: hud.show_message("저장 이전 백업 실패")
+			return
 	warehouse.restore(data.get("warehouse", {}))
 	crafting_log.clear()
 	var old_log: Variant = data.get("crafting_log", [])
@@ -3720,6 +3743,8 @@ func _load_game(quiet: bool) -> void:
 	var skill_cooldowns_value: Variant = data.get("skill_cooldowns", {})
 	skill_cooldowns = skill_cooldowns_value as Dictionary if skill_cooldowns_value is Dictionary else {}
 	skill_global_cooldown = maxf(0.0, float(data.get("skill_global_cooldown", 0.0)))
+	if original_skills != null:
+		original_skills.catalog.import_state(data)
 	var item_buffs_value: Variant = data.get("active_item_buffs", {})
 	active_item_buffs = item_buffs_value as Dictionary if item_buffs_value is Dictionary else {}
 	var item_cooldowns_value: Variant = data.get("item_use_cooldowns", {})
@@ -3774,6 +3799,7 @@ func _load_game(quiet: bool) -> void:
 				player.global_position = saved_position
 				player.camera.reset_smoothing()
 	_update_job_skillbar()
+	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	_update_hud()
 	if not quiet:
 		hud.show_message("불러오기 완료")
@@ -3890,7 +3916,11 @@ func _on_job_class_selected(job_name: String) -> void:
 	if not JOB_CLASS_ORDER.has(job_name):
 		return
 	_clear_skill_charge()
+	_clear_combat_actions()
+	if original_skills != null: original_skills.catalog.class_slots[job_class] = quickslots.duplicate(true)
 	job_class = job_name
+	if original_skills != null and original_skills.catalog.class_slots.has(job_name):
+		quickslots = original_skills.catalog.class_slots[job_name].duplicate(true)
 	var record: Dictionary = _job_transform_record(job_class)
 	if not record.is_empty():
 		equipped_catalog["변신"] = record.duplicate(true)
@@ -3933,6 +3963,7 @@ func _quickbar_job_skills() -> Array:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
+		if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill): continue
 		if _is_passive_skill(skill):
 			continue
 		var effect: String = str(skill.get("effect", ""))
@@ -3979,7 +4010,7 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		var entry: Dictionary = value as Dictionary
 		if entry.is_empty() or str(entry.get("kind", "")) != "skill":
 			continue
-		var skill_name: String = str(entry.get("id", ""))
+		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or _is_passive_skill(skill):
 			quickslots[index] = {}
@@ -3988,6 +4019,9 @@ func _sanitize_quickslots_for_current_job() -> bool:
 		var skill_class: String = str(skill.get("class", "공용"))
 		if skill_class != "공용" and skill_class != job_class:
 			quickslots[index] = {}
+			changed = true
+		elif skill.get("origin", "") == "LINEAGEM_20250617" and str(entry.get("id", "")) != str(skill.name):
+			entry["id"] = str(skill.name)
 			changed = true
 	return changed
 
@@ -4089,6 +4123,9 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 		if skill.is_empty():
 			hud.show_message("등록할 스킬을 찾을 수 없습니다")
 			return
+		if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill):
+			hud.show_message("미습득 스킬은 등록할 수 없습니다")
+			return
 		if _is_passive_skill(skill):
 			hud.show_message("%s은(는) 패시브 스킬이라 퀵슬롯 등록이 필요 없습니다" % entry_id)
 			return
@@ -4106,6 +4143,11 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 	else:
 		return
 	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
+	if str(quickslots[slot_index].kind) == "skill":
+		var slotted := _skill_record(entry_id)
+		if slotted.get("origin", "") == "LINEAGEM_20250617":
+			quickslots[slot_index]["skill_id"] = str(slotted.id)
+			quickslots[slot_index]["id"] = str(slotted.name)
 	_update_hud()
 	_save_game(true)
 
@@ -4120,7 +4162,7 @@ func _on_quickslot_pressed(slot_index: int) -> void:
 		hud.show_message("빈 퀵슬롯입니다")
 		return
 	var kind: String = str(entry.get("kind", ""))
-	var entry_id: String = str(entry.get("id", ""))
+	var entry_id: String = str(entry.get("skill_id", entry.get("id", ""))) if kind == "skill" else str(entry.get("id", ""))
 	if kind == "skill":
 		_cast_job_skill(entry_id)
 	elif kind == "item":
@@ -4158,22 +4200,24 @@ func _is_passive_skill(skill: Dictionary) -> bool:
 	return SKILL_RULES.is_passive(skill)
 
 func _skill_owned_for_current_job(skill: Dictionary) -> bool:
+	if skill.get("origin", "") == "LINEAGEM_20250617": return original_skills.catalog.enabled(skill)
 	var skill_class: String = str(skill.get("class", "공용"))
 	return skill_class == "공용" or skill_class == job_class
 
 func _passive_skill_total(key: String) -> int:
-	var total: int = 0
+	var total: int = int(original_skills.stat(key)) if original_skills != null else 0
 	for value: Variant in skills_db:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
+		if skill.get("origin", "") == "LINEAGEM_20250617": continue
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill) or SKILL_RULES.passive_trigger(skill) != "always":
 			continue
 		total += int(skill.get(key, 0))
 	return total
 
 func _passive_skill_speed_multiplier() -> float:
-	var multiplier: float = 1.0
+	var multiplier: float = original_skills.catalog.speed() if original_skills != null else 1.0
 	for value: Variant in skills_db:
 		if not (value is Dictionary):
 			continue
@@ -4193,6 +4237,7 @@ func _passive_skill_names() -> PackedStringArray:
 	return names
 
 func _is_buff_skill(skill: Dictionary) -> bool:
+	if skill.get("origin", "") == "LINEAGEM_20250617": return skill.get("mode", "") in ["buff", "counter", "stealth", "summon"]
 	return not _is_passive_skill(skill) and SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
 
 func _run_auto_buff_quickslots(delta: float) -> void:
@@ -4210,11 +4255,15 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 		var entry: Dictionary = value as Dictionary
 		if str(entry.get("kind", "")) != "skill":
 			continue
-		var skill_name: String = str(entry.get("id", ""))
-		if skill_name == "" or active_skill_buffs.has(skill_name):
+		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
+		if skill_name == "":
 			continue
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not _is_buff_skill(skill) or not _skill_owned_for_current_job(skill):
+			continue
+		skill_name = str(skill.name)
+		if active_skill_buffs.has(skill_name): continue
+		if skill.get("origin", "") == "LINEAGEM_20250617" and not bool(entry.get("auto", false)):
 			continue
 		if not _skill_ready(skill):
 			continue
@@ -4236,6 +4285,7 @@ func _tick_skill_cooldowns(delta: float) -> void:
 		skill_cooldowns.erase(key)
 
 func _skill_ready(skill: Dictionary, announce: bool = false) -> bool:
+	if skill.get("origin", "") == "LINEAGEM_20250617": return original_skills.ready(skill, announce)
 	if not pending_attack.is_empty(): return false
 	var skill_name: String = str(skill.get("name", ""))
 	if _is_passive_skill(skill):
@@ -4289,8 +4339,11 @@ func _run_auto_heal_quickslots() -> void:
 		var entry: Dictionary = value as Dictionary
 		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
 			continue
-		var skill: Dictionary = _skill_record(str(entry.get("id", "")))
+		var skill: Dictionary = _skill_record(str(entry.get("skill_id", entry.get("id", ""))))
 		if skill.is_empty() or SKILL_RULES.effect_kind(skill) != "heal":
+			continue
+		if skill.get("origin", "") == "LINEAGEM_20250617":
+			if original_skills.auto_wants(skill): _cast_job_skill(str(skill.name))
 			continue
 		if float(hp) / float(maxi(1, _effective_max_hp())) > SKILL_RULES.heal_threshold(skill):
 			continue
@@ -4307,10 +4360,11 @@ func _run_auto_combat_quickslots() -> bool:
 		var entry: Dictionary = value as Dictionary
 		if not bool(entry.get("auto", false)) or str(entry.get("kind", "")) != "skill":
 			continue
-		var skill_name: String = str(entry.get("id", ""))
+		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
 		if skill.is_empty() or not SKILL_RULES.can_auto_cast(skill) or SKILL_RULES.effect_kind(skill) == "heal":
 			continue
+		if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.auto_wants(skill, selected_monster): continue
 		if not _skill_ready(skill):
 			continue
 		if player.global_position.distance_to(selected_monster.global_position) > SKILL_RULES.range_pixels(skill):
@@ -4386,10 +4440,12 @@ func _break_invisibility() -> void:
 	hud.append_log("공격으로 은신 해제")
 
 func _try_trigger_passives(trigger_name: String, target: TwilightMonster) -> void:
+	if original_skills != null: original_skills.trigger(trigger_name, target)
 	for value: Variant in skills_db:
 		if not (value is Dictionary):
 			continue
 		var skill: Dictionary = value as Dictionary
+		if skill.get("origin", "") == "LINEAGEM_20250617": continue
 		if not _is_passive_skill(skill) or not _skill_owned_for_current_job(skill):
 			continue
 		if SKILL_RULES.passive_trigger(skill) != trigger_name:
@@ -4431,12 +4487,13 @@ func _skill_record(skill_name: String) -> Dictionary:
 	for value: Variant in skills_db:
 		if value is Dictionary:
 			var skill: Dictionary = value as Dictionary
-			if str(skill.get("name", "")) == skill_name:
+			if str(skill.get("name", "")) == skill_name or str(skill.get("id", "")) == skill_name:
 				return skill
 	return {}
 
 func _cast_job_skill(skill_name: String) -> bool:
 	var skill: Dictionary = _skill_record(skill_name)
+	if skill.get("origin", "") == "LINEAGEM_20250617": return original_skills.cast(skill)
 	if skill.is_empty():
 		hud.show_message("스킬 정보를 찾을 수 없습니다")
 		return false
@@ -4879,7 +4936,7 @@ func _cast_job_teleport_skill(skill: Dictionary) -> bool:
 	return false
 
 func _active_skill_buff_total(key: String) -> int:
-	var total: int = 0
+	var total: int = int(original_skills.stat("hp")) if original_skills != null and key == "hp" else 0
 	for value: Variant in active_skill_buffs.values():
 		if value is Dictionary:
 			total += int((value as Dictionary).get(key, 0))
@@ -5508,7 +5565,7 @@ func _effective_move_speed_multiplier() -> float:
 	return clampf(multiplier, 0.5, 2.5)
 
 func _effective_attack_speed_bonus_percent() -> float:
-	var total: float = 0.0
+	var total: float = original_skills.stat("attackSpeed") if original_skills != null else 0.0
 	for record: Dictionary in _all_equipped_records():
 		total += _record_attack_speed_percent(record)
 	total += float(_active_item_buff_total("attack_speed"))
@@ -5532,22 +5589,29 @@ func _stat_step_bonus(value: int, baseline: int, divisor: float) -> int:
 	return int(floor(float(delta) / divisor))
 
 func _melee_damage_stat() -> int:
-	return _effective_attack() + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
+	return _effective_attack() + int(original_skills.stat("meleeDamage") if original_skills != null else 0) + _catalog_damage_adjustment("melee") + _catalog_stat_sum("pve_melee_damage") + _stat_step_bonus(_effective_attribute("STR") + _active_skill_buff_total("strFlat"), 10, 2.0) + _equipment_additional_damage("melee") + _active_item_buff_total("melee_damage") + int(consumable_service.call("permanent_damage_bonus", "melee_damage"))
 
 func _melee_accuracy_stat() -> int:
-	return level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
+	return int(original_skills.stat("meleeHit") if original_skills != null else 0) + level + _effective_attribute("STR") + _active_skill_buff_total("strFlat") + int(_equipped_numeric_sum("melee_evasion_ignore")) + 10 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "melee_accuracy") + _equipment_accuracy_bonus("melee") + _catalog_accuracy_bonus("melee") + _active_item_buff_total("melee_accuracy")
 
 func _ranged_damage_stat() -> int:
-	return _effective_attack() + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
+	return _effective_attack() + int(original_skills.stat("rangedDamage") if original_skills != null else 0) + _catalog_damage_adjustment("ranged") + _catalog_stat_sum("pve_ranged_damage") + _stat_step_bonus(_effective_attribute("DEX") + _active_skill_buff_total("dexFlat"), 10, 2.0) + _active_skill_buff_total("ranged_bonus") + _equipment_additional_damage("ranged") + _active_item_buff_total("ranged_damage") + int(consumable_service.call("permanent_damage_bonus", "ranged_damage"))
 
 func _ranged_accuracy_stat() -> int:
-	return level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
+	return int(original_skills.stat("rangedHit") if original_skills != null else 0) + level + _effective_attribute("DEX") + _active_skill_buff_total("dexFlat") + int(_equipped_numeric_sum("ranged_evasion_ignore")) + 5 + _enhancement_weapon_stat("accuracy") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "ranged_accuracy") + _equipment_accuracy_bonus("ranged") + _catalog_accuracy_bonus("ranged") + _active_skill_buff_total("ranged_accuracy") + _active_item_buff_total("ranged_accuracy")
 
 func _magic_damage_stat() -> int:
 	return 5 + _stat_step_bonus(_effective_attribute("INT") + _active_skill_buff_total("intFlat"), 8, 2.0) + _catalog_damage_bonus("magic") + _catalog_stat_sum("pve_magic_damage") + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "sp") + _equipment_additional_damage("magic") + _active_item_buff_total("sp") + int(consumable_service.call("permanent_damage_bonus", "magic_damage"))
 
 func _magic_accuracy_stat() -> int:
 	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
+
+func _spell_power_stat() -> int:
+	var defaults: Dictionary = original_skills.runtime_defaults if original_skills != null else {}
+	var base := int(defaults.get("sp_base",{}).get("value",1))
+	var threshold := int(defaults.get("sp_int_baseline",{}).get("value",12))
+	var divisor := maxf(1,float(defaults.get("sp_int_divisor",{}).get("value",3)))
+	return maxi(0,base + _stat_step_bonus(_effective_attribute("INT"),threshold,divisor) + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS,"sp") + _active_item_buff_total("sp") + int(original_skills.stat("sp") if original_skills != null else 0))
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0
@@ -5584,6 +5648,7 @@ func _player_critical_rate(attack_type: String) -> int:
 	for record: Dictionary in _all_equipped_records():
 		base += _record_critical_bonus(record, attack_type)
 	base += _catalog_critical_bonus(attack_type)
+	if original_skills != null: base += int(original_skills.stat("meleeCrit" if attack_type == "melee" else "rangedCrit" if attack_type == "ranged" else "magicCrit"))
 	return clampi(base, 0, 50)
 
 func _record_stun_accuracy(record: Dictionary) -> int:
@@ -5609,7 +5674,7 @@ func _stun_resistance_stat() -> int:
 	for record: Dictionary in _all_equipped_records():
 		total += _record_stun_resistance(record)
 	total += _active_item_buff_total("stun_resistance")
-	return clampi(total, 0, 100)
+	return int(original_skills.stat("stunResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _record_silence_accuracy(record: Dictionary) -> int:
 	return maxi(0, int(record.get(
@@ -5633,7 +5698,7 @@ func _silence_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_silence_resistance(record)
-	return clampi(total, 0, 100)
+	return int(original_skills.stat("silenceResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_silence_chance(target: TwilightMonster) -> float:
 	if target == null:
@@ -5667,7 +5732,7 @@ func _hold_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_hold_resistance(record)
-	return clampi(total, 0, 100)
+	return int(original_skills.stat("holdResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_hold_chance(target: TwilightMonster) -> float:
 	if target == null:
@@ -5701,7 +5766,7 @@ func _fear_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("WIS"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_fear_resistance(record)
-	return clampi(total, 0, 100)
+	return int(original_skills.stat("fearResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_fear_chance(target: TwilightMonster) -> float:
 	if target == null:
@@ -5735,7 +5800,7 @@ func _poison_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_poison_resistance(record)
-	return clampi(total, 0, 100)
+	return int(original_skills.stat("poisonResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_poison_chance(target: TwilightMonster) -> float:
 	if target == null:
@@ -5769,7 +5834,7 @@ func _bleed_resistance_stat() -> int:
 	var total: int = 5 + _stat_step_bonus(_effective_attribute("CON"), 10, 3.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_bleed_resistance(record)
-	return clampi(total, 0, 100)
+	return int(original_skills.stat("bleedResistance") if original_skills != null else 0) + clampi(total, 0, 100)
 
 func _player_bleed_chance(target: TwilightMonster) -> float:
 	if target == null:
@@ -5834,13 +5899,13 @@ func _effective_dg() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 4.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_dg(record)
-	return maxi(0, total)
+	return maxi(0, total + int(original_skills.stat("dg") if original_skills != null else 0))
 
 func _effective_er() -> int:
 	var total: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 2.0)
 	for record: Dictionary in _all_equipped_records():
 		total += _record_er(record)
-	return maxi(0, total)
+	return maxi(0, total + int(original_skills.stat("er") if original_skills != null else 0))
 
 func _record_mr(record: Dictionary) -> int:
 	if record.has("mr"):
@@ -5859,7 +5924,7 @@ func _effective_mr() -> int:
 	total += _active_item_buff_total("mr")
 	total += _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS, "mr")
 	total += _equipped_bless_bonus("mr")
-	return maxi(0, total)
+	return maxi(0, total + int(original_skills.stat("mr") if original_skills != null else 0))
 
 func _record_damage_reduction(record: Dictionary) -> int:
 	if record.has("damage_reduction"):
@@ -6135,6 +6200,9 @@ func _release_player_attack(id: int) -> void:
 	player.face_target(target.global_position)
 	if action.kind == "magic" and combat_vfx != null:
 		combat_vfx.ring(player.combat_projectile_origin(), 18.0, Color(0.45, 0.7, 1.0))
+	if action.has("original_skill"):
+		original_skills.launch_at_marker(action, target)
+		return
 	var skill: Dictionary = action.get("skill", {})
 	var hits: int = clampi(int(skill.get("hits", 1)), 1, 8)
 	if hits > 1:
@@ -6170,6 +6238,7 @@ func _impact_player_attack(action: Dictionary) -> void:
 	resolving_combat_action = false
 
 func _clear_combat_actions() -> void:
+	if original_skills != null: original_skills.clear()
 	combat_generation += 1
 	pending_attack.clear()
 	if is_instance_valid(player): player.cancel_attack()

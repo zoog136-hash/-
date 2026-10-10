@@ -852,7 +852,7 @@ func _render_quickslots(inventory: Dictionary, active_buffs: Dictionary) -> void
 			var is_buff: bool = str(skill.get("effect", "")).find("Buff") >= 0
 			var active_text: String = " · ACTIVE" if active_buffs.has(entry_id) else ""
 			button.text = entry_id.left(5) + ("\nAUTO" if bool(entry.get("auto", false)) else "")
-			button.icon = _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
+			button.icon = load(str(skill.icon)) as Texture2D if skill.has("icon") else _skill_icon(str(skill.get("effect", "")), str(skill.get("type", "")))
 			button.expand_icon = true
 			button.tooltip_text = "%s · %s · MP %d%s" % [
 				entry_id, str(skill.get("type", "")), int(skill.get("mp", 0)),
@@ -908,7 +908,7 @@ func update_player(level: int, hp: int, max_hp: int, mp: int, max_mp: int, exper
 	if v20_mp_text != null:
 		v20_mp_text.text = "%d / %d" % [mp, max_mp]
 	if v20_status_name != null:
-		v20_status_name.text = "황혼의 기사"
+		v20_status_name.text = "황혼의 %s" % str(character_state.get("job_class", "기사"))
 
 func set_map_name(value: String) -> void:
 	super.set_map_name(value)

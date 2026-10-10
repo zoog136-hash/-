@@ -1,0 +1,9 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TARGET_STATE FAIL: actual impact applies stun and MR reduction
+TARGET_STATE FAIL: MR debuff changes the production hit formula
+TARGET_STATE FAIL: first hit of a new life starts at one mark
+TARGET_STATE FAIL: new life cannot inherit the old third-hit burst
+TARGET_STATE FAIL: old modifier lifetime cannot extend new status
+TARGET_STATE FAIL: modifier expires on its current-life timer
+TARGET_STATE FAIL: tick removes stale-life marks and debuffs without a query
