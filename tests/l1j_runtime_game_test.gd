@@ -146,14 +146,15 @@ func _run() -> void:
 		actor.set_physics_process(false)
 		actor.died.connect(world._on_monster_died)
 		var inventory_before: int = int(world.inventory.get(name_value,0))
+		# Test pursuit policy separately from the combat decision. AUTO may
+		# legitimately attack immediately without creating any click path.
+		var direct_path: PackedVector2Array = world._auto_pursuit_path(actor, true)
+		check(direct_path.size() == 1 and direct_path[0].distance_to(actor.global_position) < 1.0,
+			"visible target uses one direct pursuit waypoint " + mob_name)
+		var obstructed_path: PackedVector2Array = world._auto_pursuit_path(actor, false)
+		check(obstructed_path == world.find_world_path(world.player.global_position, actor.global_position),
+			"obstructed target keeps A* path " + mob_name)
 		world.player.set_auto_enabled(true)
-		# Regression for the observed stall: directly visible targets must not
-		# send AUTO to a stale/distant first waypoint.
-		world.auto_repath_timer = 0.0
-		world._run_auto_hunt()
-		if world._has_line_of_sight_world(world.player.global_position, actor.global_position):
-			check(world.player.click_path.size() == 1 and world.player.click_path[0].distance_to(actor.global_position) < 1.0,
-				"visible target uses direct pursuit waypoint " + mob_name)
 		var ticks: int = 0
 		while not actor.dead and ticks < 900:
 			world.auto_attack_timer = maxf(0.0,world.auto_attack_timer-1.0/60.0)
