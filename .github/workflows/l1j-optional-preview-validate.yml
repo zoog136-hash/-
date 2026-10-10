@@ -7,6 +7,8 @@ on:
       - 'addons/twilight_l1j/**'
       - 'tests/l1j_optional_bridge_test.gd'
       - 'tests/l1j_visual_link_test.gd'
+      - 'tests/l1j_png_load_test.gd'
+      - 'tools/l1j_ci_make_fixture.py'
       - '.github/workflows/l1j-optional-preview-validate.yml'
   workflow_dispatch:
 
@@ -46,6 +48,15 @@ jobs:
           export XDG_DATA_HOME="$PWD/.l1j-normal-boot-userdata"
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 60 2>&1 | tee l1j-normal-boot.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' l1j-normal-boot.log
+      - name: Generate synthetic PNG fixture (not third-party art)
+        run: python3 tools/l1j_ci_make_fixture.py --root .
+      - name: Godot 4.7.2 load real PNG paths, preview widgets and rollback
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee l1j-png-import.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/l1j_png_load_test.gd 2>&1 | tee l1j-png-test.log
+          grep -q 'L1J_PNG_LOAD_OK' l1j-png-test.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|L1J_PNG_LOAD_FAIL:' l1j-png-import.log l1j-png-test.log
       - name: Preserve logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -55,5 +66,7 @@ jobs:
             l1j-import.log
             l1j-optin.log
             l1j-visual-binding.log
+            l1j-png-import.log
+            l1j-png-test.log
             l1j-normal-boot.log
           if-no-files-found: warn
