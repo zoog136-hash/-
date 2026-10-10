@@ -5,6 +5,7 @@ const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const VISUAL = preload("res://scripts/monsters/monster_visual.gd")
+const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
 var ai: Dictionary = {}
 var aggro_remaining: float = 0.0
 var life_id: int = 0
@@ -101,6 +102,7 @@ var target_player: TwilightPlayer = null
 var world_controller: Node = null
 var attack_cooldown: float = 0.0
 var repath_cooldown: float = 0.0
+var path_stuck_elapsed: float = 0.0
 var path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
 var dead: bool = false
@@ -118,6 +120,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	damage_hit_count = 0
 	attack_cooldown = 0.
 	repath_cooldown = float(get_instance_id()%11)*.025
+	path_stuck_elapsed = 0.0
 	path = PackedVector2Array()
 	path_index = 0
 	velocity = Vector2.ZERO
@@ -295,14 +298,31 @@ func _tick_ai(delta: float) -> void:
 	var concealed: bool = world_controller.has_method("is_player_concealed") and world_controller.is_player_concealed()
 	var safe: bool = field_active and world_controller.field_map.is_safe(target_player.global_position)
 	var leash: float = float(ai.get("leash_distance",1050.))
-	if field_active and (safe or concealed or global_position.distance_to(home_position)>leash or target_player.global_position.distance_to(home_position)>leash):
+	var home_distance: float = global_position.distance_to(home_position)
+	# Once a monster disengages, finish walking home before re-acquiring its
+	# target. This prevents infinite pursuit/re-aggro loops at the leash edge.
+	if field_active and AI_POLICY.should_keep_returning(returning_home,home_distance):
+		motion.cancel_attack()
+		if is_instance_valid(species_visual): species_visual.warning_active = false
+		_move_toward(home_position,delta,.8)
+		return
+	if returning_home:
+		returning_home = false
+		aggro_remaining = 0.0
+	var disengage: bool = AI_POLICY.should_disengage(field_active,safe,concealed,
+		home_distance,target_player.global_position.distance_to(home_position),
+		distance,aggro_remaining,float(ai.get("aggro_radius",550.)),leash)
+	if disengage:
 		motion.cancel_attack()
 		if is_instance_valid(species_visual): species_visual.warning_active = false
 		aggro_remaining = 0.
 		if not returning_home: repath_cooldown = 0.
 		returning_home = true
-		_move_toward(home_position,delta,.8)
-		if global_position.distance_to(home_position)<24.: returning_home = false
+		if home_distance > AI_POLICY.RETURN_RADIUS:
+			_move_toward(home_position,delta,.8)
+		else:
+			returning_home = false
+			velocity = Vector2.ZERO
 		return
 	if concealed:
 		_stop_chasing_concealed_player()
@@ -374,10 +394,22 @@ func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 			path = world_controller.find_world_path(global_position,goal)
 		path_index = 0
 	while path_index<path.size() and global_position.distance_to(path[path_index])<8.: path_index += 1
-	if path_index>=path.size(): velocity = Vector2.ZERO; return
+	if path_index>=path.size():
+		velocity = Vector2.ZERO
+		path_stuck_elapsed = 0.0
+		return
 	var point: Vector2 = path[path_index]
+	var before_move: Vector2 = global_position
 	velocity = global_position.direction_to(point)*minf(move_speed*speed_ratio,global_position.distance_to(point)/maxf(.001,delta))
 	move_and_slide()
+	path_stuck_elapsed = AI_POLICY.next_stuck_elapsed(path_stuck_elapsed,
+		global_position.distance_to(before_move),velocity.length(),delta)
+	if AI_POLICY.should_repath(path_stuck_elapsed):
+		# Only clear the path and try AStar again; never teleport through walls.
+		repath_cooldown = 0.0
+		path_stuck_elapsed = 0.0
+		path = PackedVector2Array()
+		path_index = 0
 
 func _begin_special() -> void:
 	var skill: Dictionary = ai.special
