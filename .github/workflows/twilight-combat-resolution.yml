@@ -1,0 +1,35 @@
+name: TWILIGHT Combat Resolution Equivalence
+
+on:
+  push:
+    branches:
+      - feature/twilight-combat-hit-reduction-regression-20261010
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  combat-formula:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Full project boot and exact formula regressions
+        run: |
+          set -o pipefail
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results 2>&1 | tee combat-formula-tests.log
+          grep -q COMBAT_RESOLUTION_OK test-results/combat_resolution_equivalence_test.log
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-combat-formula-evidence
+          path: |
+            test-results
+            combat-formula-tests.log
