@@ -455,6 +455,10 @@ func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
 	var origin: Vector2 = Vector2(key) * chunk_size
 	var local_bounds := Rect2(origin,Vector2.ONE*chunk_size)
 	if not local_bounds.intersects(field.bounds): return
+	var cover_layer := Node2D.new()
+	cover_layer.name = "GroundCoverLayer"
+	cover_layer.z_index = -10
+	parent.add_child(cover_layer)
 	var style: Dictionary = field.data.get("render_style", {})
 	var wilderness: bool = bool(style.get("wild_ground",true))
 	var field_id: String = str(field.data.get("map_id",field.data.get("id",field.data.get("name",""))))
@@ -487,8 +491,9 @@ func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
 		else:
 			var shade: float = random.randf_range(.54,.79)
 			marker.modulate = Color(shade,shade*.98,shade*1.03,.75)
-		marker.z_index = -10
-		parent.add_child(marker)
+		# One dedicated draw layer stays under actors/props and counts as one
+		# streamed decoration group, not dozens of gameplay props.
+		cover_layer.add_child(marker)
 
 # Purely visual ground cover: reuse the existing licensed-in-project prop atlas
 # and exact world positions without ever modifying tiles, paths or collision.
