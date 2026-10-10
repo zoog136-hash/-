@@ -279,10 +279,17 @@ func _run() -> void:
 	world.player.camera.zoom = Vector2.ONE
 
 	# Deterministic original-rate boss roll: discovered seed yields exactly
-	# three equipment rolls and one potion; no runtime rates are substituted.
+	# three equipment rolls and one potion when those grades are explicitly listed; no runtime rates are substituted.
+	# Original deterministic grade seed is preserved, but strict per-monster
+	# loot pools now require an explicit item for every rolled grade.
+	var boss_drop_pool: Array[String] = ["HP 물약"]
+	for grade: String in world.LOOT_DROP.EQUIPMENT_GRADES:
+		var choices: Array = world.loot_catalog["equipment_by_grade"].get(grade, [])
+		if not choices.is_empty():
+			boss_drop_pool.append(str(choices[0]))
 	var boss: TwilightMonster = world.MONSTER_SCENE.instantiate()
 	world.monsters_root.add_child(boss)
-	boss.setup({"name":"드랍 검증 보스", "is_boss":true, "hp":100, "drop":["HP 물약"]}, world.player, world, null)
+	boss.setup({"name":"드랍 검증 보스", "is_boss":true, "hp":100, "drop":boss_drop_pool}, world.player, world, null)
 	boss.global_position = origin
 	boss.set_physics_process(false)
 	world.rng.seed = 146103
@@ -301,7 +308,7 @@ func _run() -> void:
 	world.quickslots = []
 	var live: TwilightMonster = world.MONSTER_SCENE.instantiate()
 	world.monsters_root.add_child(live)
-	live.setup({"name":"연속 사냥 검증", "hp":1, "atk":1, "ac":0, "is_boss":true, "drop":["HP 물약"]}, world.player, world, null)
+	live.setup({"name":"연속 사냥 검증", "hp":1, "atk":1, "ac":0, "is_boss":true, "drop":boss_drop_pool}, world.player, world, null)
 	live.global_position = point_at(230)
 	live.set_physics_process(false)
 	live.died.connect(func(monster: TwilightMonster) -> void:
