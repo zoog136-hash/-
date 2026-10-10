@@ -1,0 +1,44 @@
+name: TWILIGHT NPC Dialogue Branches
+
+on:
+  push:
+    branches:
+      - feature/twilight-npc-dialogue-branching-20261010
+  pull_request:
+    branches:
+      - feature/twilight-shop-buyback-20261010
+      - main
+  workflow_dispatch:
+
+jobs:
+  npc-dialogue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and parse entire project
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee dialogue-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' dialogue-import.log
+      - name: Dialogue plus existing NPC service regressions
+        run: |
+          set -o pipefail
+          for test in tests/npc_dialogue_branching_test.gd tests/npc_teleport_test.gd tests/local_crafting_test.gd tests/shop_buyback_test.gd tests/warehouse_persistence_test.gd; do
+            /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://$test" 2>&1 | tee -a dialogue-test.log
+          done
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' dialogue-test.log
+          grep -q NPC_DIALOGUE_OK dialogue-test.log
+      - name: Store evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-npc-dialogue-evidence
+          path: |
+            dialogue-import.log
+            dialogue-test.log

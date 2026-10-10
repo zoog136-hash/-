@@ -8,6 +8,7 @@ var hud: Node
 var config: ConfigFile = ConfigFile.new()
 var volume: HSlider
 var mute: CheckButton
+var map_visual_mode: OptionButton
 
 static func apply_saved(controller: Node) -> void:
 	var saved := ConfigFile.new()
@@ -76,6 +77,16 @@ func configure(controller: Node) -> void:
 		_store("interface","coordinates",enabled))
 	stack.add_child(coord_toggle)
 	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("월드 외형",18,UI.GOLD))
+	stack.add_child(UI.section("지도 좌표·충돌·몬스터 배치를 변경하지 않는 시각 설정입니다.",12))
+	map_visual_mode = OptionButton.new()
+	map_visual_mode.name = "MapVisualMode"
+	map_visual_mode.add_item("기존 TWILIGHT 외형")
+	map_visual_mode.add_item("클래식 판타지 외형")
+	map_visual_mode.select(1 if str(config.get_value("visual","map_mode","twilight")) == "classic" else 0)
+	map_visual_mode.item_selected.connect(_map_visual_mode_changed)
+	stack.add_child(map_visual_mode)
+	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("게임 데이터",18,UI.GOLD))
 	var actions := HBoxContainer.new()
 	stack.add_child(actions)
@@ -86,6 +97,13 @@ func configure(controller: Node) -> void:
 	stack.add_child(nav)
 	nav.add_child(UI.button("월드맵",func() -> void: hud._navigate("map")))
 	nav.add_child(UI.button("캐릭터 · 장비",func() -> void: hud._navigate("character")))
+
+func _map_visual_mode_changed(index: int) -> void:
+	var mode: String = "classic" if index == 1 else "twilight"
+	_store("visual","map_mode",mode)
+	var world: Node = hud.get_parent()
+	if world != null and world.has_method("_set_visual_mode"):
+		world.call("_set_visual_mode",mode)
 
 func _store(section: String,key: String,value: Variant) -> void:
 	config.set_value(section,key,value)

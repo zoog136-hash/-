@@ -1,0 +1,50 @@
+name: TWILIGHT Shop Buyback
+
+on:
+  push:
+    branches:
+      - feature/twilight-shop-buyback-20261010
+  pull_request:
+    branches:
+      - feature/twilight-local-crafting-v2-20261010
+      - main
+  workflow_dispatch:
+
+jobs:
+  item-buyback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Godot import and parse project
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee buyback-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' buyback-import.log
+      - name: Buyback and earlier stage regression
+        run: |
+          set -o pipefail
+          for test in tests/shop_buyback_test.gd tests/local_crafting_test.gd tests/npc_teleport_test.gd tests/warehouse_persistence_test.gd tests/shop_authority_test.gd; do
+            /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://$test" 2>&1 | tee -a buyback-tests.log
+          done
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' buyback-tests.log
+          for marker in BUYBACK_OK CRAFT_OK NPC_TELEPORT_OK WAREHOUSE_OK SHOP_AUTHORITY_OK; do grep -q "$marker" buyback-tests.log; done
+      - name: Actual headless main scene boot
+        run: |
+          set -o pipefail
+          timeout 30s /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 120 2>&1 | tee buyback-boot.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' buyback-boot.log
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-buyback-evidence
+          path: |
+            buyback-import.log
+            buyback-tests.log
+            buyback-boot.log
