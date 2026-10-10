@@ -424,6 +424,7 @@ func _load_chunk(key: Vector2i) -> void:
 			if kind in ["rubble","rune"]:
 				accent.z_index = -8
 			node.add_child(accent)
+			_scatter_ambient_details(node, record, kind)
 			continue
 		var sprite := Sprite2D.new()
 		sprite.texture = textures[kind]
@@ -444,6 +445,41 @@ func _load_chunk(key: Vector2i) -> void:
 		if kind in ["grass","bush"]:
 			sprite.z_index = -8
 		node.add_child(sprite)
+		_scatter_ambient_details(node, record, kind)
+
+# Purely visual ground cover: reuse the existing licensed-in-project prop atlas
+# and exact world positions without ever modifying tiles, paths or collision.
+# Deterministic local seeds prevent foliage popping into new random positions
+# whenever a chunk streams out and back in.
+func _scatter_ambient_details(parent: Node2D, record: Dictionary, kind: String) -> void:
+	if kind not in ["oak","oak2","pine","birch","rocks","rock","bush","grass","rubble","ruin_wall","arch","pillar"]:
+		return
+	var anchor: Vector2 = COORD.array_vector(record["position"])
+	var seed_value: int = int(absf(anchor.x * 19.0 + anchor.y * 31.0)) + kind.hash()
+	var random := RandomNumberGenerator.new()
+	random.seed = absi(seed_value) + 3
+	var wilderness: bool = bool(field.data.get("render_style", {}).get("wild_ground", true))
+	for index: int in range(2):
+		if random.randf() < 0.30: continue
+		var offset := Vector2(random.randf_range(-98.0,98.0),random.randf_range(-50.0,65.0))
+		var position_value: Vector2 = anchor + offset
+		if not field.bounds.has_point(position_value) or not field.point_clear(position_value, 5.0):
+			continue
+		var decoration_kind: String = "grass" if wilderness and random.randf() > 0.35 else ("rock" if wilderness else "rocks")
+		var texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		if texture == null: continue
+		var little := Sprite2D.new()
+		little.name = "FoliageDetail"
+		little.texture = texture
+		little.position = position_value
+		little.offset = Vector2(0.0, -texture.get_height() * .35)
+		var detail_height: float = random.randf_range(18.0,35.0) if wilderness else random.randf_range(13.0,28.0)
+		little.scale = Vector2.ONE * detail_height / maxf(1.0, texture.get_height())
+		little.rotation = random.randf_range(-.10,.10)
+		little.flip_h = random.randf() > .5
+		little.modulate = Color(random.randf_range(.68,.90),random.randf_range(.71,.96),random.randf_range(.58,.80),.90) if wilderness else Color(.72,.72,.69,.74)
+		little.z_index = -9
+		parent.add_child(little)
 
 func _select_layer(layer_name: String) -> void:
 	ground = Node2D.new()
