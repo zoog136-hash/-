@@ -154,6 +154,11 @@ func _run() -> void:
 		var obstructed_path: PackedVector2Array = world._auto_pursuit_path(actor, false)
 		check(obstructed_path == world.find_world_path(world.player.global_position, actor.global_position),
 			"obstructed target keeps A* path " + mob_name)
+		# Field population can contain other, closer monsters. This is a
+		# focused damage/approach regression for THIS source-art actor, not a
+		# ranking test for the general auto-target selector. Pin the target.
+		world.auto_target = actor
+		world.selected_monster = actor
 		world.player.set_auto_enabled(true)
 		var ticks: int = 0
 		while not actor.dead and ticks < 900:
