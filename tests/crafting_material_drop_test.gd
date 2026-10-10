@@ -51,7 +51,7 @@ func _run() -> void:
 			var item_name: String = str((raw as Dictionary).get("item",""))
 			if not (items[item_name] as Dictionary).get("crafting_material",false) and LOOT._is_equipment(items[item_name] as Dictionary):
 				required_equipment[item_name] = true
-	_check(required_equipment.size() >= 76 and equipment_reach.size() == 76, "all original 76 physical crafting ingredients explicitly reachable")
+	_check(required_equipment.size() >= 76 and equipment_reach.size() == 84, "84 physical crafting ingredients assigned to monsters")
 	for name: String in required_equipment:
 		_check(equipment_reach.has(name) or recipes.recipes.values().any(func(r: Variant) -> bool: return str(((r as Dictionary).get("result",{}) as Dictionary).get("item","")) == name),"equipment ingredient can drop or be crafted: "+name)
 	for name: String in materials:
@@ -98,7 +98,9 @@ func _run() -> void:
 			var potion_count: int = 0
 			for item_name: String in acquired:
 				_check(items.has(item_name),"all rolled items are present in the game database")
-				if bool((items[item_name] as Dictionary).get("crafting_material",false)):
+				if bool((items[item_name] as Dictionary).get("crafting_scroll",false)):
+					equipment_count += 1
+				elif bool((items[item_name] as Dictionary).get("crafting_material",false)):
 					material_count += 1
 				elif LOOT._is_equipment(items[item_name] as Dictionary):
 					equipment_count += 1
@@ -110,7 +112,7 @@ func _run() -> void:
 		var expected: float = LOOT.BOSS_MATERIAL_DROP_RATE if is_boss else LOOT.MATERIAL_DROP_RATE
 		_check(absf(rate - expected) <= 0.04,"material drops trigger at local configured rate "+name)
 	if failures.is_empty():
-		print("CRAFT_MATERIAL_OK: 10 materials, 413 recipes, 76 equipment sources, 318 monster sources, independent ground-loot rolls")
+		print("CRAFT_MATERIAL_OK: 10 materials, 413 recipes, 84 equipment sources, 318 monster sources, independent ground-loot rolls")
 		quit(0)
 	else:
 		print("CRAFT_MATERIAL_FAILED: %d" % failures.size())
