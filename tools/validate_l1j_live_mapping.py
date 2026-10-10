@@ -15,7 +15,7 @@ from import_l1j_drops import convert
 DEFAULT_SQL_MEMBER = "L1j-TW-main/db/InnoDB_TW/droplist.sql"
 ORIGINAL_ROOT = "L1j-TW-main/db/InnoDB_TW/"
 EQUIPMENT_NON_SLOTS = {"currency", "consumable", ""}
-SQL_NAME_ROW = re.compile(r"INSERT INTO `(?P<table>npc|weapon|armor|etcitem)` VALUES \\('(?P<id>\\d+)', '(?P<name>[^']*)'")
+SQL_NAME_ROW = re.compile(r"INSERT INTO `(?P<table>npc|weapon|armor|etcitem)` VALUES [(]'(?P<id>[0-9]+)', '(?P<name>[^']*)'")
 
 def read_json(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
