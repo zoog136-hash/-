@@ -405,6 +405,17 @@ func _build_v20_message_and_log() -> void:
 	_place(log_label,197,536,595,625)
 	v20_layer.add_child(log_label)
 
+func _build_v20_message_and_log() -> void:
+	super._build_v20_message_and_log()
+	# Combat history must not cover the playable world with an opaque panel.
+	# Full logs remain accessible in the workspace's 전투 기록 tab.
+	var clear_panel := StyleBoxEmpty.new()
+	log_label.add_theme_stylebox_override("normal",clear_panel)
+	log_label.add_theme_stylebox_override("focus",clear_panel)
+	log_label.add_theme_color_override("default_color",Color("ebdcbd"))
+	log_label.add_theme_font_size_override("normal_font_size",11)
+	log_label.modulate.a = .82
+
 func _fit_hud() -> void:
 	if v20_layer == null: return
 	var view: Vector2 = get_viewport().get_visible_rect().size
