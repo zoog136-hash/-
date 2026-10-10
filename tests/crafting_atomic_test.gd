@@ -22,12 +22,20 @@ func _run() -> void:
 			items[str((raw as Dictionary).get("name",""))] = raw
 	var service = CRAFTING.new()
 	service.load_recipes()
-	_check(service.recipes.size() == 5,"five actual DB-backed recipes loaded")
+	_check(service.recipes.size() == 81,"81 actual DB-backed recipes loaded")
 	for id: String in service.recipes:
 		var recipe: Dictionary = service.recipes[id]
 		_check(items.has(str((recipe["result"] as Dictionary).get("item",""))), "known output item for " + id)
 		for raw: Variant in recipe.get("materials",[]):
 			_check(items.has(str((raw as Dictionary).get("item",""))), "known material item for "+id)
+	var category_counts: Dictionary = {}
+	for id: String in service.recipes:
+		var record: Dictionary = service.recipes[id]
+		var category: String = str(record.get("category",""))
+		category_counts[category] = int(category_counts.get(category,0)) + 1
+		var item_name: String = str((record.get("result",{}) as Dictionary).get("item",""))
+		_check(str((items[item_name] as Dictionary).get("grade","")) in ["일반","고급","희귀"], "crafting capped at rare equipment: "+id)
+	_check(int(category_counts.get("무기",0)) >= 55 and int(category_counts.get("방어구",0)) == 16, "weapons and armor expanded")
 	var inv: Dictionary = {"HP 물약":3}
 	var physical: Dictionary = {}
 	var equipped: Dictionary = {}
@@ -76,6 +84,31 @@ func _run() -> void:
 	var rejected: Dictionary = service.execute("blade_steel",1,protected,5000,items,protected_ids,{},100,250,43)
 	_check(not bool(rejected.get("ok")), "enhanced/elemental equipment never consumed as recipe material")
 	_check(protected["청동 한손검"] == 2 and protected_ids.size() == 2, "failed craft stays atomic")
+	# Expanded recipe checks: equipment instance accounting, batches and wallet.
+	var bow_inv: Dictionary = {"훈련용 활":4}
+	var bow_instances: Dictionary = {
+		"100":{"name":"훈련용 활","level":0,"element":"","element_level":0},
+		"101":{"name":"훈련용 활","level":0,"element":"","element_level":0},
+		"102":{"name":"훈련용 활","level":0,"element":"","element_level":0},
+		"103":{"name":"훈련용 활","level":0,"element":"","element_level":0}
+	}
+	var bows: Dictionary = service.execute("local_weapon_03_01",2,bow_inv,1000,items,bow_instances,{},160,500,104)
+	_check(bool(bows.get("ok")), "new local bow recipe supports batch 2")
+	_check(int(bows.get("cost",-1)) == 600 and int(bows.get("gold_after",-1)) == 400, "batch cost is exact")
+	_check(int(bow_inv.get("훈련용 활",0)) == 0 and int(bow_inv.get("청동 활",0)) == 2, "batch consumes all four inputs, creates two results")
+	_check(bow_instances.size() == 2 and bow_instances.has("104") and bow_instances.has("105"), "batch assigns unique physical IDs")
+	var armor_inv: Dictionary = {"가죽의 방패":2}
+	var armor_instances: Dictionary = {
+		"200":{"name":"가죽의 방패","level":0,"element":"","element_level":0},
+		"201":{"name":"가죽의 방패","level":0,"element":"","element_level":0}
+	}
+	var armor: Dictionary = service.execute("local_armor_07_01",1,armor_inv,10000,items,armor_instances,{},60,300,202)
+	_check(bool(armor.get("ok")), "new shield crafting uses real game equipment")
+	_check(armor_instances.size() == 1 and armor_instances.has("202") and int(armor_inv.get("강철의 방패",0)) == 1, "crafted armor creates exactly one new physical item")
+	var blocked_rare: Dictionary = {"흑철 활":4}
+	var blocked_instances: Dictionary = {"300":{"name":"흑철 활","level":7,"element":"","element_level":0}}
+	var rare_denied: Dictionary = service.execute("local_weapon_03_04",1,blocked_rare,500000,items,blocked_instances,{},160,500,301)
+	_check(not bool(rare_denied.get("ok")) and blocked_instances.size() == 1 and blocked_rare.get("흑철 활",0) == 4, "rare-grade crafting cannot bypass missing pristine copies")
 	var map_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/aden_field.json"))
 	var found: bool = false
 	if map_data is Dictionary:
@@ -84,7 +117,7 @@ func _run() -> void:
 				found = str((raw as Dictionary).get("role","")) == "craft"
 	_check(found, "real craft master connected in Aden NPC data")
 	if failures.is_empty():
-		print("CRAFTING_OK: five catalog recipes, authoritative costs, weight, enchant safety, atomic inventory and save")
+		print("CRAFTING_OK: 81 DB-backed recipes, batches, weight, enchant safety, atomic inventory and save")
 		quit(0)
 	else:
 		print("CRAFTING_FAILED: %d" % failures.size())
