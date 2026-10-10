@@ -53,6 +53,8 @@ const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 var warehouse = LOCAL_WAREHOUSE.new()
+const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
+var crafting = LOCAL_CRAFTING.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
 
@@ -262,6 +264,7 @@ func _ready() -> void:
 	ThemeDB.fallback_font = korean_font
 	rng.randomize()
 	ain_service.import_state({})
+	crafting.load_recipes()
 	_load_data()
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -1041,6 +1044,8 @@ func _connect_signals() -> void:
 		hud.connect("shop_bulk_buy_requested", _buy_shop_bulk)
 	if hud.has_signal("warehouse_transfer_requested"):
 		hud.connect("warehouse_transfer_requested", _warehouse_transfer)
+	if hud.has_signal("craft_requested"):
+		hud.connect("craft_requested", _craft_execute)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -1303,6 +1308,8 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.open_shop()
 				elif str(npc["role"]) == "warehouse":
 					hud.call("open_warehouse")
+				elif str(npc["role"]) == "craft":
+					hud.call("open_crafting")
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
@@ -3283,6 +3290,42 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	hud.show_message("창고 이용 완료")
 	if hud.has_method("open_warehouse"):
 		hud.call("open_warehouse")
+
+
+func _craft_item_index() -> Dictionary:
+	var index: Dictionary = {}
+	for raw: Variant in item_db:
+		if raw is Dictionary:
+			var record: Dictionary = raw as Dictionary
+			var item_name: String = str(record.get("name",""))
+			if not item_name.is_empty():
+				index[item_name] = record
+	return index
+
+func _craft_quote(recipe_id: String, count: int) -> Dictionary:
+	_sync_item_instances()
+	return crafting.quote(recipe_id,count,inventory,gold,_craft_item_index(),item_instances,equipped_items,_inventory_total_weight(),_carrying_capacity())
+
+func _craft_execute(recipe_id: String, count: int) -> void:
+	# All parameters are revalidated by the service before touching a wallet,
+	# stack or individual physical equipment record.
+	_sync_item_instances()
+	var transaction: Dictionary = crafting.execute(recipe_id,count,inventory,gold,_craft_item_index(),
+		item_instances,equipped_items,_inventory_total_weight(),_carrying_capacity(),next_item_instance_id)
+	if not bool(transaction.get("ok",false)):
+		hud.show_message(str(transaction.get("reason","제작에 실패했습니다")))
+		return
+	gold = int(transaction["gold_after"])
+	next_item_instance_id = int(transaction["next_instance_id"])
+	_update_hud()
+	_save_game(true)
+	hud.append_log("제작 성공 · %s ×%d (-%d 아데나)" % [
+		str(transaction["result_name"]),int(transaction["result_quantity"]),int(transaction["cost"])
+	])
+	hud.show_message("%s 제작 완료" % str(transaction["result_name"]))
+	if hud.has_method("open_crafting"):
+		hud.call("open_crafting")
+
 
 func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
