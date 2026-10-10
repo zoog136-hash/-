@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "enabled": true,
+  "items": [
+    {
+      "game_source_id": "423",
+      "game_name": "수정 단검",
+      "source_candidate_id": "ext:a3:weapon:11",
+      "inventory_texture": "res://assets/l1j/verified/items/11.png",
+      "inventory_sha256": "32404f7a14960a2b9f6f513d40716be737ce3a0ed7d05a4db4cb7371ea222d6a",
+      "ground_texture": "res://assets/l1j/verified/ground/11.png",
+      "ground_sha256": "ca143835415c2c91407fde65eeef3a141e5624d12b69134cb8ffa1bb310643b3",
+      "ground_source_id": "ext:go:weapon:11",
+      "review": "A3 name and slot, GO name/icon/ground pair, A2+JP icon silhouette reviewed; frame actions not inferred",
+      "inventory_source_member": "appcenter/img/item/1921.png",
+      "ground_source_member": "assets/l1j/jp/ground/4982.png",
+      "ground_byte_provenance": "Recovered STEP1_ICONS_MONSTERS_JP pack; GO weapon table confirms icon/ground pairing. Raw JP image archive not found."
+    },
+    {
+      "game_source_id": "422",
+      "game_name": "미스릴 단검",
+      "source_candidate_id": "ext:a3:weapon:8",
+      "inventory_texture": "res://assets/l1j/verified/items/8.png",
+      "inventory_sha256": "3524639f9f9a4a04813bb7a975e15eda256627f06b3b8b91f97d4c3f798ba429",
+      "ground_texture": "res://assets/l1j/verified/ground/8.png",
+      "ground_sha256": "aec070d2a24dae6259a48134ea10d451a3d21be08dfec660600feda7bc9967c2",
+      "ground_source_id": "ext:go:weapon:8",
+      "review": "A3 name and slot, GO name/icon/ground pair, A2+JP icon silhouette reviewed; frame actions not inferred",
+      "inventory_source_member": "appcenter/img/item/1629.png",
+      "ground_source_member": "assets/l1j/jp/ground/4112.png",
+      "ground_byte_provenance": "Recovered STEP1_ICONS_MONSTERS_JP pack; GO weapon table confirms icon/ground pairing. Raw JP image archive not found."
+    },
+    {
+      "game_source_id": "326",
+      "game_name": "오크족 단검",
+      "source_candidate_id": "ext:a3:weapon:1",
+      "inventory_texture": "res://assets/l1j/verified/items/1.png",
+      "inventory_sha256": "d69707b1276d4ee67969597694b5b0950753fb91c7ab6c54da44eecd0a845749",
+      "ground_texture": "res://assets/l1j/verified/ground/1.png",
+      "ground_sha256": "807a5a331499344fd9b85d072bae74fc0fcecf62a975473a21ca46c88ef153ea",
+      "ground_source_id": "ext:go:weapon:1",
+      "review": "A3 name and slot, GO name/icon/ground pair, A2+JP icon silhouette reviewed; frame actions not inferred",
+      "inventory_source_member": "appcenter/img/item/34.png",
+      "ground_source_member": "assets/l1j/jp/ground/68.png",
+      "ground_byte_provenance": "Recovered STEP1_ICONS_MONSTERS_JP pack; GO weapon table confirms icon/ground pairing. Raw JP image archive not found."
+    },
+    {
+      "game_source_id": "6391",
+      "game_name": "은장검",
+      "source_candidate_id": "ext:a3:weapon:29",
+      "inventory_texture": "res://assets/l1j/verified/items/29.png",
+      "inventory_sha256": "8d3c9a50224efa655b3445b36ab85123dff8e981d194a3277835757cde462181",
+      "ground_texture": "res://assets/l1j/verified/ground/29.png",
+      "ground_sha256": "b8dd751674680d7664e2bcb996fd8426ba9d1cd522f911ffaafb35579b8aaee5",
+      "ground_source_id": "ext:go:weapon:29",
+      "review": "A3 name and slot, GO name/icon/ground pair, A2+JP icon silhouette reviewed; frame actions not inferred",
+      "inventory_source_member": "appcenter/img/item/163.png",
+      "ground_source_member": "assets/l1j/jp/ground/356.png",
+      "ground_byte_provenance": "Recovered STEP1_ICONS_MONSTERS_JP pack; GO weapon table confirms icon/ground pairing. Raw JP image archive not found."
+    },
+    {
+      "game_source_id": "339",
+      "game_name": "장궁",
+      "source_candidate_id": "ext:a3:weapon:181",
+      "inventory_texture": "res://assets/l1j/verified/items/181.png",
+      "inventory_sha256": "663817faaa59b1e6f59f971bf4c23a66065ecf6debad7d627d447189b16c6ed1",
+      "ground_texture": "res://assets/l1j/verified/ground/181.png",
+      "ground_sha256": "bea430e2cd19458e7e47c42adbb7b151a72b6b2dfe6740bcefd0ca504789b115",
+      "ground_source_id": "ext:go:weapon:181",
+      "review": "A3 name and slot, GO name/icon/ground pair, A2+JP icon silhouette reviewed; frame actions not inferred",
+      "inventory_source_member": "appcenter/img/item/123.png",
+      "ground_source_member": "assets/l1j/jp/ground/12.png",
+      "ground_byte_provenance": "Recovered STEP1_ICONS_MONSTERS_JP pack; GO weapon table confirms icon/ground pairing. Raw JP image archive not found."
+    }
+  ],
+  "monsters": [
+    {
+      "game_name": "버그베어",
+      "source_candidate_id": "ext:a3:npc:45223",
+      "source_sprite_id": 15740,
+      "texture": "res://assets/l1j/verified/monsters/45223.png",
+      "sha256": "38c4e474ae6886f20003c4f1d7ca7f1959b02e2978c0bd5021e75c1fba5a4b9e",
+      "animation_status": "STATIC_ONLY",
+      "review": "A3 desc_kr/spriteId lookup plus visual review of A2 portrait; existing procedural movement/combat retained",
+      "source_member": "appcenter/img/monster/ms15740.png"
+    },
+    {
+      "game_name": "스파토이",
+      "source_candidate_id": "ext:a3:npc:45161",
+      "source_sprite_id": 15601,
+      "texture": "res://assets/l1j/verified/monsters/45161.png",
+      "sha256": "5767992d3411a79990fda67b1a3a0678a943edca7fb826880c95e5250ec9b4ce",
+      "animation_status": "STATIC_ONLY",
+      "review": "A3 desc_kr/spriteId lookup plus visual review of A2 portrait; existing procedural movement/combat retained",
+      "source_member": "appcenter/img/monster/ms15601.png"
+    },
+    {
+      "game_name": "늑대인간",
+      "source_candidate_id": "ext:a3:npc:5030",
+      "source_sprite_id": 4822,
+      "texture": "res://assets/l1j/verified/monsters/5030.png",
+      "sha256": "a817ed08eeffaf3a62c1b513a07b1d129c255428498cb84b7a22a1f6b26bb4e6",
+      "animation_status": "STATIC_ONLY",
+      "review": "A3 desc_kr/spriteId lookup plus visual review of A2 portrait; existing procedural movement/combat retained",
+      "source_member": "appcenter/img/monster/ms4822.png"
+    },
+    {
+      "game_name": "데스나이트",
+      "source_candidate_id": "ext:a3:npc:18698",
+      "source_sprite_id": 12015,
+      "texture": "res://assets/l1j/verified/monsters/18698.png",
+      "sha256": "f43e8472022391ad54876368b0978308f65d309b857d924f2602a01c09d98d65",
+      "animation_status": "STATIC_ONLY",
+      "review": "A3 desc_kr/spriteId lookup plus visual review of A2 portrait; existing procedural movement/combat retained",
+      "source_member": "appcenter/img/monster/ms12015.png"
+    }
+  ],
+  "action_mappings": {},
+  "scope_note": "verified static art only; existing game stats, grades, physical equipment IDs and save schemas remain authoritative",
+  "source_archives": {
+    "a2": {
+      "filename": "a2(1).zip",
+      "sha256": "cfea6e88864987454f63fe8d367e65a7133c0685685045ce40bb20942a6968bd"
+    },
+    "ground": {
+      "filename": "TWILIGHT_GODOT472_STEP1_ICONS_MONSTERS_JP.zip",
+      "sha256": "c84f3ef08df416ebdfb3aec01a525591a3a58ad2162df2bed3a1a177a01a2c77"
+    }
+  }
+}

@@ -9,6 +9,8 @@ static var plates: Dictionary = {}
 const SHADER = preload("res://scripts/monsters/monster_body.gdshader")
 
 static func texture_for(record: Dictionary) -> Texture2D:
+	var external: Texture2D = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd").monster_texture(record)
+	if external != null: return external
 	if not record.has("visual"): return null
 	if atlases.is_empty():
 		atlases = JSON.parse_string(FileAccess.get_file_as_string("res://data/monsters/art_atlases.json")) as Array
@@ -30,6 +32,9 @@ static func texture_for(record: Dictionary) -> Texture2D:
 
 static func material_for(visual: Dictionary, texture: Texture2D) -> ShaderMaterial:
 	var material := ShaderMaterial.new()
+	if texture != null and texture.resource_path.begins_with("res://assets/l1j/verified/monsters/"):
+		material.shader = preload("res://addons/twilight_l1j/source_color_key.gdshader")
+		return material
 	material.shader = SHADER
 	material.set_shader_parameter("variation", float(visual.get("variant",0)))
 	material.set_shader_parameter("accent", Color(str(visual.get("accent","c4aa64"))))
