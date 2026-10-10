@@ -283,7 +283,7 @@ func _run() -> void:
 	# Original deterministic grade seed is preserved, but strict per-monster
 	# loot pools now require an explicit item for every rolled grade.
 	var boss_drop_pool: Array[String] = ["HP 물약"]
-	for grade: String in world.LOOT_DROP.EQUIPMENT_GRADES:
+	for grade: String in ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]:
 		var choices: Array = world.loot_catalog["equipment_by_grade"].get(grade, [])
 		if not choices.is_empty():
 			boss_drop_pool.append(str(choices[0]))
