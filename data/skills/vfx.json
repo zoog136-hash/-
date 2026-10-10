@@ -3536,5 +3536,34 @@
         "note": "mechanics reference; dated VFX/video comparison pending"
       }
     ]
+  },
+  "lm_df2656bb3d14d806": {
+    "cast_vfx": "lm_df2656bb3d14d806:cast",
+    "projectile_vfx": "lm_df2656bb3d14d806:projectile",
+    "impact_vfx": "lm_df2656bb3d14d806:impact",
+    "persistent_vfx": "lm_df2656bb3d14d806:persistent",
+    "end_vfx": "lm_df2656bb3d14d806:end",
+    "status_vfx": "lm_df2656bb3d14d806:status",
+    "audio_profile": "lm_df2656bb3d14d806:audio",
+    "motif": "guardian",
+    "hue": 0.5055555555555555,
+    "seed": 1366022,
+    "animation_timeline": {
+      "cast": 0,
+      "release": "player_motion_event",
+      "impact": "collision_or_attack_marker",
+      "end": 0.7
+    },
+    "visual_verification": "UNKNOWN",
+    "references": [
+      {
+        "source": "elf23",
+        "url": "https://lineagem.plaync.com/board/update/view?articleId=641a05b8c19a0110e2d3edf4",
+        "upload_date": null,
+        "timestamp": null,
+        "status": "UNKNOWN",
+        "note": "mechanics reference; dated VFX/video comparison pending"
+      }
+    ]
   }
 }

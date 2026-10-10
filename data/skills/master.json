@@ -41600,6 +41600,370 @@
         "신규 구현",
         "원작 미확인 수치에 자체 밸런스 적용"
       ]
+    },
+    {
+      "id": "lm_df2656bb3d14d806",
+      "name": "서먼 가디언",
+      "class": "마법사",
+      "classes": [
+        "마법사"
+      ],
+      "grade": "신화",
+      "activation": "active",
+      "mode": "summon",
+      "effect": "original",
+      "origin": "LINEAGEM_20250617",
+      "desc": "가디언을 소환하여 사냥을 돕습니다. HP가 낮아지면 소환수가 해제되고 SP에 비례한 가디언 실드로 전환됩니다.",
+      "source_ids": [
+        "elf23",
+        "guardian19",
+        "wizard23"
+      ],
+      "historical_effective": "2023-03-22",
+      "pve": "INFERRED",
+      "implementation": "PARTIAL",
+      "runtime_effect": "CONNECTED",
+      "historical_continuity": "UNKNOWN",
+      "stage": 1,
+      "school": "class",
+      "minimum_level": 80,
+      "icon": "res://assets/skills/icons/lm_df2656bb3d14d806.svg",
+      "fields": {
+        "basic": {
+          "original_name": {
+            "value": "서먼 가디언",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "original_skill_id": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "class": {
+            "value": "마법사",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "school": {
+            "value": "class",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "stage": {
+            "value": 1,
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "grade": {
+            "value": "신화",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "activation": {
+            "value": "active",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "category": {
+            "value": "summon",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
+          }
+        },
+        "learning": {
+          "minimum_level": {
+            "value": 80,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "book_name": {
+            "value": "마법서 (서먼 가디언)",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "book_grade": {
+            "value": "신화",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "book_acquisition": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "requires_skill": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "requires_skill_level": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "additional_materials": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "adena_cost": {
+            "value": 1000000,
+            "status": "CUSTOM_BALANCE",
+            "note": "Offline book shop fallback; historical acquisition remains UNKNOWN"
+          },
+          "other_cost": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "upgrades_from": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "replaces_skill": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "inherits_effects": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "unlock_conditions": {
+            "value": null,
+            "status": "UNKNOWN"
+          }
+        },
+        "combat": {
+          "target": {
+            "value": "self",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
+          },
+          "shape": {
+            "value": "single",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "range": {
+            "value": 240,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "attack_type": {
+            "value": "none",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "element": {
+            "value": "physical",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "base_damage": {
+            "value": 0,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "damage_multiplier": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "hit_rule": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "critical": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "defense_rule": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "mr_rule": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "status": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "status_chance": {
+            "value": 0.6,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "duration": {
+            "value": 360,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "cooldown": {
+            "value": 180,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "cast_time": {
+            "value": 0.42,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "mp_cost": {
+            "value": 60,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "hp_cost": {
+            "value": 0,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "item_cost": {
+            "value": {},
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "weapons": {
+            "value": [],
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "equipment": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "proc_chance": {
+            "value": 1,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
+          },
+          "proc_count": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "stacking": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "dispel_conditions": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "immunity_conditions": {
+            "value": null,
+            "status": "UNKNOWN"
+          }
+        },
+        "visual": {
+          "original_icon": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "cast_motion": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "cast_vfx": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "projectile": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "projectile_movement": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "impact_vfx": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "area_vfx": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "status_vfx": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "persistent_vfx": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "end_vfx": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "sound": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "hit_frame": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "total_duration": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "reference_video": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "upload_date": {
+            "value": null,
+            "status": "UNKNOWN"
+          },
+          "timestamp": {
+            "value": null,
+            "status": "UNKNOWN"
+          }
+        }
+      },
+      "book_name": "마법서 (서먼 가디언)",
+      "comparison": [
+        "신규 구현",
+        "원작 미확인 수치에 자체 밸런스 적용"
+      ],
+      "mechanisms": {
+        "summon_npc_companion": {
+          "value": true,
+          "status": "VERIFIED",
+          "sources": [
+            "guardian19"
+          ]
+        },
+        "low_hp_conversion": {
+          "value": true,
+          "status": "VERIFIED",
+          "sources": [
+            "elf23"
+          ]
+        },
+        "sp_scaled_shield": {
+          "value": true,
+          "status": "VERIFIED",
+          "sources": [
+            "elf23"
+          ]
+        }
+      }
     }
   ]
 }

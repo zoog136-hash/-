@@ -31,4 +31,6 @@ lines+=['','## 보류와 다음 단계','','research_inventory.json과 original-
 fetch=json.loads((args.cache/'fetch-summary.json').read_text()) if (args.cache/'fetch-summary.json').exists() else {'unique_details_cached':len(list((args.cache/'details').glob('*.json'))),'historical_completeness':'UNKNOWN'}
 (dest/'research-fetch-summary.json').write_text(json.dumps(fetch,ensure_ascii=False,indent=2)+'\n')
 (dest/'external-source-inventory.json').write_text((args.cache/'external-source-inventory.json').read_text())
+if (args.cache/'external-source-blocked.json').exists():
+    (dest/'external-source-blocked.json').write_text((args.cache/'external-source-blocked.json').read_text())
 print(json.dumps({'runtime':len(records),'candidate_records':len(inventory),'legacy_original_name_candidates':len(names),'legacy_custom':len(old)-len(names),'status':dict(Counter(x['implementation'] for x in inventory))},ensure_ascii=False))

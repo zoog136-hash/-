@@ -44,7 +44,7 @@ static func effect_for(record: Dictionary) -> String:
 		"buff", "counter": return "defBuff"
 		"teleport": return "teleport"
 		"stealth": return "invisibility"
-		"taunt", "toggle_proc": return "utility"
+		"taunt", "toggle_proc", "summon": return "utility"
 	return "passive"
 
 func seed_starters() -> void:

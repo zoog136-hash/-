@@ -45,7 +45,7 @@ def build(cache):
     for k,(date,url,kind,filename) in SOURCES.items():
         f=cache/'evidence'/f'{filename}.txt'
         registry[k]={'url':url,'published':date,'effective':date,'effective_status':'VERIFIED' if kind=='OFFICIAL' else 'UNKNOWN','observed_at':date,'type':kind,'scope':'historical observation, continuity to cutoff not assumed','sha256':hashlib.sha256(f.read_bytes()).hexdigest() if f.exists() else None}
-        for field_name in ['published','effective','effective_status','page_modified','sha256']:
+        for field_name in ['published','effective','effective_status','page_modified','sha256','hash_scope','api_response_sha256','reference_video','retrieved_at']:
             if field_name in saved_metadata.get(k, {}):registry[k][field_name]=saved_metadata[k][field_name]
         html_file=cache/'evidence'/f'{filename}.html'
         if html_file.exists():
@@ -80,7 +80,7 @@ def build(cache):
     for s in SPECS:
         job,name,source,mode=s['job'],s['name'],s['source'],s['mode'];sid=ident(job,name)
         values={'power':40,'mp':10,'hp':0,'range':240,'duration':5,'cooldown':8 if mode=='status' else 2,'cast_time':.42,'global_cooldown':.3,'shape':'single','targets':6,'radius':128,'attack_type':'none','element':'none','proc_chance':1,'status_chance':.6,'stats':{},'items':{},'weapons':[],'counter_chance':{'일반':.1,'고급':.1,'희귀':.1,'영웅':.15,'전설':.2,'신화':.25,'유일':.3}[s['grade']],'counter_multiplier':1}
-        excluded={'job','name','grade','source','mode','description','upgrades','requires','proof','classes','stage','school','level','motif'}
+        excluded={'job','name','grade','source','mode','description','upgrades','requires','proof','classes','stage','school','level','motif','additional_sources','mechanism_proofs'}
         values.update({k:v for k,v in s.items() if k not in excluded})
         values['minimum_level']=s.get('level',1 if job=='공용' and s.get('stage',1)==1 else 10 if job=='공용' else {'일반':30,'영웅':60,'전설':80,'신화':80}[s['grade']])
         passive_mode=mode in PASSIVE
@@ -113,12 +113,15 @@ def build(cache):
         cm={'power':'base_damage','mp':'mp_cost','hp':'hp_cost','items':'item_cost','weapons':'weapons','shape':'shape','range':'range','attack_type':'attack_type','element':'element','status':'status','status_chance':'status_chance','duration':'duration','cooldown':'cooldown','cast_time':'cast_time','proc_chance':'proc_chance','hits':'proc_count','multiplier':'damage_multiplier'}
         for key,dst in cm.items():
             if key in balance[sid]:rec['fields']['combat'][dst]=balance[sid][key]
-        rec['fields']['combat']['target']=field('self' if mode in ['buff','heal','stealth','counter','convert','cleanse','teleport'] else 'NPC','INFERRED',source)
+        rec['fields']['combat']['target']=field('self' if mode in ['buff','heal','stealth','counter','convert','cleanse','teleport','summon'] else 'NPC','INFERRED',source)
         # A unique preset is authored for each ID; resemblance is NOT claimed
         # before dated video frames have been inspected.
         motif=s.get('motif',mode);h=int(sid[-6:],16)
         vfx[sid]={'cast_vfx':sid+':cast','projectile_vfx':sid+':projectile','impact_vfx':sid+':impact','persistent_vfx':sid+':persistent','end_vfx':sid+':end','status_vfx':sid+':status','audio_profile':sid+':audio','motif':motif,'hue':(h%360)/360,'seed':h,'animation_timeline':{'cast':0,'release':'player_motion_event','impact':'collision_or_attack_marker','end':.7},'visual_verification':'UNKNOWN','references':[{'source':source,'url':registry[source]['url'],'upload_date':None,'timestamp':None,'status':'UNKNOWN','note':'mechanics reference; dated VFX/video comparison pending'}]}
         rec['comparison']=['기존 구현 수정' if normalized(name) in old_names else '신규 구현','원작 미확인 수치에 자체 밸런스 적용']
+        rec['source_ids']=list(dict.fromkeys([source]+s.get('additional_sources',[])))
+        if s.get('mechanism_proofs'):
+            rec['mechanisms']={key:field(True,'VERIFIED',evidence) for key,evidence in s['mechanism_proofs'].items()}
         records.append(rec)
         entry=inventory.get(by_name.get((job,normalized(name)),''))
         if entry is not None:entry.update(implementation='PARTIAL',runtime_id=sid,pve='INFERRED')
@@ -160,7 +163,7 @@ def build(cache):
                 else:mapped.append({'key':key,'name':name,'status':'BLOCKED','history':'UNKNOWN','note':'No verified runtime mechanism; never converted to generic damage'})
             if mapped:links.append({'category':category,'name':item['name'],'links':mapped})
     (out/'equipment_links.json').write_text(json.dumps({'records':links},ensure_ascii=False,indent=2)+'\n')
-    balances=outputs['balance.json'];balances['equipment']=equipment_balance;balances['runtime_defaults']={'equipment_level_damage_percent':field(2,'CUSTOM_BALANCE')}
+    balances=outputs['balance.json'];balances['equipment']=equipment_balance;balances['runtime_defaults']={k:field(v,'CUSTOM_BALANCE') for k,v in {'equipment_level_damage_percent':2,'sp_base':1,'sp_int_baseline':12,'sp_int_divisor':3}.items()}
     (out/'balance.json').write_text(json.dumps(balances,ensure_ascii=False,indent=2)+'\n')
     make_icons(records,vfx)
     make_audio(records,vfx)
@@ -173,7 +176,7 @@ def make_icons(records,vfx):
         # Independent vector art. Distinct glyph, color, rune positions, and
         # silhouette per skill ID; no reused bitmap or publisher artwork.
         paths=['M34 8L23 32h11l-5 24 21-31H38z','M14 14L49 49m-8-3 9-8M20 15l-5 5','M32 9L51 18v15Q48 48 32 56Q16 48 13 33V18z','M10 37Q31 5 54 37Q32 65 10 37z','M16 50Q10 28 31 11Q30 26 45 31Q57 46 32 55z','M9 32h45M43 21l11 11-11 11','M32 9L52 32 32 55 12 32z','M14 44L32 14l18 30z']
-        glyph=paths[seed%len(paths)]
+        glyph='M22 51V35L16 29V20L25 16V8h14v8l9 4v9l-6 6v16M22 35h20M25 16h14M28 8v8M36 8v8M30 36v17M36 36v17M8 32h9v15l-5 6-5-6V32' if r['mode']=='summon' else paths[seed%len(paths)]
         marks=''.join(f'<circle cx="{12+(seed//(i+1))%40}" cy="{9+(seed//(i+3))%45}" r="{1+i%2}" fill="hsl({(hue+80)%360},80%,75%)"/>' for i in range(4))
         svg=f'<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs><radialGradient id="g"><stop stop-color="hsl({hue},55%,32%)"/><stop offset="1" stop-color="#080e1b"/></radialGradient></defs><rect x="1" y="1" width="62" height="62" rx="9" fill="url(#g)" stroke="hsl({hue},70%,70%)" stroke-width="2"/><path d="{glyph}" fill="none" stroke="hsl({hue},85%,76%)" stroke-width="4" stroke-linejoin="round"/>{marks}<path d="M7 58h{15+seed%33}" stroke="hsl({hue},80%,55%)" stroke-width="2"/></svg>'
         (dest/(r['id']+'.svg')).write_text(svg)

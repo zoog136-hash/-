@@ -33829,56 +33829,85 @@
         }
       ],
       "historical_presence": "UNKNOWN",
-      "implementation": "BLOCKED",
-      "pve": "UNKNOWN",
+      "implementation": "PARTIAL",
+      "pve": "INFERRED",
       "blocked_reason": "기준일 직전 설명·PvE 대상 검증 필요",
+      "runtime_id": "lm_df2656bb3d14d806",
       "fields": {
         "basic": {
           "original_name": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "서먼 가디언",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
           },
           "original_skill_id": {
             "value": null,
             "status": "UNKNOWN"
           },
           "class": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "마법사",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
           },
           "school": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "class",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
           },
           "stage": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 1,
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
           },
           "grade": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "신화",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
           },
           "activation": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "active",
+            "status": "VERIFIED",
+            "sources": [
+              "elf23"
+            ]
           },
           "category": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "summon",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
           }
         },
         "learning": {
           "minimum_level": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 80,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "book_name": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "마법서 (서먼 가디언)",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
           },
           "book_grade": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "신화",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
           },
           "book_acquisition": {
             "value": null,
@@ -33897,8 +33926,9 @@
             "status": "UNKNOWN"
           },
           "adena_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 1000000,
+            "status": "CUSTOM_BALANCE",
+            "note": "Offline book shop fallback; historical acquisition remains UNKNOWN"
           },
           "other_cost": {
             "value": null,
@@ -33923,28 +33953,36 @@
         },
         "combat": {
           "target": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "self",
+            "status": "INFERRED",
+            "sources": [
+              "elf23"
+            ]
           },
           "shape": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "single",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "range": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 240,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "attack_type": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "none",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "element": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "physical",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "base_damage": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "damage_multiplier": {
             "value": null,
@@ -33971,44 +34009,53 @@
             "status": "UNKNOWN"
           },
           "status_chance": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0.6,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "duration": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 360,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "cooldown": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 180,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "cast_time": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0.42,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "mp_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 60,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "hp_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "item_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": {},
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "weapons": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": [],
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "equipment": {
             "value": null,
             "status": "UNKNOWN"
           },
           "proc_chance": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 1,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "proc_count": {
             "value": null,

@@ -67,6 +67,65 @@ func run() -> void:
 	await capture("04-effect-crowd")
 	samples.sort()
 	print("ORIGINAL_RENDER_OK driver=",RenderingServer.get_video_adapter_name()," median_ms=",samples[30]," p95_ms=",samples[57]," active=",world.original_skills.vfx.live.size()," available=",world.original_skills.vfx.available.size())
+	world._clear_combat_actions()
+	world.active_skill_buffs.clear()
+	world._clear_monsters()
+	world.job_class = "마법사"
+	world._update_job_skillbar()
+	world.equipped_items["weapon"] = {"name":"검증 SP 지팡이","type":"지팡이","slot":"weapon","atk":0,"sp":4}
+	var guardian := catalog.record_for("서먼 가디언")
+	catalog.learned[str(guardian.id)] = 1
+	world.mp = 999;world.hp = world._effective_max_hp()
+	world.skill_cooldowns.clear();world.skill_global_cooldown = 0
+	if not world._cast_job_skill(str(guardian.name)):
+		push_error("Guardian capture requires a successful real cast")
+		quit(1);return
+	var summons := world.original_skills.summons
+	for _frame: int in range(20):
+		summons.tick(1.0/60)
+		await process_frame
+	if not summons.active() or world.mp != 999-int(guardian.mp):
+		push_error("Guardian actor/cost mismatch")
+		quit(1);return
+	await capture("05-guardian-summon")
+	world.hud.open_skills()
+	for _frame: int in range(5): await process_frame
+	view = world.hud.skills_view
+	for index: int in range(view.filtered.size()):
+		if str(view.filtered[index].id)==str(guardian.id): view.cards.select(index);view.select(index)
+	if not view.summon_controls.visible:
+		push_error("Guardian commands must be visible in the actual skill UI")
+		quit(1);return
+	await capture("08-guardian-commands")
+	world.hud._close_workspace()
+	var dummy: TwilightMonster = (load("res://scenes/Monster.tscn") as PackedScene).instantiate()
+	world.monsters_root.add_child(dummy)
+	dummy.setup({"name":"가디언 실제 타격 검사","hp":1000000,"lv":1,"ac":0,"mr":0},world.player,world,null)
+	dummy.set_physics_process(false)
+	dummy.global_position = world.player.global_position+Vector2(56,0)
+	summons.actor.global_position = world.player.global_position+Vector2(24,0)
+	summons.command("attack",dummy)
+	var hits := dummy.damage_hit_count
+	var struck := false
+	for _frame: int in range(240):
+		summons.tick(1.0/60)
+		await process_frame
+		if dummy.damage_hit_count > hits:
+			struck = true;break
+	if not struck:
+		push_error("Guardian capture requires an actual NPC hit")
+		quit(1);return
+	await capture("06-guardian-hit")
+	world.hp = 10
+	var damage := world.original_skills.incoming_damage(dummy,"magic",11)
+	if summons.active() or summons.shield_events != 1 or damage != 0:
+		push_error("Guardian shield requires actual damage-triggered conversion")
+		quit(1);return
+	world.hp = maxi(0,world.hp-damage)
+	world._update_hud()
+	for _frame: int in range(3): await process_frame
+	await capture("07-guardian-shield")
+	print("ORIGINAL_GUARDIAN_RENDER_OK npc_hits=",dummy.damage_hit_count-hits," shield_events=",summons.shield_events," mp_spent=",999-world.mp)
 	world.queue_free()
 	await process_frame
 	quit()

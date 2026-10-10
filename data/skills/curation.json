@@ -1810,5 +1810,46 @@
       "counter_multiplier": 1.15
     },
     "level": 70
+  },
+  {
+    "job": "마법사",
+    "name": "서먼 가디언",
+    "grade": "신화",
+    "source": "elf23",
+    "additional_sources": [
+      "guardian19",
+      "wizard23"
+    ],
+    "mechanism_proofs": {
+      "summon_npc_companion": "guardian19",
+      "low_hp_conversion": "elf23",
+      "sp_scaled_shield": "elf23"
+    },
+    "mode": "summon",
+    "description": "가디언을 소환하여 사냥을 돕습니다. HP가 낮아지면 소환수가 해제되고 SP에 비례한 가디언 실드로 전환됩니다.",
+    "level": 80,
+    "mp": 60,
+    "power": 0,
+    "duration": 360,
+    "cooldown": 180,
+    "attack_type": "none",
+    "element": "physical",
+    "summon_speed": 165,
+    "summon_leash": 720,
+    "summon_attack_range": 72,
+    "summon_attack_interval": 1.2,
+    "summon_strike_time": 0.32,
+    "summon_recovery_time": 0.18,
+    "summon_materialize_time": 0.35,
+    "summon_path_interval": 0.35,
+    "summon_power": 35,
+    "summon_accuracy": 30,
+    "summon_sp_scale": 1.5,
+    "guardian_hp_threshold": 0.25,
+    "guardian_shield_base": 100,
+    "guardian_shield_sp_scale": 18,
+    "guardian_shield_hp_cap": 1,
+    "guardian_shield_duration": 12,
+    "motif": "guardian"
   }
 ]

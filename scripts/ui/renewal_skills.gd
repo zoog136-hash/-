@@ -22,6 +22,8 @@ var cooldown: Label
 var use_button: Button
 var quick_button: Button
 var clock: float = 0
+var summon_controls: HBoxContainer
+var summon_order: OptionButton
 var touch_start: Vector2
 var dragging: bool = false
 var touch_active: bool = false
@@ -147,6 +149,19 @@ func configure(controller: Node) -> void:
 	quick_button.name="RegisterSkill"
 	quick_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.add_child(quick_button)
+	summon_controls = HBoxContainer.new()
+	summon_controls.name = "SummonCommands"
+	summon_controls.visible = false
+	side.add_child(summon_controls)
+	summon_order = OptionButton.new()
+	for label: String in ["보호","공격","따라오기","대기"]: summon_order.add_item(label)
+	summon_order.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	summon_order.item_selected.connect(func(index: int) -> void:
+		var world: Node = hud.get_parent()
+		var orders: Array[String] = ["guard","attack","follow","stay"]
+		if not world.original_skills.summons.command(orders[index],world.selected_monster): world.hud.show_message("소환수 또는 공격 대상 없음"))
+	summon_controls.add_child(summon_order)
+	summon_controls.add_child(UI.button("소환 해제",func() -> void: hud.get_parent().original_skills.summons.command("dismiss")))
 	body.configure(cards,side_scroll,278)
 	hud.workspace.register_scroll_drag(side_scroll,side_scroll)
 	refresh()
@@ -214,6 +229,10 @@ func select_original() -> void:
 	var relation: Dictionary = catalog.relations.get(str(selected.id), {})
 	var passive: bool = RULES.is_passive(selected)
 	var learned: bool = catalog.owned(selected)
+	summon_controls.visible = str(selected.mode) == "summon" and learned
+	if summon_controls.visible:
+		var orders: Array[String] = ["guard","attack","follow","stay"]
+		summon_order.select(maxi(0,orders.find(service.summons.order)))
 	var base: Dictionary = catalog.record_for(str(relation.get("upgrades_from", "")))
 	var weapon_text := "제한 없음" if skill.get("weapons", []).is_empty() else " · ".join(skill.weapons)
 	var school_text := str({"general_magic":"일반 마법","class":"직업 기술","rune":"룬 마법","water":"물 정령","earth":"땅 정령","wind":"바람 정령","fire":"불 정령"}.get(str(selected.school), selected.school))
@@ -245,6 +264,7 @@ func _process(delta: float) -> void:
 		quick_button.disabled = RULES.is_passive(selected) or not world.original_skills.catalog.owned(selected)
 		var original_remain: float = float(world.skill_cooldowns.get(str(selected.name), 0))
 		cooldown.text = "패시브 적용" if RULES.is_passive(selected) and world.original_skills.catalog.owned(selected) else "재사용 %.1f초" % original_remain if original_remain > 0 else "준비됨" if world.original_skills.catalog.owned(selected) else "미습득"
+		if str(selected.mode) == "summon" and world.original_skills.summons.active(str(selected.id)): cooldown.text += " · 소환 %.0f초" % world.original_skills.summons.remaining
 		return
 	var remain := float(world.skill_cooldowns.get(str(selected.get("name","")),0))
 	cooldown.text="재사용 %.1f초 남음" % remain if remain>0 else "재사용 준비됨"

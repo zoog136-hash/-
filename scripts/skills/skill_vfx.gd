@@ -104,6 +104,14 @@ func _draw() -> void:
 		elif motif in ["counter","illusion","holy_counter","shield","phalanx","barrier"]:
 			draw_arc(point + Vector2(0,-20), radius, -PI*.8, PI*.6, 24, color, 3, true)
 			for shard: int in range(3): draw_line(point + Vector2(-20+shard*20,-35),point+Vector2(-10+shard*20,-5),color,2,true)
+		elif motif == "guardian":
+			var crest := PackedVector2Array([point+Vector2(0,-radius*1.5),point+Vector2(radius,-radius*.4),point+Vector2(radius*.6,radius*.5),point+Vector2(0,radius),point+Vector2(-radius*.6,radius*.5),point+Vector2(-radius,-radius*.4),point+Vector2(0,-radius*1.5)])
+			draw_colored_polygon(crest,Color(color,.12*color.a))
+			draw_polyline(crest,color,3,true)
+			draw_line(point+Vector2(0,-radius),point+Vector2(0,radius*.6),color,2,true)
+			for rune: int in range(6):
+				var at := point+Vector2.from_angle(TAU*rune/6+t)*radius*1.25
+				draw_line(at-Vector2(2,4),at+Vector2(2,4),color,2,true)
 		elif motif in ["arrows","bullets","claw","axe","scythe"]:
 			for slash: int in range(3):
 				draw_line(point + Vector2(-radius, -radius+slash*12), point+Vector2(radius,radius+slash*6), color, 2, true)
@@ -123,5 +131,9 @@ func _draw() -> void:
 		var color := color_for(id)
 		color.a = .45
 		var motif := str(presets.get(id, {}).get("motif", ""))
-		if motif == "light": draw_circle(point, 68, Color(color,.08))
+		if motif == "guardian":
+			var crest := PackedVector2Array([point+Vector2(0,-30),point+Vector2(27,-14),point+Vector2(23,16),point+Vector2(0,32),point+Vector2(-23,16),point+Vector2(-27,-14),point+Vector2(0,-30)])
+			draw_colored_polygon(crest,Color(color,.06))
+			draw_polyline(crest,color,2,true)
+		elif motif == "light": draw_circle(point, 68, Color(color,.08))
 		else: draw_arc(point, 28, -PI*.9, PI*.1, 20, color, 2, true)

@@ -3959,7 +3959,7 @@ func _passive_skill_names() -> PackedStringArray:
 	return names
 
 func _is_buff_skill(skill: Dictionary) -> bool:
-	if skill.get("origin", "") == "LINEAGEM_20250617": return skill.get("mode", "") in ["buff", "counter", "stealth"]
+	if skill.get("origin", "") == "LINEAGEM_20250617": return skill.get("mode", "") in ["buff", "counter", "stealth", "summon"]
 	return not _is_passive_skill(skill) and SKILL_RULES.is_buff(SKILL_RULES.effect_kind(skill))
 
 func _run_auto_buff_quickslots(delta: float) -> void:
@@ -5327,6 +5327,13 @@ func _magic_damage_stat() -> int:
 
 func _magic_accuracy_stat() -> int:
 	return level + _effective_attribute("INT") + _active_skill_buff_total("intFlat") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "magic_accuracy") + _equipment_accuracy_bonus("magic") + _catalog_accuracy_bonus("magic") + _active_item_buff_total("magic_accuracy")
+
+func _spell_power_stat() -> int:
+	var defaults: Dictionary = original_skills.runtime_defaults if original_skills != null else {}
+	var base := int(defaults.get("sp_base",{}).get("value",1))
+	var threshold := int(defaults.get("sp_int_baseline",{}).get("value",12))
+	var divisor := maxf(1,float(defaults.get("sp_int_divisor",{}).get("value",3)))
+	return maxi(0,base + _stat_step_bonus(_effective_attribute("INT"),threshold,divisor) + _catalog_stat_sum("sp") + int(_equipment_inven_sum("sp")) + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS,"sp") + _enhancement_stat_for_slots(ARMOR_EQUIPMENT_SLOTS,"sp") + _active_item_buff_total("sp") + int(original_skills.stat("sp") if original_skills != null else 0))
 
 func _record_critical_bonus(record: Dictionary, attack_type: String) -> int:
 	var total: int = 0

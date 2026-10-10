@@ -4,6 +4,7 @@ class_name TwilightOriginalSkillService
 const Catalog = preload("res://scripts/skills/skill_catalog.gd")
 const Status = preload("res://scripts/skills/status_service.gd")
 const VFX = preload("res://scripts/skills/skill_vfx.gd")
+const Summons = preload("res://scripts/skills/summon_service.gd")
 var catalog: TwilightOriginalSkillCatalog
 var status: TwilightSkillStatusService = Status.new()
 var vfx: TwilightOriginalSkillVFX
@@ -22,6 +23,7 @@ var last_evaded: bool = false
 var equipment_links: Dictionary = {}
 var equipment_balance: Dictionary = {}
 var runtime_defaults: Dictionary = {}
+var summons: TwilightOriginalSummonService = Summons.new()
 
 func configure(owner: Node) -> void:
 	world = owner
@@ -35,9 +37,12 @@ func configure(owner: Node) -> void:
 	vfx.name = "OriginalSkillVFX"
 	vfx.z_index = 12
 	owner.add_child(vfx)
+	summons.configure(self)
 
 func clear() -> void:
+	summons.clear()
 	status.clear()
+	for id: String in shields.keys(): remove_guardian_shield_buff(id)
 	shields.clear()
 	stacks.clear()
 	marks.clear()
@@ -46,11 +51,14 @@ func clear() -> void:
 
 func tick(delta: float) -> void:
 	status.tick(delta)
+	summons.tick(delta)
 	combat_elapsed += delta
 	recovery_elapsed += delta
 	for id: String in shields.keys():
 		shields[id].remaining -= delta
-		if float(shields[id].remaining) <= 0: shields.erase(id)
+		if float(shields[id].remaining) <= 0:
+			shields.erase(id)
+			remove_guardian_shield_buff(id)
 	for id: String in stacks.keys():
 		stacks[id].remaining -= delta
 		if float(stacks[id].remaining) <= 0: stacks.erase(id)
@@ -128,6 +136,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	if not catalog.owned(skill): reason = "미습득 또는 직업 제한"
 	elif str(skill.activation) == "passive": reason = "패시브 기술"
 	elif not catalog.enabled(skill): reason = "속성 계열 또는 사용 무기 제한"
+	elif str(skill.mode) == "summon" and (summons.active() or world.active_skill_buffs.has(str(skill.name))): reason = "가디언 또는 보호막 유지 중"
 	elif not world.pending_attack.is_empty(): reason = "시전 중"
 	elif world.hp <= 0: reason = "사망 상태"
 	elif not bool(skill.get("cast_while_disabled", false)) and (world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced()): reason = "상태이상으로 사용 불가"
@@ -188,6 +197,7 @@ func cast(record: Dictionary) -> bool:
 		"toggle_proc":
 			toggles[id] = not bool(toggles.get(id, false))
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
+		"summon": summons.spawn(skill)
 		_: return false
 	if mode not in ["attack","status"]: world.player.pulse_attack()
 	trigger("on_skill", target, skill)
@@ -289,6 +299,7 @@ func stack(id: String, stats: Dictionary, limit: int, duration: float) -> void:
 	stacks[id] = {"count":count,"stats":stats,"remaining":duration}
 
 func trigger(event: String, target: TwilightMonster, source_skill: Dictionary = {}) -> void:
+	if event == "on_hit" and str(source_skill.get("mode", "")) != "summon": summons.notify_attack(target)
 	# Extra hits, reflected damage, and procs do not recursively proc themselves.
 	if proc_depth > 0: return
 	proc_depth += 1
@@ -432,6 +443,7 @@ func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 		"convert": return float(world.mp) / float(world._effective_max_mp()) <= .35 and float(world.hp) / float(world._effective_max_hp()) > .55
 		"cleanse": return world.player.is_poisoned()
 		"buff", "counter": return not world.active_skill_buffs.has(str(skill.name))
+		"summon": return not summons.active() and not world.active_skill_buffs.has(str(skill.name))
 		"status":
 			if not is_instance_valid(target) or target.dead: return false
 			var kind := str(skill.get("status", ""))
@@ -442,6 +454,7 @@ func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 
 func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> int:
 	combat_elapsed = 0
+	summons.notify_threat(attacker)
 	last_evaded = false
 	if stat("invulnerable") > 0: return 0
 	if counter(attacker, kind, amount):
@@ -454,11 +467,15 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 	if kind == "ranged": reduction += stat("rangedReduction")
 	var result := maxi(0, int(amount * multiplier) - int(reduction))
 	if kind != "magic": result = int(result * (1 - clampf(stat("physicalResistance") / 100.0,0,.8)))
+	# Convert before the triggering hit is applied, including lethal damage.
+	summons.intercept(result)
 	for id: String in shields.keys():
 		var absorb := mini(result, int(shields[id].amount))
 		result -= absorb
 		shields[id].amount -= absorb
-		if int(shields[id].amount) <= 0: shields.erase(id)
+		if int(shields[id].amount) <= 0:
+			shields.erase(id)
+			remove_guardian_shield_buff(id)
 	# Losing HP ends shadow hiding; ordinary invisibility only ends on attack.
 	if result > 0:
 		for name: String in world.active_skill_buffs.keys():
@@ -466,8 +483,16 @@ func incoming_damage(attacker: TwilightMonster, kind: String, amount: int) -> in
 		world._refresh_skill_stealth_visual()
 	return result
 
+func remove_guardian_shield_buff(id: String) -> void:
+	var record := catalog.record_for(id)
+	if record.is_empty() or str(record.mode) != "summon": return
+	var name := str(record.name)
+	if str(world.active_skill_buffs.get(name,{}).get("summon_stage","")) != "shield": return
+	world.active_skill_buffs.erase(name)
+	vfx.remove_persistent(id)
+
 func export_state() -> Dictionary:
-	return {"toggles":toggles.duplicate(true),"shields":shields.duplicate(true)}
+	return {"toggles":toggles.duplicate(true),"shields":shields.duplicate(true),"summon":summons.export_state()}
 
 func import_state(data: Dictionary) -> void:
 	clear()
@@ -476,10 +501,22 @@ func import_state(data: Dictionary) -> void:
 		if catalog.record_for(id).is_empty(): continue
 		var value: Dictionary = data.shields[id]
 		shields[id] = {"amount":clampi(int(value.get("amount", 0)), 0, world._effective_max_hp()),"remaining":clampf(float(value.get("remaining", 0)), 0, 60)}
+		var record := catalog.record_for(id)
+		if str(record.mode) == "summon" and catalog.enabled(record) and int(shields[id].amount) > 0 and float(shields[id].remaining) > 0:
+			var shield := catalog.resolve(record)
+			shield.duration = float(shields[id].remaining)
+			apply_buff(shield)
+			world.active_skill_buffs[str(record.name)]["summon_stage"] = "shield"
+	summons.restore_state(data.get("summon",{}))
 	for name: String in world.active_skill_buffs.keys():
 		var buff: Dictionary = world.active_skill_buffs[name]
 		var base := catalog.record_for(str(buff.get("skill_id", name)))
 		if base.is_empty() or not catalog.enabled(base): continue
+		if str(base.mode) == "summon":
+			var stage := str(buff.get("summon_stage",""))
+			if (stage == "creature" and not summons.active(str(base.id))) or (stage == "shield" and not shields.has(str(base.id))):
+				world.active_skill_buffs.erase(name)
+				continue
 		var skill := catalog.resolve(base)
 		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
 		vfx.maintain(str(skill.id), world.player, float(buff.get("remaining", 0)))
