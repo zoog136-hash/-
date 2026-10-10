@@ -1,0 +1,41 @@
+name: TWILIGHT Shop Authority
+
+on:
+  push:
+    branches:
+      - feature/twilight-shop-authoritative-transactions-20261010
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  shop-authority:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Godot import and GDScript parse
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee shop-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' shop-import.log
+      - name: Authoritative transaction tests
+        run: |
+          set -o pipefail
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/shop_authority_test.gd 2>&1 | tee shop-test.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' shop-test.log
+          grep -q SHOP_AUTHORITY_OK shop-test.log
+      - name: Store validation output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-shop-authority
+          path: |
+            shop-import.log
+            shop-test.log

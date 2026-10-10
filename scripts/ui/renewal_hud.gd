@@ -4,6 +4,7 @@ extends "res://scripts/hud_v20.gd"
 signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
+signal shop_bulk_buy_requested(item_name: String, quantity: int)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
