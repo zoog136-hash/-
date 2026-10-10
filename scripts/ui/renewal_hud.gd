@@ -5,6 +5,7 @@ signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
 signal shop_bulk_buy_requested(item_name: String, quantity: int)
+signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -14,6 +15,7 @@ const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
+const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
 const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
@@ -596,6 +598,12 @@ func open_shop() -> void:
 	var shop := ShopUI.new()
 	workspace.mount(shop)
 	shop.configure(self)
+
+func open_warehouse() -> void:
+	_open_window("warehouse","창고지기","아이템 보관/찾기 · 개별 강화 상태 보존")
+	var screen := WarehouseUI.new()
+	workspace.mount(screen)
+	screen.configure(self)
 
 func open_quest_info() -> void:
 	_open_window("quest","퀘스트","기존 게임의 사냥 퀘스트 진행도")
