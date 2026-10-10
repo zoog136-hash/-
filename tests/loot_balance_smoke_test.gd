@@ -83,7 +83,7 @@ func _run() -> void:
 	var queen_loot: Dictionary = LOOT._pick_equipment_entry("고급", ["마법 망토"], catalog, strict_rng, "얼음 여왕")
 	_check(str(queen_loot.get("item_name", "")) == "수정 단검", "L1J Crystal Dagger mapped through live catalog")
 	_check(int(queen_loot.get("quantity", 0)) == 1, "real source quantity preserved")
-	_check(LOOT._pick_equipment_entry("희귀", ["마법 망토"], catalog, strict_rng, "얼음 여왕").is_empty(), "Ice Queen cannot inherit unrelated rare gear")
+	_check(LOOT._pick_equipment_entry("희귀", ["마법 망토"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마법 망토", "Ice Queen retains her preexisting rare cloak with L1J import")
 	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], catalog, strict_rng, "얼음 여왕").get("item_name", "") == "마족의 단검", "legacy registered rare item remains available")
 	var boss_count: int = 0
 	var normal_count: int = 0
