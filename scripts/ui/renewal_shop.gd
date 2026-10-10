@@ -173,7 +173,7 @@ func _refresh_selection() -> void:
 			break
 	var count: int = int(hud.lineage_inventory_ui.inventory.get(name,0))
 	var total: int = maxi(0, price) * quantity
-	detail.text = "[color=#d8b878][font_size=22]%s[/font_size][/color]\\n%s\\n\\n단가: %d 아데나\\n수량: %d개\\n합계: %d 아데나\\n보유: %d개\\n아데나: %d\\n\\n%s" % [
+	detail.text = "[color=#d8b878][font_size=22]%s[/font_size][/color]\n%s\n\n단가: %d 아데나\n수량: %d개\n합계: %d 아데나\n보유: %d개\n아데나: %d\n\n%s" % [
 		UI.safe(name), UI.safe(selected[2]), price, quantity, total, count, available,
 		UI.safe(info.get("desc",info.get("description","기존 게임 데이터의 소모품 / 강화 주문서")))
 	]
