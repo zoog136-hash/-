@@ -39001,60 +39001,92 @@
         }
       ],
       "historical_presence": "UNKNOWN",
-      "implementation": "BLOCKED",
-      "pve": "UNKNOWN",
+      "implementation": "PARTIAL",
+      "pve": "INFERRED",
       "blocked_reason": "기준일 직전 설명·PvE 대상 검증 필요",
+      "runtime_id": "lm_09370fb0d313977d",
       "fields": {
         "basic": {
           "original_name": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "턴 언데드(에이션트)",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "original_skill_id": {
             "value": null,
             "status": "UNKNOWN"
           },
           "class": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "마법사",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "school": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "class",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "stage": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 1,
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "grade": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "영웅",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "activation": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "passive",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "category": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "upgrade",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           }
         },
         "learning": {
           "minimum_level": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 70,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "book_name": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "마법서 (턴 언데드(에이션트))",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "book_grade": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "영웅",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "book_acquisition": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "몬스터 드랍: 신념의 탑 2층 보스(탐욕의 벨리엘)",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "requires_skill": {
             "value": null,
@@ -39069,24 +39101,33 @@
             "status": "UNKNOWN"
           },
           "adena_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 100000,
+            "status": "CUSTOM_BALANCE",
+            "note": "Offline book shop fallback; historical acquisition remains UNKNOWN"
           },
           "other_cost": {
             "value": null,
             "status": "UNKNOWN"
           },
           "upgrades_from": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "lm_e35a5e1482fc0950",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "replaces_skill": {
             "value": null,
             "status": "UNKNOWN"
           },
           "inherits_effects": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": [
+              "lm_e35a5e1482fc0950"
+            ],
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "unlock_conditions": {
             "value": null,
@@ -39095,28 +39136,36 @@
         },
         "combat": {
           "target": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "NPC",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "shape": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "single",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "range": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 240,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "attack_type": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "none",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "element": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "none",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "base_damage": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 40,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "damage_multiplier": {
             "value": null,
@@ -39143,44 +39192,53 @@
             "status": "UNKNOWN"
           },
           "status_chance": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0.6,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "duration": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 5,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "cooldown": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 2,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "cast_time": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0.42,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "mp_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "hp_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "item_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": {},
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "weapons": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": [],
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "equipment": {
             "value": null,
             "status": "UNKNOWN"
           },
           "proc_chance": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 1,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "proc_count": {
             "value": null,
@@ -51966,56 +52024,85 @@
         }
       ],
       "historical_presence": "VERIFIED",
-      "implementation": "BLOCKED",
-      "pve": "UNKNOWN",
+      "implementation": "PARTIAL",
+      "pve": "INFERRED",
       "blocked_reason": "기준일 직전 설명·PvE 대상 검증 필요",
+      "runtime_id": "lm_e35a5e1482fc0950",
       "fields": {
         "basic": {
           "original_name": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "턴 언데드",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "original_skill_id": {
             "value": null,
             "status": "UNKNOWN"
           },
           "class": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "마법사",
+            "status": "VERIFIED",
+            "sources": [
+              "turn22"
+            ]
           },
           "school": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "class",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "stage": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 3,
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "grade": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "일반",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "activation": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "active",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "category": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "turn_undead",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           }
         },
         "learning": {
           "minimum_level": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 30,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "book_name": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "마법서 (턴 언데드)",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "book_grade": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "일반",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "book_acquisition": {
             "value": null,
@@ -52034,8 +52121,9 @@
             "status": "UNKNOWN"
           },
           "adena_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 3000,
+            "status": "CUSTOM_BALANCE",
+            "note": "Offline book shop fallback; historical acquisition remains UNKNOWN"
           },
           "other_cost": {
             "value": null,
@@ -52060,28 +52148,36 @@
         },
         "combat": {
           "target": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "NPC",
+            "status": "INFERRED",
+            "sources": [
+              "turn22"
+            ]
           },
           "shape": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "single",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "range": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 320,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "attack_type": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "magic",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "element": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": "holy",
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "base_damage": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 40,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "damage_multiplier": {
             "value": null,
@@ -52108,44 +52204,53 @@
             "status": "UNKNOWN"
           },
           "status_chance": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0.6,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "duration": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 5,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "cooldown": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 5,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "cast_time": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0.42,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "mp_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 20,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "hp_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 0,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "item_cost": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": {},
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "weapons": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": [],
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "equipment": {
             "value": null,
             "status": "UNKNOWN"
           },
           "proc_chance": {
-            "value": null,
-            "status": "UNKNOWN"
+            "value": 1,
+            "status": "CUSTOM_BALANCE",
+            "note": "TWILIGHT offline fallback; original number unconfirmed"
           },
           "proc_count": {
             "value": null,

@@ -23,7 +23,7 @@ func color_for(id: String) -> Color:
 	return Color.from_hsv(float(presets.get(id, {}).get("hue", .58)), .5, 1.0)
 
 func emit_skill(id: String, phase: String, point: Vector2, end: Vector2 = Vector2.INF) -> void:
-	if phase in ["impact", "status"] and is_instance_valid(audio_pool): audio_pool.play_skill(id, point)
+	if phase in ["impact", "status", "resist"] and is_instance_valid(audio_pool): audio_pool.play_skill(id, point)
 	if live.size() >= MAX_EFFECTS: return
 	var item: Dictionary = available.pop_back() if not available.is_empty() else {}
 	item.merge({"id":id,"phase":phase,"point":point,"end":end,"age":0.0,"ttl":.65 if phase != "cast" else .4}, true)
@@ -72,7 +72,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	for item: Dictionary in live:
 		var preset: Dictionary = presets.get(str(item.id), {})
-		var point := to_local(item.point)
+		var point: Vector2 = to_local(item.point)
 		var t := float(item.age) / float(item.ttl)
 		var color := color_for(str(item.id))
 		color.a = 1.0 - t
@@ -83,8 +83,15 @@ func _draw() -> void:
 			for ray: int in range(5 + seed % 4):
 				var angle := TAU * float(ray) / float(5 + seed % 4) + t
 				draw_line(point + Vector2.from_angle(angle) * radius, point + Vector2.from_angle(angle) * (radius + 9), color, 2)
+		elif item.phase == "resist":
+			draw_arc(point, radius * .6, 0, TAU, 24, Color(.6, .65, .7, color.a * .5), 1, true)
+		elif motif in ["turn_undead", "turn_undead_ancient"]:
+			draw_arc(point, radius, 0, TAU, 32, color, 3, true)
+			draw_line(point + Vector2(0, -90 * (1 - t)), point + Vector2(0, 18), color, 4, true)
+			draw_line(point + Vector2(-radius, -20), point + Vector2(radius, -20), color, 3, true)
+			if motif == "turn_undead_ancient": draw_arc(point, radius * 1.5, 0, TAU, 32, Color(color, color.a * .5), 2, true)
 		elif motif in ["lightning","chain_lightning","thunder_stun","thunder_armor","field"]:
-			var begin := to_local(item.end) if item.end != Vector2.INF else point + Vector2(0, -160)
+			var begin: Vector2 = to_local(item.end) if item.end != Vector2.INF else point + Vector2(0, -160)
 			var last := begin
 			for step: int in range(1, 9):
 				var next := begin.lerp(point, float(step) / 8.0) + Vector2(sin(float(step * 5 + seed)) * 13, 0)

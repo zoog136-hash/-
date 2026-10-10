@@ -35,6 +35,12 @@ func run() -> void:
 		world.player.clear_status_effects()
 		world.player.apply_poison(10,1)
 		world.selected_monster = dummy
+		# The execution catalogue includes an instant-death skill. Give that path
+		# a valid undead target, and revive the fixture before each later record.
+		dummy.dead = false
+		dummy.hp = dummy.max_hp
+		dummy.undead = str(record.mode) == "turn_undead"
+		dummy.monster_type = "언데드" if dummy.undead else ""
 		if record.mode == "convert": world.mp = 0
 		for item: String in record.items: world.inventory[item] = 100
 		check(ResourceLoader.exists(str(record.icon)), "icon "+str(record.name))

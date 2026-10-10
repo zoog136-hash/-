@@ -4,7 +4,7 @@
 
 - 현재 Inven 13직업: 662 직업 배정, 486 고유 ID의 상세 메타데이터 확보.
 - 조사 인벤토리: 695 직업·이름 레코드. 날짜가 확인되는 과거 기록과 현재 후보를 구분합니다.
-- 실행 연결: 123개, 모두 PARTIAL. 실제 전투 경로를 연결했지만 원작 전체 효과의 일치 검증은 남아 있습니다.
+- 실행 연결: 125개, 모두 PARTIAL. 실제 전투 경로를 연결했지만 원작 전체 효과의 일치 검증은 남아 있습니다.
 - 기존 257개 DB 보존: 원작 이름 후보 41개 / 자체 제작 분류 216개.
 - 원작 미확인 수치는 balance.json의 CUSTOM_BALANCE. 내부 lm_ ID는 NC의 공식 ID가 아닙니다.
 
@@ -53,6 +53,8 @@
 | 마법사 | 디스인트그레이트(에이션트) | 전설 | upgrade | 80 | UNKNOWN | 디스인트그레이트 | [2023-05-27](https://mysmallplace.tistory.com/6) |
 | 마법사 | 미티어 스트라이크(에이션트) | 전설 | upgrade | 80 | UNKNOWN | 미티어 스트라이크 | [2023-05-27](https://mysmallplace.tistory.com/6) |
 | 마법사 | 서먼 가디언 | 신화 | summon | 80 | UNKNOWN | — | [2023-03-22](https://lineagem.plaync.com/board/update/view?articleId=641a05b8c19a0110e2d3edf4) |
+| 마법사 | 턴 언데드 | 일반 | turn_undead | 30 | UNKNOWN | — | [2022-02-09](https://lineagem.plaync.com/board/update/view?articleId=6202c4b88a33a923b33364dc) |
+| 마법사 | 턴 언데드(에이션트) | 영웅 | upgrade | 70 | UNKNOWN | 턴 언데드 | [2022-02-09](https://lineagem.plaync.com/board/update/view?articleId=6202c4b88a33a923b33364dc) |
 | 다크엘프 | 무빙 악셀레이션 | 일반 | stats | 30 | UNKNOWN | — | [2023-05-30](https://mysmallplace.tistory.com/7) |
 | 다크엘프 | 쉐도우 팽 | 일반 | stats | 30 | UNKNOWN | — | [2023-05-30](https://mysmallplace.tistory.com/7) |
 | 다크엘프 | 언케니 이베이젼 | 일반 | stats | 30 | UNKNOWN | — | [2023-05-30](https://mysmallplace.tistory.com/7) |

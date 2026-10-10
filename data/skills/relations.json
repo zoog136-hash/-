@@ -1291,5 +1291,31 @@
     "unlock_conditions": [],
     "requires_status": "UNKNOWN",
     "relationship_status": "NOT_APPLICABLE"
+  },
+  "lm_e35a5e1482fc0950": {
+    "requires_skill": [],
+    "requires_skill_level": {},
+    "upgrades_from": null,
+    "replaces_skill": null,
+    "inherits_effects": [],
+    "unlock_conditions": [],
+    "requires_status": "UNKNOWN",
+    "relationship_status": "NOT_APPLICABLE"
+  },
+  "lm_09370fb0d313977d": {
+    "requires_skill": [],
+    "requires_skill_level": {},
+    "upgrades_from": "lm_e35a5e1482fc0950",
+    "replaces_skill": null,
+    "inherits_effects": [
+      "lm_e35a5e1482fc0950"
+    ],
+    "unlock_conditions": [],
+    "requires_status": "UNKNOWN",
+    "relationship_status": "VERIFIED",
+    "patch": {
+      "turn_accuracy_bonus": 0.12,
+      "visual_skill_id": "lm_09370fb0d313977d"
+    }
   }
 }

@@ -80,7 +80,7 @@ def build(cache):
     for s in SPECS:
         job,name,source,mode=s['job'],s['name'],s['source'],s['mode'];sid=ident(job,name)
         values={'power':40,'mp':10,'hp':0,'range':240,'duration':5,'cooldown':8 if mode=='status' else 2,'cast_time':.42,'global_cooldown':.3,'shape':'single','targets':6,'radius':128,'attack_type':'none','element':'none','proc_chance':1,'status_chance':.6,'stats':{},'items':{},'weapons':[],'counter_chance':{'일반':.1,'고급':.1,'희귀':.1,'영웅':.15,'전설':.2,'신화':.25,'유일':.3}[s['grade']],'counter_multiplier':1}
-        excluded={'job','name','grade','source','mode','description','upgrades','requires','proof','classes','stage','school','level','motif','additional_sources','mechanism_proofs'}
+        excluded={'job','name','grade','source','mode','description','upgrades','requires','proof','classes','stage','school','level','motif','additional_sources','mechanism_proofs','unverified_fields','verified_fields'}
         values.update({k:v for k,v in s.items() if k not in excluded})
         values['minimum_level']=s.get('level',1 if job=='공용' and s.get('stage',1)==1 else 10 if job=='공용' else {'일반':30,'영웅':60,'전설':80,'신화':80}[s['grade']])
         passive_mode=mode in PASSIVE
@@ -90,7 +90,7 @@ def build(cache):
         # Even values shown on current DB are not accepted as dated numerical proof.
         balance[sid]={k:field(v,'VERIFIED' if k in proof else 'CUSTOM_BALANCE',proof.get(k),None if k in proof else 'TWILIGHT offline fallback; original number unconfirmed') for k,v in values.items()}
         rec={'id':sid,'name':name,'class':job,'classes':s.get('classes',CLASSES if job=='공용' else [job]),'grade':s['grade'],'activation':'passive' if passive_mode else 'active','mode':mode,'effect':'original','origin':'LINEAGEM_20250617','desc':s['description'],'source_ids':[source],'historical_effective':registry[source]['effective'],'pve':'INFERRED','implementation':'PARTIAL','runtime_effect':'CONNECTED','historical_continuity':'UNKNOWN','stage':s.get('stage',1),'school':s.get('school','rune' if job=='마검사' else 'class' if job!='공용' else 'general_magic'),'minimum_level':values['minimum_level'],'icon':f'res://assets/skills/icons/{sid}.svg','fields':{g:{k:field() for k in keys} for g,keys in [('basic',BASIC),('learning',LEARN),('combat',COMBAT),('visual',VISUAL)]}}
-        for k,val in [('original_name',name),('class',job),('grade',s['grade']),('activation',rec['activation'])]:rec['fields']['basic'][k]=field(val,'VERIFIED',source)
+        for k,val in [('original_name',name),('class',job),('grade',s['grade']),('activation',rec['activation'])]:rec['fields']['basic'][k]=field(val,'INFERRED' if k in s.get('unverified_fields',[]) else 'VERIFIED',source)
         rec['fields']['basic']['school']=field(rec['school'],'INFERRED',source)
         rec['fields']['basic']['stage']=field(rec['stage'],'VERIFIED' if source=='thunder22' else 'INFERRED',source)
         rec['fields']['basic']['category']=field(mode,'INFERRED',source)
@@ -122,6 +122,9 @@ def build(cache):
         rec['source_ids']=list(dict.fromkeys([source]+s.get('additional_sources',[])))
         if s.get('mechanism_proofs'):
             rec['mechanisms']={key:field(True,'VERIFIED',evidence) for key,evidence in s['mechanism_proofs'].items()}
+        for path, evidence in s.get('verified_fields',{}).items():
+            group,key=path.split('.',1)
+            rec['fields'][group][key]=field(evidence['value'],'VERIFIED',evidence['source'])
         records.append(rec)
         entry=inventory.get(by_name.get((job,normalized(name)),''))
         if entry is not None:entry.update(implementation='PARTIAL',runtime_id=sid,pve='INFERRED')
@@ -149,6 +152,9 @@ def build(cache):
     for file,d in outputs.items():(out/file).write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
     links=[];equipment_balance={}
     runtime_names={normalized(r['name']):r['id'] for r in records}
+    # An execution path does not verify the item's historical proc association.
+    # Keep previously blocked instant-death item effects blocked until reviewed.
+    unreviewed_item_skills={r['id'] for r in records if r['mode']=='turn_undead'}
     for category,items in json.loads((ROOT/'data/catalog_v19.json').read_text()).items():
         if category not in ['아이템','변신','마법인형','성물'] or not isinstance(items,list):continue
         for item in items:
@@ -157,7 +163,7 @@ def build(cache):
                 match=re.match(r'\s*발동:\s*(.*?)(?:\s+(\d+(?:\.\d+)?)%)?\s*$',fragment)
                 if not match:continue
                 name=match.group(1);id=runtime_names.get(normalized(name));key=hashlib.sha256((category+':'+item['name']+':'+name).encode()).hexdigest()[:16]
-                if id:
+                if id and id not in unreviewed_item_skills:
                     mapped.append({'key':key,'skill_id':id,'trigger':'on_hit','status':'INFERRED','history':'UNKNOWN','note':'Existing catalog association; original item effect date not yet verified'})
                     equipment_balance[key]=field(float(match.group(2))/100 if match.group(2) else .05,'CUSTOM_BALANCE',note='Current option probability is not accepted as a historical fact; local conservative fallback')
                 else:mapped.append({'key':key,'name':name,'status':'BLOCKED','history':'UNKNOWN','note':'No verified runtime mechanism; never converted to generic damage'})

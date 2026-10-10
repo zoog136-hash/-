@@ -151,9 +151,12 @@ func cast(record: Dictionary) -> bool:
 	skill["cast_time"] = float(skill.get("cast_time", .42)) / clampf(1 + stat("castSpeed") / 100.0, 1, 4)
 	var mode := str(skill.mode)
 	var target: TwilightMonster = null
-	if mode in ["attack", "status"] and str(skill.get("shape", "single")) != "self_circle":
+	if mode in ["attack", "status", "turn_undead"] and str(skill.get("shape", "single")) != "self_circle":
 		target = world._skill_target(float(skill.get("range", 240)))
 		if not is_instance_valid(target) or target.dead: return false
+	if mode == "turn_undead" and turn_undead_chance(skill, target) <= 0:
+		world.hud.show_message("턴 언데드 대상이 아니거나 즉사 면역입니다")
+		return false
 	if mode == "heal" and world.hp >= world._effective_max_hp() and not bool(skill.get("overflow_shield", false)) and skill.get("statuses", []).is_empty(): return false
 	if mode == "convert" and world.mp >= world._effective_max_mp(): return false
 	if mode == "cleanse" and not world.player.is_poisoned(): return false
@@ -165,9 +168,9 @@ func cast(record: Dictionary) -> bool:
 	world.skill_cooldowns[str(skill.name)] = maxf(0, cooldown)
 	world.skill_global_cooldown = float(skill.get("global_cooldown", .3))
 	world._break_invisibility()
-	vfx.emit_skill(id, "cast", world.player.global_position)
+	vfx.emit_skill(presentation_id(skill), "cast", world.player.global_position)
 	match mode:
-		"attack", "status":
+		"attack", "status", "turn_undead":
 			if str(skill.get("shape", "single")) == "self_circle":
 				world.player.pulse_attack()
 				# A timer carries the same map generation as queued target attacks.
@@ -199,7 +202,7 @@ func cast(record: Dictionary) -> bool:
 			world.hud.show_message(str(skill.name) + (" ON" if toggles[id] else " OFF"))
 		"summon": summons.spawn(skill)
 		_: return false
-	if mode not in ["attack","status"]: world.player.pulse_attack()
+	if mode not in ["attack","status","turn_undead"]: world.player.pulse_attack()
 	trigger("on_skill", target, skill)
 	world._update_hud()
 	return true
@@ -211,7 +214,8 @@ func launch_at_marker(action: Dictionary, target: TwilightMonster) -> void:
 		var shot_action := action.duplicate(false)
 		shot_action["callback"] = impact.bind(skill, target)
 		var kind := str(action.kind) if str(action.kind) in ["magic","ranged"] else "timed"
-		world.combat_flights.launch(world.player.combat_projectile_origin(), target, kind, world._impact_player_attack.bind(shot_action), 1050, hit * .08, {"color":vfx.color_for(str(skill.id)),"motif":vfx.presets.get(str(skill.id), {}).get("motif", ""),"obstruction":world._has_line_of_sight_world})
+		var visual_id := presentation_id(skill)
+		world.combat_flights.launch(world.player.combat_projectile_origin(), target, kind, world._impact_player_attack.bind(shot_action), 1050, hit * .08, {"color":vfx.color_for(visual_id),"motif":vfx.presets.get(visual_id, {}).get("motif", ""),"obstruction":world._has_line_of_sight_world})
 
 func area_marker(skill: Dictionary, generation: int) -> void:
 	if not is_instance_valid(world) or world.hp <= 0 or generation != world.combat_generation: return
@@ -242,6 +246,9 @@ func impact(skill: Dictionary, primary: TwilightMonster) -> void:
 	combat_elapsed = 0
 	for target: TwilightMonster in targets(skill, primary):
 		if not is_instance_valid(target) or target.dead: continue
+		if str(skill.mode) == "turn_undead":
+			resolve_turn_undead(skill, target)
+			continue
 		if str(skill.mode) == "status":
 			if status.apply(skill, target, world): vfx.emit_skill(str(skill.id), "status", target.combat_hit_position())
 			continue
@@ -256,6 +263,38 @@ func impact(skill: Dictionary, primary: TwilightMonster) -> void:
 		var config: Dictionary = skill.self_stacks
 		stack(str(skill.id), {"atk":config.get("atk", 2)}, int(config.get("max", 3)), float(config.get("duration", 15)))
 	world._refresh_combat_hud()
+
+static func presentation_id(skill: Dictionary) -> String:
+	return str(skill.get("visual_skill_id", skill.get("id", "")))
+
+func turn_undead_chance(skill: Dictionary, target: TwilightMonster) -> float:
+	if not is_instance_valid(target) or target.dead or not target.is_undead(): return 0.0
+	if target.status_immunities.has("turnUndead") or target.status_immunities.has("turn_undead"): return 0.0
+	# The original formula is undisclosed. These bounds, the upgrade bonus and
+	# the default boss exclusion are explicitly CUSTOM_BALANCE in balance.json.
+	var chance := clampf(hit_chance(skill, target) + float(skill.get("turn_accuracy_bonus", 0)), float(skill.get("turn_min_chance", .05)), float(skill.get("turn_max_chance", .99)))
+	if target.is_boss: chance *= clampf(float(skill.get("turn_boss_factor", 0)), 0, 1)
+	return chance
+
+static func roll_turn_undead(random: RandomNumberGenerator, chance: float) -> bool:
+	return random.randf() < clampf(chance, 0, 1)
+
+func resolve_turn_undead(skill: Dictionary, target: TwilightMonster) -> void:
+	var chance := turn_undead_chance(skill, target)
+	# Recheck at impact: changing race, gaining immunity or a stale target must
+	# not turn a previously valid projectile into an ordinary damage spell.
+	if chance <= 0: return
+	if not roll_turn_undead(world.rng, chance):
+		target.show_miss()
+		vfx.emit_skill(presentation_id(skill), "resist", target.combat_hit_position())
+		world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 저항")
+		return
+	# Use the NPC death signal/drop/XP path, with no weapon lifesteal, critical
+	# roll or recursive on-hit proc attached to this instant-death effect.
+	target.take_damage(target.hp, false, "turnUndead")
+	vfx.emit_skill(presentation_id(skill), "impact", target.combat_hit_position())
+	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1
+	world.hud.append_log(str(skill.name) + " · " + target.monster_name + " 언데드 즉사")
 
 func hit_chance(skill: Dictionary, target: TwilightMonster) -> float:
 	if str(skill.get("attack_type", "")) == "magic":
@@ -373,7 +412,7 @@ func trigger_equipment(target: TwilightMonster) -> void:
 			for augment_id: String in ancestry: skill.merge(catalog.relations[augment_id].get("patch", {}), true)
 			fired[id] = true
 			match str(skill.mode):
-				"attack", "status": impact(skill, target)
+				"attack", "status", "turn_undead": impact(skill, target)
 				"heal": heal(skill, int(skill.get("heal", 0)))
 				"buff": apply_buff(skill)
 
@@ -438,7 +477,9 @@ static func roll_counter(random: RandomNumberGenerator, chance: float) -> bool:
 
 func auto_wants(skill: Dictionary, target: TwilightMonster = null) -> bool:
 	if not ready(skill): return false
+	skill = catalog.resolve(skill)
 	match str(skill.mode):
+		"turn_undead": return turn_undead_chance(skill, target) > 0
 		"heal": return float(world.hp) / float(world._effective_max_hp()) <= float(skill.get("auto_hp_threshold", .65))
 		"convert": return float(world.mp) / float(world._effective_max_mp()) <= .35 and float(world.hp) / float(world._effective_max_hp()) > .55
 		"cleanse": return world.player.is_poisoned()

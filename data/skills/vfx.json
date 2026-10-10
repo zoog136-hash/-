@@ -3565,5 +3565,63 @@
         "note": "mechanics reference; dated VFX/video comparison pending"
       }
     ]
+  },
+  "lm_e35a5e1482fc0950": {
+    "cast_vfx": "lm_e35a5e1482fc0950:cast",
+    "projectile_vfx": "lm_e35a5e1482fc0950:projectile",
+    "impact_vfx": "lm_e35a5e1482fc0950:impact",
+    "persistent_vfx": "lm_e35a5e1482fc0950:persistent",
+    "end_vfx": "lm_e35a5e1482fc0950:end",
+    "status_vfx": "lm_e35a5e1482fc0950:status",
+    "audio_profile": "lm_e35a5e1482fc0950:audio",
+    "motif": "turn_undead",
+    "hue": 0.8222222222222222,
+    "seed": 16517456,
+    "animation_timeline": {
+      "cast": 0,
+      "release": "player_motion_event",
+      "impact": "collision_or_attack_marker",
+      "end": 0.7
+    },
+    "visual_verification": "UNKNOWN",
+    "references": [
+      {
+        "source": "turn22",
+        "url": "https://lineagem.plaync.com/board/update/view?articleId=6202c4b88a33a923b33364dc",
+        "upload_date": null,
+        "timestamp": null,
+        "status": "UNKNOWN",
+        "note": "mechanics reference; dated VFX/video comparison pending"
+      }
+    ]
+  },
+  "lm_09370fb0d313977d": {
+    "cast_vfx": "lm_09370fb0d313977d:cast",
+    "projectile_vfx": "lm_09370fb0d313977d:projectile",
+    "impact_vfx": "lm_09370fb0d313977d:impact",
+    "persistent_vfx": "lm_09370fb0d313977d:persistent",
+    "end_vfx": "lm_09370fb0d313977d:end",
+    "status_vfx": "lm_09370fb0d313977d:status",
+    "audio_profile": "lm_09370fb0d313977d:audio",
+    "motif": "turn_undead_ancient",
+    "hue": 0.5694444444444444,
+    "seed": 1283965,
+    "animation_timeline": {
+      "cast": 0,
+      "release": "player_motion_event",
+      "impact": "collision_or_attack_marker",
+      "end": 0.7
+    },
+    "visual_verification": "UNKNOWN",
+    "references": [
+      {
+        "source": "turn22",
+        "url": "https://lineagem.plaync.com/board/update/view?articleId=6202c4b88a33a923b33364dc",
+        "upload_date": null,
+        "timestamp": null,
+        "status": "UNKNOWN",
+        "note": "mechanics reference; dated VFX/video comparison pending"
+      }
+    ]
   }
 }

@@ -39,6 +39,7 @@ static func read_json(filename: String) -> Dictionary:
 static func effect_for(record: Dictionary) -> String:
 	match str(record.get("mode", "")):
 		"attack": return "damage"
+		"turn_undead": return "turnUndead"
 		"status": return str(record.get("status", "stun"))
 		"heal", "convert", "cleanse": return "heal"
 		"buff", "counter": return "defBuff"

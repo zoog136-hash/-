@@ -1851,5 +1851,63 @@
     "guardian_shield_hp_cap": 1,
     "guardian_shield_duration": 12,
     "motif": "guardian"
+  },
+  {
+    "job": "마법사",
+    "name": "턴 언데드",
+    "grade": "일반",
+    "source": "turn22",
+    "additional_sources": [
+      "turn24"
+    ],
+    "mode": "turn_undead",
+    "description": "언데드 NPC에 확률적 즉사를 시도합니다. 원작 수치 미확인: 로컬 마법 명중 기반 판정과 보스 제외는 자체 밸런스입니다.",
+    "stage": 3,
+    "level": 30,
+    "mp": 20,
+    "hp": 0,
+    "items": {},
+    "cooldown": 5,
+    "range": 320,
+    "cast_time": 0.42,
+    "attack_type": "magic",
+    "element": "holy",
+    "motif": "turn_undead",
+    "targets": 1,
+    "turn_accuracy_bonus": 0.0,
+    "turn_min_chance": 0.05,
+    "turn_max_chance": 0.99,
+    "turn_boss_factor": 0.0,
+    "unverified_fields": [
+      "grade",
+      "activation"
+    ]
+  },
+  {
+    "job": "마법사",
+    "name": "턴 언데드(에이션트)",
+    "grade": "영웅",
+    "source": "turn22",
+    "additional_sources": [
+      "turn24"
+    ],
+    "mode": "upgrade",
+    "upgrades": "턴 언데드",
+    "description": "턴 언데드 적중 확률을 강화하는 패시브입니다. 강화 폭은 원작 미공개: TWILIGHT 자체 수치 +0.12를 적용합니다.",
+    "level": 70,
+    "motif": "turn_undead_ancient",
+    "patch": {
+      "turn_accuracy_bonus": 0.12,
+      "visual_skill_id": "lm_09370fb0d313977d"
+    },
+    "mechanism_proofs": {
+      "enhance_turn_undead_hit_chance": "turn22"
+    },
+    "verified_fields": {
+      "learning.book_acquisition": {
+        "value": "몬스터 드랍: 신념의 탑 2층 보스(탐욕의 벨리엘)",
+        "source": "turn22"
+      }
+    }
   }
 ]
