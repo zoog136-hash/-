@@ -23,7 +23,7 @@ func _verify() -> void:
 	var map_renderer: Node = MAP.new()
 	var inventory_ui: Node = INVENTORY.new()
 	var catalog_ui: Node = CATALOG.new()
-	var shop: Node = SHOP.new()
+	var shop = SHOP.new()
 	assert(fx.has_method("_draw"))
 	assert(map_renderer.has_method("_scatter_ambient_details"))
 	assert(inventory_ui.has_method("_activate_dragged_equipment"))
