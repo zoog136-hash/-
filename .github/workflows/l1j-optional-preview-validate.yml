@@ -1,0 +1,50 @@
+name: L1J Opt-In Preview Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'addons/twilight_l1j/**'
+      - 'tests/l1j_optional_bridge_test.gd'
+      - '.github/workflows/l1j-optional-preview-validate.yml'
+  workflow_dispatch:
+
+jobs:
+  safe-opt-in:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get Godot 4.7.2 official build
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Parse all project scripts
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee l1j-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' l1j-import.log
+      - name: Validate optional bridge and standalone scene
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$PWD/.l1j-optin-test-userdata"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/l1j_optional_bridge_test.gd 2>&1 | tee l1j-optin.log
+          grep -q 'L1J_OPTIONAL_BRIDGE_OK' l1j-optin.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|L1J_OPTIONAL_FAIL:' l1j-optin.log
+      - name: Verify normal game starts without resource ZIPs
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$PWD/.l1j-normal-boot-userdata"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 60 2>&1 | tee l1j-normal-boot.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' l1j-normal-boot.log
+      - name: Preserve logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l1j-selective-preview-validation
+          path: |
+            l1j-import.log
+            l1j-optin.log
+            l1j-normal-boot.log
+          if-no-files-found: warn
