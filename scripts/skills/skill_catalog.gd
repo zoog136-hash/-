@@ -108,6 +108,7 @@ func learn(key: String) -> bool:
 	world.inventory[str(record.book_name)] -= 1
 	learned[str(record.id)] = 1
 	revision += 1
+	world.original_skills.refresh_buffs_after_learning(str(record.id))
 	world._refresh_speed_modifiers()
 	world._update_hud()
 	world._save_game(true)

@@ -250,8 +250,9 @@ working OpenGL display. Public fetch works here; plain Git push lacks credential
 This session published through authenticated Git blob/tree/commit/ref APIs,
 verifying exact local hashes and the expected remote parent without force.
 
-Next actual paths after the recovery below: `scripts/skills/skill_catalog.gd:learn()/resolve()`
-for the remaining ownership/weapon/upgrade audits; then dated class effects in
+Next actual paths after the recovery below: `scripts/skills/skill_service.gd:import_state()`
+for restored buff/toggle/shield eligibility, then dated class effects and original
+learning prerequisites in
 `data/skills/research_inventory.json`. All **568 BLOCKED records** are the explicit
 unfinished list: **549** need pre-cutoff effect/PvE verification; **19** need historical
 rename/rework/continuity verification. The first record is knight `데몬 대시`, stable
@@ -435,3 +436,91 @@ existing branch, and run the new `original_skill_status_coexistence_test.gd` wit
 an isolated save directory. The machine-readable evidence for this checkpoint
 is `evidence/pr59-coexistence-20261011/verification.json`. Do not merge into main
 without the user's separate instruction.
+
+
+## Learning conditions and already-active upgrades — 2026-10-11 KST
+
+The checkout was clean at `c34b9c5a841c4097de498662332b59cfd80d11b2`; the
+remote head matched. Its **25/25 GitHub workflows now succeeded**, including
+[PR skill CI 38094443398](https://github.com/zoog136-hash/-/actions/runs/38094443398)
+with **95/95 + real OpenGL 11 screens**, guardian hit/shield and Turn Undead
+impact. Prior code was retained. See `evidence/pr59-learning-20261011/previous-ci.json`
+for the exact jobs, logs and artifact digest.
+
+### Reproduced bug
+
+Cast Thunder Armor, then learn its Mystic upgrade through an actual skill book.
+The resolver immediately knew the new stats, while the already-active buff kept
+its old stat snapshot. This left received physical damage and the learning
+transaction's saved buff at the old values until a later load/recast. The new
+regression reproduced **three failures**: live stats, actual incoming damage,
+and the buff values written by learning.
+
+`skill_catalog.gd:learn()` now reconciles affected live buffs after granting the
+stable learned ID and before HUD/speed/save refresh.
+`skill_service.gd:refresh_buffs_after_learning()` follows the declared ancestor
+IDs, resolves only owned active buffs in that family, and replaces their stat
+snapshot/speed. It does not cast, spend MP, change cooldowns, restart timers or
+touch unrelated buffs. All original data, IDs, school/weapon rules, source
+metadata, upgrade graph and save schemas remain unchanged.
+
+### Actual validation
+
+- The new regression passed **1,689 assertions**, covering all **125** current
+  records, **10** upgrade relations and **4** weapon-restricted base records.
+  It exercises low-level rejection, missing books, insufficient gold, actual
+  buy/learn transactions, duplicate/unknown IDs, class ownership, passive cast
+  rejection, learned ancestor order even with the catalog reversed, weapon
+  denial for manual/AUTO without MP/cooldown/RNG consumption, and elf schools.
+- The live upgrade probe confirms local resistance **5 -> 8**, DG **0 -> 4**,
+  actual 100-point physical incoming damage **95 -> 92**, immediate save/load
+  agreement, unchanged 60-second remaining time, MP/cooldowns, unrelated Shield
+  buff and cast-event counts. These numbers are existing **CUSTOM_BALANCE**.
+- All **6/6 focused suites passed**, including summon, catalog, skill-system,
+  shared warehouse/save and coexisting-status regressions. Data errors: **0**.
+- Whole-project regression: **96/96 PASS**, with isolated saves and the
+  existing synthetic CI fixtures. Verified generated files against an isolated
+  fixture and removed only those files/PNG import sidecars. No new local render
+  was performed at this learning checkpoint.
+- The initial test's catalog-order probe was corrected to iterate a snapshot
+  before the passing run; a final 125/10/4 assertion prevents incomplete audit
+  coverage. The three production failures above were independently reproduced
+  by the live-upgrade section.
+
+This validates the current local implementation, not the historical accuracy
+of every learning level, price, prerequisite or enhancement chain. In
+particular, UNKNOWN original prerequisites remain UNKNOWN; no intermediate
+book requirement was invented. Counts stay **125 PARTIAL / 568 BLOCKED /
+2 PVP_EXCLUDED**, with no new COMPLETE declaration.
+
+### Primary-source follow-up and next step
+
+Public official article bodies for the existing 2024-09-25 and 2024-10-02
+knight sources were retrieved through the API used by their public pages.
+Neither body mentions Demon Dash. That limited result cannot establish its
+absence or PvE exclusion, so stable ID `lm_bf27d9216c1bd228` remains BLOCKED.
+The September article also distinguishes old Master -> Grand Master: Counter
+from old Veteran -> new Master; the October care note uses Grand Master:
+Counter. Preserve separate historical identities when investigating this
+rename, rather than equating identical displayed names across dates.
+Canonical URLs, publication times, body hashes and the bounded findings are
+in `evidence/pr59-learning-20261011/source-followup.json`. No source body was
+redistributed and no runtime data was changed based on an undated search hit.
+
+Next concrete code audit: `skill_service.gd:import_state()` and its consumers
+for restored buff/toggle/shield ownership and eligibility. Continue dated
+original prerequisite/rename evidence and the explicit BLOCKED inventory.
+Before resuming, compare local changes with PR #59's remote head, preserve
+local edits, and keep the existing branch. Use isolated saves and the existing
+CI fixture setup only where no private resources exist. Do not merge main.
+
+The completed prior PR CI used synthetic merge `020d56adb513f9f7d4dbab40a28378f7170cfae2`,
+tree `06abb53b2b7dbf7dd84331e3f7c9e0a7e33aec86`, with newer main parent
+`1d267e53aaea32038f348065066f7c3e5286415c`; it is not identical to the c34 feature
+tree. The separate [push CI](https://github.com/zoog136-hash/-/actions/runs/38094440519)
+(job `114337318198`) directly verifies c34 with 95/95 and actual OpenGL markers.
+During this task main advanced to `bc6b59baac786913ea0112ab3bd7f8bf278e474f`
+(six commits after the integrated 88d1c68 baseline). GitHub's metadata reported
+mergeable=false, but a local read-only merge-tree calculation found **no text
+conflicts**, resulting tree `3ef0aa3e254def09f827f1fc6bb266e67e258814` before
+adding this learning fix. Do not infer a file conflict from that API flag.

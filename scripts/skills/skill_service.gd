@@ -102,6 +102,26 @@ func refresh_buff_visuals() -> void:
 	for id: String in vfx.persistent.keys():
 		if not retained.has(id): vfx.remove_persistent(id)
 
+func refresh_buffs_after_learning(learned_id: String) -> void:
+	# An upgrade can be learned while its base buff is already active. Resolve
+	# that family's stats before the learning transaction updates HUD/save data;
+	# this is not a cast and must not refresh time, costs or unrelated buffs.
+	if catalog.relations.get(learned_id, {}).get("upgrades_from") == null: return
+	var family: Dictionary = {}
+	var cursor := learned_id
+	while not cursor.is_empty() and not family.has(cursor):
+		family[cursor] = true
+		var parent: Variant = catalog.relations.get(cursor, {}).get("upgrades_from")
+		cursor = str(parent) if parent != null else ""
+	for buff: Dictionary in world.active_skill_buffs.values():
+		var id := str(buff.get("skill_id", ""))
+		if not family.has(id): continue
+		var base := catalog.record_for(id)
+		if base.is_empty() or not catalog.owned(base): continue
+		var skill := catalog.resolve(base)
+		buff["skill_stats"] = skill.get("stats", {}).duplicate(true)
+		buff["speed"] = float(buff.skill_stats.get("speed", 1))
+
 func stat(key: String) -> float:
 	var result := catalog.stat(key)
 	for buff: Dictionary in world.active_skill_buffs.values():

@@ -1,0 +1,41 @@
+{
+  "recorded_at": "2026-10-10T23:34:17.552977+00:00",
+  "target_id": "lm_bf27d9216c1bd228",
+  "target_name": "데몬 대시",
+  "scope": "Read the public article bodies of two existing official knight update sources. Search engine results did not yield a sufficient dated official Demon Dash source.",
+  "sources": [
+    {
+      "article_id": "66f31338a6acf62e167e4e3f",
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=66f31338a6acf62e167e4e3f",
+      "public_api_url": "https://api-community.plaync.com/lineagem/board/update/article/66f31338a6acf62e167e4e3f",
+      "title": "[업데이트 공지] 리니지M 9월 25일 패치 노트 - 1",
+      "published_at": "2024-09-24T19:30:00.001Z",
+      "effective_date_kst": "2024-09-25",
+      "response_sha256": "b48af239bda94d816df1e59a12c6ca9964134a37d75db5bf36ba4e3674ec0b0e",
+      "body_sha256": "4068deea40bc7c64a3a6ad9bd253ba0a39a85cd7d5982e31342719b79704abf9",
+      "body_chars": 130357,
+      "literal_demon_dash_mentions": 0,
+      "literal_demon_mentions": 0,
+      "literal_dash_mentions": 0
+    },
+    {
+      "article_id": "66fc4db89f0bd41e688fd8cd",
+      "url": "https://lineagem.plaync.com/board/update/view?articleId=66fc4db89f0bd41e688fd8cd",
+      "public_api_url": "https://api-community.plaync.com/lineagem/board/update/article/66fc4db89f0bd41e688fd8cd",
+      "title": "[업데이트 공지] 리니지M 10월 2일 패치 노트 (수정)",
+      "published_at": "2024-10-01T19:30:00.001Z",
+      "effective_date_kst": "2024-10-02",
+      "response_sha256": "86e89b85a5e6125f7c397404bdb7d91c874339febed03f9c1da4031c5505277c",
+      "body_sha256": "7f4844951caef32cf743f1f86eacd989e52cd3d66d52ef5335be8da0e60b4c0a",
+      "body_chars": 25468,
+      "literal_demon_dash_mentions": 0,
+      "literal_demon_mentions": 0,
+      "literal_dash_mentions": 0
+    }
+  ],
+  "finding": "Neither inspected article body mentions Demon Dash. This is limited negative evidence, not proof of absence from the game or PvE exclusion.",
+  "other_observation": "The 2024-09-25 official update distinguishes old Counter Barrier Master renamed to Grand Master: Counter from old Veteran renamed to Counter Barrier Master. The 2024-10-02 care note uses Grand Master: Counter. Existing pre-2024 runtime identities must not be silently merged by equal display names.",
+  "decision": "Keep Demon Dash BLOCKED and historical/PvE continuity UNKNOWN. No runtime data, names, counts, requirements or classifications changed.",
+  "audit_limit": "The 1,689 condition assertions verify current TWILIGHT data and transactions. They do not validate original historical learning prerequisites or all original upgrade relationships.",
+  "next_source_work": "Inspect dated official class releases/skill guides preceding 2025-06-17 and preserve separate old/new identities for the 2024 counter renames. Do not repeat the same broad searches as evidence of progress."
+}
