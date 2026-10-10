@@ -88,3 +88,7 @@
 - `tests/crafting_scroll_grade_test.gd`: 등급별 비법서 분류, 실제 드랍 후보, 고유 장비 전체 커버리지, 비법서 부족 거절, 비법서 소모 및 물리 장비 ID.
 - `tests/crafting_atomic_test.gd`: 413개 레시피, 수량, 장착/강화된 재료 보호, 일괄 소비 원자성.
 - `tests/crafting_material_drop_test.gd`, `tests/loot_balance_smoke_test.gd`, `tests/ground_loot_system_test.gd`, 창고·상점 회귀 테스트 보존.
+
+### 재료 접근성 보완
+
+상위 레시피의 하위 장신구 8종(수호의 목걸이·인장·귀걸이·벨트·팔찌·수정·카탈리스트·룬)이 기존 76종의 '재료로 직접 쓰이는 장비' 출처만으로는 명시적으로 접근할 수 없어 몬스터별 동일 등급 장비 후보에 추가함. **현재 하위 장비 재료의 명시적 출처는 84종**이며, 다른 상위 장비 재료는 자체 제작법을 통해 획득할 수 있음. 신규 책은 독립 채집 재료 판정에 포함하지 않는다.
