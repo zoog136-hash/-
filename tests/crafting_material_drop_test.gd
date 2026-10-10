@@ -110,7 +110,7 @@ func _run() -> void:
 		var expected: float = LOOT.BOSS_MATERIAL_DROP_RATE if is_boss else LOOT.MATERIAL_DROP_RATE
 		_check(absf(rate - expected) <= 0.04,"material drops trigger at local configured rate "+name)
 	if failures.is_empty():
-		print("CRAFT_MATERIAL_OK: 10 materials, 81 recipes, 76 equipment sources, 318 monster sources, independent ground-loot rolls")
+		print("CRAFT_MATERIAL_OK: 10 materials, 413 recipes, 76 equipment sources, 318 monster sources, independent ground-loot rolls")
 		quit(0)
 	else:
 		print("CRAFT_MATERIAL_FAILED: %d" % failures.size())
