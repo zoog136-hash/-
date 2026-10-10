@@ -49,11 +49,11 @@ func _run() -> void:
 	var inv: Dictionary = {"HP 물약":3,"약초":2}
 	var physical: Dictionary = {}
 	var equipped: Dictionary = {}
-	var denied: Dictionary = service.execute("healing_plus",1,inv,79,items,physical,equipped,9,200,10)
+	var denied: Dictionary = service.execute("healing_plus",1,inv,79,items,physical,equipped,11,200,10)
 	_check(not bool(denied.get("ok")) and inv["HP 물약"] == 3 and inv["약초"] == 2, "insufficient Adena cannot consume materials")
-	denied = service.execute("healing_plus",1,inv,1000,items,physical,equipped,9,3,10)
+	denied = service.execute("healing_plus",1,inv,1000,items,physical,equipped,11,3,10)
 	_check(not bool(denied.get("ok")) and inv["HP 물약"] == 3 and inv["약초"] == 2, "result overweight cannot consume materials")
-	var crafted: Dictionary = service.execute("healing_plus",1,inv,1000,items,physical,equipped,9,200,10)
+	var crafted: Dictionary = service.execute("healing_plus",1,inv,1000,items,physical,equipped,11,200,10)
 	_check(bool(crafted.get("ok")), "valid potion crafting works")
 	_check(int(crafted.get("gold_after",-1)) == 920, "authoritative Adena price")
 	_check(int(inv.get("HP 물약",0)) == 0 and int(inv.get("약초",0)) == 0 and int(inv.get("강력 HP 물약",0)) == 1, "materials deducted and result produced")
