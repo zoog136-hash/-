@@ -49,6 +49,13 @@ func _run() -> void:
 	special_rng.seed = 714
 	var unique_item: String = LOOT._pick_equipment("유일", ["기르타스의 단검"], catalog, special_rng)
 	_check(unique_item == "기르타스의 단검", "boss configured Unique gear should be prioritized")
+	# A configured monster must never inherit an unrelated item or grade.
+	var strict_rng: RandomNumberGenerator = RandomNumberGenerator.new()
+	strict_rng.seed = 3189
+	_check(LOOT._pick_equipment("희귀", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "", "grade miss must not substitute unrelated rare equipment")
+	_check(LOOT._pick_equipment("고급", ["HP 물약", "수정 단검"], catalog, strict_rng, "스파토이") == "수정 단검", "configured grade must select exactly registered equipment")
+	_check(LOOT._pick_equipment("유일", ["HP 물약"], catalog, strict_rng, "고스트") == "", "potion-only monster must not inherit Unique equipment")
+	_check(LOOT._pick_equipment("일반", ["없는 아이템"], catalog, strict_rng, "잘못된 몬스터") == "", "unmapped item must be rejected")
 	var boss_count: int = 0
 	var normal_count: int = 0
 	var gear_count: int = 0
@@ -98,8 +105,13 @@ func _run() -> void:
 	var sampled_rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	sampled_rng.seed = 90210
 	var multi_gear_kills: int = 0
+	var boss_test_drops: Array[String] = ["HP 물약"]
+	for grade: String in LOOT.EQUIPMENT_GRADES:
+		var grade_items: Array = equipment_pools.get(grade, [])
+		if not grade_items.is_empty():
+			boss_test_drops.append(str(grade_items[0]))
 	for index: int in range(25000):
-		var earned: Array[String] = LOOT.roll(["HP 물약", "기르타스의 단검"], true, catalog, sampled_rng)
+		var earned: Array[String] = LOOT.roll(boss_test_drops, true, catalog, sampled_rng)
 		var earned_gear: int = 0
 		for name: String in earned:
 			var item: Dictionary = by_name[name] as Dictionary
