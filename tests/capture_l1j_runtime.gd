@@ -55,7 +55,7 @@ func _run() -> void:
 		var binding: Dictionary = bindings.items[index]
 		world._grant_playtest_catalog_variant(str(binding.game_source_id),1)
 		world._spawn_ground_drop(str(binding.game_name),world.player.global_position+Vector2(float(index-2)*105,40))
-	await capture("01-original-art-field")
+	await capture("01-bound-art-field")
 	world.hud.open_catalog("아이템")
 	world.hud.catalog_search.text = "수정 단검"
 	world.hud._refresh_catalog_list("수정 단검")
@@ -64,11 +64,11 @@ func _run() -> void:
 			world.hud.catalog_list.select(index)
 			world.hud._on_catalog_item_selected(index)
 			break
-	await capture("02-original-icon-catalog")
+	await capture("02-bound-icon-catalog")
 	world.hud.catalog_panel.hide()
 	world.hud.refresh_inventory(world.inventory)
 	world.hud.toggle_inventory()
-	await capture("03-original-icons-inventory")
+	await capture("03-bound-icons-inventory")
 	print("L1J_RUNTIME_RENDER_OK captures=",captures," directory=",ProjectSettings.globalize_path(OUTPUT),
 		" synthetic=",bool(bindings.get("synthetic_fixture_only",false)))
 	world.queue_free()
