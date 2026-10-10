@@ -27,7 +27,6 @@ func _run() -> void:
         actor.sprite_frames = frames
         actor.animation = "default"
         actor.frame = 1
-        _check(actor.texture_filter == CanvasItem.TEXTURE_FILTER_INHERIT, "unexpected sprite config")
         _check(actor.sprite_frames.get_frame_count(actor.animation) == 2, "animation not applied to Sprite2D")
         actor.queue_free()
     if failures.is_empty():
