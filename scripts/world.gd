@@ -1133,6 +1133,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
+		_apply_saved_visual_mode()
 		field_population.configure(self, field_map)
 	else:
 		_spawn_monsters(9)
@@ -1142,6 +1143,19 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	auto_repath_timer = 0.0
 	ground_loot.activate(active_map_id)
 	hud.show_message(str(active_map.get("name", active_map_id)))
+
+func _set_visual_mode(mode: String) -> void:
+	if is_instance_valid(field_renderer):
+		field_renderer.set_visual_mode(mode)
+
+func _apply_saved_visual_mode() -> void:
+	if not is_instance_valid(field_renderer):
+		return
+	var options := ConfigFile.new()
+	var mode: String = "twilight"
+	if options.load("user://twilight_ui_settings.cfg") == OK:
+		mode = str(options.get_value("visual","map_mode","twilight"))
+	_set_visual_mode(mode)
 
 func _apply_map_background() -> void:
 	var path: String = str(active_map.get("image_path", ""))
