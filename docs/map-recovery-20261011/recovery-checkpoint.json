@@ -44,5 +44,26 @@
     "Resume from this branch HEAD and the saved original grid pack; reuse the inventory and do not rescan unchanged sources."
   ],
   "private_pack_directory": "data/l1j/recovered_maps",
-  "public_report_directory": "docs/map-recovery-20261011"
+  "public_report_directory": "docs/map-recovery-20261011",
+  "latest_main_integrated_sha": "1d267e53aaea32038f348065066f7c3e5286415c",
+  "initial_saved_remote_commit": "e400fc821641f13913e57f6426346eb757f7d161",
+  "initial_exact_verified_tree": "f7755ea6ba386e17be9eb6594400c0db3c3bfb78",
+  "latest_main_changed_files": [
+    "tests/capture_regions.gd",
+    "tests/l1j_runtime_game_test.gd"
+  ],
+  "affected_runtime_recheck": {
+    "passed": 67,
+    "failed": 0,
+    "log": "evidence/latest-main-runtime.txt"
+  },
+  "remote_source_map_ci": {
+    "url": "https://github.com/zoog136-hash/-/actions/runs/38092128884",
+    "conclusion": "success"
+  },
+  "save_attempt_notes": [
+    "Direct git push had no credentials; not repeated.",
+    "A whole-tree content upload normalized CSV CRLF and did not match the tested tree. Repeating the whole transfer was stopped.",
+    "The original CSV was stored as exact base64 bytes and verified by its original blob hash; the final remote tree matched the tested local tree."
+  ]
 }
