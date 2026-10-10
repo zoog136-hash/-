@@ -28,6 +28,10 @@ static func _is_potion(record: Dictionary) -> bool:
 	return str(record.get("slot", "")) == "consumable" and int(record.get("heal", 0)) > 0
 
 static func _is_equipment(record: Dictionary) -> bool:
+	# Scrolls share equipment rarity rolls, but stay non-wearable stackable
+	# consumables in inventory, warehouse and crafting transactions.
+	if bool(record.get("crafting_scroll",false)):
+		return bool(record.get("drop_as_equipment",false)) and str(record.get("slot","")) == "consumable"
 	var slot: String = str(record.get("slot", ""))
 	return not slot.is_empty() and slot != "currency" and slot != "consumable"
 
