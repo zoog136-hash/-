@@ -6,11 +6,11 @@ import pathlib
 import struct
 import zlib
 
-def png_bytes(rgba):
+def png_bytes(rgba, width=4, height=4):
     def chunk(name, body):
         return struct.pack(">I", len(body)) + name + body + struct.pack(">I", zlib.crc32(name + body) & 0xffffffff)
-    header = struct.pack(">IIBBBBB", 4, 4, 8, 6, 0, 0, 0)
-    rows = b"".join(b"\x00" + bytes(rgba) * 4 for _ in range(4))
+    header = struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)
+    rows = b"".join(b"\x00" + bytes(rgba) * width for _ in range(height))
     return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", zlib.compress(rows)) + chunk(b"IEND", b"")
 
 def main():

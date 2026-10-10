@@ -28,6 +28,8 @@ func item_record(item_name: String) -> Dictionary:
 	return (catalog.get("by_name", {}) as Dictionary).get(item_name, {})
 
 func _icon(item_name: String) -> Texture2D:
+	var external: Texture2D = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd").ground_icon(item_record(item_name), item_name)
+	if external != null: return external
 	var images: Dictionary = (world.get("catalog_image_index") as Dictionary).get("아이템", {})
 	var path: String = str(images.get(item_name, ""))
 	return load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
