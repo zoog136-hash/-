@@ -56,7 +56,20 @@ static func build_catalog(items: Array) -> Dictionary:
 			var declared: Variant = (raw_overrides as Dictionary).get("monsters", {})
 			if declared is Dictionary:
 				overrides = declared as Dictionary
-	return {"by_name":by_name, "equipment_by_grade":by_grade, "potions":potions, "l1j_monster_drops":overrides}
+	# Supplemental TWILIGHT gameplay-balance assignments are intentionally separate
+	# from the source-audited L1J drop overrides. No extra rarity rolls occur.
+	var coverage_equipment: Dictionary = {}
+	var coverage_potions: Dictionary = {}
+	if FileAccess.file_exists("res://data/monsters/twilight_drop_coverage.json"):
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/monsters/twilight_drop_coverage.json"))
+		if parsed is Dictionary and int((parsed as Dictionary).get("schema_version", 0)) == 1:
+			var balance: Dictionary = parsed as Dictionary
+			if balance.get("equipment", {}) is Dictionary:
+				coverage_equipment = balance["equipment"] as Dictionary
+			if balance.get("potions", {}) is Dictionary:
+				coverage_potions = balance["potions"] as Dictionary
+	return {"by_name":by_name, "equipment_by_grade":by_grade, "potions":potions, "l1j_monster_drops":overrides,
+		"twilight_coverage_equipment":coverage_equipment, "twilight_coverage_potions":coverage_potions}
 
 static func _roll_equipment_grade(is_boss: bool, rng: RandomNumberGenerator) -> String:
 	var rates: Dictionary = BOSS_EQUIPMENT_RATES if is_boss else NORMAL_EQUIPMENT_RATES
@@ -68,7 +81,7 @@ static func _roll_equipment_grade(is_boss: bool, rng: RandomNumberGenerator) -> 
 			return grade
 	return ""
 
-static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator) -> String:
+static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: Dictionary, rng: RandomNumberGenerator, monster_name: String = "") -> String:
 	var by_name: Dictionary = catalog.get("by_name", {})
 	var configured: Array[String] = []
 	for item_name: String in monster_drops:
@@ -77,6 +90,42 @@ static func _pick_potion(monster_drops: Array[String], is_boss: bool, catalog: D
 		var record: Dictionary = by_name[item_name] as Dictionary
 		if _is_potion(record) and str(record.get("grade", "")) != "유일":
 			configured.append(item_name)
+	# One existing potion roll (45% field / 90% boss). Extra catalog potions
+	# share that roll as rare weighted alternatives; never an extra drop roll.
+	var supplemental: Dictionary = catalog.get("twilight_coverage_potions", {})
+	var potion_rows: Variant = supplemental.get(monster_name, [])
+	if potion_rows is Array and not (potion_rows as Array).is_empty():
+		var choices: Array[Dictionary] = []
+		for configured_name: String in configured:
+			choices.append({"item_name":configured_name, "weight":100000})
+		if choices.is_empty():
+			var default_name: String = "강력 HP 물약" if is_boss else "HP 물약"
+			if by_name.has(default_name) and _is_potion(by_name[default_name] as Dictionary):
+				choices.append({"item_name":default_name, "weight":100000})
+		for raw_row: Variant in potion_rows:
+			if not (raw_row is Dictionary):
+				continue
+			var row: Dictionary = raw_row as Dictionary
+			var name_value: String = str(row.get("item_name", ""))
+			if not by_name.has(name_value) or configured.has(name_value):
+				continue
+			var item: Dictionary = by_name[name_value] as Dictionary
+			if not _is_potion(item):
+				continue
+			if str(item.get("grade", "")) == "유일" and not is_boss:
+				continue
+			var weight: int = clampi(int(row.get("weight", 0)), 0, 1000000)
+			if weight > 0:
+				choices.append({"item_name":name_value, "weight":weight})
+		var total_weight: int = 0
+		for choice: Dictionary in choices:
+			total_weight += int(choice["weight"])
+		if total_weight > 0:
+			var draw: int = rng.randi_range(1, total_weight)
+			for choice: Dictionary in choices:
+				draw -= int(choice["weight"])
+				if draw <= 0:
+					return str(choice["item_name"])
 	if not configured.is_empty():
 		return configured[rng.randi_range(0, configured.size() - 1)]
 	var fallback: String = "강력 HP 물약" if is_boss else "HP 물약"
@@ -139,6 +188,28 @@ static func _pick_equipment_entry(grade: String, monster_drops: Array[String], c
 				break
 		if not duplicate:
 			candidates.append({"item_name":item_name, "weight":1, "min":1, "max":1})
+	# Add balance-only assignments after original L1J and pre-existing
+	# per-monster entries. Never borrow an item from the global grade catalog.
+	var supplemental: Dictionary = catalog.get("twilight_coverage_equipment", {})
+	var balance_rows: Variant = supplemental.get(monster_name, [])
+	if balance_rows is Array:
+		for raw_row: Variant in balance_rows:
+			if not (raw_row is Dictionary):
+				continue
+			var row: Dictionary = raw_row as Dictionary
+			var item_name: String = str(row.get("item_name", ""))
+			if not by_name.has(item_name):
+				continue
+			var item: Dictionary = by_name[item_name] as Dictionary
+			if not _is_equipment(item) or str(item.get("grade", "일반")) != grade:
+				continue
+			var duplicate: bool = false
+			for candidate: Dictionary in candidates:
+				if str(candidate["item_name"]) == item_name:
+					duplicate = true
+					break
+			if not duplicate:
+				candidates.append({"item_name":item_name, "weight":clampi(int(row.get("weight", 100)), 1, 1000000), "min":1, "max":1})
 	if candidates.is_empty():
 		return _missing(monster_name, grade)
 	var total_weight: int = 0
@@ -160,7 +231,7 @@ static func roll_detailed(monster_drops: Array[String], is_boss: bool, catalog: 
 	var earned: Array[Dictionary] = []
 	var potion_rate: float = BOSS_POTION_RATE if is_boss else NORMAL_POTION_RATE
 	if rng.randf() < potion_rate:
-		var potion: String = _pick_potion(monster_drops, is_boss, catalog, rng)
+		var potion: String = _pick_potion(monster_drops, is_boss, catalog, rng, monster_name)
 		if not potion.is_empty():
 			earned.append({"item_name":potion, "quantity":1})
 	var equipment_roll_count: int = MAX_BOSS_EQUIPMENT_ROLLS if is_boss else 1
