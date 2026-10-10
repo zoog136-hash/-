@@ -45,8 +45,8 @@ def generate(source: pathlib.Path, target: pathlib.Path) -> dict:
             size = [0,0]
             for role, start in actions.items():
                 for direction in range(8):
-                    # Game direction is E,SE,S,SW,W,NW,N,NE; archive starts south.
-                    source_dir = (direction+6) % 8
+                    # Game direction is E,SE,S,SW,W,NW,N,NE; SPX source is N,NW,W,SW,S,SE,E,NE.
+                    source_dir = (6-direction) % 8
                     seq = start + source_dir
                     member = f'sprite/{actor_id}-{seq}.spx'
                     if member not in names: raise ValueError('missing source sequence '+member)
