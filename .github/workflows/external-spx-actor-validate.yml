@@ -1,0 +1,36 @@
+name: TWILIGHT Optional 8-Direction SPX Actor
+on:
+  pull_request:
+    paths:
+      - 'addons/twilight_l1j/twilight_external_spx_actor.gd'
+      - 'scripts/player.gd'
+      - 'scripts/ui/renewal_settings.gd'
+      - 'tools/l1j/make_synthetic_spx_fixture.py'
+      - 'tools/l1j/build_external_spx_actor_pack.py'
+      - 'tests/external_spx_actor_runtime_test.gd'
+      - '.github/workflows/external-spx-actor-validate.yml'
+  workflow_dispatch:
+jobs:
+  synthetic-actor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create clean synthetic local actors (no third-party art)
+        run: python3 tools/l1j/make_synthetic_spx_fixture.py --root .
+      - name: Install Godot 4.7.2
+        run: |
+          curl -fL --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Import source and synthetic PNGs
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import 2>&1 | tee spx-import.log
+          ! grep -E 'SCRIPT ERROR:|Parse Error:|ERROR:' spx-import.log
+      - name: Exercise real player scene with eight-direction actions
+        run: |
+          set -o pipefail
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/external_spx_actor_runtime_test.gd 2>&1 | tee spx-actor-test.log
+          grep -q 'EXTERNAL_SPX_ACTOR_RUNTIME_OK' spx-actor-test.log
+          ! grep -E 'SCRIPT ERROR:|Parse Error:|ERROR:|SPX_ACTOR_FAIL:' spx-actor-test.log
