@@ -120,6 +120,9 @@ func _input(event: InputEvent) -> void:
 			if Rect2(Vector2.ZERO, button.size).has_point(point):
 				_gesture_start(event, str(key), button)
 				break
+	if event is InputEventScreenTouch and event.index == 73 and event.pressed: print("INV_TRACE down idx=", gesture_index, " visible=", inventory_panel.visible, " matched=", gesture_reference)
+	elif event is InputEventScreenDrag and event.index == 73: print("INV_TRACE drag idx=", gesture_index, " rel=", event.relative, " slot=", gesture_reference, " scroll=", grid_scroll.scroll_vertical)
+	elif event is InputEventScreenTouch and event.index == 73 and not event.pressed: print("INV_TRACE up idx=", gesture_index, " dragged=", gesture_dragged, " scroll=", grid_scroll.scroll_vertical)
 	var drag_delta: Vector2 = Vector2.ZERO
 	if event is InputEventScreenDrag and event.index == gesture_index:
 		drag_delta = event.relative
