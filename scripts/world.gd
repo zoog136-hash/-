@@ -299,7 +299,6 @@ func _ready() -> void:
 	# existing movement/input regressions must not inherit an opaque modal.
 	if creating_character and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
-	hud.append_log("V20 · 모바일 MMORPG HUD / 전투 화면 개선")
 
 func _process(delta: float) -> void:
 	# No auto-save, auto-hunt or keyboard commands until the new class is
