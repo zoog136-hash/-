@@ -146,6 +146,19 @@ func _run() -> void:
 		actor.set_physics_process(false)
 		actor.died.connect(world._on_monster_died)
 		var inventory_before: int = int(world.inventory.get(name_value,0))
+		# Test pursuit policy separately from the combat decision. AUTO may
+		# legitimately attack immediately without creating any click path.
+		var direct_path: PackedVector2Array = world._auto_pursuit_path(actor, true)
+		check(direct_path.size() == 1 and direct_path[0].distance_to(actor.global_position) < 1.0,
+			"visible target uses one direct pursuit waypoint " + mob_name)
+		var obstructed_path: PackedVector2Array = world._auto_pursuit_path(actor, false)
+		check(obstructed_path == world.find_world_path(world.player.global_position, actor.global_position),
+			"obstructed target keeps A* path " + mob_name)
+		# Field population can contain other, closer monsters. This is a
+		# focused damage/approach regression for THIS source-art actor, not a
+		# ranking test for the general auto-target selector. Pin the target.
+		world.auto_target = actor
+		world.selected_monster = actor
 		world.player.set_auto_enabled(true)
 		var ticks: int = 0
 		while not actor.dead and ticks < 900:
@@ -154,6 +167,30 @@ func _run() -> void:
 			world._run_auto_hunt()
 			await physics_frame
 			ticks += 1
+		if not actor.dead:
+			# Keep evidence BEFORE clearing AUTO and its path: intermittent
+			# pursuit failures must be diagnosed, not hidden by CI retries.
+			var track: Dictionary = {
+				"monster":mob_name, "ticks":ticks,
+				"player":[world.player.global_position.x,world.player.global_position.y],
+				"enemy":[actor.global_position.x,actor.global_position.y],
+				"distance":world.player.global_position.distance_to(actor.global_position),
+				"weapon_cells":world._current_attack_range_cells(),
+				"cell_distance":world._weapon_cell_distance(actor),
+				"line_clear":world._has_line_of_sight_world(world.player.global_position,actor.global_position),
+				"active_target":world.auto_target == actor,
+				"auto_enabled":world.player.auto_enabled,
+				"click_path_length":world.player.click_path.size(),
+				"first_waypoint":[world.player.click_path[0].x,world.player.click_path[0].y] if not world.player.click_path.is_empty() else [],
+				"path_index":world.player.path_index,
+				"repath_timer":world.auto_repath_timer,
+				"world_path_length":world.find_world_path(world.player.global_position,actor.global_position).size(),
+				"pending_attack":not world.pending_attack.is_empty(),
+				"stunned":world.player.is_stunned(),
+				"held":world.player.is_held(),
+				"feared":world.player.is_feared()
+			}
+			print("L1J_COMBAT_DIAG ",JSON.stringify(track))
 		world.player.set_auto_enabled(false)
 		world.player.clear_click_path()
 		print("L1J_COMBAT_TRACE ", mob_name, " ticks=", ticks, " hp=", actor.hp, " hits=", actor.damage_hit_count)

@@ -1988,7 +1988,12 @@ func _run_auto_hunt() -> void:
 			player.clear_click_path()
 			auto_stuck_time = 0.0
 			return
-		var path: PackedVector2Array = find_world_path(player.global_position, auto_target.global_position)
+		# A moving target that is directly visible must not send AUTO around
+		# a distant A* waypoint. A grid route may include an old first turn even
+		# when the direct segment is already clear, causing a long pursuit stall.
+		# Field line_clear checks the same walkability used for combat sight.
+		# Keep A* for obstructed targets; do not bypass collision or map bounds.
+		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
 		if path.is_empty():
 			auto_target = _nearest_reachable_monster(99999.0)
 			if auto_target == null:
@@ -1998,6 +2003,14 @@ func _run_auto_hunt() -> void:
 			selected_monster = auto_target
 			path = find_world_path(player.global_position, auto_target.global_position)
 		player.set_click_path(path, auto_target.global_position)
+
+func _auto_pursuit_path(target: TwilightMonster, directly_visible: bool) -> PackedVector2Array:
+	if not is_instance_valid(target) or target.dead:
+		return PackedVector2Array()
+	if directly_visible:
+		# A visible target needs no old A* corners; physics still collides.
+		return PackedVector2Array([target.global_position])
+	return find_world_path(player.global_position, target.global_position)
 
 func _nearest_monster(max_distance: float) -> TwilightMonster:
 	var best: TwilightMonster = null
