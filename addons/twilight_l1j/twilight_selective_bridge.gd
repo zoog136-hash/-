@@ -25,7 +25,9 @@ func _record(candidate_id: String) -> Dictionary:
     if not candidate_id.begins_with("ext:"):
         return {}
     var source: String = ""
-    if candidate_id.begins_with("ext:a3:"):
+    if candidate_id.begins_with("ext:a2:"):
+        source = "a2_visuals"
+    elif candidate_id.begins_with("ext:a3:"):
         source = "a3_items"
     elif candidate_id.begins_with("ext:go:npc:"):
         source = "go_npcs"

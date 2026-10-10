@@ -5,6 +5,7 @@ class_name TwilightExternalRegistry
 const A3_ITEMS := "res://data/l1j/registry/a3_items_normalized.json"
 const GO_ITEMS := "res://data/l1j/registry/go_items_normalized.json"
 const GO_NPCS := "res://data/l1j/registry/go_npcs_normalized.json"
+const A2_VISUALS := "res://data/l1j/registry/a2_visuals_normalized.json"
 var _by_source_id: Dictionary = {}
 var _loaded_sources: Dictionary = {}
 
@@ -14,6 +15,7 @@ func load_source(source: String) -> int:
         "a3_items": path = A3_ITEMS
         "go_items": path = GO_ITEMS
         "go_npcs": path = GO_NPCS
+        "a2_visuals": path = A2_VISUALS
         _: return -1
     if _loaded_sources.has(source):
         return int(_loaded_sources[source])

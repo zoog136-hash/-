@@ -2,10 +2,11 @@ name: L1J Opt-In Preview Validation
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, feature/twilight-l1j-additive-import-20261010]
     paths:
       - 'addons/twilight_l1j/**'
       - 'tests/l1j_optional_bridge_test.gd'
+      - 'tests/l1j_visual_link_test.gd'
       - '.github/workflows/l1j-optional-preview-validate.yml'
   workflow_dispatch:
 
@@ -32,6 +33,13 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/l1j_optional_bridge_test.gd 2>&1 | tee l1j-optin.log
           grep -q 'L1J_OPTIONAL_BRIDGE_OK' l1j-optin.log
           ! grep -E 'SCRIPT ERROR:|ERROR:|L1J_OPTIONAL_FAIL:' l1j-optin.log
+      - name: Validate opt-in runtime visual bindings and rollback
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$PWD/.l1j-visual-binding-userdata"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/l1j_visual_link_test.gd 2>&1 | tee l1j-visual-binding.log
+          grep -q 'L1J_VISUAL_LINK_OK' l1j-visual-binding.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|L1J_VISUAL_LINK_FAIL:' l1j-visual-binding.log
       - name: Verify normal game starts without resource ZIPs
         run: |
           set -o pipefail
@@ -46,5 +54,6 @@ jobs:
           path: |
             l1j-import.log
             l1j-optin.log
+            l1j-visual-binding.log
             l1j-normal-boot.log
           if-no-files-found: warn
