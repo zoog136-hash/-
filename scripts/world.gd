@@ -53,6 +53,8 @@ const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
+const NPC_DIALOGUE_SERVICE = preload("res://scripts/npc/dialogue_service.gd")
+var dialogue_service = NPC_DIALOGUE_SERVICE.new()
 const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
@@ -266,6 +268,7 @@ func _ready() -> void:
 	ThemeDB.fallback_font = korean_font
 	rng.randomize()
 	ain_service.import_state({})
+	dialogue_service.load_dialogues()
 	_load_data()
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -1051,6 +1054,8 @@ func _connect_signals() -> void:
 		hud.connect("craft_requested", _craft_requested)
 	if hud.has_signal("shop_sell_requested"):
 		hud.connect("shop_sell_requested", _sell_shop_item)
+	if hud.has_signal("npc_dialogue_action_requested"):
+		hud.connect("npc_dialogue_action_requested", _npc_dialogue_action)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -1303,6 +1308,33 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 					return cell
 	return origin
 
+func _npc_dialogue_state() -> Dictionary:
+	return {"level":level,"job_class":job_class,"quest_kills":quest_kills,"inventory":inventory.duplicate(true)}
+
+func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void:
+	# The UI cannot authorize an NPC service. Revalidate player proximity and
+	# the conditional dialogue choice against CURRENT world state.
+	if field_map == null:
+		return
+	var valid_npc: bool = false
+	for npc: Dictionary in field_map.data.get("npc_spawn",[]):
+		if str(npc.get("id","")) != npc_id:
+			continue
+		if player.global_position.distance_to(COORD.array_vector(npc["position"])) <= 190.0:
+			valid_npc = true
+		break
+	if not valid_npc or not dialogue_service.allowed_action(npc_id,node_id,action,_npc_dialogue_state()):
+		hud.show_message("대화 조건 또는 NPC 접근 거리가 맞지 않습니다")
+		return
+	match action:
+		"shop": hud.open_shop()
+		"warehouse": hud.call("open_warehouse")
+		"craft": hud.call("open_crafting")
+		"buyback": hud.call("open_item_sell")
+		"teleport": hud.call("open_npc_teleport")
+		"quest": hud.call("open_quest_info")
+		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
+
 func _set_click_destination(target: Vector2) -> void:
 	loot_pickup.cancel()
 	if field_map != null:
@@ -1319,6 +1351,8 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_crafting")
 				elif str(npc["role"]) == "buyback":
 					hud.call("open_item_sell")
+				elif str(npc["role"]) == "guide":
+					hud.call("open_npc_dialogue",str(npc.get("id","")))
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return

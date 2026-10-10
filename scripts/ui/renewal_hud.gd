@@ -9,6 +9,7 @@ signal warehouse_transfer_requested(item_name: String, quantity: int, direction:
 signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
 signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
+signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: String)
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
@@ -18,6 +19,7 @@ const CharacterUI = preload("res://scripts/ui/renewal_character.gd")
 const SkillsUI = preload("res://scripts/ui/renewal_skills.gd")
 const ClassSelectUI = preload("res://scripts/ui/renewal_class_select.gd")
 const ShopUI = preload("res://scripts/ui/renewal_shop.gd")
+const DialogueUI = preload("res://scripts/ui/renewal_dialogue.gd")
 const WarehouseUI = preload("res://scripts/ui/renewal_warehouse.gd")
 const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
@@ -628,6 +630,12 @@ func open_item_sell() -> void:
 	var screen := SellUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+
+func open_npc_dialogue(npc_id: String) -> void:
+	_open_window("dialogue","NPC 대화","레벨 · 직업 · 퀘스트 · 아이템 보유 분기")
+	var screen := DialogueUI.new()
+	workspace.mount(screen)
+	screen.configure(self,npc_id)
 
 func open_quest_info() -> void:
 	_open_window("quest","퀘스트","기존 게임의 사냥 퀘스트 진행도")
