@@ -6,3 +6,24 @@ android/build/
 *.uid
 test-results/
 __pycache__/
+
+# User-provided and derivative visual packs remain in the private project ZIP.
+assets/external_l1j/
+assets/external_spx/
+assets/catalog_motion/
+assets/l1j/candidates/
+assets/l1j/preview/
+assets/l1j/verified/
+assets/original_items/
+data/external_l1j/
+data/external_spx/
+data/l1j/spx/
+data/l1j/maps/
+data/l1j/verified_bytes/
+data/l1j/registry/a2_visuals_normalized.json
+data/l1j/registry/a3_items_normalized.json
+data/visuals/runtime_manifest.json
+EXTERNAL_*_README.txt
+SPX_GODOT_PLAYBACK.json
+SOURCE_MAPS_GODOT.json
+reports/resource-integration/

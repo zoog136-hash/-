@@ -20,11 +20,23 @@ func _run() -> void:
     var icon: Texture2D = bridge.call("item_icon", "ext:a2:item:34") as Texture2D
     var ground: Texture2D = bridge.call("ground_icon", "ext:a2:item:34") as Texture2D
     var monster: Texture2D = bridge.call("npc_portrait", "ext:a2:monster:ms852") as Texture2D
+    var item_details: Dictionary = bridge.call("record_details", "ext:a2:item:34")
+    var has_ground: bool = not str(item_details.get("ground_texture", "")).is_empty()
     _check(icon != null, "actual PNG item missing")
-    _check(ground != null, "actual PNG floor missing")
+    _check((ground != null) == has_ground, "ground availability must match reviewed metadata")
     _check(monster != null, "actual PNG monster missing")
     if icon != null:
-        _check(icon.get_size() == Vector2(4, 4), "item PNG dimensions wrong")
+        var rows: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/l1j/registry/a2_visuals_normalized.json"))
+        var expected_digest: String = ""
+        if rows is Array:
+            for row: Dictionary in rows:
+                if str(row.get("canonical_candidate_id", "")) == "ext:a2:item:34":
+                    expected_digest = str(row.get("asset_sha256", row.get("sha256", "")))
+        if not expected_digest.is_empty():
+            _check(FileAccess.get_sha256("res://assets/l1j/preview/a2/items/34.png") == expected_digest, "installed original PNG digest")
+            _check(icon.get_width() > 0 and icon.get_height() > 0, "installed original PNG dimensions")
+        else:
+            _check(icon.get_size() == Vector2(4, 4), "synthetic CI PNG dimensions wrong")
     var link: RefCounted = LINK.new()
     var original: ImageTexture = ImageTexture.new()
     var item_node := TextureRect.new()
@@ -36,10 +48,10 @@ func _run() -> void:
     _check(bool(link.call("enable_feature", "item_icon", true)), "enable item")
     _check(bool(link.call("enable_feature", "ground_icon", true)), "enable ground")
     _check(bool(link.call("bind_external_texture", item_node, "item_icon", "ext:a2:item:34")), "bind external item")
-    _check(bool(link.call("bind_external_texture", ground_node, "ground_icon", "ext:a2:item:34")), "bind external ground")
+    _check(bool(link.call("bind_external_texture", ground_node, "ground_icon", "ext:a2:item:34")) == has_ground, "bind only declared external ground")
     _check(item_node.texture != original and item_node.texture != null, "item UI texture unchanged")
-    _check(ground_node.texture != original and ground_node.texture != null, "ground texture unchanged")
-    _check(int(link.call("restore_all")) == 2, "missing rollback")
+    _check((ground_node.texture != original and ground_node.texture != null) == has_ground, "undeclared ground must preserve original")
+    _check(int(link.call("restore_all")) == (2 if has_ground else 1), "missing rollback")
     _check(item_node.texture == original and ground_node.texture == original, "resource rollback failed")
 
     var preview: Control = PREVIEW.instantiate() as Control

@@ -15,6 +15,8 @@ var profile: TwilightAnimationProfile
 var material: ShaderMaterial
 var follow_offset: Vector2 = Vector2(48, 18)
 var motion: TwilightActorMotion = MOTION.new()
+var appear_speed: float = 4.0
+var disappear_speed: float = 4.0
 
 func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, grade_color: Color) -> void:
 	var path: String = str(record.get("image_path", ""))
@@ -26,6 +28,8 @@ func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, gra
 	motion = MOTION.new()
 	motion.profile = profile
 	var frames: SpriteFrames = CATALOG.frames_for_profile(profile, path)
+	appear_speed = 1.0 / MOTION.presentation_seconds(frames, "equip", 0.25)
+	disappear_speed = 1.0 / MOTION.presentation_seconds(frames, "unequip", 0.25)
 	var texture: Texture2D = CATALOG.first_texture(frames)
 	if texture == null:
 		enabled = false
@@ -53,8 +57,11 @@ func configure(record: Dictionary, sprite: Sprite2D, player: TwilightPlayer, gra
 
 func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 	if not enabled and not sprite.visible: return
-	opacity = move_toward(opacity, 1.0 if enabled else 0.0, delta * 4.0)
-	if not enabled and opacity <= 0.0:
+	opacity = move_toward(opacity, 1.0 if enabled else 0.0, delta * (appear_speed if enabled else disappear_speed))
+	if absf(opacity - (1.0 if enabled else 0.0)) < 0.00001:
+		opacity = 1.0 if enabled else 0.0
+	if not enabled and opacity <= 0.001:
+		opacity = 0.0
 		sprite.visible = false
 		sprite.texture = null
 		return
@@ -68,12 +75,21 @@ func update(delta: float, sprite: Sprite2D, player: TwilightPlayer) -> void:
 		sprite.global_position = sprite.global_position.lerp(target, 1.0 - exp(-8.0 * delta))
 	var real_velocity: Vector2 = (sprite.global_position - previous) / maxf(delta, 0.001)
 	if previous.distance_to(target) > 900.0: real_velocity = Vector2.ZERO
+	var prior_state: String = motion.state
+	var prior_clock: float = motion.state_clock
 	motion.advance(delta, real_velocity)
-	motion.apply_frames(sprite)
 	if player.motion.sequence != previous_sequence:
 		previous_sequence = player.motion.sequence
 		reaction = 0.28
 	reaction = maxf(0.0, reaction - delta)
+	# A relic uses body/energy/equip tracks, never humanoid walking poses.
+	var pose: String = "float"
+	if not enabled: pose = "unequip"
+	elif opacity < 1.0: pose = "equip"
+	elif reaction > 0.0: pose = "activate"
+	motion.state_clock = prior_clock + delta if prior_state == pose else 0.0
+	motion.state = pose
+	motion.apply_frames(sprite)
 	var elevation: float = profile.sprite_offset.y if profile != null else -64.0
 	sprite.scale = base_scale * (1.0 + reaction * 0.16)
 	sprite.offset = Vector2(0, elevation + sin(clock * 2.4) * 3.5) / sprite.scale

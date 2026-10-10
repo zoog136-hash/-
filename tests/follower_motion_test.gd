@@ -26,7 +26,11 @@ func _run() -> void:
 		var path: String = str(art.get(key, {}).get("path", record.image_path))
 		follower.configure(record, path, anchor, sprite, actor)
 		check(follower.enabled and sprite.visible, "missing " + key)
-		if not art.has(key): check(sprite.sprite_frames.has_animation("still"), "single image sliced " + key)
+		if preload("res://scripts/animation/visual_manifest.gd").record(key).is_empty():
+			if not art.has(key): check(sprite.sprite_frames.has_animation("still"), "single image sliced " + key)
+		else:
+			check(sprite.sprite_frames.get_meta("twilight_visual_key", "") == key, "identity-based authored doll " + key)
+			check(sprite.sprite_frames.get_animation_names().size() >= 6, "authored doll missing states " + key)
 	actor.velocity = Vector2(450, 0)
 	for i: int in range(120):
 		actor.position += actor.velocity / 60.0
@@ -41,7 +45,10 @@ func _run() -> void:
 	check(anchor.position == stopped and follower.state == "idle", "idle follow jitter")
 	check(anchor.position.distance_to(actor.position) >= 45.0, "doll overlaps player")
 	follower.configure({}, "", anchor, sprite, actor)
-	for i: int in range(30): follower.update(1.0 / 60.0, anchor, sprite, actor)
+	follower.update(1.0 / 60.0, anchor, sprite, actor)
+	check(not follower.enabled and sprite.visible and follower.state == "despawn", "dismissal must disable buff presentation and finish its clip")
+	var dismissal_seconds: float = 1.0 / follower.disappear_speed
+	for i: int in range(ceili(dismissal_seconds * 60.0) + 2): follower.update(1.0 / 60.0, anchor, sprite, actor)
 	check(not sprite.visible and follower.state == "despawn", "despawn did not finish")
 	actor.queue_free()
 	anchor.queue_free()
