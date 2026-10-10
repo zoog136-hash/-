@@ -34,6 +34,11 @@ jobs:
           done
           ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' craft-test.log
           for marker in CRAFT_OK NPC_TELEPORT_OK WAREHOUSE_OK SHOP_AUTHORITY_OK; do grep -q "$marker" craft-test.log; done
+      - name: Run actual main scene headless for 120 frames
+        run: |
+          set -o pipefail
+          timeout 30s /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 120 2>&1 | tee craft-main-boot.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error:' craft-main-boot.log
       - name: Preserve evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -42,3 +47,4 @@ jobs:
           path: |
             craft-import.log
             craft-test.log
+            craft-main-boot.log
