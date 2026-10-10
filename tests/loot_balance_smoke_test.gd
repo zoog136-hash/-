@@ -74,7 +74,8 @@ func _run() -> void:
 			_check(int(pick.get("quantity", 0)) >= 2 and int(pick.get("quantity", 0)) <= 4, "mapped count range preserved")
 		samples[pick_name] = int(samples.get(pick_name, 0)) + 1
 	_check(int(samples.get("수정 단검",0)) > int(samples.get("강철 판금 갑옷",0)) * 5, "within-grade weights honored")
-	_check(LOOT._pick_equipment_entry("유일", ["기르타스의 단검"], mapped_catalog, strict_rng, "스파토이").is_empty(), "registered mob missing grade cannot fall back to legacy Unique")
+	_check(LOOT._pick_equipment_entry("희귀", ["마족의 단검"], mapped_catalog, strict_rng, "스파토이").get("item_name", "") == "마족의 단검", "partial L1J mapping preserves legacy monster items")
+	_check(LOOT._pick_equipment_entry("유일", ["HP 물약"], mapped_catalog, strict_rng, "스파토이").is_empty(), "registered mob without Unique source or legacy entry cannot substitute")
 	var boss_count: int = 0
 	var normal_count: int = 0
 	var gear_count: int = 0
