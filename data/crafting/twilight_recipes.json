@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "source": "TWILIGHT original local recipes (not L1J official crafting rates)",
+  "source": "TWILIGHT original local recipes. Game item names are verified against data/game_db_v17.json; no official craft material/count/success-rate claim.",
   "recipes": [
     {
       "id": "healing_plus",
@@ -93,6 +93,1310 @@
         }
       ],
       "adena": 1000
+    },
+    {
+      "id": "local_weapon_00_01",
+      "name": "청동 한손검 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 한손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 한손검",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_00_03",
+      "name": "흑철 한손검 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 한손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 한손검",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_00_04",
+      "name": "미스릴 한손검 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 한손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 한손검",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_01_01",
+      "name": "청동 양손검 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 양손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 양손검",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_01_02",
+      "name": "강철 양손검 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 양손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 양손검",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_01_03",
+      "name": "흑철 양손검 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 양손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 양손검",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_01_04",
+      "name": "미스릴 양손검 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 양손검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 양손검",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_02_01",
+      "name": "청동 단검 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 단검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 단검",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_02_02",
+      "name": "강철 단검 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 단검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 단검",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_02_03",
+      "name": "흑철 단검 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 단검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 단검",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_02_04",
+      "name": "미스릴 단검 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 단검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 단검",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_03_01",
+      "name": "청동 활 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 활",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 활",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_03_02",
+      "name": "강철 활 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 활",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 활",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_03_03",
+      "name": "흑철 활 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 활",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 활",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_03_04",
+      "name": "미스릴 활 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 활",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 활",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_04_01",
+      "name": "청동 창 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 창",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 창",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_04_02",
+      "name": "강철 창 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 창",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 창",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_04_03",
+      "name": "흑철 창 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 창",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 창",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_04_04",
+      "name": "미스릴 창 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 창",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 창",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_05_01",
+      "name": "청동 도끼 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 도끼",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 도끼",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_05_02",
+      "name": "강철 도끼 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 도끼",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 도끼",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_05_03",
+      "name": "흑철 도끼 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 도끼",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 도끼",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_05_04",
+      "name": "미스릴 도끼 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 도끼",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 도끼",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_06_01",
+      "name": "청동 사이드 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 사이드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 사이드",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_06_02",
+      "name": "강철 사이드 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 사이드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 사이드",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_06_03",
+      "name": "흑철 사이드 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 사이드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 사이드",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_06_04",
+      "name": "미스릴 사이드 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 사이드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 사이드",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_07_01",
+      "name": "청동 이도류 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 이도류",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 이도류",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_07_03",
+      "name": "흑철 이도류 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 이도류",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 이도류",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_07_04",
+      "name": "미스릴 이도류 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 이도류",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 이도류",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_08_01",
+      "name": "청동 크로우 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 크로우",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 크로우",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_08_02",
+      "name": "강철 크로우 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 크로우",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 크로우",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_08_03",
+      "name": "흑철 크로우 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 크로우",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 크로우",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_08_04",
+      "name": "미스릴 크로우 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 크로우",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 크로우",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_09_01",
+      "name": "청동 지팡이 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 지팡이",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 지팡이",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_09_02",
+      "name": "강철 지팡이 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 지팡이",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 지팡이",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_09_03",
+      "name": "흑철 지팡이 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 지팡이",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 지팡이",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_09_04",
+      "name": "미스릴 지팡이 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 지팡이",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 지팡이",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_10_01",
+      "name": "청동 라이플 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 라이플",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 라이플",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_10_02",
+      "name": "강철 라이플 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 라이플",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 라이플",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_10_03",
+      "name": "흑철 라이플 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 라이플",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 라이플",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_10_04",
+      "name": "미스릴 라이플 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 라이플",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 라이플",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_11_01",
+      "name": "청동 체인소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 체인소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 체인소드",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_11_02",
+      "name": "강철 체인소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 체인소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 체인소드",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_11_03",
+      "name": "흑철 체인소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 체인소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 체인소드",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_11_04",
+      "name": "미스릴 체인소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 체인소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 체인소드",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_12_01",
+      "name": "청동 그레이트소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 그레이트소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 그레이트소드",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_12_02",
+      "name": "강철 그레이트소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 그레이트소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 그레이트소드",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_12_03",
+      "name": "흑철 그레이트소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 그레이트소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 그레이트소드",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_12_04",
+      "name": "미스릴 그레이트소드 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 그레이트소드",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 그레이트소드",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_13_01",
+      "name": "청동 핸드캐넌 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 핸드캐넌",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 핸드캐넌",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_13_02",
+      "name": "강철 핸드캐넌 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 핸드캐넌",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 핸드캐넌",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_13_03",
+      "name": "흑철 핸드캐넌 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 핸드캐넌",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 핸드캐넌",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_13_04",
+      "name": "미스릴 핸드캐넌 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 핸드캐넌",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 핸드캐넌",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_14_01",
+      "name": "청동 마검 합성",
+      "category": "무기",
+      "result": {
+        "item": "청동 마검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "훈련용 마검",
+          "quantity": 2
+        }
+      ],
+      "adena": 300,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_14_02",
+      "name": "강철 마검 합성",
+      "category": "무기",
+      "result": {
+        "item": "강철 마검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "청동 마검",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_14_03",
+      "name": "흑철 마검 합성",
+      "category": "무기",
+      "result": {
+        "item": "흑철 마검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철 마검",
+          "quantity": 2
+        }
+      ],
+      "adena": 8000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_weapon_14_04",
+      "name": "미스릴 마검 합성",
+      "category": "무기",
+      "result": {
+        "item": "미스릴 마검",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "흑철 마검",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_00_01",
+      "name": "강철의 투구 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 투구",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 투구",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_00_02",
+      "name": "미스릴의 투구 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 투구",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 투구",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_01_01",
+      "name": "강철의 티셔츠 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 티셔츠",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 티셔츠",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_01_02",
+      "name": "미스릴의 티셔츠 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 티셔츠",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 티셔츠",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_02_01",
+      "name": "강철의 갑옷 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 갑옷",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 갑옷",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_02_02",
+      "name": "미스릴의 갑옷 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 갑옷",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 갑옷",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_03_01",
+      "name": "강철의 망토 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 망토",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 망토",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_03_02",
+      "name": "미스릴의 망토 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 망토",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 망토",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_04_01",
+      "name": "강철의 각반 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 각반",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 각반",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_04_02",
+      "name": "미스릴의 각반 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 각반",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 각반",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_05_01",
+      "name": "강철의 장갑 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 장갑",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 장갑",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_05_02",
+      "name": "미스릴의 장갑 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 장갑",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 장갑",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_06_01",
+      "name": "강철의 신발 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 신발",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 신발",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_06_02",
+      "name": "미스릴의 신발 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 신발",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 신발",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_07_01",
+      "name": "강철의 방패 합성",
+      "category": "방어구",
+      "result": {
+        "item": "강철의 방패",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "가죽의 방패",
+          "quantity": 2
+        }
+      ],
+      "adena": 2000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_armor_07_02",
+      "name": "미스릴의 방패 합성",
+      "category": "방어구",
+      "result": {
+        "item": "미스릴의 방패",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "강철의 방패",
+          "quantity": 4
+        }
+      ],
+      "adena": 120000,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_potion_01",
+      "name": "중급 회복 물약 조제",
+      "category": "물약",
+      "result": {
+        "item": "중급 회복 물약",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "초급 회복 물약",
+          "quantity": 3
+        }
+      ],
+      "adena": 450,
+      "source_type": "twilight_local_balancing"
+    },
+    {
+      "id": "local_potion_02",
+      "name": "상급 회복 물약 조제",
+      "category": "물약",
+      "result": {
+        "item": "상급 회복 물약",
+        "quantity": 1
+      },
+      "materials": [
+        {
+          "item": "중급 회복 물약",
+          "quantity": 3
+        }
+      ],
+      "adena": 2200,
+      "source_type": "twilight_local_balancing"
+    }
+  ],
+  "references": [
+    {
+      "source": "Lineage M Inven Item DB",
+      "url": "https://lineagem.inven.co.kr/db/item/",
+      "use": "reference for class/type/category and equipment/item existence; not a crafting cost/odds source"
+    },
+    {
+      "source": "Lineage M NC official guidebook",
+      "url": "https://lineagem.plaync.com/guidebook/list",
+      "use": "reference for game systems and item grading; not an exact recipe source"
     }
   ]
 }
