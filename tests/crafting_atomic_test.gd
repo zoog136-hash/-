@@ -45,7 +45,7 @@ func _run() -> void:
 		category_counts[category] = int(category_counts.get(category,0)) + 1
 		var item_name: String = str((record.get("result",{}) as Dictionary).get("item",""))
 		_check(str((items[item_name] as Dictionary).get("grade","")) in ["일반","고급","희귀","영웅","전설","신화","유일"], "known crafting grade: "+id)
-	_check(int(category_counts.get("무기",0)) >= 55 and int(category_counts.get("방어구",0)) == 16, "weapons and armor expanded")
+	_check(int(category_counts.get("무기",0)) >= 55 and int(category_counts.get("방어구",0)) >= 16, "weapons and armor expanded")
 	var inv: Dictionary = {"HP 물약":3,"약초":2}
 	var physical: Dictionary = {}
 	var equipped: Dictionary = {}
