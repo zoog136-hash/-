@@ -29,10 +29,22 @@ func _run() -> void:
 
     var attrs: RefCounted = MAP.new()
     _check(not bool(attrs.call("load_a3", 4, Vector2i(5, 3))), "invalid byte length accepted")
-    _check(bool(attrs.call("load_a3", 4, Vector2i(4, 3))), "synthetic source tile bytes missing")
-    _check(int(attrs.call("attribute_at", Vector2i.ZERO)) == 0, "first byte mismatch")
-    _check(int(attrs.call("attribute_at", Vector2i(3, 2))) == 11, "last byte mismatch")
-    _check(int(attrs.call("attribute_at", Vector2i(4, 2))) == -1, "bounds mismatch")
+    var actual_size := Vector2i(4, 3)
+    var first_byte: int = 0
+    var last_byte: int = 11
+    if FileAccess.file_exists("res://data/l1j/maps/source_maps.json"):
+        var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/l1j/maps/source_maps.json"))
+        for row: Dictionary in source.get("maps", []):
+            if int(row.map_id) == 4:
+                actual_size = Vector2i(int(row.dimensions[0]), int(row.dimensions[1]))
+                var raw: PackedByteArray = FileAccess.get_file_as_bytes("res://data/l1j/maps/raw/4.bin")
+                _check(FileAccess.get_sha256("res://data/l1j/maps/raw/4.bin") == str(row.row_major_sha256), "installed source map digest")
+                first_byte = raw[0]
+                last_byte = raw[-1]
+    _check(bool(attrs.call("load_a3", 4, actual_size)), "installed source tile bytes missing")
+    _check(int(attrs.call("attribute_at", Vector2i.ZERO)) == first_byte, "first byte mismatch")
+    _check(int(attrs.call("attribute_at", actual_size - Vector2i.ONE)) == last_byte, "last byte mismatch")
+    _check(int(attrs.call("attribute_at", Vector2i(actual_size.x, 2))) == -1, "bounds mismatch")
     _check(not bool(attrs.call("load_a3", 4, Vector2i.ZERO)), "invalid dimensions accepted")
     _check(not bool(attrs.call("is_loaded")), "failed reload retained previous mapping")
     if errors.is_empty():

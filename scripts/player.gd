@@ -15,7 +15,9 @@ var class_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var transform_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var spx_profile: TwilightAnimationProfile = ANIMATION_PROFILE.new()
 var spx_sprite: AnimatedSprite2D = null
+var spx_effect_sprite: AnimatedSprite2D = null
 var spx_actor_id: String = ""
+var source_weapon_type: String = "__default__"
 var animation_state: String:
 	get: return motion.state
 var facing8: int:
@@ -94,6 +96,14 @@ func _ready() -> void:
 	# AnimatedSprite2D uses the actor's foot anchor; physics and click targets stay unchanged.
 	add_child(spx_sprite)
 	spx_sprite.hide()
+	spx_effect_sprite = AnimatedSprite2D.new()
+	spx_effect_sprite.name = "ExternalSPXEffects"
+	spx_effect_sprite.z_index = spx_sprite.z_index + 1
+	var source_material := ShaderMaterial.new()
+	source_material.shader = preload("res://assets/effects/source_spx_additive.gdshader")
+	spx_effect_sprite.material = source_material
+	add_child(spx_effect_sprite)
+	spx_effect_sprite.hide()
 	var visual_settings := ConfigFile.new()
 	if visual_settings.load(VISUAL_CONFIG_PATH) == OK:
 		select_external_spx_actor(str(visual_settings.get_value("visual","spx_actor","")))
@@ -191,8 +201,17 @@ func _update_visual(delta: float) -> void:
 	class_sprite.visible = not transform_active and not show_spx
 	transform_sprite.visible = transform_active
 	if spx_sprite != null: spx_sprite.visible = show_spx
+	if spx_effect_sprite != null:
+		spx_effect_sprite.visible = show_spx and spx_effect_sprite.sprite_frames != null
 	var active_sprite: AnimatedSprite2D = transform_sprite if transform_active else (spx_sprite if show_spx else class_sprite)
 	motion.apply(active_sprite, active_sprite.get_meta("base_scale", Vector2.ONE))
+	if spx_effect_sprite != null and spx_effect_sprite.visible:
+		if spx_effect_sprite.sprite_frames.has_animation(spx_sprite.animation):
+			spx_effect_sprite.animation = spx_sprite.animation
+			spx_effect_sprite.set_frame_and_progress(spx_sprite.frame, spx_sprite.frame_progress)
+			spx_effect_sprite.transform = spx_sprite.transform
+			spx_effect_sprite.flip_h = spx_sprite.flip_h
+			spx_effect_sprite.modulate = spx_sprite.modulate
 
 func face_target(position_value: Vector2) -> void:
 	motion.face(position_value - global_position)
@@ -259,6 +278,7 @@ func select_external_spx_actor(id: String) -> bool:
 	if id.is_empty() or id == "default":
 		spx_actor_id = ""
 		if spx_sprite != null: spx_sprite.hide()
+		if spx_effect_sprite != null: spx_effect_sprite.hide()
 		return true
 	var frames: SpriteFrames = EXTERNAL_SPX.frames(id)
 	if frames == null or spx_sprite == null: return false
@@ -273,9 +293,38 @@ func select_external_spx_actor(id: String) -> bool:
 	spx_profile.shadow_size = class_profile.shadow_size
 	spx_sprite.stop()
 	spx_sprite.sprite_frames = frames
-	spx_sprite.set_meta("base_scale", Vector2.ONE * 125.0 / maxf(1.0, float(frames.get_frame_texture("idle_2", 0).get_height())))
+	if spx_effect_sprite != null:
+		spx_effect_sprite.stop()
+		spx_effect_sprite.sprite_frames = EXTERNAL_SPX.effects_frames(id)
+	var metadata: Dictionary = EXTERNAL_SPX.actor_metadata(id)
+	var scale_value: float = 125.0 / maxf(1.0, float(frames.get_frame_texture("idle_2", 0).get_height()))
+	if metadata.has("reference_body_height") and metadata.has("foot_pixel"):
+		scale_value = 110.0 / maxf(1.0, float(metadata.reference_body_height))
+		var canvas: Array = metadata.canvas
+		var foot: Array = metadata.foot_pixel
+		spx_profile.sprite_offset = (Vector2(float(canvas[0]), float(canvas[1])) * 0.5 - Vector2(float(foot[0]), float(foot[1]))) * scale_value
+	spx_sprite.set_meta("base_scale", Vector2.ONE * scale_value)
 	spx_actor_id = id
+	set_source_weapon_visual(source_weapon_type)
 	return true
+
+func set_source_weapon_visual(weapon: String) -> void:
+	source_weapon_type = weapon
+	if spx_sprite == null or spx_actor_id.is_empty(): return
+	var group: String = ""
+	if weapon.is_empty(): group = "unarmed"
+	elif weapon in ["한손검", "검", "단검"]: group = "onehand"
+	elif weapon in ["양손검", "그레이트소드"]: group = "largesword"
+	elif weapon in ["도끼", "둔기"]: group = "axe"
+	elif weapon == "체인소드": group = "chain"
+	spx_profile.animation_names.clear()
+	if not group.is_empty():
+		for role: String in ["idle", "walk", "attack", "hit"]:
+			for direction: int in range(8):
+				var key: String = role + "_" + group + "_" + str(direction)
+				if spx_sprite.sprite_frames.has_animation(key):
+					spx_profile.animation_names[role + ":" + str(direction)] = key
+	motion.invalidate_pose()
 
 func _class_direction_animation_name(direction_value: int) -> String:
 	match direction_value:

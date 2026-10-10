@@ -1,5 +1,5 @@
 """Validate A3 and JP cache headers; convert x-major bytes to explicit row-major grids."""
-import argparse, hashlib, json, pathlib, struct, zipfile
+import argparse, collections, hashlib, json, pathlib, re, struct, zipfile
 import numpy as np
 
 IDS=[4,*range(101,111)]
@@ -12,13 +12,21 @@ def read_cache(blob, expected):
     return {'map_id':id,'source_origin':[x,y],'dimensions':[w,h]}, row
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--a3',type=pathlib.Path,required=True);p.add_argument('--jp',type=pathlib.Path,required=True);p.add_argument('--out',type=pathlib.Path,required=True);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--a3',type=pathlib.Path,required=True);p.add_argument('--jp',type=pathlib.Path,required=True);p.add_argument('--out',type=pathlib.Path,required=True)
+    p.add_argument('--all',action='store_true',help='Convert every supplied A3 map cache, without selecting example maps')
+    a=p.parse_args()
     output=a.out;rawdir=output/'raw';rawdir.mkdir(parents=True,exist_ok=True)
     maps=[]
     with zipfile.ZipFile(a.a3) as source,zipfile.ZipFile(a.jp) as jp:
-        for id in IDS:
+        ids=sorted(int(match.group(1)) for name in source.namelist()
+                   if (match:=re.fullmatch(r'data/mapcache/(\d+)\.map',name))) if a.all else IDS
+        if len(set(ids))!=len(ids): raise ValueError('duplicate map cache IDs')
+        jp_members={int(match.group(1)):name for name in jp.namelist()
+                    if (match:=re.search(r'/data/mapcache/(\d+)\.map$',name))}
+        for id in ids:
+            if id<0 or id>99999: raise ValueError('unsupported source map ID')
             blob=source.read(f'data/mapcache/{id}.map');meta,row=read_cache(blob,id)
-            other_name=next((n for n in jp.namelist() if n.endswith(f'/data/mapcache/{id}.map')),None)
+            other_name=jp_members.get(id)
             status='MISSING';count=0
             if other_name:
                 ometa,other=read_cache(jp.read(other_name),id)
@@ -27,6 +35,6 @@ def main():
                 else: status='HEADER_VARIANT'
             data=row.tobytes();(rawdir/f'{id}.bin').write_bytes(data)
             maps.append(meta|{'source_sha256':hashlib.sha256(blob).hexdigest(),'row_major_sha256':hashlib.sha256(data).hexdigest(),'jp_comparison':status,'jp_different_tiles':count,'terrain_graphics':'MISSING','navigation_rules':'A3 L1V1Map.checkMoveTile; no dynamic objects or door state','gameplay_collision_applied':False})
-    (output/'source_maps.json').write_text(json.dumps({'maps':maps},ensure_ascii=False,indent=2)+'\n')
-    print(json.dumps({'converted_maps':len(maps),'jp_status':{r['map_id']:r['jp_comparison'] for r in maps}}))
+    (output/'source_maps.json').write_text(json.dumps({'maps':maps,'selection':'all' if a.all else 'legacy selected IDs'},ensure_ascii=False,indent=2)+'\n')
+    print(json.dumps({'converted_maps':len(maps),'jp_status_counts':dict(collections.Counter(r['jp_comparison'] for r in maps))}))
 if __name__=='__main__':main()
