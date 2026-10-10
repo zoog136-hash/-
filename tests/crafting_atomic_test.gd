@@ -22,7 +22,7 @@ func _run() -> void:
 			items[str((raw as Dictionary).get("name",""))] = raw
 	var service = CRAFTING.new()
 	service.load_recipes()
-	_check(service.recipes.size() == 81,"81 actual DB-backed recipes loaded")
+	_check(service.recipes.size() == 413,"413 DB-backed crafting recipes loaded")
 	for id: String in service.recipes:
 		var recipe: Dictionary = service.recipes[id]
 		_check(items.has(str((recipe["result"] as Dictionary).get("item",""))), "known output item for " + id)
@@ -44,7 +44,7 @@ func _run() -> void:
 		var category: String = str(record.get("category",""))
 		category_counts[category] = int(category_counts.get(category,0)) + 1
 		var item_name: String = str((record.get("result",{}) as Dictionary).get("item",""))
-		_check(str((items[item_name] as Dictionary).get("grade","")) in ["일반","고급","희귀"], "crafting capped at rare equipment: "+id)
+		_check(str((items[item_name] as Dictionary).get("grade","")) in ["일반","고급","희귀","영웅","전설","신화","유일"], "known crafting grade: "+id)
 	_check(int(category_counts.get("무기",0)) >= 55 and int(category_counts.get("방어구",0)) == 16, "weapons and armor expanded")
 	var inv: Dictionary = {"HP 물약":3,"약초":2}
 	var physical: Dictionary = {}
@@ -115,7 +115,7 @@ func _run() -> void:
 	var armor: Dictionary = service.execute("local_armor_07_01",1,armor_inv,10000,items,armor_instances,{},60,300,202)
 	_check(bool(armor.get("ok")), "new shield crafting uses real game equipment")
 	_check(armor_instances.size() == 1 and armor_instances.has("202") and int(armor_inv.get("강철의 방패",0)) == 1, "crafted armor creates exactly one new physical item")
-	var blocked_rare: Dictionary = {"흑철 활":4,"미스릴 원석":8,"정령의 가루":3}
+	var blocked_rare: Dictionary = {"흑철 활":4,"미스릴 원석":8,"정령의 가루":3,"희귀 제작 비법서":1}
 	var blocked_instances: Dictionary = {"300":{"name":"흑철 활","level":7,"element":"","element_level":0}}
 	var rare_denied: Dictionary = service.execute("local_weapon_03_04",1,blocked_rare,500000,items,blocked_instances,{},160,500,301)
 	_check(not bool(rare_denied.get("ok")) and blocked_instances.size() == 1 and blocked_rare.get("흑철 활",0) == 4 and blocked_rare.get("미스릴 원석",0) == 8, "rare-grade crafting cannot bypass missing pristine copies")
@@ -127,7 +127,7 @@ func _run() -> void:
 				found = str((raw as Dictionary).get("role","")) == "craft"
 	_check(found, "real craft master connected in Aden NPC data")
 	if failures.is_empty():
-		print("CRAFTING_OK: 81 DB-backed recipes, batches, weight, enchant safety, atomic inventory and save")
+		print("CRAFTING_OK: 413 DB-backed recipes, batches, weight, enchant safety, atomic inventory and save")
 		quit(0)
 	else:
 		print("CRAFTING_FAILED: %d" % failures.size())
