@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Audit L1J SQL converter fixture
         run: python3 tools/test_import_l1j_drops.py
+      - name: Validate live L1J ID registry against TWILIGHT catalog
+        run: python3 tools/validate_l1j_live_mapping.py
       - name: Install Godot 4.7.2
         run: |
           curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
