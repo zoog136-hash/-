@@ -15,6 +15,26 @@ func _run() -> void:
 	_check(EXTERNAL_SPX.frames("../../evil") == null, "reject relative paths")
 	_check(EXTERNAL_SPX.frames("99999") == null, "reject unknown sprites")
 	_check(EXTERNAL_SPX.frames("21625") == null, "reject unreviewed effects layers")
+	# The game must also boot unmodified when the optional SPX pack is absent.
+	# Full-project CI deliberately has no user-provided artwork installed.
+	var has_first: bool = EXTERNAL_SPX.available("21624")
+	var has_second: bool = EXTERNAL_SPX.available("21653")
+	if not has_first and not has_second:
+		var fallback_player: TwilightPlayer = (load("res://scenes/Player.tscn") as PackedScene).instantiate()
+		root.add_child(fallback_player)
+		await process_frame
+		_check(not fallback_player.select_external_spx_actor("21624"), "uninstalled external actor is rejected")
+		fallback_player._update_visual(.05)
+		_check(fallback_player.class_sprite.visible and not fallback_player.spx_sprite.visible, "legacy art remains visible without pack")
+		fallback_player.queue_free()
+		await process_frame
+		if failures.is_empty():
+			print("EXTERNAL_SPX_ACTOR_RUNTIME_OK mode=missing_pack_fallback")
+			quit(0)
+		else:
+			print("EXTERNAL_SPX_ACTOR_RUNTIME_FAIL ", failures.size())
+			quit(1)
+		return
 	var complete: bool = true
 	for source_id: String in ["21624", "21653"]:
 		var frames: SpriteFrames = EXTERNAL_SPX.frames(source_id)
