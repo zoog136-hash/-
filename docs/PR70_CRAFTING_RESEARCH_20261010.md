@@ -57,3 +57,34 @@
 - 공식 가이드북: https://lineagem.plaync.com/guidebook/list
 - 인벤 아이템 DB: https://lineagem.inven.co.kr/db/item/
 - 원작 자료는 제작/몬스터/장비/재료 분류를 참고하는 범위에서 활용. 위에서 새로 배정한 318종의 획득 경로는 **TWILIGHT 자체 설계**.
+
+
+## 2026-10-10 — 희귀~유일 장비용 등급별 제작 비법서
+
+### 원작 이름 참고자료
+
+- 인벤 비법서 원본 항목: https://lineagem.inven.co.kr/db/item/754?vtype=pc
+- 인벤 제작 비법서 종류 및 상위 계열: https://lineagem.inven.co.kr/db/item/?filtering=10
+- 인벤 각인 희귀 제작 비법서 예시: https://lineagem.inven.co.kr/dataninfo/item/detail.php?code=8321
+- 공식 리니지M 업데이트의 각인 희귀 비법서 등장 사례: https://lineagem.plaync.com/conts/250903_update
+
+**원작 확정 수치가 아닌 내용:** 아래 신규 413개 제작법의 모든 구체적인 재료 개수, 아데나 비용, 62개 몬스터의 비법서 획득 경로는 TWILIGHT 오프라인 밸런스이다.
+
+### 실제 PR #70 구현
+
+- 비법서 5종 신규 DB 등록: `희귀 제작 비법서`, `영웅 제작 비법서`, `전설 제작 비법서`, `신화 제작 비법서`, `유일 제작 비법서`.
+- 위 비법서는 `slot=consumable`, `crafting_scroll=true`, `drop_as_equipment=true`, `crafting_material=true`. **착용 불가, 물약 사용 불가, 장비 개체 ID 없음**, 인벤토리·창고·저장에서는 수량형 재료로 취급.
+- 기존 희귀 장비 레시피에도 **해당 등급 비법서 1장**을 추가하고, 새로운 장비 레시피 332개를 확장. 총 **413개 레시피**, 희귀/영웅/전설/신화/유일 장비 **355개 고유 결과**를 모두 제작 가능.
+- 누락·변조된 비법서 등급/소모 조건은 `local_crafting.gd`에서 실제 인벤토리 차감 전 재검증. 결과 장비만 새로운 물리 인스턴스를 만든다.
+- 비법서 1장은 *동일 등급 장비 드랍 판정 중 1칸의 후보*이며 별도 드랍 기회를 추가로 만들지 않음. 일반 몬스터 장비 판정 1회/보스 3회 및 기존 등급별 확률과 독립 재료 판정은 그대로. 원래 같은 등급 명시 드랍 아이템이 있는 몬스터는 해당 아이템을 먼저 선정한다.
+- `twilight_crafting_drops.json`에 지정 몬스터 **총 62곳**의 5개 등급 비법서 출처 추가. 일반 몬스터는 희귀·영웅까지, 전설 이상은 보스에만 지정. 원본 리니지M 특정 몬스터 비법서 테이블과 같다는 주장은 하지 않는다.
+- 바닥에서는 등급에 맞는 빛기둥을 유지하며 제작 비법서는 양피지 형태의 전용 절차적 아이콘 사용. 수동 줍기/자동사냥 중 자동 줍기/바닥 드랍 저장은 기존 시스템 유지.
+- 제작 UI에 물품 등급 필터 추가. 등급과 재료 부족 상태 확인 가능.
+- 제작 성공률은 기존 TWILIGHT 로컬 제작이므로 **100%**(모든 재료와 아데나가 충족될 때 확정)이며, 원작 제작 성공률을 재현한다고 주장하지 않는다.
+- PR #64/다른 PR과 병합하지 않고 Draft 상태 유지. 통합 시 드랍 후보 충돌을 점검.
+
+### 회귀 검증
+
+- `tests/crafting_scroll_grade_test.gd`: 등급별 비법서 분류, 실제 드랍 후보, 고유 장비 전체 커버리지, 비법서 부족 거절, 비법서 소모 및 물리 장비 ID.
+- `tests/crafting_atomic_test.gd`: 413개 레시피, 수량, 장착/강화된 재료 보호, 일괄 소비 원자성.
+- `tests/crafting_material_drop_test.gd`, `tests/loot_balance_smoke_test.gd`, `tests/ground_loot_system_test.gd`, 창고·상점 회귀 테스트 보존.
