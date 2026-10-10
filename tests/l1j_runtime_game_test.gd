@@ -154,6 +154,29 @@ func _run() -> void:
 			world._run_auto_hunt()
 			await physics_frame
 			ticks += 1
+		if not actor.dead:
+			# Keep evidence BEFORE clearing AUTO and its path: intermittent
+			# pursuit failures must be diagnosed, not hidden by CI retries.
+			var track: Dictionary = {
+				"monster":mob_name, "ticks":ticks,
+				"player":[world.player.global_position.x,world.player.global_position.y],
+				"enemy":[actor.global_position.x,actor.global_position.y],
+				"distance":world.player.global_position.distance_to(actor.global_position),
+				"weapon_cells":world._current_attack_range_cells(),
+				"cell_distance":world._weapon_cell_distance(actor),
+				"line_clear":world._has_line_of_sight_world(world.player.global_position,actor.global_position),
+				"active_target":world.auto_target == actor,
+				"auto_enabled":world.player.auto_enabled,
+				"click_path_length":world.player.click_path.size(),
+				"path_index":world.player.path_index,
+				"repath_timer":world.auto_repath_timer,
+				"world_path_length":world.find_world_path(world.player.global_position,actor.global_position).size(),
+				"pending_attack":not world.pending_attack.is_empty(),
+				"stunned":world.player.is_stunned(),
+				"held":world.player.is_held(),
+				"feared":world.player.is_feared()
+			}
+			print("L1J_COMBAT_DIAG ",JSON.stringify(track))
 		world.player.set_auto_enabled(false)
 		world.player.clear_click_path()
 		print("L1J_COMBAT_TRACE ", mob_name, " ticks=", ticks, " hp=", actor.hp, " hits=", actor.damage_hit_count)
