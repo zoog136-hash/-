@@ -1,0 +1,35 @@
+name: TWILIGHT 25 Map Visual Styles
+
+on:
+  push:
+    branches:
+      - feature/twilight-25map-visual-style-toggle-20261010
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  map-visuals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot 4.7.2
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Full Godot import boot and map regression tests
+        run: |
+          set -o pipefail
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results 2>&1 | tee map-visuals-test.log
+          grep -q MAP_VISUAL_OK test-results/map_visual_toggle_test.log
+      - name: Save exact engine evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-visual-25maps-evidence
+          path: |
+            test-results
+            map-visuals-test.log
