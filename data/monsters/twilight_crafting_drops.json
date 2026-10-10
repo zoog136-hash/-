@@ -5,7 +5,7 @@
     "field": 0.28,
     "boss": 0.65
   },
-  "note": "One independent stackable crafting-material roll on each kill. Equipment crafting ingredients use original grade roll only; original explicitly configured equipment takes priority.",
+  "note": "One independent stackable crafting-material roll on each kill. Equipment crafting ingredients use original grade roll only; original explicitly configured equipment takes priority. High-grade scrolls are part of the existing equipment grade roll; exact original equipment candidates still take precedence, and scrolls are never equipment instances.",
   "monsters": {
     "고스트": {
       "materials": [
@@ -444,7 +444,9 @@
         }
       ],
       "equipment_ingredients": [
-        "흑철 도끼"
+        "흑철 도끼",
+        "희귀 제작 비법서",
+        "전설 제작 비법서"
       ]
     },
     "테베 호루스": {
@@ -522,7 +524,8 @@
         }
       ],
       "equipment_ingredients": [
-        "흑철 양손검"
+        "흑철 양손검",
+        "전설 제작 비법서"
       ]
     },
     "불타는 전사": {
@@ -787,7 +790,8 @@
         }
       ],
       "equipment_ingredients": [
-        "강철 양손검"
+        "강철 양손검",
+        "전설 제작 비법서"
       ]
     },
     "피닉스": {
@@ -862,7 +866,9 @@
           "weight": 8
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서"
+      ]
     },
     "얼음 여왕": {
       "materials": [
@@ -899,7 +905,9 @@
           "weight": 8
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서"
+      ]
     },
     "거대 드레이크": {
       "materials": [
@@ -973,7 +981,9 @@
           "weight": 2
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "정예 다크엘프": {
       "materials": [
@@ -2079,7 +2089,8 @@
         }
       ],
       "equipment_ingredients": [
-        "훈련용 핸드캐넌"
+        "훈련용 핸드캐넌",
+        "희귀 제작 비법서"
       ]
     },
     "기란 평원 도마뱀전사": {
@@ -2923,7 +2934,9 @@
           "weight": 2
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "화룡의 둥지 화염드레이크": {
       "materials": [
@@ -3036,7 +3049,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "풍룡의 둥지 하피": {
       "materials": [
@@ -3303,7 +3318,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "지룡의 둥지 지룡서큐버스": {
       "materials": [
@@ -3650,7 +3667,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "잊혀진 섬 고대드레이크": {
       "materials": [
@@ -4221,7 +4240,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "아틀란티스 심해마녀": {
       "materials": [
@@ -4377,7 +4398,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "마계 악마전사": {
       "materials": [
@@ -5538,7 +5561,8 @@
         }
       ],
       "equipment_ingredients": [
-        "흑철 한손검"
+        "흑철 한손검",
+        "신화 제작 비법서"
       ]
     },
     "수룡의 둥지의 지배자": {
@@ -5576,7 +5600,9 @@
           "weight": 8
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "신화 제작 비법서"
+      ]
     },
     "잊혀진 섬의 지배자": {
       "materials": [
@@ -5613,7 +5639,9 @@
           "weight": 8
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "유일 제작 비법서"
+      ]
     },
     "라스타바드의 지배자": {
       "materials": [
@@ -5728,7 +5756,10 @@
           "weight": 8
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "신화 제작 비법서",
+        "유일 제작 비법서"
+      ]
     },
     "마계의 지배자": {
       "materials": [
@@ -6034,7 +6065,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서"
+      ]
     },
     "공포의 이프리트": {
       "materials": [
@@ -6071,7 +6104,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "공포의 켈베로스": {
       "materials": [
@@ -6182,7 +6217,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "교만의 레버넌트": {
       "materials": [
@@ -6257,7 +6294,9 @@
         }
       ],
       "equipment_ingredients": [
-        "흑철 단검"
+        "흑철 단검",
+        "영웅 제작 비법서",
+        "전설 제작 비법서"
       ]
     },
     "교만의 제노사이더": {
@@ -6295,7 +6334,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "교만의 제라키엘": {
       "materials": [
@@ -6406,7 +6447,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "유일 제작 비법서"
+      ]
     },
     "그리미": {
       "materials": [
@@ -6480,7 +6523,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "놀": {
       "materials": [
@@ -6625,7 +6670,8 @@
         }
       ],
       "equipment_ingredients": [
-        "강철 체인소드"
+        "강철 체인소드",
+        "영웅 제작 비법서"
       ]
     },
     "듀페리온": {
@@ -6663,7 +6709,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "유일 제작 비법서"
+      ]
     },
     "라미아": {
       "materials": [
@@ -6735,7 +6783,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "분노의 데스 도그": {
       "materials": [
@@ -7031,7 +7081,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "신화 제작 비법서"
+      ]
     },
     "불멸의 리치": {
       "materials": [
@@ -7068,7 +7120,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서"
+      ]
     },
     "불멸의 본 드래곤": {
       "materials": [
@@ -7331,7 +7385,10 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서",
+        "신화 제작 비법서"
+      ]
     },
     "불사의 좀비 마법사": {
       "materials": [
@@ -7627,7 +7684,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "불신의 시어": {
       "materials": [
@@ -7941,7 +8000,8 @@
         }
       ],
       "equipment_ingredients": [
-        "청동 라이플"
+        "청동 라이플",
+        "희귀 제작 비법서"
       ]
     },
     "살라흐": {
@@ -7979,7 +8039,10 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서",
+        "신화 제작 비법서"
+      ]
     },
     "샤벨 타이거": {
       "materials": [
@@ -8351,7 +8414,10 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서",
+        "신화 제작 비법서"
+      ]
     },
     "알비노 도마뱀": {
       "materials": [
@@ -8763,7 +8829,8 @@
         }
       ],
       "equipment_ingredients": [
-        "흑철 창"
+        "흑철 창",
+        "유일 제작 비법서"
       ]
     },
     "알비노 이구아나": {
@@ -8913,7 +8980,9 @@
         }
       ],
       "equipment_ingredients": [
-        "흑철 지팡이"
+        "흑철 지팡이",
+        "전설 제작 비법서",
+        "신화 제작 비법서"
       ]
     },
     "알비노 피쉬맨": {
@@ -9062,7 +9131,10 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서",
+        "신화 제작 비법서"
+      ]
     },
     "어둠의 불타는 궁수": {
       "materials": [
@@ -9173,7 +9245,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "에스카로스 매지션": {
       "materials": [
@@ -9210,7 +9284,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "에스카로스 솔져": {
       "materials": [
@@ -9362,7 +9438,9 @@
           "weight": 2
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "오만한 레비아탄": {
       "materials": [
@@ -9547,7 +9625,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "신화 제작 비법서"
+      ]
     },
     "오만한 플레임 팽": {
       "materials": [
@@ -9811,7 +9891,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서"
+      ]
     },
     "왜곡의 코카트리스": {
       "materials": [
@@ -9963,7 +10045,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "유일 제작 비법서"
+      ]
     },
     "웨링": {
       "materials": [
@@ -10000,7 +10084,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "신화 제작 비법서"
+      ]
     },
     "유니 드래곤": {
       "materials": [
@@ -10080,7 +10166,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "잔혹한 샤벨타이거": {
       "materials": [
@@ -10117,7 +10205,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "잔혹한 아시타지오": {
       "materials": [
@@ -10339,7 +10429,10 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "전설 제작 비법서",
+        "신화 제작 비법서"
+      ]
     },
     "죽음의 해골 근위병": {
       "materials": [
@@ -10528,7 +10621,10 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서",
+        "영웅 제작 비법서"
+      ]
     },
     "지옥의 본 드래곤": {
       "materials": [
@@ -10680,7 +10776,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "영웅 제작 비법서"
+      ]
     },
     "질투의 공주 이자벨": {
       "materials": [
@@ -10717,7 +10815,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "유일 제작 비법서"
+      ]
     },
     "질투의 로가리우스": {
       "materials": [
@@ -11081,7 +11181,9 @@
           "weight": 5
         }
       ],
-      "equipment_ingredients": []
+      "equipment_ingredients": [
+        "희귀 제작 비법서"
+      ]
     },
     "탐욕의 엔트키아": {
       "materials": [
@@ -11156,7 +11258,8 @@
         }
       ],
       "equipment_ingredients": [
-        "흑철 체인소드"
+        "흑철 체인소드",
+        "유일 제작 비법서"
       ]
     },
     "탐욕의 코아쿡": {
