@@ -51,6 +51,8 @@ const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
+const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
+var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
 
@@ -1037,6 +1039,8 @@ func _connect_signals() -> void:
 	hud.shop_buy_requested.connect(_buy_shop_item)
 	if hud.has_signal("shop_bulk_buy_requested"):
 		hud.connect("shop_bulk_buy_requested", _buy_shop_bulk)
+	if hud.has_signal("warehouse_transfer_requested"):
+		hud.connect("warehouse_transfer_requested", _warehouse_transfer)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -1297,6 +1301,8 @@ func _set_click_destination(target: Vector2) -> void:
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
 				if str(npc["role"]) == "shop":
 					hud.open_shop()
+				elif str(npc["role"]) == "warehouse":
+					hud.call("open_warehouse")
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
@@ -3243,6 +3249,41 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	if hud.has_method("open_shop"):
 		hud.call("open_shop")
 
+
+func _warehouse_transfer(item_name: String, quantity: int, direction: String, instance_id: String) -> void:
+	if item_name == "아데나" or item_name.is_empty():
+		hud.show_message("이 아이템은 창고에 보관할 수 없습니다")
+		return
+	var record: Dictionary = _find_catalog_item_record(item_name)
+	if record.is_empty() or int(quantity) < 1 or int(quantity) > 99:
+		hud.show_message("창고 아이템 또는 수량이 유효하지 않습니다")
+		return
+	_sync_item_instances()
+	var is_equipment: bool = _enhancement_kind_for_record(record) != ""
+	var result: Dictionary = {}
+	if direction == "deposit":
+		result = warehouse.store(item_name,quantity,instance_id,inventory,item_instances,equipped_items,is_equipment)
+	elif direction == "withdraw":
+		result = warehouse.retrieve(
+			item_name,quantity,instance_id,inventory,item_instances,is_equipment,
+			_inventory_total_weight(),_carrying_capacity(),maxi(0,int(item_weight_index.get(item_name,3)))
+		)
+	else:
+		hud.show_message("잘못된 창고 요청입니다")
+		return
+	if not bool(result.get("ok",false)):
+		hud.show_message(str(result.get("reason","창고 이용에 실패했습니다")))
+		return
+	# Physical instance IDs and their enchant/element/custom-record metadata
+	# are moved, not re-created. The original save schema is extended only
+	# with an optional warehouse field (legacy saves default to empty).
+	_update_hud()
+	_save_game(true)
+	hud.append_log("창고 %s · %s ×%d" % ["보관" if direction == "deposit" else "찾기",item_name,quantity])
+	hud.show_message("창고 이용 완료")
+	if hud.has_method("open_warehouse"):
+		hud.call("open_warehouse")
+
 func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
@@ -3380,6 +3421,7 @@ func _save_game(quiet: bool) -> void:
 		"gold": gold,
 		"inventory": inventory,
 		"ground_drops": _ground_drops_snapshot(),
+		"warehouse": warehouse.snapshot(),
 		"monster_world": field_population.export_state(),
 		"class_index": class_index,
 		"job_class": job_class,
@@ -3433,6 +3475,7 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	warehouse.restore(data.get("warehouse", {}))
 	ain_service.import_state(data.get("ainhasad_state", {}))
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
