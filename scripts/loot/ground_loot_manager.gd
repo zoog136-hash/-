@@ -67,7 +67,9 @@ func spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String 
 
 func _create_view(record: Dictionary) -> Button:
 	var view: TwilightGroundLoot = LOOT.new()
-	view.configure(record, _icon(str(record["item_name"])), str(item_record(str(record["item_name"])).get("slot", "")))
+	var item_data: Dictionary = item_record(str(record["item_name"]))
+	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
+	view.configure(record, _icon(str(record["item_name"])), visual_slot)
 	(world.get("drops_root") as Node).add_child(view)
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
 	views[record["id"]] = view

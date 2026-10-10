@@ -146,6 +146,16 @@ func _run() -> void:
 						_check(LOOT._is_potion(potion_record), "balance potion must heal: " + potion_name)
 						_check(boss or str(potion_record.get("grade", "")) != "유일", "Unique potion must be boss-only")
 						registered_potions[potion_name] = true
+	# Crafting scrolls share one existing equipment-grade roll and are only
+	# reachable through their explicit per-monster ingredient sources.
+	var crafting_sources: Dictionary = catalog.get("crafting_drops", {})
+	for source_record: Variant in crafting_sources.values():
+		if not (source_record is Dictionary):
+			continue
+		for item_value: Variant in (source_record as Dictionary).get("equipment_ingredients", []):
+			var item_name: String = str(item_value)
+			if by_name.has(item_name) and bool((by_name[item_name] as Dictionary).get("crafting_scroll", false)):
+				registered[item_name] = true
 	var equip_total: int = 0
 	var potion_total: int = 0
 	for item_value: Variant in data.get("아이템", []):
@@ -157,7 +167,7 @@ func _run() -> void:
 		elif LOOT._is_potion(item):
 			potion_total += 1
 			_check(registered_potions.has(name_value), "unreachable potion: " + name_value)
-	_check(equip_total == 458, "catalog equipment count must stay 458")
+	_check(equip_total == 463, "458 gear plus five scrolls share equipment-grade rolls")
 	_check(potion_total == 11, "catalog healing potion count must stay 11")
 	# Select a balance-only item through the same in-game equipment-picker.
 	var balance_mob_names: Array = balance_equipment.keys()
@@ -190,16 +200,19 @@ func _run() -> void:
 		for index: int in range(200):
 			var acquired: Array[String] = LOOT.roll(drops, is_boss, catalog, rng)
 			var max_gear: int = 3 if is_boss else 1
-			_check(acquired.size() <= max_gear + 1, "at most one potion plus allowed equipment slots")
+			_check(acquired.size() <= max_gear + 2, "at most one potion, one material and allowed equipment slots")
 			var potions_in_kill: int = 0
 			var gear_in_kill: int = 0
+			var resources_in_kill: int = 0
 			for item_name: String in acquired:
 				_check(by_name.has(item_name), "unknown dropped item: " + item_name)
 				if not by_name.has(item_name):
 					continue
 				var item: Dictionary = by_name[item_name] as Dictionary
 				var grade: String = str(item.get("grade", ""))
-				if LOOT._is_potion(item):
+				if bool(item.get("crafting_material", false)):
+					resources_in_kill += 1
+				elif LOOT._is_potion(item):
 					potion_count += 1
 					potions_in_kill += 1
 					_check(grade != "유일" or is_boss, "Unique consumables must be boss-only")
@@ -210,6 +223,7 @@ func _run() -> void:
 					_check(grade in LOOT.EQUIPMENT_GRADES, "equipment grade unrecognized")
 					if not is_boss:
 						_check(grade in ["일반", "고급", "희귀", "영웅"], "normal monster exceeded Hero cap: " + item_name)
+			_check(resources_in_kill <= 1, "at most one independent material per kill")
 			_check(potions_in_kill <= 1, "at most one potion per kill")
 			_check(gear_in_kill <= max_gear, "equipment drop count exceeded cap")
 		_check(potion_count > 0, "potion should drop during sample for " + str(record.get("name","")))

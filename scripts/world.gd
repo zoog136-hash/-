@@ -57,6 +57,8 @@ const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
 const NPC_DIALOGUE_SERVICE = preload("res://scripts/npc/dialogue_service.gd")
 var dialogue_service = NPC_DIALOGUE_SERVICE.new()
 const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
+const EXPANDED_CRAFTING = preload("res://scripts/crafting/expanded_crafting.gd")
+var crafting = EXPANDED_CRAFTING.new()
 const LOCAL_BUYBACK = preload("res://scripts/shop/local_buyback.gd")
 var crafting_log: Array[Dictionary] = []
 var warehouse = LOCAL_WAREHOUSE.new()
@@ -270,6 +272,7 @@ func _ready() -> void:
 	rng.randomize()
 	ain_service.import_state({})
 	dialogue_service.load_dialogues()
+	crafting.load_recipes()
 	_load_data()
 	consumable_service = CONSUMABLE_SERVICE.new()
 	add_child(consumable_service)
@@ -3332,27 +3335,43 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 		hud.call("open_shop")
 
 
-func _craft_requested(recipe_id: String, batches: int) -> void:
-	# World revalidates canonical recipe/weight/ownership, not UI totals.
-	var quoted: Dictionary = LOCAL_CRAFTING.quote(
-		recipe_id,batches,inventory,gold,loot_catalog,item_weight_index,
-		_inventory_total_weight(),_carrying_capacity()
+# The original static crafting service remains available for saved-game and
+# regression compatibility. The expanded 413-recipe service is a separate instance.
+func _craft_item_index() -> Dictionary:
+	return loot_catalog.get("by_name", {}) as Dictionary
+
+func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
+	_sync_item_instances()
+	return crafting.quote(
+		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
+		equipped_items, _inventory_total_weight(), _carrying_capacity()
 	)
-	if not bool(quoted.get("ok",false)):
-		hud.show_message(str(quoted.get("reason","제작할 수 없습니다")))
+
+func _craft_requested(recipe_id: String, batches: int) -> void:
+	# Revalidate authoritative ingredients, wallet, weight and physical IDs.
+	# The service stages mutations and commits only if every check succeeds.
+	_sync_item_instances()
+	var transaction: Dictionary = crafting.execute(
+		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
+		equipped_items, _inventory_total_weight(), _carrying_capacity(), next_item_instance_id
+	)
+	if not bool(transaction.get("ok", false)):
+		hud.show_message(str(transaction.get("reason", "제작에 실패했습니다")))
 		return
-	var result: Dictionary = LOCAL_CRAFTING.execute(quoted,inventory,gold)
-	if not bool(result.get("ok",false)):
-		hud.show_message(str(result.get("reason","제작에 실패했습니다")))
-		return
-	gold = int(result["wallet"])
-	var summary: String = "%s ×%d" % [str(result["output"]),int(result["quantity"])]
-	crafting_log.append({"recipe_id":recipe_id,"batch":batches,"output":str(result["output"]),"quantity":int(result["quantity"]),"gold":int(quoted["gold"]),"at":Time.get_unix_time_from_system()})
+	gold = int(transaction["gold_after"])
+	next_item_instance_id = int(transaction["next_instance_id"])
+	var output_name: String = str(transaction["result_name"])
+	var output_quantity: int = int(transaction["result_quantity"])
+	crafting_log.append({
+		"recipe_id":recipe_id, "batch":batches, "output":output_name,
+		"quantity":output_quantity, "gold":int(transaction["cost"]),
+		"at":Time.get_unix_time_from_system()
+	})
 	if crafting_log.size() > 200:
 		crafting_log.pop_front()
 	hud.refresh_inventory(inventory)
-	hud.append_log("제작 완료 · " + summary)
-	hud.show_message("제작 완료 · " + summary)
+	hud.append_log("제작 완료 · %s ×%d" % [output_name,output_quantity])
+	hud.show_message("제작 완료 · %s ×%d" % [output_name,output_quantity])
 	_update_hud()
 	_save_game(true)
 	if hud.has_method("open_crafting"):
