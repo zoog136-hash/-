@@ -27,6 +27,9 @@ func configure(controller: Node) -> void:
 	add_child(UI.section("ADEN  /  잡화 상점",16))
 	wallet = UI.label("",15,UI.GOLD)
 	add_child(wallet)
+	var buyback := UI.button("아이템 매입 · 보유 장비/소모품 판매",func() -> void: hud.call("open_item_sell"),Vector2(0,44))
+	buyback.name = "OpenBuyback"
+	add_child(buyback)
 	var filters := HBoxContainer.new()
 	add_child(filters)
 	search_field = LineEdit.new()
