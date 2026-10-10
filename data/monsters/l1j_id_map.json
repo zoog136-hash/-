@@ -1,6 +1,11 @@
 {
   "schema_version": 1,
   "monster_id_to_twilight": {
+    "45181": "스파토이",
+    "45573": "바포메트",
+    "45601": "데스나이트",
+    "46123": "테베 호루스",
+    "46124": "테베 아누비스",
     "46141": "얼음 여왕"
   },
   "item_id_to_twilight": {
@@ -8,6 +13,11 @@
       "name": "수정 단검",
       "kind": "equipment",
       "verified_in": "L1j-TW-main/db/InnoDB_TW/weapon.sql: 水晶短劍"
+    },
+    "76": {
+      "name": "론드의 이도류",
+      "kind": "equipment",
+      "verified_in": "L1j-TW-main/db/InnoDB_TW/weapon.sql: 倫得雙刀; droplist.sql: mob 45601 -> item 76"
     },
     "40308": {
       "name": "아데나",
