@@ -23,7 +23,7 @@ func _run() -> void:
 	var items: Dictionary = catalog.get("by_name",{})
 	var sources: Dictionary = catalog.get("crafting_drops",{})
 	var monsters: Array = MONSTER_CATALOG.expand(db.get("몬스터",[]))
-	_check(items.size() == 480,"480 catalog items including ten stackable resources")
+	_check(items.size() == 485,"485 items including ten resources and five scrolls")
 	_check(monsters.size() == 318 and sources.size() == monsters.size(),"all 318 monsters have explicit crafting drop rows")
 	var materials: Array[String] = ["철 광석","동 광석","미스릴 원석","가죽 조각","정제된 목재","천 조각","마력 결정","연마석","약초","정령의 가루"]
 	var material_reach: Dictionary = {}
@@ -40,7 +40,8 @@ func _run() -> void:
 		for raw: Variant in row.get("equipment_ingredients",[]):
 			var item_name: String = str(raw)
 			_check(items.has(item_name) and LOOT._is_equipment(items[item_name] as Dictionary), "equipment ingredient exists and is equipment: "+item_name)
-			equipment_reach[item_name] = true
+			if not bool((items[item_name] as Dictionary).get("crafting_scroll",false)):
+				equipment_reach[item_name] = true
 	var recipes := CRAFTING.new()
 	recipes.load_recipes()
 	var required_equipment: Dictionary = {}
@@ -50,7 +51,7 @@ func _run() -> void:
 			var item_name: String = str((raw as Dictionary).get("item",""))
 			if not (items[item_name] as Dictionary).get("crafting_material",false) and LOOT._is_equipment(items[item_name] as Dictionary):
 				required_equipment[item_name] = true
-	_check(required_equipment.size() == 76 and equipment_reach.size() == required_equipment.size(), "all 76 physical crafting ingredients explicitly reachable")
+	_check(required_equipment.size() >= 76 and equipment_reach.size() == 76, "all original 76 physical crafting ingredients explicitly reachable")
 	for name: String in required_equipment:
 		_check(equipment_reach.has(name),"equipment material has monster source: "+name)
 	for name: String in materials:
