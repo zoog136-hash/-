@@ -19,6 +19,7 @@ const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const FIELD_MINIMAP = preload("res://scripts/maps/field_minimap.gd")
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
 const ITEM_OPTIONS = preload("res://scripts/item_options.gd")
+const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd")
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
@@ -1456,8 +1457,7 @@ func _clear_drops() -> void:
 	ground_loot.clear_map(active_map_id)
 
 func _magic_hit_chance(attacker_magic_accuracy: int, target_mr: int) -> float:
-	var chance_percent: float = 75.0 + float(attacker_magic_accuracy - maxi(0, target_mr)) * 0.7
-	return clampf(chance_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.magic_hit_chance(attacker_magic_accuracy,target_mr)
 
 func _player_magic_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
@@ -1850,10 +1850,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 func _melee_hit_chance(target: TwilightMonster) -> float:
 	if target == null:
 		return 0.05
-	var accuracy: int = _melee_accuracy_stat()
-	var target_ac_abs: int = absi(target.armor_class)
-	var chance_percent: float = 75.0 + float(accuracy - target_ac_abs) * 0.7
-	return clampf(chance_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(_melee_accuracy_stat(),target.armor_class,0)
 
 func _roll_melee_hit(target: TwilightMonster) -> bool:
 	return rng.randf() < _melee_hit_chance(target)
@@ -2203,9 +2200,7 @@ func _roll_drop(monster: TwilightMonster, can_drop_tradeable_equipment: bool = t
 
 
 func _physical_hit_chance(attacker_accuracy: int, target_ac: int, avoidance: int) -> float:
-	var base_percent: float = 75.0 + float(attacker_accuracy - absi(target_ac)) * 0.7
-	var final_percent: float = base_percent - float(maxi(0, avoidance))
-	return clampf(final_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(attacker_accuracy,target_ac,avoidance)
 
 func _avoidance_for_attack_type(attack_type: String) -> int:
 	return _effective_er() if attack_type == "ranged" else _effective_dg()
@@ -5377,9 +5372,7 @@ func _normal_attack_hit_chance(target: TwilightMonster, attack_kind: String) -> 
 	if target == null:
 		return 0.05
 	var accuracy: int = _ranged_accuracy_stat() if attack_kind == "ranged" else _melee_accuracy_stat()
-	var target_ac_abs: int = absi(target.armor_class)
-	var chance_percent: float = 75.0 + float(accuracy - target_ac_abs) * 0.7
-	return clampf(chance_percent / 100.0, 0.05, 0.95)
+	return PHYSICAL_RESOLUTION.physical_hit_chance(accuracy,target.armor_class,0)
 
 func _catalog_damage_bonus(kind: String) -> int:
 	var total: int = _catalog_stat_sum("damage_reduction_ignore") + _catalog_stat_sum("damageReductionIgnore") + _catalog_stat_sum(kind + "_reduction_ignore")
@@ -5826,7 +5819,7 @@ func _pve_damage_after_item_buffs(raw_damage: int) -> int:
 	return reduced
 
 func _physical_damage_after_reduction(raw_damage: int) -> int:
-	return maxi(1, raw_damage - _damage_reduction_stat() - _active_skill_buff_total("damage_reduction"))
+	return PHYSICAL_RESOLUTION.physical_after_flat_reduction(raw_damage,_damage_reduction_stat(),_active_skill_buff_total("damage_reduction"))
 
 func _character_stats_snapshot() -> Dictionary:
 	return {
