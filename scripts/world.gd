@@ -53,6 +53,8 @@ const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
+const LOCAL_CRAFTING = preload("res://scripts/crafting/local_crafting.gd")
+var crafting_log: Array[Dictionary] = []
 var warehouse = LOCAL_WAREHOUSE.new()
 var ain_service: TwilightAinhasadService = AIN_SERVICE.new()
 var ain_refresh_clock: float = 0.0
@@ -1044,6 +1046,8 @@ func _connect_signals() -> void:
 		hud.connect("warehouse_transfer_requested", _warehouse_transfer)
 	if hud.has_signal("npc_teleport_requested"):
 		hud.connect("npc_teleport_requested", _npc_teleport_requested)
+	if hud.has_signal("craft_requested"):
+		hud.connect("craft_requested", _craft_requested)
 	if hud.has_signal("ain_item_requested"):
 		hud.connect("ain_item_requested", _on_ain_item_requested)
 	if hud.has_signal("ain_shop_requested"):
@@ -1308,6 +1312,8 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_warehouse")
 				elif str(npc["role"]) == "teleport":
 					hud.call("open_npc_teleport")
+				elif str(npc["role"]) == "craft":
+					hud.call("open_crafting")
 				else:
 					hud.show_message("왕의 길을 따라 동쪽으로: 초원 → 돌다리 → 황혼의 폐허" if str(field_map.data.get("map_id",""))=="aden_world" else str(field_map.data["map_name"])+" · 청록 이동진: 이전/다음 지역 · 아덴 귀환")
 				return
@@ -3255,6 +3261,32 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 		hud.call("open_shop")
 
 
+func _craft_requested(recipe_id: String, batches: int) -> void:
+	# World revalidates canonical recipe/weight/ownership, not UI totals.
+	var quoted: Dictionary = LOCAL_CRAFTING.quote(
+		recipe_id,batches,inventory,gold,loot_catalog,item_weight_index,
+		_inventory_total_weight(),_carrying_capacity()
+	)
+	if not bool(quoted.get("ok",false)):
+		hud.show_message(str(quoted.get("reason","제작할 수 없습니다")))
+		return
+	var result: Dictionary = LOCAL_CRAFTING.execute(quoted,inventory,gold)
+	if not bool(result.get("ok",false)):
+		hud.show_message(str(result.get("reason","제작에 실패했습니다")))
+		return
+	gold = int(result["wallet"])
+	var summary: String = "%s ×%d" % [str(result["output"]),int(result["quantity"])]
+	crafting_log.append({"recipe_id":recipe_id,"batch":batches,"output":str(result["output"]),"quantity":int(result["quantity"]),"gold":int(quoted["gold"]),"at":Time.get_unix_time_from_system()})
+	if crafting_log.size() > 200:
+		crafting_log.pop_front()
+	hud.refresh_inventory(inventory)
+	hud.append_log("제작 완료 · " + summary)
+	hud.show_message("제작 완료 · " + summary)
+	_update_hud()
+	_save_game(true)
+	if hud.has_method("open_crafting"):
+		hud.call("open_crafting")
+
 func _npc_teleport_requested(map_id: String) -> void:
 	if player.is_stunned() or player.is_feared() or player.is_held():
 		hud.show_message("이동 불가 상태에서는 텔레포트할 수 없습니다")
@@ -3448,6 +3480,7 @@ func _save_game(quiet: bool) -> void:
 		"inventory": inventory,
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
+		"crafting_log": crafting_log,
 		"monster_world": field_population.export_state(),
 		"class_index": class_index,
 		"job_class": job_class,
@@ -3502,6 +3535,12 @@ func _load_game(quiet: bool) -> void:
 		return
 	var data: Dictionary = value as Dictionary
 	warehouse.restore(data.get("warehouse", {}))
+	crafting_log.clear()
+	var old_log: Variant = data.get("crafting_log", [])
+	if old_log is Array:
+		for raw_log: Variant in old_log:
+			if raw_log is Dictionary and crafting_log.size() < 200:
+				crafting_log.append((raw_log as Dictionary).duplicate(true))
 	ain_service.import_state(data.get("ainhasad_state", {}))
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
