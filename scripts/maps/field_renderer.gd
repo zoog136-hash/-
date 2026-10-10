@@ -6,6 +6,7 @@ const GROUND_SHADER = preload("res://assets/maps/aden/ground.gdshader")
 const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
 const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
+const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
 const LANDMARK_BAKE_SCALE: float = 1.5
 const LANDMARK_CELL: Vector2 = Vector2(256,256)
 const LANDMARK_ORIGIN: Vector2 = Vector2(128,224)
@@ -38,6 +39,8 @@ var stream_clock: float = 0.0
 var faded: Array[Node2D] = []
 var visible_props: int = 0
 var chunk_size: float = 1024.0
+var visual_mode: String = VISUAL_STYLE.TWILIGHT
+var npc_visuals: Array[Sprite2D] = []
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field = value
@@ -64,7 +67,28 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		buckets[key].append(record)
 	_build_landmark_cache()
 	_build_markers()
+	_apply_visual_mode()
 	refresh_visible()
+
+func set_visual_mode(requested: String) -> void:
+	visual_mode = VISUAL_STYLE.normalize(requested)
+	_apply_visual_mode()
+
+func _apply_visual_mode() -> void:
+	# Only CanvasItem modulation / ground shader appearance changes here.
+	# No field map navigation, collision, portal or actor coordinates touched.
+	if is_instance_valid(terrain_root):
+		terrain_root.modulate = VISUAL_STYLE.ground_tint(visual_mode)
+	for raw: Variant in chunks.values():
+		if raw is Node2D and is_instance_valid(raw):
+			(raw as Node2D).modulate = VISUAL_STYLE.prop_tint(visual_mode)
+	for npc: Sprite2D in npc_visuals:
+		if is_instance_valid(npc):
+			npc.modulate = VISUAL_STYLE.npc_render_tint(str(npc.get_meta("npc_role","")),visual_mode)
+	if field != null:
+		for raw: Variant in ground_materials.values():
+			if raw is ShaderMaterial:
+				_style_material(raw as ShaderMaterial)
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_RESUMED,NOTIFICATION_WM_WINDOW_FOCUS_IN] and is_instance_valid(landmark_cache):
@@ -272,8 +296,8 @@ func _build_ground() -> void:
 func _style_material(material: ShaderMaterial) -> void:
 	var style: Dictionary = field.data.get("render_style",{})
 	material.set_shader_parameter("wild_ground",bool(style.get("wild_ground",true)))
-	material.set_shader_parameter("palette",Color(str(style.get("palette","ffffff"))))
-	material.set_shader_parameter("saturation",float(style.get("saturation",1.0)))
+	material.set_shader_parameter("palette",Color(str(style.get("palette","ffffff"))) * VISUAL_STYLE.palette_tint(visual_mode))
+	material.set_shader_parameter("saturation",float(style.get("saturation",1.0)) * VISUAL_STYLE.saturation_multiplier(visual_mode))
 	material.set_shader_parameter("brightness_lift",float(style.get("brightness_lift",0.0)))
 
 func _courtyard(box: Rect2) -> void:
@@ -300,7 +324,8 @@ func _build_markers() -> void:
 	for npc: Dictionary in field.data["npc_spawn"]:
 		var p: Vector2 = COORD.array_vector(npc["position"])
 		var sprite := Sprite2D.new()
-		var tex: Texture2D = load("res://assets/sprites/classes/warrior.png") as Texture2D
+		var npc_role: String = str(npc.get("role","guide"))
+		var tex: Texture2D = load(VISUAL_STYLE.npc_class_art(npc_role)) as Texture2D
 		var part := AtlasTexture.new()
 		part.atlas = tex
 		part.region = Rect2(0,0,148,116)
@@ -308,7 +333,10 @@ func _build_markers() -> void:
 		sprite.position = p
 		sprite.offset = Vector2(0,-52)
 		sprite.scale = Vector2.ONE*.78
+		sprite.set_meta("npc_role",npc_role)
+		sprite.modulate = VISUAL_STYLE.npc_render_tint(npc_role,visual_mode)
 		add_child(sprite)
+		npc_visuals.append(sprite)
 		_label(str(npc["name"]),p+Vector2(-90,-107),Color("dfc58a"))
 
 func _label(text_value: String, at: Vector2, color: Color) -> void:
@@ -376,6 +404,7 @@ func _load_chunk(key: Vector2i) -> void:
 	var node := Node2D.new()
 	node.name = "Chunk_%d_%d" % [key.x,key.y]
 	node.y_sort_enabled = true
+	node.modulate = VISUAL_STYLE.prop_tint(visual_mode)
 	add_child(node)
 	chunks[key] = node
 	for record: Dictionary in buckets[key]:
