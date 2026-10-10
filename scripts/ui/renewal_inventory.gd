@@ -109,6 +109,17 @@ func _input(event: InputEvent) -> void:
 		gesture_index = -1
 		gesture_mouse = false
 		return
+	# The input phase precedes gui_input. Some native touch stacks consume the
+	# press at a ScrollContainer before an item Button receives gui_input.
+	# Capture a press by hit-testing the existing real slot rect as a fallback.
+	if event is InputEventScreenTouch and event.pressed and not event.canceled and gesture_index == -1:
+		for key: Variant in slot_buttons:
+			var button: Control = slot_buttons[key] as Control
+			if not is_instance_valid(button) or not button.is_visible_in_tree(): continue
+			var point: Vector2 = button.get_global_transform_with_canvas().affine_inverse() * event.position
+			if Rect2(Vector2.ZERO, button.size).has_point(point):
+				_gesture_start(event, str(key), button)
+				break
 	var drag_delta: Vector2 = Vector2.ZERO
 	if event is InputEventScreenDrag and event.index == gesture_index:
 		drag_delta = event.relative
