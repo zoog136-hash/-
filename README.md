@@ -25,3 +25,8 @@
 
 
 UI 전면 리뉴얼 후속 PR #50의 [화면별 변경·참조·검증 범위](docs/UI_RENEWAL_FIDELITY_20261009.md)를 참고하세요. 실제 터치 입력 회귀와 작은 창/Android 크기 화면 검증은 `tests/ui_fidelity_regression_test.gd`와 `tests/capture_ui_fidelity.gd`에 포함됩니다.
+
+
+## 리소스 누락 방지 자동검사 (2026-10-11)
+
+새 Work를 시작하기 전 [리소스 상태 장부](data/resource_delivery_ledger.json)와 [필수 리소스 확인 절차](docs/RESOURCE_INTEGRITY_POLICY.md)를 확인하십시오. `python3 tools/check_resource_integrity.py --root .`은 Git에 실제 포함된 시트 723개와 SHA/매핑을 전수 검사합니다. 업로드된 원본 ZIP이나 외부 팩이 자동으로 GitHub 또는 배포본에 포함되는 것은 **아닙니다**. 원본 전달은 별도 ZIP/영수증 및 깨끗한 환경 재검증이 있어야 완료로 보고합니다.
