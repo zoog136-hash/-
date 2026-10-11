@@ -60,7 +60,10 @@ func _run() -> void:
 	var map_count: int = 0
 	var dense_count: int = 0
 	var boss_count: int = 0
-	for id: String in world.maps_by_id:
+	# This suite verifies all 25 authored regions and their authored population caps.
+	# Imported source regions have independent limits/rules and dedicated tests.
+	for legacy: Dictionary in world.maps:
+		var id: String = str(legacy.id)
 		world._set_map(id,false)
 		pause_actors()
 		var population: FieldPopulation = world.field_population

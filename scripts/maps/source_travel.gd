@@ -1,11 +1,35 @@
 extends RefCounted
 ## Validate exact original coordinates before changing active map or consuming items.
 const FIELD = preload("res://scripts/maps/source_field.gd")
+static func read_object(path: String) -> Dictionary:
+	if not FileAccess.file_exists(path): return {}
+	var parser := JSON.new()
+	if parser.parse(FileAccess.get_file_as_string(path)) != OK or not parser.data is Dictionary: return {}
+	return parser.data
+
+static func catalog_entries(path: String = "res://data/original_maps/catalog.json") -> Array:
+	var catalog: Dictionary = read_object(path)
+	var result: Array = []
+	if int(catalog.get("schema",0)) != 2 or not catalog.get("maps") is Array: return result
+	for raw: Variant in catalog.maps:
+		if not raw is Dictionary: continue
+		var record: Dictionary = raw
+		if not str(record.get("id","")).begins_with("l1_"): continue
+		if not str(record.get("source_definition","")).begins_with("res://data/original_maps/definitions/"): continue
+		if bool(record.get("playable",false)): result.append(record)
+	return result
+
 static func load_field(record: Dictionary) -> OriginalPlayableField:
 	var path: String = str(record.get("source_definition",""))
 	if path.is_empty() or not FileAccess.file_exists(path): return null
-	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	if not (raw is Dictionary) or str(raw.get("map_id","")) != str(record.id): return null
+	var raw: Dictionary = read_object(path)
+	if raw.is_empty() or str(raw.get("map_id","")) != str(record.get("id","")): return null
+	if int(raw.get("schema",0)) != 2 or not raw.get("navigation") is Dictionary: return null
+	for key: String in ["origin","dimensions","spawn_source"]:
+		if not raw.get(key) is Array or raw[key].size()!=2: return null
+	for key: String in ["npc_spawns","monster_spawns","portals","terrain_chunks"]:
+		if not raw.get(key) is Array: return null
+	if not raw.navigation.get("chunks") is Array: return null
 	var field: OriginalPlayableField = FIELD.new()
 	if not field.configure_source(raw): field.close(); return null
 	return field

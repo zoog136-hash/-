@@ -1,3 +1,5 @@
+> Historical record from the preserved local runtime. Superseded by ../playable-maps-20261011/CHECKPOINT.md. Source geometry is kept out of the public PR under the current user instructions.
+
 # Original world runtime checkpoint
 
 Base: PR #81 b1198ad12d5c644bb357694b2d1261fb22a627b7, containing main 1d267e53aaea32038f348065066f7c3e5286415c. Independent branch; no changes to other PR branches and no merge.

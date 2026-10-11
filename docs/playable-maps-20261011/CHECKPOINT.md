@@ -1,13 +1,14 @@
-# Playable map continuation
+# Current playable-map checkpoint
 
-Independent branch from main 2f5ae1013da5c7281d3020719d8a723a23adb8cc.
-PR81 b1198ad12d5c644bb357694b2d1261fb22a627b7 and preserved local runtime 43137c112759b7301728ccd3a8e40a67037692cf reused; neither branch changed.
+PR #83, independent branch feature/twilight-playable-maps-20261011.
+Last verified remote commit before this checkpoint: 67dac0688cb756b79bc48da8959dcefb77a7dd40. Local implementation checkpoint: faff1b1b. Use this branch's current HEAD when resuming, not an old workspace.
 
-Current map: l1_4, A3 mainland. Original tile images: missing. Original 25 TWILIGHT map equivalence: unverified, no field replaced.
-Imported existing runtime, bounded chunks, precise source coordinates/edges, NPC and spawn integration, portals and separate save state.
-Added explicit local Kurtz boss adaptation and guard against overwriting a source-map save when its data pack is missing.
+Current map l1_4: PLAYABLE with temporary navigation terrain, not ORIGINAL_RESTORED. Freshly installed A3 source pack passed 32 software OpenGL checks and five screenshots. Original target-25 edition/ID equivalence is unconfirmed; the exact zero/25 restoration counters and separate source-runtime counters are in status.json and REPORT.md.
 
-Validation so far: source pack 2770 files / 161549593 bytes verified locally; 23 source regions passed 201 earlier runtime assertions on integrated main; first-map 21/22 headless checks passed. A* actor detour failed and is under investigation. NOT PLAYABLE-complete yet. No Windows device test.
+Completed: PR81 and saved runtime reuse; source geometry/edges, A*, actual actor movement, streaming, NPC, monsters, explicit local boss, portals, AUTO, minimap, map menu, save/reconnect; float precision fix; missing/corrupt pack save protection. Old 25 maps remain.
 
-The source pack remains private/local. Public Git contains code, provenance and installation instructions; not unreviewed source bytes. Existing main resource rules and 723 tracked atlases preserved.
-Next: diagnose actual detour movement, GL validation, clean-code fallback regressions, local installer validation, publish independent PR and precise status matrix.
+Validation: initial full 89/93, four issues rechecked successfully as documented; 23 source maps 201 assertions, first source map 32 OpenGL assertions, legacy 25 maps 9323 assertions, malformed pack 12 assertions. First remote L1J CI failed because its fixture tool encountered existing shipped art. Fixed by separate synthetic subpaths, keeping original-byte protection; synthetic runtime 78 assertions pass. Final CI remains separately inspectable on PR83.
+
+Source pack publication: excluded from public Git because redistribution rights are not established. Uploaded source ZIPs remain the input. Run INSTALL.md to reconstruct locally, or reuse data/l1j/recovered_maps and data/original_maps only after verify_delivery.py passes. Uploaded files SHA all 16 match PR81. No unchanged nested-archive rescans are required.
+
+Next: verify final PR CI, then obtain exact source-edition correspondence for the 25 target IDs and actual tile imagery. Resume only missing gameplay cases on candidate maps; do not turn all 998 catalog entries into completion claims. Do not merge main/other PRs without authorization.

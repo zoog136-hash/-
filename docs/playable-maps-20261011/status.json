@@ -1,0 +1,282 @@
+{
+  "schema": 1,
+  "base_main": "2f5ae1013da5c7281d3020719d8a723a23adb8cc",
+  "last_remote_checkpoint": "67dac0688cb756b79bc48da8959dcefb77a7dd40",
+  "scope_note": "Existing 25 LineageM-inspired maps and separately integrated A3 maps are not declared equivalent.",
+  "target_25": {
+    "total": 25,
+    "DATA_READY": {
+      "count": 0,
+      "ids": []
+    },
+    "PLAYABLE": {
+      "count": 0,
+      "ids": []
+    },
+    "ORIGINAL_RESTORED": {
+      "count": 0,
+      "ids": []
+    },
+    "NPC": {
+      "count": 0,
+      "ids": []
+    },
+    "MONSTERS": {
+      "count": 0,
+      "ids": []
+    },
+    "PORTALS": {
+      "count": 0,
+      "ids": []
+    },
+    "AUTO": {
+      "count": 0,
+      "ids": []
+    },
+    "maps": [
+      {
+        "id": "oman_01",
+        "source_candidate": 101,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_02",
+        "source_candidate": 102,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_03",
+        "source_candidate": 103,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_04",
+        "source_candidate": 104,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_05",
+        "source_candidate": 105,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_06",
+        "source_candidate": 106,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_07",
+        "source_candidate": 107,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_08",
+        "source_candidate": 108,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_09",
+        "source_candidate": 109,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "oman_10",
+        "source_candidate": 110,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "domination_summit",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "escaros_01",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "escaros_02",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "escaros_03",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "escaros_04",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "escaros_05",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "albino_01",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "albino_02",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "albino_03",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "albino_04",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "faith_01",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "faith_02",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "faith_03",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "faith_04",
+        "source_candidate": null,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      },
+      {
+        "id": "aden_world",
+        "source_candidate": 4,
+        "status": "EDITION_MAPPING_UNCONFIRMED",
+        "original_graphics": false
+      }
+    ]
+  },
+  "separate_A3_runtime": {
+    "PLAYABLE": {
+      "count": 1,
+      "ids": [
+        "l1_4"
+      ],
+      "graphics": "temporary traversal terrain",
+      "npc_services": "TWILIGHT temporary binding",
+      "boss": "explicit offline override"
+    },
+    "ORIGINAL_RESTORED": {
+      "count": 0,
+      "ids": []
+    },
+    "DATA_READY": {
+      "count": 1000,
+      "id_index": "../map-recovery-20261011/MAP_SOURCE_MAPPING.json:source_maps[navigation_rules=A3_STATIC_EDGES]",
+      "note": "997 and 998 empty; 998 selectable"
+    },
+    "movement_and_save": {
+      "count": 23,
+      "ids": [
+        "l1_4",
+        "l1_101",
+        "l1_102",
+        "l1_103",
+        "l1_104",
+        "l1_105",
+        "l1_106",
+        "l1_107",
+        "l1_108",
+        "l1_109",
+        "l1_110",
+        "l1_111",
+        "l1_12852",
+        "l1_12853",
+        "l1_12854",
+        "l1_12855",
+        "l1_12856",
+        "l1_12857",
+        "l1_12858",
+        "l1_12859",
+        "l1_12860",
+        "l1_12861",
+        "l1_12862"
+      ]
+    },
+    "render_and_viewport_click": {
+      "count": 5,
+      "ids": [
+        "l1_4",
+        "l1_101",
+        "l1_111",
+        "l1_12852",
+        "l1_12862"
+      ]
+    },
+    "NPC": {
+      "count": 1,
+      "ids": [
+        "l1_4"
+      ]
+    },
+    "MONSTERS": {
+      "count": 3,
+      "ids": [
+        "l1_4",
+        "l1_101",
+        "l1_12852"
+      ]
+    },
+    "PORTALS": {
+      "count": 1,
+      "ids": [
+        "l1_4"
+      ],
+      "verified_destination": "l1_6"
+    },
+    "AUTO": {
+      "count": 3,
+      "ids": [
+        "l1_4",
+        "l1_101",
+        "l1_12852"
+      ]
+    }
+  },
+  "blockers": [
+    "Original visual tile pack absent in identical 16 archives; no new tile discovery claim.",
+    "Edition/source correspondence for target 25 remains unconfirmed.",
+    "Other source maps lack complete NPC/boss/portal/AUTO validation; do not count catalog enablement as PLAYABLE.",
+    "Windows device testing not performed."
+  ]
+}

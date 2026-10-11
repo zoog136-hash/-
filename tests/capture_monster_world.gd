@@ -57,7 +57,8 @@ func _run() -> void:
 	report.renderer = RenderingServer.get_current_rendering_method()
 	report.adapter = RenderingServer.get_video_adapter_name()
 	check(report.renderer=="gl_compatibility","Compatibility renderer")
-	for id: String in world.maps_by_id:
+	for legacy: Dictionary in world.maps:
+		var id: String = str(legacy.id)
 		world._set_map(id,false)
 		pause_actors()
 		var mob: TwilightMonster = world.monsters_root.get_child(0)

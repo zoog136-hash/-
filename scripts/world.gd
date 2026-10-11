@@ -407,12 +407,9 @@ func _load_data() -> void:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
 			maps_by_id[str(map_data.get("id", ""))] = map_data
-	if FileAccess.file_exists("res://data/original_maps/catalog.json"):
-		var original_catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/original_maps/catalog.json"))
-		for record: Dictionary in original_catalog.get("maps",[]):
-			if not bool(record.get("playable",false)): continue
-			original_maps.append(record)
-			maps_by_id[str(record.id)] = record
+	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
+		original_maps.append(record)
+		maps_by_id[str(record.id)] = record
 	var db_text: String = FileAccess.get_file_as_string(DB_PATH)
 	var db_value: Variant = JSON.parse_string(db_text)
 	if db_value is Dictionary:

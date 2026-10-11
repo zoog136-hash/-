@@ -117,6 +117,9 @@ func run() -> void:
 		for slot: Dictionary in world.field_population.slots:
 			if str(slot.region.id)=="offline_kurtz" and is_instance_valid(slot.monster): boss=slot.monster;break
 		check(boss!=null and boss.hp==1777,"boss HP save restoration")
+		if boss!=null:
+			world.player.global_position=field.cell_to_world(field.nearest_cell(boss.global_position+Vector2(72,0)))
+			world._select_monster(boss)
 		await shot("03-offline-boss")
 	# Find a real source-bound regular monster and engage using existing AUTO.
 	var target: TwilightMonster=null
