@@ -47,7 +47,7 @@ jobs:
       - name: Terrain and road geometry on all map data
         run: |
           set -o pipefail
-          for test in road_surface_mesh terrain_surface_geometry terrain_variation_texture world_structure; do
+          for test in road_surface_mesh terrain_surface_geometry terrain_variation_texture world_structure reference_object_placement; do
             timeout 120 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" 2>&1 | tee "terrain-${test}.log"
             grep -q '_OK' "terrain-${test}.log"
             ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "terrain-${test}.log"
@@ -92,6 +92,20 @@ jobs:
         with:
           name: pr84-structure-before
           path: docs/world-structure-20261011/evidence/before
+          if-no-files-found: warn
+      - name: Existing object placement cameras and navigation
+        run: |
+          set -o pipefail
+          XDG_DATA_HOME="${RUNNER_TEMP}/object-placement-save" timeout 420 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/reference_object_capture_test.gd -- --phase=after 2>&1 | tee terrain-object-placement.log
+          grep -q REFERENCE_OBJECT_CAPTURE_OK terrain-object-placement.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' terrain-object-placement.log
+          /tmp/terrain-evidence-tools/bin/python tools/build_reference_object_evidence.py
+      - name: Preserve object placement evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-object-placement
+          path: docs/object-placement-20261011/evidence
           if-no-files-found: warn
       - name: Preserve after viewports
         if: always()

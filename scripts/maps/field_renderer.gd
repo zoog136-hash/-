@@ -596,6 +596,10 @@ func _load_chunk(key: Vector2i) -> void:
 			continue
 		var sprite := Sprite2D.new()
 		sprite.texture = textures[kind]
+		# Placement records may reuse either of the two already shipped atlases.
+		# Old records keep the existing reference-profile appearance.
+		if str(record.get("texture_style","reference")) == "aden_original":
+			sprite.texture = detail_textures[kind]
 		sprite.set_meta("prop_kind",kind)
 		sprite.position = COORD.array_vector(record["position"])
 		# One existing north-village house receives authored stone/slate art.
