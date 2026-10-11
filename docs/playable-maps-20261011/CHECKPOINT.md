@@ -1,3 +1,21 @@
+# Authored-tile screenshot checkpoint
+
+Latest completed implementation: c0e40c1a55b52f6fe5bc0e3f3bb697d35272d1a3 (remote PR83); local equivalent 60649aa72875f1cd46a2bb76a705adac19daf1fe. The current branch HEAD includes this evidence checkpoint. Latest main verified 2f5ae101; main and the earlier PRs remain untouched.
+
+User changed the art requirement: "타일을 소스들에 맞게 직접 제작해봐". Newly authored replacement graphics are now authorized. No original tile download is required to continue this authored-art path. Original artwork restoration remains 0/25 and must not be incremented for these images.
+
+Current map: l1_4. PLAYABLE with newly authored terrain. Four ground materials and four obstacle sprites in two real PNG atlases (5,892,144 bytes) are tracked and SHA-verified in Git. Source navigation, 48×24 projection, S32-based subtle variation, chunk streaming and all gameplay are preserved. Other maps are explicitly excluded from the new style. Original water/building/object graphics are unresolved; neutral rock represents inaccessible cells, not a claim about their original material.
+
+Validation completed: actual Godot 4.7.2 Linux software OpenGL, 36/36 checks, zero failures. Covers movement, source collision, A*, NPC shop, monster/boss, AUTO movement/damage, actual l1_4→l1_6 portal, minimap/map selector, save/reconnect, missing-pack save preservation, bounded chunks, and no authored-style expansion to destination maps. Existing 723-atlas resource integrity passed. Windows device validation remains unperformed.
+
+Evidence: evidence/authored-first-map-gl.log and evidence/authored-first-map-result.json; actual unedited first-map screenshots in authored-screenshots/01-mainland.png and 04-auto-combat.png. The former diagnostic screenshots remain separately preserved in screenshots/. Full prompts and authored image SHA values are under assets/maps/authored_mainland_v1/.
+
+Next action: present these actual screenshots and wait for the user's explicit OK, as requested, before producing the remaining maps. No screenshot approval has yet been given. Do not repeat source ZIP scans or completed checks without a concrete new issue. Resume from this PR branch HEAD. Do not merge main without authorization.
+
+---
+
+## Previous checkpoint (historical; original-art blocker applies only to original restoration)
+
 # Current playable-map checkpoint
 
 PR #83, independent branch feature/twilight-playable-maps-20261011.

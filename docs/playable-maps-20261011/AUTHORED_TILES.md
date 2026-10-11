@@ -44,8 +44,10 @@ boss, AUTO, portal, minimap, map selector, save/reconnect and missing-pack save
 protection checks remain.
 
 First visual run: 35 checks passed on Godot 4.7.2 Linux software OpenGL. A final
-run also checks the unexpanded destination map; its exact log and screenshots
-are recorded in the subsequent evidence checkpoint. These are not Windows
+run also checked the unexpanded destination map: **36/36 PASS**, zero failures.
+The exact log is `evidence/authored-first-map-gl.log`; the result and image hashes
+are in `evidence/authored-first-map-result.json`. Two actual screenshots are in
+`authored-screenshots/`. These are not Windows
 device results. Other source maps and the old 25 TWILIGHT maps are not restyled.
 
 Resume from the current PR83 branch head. To reproduce, follow INSTALL.md for

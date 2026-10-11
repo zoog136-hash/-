@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "base_main": "2f5ae1013da5c7281d3020719d8a723a23adb8cc",
-  "last_remote_checkpoint": "335475e55d937e8cfc4cfc5dd8e022cb8ce91086",
+  "last_remote_checkpoint": "c0e40c1a55b52f6fe5bc0e3f3bb697d35272d1a3",
   "scope_note": "Existing 25 LineageM-inspired maps and separately integrated A3 maps are not declared equivalent.",
   "target_25": {
     "total": 25,
@@ -192,7 +192,7 @@
       "ids": [
         "l1_4"
       ],
-      "graphics": "temporary traversal terrain",
+      "graphics": "user-authorized authored terrain v1 on l1_4",
       "npc_services": "TWILIGHT temporary binding",
       "boss": "explicit offline override"
     },
@@ -281,13 +281,24 @@
   ],
   "user_approval_gate": {
     "first_map": "l1_4",
-    "requirement": "Actual original tiles in running Godot screenshot, then explicit user OK before remaining-map production",
-    "screenshot_ready": false,
+    "requirement": "User authorized newly authored replacement tiles. Present actual first-map Godot screenshots and await explicit OK before remaining-map production.",
+    "screenshot_ready": true,
     "approved": false,
     "expansion_allowed": false,
-    "blocker": "Missing matching Tile.pak + Tile.idx or extracted numeric TIL files",
+    "blocker": "Awaiting user review of authored first-map screenshots; original tile bytes remain unavailable.",
     "first_spawn_required_tile_ids": 333,
     "first_spawn_required_image_pairs": 30149,
     "first_spawn_mapped_image_pairs": 0
+  },
+  "authored_graphics": {
+    "count": 1,
+    "ids": [
+      "l1_4"
+    ],
+    "style": "USER_AUTHORIZED_AUTHORED_V1",
+    "original_restored": false,
+    "GL_checks_passed": 36,
+    "GL_checks_failed": 0,
+    "screenshot_index": "evidence/authored-first-map-result.json"
   }
 }
