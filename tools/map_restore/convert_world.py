@@ -30,7 +30,11 @@ class Pack:
         ref=[self.shard,self.position,len(data),digest]
         self.file.write(data);self.position+=len(data);self.known[digest]=ref;return ref
     def close(self):
-        if self.file:self.file.close()
+        if self.file:
+            self.file.close()
+            path = self.root/f'{self.prefix}-{self.shard:02}.bin'
+            if path.stat().st_size != self.position:
+                raise IOError('Incomplete resource shard: '+str(path))
 
 def convert(root,a3,viewer):
     base=root/'data/l1j/recovered_maps'; out=root/'data/original_maps';docs=root/'docs/map-runtime-20261011'

@@ -1,3 +1,21 @@
+# Reference expansion checkpoint (supersedes previous approval hold)
+
+User requested “리니지m 사이트 검색해서 확장해봐” after seeing the first authored screenshots. Expansion is authorized. This is a separate branch/PR84 above PR83; PR83 and main remain unchanged.
+
+Remote implementation commit: `9ce4af244027989aecfe5c2c63a3ce129dc9557a`; local equivalent `3cfaa942010a7a0e089e794a83b20b8d0a63c89f`; identical tree `d48d9ed4866d04050bbab7566c881302425b4ad5`. Current HEAD additionally contains evidence and source-pack truncation guards. Resume from the current PR84 head, not an older checkpoint SHA.
+
+Completed: 16 authored terrain materials and 16 transparent environment sprites, production visual profiles on all 25 existing TWILIGHT regions, improved A3 l1_4 ground/NPC presentation. See REFERENCE_EXPANSION.md for references and limits; no proprietary reference images are shipped. Terrain and scenery PNG SHA-256/byte counts are in assets/maps/reference_expansion_v2/asset_manifest.json. Source graphics restoration remains 0/25.
+
+Actual Linux software OpenGL: 25/25 existing maps rendered, 240 checks PASS, 25 unedited 1280×720 screenshots in reference-v2/screenshots/. Separate A3 l1_4: 37 checks PASS, includes clicks/collision/A*/NPC/boss/AUTO/portal/save/reconnect. 24 dungeon gameplay suite: 5679 checks PASS, 5 families AUTO/combat tested; Aden field: 1677 checks PASS; full progression portal suite: 244 checks PASS. Do not claim AUTO was individually tested in all 25 maps from a five-family check.
+
+Whole suite initially 91/95 passed. Three external-adapter fixture tests passed on targeted rerun in an isolated synthetic worktree. The fourth exposed an incomplete local navigation-01.bin (414492 bytes vs referenced end 607508). Rebuilt only that shard from preserved source grids, verified each payload SHA and compression length; original catalog then loaded all 998 enabled entries out of 1000 preserved maps. The cause of the initial truncation is not established. Installer/manifest verification now rejects out-of-bounds payload references, and exporter checks final shard size. Private pack verified: 2016 files / 120986251 bytes. Full suite was not repeated after targeted rechecks; no remaining failed checks in those reruns. Initial failures are retained under reference-v2/regression/.
+
+Remaining: exact original map correspondence and original tile art, richer architecture/shoreline detail beyond this art pass, per-map full AUTO/boss acceptance, Windows/Android device validation. All map topology, collision, NPC/monster/portal coordinate data are preserved by this visual expansion. No merge to main has occurred.
+
+Next: inspect the committed actual screenshots and refine specific regions. Do not rescan the source archives or repeat completed tests without a new issue. Install the private pack using INSTALL.md only if missing; verify_payload_ranges now detects incomplete shards before reporting installation success.
+
+---
+
 # Authored-tile screenshot checkpoint
 
 Latest completed implementation: c0e40c1a55b52f6fe5bc0e3f3bb697d35272d1a3 (remote PR83); local equivalent 60649aa72875f1cd46a2bb76a705adac19daf1fe. The current branch HEAD includes this evidence checkpoint. Latest main verified 2f5ae101; main and the earlier PRs remain untouched.

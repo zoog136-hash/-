@@ -281,11 +281,11 @@
   ],
   "user_approval_gate": {
     "first_map": "l1_4",
-    "requirement": "User authorized newly authored replacement tiles. Present actual first-map Godot screenshots and await explicit OK before remaining-map production.",
+    "requirement": "User authorized reference-informed expansion after viewing first-map screenshots.",
     "screenshot_ready": true,
     "approved": false,
-    "expansion_allowed": false,
-    "blocker": "Awaiting user review of authored first-map screenshots; original tile bytes remain unavailable.",
+    "expansion_allowed": true,
+    "blocker": "No expansion blocker; original tile art remains unavailable.",
     "first_spawn_required_tile_ids": 333,
     "first_spawn_required_image_pairs": 30149,
     "first_spawn_mapped_image_pairs": 0
@@ -300,5 +300,46 @@
     "GL_checks_passed": 36,
     "GL_checks_failed": 0,
     "screenshot_index": "evidence/authored-first-map-result.json"
+  },
+  "reference_expansion": {
+    "user_request": "리니지m 사이트 검색해서 확장해봐",
+    "branch": "feature/twilight-reference-expansion-20261011",
+    "pr": 84,
+    "code_commit": "9ce4af244027989aecfe5c2c63a3ce129dc9557a",
+    "rendered_maps": [
+      "oman_01",
+      "oman_02",
+      "oman_03",
+      "oman_04",
+      "oman_05",
+      "oman_06",
+      "oman_07",
+      "oman_08",
+      "oman_09",
+      "oman_10",
+      "domination_summit",
+      "escaros_01",
+      "escaros_02",
+      "escaros_03",
+      "escaros_04",
+      "escaros_05",
+      "albino_01",
+      "albino_02",
+      "albino_03",
+      "albino_04",
+      "faith_01",
+      "faith_02",
+      "faith_03",
+      "faith_04",
+      "aden_world"
+    ],
+    "graphics_applied": 25,
+    "original_restored": 0,
+    "A3_source_map_styled": [
+      "l1_4"
+    ],
+    "render_checks": 240,
+    "source_GL_checks": 37,
+    "details": "reference-v2/validation-summary.json"
   }
 }

@@ -11,6 +11,7 @@ import zipfile
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'l1j'))
 from convert_maps import read_cache
 from convert_world import convert
+from verify_delivery import verify_payload_ranges
 
 def sha(data): return hashlib.sha256(data).hexdigest()
 def install(root, a3, viewer):
@@ -47,9 +48,11 @@ def install(root, a3, viewer):
         print('RECOVERED_EXACT_A3_MEMBERS',len(rows))
     target=root/'data/original_maps/catalog.json'
     if target.exists():
+        verify_payload_ranges(root)
         print('EXISTING_RUNTIME_PACK_PRESERVED; run verify_delivery.py to verify it')
         return
     convert(root,a3,viewer)
+    verify_payload_ranges(root)
     print('PRIVATE_PACK_INSTALLED; original graphics still missing; gameplay tests required')
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)

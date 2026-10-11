@@ -16,6 +16,25 @@ FOLDERS = ('data/original_maps', 'data/l1j/recovered_maps')
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
+def verify_payload_ranges(root):
+    """Reject truncated shards even when a new manifest hashes their bytes."""
+    base = root / 'data/original_maps'
+    catalog = json.loads((base / 'catalog.json').read_text())
+    checked = set()
+    for row in catalog['maps']:
+        definition = json.loads((root / row['source_definition'].removeprefix('res://')).read_text())
+        refs = [('navigation', r[4], r[5], r[6]) for r in definition['navigation']['chunks']]
+        refs += [('terrain', *r['pack'][:3]) for r in definition['terrain_variants']]
+        for prefix, shard, offset, size in refs:
+            key = (prefix, shard, offset, size)
+            if key in checked:
+                continue
+            path = base / f'{prefix}-{shard:02}.bin'
+            if not path.is_file() or offset < 0 or size <= 0 or offset + size > path.stat().st_size:
+                raise ValueError(f'Truncated/missing source payload: {row["id"]} {path.name} offset={offset} bytes={size}')
+            checked.add(key)
+    return len(checked)
+
 def inspect(root):
     result = []
     for folder in FOLDERS:
@@ -33,6 +52,7 @@ def main():
     parser.add_argument('--require-tracked', action='store_true')
     args = parser.parse_args()
     root = args.root.resolve()
+    verify_payload_ranges(root)
     actual = inspect(root)
     if args.write:
         payload = {'schema': 1, 'original_terrain_art': 'MISSING', 'files': actual,
