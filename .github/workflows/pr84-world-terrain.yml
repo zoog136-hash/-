@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      XDG_DATA_HOME: ${{ runner.temp }}/twilight-road-default
-      XDG_CACHE_HOME: ${{ runner.temp }}/twilight-road-cache
+      XDG_DATA_HOME: /tmp/twilight-road-default
+      XDG_CACHE_HOME: /tmp/twilight-road-cache
     steps:
       - uses: actions/checkout@v4
         with:
