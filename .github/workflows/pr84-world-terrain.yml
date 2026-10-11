@@ -62,7 +62,7 @@ jobs:
           MESA_GL_VERSION_OVERRIDE: '3.3'
         run: |
           set -o pipefail
-          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --script res://tests/world_terrain_coverage_test.gd 2>&1 | tee terrain-run.log
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/world_terrain_coverage_test.gd 2>&1 | tee terrain-run.log
           grep -q WORLD_TERRAIN_OK terrain-run.log
           ! grep -E 'SCRIPT ERROR:|WORLD_TERRAIN_FAIL:|WORLD_TERRAIN_FAILED' terrain-run.log
       - name: Matched baseline and new road viewports
@@ -84,7 +84,7 @@ jobs:
           grep -q ROAD_RENDER_OK road-after.log
           ! grep -E 'SCRIPT ERROR:|ERROR:|ROAD_RENDER_FAIL' road-after.log
           cp -r "${RUNNER_TEMP}/road-before/docs/playable-maps-20261011/road-mesh-evidence/before" docs/playable-maps-20261011/road-mesh-evidence/
-          XDG_DATA_HOME="${RUNNER_TEMP}/road-courtyard" timeout 120 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --script res://tests/aden_courtyard_test.gd 2>&1 | tee road-courtyard.log
+          XDG_DATA_HOME="${RUNNER_TEMP}/road-courtyard" timeout 120 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/aden_courtyard_test.gd 2>&1 | tee road-courtyard.log
           ! grep -E 'SCRIPT ERROR:|ERROR:|COURTYARD_FAIL' road-courtyard.log
       - name: Record screenshot hashes and matching cameras
         run: |
