@@ -1,3 +1,27 @@
+# PR84 resumed — Aden riverbank unit saved (2026-10-11)
+
+Current map: `aden_world`. Completed: ground texture continuity and wet riverbanks,
+visible shallow bed, gradual water depth and softened land shoulders.
+Remote saved shoreline SHA: `209d2b876a2525b2ea5d7f675eb6ea7cbffcae26`.
+Verified tree: `7f044b281fc51f189eaa7fdcfe9d8da0c76d69c8`, identical to local
+`4d440cfef1a8c39284a716d756f993666f84866a`. Earlier ground unit: `67017f1`.
+
+Actual Godot Linux software OpenGL after shoreline changes: 25 gameplay checks
+PASS and 23 additional outline/triangle/bridge/capture checks PASS. No failures
+in this unit. Three original river polygons and both bridge footprints preserved.
+Evidence: `aden-shoreline-v3/`; same-camera north-bridge before image reused from
+`aden-polish-v3/after/03-bridge.png`. Source map, gameplay and atlas hashes preserved.
+Resource integrity: 723 sheets PASS. Windows/Android devices remain untested.
+
+Remaining: village paving has a conspicuously regular hard elliptical perimeter;
+architecture detail and other regions still need work. Original restoration 0/25.
+Next concrete action, now continuing: soften and weather the existing three Aden
+courtyard edges in the ground shader, reuse the current paving texture and exact
+courtyard placement; render village/ruins views and verify movement and style toggle.
+No approval hold, no main merge, no modifications to other feature PRs.
+
+---
+
 # PR84 resumed — Aden ground seams saved (2026-10-11)
 
 Current map: `aden_world`. Completed: removed diagonal/horizontal hard joins in
