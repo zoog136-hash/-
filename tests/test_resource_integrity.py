@@ -20,7 +20,7 @@ class ResourceIntegrityTest(unittest.TestCase):
         subprocess.run(["git", "init", "-q", str(self.root)], check=True)
         self.asset = self.root / "assets/catalog_motion/transform/01.webp"
         self.asset.parent.mkdir(parents=True, exist_ok=True)
-        self.asset.write_bytes(b"RIFF" + b"\\0" * 4 + b"WEBP" + b"x" * 200)
+        self.asset.write_bytes(b"RIFF" + bytes([0]) * 4 + b"WEBP" + b"x" * 200)
         self.manifest = self.root / "data/visuals/runtime_manifest.json"
         self.manifest.parent.mkdir(parents=True, exist_ok=True)
         self.record = {"schema": 1, "catalog": {"transform:01": {
