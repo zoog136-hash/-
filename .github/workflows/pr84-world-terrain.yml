@@ -1,4 +1,4 @@
-name: PR84 25-map terrain coverage validation
+name: PR84 25-map terrain and road validation
 on:
   push:
     branches: [feature/twilight-reference-expansion-20261011]
@@ -9,12 +9,26 @@ jobs:
   godot-coverage:
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    env:
+      XDG_DATA_HOME: ${{ runner.temp }}/twilight-road-default
+      XDG_CACHE_HOME: ${{ runner.temp }}/twilight-road-cache
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 2
       - name: Resource integrity
-        run: python3 tools/check_resource_integrity.py --root .
+        run: |
+          python3 tools/check_resource_integrity.py --root .
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          for asset in json.loads(Path('assets/maps/reference_expansion_v2/asset_manifest.json').read_text())['assets']:
+              data = Path(asset['path']).read_bytes()
+              assert len(data) == asset['bytes']
+              assert hashlib.sha256(data).hexdigest() == asset['sha256']
+          print('AUTHORED_MAP_ATLASES_SHA_OK')
+          PY
       - name: Godot 4.7.2
         run: |
           curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
@@ -26,6 +40,22 @@ jobs:
           set -o pipefail
           /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee terrain-import.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' terrain-import.log
+      - name: Road geometry on all map data
+        run: |
+          set -o pipefail
+          timeout 120 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/road_surface_mesh_test.gd 2>&1 | tee road-geometry.log
+          grep -q ROAD_MESH_OK road-geometry.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|ROAD_MESH_FAIL' road-geometry.log
+      - name: Boot, movement, collision, portals and UI regression
+        run: |
+          set -o pipefail
+          timeout 120 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 60 2>&1 | tee road-boot.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' road-boot.log
+          for test in field_world world_regions world_region_portals map_visual_toggle ui_renewal_integration; do
+            XDG_DATA_HOME="${RUNNER_TEMP}/road-test-${test}" timeout 240 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" 2>&1 | tee "road-${test}.log"
+            grep -q '_OK' "road-${test}.log"
+            ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|FAILED' "road-${test}.log"
+          done
       - name: OpenGL 25-map screenshots
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
@@ -35,6 +65,77 @@ jobs:
           xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --script res://tests/world_terrain_coverage_test.gd 2>&1 | tee terrain-run.log
           grep -q WORLD_TERRAIN_OK terrain-run.log
           ! grep -E 'SCRIPT ERROR:|WORLD_TERRAIN_FAIL:|WORLD_TERRAIN_FAILED' terrain-run.log
+      - name: Matched baseline and new road viewports
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          MESA_GL_VERSION_OVERRIDE: '3.3'
+        run: |
+          set -o pipefail
+          baseline=1052bb6f6f9a9969b598a8f7e63d0f7ce58058c2
+          git fetch --depth=1 origin "$baseline"
+          git worktree add --detach "${RUNNER_TEMP}/road-before" "$baseline"
+          cp tests/road_surface_render_test.gd "${RUNNER_TEMP}/road-before/tests/road_surface_render_test.gd"
+          timeout 240 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "${RUNNER_TEMP}/road-before" --quit 2>&1 | tee road-before-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' road-before-import.log
+          XDG_DATA_HOME="${RUNNER_TEMP}/road-capture-before" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path "${RUNNER_TEMP}/road-before" --rendering-driver opengl3 --audio-driver Dummy --script res://tests/road_surface_render_test.gd -- --phase=before 2>&1 | tee road-before.log
+          grep -q ROAD_RENDER_OK road-before.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|ROAD_RENDER_FAIL' road-before.log
+          XDG_DATA_HOME="${RUNNER_TEMP}/road-capture-after" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/road_surface_render_test.gd -- --phase=after 2>&1 | tee road-after.log
+          grep -q ROAD_RENDER_OK road-after.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|ROAD_RENDER_FAIL' road-after.log
+          cp -r "${RUNNER_TEMP}/road-before/docs/playable-maps-20261011/road-mesh-evidence/before" docs/playable-maps-20261011/road-mesh-evidence/
+          XDG_DATA_HOME="${RUNNER_TEMP}/road-courtyard" timeout 120 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --script res://tests/aden_courtyard_test.gd 2>&1 | tee road-courtyard.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|COURTYARD_FAIL' road-courtyard.log
+      - name: Record screenshot hashes and matching cameras
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          root = Path('docs/playable-maps-20261011/road-mesh-evidence')
+          before = json.loads((root/'before/result.json').read_text())
+          after = json.loads((root/'after/result.json').read_text())
+          assert before['captures'] == after['captures'], 'camera coordinates changed'
+          assert len(after['captures']) == 50
+          rows = []
+          for capture in after['captures']:
+              row = dict(capture)
+              for phase in ('before','after'):
+                  content = (root/phase/capture['file']).read_bytes()
+                  row[phase+'_sha256'] = hashlib.sha256(content).hexdigest()
+                  row[phase+'_bytes'] = len(content)
+              assert row['before_sha256'] != row['after_sha256'], capture['file']
+              rows.append(row)
+          (root/'comparison.json').write_text(json.dumps({'baseline':'1052bb6f6f9a9969b598a8f7e63d0f7ce58058c2','comparisons':rows},indent=2)+'\n')
+          print('ROAD_MATCHED_CAMERAS_OK', len(rows))
+          PY
+      - name: Full project regression inventory
+        id: full_suite
+        continue-on-error: true
+        run: timeout 1200 python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs road-full-suite --timeout 120
+      - name: Preserve before road views
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-road-before
+          path: docs/playable-maps-20261011/road-mesh-evidence/before
+          if-no-files-found: warn
+      - name: Preserve after road views
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-road-after
+          path: docs/playable-maps-20261011/road-mesh-evidence/after
+          if-no-files-found: warn
+      - name: Preserve road validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-road-validation
+          path: |
+            road-*.log
+            road-full-suite
+            docs/playable-maps-20261011/road-mesh-evidence/comparison.json
+          if-no-files-found: warn
       - name: Preserve screen evidence and logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,3 +146,4 @@ jobs:
             terrain-run.log
             docs/playable-maps-20261011/terrain-coverage-evidence
           if-no-files-found: warn
+

@@ -10,6 +10,7 @@ const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
 const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
 const REFERENCE_VISUALS = preload("res://scripts/maps/reference_visuals.gd")
 const WORLD_TERRAIN_COVERAGE = preload("res://scripts/maps/world_terrain_coverage.gd")
+const ROAD_SURFACE_MESH = preload("res://scripts/maps/road_surface_mesh.gd")
 var reference_profile: Dictionary = {}
 const LANDMARK_BAKE_SCALE: float = 1.5
 const LANDMARK_CELL: Vector2 = Vector2(256,256)
@@ -201,18 +202,10 @@ func _box_points(box: Rect2) -> PackedVector2Array:
 	return PackedVector2Array([box.position,Vector2(box.end.x,box.position.y),box.end,Vector2(box.position.x,box.end.y)])
 
 func _road(points: Array, width: float, index: int, alpha: float) -> void:
-	var line := Line2D.new()
-	line.texture = terrain
-	line.texture_mode = Line2D.LINE_TEXTURE_STRETCH
-	for p: Array in points:
-		line.add_point(COORD.array_vector(p))
-	line.width = width
-	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	line.end_cap_mode = Line2D.LINE_CAP_ROUND
-	line.joint_mode = Line2D.LINE_JOINT_ROUND
-	line.round_precision = 12
-	line.material = _ground_material(index,alpha,true)
-	ground.add_child(line)
+	ground.add_child(ROAD_SURFACE_MESH.build(
+		[{"points": points, "width": width, "material": index,
+			"opacity": alpha / ROAD_SURFACE_MESH.CORE_OPACITY}],
+		field.bounds, Callable(self, "_ground_material")))
 
 func _build_ground() -> void:
 	_select_layer("Ground")
@@ -235,10 +228,10 @@ func _build_ground() -> void:
 		if surface.has("tint"):
 			poly.modulate = Color(str(surface["tint"]))
 	_select_layer("Road")
-	# Soft multiple road shoulders blend earth into vegetation.
-	for road: Dictionary in field.data["roads"]:
-		for shoulder: int in [48,28,12,0]:
-			_road(road["points"],float(road["width"])+shoulder*2,int(road.get("material",1)),(.16 if shoulder>0 else .94)*float(road.get("opacity",1.0)))
+	# One coverage mesh per material joins every route, including intersections.
+	# Alpha is stored once per shared vertex instead of stacking road shoulders.
+	ground.add_child(ROAD_SURFACE_MESH.build(
+		field.data["roads"], field.bounds, Callable(self, "_ground_material")))
 	# Courtyards and farming plots use separate material layers.
 	_select_layer("GroundDetail")
 	if int(field.data.get("schema_version",1)) == 1:
@@ -377,15 +370,9 @@ func _courtyard(box: Rect2) -> void:
 	if str(field.data.map_id)=="aden_world":
 		# One continuous worn edge replaces three visibly nested opaque rings.
 		# These remain visual paving bounds, never navigation/collision geometry.
-		var points := PackedVector2Array()
-		for i: int in range(64):
-			var angle: float = i*TAU/64.0
-			points.append(box.get_center()+Vector2(cos(angle),sin(angle))*box.size*.5*1.13)
-		var poly: Polygon2D = _polygon(points,2,.84)
-		poly.name = "WeatheredCourtyard"
-		var material: ShaderMaterial = poly.material.duplicate() as ShaderMaterial
+		var material: ShaderMaterial = _ground_material(2,.84).duplicate() as ShaderMaterial
 		material.set_shader_parameter("courtyard_rect",Vector4(box.position.x,box.position.y,box.size.x,box.size.y))
-		poly.material = material
+		ground.add_child(ROAD_SURFACE_MESH.plaza(box, material))
 		courtyard_materials.append(material)
 		return
 	for radius: float in [1.13,1.05,1.0]:
@@ -633,3 +620,4 @@ func _select_layer(layer_name: String) -> void:
 	ground = Node2D.new()
 	ground.name = layer_name
 	terrain_root.add_child(ground)
+
