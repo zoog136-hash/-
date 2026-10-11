@@ -47,7 +47,7 @@ jobs:
       - name: Terrain and road geometry on all map data
         run: |
           set -o pipefail
-          for test in road_surface_mesh terrain_surface_geometry; do
+          for test in road_surface_mesh terrain_surface_geometry terrain_variation_texture; do
             timeout 120 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" 2>&1 | tee "terrain-${test}.log"
             grep -q '_OK' "terrain-${test}.log"
             ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "terrain-${test}.log"

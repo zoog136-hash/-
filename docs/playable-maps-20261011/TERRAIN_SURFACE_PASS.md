@@ -8,9 +8,9 @@ Escaros 1–5, Albino 1–4 and Faith 1–4.
 
 ## Implementation
 
-- Reuse the existing 16-material authored atlas. Three continuous texture
-  phases on a triangular lattice reduce the large mirrored tile repetitions.
-  Sharpened blend weights retain leaf, gravel and masonry detail.
+- Reuse the existing 16-material authored atlas. Two continuous texture phases
+  follow a procedural control field to reduce large mirrored tile repetitions.
+  Narrow overlap weights retain leaf, gravel and masonry detail.
 - Use finer organic grain, larger masonry blocks and stable per-map weathering.
 - Replace the ground shader's two fixed forest ellipses for these maps with
   the existing map-wide biome system, now using domain-warped boundary weights.
@@ -18,8 +18,10 @@ Escaros 1–5, Albino 1–4 and Faith 1–4.
   provide finer boundary interpolation without duplicating triangle vertices.
 - Give regional overlay materials continuous edge variation and preserve their
   runtime classic/TWILIGHT palette switching.
-- Reduce fragment cost with polynomial phase hashing, multiplication for blend
-  weights, one weather octave and early rejection of transparent biome pixels.
+- Precompute phase, weathering and erosion into one shared 128×128 RGBA texture
+  (64 KiB). Ground fragments read the field and two atlas phases instead of
+  recalculating noise and sampling three atlas phases. Source phase hashing is
+  polynomial; transparent biome pixels are rejected before atlas sampling.
 
 No new commercial textures or map layouts are imported. Existing family material
 profiles remain authoritative. These procedural surface changes are not a
@@ -59,8 +61,11 @@ that an unexecuted run has passed.
 
 The first actual viewport run (`1adb88b`, workflow `38147964032`) produced all
 75 matched pairs, but its software frame interval median rose from 37.257 ms to
-79.325 ms. That regression required the fragment-cost reduction above; use the
-subsequent commit's matched measurements to assess the optimized version.
+79.325 ms. A first arithmetic optimization (`a9e9e3d`, run `38148904923`) measured
+24.521 ms baseline and 38.580 ms current on its own runner. Runner speeds differ,
+so absolute times from those two runs are not directly comparable. The remaining
+cost motivated the shared field and two-sample implementation above. Use its
+matching workflow measurements for final acceptance.
 
 ## Resume
 

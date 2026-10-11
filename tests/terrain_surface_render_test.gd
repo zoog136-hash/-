@@ -85,6 +85,8 @@ func run() -> void:
 			for material: ShaderMaterial in world.field_renderer.ground_materials.values():
 				check(bool(material.get_shader_parameter("terrain_variation")),id+" stochastic ground active")
 				check(material.get_shader_parameter("terrain") is Texture2D,id+" real terrain atlas loaded")
+				var variation: Texture2D = material.get_shader_parameter("terrain_variation_map")
+				check(variation!=null and variation.get_width()==128,id+" shared variation texture loaded")
 			var coverage: Node = world.field_renderer.terrain_root.get_node("Ground/TerrainCoverage")
 			for layer: MeshInstance2D in coverage.get_children():
 				check(bool(layer.material.get_shader_parameter("regional_mix")),id+" regional edge breakup active")

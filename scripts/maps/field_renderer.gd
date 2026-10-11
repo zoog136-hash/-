@@ -10,6 +10,7 @@ const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
 const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
 const REFERENCE_VISUALS = preload("res://scripts/maps/reference_visuals.gd")
 const WORLD_TERRAIN_COVERAGE = preload("res://scripts/maps/world_terrain_coverage.gd")
+const TERRAIN_VARIATION = preload("res://scripts/maps/terrain_variation_texture.gd")
 const ROAD_SURFACE_MESH = preload("res://scripts/maps/road_surface_mesh.gd")
 var reference_profile: Dictionary = {}
 const LANDMARK_BAKE_SCALE: float = 1.5
@@ -195,6 +196,9 @@ func _ground_material(index: int, alpha: float = 1.0, edge: bool = false) -> Sha
 	material.set_shader_parameter("continuous_ground",str(field.data.map_id)=="aden_world")
 	material.set_shader_parameter("terrain_variation",not reference_profile.is_empty())
 	material.set_shader_parameter("terrain_seed",float(absi(str(field.data.map_id).hash()) % 997))
+	if not reference_profile.is_empty():
+		material.set_shader_parameter("terrain_variation_map",TERRAIN_VARIATION.get_texture())
+		material.set_shader_parameter("terrain_bounds",Vector4(field.bounds.position.x,field.bounds.position.y,field.bounds.size.x,field.bounds.size.y))
 	_style_material(material)
 	ground_materials[key] = material
 	return material
