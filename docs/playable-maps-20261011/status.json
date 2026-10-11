@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "base_main": "2f5ae1013da5c7281d3020719d8a723a23adb8cc",
-  "last_remote_checkpoint": "67dac0688cb756b79bc48da8959dcefb77a7dd40",
+  "last_remote_checkpoint": "335475e55d937e8cfc4cfc5dd8e022cb8ce91086",
   "scope_note": "Existing 25 LineageM-inspired maps and separately integrated A3 maps are not declared equivalent.",
   "target_25": {
     "total": 25,
@@ -274,9 +274,20 @@
     }
   },
   "blockers": [
-    "Original visual tile pack absent in identical 16 archives; no new tile discovery claim.",
+    "Original visual tiles remain absent. Newly materialized a2(1).zip has 8,033 files, all SHA-identical to the four previously audited split archives; it adds no imagery.",
     "Edition/source correspondence for target 25 remains unconfirmed.",
     "Other source maps lack complete NPC/boss/portal/AUTO validation; do not count catalog enablement as PLAYABLE.",
     "Windows device testing not performed."
-  ]
+  ],
+  "user_approval_gate": {
+    "first_map": "l1_4",
+    "requirement": "Actual original tiles in running Godot screenshot, then explicit user OK before remaining-map production",
+    "screenshot_ready": false,
+    "approved": false,
+    "expansion_allowed": false,
+    "blocker": "Missing matching Tile.pak + Tile.idx or extracted numeric TIL files",
+    "first_spawn_required_tile_ids": 333,
+    "first_spawn_required_image_pairs": 30149,
+    "first_spawn_mapped_image_pairs": 0
+  }
 }
