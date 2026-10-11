@@ -18,6 +18,8 @@ Escaros 1–5, Albino 1–4 and Faith 1–4.
   provide finer boundary interpolation without duplicating triangle vertices.
 - Give regional overlay materials continuous edge variation and preserve their
   runtime classic/TWILIGHT palette switching.
+- Reduce fragment cost with polynomial phase hashing, multiplication for blend
+  weights, one weather octave and early rejection of transparent biome pixels.
 
 No new commercial textures or map layouts are imported. Existing family material
 profiles remain authoritative. These procedural surface changes are not a
@@ -54,6 +56,11 @@ Workflow artifacts separate before/after images, review files and validation
 logs to stay within the workspace's 32 MiB per-file transfer limit. Inspect the
 workflow for the exact current commit; do not treat this document as a claim
 that an unexecuted run has passed.
+
+The first actual viewport run (`1adb88b`, workflow `38147964032`) produced all
+75 matched pairs, but its software frame interval median rose from 37.257 ms to
+79.325 ms. That regression required the fragment-cost reduction above; use the
+subsequent commit's matched measurements to assess the optimized version.
 
 ## Resume
 

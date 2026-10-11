@@ -29,6 +29,13 @@ float noise(vec2 p) {
     vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
     return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);
 }
+vec2 terrain_hash(vec2 p) {
+    // Polynomial hashing avoids six transcendental operations per terrain
+    // layer and pixel. Only the new terrain sampler uses this phase field.
+    vec3 q = fract(vec3(p.x,p.y,p.x)*vec3(.1031,.1030,.0973));
+    q += dot(q,q.yzx+33.33);
+    return fract((q.xx+q.yz)*q.zy);
+}
 vec3 terrain_sample(vec2 p, vec2 quadrant, float scale) {
     // A triangular lattice has no four-way square joins. Every lattice vertex
     // owns a stable source phase shared by all its neighboring triangles.
@@ -51,12 +58,14 @@ vec3 terrain_sample(vec2 p, vec2 quadrant, float scale) {
     }
     // Sharpen the overlap to retain stone joints and leaf/gravel detail instead
     // of averaging three unrelated patterns over the entire ground.
-    weights = pow(max(weights,vec3(0.0)),vec3(4.0));
+    weights = max(weights,vec3(0.0));
+    weights *= weights;
+    weights *= weights;
     weights /= max(dot(weights,vec3(1.0)),0.00001);
     vec3 result = vec3(0.0);
     for (int i=0; i<3; i++) {
         vec2 seed = sites[i] + vec2(terrain_seed,terrain_seed*.713);
-        vec2 phase = vec2(hash(seed+vec2(13.7,59.3)),hash(seed+vec2(81.1,7.9)))*7.0;
+        vec2 phase = terrain_hash(seed+vec2(13.7,59.3))*7.0;
         vec2 uv = 1.0-abs(mod(p/scale+phase,2.0)-1.0);
         result += texture(terrain,quadrant+(vec2(.016)+uv*.968)/atlas_grid).rgb*weights[i];
     }
@@ -89,9 +98,7 @@ vec3 sample_ground(vec2 p, float index) {
         // Fine organic grain; masonry retains larger, readable blocks.
         bool organic = tile==0.0 || tile==1.0 || tile==3.0 || tile==8.0 || tile==9.0 || tile==10.0 || tile==11.0 || tile==15.0;
         float scale = organic ? 190.0 : 245.0;
-        vec3 surface = terrain_sample(p,quadrant,scale);
-        float weather = noise(p/173.0+vec2(terrain_seed))*0.07 + noise(p/947.0)*0.09;
-        return surface*(.92+weather);
+        return terrain_sample(p,quadrant,scale);
     }
     if (atlas_grid > 3.0 && tile != 0.0 && tile != 1.0 && tile != 3.0 && tile != 8.0 && tile != 9.0) {
         vec2 repeat_uv=1.0-abs(mod(p/240.0,2.0)-1.0);
@@ -111,9 +118,22 @@ vec3 sample_ground(vec2 p, float index) {
 }
 void vertex() { world=(MODEL_MATRIX*vec4(VERTEX,0.0,1.0)).xy; vertex_tint=COLOR; }
 void fragment() {
-    float broad=noise(world/690.0);
+    float coverage = vertex_tint.a;
+    if (regional_mix) {
+        float erosion = (noise(world/127.0+vec2(terrain_seed))-.5)*.22;
+        coverage = smoothstep(.16,.79,coverage+erosion);
+        // The opaque base already covers these fragments. Avoid three atlas
+        // reads on invisible portions of a regional overlay.
+        if (coverage < .003) { discard; }
+    }
     vec3 color=sample_ground(world,material_index);
+    if (terrain_variation && !road_surface) {
+        // Reuse one broad weather field instead of two additional octaves per
+        // pixel on every layer. Map variation is already in the phase hash.
+        color *= .95 + noise(world/690.0)*.12;
+    }
     if(material_index<.5 && wild_ground && !terrain_variation) {
+        float broad=noise(world/690.0);
         float forest=max(1.0-length((world-vec2(2850,2050))/vec2(2250,1950)),1.0-length((world-vec2(9400,6600))/vec2(2250,1950)));
         float patches=smoothstep(.35,.75,broad)*.23+smoothstep(-.1,.5,forest)*.44;
         color=mix(color,sample_ground(world,3.0),patches);
@@ -131,13 +151,6 @@ void fragment() {
     }
     float luminance=dot(color,vec3(.299,.587,.114));
     color=mix(vec3(luminance),color,saturation)*palette.rgb+brightness_lift;
-    float coverage = vertex_tint.a;
-    if (regional_mix) {
-        // Break up smooth triangle-wide transparency with continuous detail.
-        // The base layer remains opaque, including on worn transition edges.
-        float erosion = (noise(world/127.0+vec2(terrain_seed))-.5)*.22;
-        coverage = smoothstep(.16,.79,coverage+erosion);
-    }
     if (road_surface) {
         coverage = 1.0-pow(1.0-clamp(coverage,0.0,1.0),road_strength);
     }
