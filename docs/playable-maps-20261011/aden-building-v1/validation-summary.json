@@ -1,0 +1,89 @@
+{
+  "remote_resume_sha": "35578da7e8a9a7ea3ea31c1bf65f471f85c39a9a",
+  "previous_local_sha": "85ad235265a4499902123dab2303d80833573179",
+  "matching_resume_tree": "24a594d40fbcff051f19401f9e838e76f8e799b6",
+  "main_observed_sha": "2f5ae1013da5c7281d3020719d8a723a23adb8cc",
+  "scope": "one existing Aden house at (1630,3610); no other buildings or terrain changed",
+  "godot": {
+    "checks": 40,
+    "failures": [],
+    "original_restored": false,
+    "phase": "after",
+    "physical_devices_tested": false,
+    "platform": "Godot 4.7.2 Linux software OpenGL",
+    "target_position": [
+      1630,
+      3610
+    ]
+  },
+  "project_import": "PASS; all project scripts imported; no script errors",
+  "game_boot": "PASS; isolated user data; 60 headless frames",
+  "ui_fidelity_regression": {
+    "assertions": 75,
+    "result": "PASS"
+  },
+  "whole_game_test_suite": "not rerun; scoped rendering/gameplay and UI regression only",
+  "asset": {
+    "path": "assets/maps/aden/stone_cottage_v1.png",
+    "bytes": 2044387,
+    "sha256": "f80b3b96533d104b97777953b154d0711e6c387e415adb6be0078de0a2212f2b"
+  },
+  "preserved_sha256": {
+    "data/maps/aden_field.json": "6a6c23764c2eb25141d450372f6006efaffc41b788f98acde2d1c4fde41f25b6",
+    "data/maps/reference_visual_profiles.json": "45b73ac5d30188dbe3d93063c9fd6cac3bcb708f0ad2e693dc2480d16b2c270f",
+    "scripts/world.gd": "d51e627e1c5ffabc38f77fb47f562433babe80e9a305a5116c4c03a59f1dbed7",
+    "scripts/maps/playable_field.gd": "f15fca44b11e1b8373a23ba970ad8876741008c3616096fd2d693acbd896fe13",
+    "scripts/ui/renewal_hud.gd": "a1b073cddef8155131f8f9c459363e017751c9a9237582d72bb631550c6cce36",
+    "assets/maps/aden/ground.gdshader": "17d427b352f44c7d3cadea905602a1b6aba1a827d12fba4f5ceb83838d8b2662",
+    "assets/maps/aden/river_depth.gdshader": "402be6252200aa9cfec6f5e44b45e5945e9f6b6a23159685a29ab4f06789951a",
+    "assets/maps/reference_expansion_v2/props.png": "edec31e6596f5bc036a0ee4eb5fe94ef7c1ff987dd0e20bfbe7a949d880e8199",
+    "assets/maps/reference_expansion_v2/terrain.png": "4a4fe796ec4304c264719d2af4457c76ac87979bc33c557a0c3bdb72d8ac03af"
+  },
+  "screenshots": [
+    {
+      "path": "after/01-stone-cottage.png",
+      "bytes": 1804706,
+      "sha256": "57ac13971d6849107445cca5ae78d3d9853e6bbcdb34423b6badf6cdd869e660"
+    },
+    {
+      "path": "after/02-classic.png",
+      "bytes": 1666214,
+      "sha256": "4a0361a4f0aed542a997ced58f38a25c76a9d8d2469290cd9c5985dc3eb014d8"
+    },
+    {
+      "path": "after/03-occlusion.png",
+      "bytes": 1731493,
+      "sha256": "f4ffc094a2c2215f9aa01306fed1f635bd3a8f149aca65de305af21a8b5a52e7"
+    },
+    {
+      "path": "after/04-canopy-before.png",
+      "bytes": 1866389,
+      "sha256": "24a628c5547abaef83242cf7982e187b4b191b0b51893749069014077c699a47"
+    },
+    {
+      "path": "after/04-stream-away.png",
+      "bytes": 1699865,
+      "sha256": "4bb83529598255249af36087edee7adf2c4c12ad5665046aa1869fed9816431f"
+    },
+    {
+      "path": "after/05-stream-return.png",
+      "bytes": 1806500,
+      "sha256": "69f19a177127f54c82f05268881ebbbbe146d308e95f28791e13f0a2eec67546"
+    },
+    {
+      "path": "after/06-portal-return.png",
+      "bytes": 1804968,
+      "sha256": "13502ef73c3f9d86e2b1de28f73e302cce311a2736d13e7c0c926e66ce879d59"
+    },
+    {
+      "path": "before/01-stone-cottage.png",
+      "bytes": 1770665,
+      "sha256": "4ae525c6b1a37aaf9fc4c408cd36f45347951b0f16fc1a5130f7ebd6c70f1974"
+    }
+  ],
+  "initial_attempt": "Before-capture harness first had a malformed extends/comment line; corrected before any renderer change. Initial failure log retained. Corrected before and final after runs pass.",
+  "unsaved_work_status": "Previous PR84 checkout was accessible and git status was clean. Existing logs and screenshots preserved. No additional prepared stone-cottage image was located in checked paths; this unit uses a newly generated image. No claim that all old unsaved files were recovered.",
+  "original_restored": false,
+  "physical_devices_tested": false,
+  "main_merged": false
+}

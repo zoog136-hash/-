@@ -1,3 +1,34 @@
+# PR84 bounded resume — one Aden stone cottage completed (2026-10-11)
+
+This entry supersedes the stale next-step text below. Start from the current
+`feature/twilight-reference-expansion-20261011` remote HEAD, not a historical SHA.
+Remote base for this unit: `35578da7e8a9a7ea3ea31c1bf65f471f85c39a9a`.
+Previous local `85ad235` and that remote commit had the same tree
+`24a594d40fbcff051f19401f9e838e76f8e799b6`. Recent commits, actual renderer code,
+logs and screenshot hashes confirm the courtyard unit was already completed.
+
+Completed in the commit containing this entry: one original stone/slate cottage
+at existing Aden house position `(1630,3610)`. No other building or paving change.
+New PNG `assets/maps/aden/stone_cottage_v1.png` is 2,044,387 bytes; SHA-256
+`f80b3b96533d104b97777953b154d0711e6c387e415adb6be0078de0a2212f2b`.
+Evidence and exact preserved-file hashes: `aden-building-v1/`.
+
+Actual Godot 4.7.2 Linux software OpenGL: 40 checks PASS, zero failures;
+project import/game boot PASS; UI fidelity 75 assertions PASS; 723-sheet integrity PASS.
+Same-camera before/after captures and roof fade/style/streaming captures are stored.
+Full unrelated suite and physical Windows/Android devices were not rerun.
+
+The accessible earlier checkout was clean and is preserved. No separate prepared
+stone-cottage image was located in the checked paths; new art was generated.
+Do not claim all prior unsaved results were recovered. Uploaded original packs
+were not required or reprocessed. Original map restoration remains 0/25.
+
+This is the requested stopping point after commit/push: one building unit only.
+Remaining: further architectural variety, other regions and device verification.
+No main merge, deletion, reset, history rewrite or forced push is authorized.
+
+---
+
 # PR84 resumed — Aden riverbank unit saved (2026-10-11)
 
 Current map: `aden_world`. Completed: ground texture continuity and wet riverbanks,

@@ -30,6 +30,7 @@ var player: Node2D
 var atlas: Texture2D
 var textures: Dictionary = {}
 var detail_textures: Dictionary = {}
+var aden_stone_cottage: Texture2D
 var landmark_textures: Dictionary = {}
 var landmark_cache: SubViewport
 var landmark_material: ShaderMaterial
@@ -67,6 +68,8 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		var expanded: Texture2D = load("res://assets/maps/reference_expansion_v2/props.png")
 		for kind: String in REFERENCE_VISUALS.PROP_CELLS:
 			textures[kind] = REFERENCE_VISUALS.cell(expanded,REFERENCE_VISUALS.prop_index(kind,str(reference_profile.family)))
+	if str(field.data.map_id) == "aden_world":
+		aden_stone_cottage = load("res://assets/maps/aden/stone_cottage_v1.png")
 	terrain_root = Node2D.new()
 	terrain_root.name = "Terrain"
 	terrain_root.z_index = -20
@@ -514,6 +517,10 @@ func _load_chunk(key: Vector2i) -> void:
 		sprite.texture = textures[kind]
 		sprite.set_meta("prop_kind",kind)
 		sprite.position = COORD.array_vector(record["position"])
+		# One existing north-village house receives authored stone/slate art.
+		# Keep its map record, anchor, scale, collision and occlusion behavior.
+		if aden_stone_cottage != null and kind == "house" and sprite.position == Vector2(1630,3610):
+			sprite.texture = aden_stone_cottage
 		var tex_size: Vector2 = sprite.texture.get_size()
 		sprite.offset = Vector2(0,-tex_size.y*.46)
 		var scale_value: float = float(HEIGHTS[kind])*float(record["scale"])/tex_size.y
