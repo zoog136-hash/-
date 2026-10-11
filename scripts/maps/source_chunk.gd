@@ -11,6 +11,12 @@ func configure(value: OriginalPlayableField, key: Vector2i,layers: Dictionary,co
 	terrain=layers
 	renderer=controller
 	z_index=-20
+	if renderer.authored_art_enabled:
+		var authored=preload("res://scripts/maps/authored_source_chunk.gd").new()
+		authored.name="AuthoredTerrain"
+		add_child(authored)
+		authored.configure(source,key,terrain,renderer.authored_material,renderer.authored_props)
+		return
 	var vertices:=PackedVector2Array()
 	var colors:=PackedColorArray()
 	var indices:=PackedInt32Array()
@@ -65,6 +71,7 @@ func _build_markers() -> void:
 	add_child(node)
 func _draw() -> void:
 	original_tiles=0
+	if renderer!=null and renderer.authored_art_enabled: return
 	if terrain.is_empty(): return
 	var origin:=Vector2i(int(terrain.origin[0]),int(terrain.origin[1]))
 	var raw: PackedByteArray=Marshalls.base64_to_raw(str(terrain.floor_bytes))

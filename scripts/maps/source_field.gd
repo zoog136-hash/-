@@ -31,6 +31,7 @@ func configure_source(value: Dictionary) -> bool:
 		"layout_revision":value.layout_revision,"spawn_position":[],"bounds":[0,0,bounds.size.x,bounds.size.y],
 		"regions":[],"water":[],"roads":[],"surfaces":[],"npc_spawn":[],"monster_spawn":[],"portal":[],
 		"camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},"streaming":{"monster_sleep_distance":1600}}
+	if str(value.map_id)=="l1_4": data.short_name="원본 통행 · 자체 제작 타일 v1"
 	var spawn: Vector2=coordinates.to_world(Vector2(float(value.spawn_source[0]),float(value.spawn_source[1])))
 	data.spawn_position=[spawn.x,spawn.y]
 	for record: Dictionary in value.npc_spawns:

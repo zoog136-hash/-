@@ -86,7 +86,7 @@ func _draw() -> void:
 	if field != null:
 		var region: Dictionary = field.region_at(world.player.global_position)
 		title = str(region["name"]) + (" · 안전" if str(region["type"])=="safe" else " · 사냥터")
-		if field is OriginalPlayableField: title = "원본 통행 지도 · 이미지 미확보"
+		if field is OriginalPlayableField: title = str(field.data.short_name)
 	draw_string(font,Vector2(9,181),title,HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("d7ceba"))
 
 func _panel() -> StyleBoxFlat:

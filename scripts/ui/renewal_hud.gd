@@ -1357,5 +1357,5 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 	if get_parent().field_map is OriginalPlayableField:
 		selector.select(1)
 		populate.call()
-	regions.add_child(UI.label("원본 통행 지역: 타일 이미지 미확보",11,UI.MUTED))
+	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
 	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))

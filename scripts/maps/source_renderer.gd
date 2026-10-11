@@ -10,11 +10,28 @@ var source_markers: Dictionary={}
 var last_chunk:=Vector2i(-999,-999)
 var loaded_terrain_chunks: int=0
 var missing_object_markers: int=0
+var authored_art_enabled: bool=false
+var authored_material: ShaderMaterial
+var authored_props: Array[AtlasTexture]=[]
 func configure(value: PlayableField,actor: Node2D) -> void:
 	field=value
 	source=value as OriginalPlayableField
 	player=actor
 	y_sort_enabled=true
+	# Approval scope is strictly the first map. Other maps retain their existing
+	# renderer until the user approves actual first-map screenshots.
+	authored_art_enabled=str(source.definition.map_id)=="l1_4"
+	if authored_art_enabled:
+		authored_material=ShaderMaterial.new()
+		authored_material.shader=load("res://assets/maps/authored_mainland_v1/terrain.gdshader")
+		authored_material.set_shader_parameter("atlas",load("res://assets/maps/authored_mainland_v1/terrain.png"))
+		var prop_atlas: Texture2D=load("res://assets/maps/authored_mainland_v1/obstacles.png")
+		for i: int in range(4):
+			var tex:=AtlasTexture.new()
+			tex.atlas=prop_atlas
+			tex.region=Rect2(Vector2(i%2,i/2)*prop_atlas.get_size()/2.0,prop_atlas.get_size()/2.0)
+			tex.filter_clip=true
+			authored_props.append(tex)
 	for record: Dictionary in source.definition.terrain_chunks:
 		var key:=Vector2i((int(record.origin[0])-source.coordinates.origin.x)>>6,(int(record.origin[1])-source.coordinates.origin.y)>>6)
 		terrain_table[key]=record

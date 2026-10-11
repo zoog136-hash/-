@@ -40,6 +40,23 @@ func run() -> void:
 	check(field.definition.source_sha256=="c22aa61ed083a3680230c659202503d7afaef30cb41b86d4655e9f843c81a7c4","actual A3 grid")
 	check(world.field_minimap.field==field and world.field_minimap.source_overview!=null,"minimap source terrain")
 	check(world.field_renderer.get_child_count()>0,"terrain mesh mounted")
+	check(world.field_renderer.authored_art_enabled,"authored tiles enabled only for first map")
+	var authored_cells: int=0
+	var source_pair_cells: int=0
+	var props_on_solid: bool=true
+	for chunk: Node in world.field_renderer.chunks.values():
+		var art: Node=chunk.get_node_or_null("AuthoredTerrain")
+		if art==null: continue
+		authored_cells+=int(art.cell_count)
+		source_pair_cells+=int(art.source_pair_cells)
+		for prop: Node in art.get_children():
+			if prop.has_meta("source_blocked_cell"):
+				props_on_solid=props_on_solid and field.value_at(prop.get_meta("source_blocked_cell"),true)==0
+	check(authored_cells>0 and source_pair_cells>0,"textured source geometry and S32 variation mounted")
+	check(props_on_solid,"authored obstacles remain on source-blocked cells")
+	evidence["terrain_art"]="USER_AUTHORIZED_AUTHORED_V1"
+	evidence["authored_cells"]=authored_cells
+	evidence["s32_varied_cells"]=source_pair_cells
 	await shot("01-mainland")
 	var start: Vector2=world.player.global_position
 	var cell: Vector2i=field.world_to_cell(start)
@@ -167,6 +184,7 @@ func run() -> void:
 		evidence["portal_destination"]=world.active_map_id
 		break
 	check(portal_ok,"physics portal transition")
+	check(not world.field_renderer.authored_art_enabled,"other maps remain outside screenshot approval scope")
 	world._set_map("l1_4",false);world.portal_cooldown=1000;await frames(3)
 	world.hud.toggle_map();await frames(2)
 	check(world.hud.region_selection.item_count>0,"world map selector")
