@@ -7,7 +7,7 @@ android/build/
 test-results/
 __pycache__/
 
-# Optional external source packs remain untracked. The PR80 generated 723 WebP atlases and runtime manifest are tracked in main.
+# Unreviewed source packs stay separate; approved PR80 runtime images ship with the game.
 assets/external_l1j/
 assets/external_spx/
 assets/l1j/candidates/
@@ -25,3 +25,18 @@ EXTERNAL_*_README.txt
 SPX_GODOT_PLAYBACK.json
 SOURCE_MAPS_GODOT.json
 reports/resource-integration/
+
+# User-authorized recovered PR80 image binaries (2026-10-11).
+!assets/external_l1j/
+assets/external_l1j/*
+!assets/external_l1j/items/
+!assets/external_l1j/monsters/
+!assets/original_items/
+assets/original_items/*
+!assets/original_items/inventory/
+!assets/original_items/ground/
+!assets/l1j/verified/
+assets/l1j/verified/*
+!assets/l1j/verified/items/
+!assets/l1j/verified/monsters/
+!assets/l1j/verified/ground/
