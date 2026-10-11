@@ -18,20 +18,18 @@ func configure(value: PlayableField,actor: Node2D) -> void:
 	source=value as OriginalPlayableField
 	player=actor
 	y_sort_enabled=true
-	# Approval scope is strictly the first map. Other maps retain their existing
-	# renderer until the user approves actual first-map screenshots.
+	# User authorized reference-based expansion. The 25 TWILIGHT maps receive
+	# explicit profiles; source map art stays on the separately verified mainland.
 	authored_art_enabled=str(source.definition.map_id)=="l1_4"
 	if authored_art_enabled:
 		authored_material=ShaderMaterial.new()
 		authored_material.shader=load("res://assets/maps/authored_mainland_v1/terrain.gdshader")
-		authored_material.set_shader_parameter("atlas",load("res://assets/maps/authored_mainland_v1/terrain.png"))
-		var prop_atlas: Texture2D=load("res://assets/maps/authored_mainland_v1/obstacles.png")
-		for i: int in range(4):
-			var tex:=AtlasTexture.new()
-			tex.atlas=prop_atlas
-			tex.region=Rect2(Vector2(i%2,i/2)*prop_atlas.get_size()/2.0,prop_atlas.get_size()/2.0)
-			tex.filter_clip=true
-			authored_props.append(tex)
+		authored_material.set_shader_parameter("atlas",load("res://assets/maps/reference_expansion_v2/terrain.png"))
+		authored_material.set_shader_parameter("atlas_grid",4.0)
+		authored_material.set_shader_parameter("material_slots",Vector4(0,2,1,7))
+		var prop_atlas: Texture2D=load("res://assets/maps/reference_expansion_v2/props.png")
+		for i: int in range(16):
+			authored_props.append(REFERENCE_VISUALS.cell(prop_atlas,i))
 	for record: Dictionary in source.definition.terrain_chunks:
 		var key:=Vector2i((int(record.origin[0])-source.coordinates.origin.x)>>6,(int(record.origin[1])-source.coordinates.origin.y)>>6)
 		terrain_table[key]=record
@@ -107,9 +105,18 @@ func _refresh_markers() -> void:
 			ring.default_color=Color("87d1c8") if bool(entry[1]) else Color("dec68e")
 			for i: int in range(17): ring.add_point(Vector2(cos(TAU*i/16)*15,sin(TAU*i/16)*7))
 			node.add_child(ring)
+			if not bool(entry[1]):
+				var npc:=Sprite2D.new()
+				var part:=AtlasTexture.new()
+				part.atlas=load(VISUAL_STYLE.npc_class_art(str(record.get("role","guide"))))
+				part.region=Rect2(0,0,148,116)
+				npc.texture=part
+				npc.scale=Vector2.ONE*.55
+				npc.offset=Vector2(0,-52)
+				node.add_child(npc)
 			var label:=Label.new()
 			label.text=str(record.name)
-			label.position=Vector2(-80,-28)
+			label.position=Vector2(-80,-78 if not bool(entry[1]) else -28)
 			label.size=Vector2(160,22)
 			label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			label.add_theme_font_size_override("font_size",12)

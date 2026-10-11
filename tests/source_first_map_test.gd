@@ -54,7 +54,8 @@ func run() -> void:
 				props_on_solid=props_on_solid and field.value_at(prop.get_meta("source_blocked_cell"),true)==0
 	check(authored_cells>0 and source_pair_cells>0,"textured source geometry and S32 variation mounted")
 	check(props_on_solid,"authored obstacles remain on source-blocked cells")
-	evidence["terrain_art"]="USER_AUTHORIZED_AUTHORED_V1"
+	evidence["terrain_art"]="AUTHORED_REFERENCE_V2"
+	check(world.field_renderer.authored_material.get_shader_parameter("atlas").resource_path=="res://assets/maps/reference_expansion_v2/terrain.png","reference expansion atlas mounted")
 	evidence["authored_cells"]=authored_cells
 	evidence["s32_varied_cells"]=source_pair_cells
 	await shot("01-mainland")
@@ -184,7 +185,7 @@ func run() -> void:
 		evidence["portal_destination"]=world.active_map_id
 		break
 	check(portal_ok,"physics portal transition")
-	check(not world.field_renderer.authored_art_enabled,"other maps remain outside screenshot approval scope")
+	check(not world.field_renderer.authored_art_enabled,"unprofiled A3 destination retains prior renderer")
 	world._set_map("l1_4",false);world.portal_cooldown=1000;await frames(3)
 	world.hud.toggle_map();await frames(2)
 	check(world.hud.region_selection.item_count>0,"world map selector")

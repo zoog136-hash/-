@@ -38,16 +38,25 @@ func configure(source: OriginalPlayableField, key: Vector2i, terrain: Dictionary
 				colors.append(Color(float(kind)/3.0,float(posmod(seed_value,29))/28.0,0.72 if not opened else 1.0,1))
 			indices.append_array(PackedInt32Array([at,at+1,at+2,at,at+2,at+3]))
 			cell_count+=1
-			if not opened and x%3==0 and y%3==0 and prop_count<96:
+			if not opened and x%5==0 and y%5==0 and prop_count<60:
 				var near_open: bool = false
 				for direction: Vector2i in [Vector2i(1,0),Vector2i(-1,0),Vector2i(0,1),Vector2i(0,-1)]:
 					if source.value_at(cell+direction,true)!=0: near_open=true; break
 				if near_open:
 					var sprite := Sprite2D.new()
-					var prop: int = (2+posmod(x+y,2)) if safe else posmod(x+y,2)
+					var prop: int = [4,5,7][posmod(x+y,3)] if safe else [2,3,9,14][posmod(x+y,4)]
+					# Large roofs/canopies require a verified solid footprint.
+					# Their material and architecture remain our authored choices.
+					var footprint_clear: bool = true
+					for oy: int in range(-2,3):
+						for ox: int in range(-2,3):
+							if source.value_at(cell+Vector2i(ox,oy),true)!=0: footprint_clear=false
+					if prop in [2,3,14] and not footprint_clear: prop=9
 					sprite.texture=props[prop]
-					sprite.scale=Vector2.ONE*(64.0/props[prop].get_width())
-					sprite.position=p+Vector2(0,-18)
+					var size: float = 145.0 if prop in [2,3,14] else 70.0
+					sprite.scale=Vector2.ONE*(size/props[prop].get_width())
+					sprite.position=p
+					sprite.offset=Vector2(0,-props[prop].get_height()*.40)
 					sprite.z_index=1
 					sprite.set_meta("source_blocked_cell",cell)
 					add_child(sprite)

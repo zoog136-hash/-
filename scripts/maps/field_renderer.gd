@@ -7,6 +7,8 @@ const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
 const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
 const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
+const REFERENCE_VISUALS = preload("res://scripts/maps/reference_visuals.gd")
+var reference_profile: Dictionary = {}
 const LANDMARK_BAKE_SCALE: float = 1.5
 const LANDMARK_CELL: Vector2 = Vector2(256,256)
 const LANDMARK_ORIGIN: Vector2 = Vector2(128,224)
@@ -26,6 +28,7 @@ var field: PlayableField
 var player: Node2D
 var atlas: Texture2D
 var textures: Dictionary = {}
+var detail_textures: Dictionary = {}
 var landmark_textures: Dictionary = {}
 var landmark_cache: SubViewport
 var landmark_material: ShaderMaterial
@@ -48,12 +51,20 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	y_sort_enabled = true
 	atlas = load(str(field.data["foreground"]["prop_atlas"])) as Texture2D
 	terrain = load(str(field.data["background"]["material_atlas"])) as Texture2D
+	reference_profile = REFERENCE_VISUALS.profile(str(field.data.map_id))
+	if not reference_profile.is_empty():
+		terrain = load("res://assets/maps/reference_expansion_v2/terrain.png")
 	for kind: String in REGIONS:
 		var tex := AtlasTexture.new()
 		tex.atlas = atlas
 		tex.region = REGIONS[kind]
 		tex.filter_clip = true
 		textures[kind] = tex
+		detail_textures[kind] = tex
+	if not reference_profile.is_empty():
+		var expanded: Texture2D = load("res://assets/maps/reference_expansion_v2/props.png")
+		for kind: String in REFERENCE_VISUALS.PROP_CELLS:
+			textures[kind] = REFERENCE_VISUALS.cell(expanded,REFERENCE_VISUALS.prop_index(kind,str(reference_profile.family)))
 	terrain_root = Node2D.new()
 	terrain_root.name = "Terrain"
 	terrain_root.z_index = -20
@@ -160,6 +171,10 @@ func _ground_material(index: int, alpha: float = 1.0, edge: bool = false) -> Sha
 	material.shader = GROUND_SHADER
 	material.set_shader_parameter("terrain", terrain)
 	material.set_shader_parameter("material_index", float(index))
+	if not reference_profile.is_empty():
+		material.set_shader_parameter("atlas_grid",4.0)
+		var slots: Array = reference_profile.materials
+		material.set_shader_parameter("material_slots",Vector4(slots[0],slots[1],slots[2],slots[3]))
 	material.set_shader_parameter("opacity", alpha)
 	material.set_shader_parameter("edge_fade",edge)
 	_style_material(material)
@@ -418,6 +433,12 @@ func _load_chunk(key: Vector2i) -> void:
 			accent.offset = (LANDMARK_CELL*.5-LANDMARK_ORIGIN)*LANDMARK_BAKE_SCALE
 			var prop_scale: float = float(record.get("scale",1.0))
 			accent.scale = Vector2.ONE*prop_scale/LANDMARK_BAKE_SCALE
+			var replacement: Dictionary = {"crystal":11,"altar":13,"arch":15,"obelisk":8}
+			if not reference_profile.is_empty() and replacement.has(kind):
+				accent.texture = REFERENCE_VISUALS.cell(load("res://assets/maps/reference_expansion_v2/props.png"),int(replacement[kind]))
+				accent.material = null
+				accent.offset = Vector2(0,-accent.texture.get_height()*.40)
+				accent.scale = Vector2.ONE * 180.0 * prop_scale / accent.texture.get_height()
 			accent.set_meta("prop_kind",kind)
 			accent.set_meta("visual_size",LANDMARK.VISUAL_SIZES.get(kind,Vector2(110,160))*prop_scale)
 			if kind in ["crystal","obelisk","arch","banner"]:
@@ -466,12 +487,14 @@ func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
 	var volcanic: bool = field_id.contains("escaros")
 	var random := RandomNumberGenerator.new()
 	random.seed = absi(key.x*73856093 + key.y*19349663 + field_id.hash()) + 101
-	var count: int = 68 if wilderness else (49 if frozen else 58)
+	var count: int = (32 if wilderness else 18) if not reference_profile.is_empty() else (68 if wilderness else (49 if frozen else 58))
 	for index: int in range(count):
 		var position_value: Vector2 = origin + Vector2(random.randf_range(8.0,chunk_size-8.0),random.randf_range(8.0,chunk_size-8.0))
 		if not field.bounds.has_point(position_value) or not field.point_clear(position_value,4.0): continue
 		var decoration_kind: String = "grass" if wilderness and random.randf() < .72 else ("rock" if random.randf() > .45 else "rocks")
-		var source_texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		# Groundcover remains low, non-blocking debris. Do not shrink tall
+		# replacement rocks/stalagmites into apparent obstacles on clear paths.
+		var source_texture: Texture2D = detail_textures.get(decoration_kind) as Texture2D
 		if source_texture == null: continue
 		var marker := Sprite2D.new()
 		marker.name = "GroundCover"
@@ -479,6 +502,7 @@ func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
 		marker.position = position_value
 		marker.offset = Vector2(0,-source_texture.get_height()*.34)
 		var target_height: float = random.randf_range(37.0,73.0) if wilderness else random.randf_range(34.0,63.0)
+		if not reference_profile.is_empty(): target_height = random.randf_range(12.0,27.0)
 		marker.scale = Vector2.ONE * target_height / maxf(1.0,source_texture.get_height())
 		marker.rotation = random.randf_range(-.20,.20)
 		marker.flip_h = random.randf() > .5
@@ -514,7 +538,7 @@ func _scatter_ambient_details(parent: Node2D, record: Dictionary, kind: String) 
 		if not field.bounds.has_point(position_value) or not field.point_clear(position_value, 5.0):
 			continue
 		var decoration_kind: String = "grass" if wilderness and random.randf() > 0.35 else ("rock" if wilderness else "rocks")
-		var texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		var texture: Texture2D = detail_textures.get(decoration_kind) as Texture2D
 		if texture == null: continue
 		var little := Sprite2D.new()
 		little.name = "FoliageDetail"

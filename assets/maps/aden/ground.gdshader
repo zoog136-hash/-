@@ -8,6 +8,8 @@ uniform bool wild_ground = true;
 uniform vec4 palette : source_color = vec4(1.0);
 uniform float saturation = 1.0;
 uniform float brightness_lift = 0.0;
+uniform float atlas_grid = 2.0;
+uniform vec4 material_slots = vec4(0.0,1.0,2.0,3.0);
 varying vec2 world;
 varying vec4 vertex_tint;
 
@@ -17,11 +19,16 @@ float noise(vec2 p) {
     return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);
 }
 vec3 sample_ground(vec2 p, float index) {
-    vec2 quadrant=vec2(mod(index,2.0),floor(index/2.0))*.5;
+    float tile = material_slots[int(clamp(index,0.0,3.0))];
+    vec2 quadrant=vec2(mod(tile,atlas_grid),floor(tile/atlas_grid))/atlas_grid;
+    if (atlas_grid > 3.0 && tile != 0.0 && tile != 1.0 && tile != 3.0 && tile != 8.0 && tile != 9.0) {
+        vec2 repeat_uv=1.0-abs(mod(p/240.0,2.0)-1.0);
+        return texture(terrain,quadrant+(vec2(.016)+repeat_uv*.968)/atlas_grid).rgb;
+    }
     // Repeat three unrelated projections and blend smoothly: no visible tile lattice.
     vec2 a=fract(p/430.0), b=fract(mat2(vec2(.8,.6),vec2(-.6,.8))*p/579.0+vec2(.17,.43));
     float blend=smoothstep(.12,.88,noise(p/380.0));
-    return mix(texture(terrain,quadrant+.008+a*.484).rgb,texture(terrain,quadrant+.008+b*.484).rgb,blend);
+    return mix(texture(terrain,quadrant+(vec2(.016)+a*.968)/atlas_grid).rgb,texture(terrain,quadrant+(vec2(.016)+b*.968)/atlas_grid).rgb,blend);
 }
 void vertex() { world=(MODEL_MATRIX*vec4(VERTEX,0.0,1.0)).xy; vertex_tint=COLOR; }
 void fragment() {

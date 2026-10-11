@@ -23,7 +23,7 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--prefix="):
 			prefix = argument.trim_prefix("--prefix=")
-	check(world.maps.size()==25,"all original map IDs are preserved")
+	check(world.maps.filter(func(m: Dictionary) -> bool: return not str(m.get("id",m.get("map_id",""))).begins_with("l1_")).size()==25,"all 25 TWILIGHT map IDs are preserved alongside optional source regions")
 	var tested: int = 0
 	var families: Dictionary = {}
 	var rng := RandomNumberGenerator.new()
