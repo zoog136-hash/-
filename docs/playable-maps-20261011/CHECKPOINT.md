@@ -1,3 +1,29 @@
+# PR84 resumed — Aden ground seams saved (2026-10-11)
+
+Current map: `aden_world`. Completed: removed diagonal/horizontal hard joins in
+existing authored ground textures with continuous sampling scoped to Aden.
+Remote saved implementation + evidence SHA: `67017f1fd2f9927668e8548489563822c58ddec0`.
+Verified remote tree: `c74488897e7cb941982f9ef21c47d655f0ee14ff`, identical to local
+`92135283bc0e75367e28aa508af10042a9483c7d`. Resume from current PR84 head.
+
+Actual Godot 4.7.2 Linux software OpenGL: 25 Main-scene checks PASS (movement,
+river physics, route clearance, canopy fading, NPC shop, minimap, isolated save/load,
+Oman portal/return and streaming); four GPU wrap-boundary comparisons PASS.
+Initial probe had three invalid measurements because its camera ignored rotation;
+fixed camera and targeted rerun PASS. Initial and corrected logs both tracked.
+Evidence: `aden-polish-v3/` (before/after PNGs, logs, SHA manifests, validation summary).
+Atlas and gameplay/map JSON/code hashes remain equal to parent `28b9978`.
+
+Remaining: water/land boundaries still meet abruptly, architecture detailing,
+original tile restoration (still 0/25), all-map individual gameplay acceptance,
+Windows/Android device runs. No claim of Lineage M visual parity; no main merge.
+Next concrete action: refine the water/bank transition beside Aden's north bridge,
+using only the existing polygon outline. Preserve river collision and bridge width;
+capture the same (6180,3000) camera position and validate the crossings in Godot.
+This next unit is authorized and is being continued without an approval hold.
+
+---
+
 # Reference expansion checkpoint (supersedes previous approval hold)
 
 User requested “리니지m 사이트 검색해서 확장해봐” after seeing the first authored screenshots. Expansion is authorized. This is a separate branch/PR84 above PR83; PR83 and main remain unchanged.
