@@ -34,6 +34,7 @@ var landmark_textures: Dictionary = {}
 var landmark_cache: SubViewport
 var landmark_material: ShaderMaterial
 var ground_materials: Dictionary = {}
+var courtyard_materials: Array[ShaderMaterial] = []
 var terrain: Texture2D
 var buckets: Dictionary = {}
 var chunks: Dictionary = {}
@@ -101,6 +102,8 @@ func _apply_visual_mode() -> void:
 		for raw: Variant in ground_materials.values():
 			if raw is ShaderMaterial:
 				_style_material(raw as ShaderMaterial)
+		for material: ShaderMaterial in courtyard_materials:
+			_style_material(material)
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_RESUMED,NOTIFICATION_WM_WINDOW_FOCUS_IN] and is_instance_valid(landmark_cache):
@@ -361,6 +364,20 @@ func _style_material(material: ShaderMaterial) -> void:
 	material.set_shader_parameter("brightness_lift",float(style.get("brightness_lift",0.0)))
 
 func _courtyard(box: Rect2) -> void:
+	if str(field.data.map_id)=="aden_world":
+		# One continuous worn edge replaces three visibly nested opaque rings.
+		# These remain visual paving bounds, never navigation/collision geometry.
+		var points := PackedVector2Array()
+		for i: int in range(64):
+			var angle: float = i*TAU/64.0
+			points.append(box.get_center()+Vector2(cos(angle),sin(angle))*box.size*.5*1.13)
+		var poly: Polygon2D = _polygon(points,2,.84)
+		poly.name = "WeatheredCourtyard"
+		var material: ShaderMaterial = poly.material.duplicate() as ShaderMaterial
+		material.set_shader_parameter("courtyard_rect",Vector4(box.position.x,box.position.y,box.size.x,box.size.y))
+		poly.material = material
+		courtyard_materials.append(material)
+		return
 	for radius: float in [1.13,1.05,1.0]:
 		var points := PackedVector2Array()
 		for i: int in range(32):

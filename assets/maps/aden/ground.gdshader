@@ -12,6 +12,8 @@ uniform float atlas_grid = 2.0;
 uniform vec4 material_slots = vec4(0.0,1.0,2.0,3.0);
 // Opt-in for Aden: the authored atlas cells do not have matching edge pixels.
 uniform bool continuous_ground = false;
+// Per-courtyard world-space bounds; zero width leaves every other surface alone.
+uniform vec4 courtyard_rect = vec4(0.0);
 varying vec2 world;
 varying vec4 vertex_tint;
 
@@ -50,6 +52,11 @@ void fragment() {
         color*=vec3(.87,.94,.83)*(0.87+broad*.27);
     }
     float alpha=opacity;
+    if(courtyard_rect.z>0.0) {
+        vec2 local=(world-courtyard_rect.xy-courtyard_rect.zw*.5)/(courtyard_rect.zw*.5);
+        float worn=(noise(world/23.0)-.5)*.065+(noise(world/103.0)-.5)*.035;
+        alpha*=1.0-smoothstep(.91,1.04,length(local)+worn);
+    }
     if(edge_fade) {
         float shoulder=min(UV.y,1.0-UV.y);
         alpha*=smoothstep(.015,.19,shoulder+(noise(world/32.0)-.5)*.095);
