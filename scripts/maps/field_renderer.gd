@@ -38,6 +38,7 @@ var landmark_cache: SubViewport
 var landmark_material: ShaderMaterial
 var ground_materials: Dictionary = {}
 var road_materials: Dictionary = {}
+var terrain_materials: Array[ShaderMaterial] = []
 var courtyard_materials: Array[ShaderMaterial] = []
 var terrain: Texture2D
 var buckets: Dictionary = {}
@@ -111,6 +112,8 @@ func _apply_visual_mode() -> void:
 		for material: ShaderMaterial in courtyard_materials:
 			_style_material(material)
 		for material: ShaderMaterial in road_materials.values():
+			_style_material(material)
+		for material: ShaderMaterial in terrain_materials:
 			_style_material(material)
 
 func _notification(what: int) -> void:
@@ -190,8 +193,16 @@ func _ground_material(index: int, alpha: float = 1.0, edge: bool = false) -> Sha
 	material.set_shader_parameter("opacity", alpha)
 	material.set_shader_parameter("edge_fade",edge)
 	material.set_shader_parameter("continuous_ground",str(field.data.map_id)=="aden_world")
+	material.set_shader_parameter("terrain_variation",not reference_profile.is_empty())
+	material.set_shader_parameter("terrain_seed",float(absi(str(field.data.map_id).hash()) % 997))
 	_style_material(material)
 	ground_materials[key] = material
+	return material
+
+func _terrain_material(index: int) -> ShaderMaterial:
+	var material: ShaderMaterial = _ground_material(index).duplicate() as ShaderMaterial
+	material.set_shader_parameter("regional_mix",true)
+	terrain_materials.append(material)
 	return material
 
 func _polygon(points: PackedVector2Array, index: int, alpha: float = 1.0) -> Polygon2D:
@@ -228,7 +239,7 @@ func _build_ground() -> void:
 	# still paint above it. No map, collision or navigation data is changed.
 	var coverage: Node2D = WORLD_TERRAIN_COVERAGE.build(
 		field.bounds, str(field.data.get("map_id","")),
-		str(field.data.get("family","")), Callable(self,"_ground_material"))
+		str(field.data.get("family","")), Callable(self,"_terrain_material"))
 	ground.add_child(coverage)
 	for surface: Dictionary in field.data.get("surfaces", []):
 		# Same world-space material is already visible through the wall complement.

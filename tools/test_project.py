@@ -15,6 +15,7 @@ import sys
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
+parser.add_argument('--render-visual-tests',action='store_true',help='Use the existing display only for tests that await frame_post_draw')
 parser.add_argument('--timeout',type=int,default=150,help='Per-check limit in seconds; assertions are unchanged')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
@@ -40,6 +41,9 @@ tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'
 failed=[]
 skipped=[]
 for name,extra in tests:
+    source=root/'tests'/(name+'.gd')
+    visual=args.render_visual_tests and source.is_file() and 'RenderingServer.frame_post_draw' in source.read_text(encoding='utf-8')
+    display_args=['--rendering-driver','opengl3','--audio-driver','Dummy'] if visual else ['--headless']
     with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
         env=os.environ.copy()
         env['XDG_DATA_HOME']=user_data
@@ -48,7 +52,7 @@ for name,extra in tests:
         env['APPDATA']=user_data
         env['LOCALAPPDATA']=user_data
         try:
-            p=subprocess.run([args.godot,'--headless','--path',str(root),*extra],capture_output=True,text=True,env=env,timeout=args.timeout)
+            p=subprocess.run([args.godot,*display_args,'--path',str(root),*extra],capture_output=True,text=True,env=env,timeout=args.timeout)
             output=p.stdout+p.stderr
             ok=p.returncode==0 and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
             is_skipped=p.returncode==0 and '_SKIP:' in output and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
@@ -56,7 +60,14 @@ for name,extra in tests:
                 skipped.append(name)
                 ok=True
             elif name not in ('import','boot'):
-                ok=ok and ('_OK' in output)
+                reports=[]
+                for line in output.splitlines():
+                    match=re.search(r'\b[A-Z_]+_RESULT (\{.*\})$',line)
+                    if match:
+                        try: reports.append(json.loads(match.group(1)))
+                        except json.JSONDecodeError: pass
+                result_ok=bool(reports) and all(report.get('failures')==[] for report in reports)
+                ok=ok and ('_OK' in output or result_ok)
         except subprocess.TimeoutExpired as exc:
             output='TIMEOUT '+str(exc);ok=False
         (logs/(name+'.log')).write_text(output,encoding='utf-8')
