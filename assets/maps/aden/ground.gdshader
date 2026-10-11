@@ -10,6 +10,8 @@ uniform float saturation = 1.0;
 uniform float brightness_lift = 0.0;
 uniform float atlas_grid = 2.0;
 uniform vec4 material_slots = vec4(0.0,1.0,2.0,3.0);
+// Opt-in for Aden: the authored atlas cells do not have matching edge pixels.
+uniform bool continuous_ground = false;
 varying vec2 world;
 varying vec4 vertex_tint;
 
@@ -25,8 +27,15 @@ vec3 sample_ground(vec2 p, float index) {
         vec2 repeat_uv=1.0-abs(mod(p/240.0,2.0)-1.0);
         return texture(terrain,quadrant+(vec2(.016)+repeat_uv*.968)/atlas_grid).rgb;
     }
-    // Repeat three unrelated projections and blend smoothly: no visible tile lattice.
-    vec2 a=fract(p/430.0), b=fract(mat2(vec2(.8,.6),vec2(-.6,.8))*p/579.0+vec2(.17,.43));
+    // Blend two unrelated projections. Mirrored wrapping is continuous at cell
+    // boundaries; fract() alone abruptly joined unrelated source edge pixels.
+    vec2 source_a=p/430.0;
+    vec2 source_b=mat2(vec2(.8,.6),vec2(-.6,.8))*p/579.0+vec2(.17,.43);
+    vec2 a=fract(source_a), b=fract(source_b);
+    if (continuous_ground) {
+        a=1.0-abs(mod(source_a,2.0)-1.0);
+        b=1.0-abs(mod(source_b,2.0)-1.0);
+    }
     float blend=smoothstep(.12,.88,noise(p/380.0));
     return mix(texture(terrain,quadrant+(vec2(.016)+a*.968)/atlas_grid).rgb,texture(terrain,quadrant+(vec2(.016)+b*.968)/atlas_grid).rgb,blend);
 }

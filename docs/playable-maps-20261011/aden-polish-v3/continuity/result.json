@@ -1,0 +1,27 @@
+{
+  "boundaries": [
+    {
+      "after": 0.000561683011862139,
+      "before": 0.00230800682523598,
+      "boundary": "primary_x"
+    },
+    {
+      "after": 0.000428921543061733,
+      "before": 0.0186785140928502,
+      "boundary": "primary_y"
+    },
+    {
+      "after": 0.0000204248353838921,
+      "before": 0.130249187330871,
+      "boundary": "rotated_x"
+    },
+    {
+      "after": 0.000357434696828326,
+      "before": 0.0924938753790533,
+      "boundary": "rotated_y"
+    }
+  ],
+  "display": "X11",
+  "failures": [],
+  "metric": "mean absolute RGB difference at adjacent pixels straddling sampler wrap; 128x horizontal magnification"
+}

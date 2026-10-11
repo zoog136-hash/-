@@ -177,6 +177,7 @@ func _ground_material(index: int, alpha: float = 1.0, edge: bool = false) -> Sha
 		material.set_shader_parameter("material_slots",Vector4(slots[0],slots[1],slots[2],slots[3]))
 	material.set_shader_parameter("opacity", alpha)
 	material.set_shader_parameter("edge_fade",edge)
+	material.set_shader_parameter("continuous_ground",str(field.data.map_id)=="aden_world")
 	_style_material(material)
 	ground_materials[key] = material
 	return material
