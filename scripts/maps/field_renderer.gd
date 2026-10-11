@@ -4,6 +4,7 @@ class_name FieldRenderer
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const GROUND_SHADER = preload("res://assets/maps/aden/ground.gdshader")
 const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
+const ADEN_RIVER_SHADER = preload("res://assets/maps/aden/river_depth.gdshader")
 const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
 const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
@@ -238,19 +239,33 @@ func _build_ground() -> void:
 		var points := PackedVector2Array()
 		for p: Array in water["polygon"]:
 			points.append(COORD.array_vector(p))
+		if str(field.data.map_id)=="aden_world":
+			var shoulder := Line2D.new()
+			shoulder.name = "BankShoulder"
+			shoulder.points = points
+			shoulder.closed = true
+			shoulder.width = 100
+			shoulder.texture = terrain
+			shoulder.texture_mode = Line2D.LINE_TEXTURE_STRETCH
+			shoulder.material = _ground_material(1,.48,true)
+			ground.add_child(shoulder)
 		var bank := Line2D.new()
+		bank.name = "RiverBank"
 		bank.points = points
 		bank.closed = true
 		bank.width = 55
 		bank.default_color = Color(.78,.83,.70,1)
 		bank.texture = terrain
 		bank.texture_mode = Line2D.LINE_TEXTURE_STRETCH
-		bank.material = _ground_material(1)
+		bank.material = _ground_material(1,1.0,str(field.data.map_id)=="aden_world")
 		ground.add_child(bank)
 		var poly := Polygon2D.new()
+		poly.name = "RiverWater"
 		poly.polygon = points
 		var material := ShaderMaterial.new()
 		material.shader = WATER_SHADER
+		if str(field.data.map_id)=="aden_world":
+			_configure_aden_river(poly,material,points)
 		if water.has("deep_color"):
 			material.set_shader_parameter("deep_color",Color(str(water["deep_color"])))
 			material.set_shader_parameter("shallow_color",Color(str(water["shallow_color"])))
@@ -308,6 +323,35 @@ func _build_ground() -> void:
 		shade.width = 14
 		shade.default_color = Color(0,0,0,.38)
 		ground.add_child(shade)
+
+func _configure_aden_river(poly: Polygon2D, material: ShaderMaterial, points: PackedVector2Array) -> void:
+	# Aden's existing three river polygons have paired bank samples. Use exact
+	# vertices and explicit strip triangles so depth never cuts across a bend.
+	var half: int = points.size()/2
+	if half<2 or points.size()%2!=0: return
+	var width: float = points[-1].x-points[0].x
+	if width<=0.0: return
+	for row: int in range(half):
+		var left: Vector2 = points[row]
+		var right: Vector2 = points[points.size()-1-row]
+		if absf(left.y-right.y)>.1 or absf(right.x-left.x-width)>.1: return
+	var uv := PackedVector2Array()
+	uv.resize(points.size())
+	var triangles: Array[PackedInt32Array] = []
+	for row: int in range(half):
+		var right: int = points.size()-1-row
+		var v: float = float(row)/float(half-1)*terrain.get_height()
+		uv[row] = Vector2(0,v)
+		uv[right] = Vector2(terrain.get_width(),v)
+		if row<half-1:
+			triangles.append(PackedInt32Array([row,row+1,right-1]))
+			triangles.append(PackedInt32Array([row,right-1,right]))
+	poly.texture = terrain
+	poly.uv = uv
+	poly.polygons = triangles
+	material.shader = ADEN_RIVER_SHADER
+	material.set_shader_parameter("terrain",terrain)
+	material.set_shader_parameter("river_width",width)
 
 func _style_material(material: ShaderMaterial) -> void:
 	var style: Dictionary = field.data.get("render_style",{})
