@@ -9,6 +9,7 @@ const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
 const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
 const REFERENCE_VISUALS = preload("res://scripts/maps/reference_visuals.gd")
+const WORLD_TERRAIN_COVERAGE = preload("res://scripts/maps/world_terrain_coverage.gd")
 var reference_profile: Dictionary = {}
 const LANDMARK_BAKE_SCALE: float = 1.5
 const LANDMARK_CELL: Vector2 = Vector2(256,256)
@@ -216,6 +217,12 @@ func _road(points: Array, width: float, index: int, alpha: float) -> void:
 func _build_ground() -> void:
 	_select_layer("Ground")
 	_polygon(_box_points(field.bounds),int(field.data["background"].get("base_material",0)))
+	# Map-bounds-wide regional ground mesh; existing surfaces/roads/walls
+	# still paint above it. No map, collision or navigation data is changed.
+	var coverage: Node2D = WORLD_TERRAIN_COVERAGE.build(
+		field.bounds, str(field.data.get("map_id","")),
+		str(field.data.get("family","")), Callable(self,"_ground_material"))
+	ground.add_child(coverage)
 	for surface: Dictionary in field.data.get("surfaces", []):
 		# Same world-space material is already visible through the wall complement.
 		# Redrawing every overlapping room/corridor costs fill rate without changing
