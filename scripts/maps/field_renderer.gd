@@ -37,6 +37,7 @@ var landmark_textures: Dictionary = {}
 var landmark_cache: SubViewport
 var landmark_material: ShaderMaterial
 var ground_materials: Dictionary = {}
+var road_materials: Dictionary = {}
 var courtyard_materials: Array[ShaderMaterial] = []
 var terrain: Texture2D
 var buckets: Dictionary = {}
@@ -108,6 +109,8 @@ func _apply_visual_mode() -> void:
 			if raw is ShaderMaterial:
 				_style_material(raw as ShaderMaterial)
 		for material: ShaderMaterial in courtyard_materials:
+			_style_material(material)
+		for material: ShaderMaterial in road_materials.values():
 			_style_material(material)
 
 func _notification(what: int) -> void:
@@ -198,6 +201,17 @@ func _polygon(points: PackedVector2Array, index: int, alpha: float = 1.0) -> Pol
 	ground.add_child(poly)
 	return poly
 
+func _road_material(index: int) -> ShaderMaterial:
+	if road_materials.has(index):
+		return road_materials[index] as ShaderMaterial
+	var material: ShaderMaterial = _ground_material(index).duplicate() as ShaderMaterial
+	material.set_shader_parameter("road_surface", true)
+	material.set_shader_parameter("continuous_ground", true)
+	var family: String = str(reference_profile.get("family", ""))
+	material.set_shader_parameter("road_strength", 2.5 if family in ["oman", "faith", "domination", "albino"] else 1.0)
+	road_materials[index] = material
+	return material
+
 func _box_points(box: Rect2) -> PackedVector2Array:
 	return PackedVector2Array([box.position,Vector2(box.end.x,box.position.y),box.end,Vector2(box.position.x,box.end.y)])
 
@@ -205,7 +219,7 @@ func _road(points: Array, width: float, index: int, alpha: float) -> void:
 	ground.add_child(ROAD_SURFACE_MESH.build(
 		[{"points": points, "width": width, "material": index,
 			"opacity": alpha / ROAD_SURFACE_MESH.CORE_OPACITY}],
-		field.bounds, Callable(self, "_ground_material")))
+		field.bounds, Callable(self, "_road_material")))
 
 func _build_ground() -> void:
 	_select_layer("Ground")
@@ -231,7 +245,7 @@ func _build_ground() -> void:
 	# One coverage mesh per material joins every route, including intersections.
 	# Alpha is stored once per shared vertex instead of stacking road shoulders.
 	ground.add_child(ROAD_SURFACE_MESH.build(
-		field.data["roads"], field.bounds, Callable(self, "_ground_material")))
+		field.data["roads"], field.bounds, Callable(self, "_road_material")))
 	# Courtyards and farming plots use separate material layers.
 	_select_layer("GroundDetail")
 	if int(field.data.get("schema_version",1)) == 1:

@@ -36,6 +36,8 @@ func capture(id: String, label: String, requested: Vector2, zoom_value: float) -
 	world.player.camera.reset_smoothing()
 	world.player.camera.force_update_scroll()
 	world.field_renderer.refresh_visible()
+	world._update_hud()
+	world.field_minimap.queue_redraw()
 	for i: int in range(6): await physics_frame
 	await RenderingServer.frame_post_draw
 	var img: Image = root.get_texture().get_image()
@@ -81,6 +83,19 @@ func run() -> void:
 			if network != null:
 				for child: Node in network.get_children():
 					check(child is MeshInstance2D, id + " roads use actual triangle meshes")
+					if child is MeshInstance2D:
+						check(bool((child as MeshInstance2D).material.get_shader_parameter("road_surface")), id + " varied road material active")
+			var palettes: Array[Color] = []
+			# Dynamic access lets the same capture script run on the baseline renderer.
+			var road_materials: Dictionary = world.field_renderer.get("road_materials")
+			for mat: ShaderMaterial in road_materials.values():
+				palettes.append(mat.get_shader_parameter("palette"))
+			world.field_renderer.set_visual_mode("classic")
+			var material_index: int = 0
+			for mat: ShaderMaterial in road_materials.values():
+				check(mat.get_shader_parameter("palette") != palettes[material_index], id + " road palette follows classic mode")
+				material_index += 1
+			world.field_renderer.set_visual_mode("twilight")
 			if id == "aden_world":
 				var plazas: int = 0
 				for child: Node in world.field_renderer.terrain_root.get_node("GroundDetail").get_children():

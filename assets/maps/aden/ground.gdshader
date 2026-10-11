@@ -14,6 +14,9 @@ uniform vec4 material_slots = vec4(0.0,1.0,2.0,3.0);
 uniform bool continuous_ground = false;
 // Per-courtyard world-space bounds; zero width leaves every other surface alone.
 uniform vec4 courtyard_rect = vec4(0.0);
+// Only the connected road meshes opt in. Keep scenery and terrain materials intact.
+uniform bool road_surface = false;
+uniform float road_strength = 1.0;
 varying vec2 world;
 varying vec4 vertex_tint;
 
@@ -25,6 +28,26 @@ float noise(vec2 p) {
 vec3 sample_ground(vec2 p, float index) {
     float tile = material_slots[int(clamp(index,0.0,3.0))];
     vec2 quadrant=vec2(mod(tile,atlas_grid),floor(tile/atlas_grid))/atlas_grid;
+    if (road_surface) {
+        // Offset the source phase in broad, overlapping world-space patches.
+        // Smooth weights and mirrored atlas sampling keep every patch continuous.
+        // Smaller material features make the route readable against broad terrain.
+        vec2 patch = p / 410.0;
+        vec2 cell = floor(patch);
+        vec2 blend = smoothstep(vec2(0.0), vec2(1.0), fract(patch));
+        vec3 samples[4];
+        for (int j = 0; j < 4; j++) {
+            vec2 offset = vec2(float(j % 2), float(j / 2));
+            vec2 seed = cell + offset;
+            vec2 phase = vec2(hash(seed + vec2(17.2,31.7)), hash(seed + vec2(73.9,11.3)));
+            vec2 q = p / 155.0 + phase * 3.7;
+            vec2 uv = 1.0 - abs(mod(q,2.0)-1.0);
+            samples[j] = texture(terrain,quadrant+(vec2(.016)+uv*.968)/atlas_grid).rgb;
+        }
+        vec3 stone = mix(mix(samples[0],samples[1],blend.x),mix(samples[2],samples[3],blend.x),blend.y);
+        float wear = noise(p/93.0)*.065 + noise(p/357.0)*.085;
+        return stone * (.89 + wear);
+    }
     if (atlas_grid > 3.0 && tile != 0.0 && tile != 1.0 && tile != 3.0 && tile != 8.0 && tile != 9.0) {
         vec2 repeat_uv=1.0-abs(mod(p/240.0,2.0)-1.0);
         return texture(terrain,quadrant+(vec2(.016)+repeat_uv*.968)/atlas_grid).rgb;
@@ -63,5 +86,10 @@ void fragment() {
     }
     float luminance=dot(color,vec3(.299,.587,.114));
     color=mix(vec3(luminance),color,saturation)*palette.rgb+brightness_lift;
-    COLOR=vec4(color,alpha)*vertex_tint;
+    float coverage = vertex_tint.a;
+    if (road_surface) {
+        coverage = 1.0-pow(1.0-clamp(coverage,0.0,1.0),road_strength);
+    }
+    COLOR=vec4(color*vertex_tint.rgb,alpha*coverage);
 }
+

@@ -14,11 +14,16 @@ road material. Coverage is the maximum of the original route footprints, so
 junctions do not accumulate opacity. Round endpoints, acute reversals and loop
 interiors retain their shape. World-coordinate wear varies the soft road edge.
 Only nearby grid cells generate geometry; the shared vertices prevent cracks.
+Road-only materials also reuse the atlas at a smaller material scale, blending
+four offset texture phases over broad world-space patches to suppress mirrored
+repeats. Worn indoor routes have stronger coverage so they remain distinguishable
+from the same-family ground. Visual-mode palette changes update those materials.
 The three existing Aden courtyard surfaces use indexed meshes with their existing
 worn-edge material. Their elliptical footprints are intentionally not claimed as
 finished town topology; replacing those artificial footprints is a next unit.
 
-All source route positions, widths and opacities come from existing JSON. No map
+All source route positions, widths and opacities come from existing JSON. The
+indoor road material applies a display-only coverage curve to the stored opacity. No map
 data, collision, navigation, spawn, portals, character or save code is changed.
 Existing shader palettes, texture atlases, scenery streaming and occlusion apply.
 No new binary art or third-party commercial resources are added.
