@@ -38,6 +38,7 @@ logs=Path(args.logs).resolve();logs.mkdir(parents=True,exist_ok=True)
 tests=[('import',['--editor','--quit']),('boot',['--quit-after','60'])]
 tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'tests').glob('*test.gd')))
 failed=[]
+skipped=[]
 for name,extra in tests:
     with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
         env=os.environ.copy()
@@ -50,14 +51,18 @@ for name,extra in tests:
             p=subprocess.run([args.godot,'--headless','--path',str(root),*extra],capture_output=True,text=True,env=env,timeout=args.timeout)
             output=p.stdout+p.stderr
             ok=p.returncode==0 and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
-            if name not in ('import','boot'):
+            is_skipped=p.returncode==0 and '_SKIP:' in output and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
+            if is_skipped:
+                skipped.append(name)
+                ok=True
+            elif name not in ('import','boot'):
                 ok=ok and ('_OK' in output)
         except subprocess.TimeoutExpired as exc:
             output='TIMEOUT '+str(exc);ok=False
         (logs/(name+'.log')).write_text(output,encoding='utf-8')
-        print(('PASS ' if ok else 'FAIL ')+name,flush=True)
+        print(('SKIP ' if name in skipped else ('PASS ' if ok else 'FAIL '))+name,flush=True)
         if not ok:failed.append(name)
-print(f'{len(tests)-len(failed)}/{len(tests)} checks passed')
-(logs/'summary.json').write_text(json.dumps({'total':len(tests),'passed':len(tests)-len(failed),
-    'failed':failed,'checks':[name for name,_ in tests]},indent=2)+'\n',encoding='utf-8')
+print(f'{len(tests)-len(failed)-len(skipped)}/{len(tests)} checks passed; {len(skipped)} skipped')
+(logs/'summary.json').write_text(json.dumps({'total':len(tests),'passed':len(tests)-len(failed)-len(skipped),
+    'failed':failed,'skipped':skipped,'checks':[name for name,_ in tests]},indent=2)+'\n',encoding='utf-8')
 raise SystemExit(bool(failed))

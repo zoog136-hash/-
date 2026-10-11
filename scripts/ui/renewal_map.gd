@@ -22,6 +22,7 @@ func _draw() -> void:
 	if world==null or field==null: return
 	draw_style_box(UI.box(Color("111a1c"),UI.BRONZE,0),Rect2(Vector2.ZERO,size))
 	draw_rect(area,Color("24362e"))
+	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	var font := get_theme_default_font()
 	draw_string(font,Vector2(14,26),"현재 지역 상세 지도",HORIZONTAL_ALIGNMENT_LEFT,size.x-28,17,UI.GOLD)
 	for surface: Dictionary in field.data.get("surfaces",[]):

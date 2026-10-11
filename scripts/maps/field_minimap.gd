@@ -2,6 +2,7 @@ extends Control
 class_name FieldMinimap
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
+var source_overview: Texture2D
 var world: Node
 var field: PlayableField
 var bounds := Rect2(0,0,1,1)
@@ -12,6 +13,7 @@ func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
 	field = value
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
+	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
 	queue_redraw()
 
 func _ready() -> void:
@@ -33,8 +35,10 @@ func _draw() -> void:
 		return
 	draw_style_box(_panel(),Rect2(Vector2.ZERO,size))
 	draw_rect(area,Color("202e27"))
+	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	var font: Font = get_theme_default_font()
 	var heading: String = str(field.data.get("minimap",{}).get("title","ADEN  /  WORLD")) if field != null else "REGION  /  MAP"
+	if field is OriginalPlayableField: heading = str(field.data.map_name)
 	draw_string(font,Vector2(10,18),heading.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("decfae"))
 	if field != null:
 		for surface: Dictionary in field.data.get("surfaces",[]):
@@ -82,6 +86,7 @@ func _draw() -> void:
 	if field != null:
 		var region: Dictionary = field.region_at(world.player.global_position)
 		title = str(region["name"]) + (" · 안전" if str(region["type"])=="safe" else " · 사냥터")
+		if field is OriginalPlayableField: title = "원본 통행 지도 · 이미지 미확보"
 	draw_string(font,Vector2(9,181),title,HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("d7ceba"))
 
 func _panel() -> StyleBoxFlat:

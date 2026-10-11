@@ -230,6 +230,9 @@ func _use_return(item_name: String) -> void:
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 귀환할 수 없습니다")
 		return
+	if world.get("field_map") is OriginalPlayableField:
+		if world.call("return_from_original_map"): _consume(item_name)
+		return
 	if not (world.get("maps_by_id") as Dictionary).has("aden_world"):
 		_message("귀환 가능한 마을을 찾을 수 없습니다")
 		return
@@ -247,6 +250,9 @@ func _random_destination() -> Vector2:
 	var field: Variant = world.get("field_map")
 	var start: Vector2 = world.player.global_position
 	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
+	if field is OriginalPlayableField:
+		if not bool(field.definition.rules.get("teleportable",0)): return Vector2.INF
+		return field.random_landing(rng,start)
 	if field != null:
 		for attempt: int in range(1500):
 			var x: int = rng.randi_range(0, field.width - 1)

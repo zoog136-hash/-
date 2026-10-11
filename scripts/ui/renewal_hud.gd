@@ -464,6 +464,10 @@ func _process(delta: float) -> void:
 	var actor: Node = world.get("player")
 	if actor != null and coordinates_readout != null:
 		coordinates_readout.text = "좌표  %d, %d" % [int(actor.global_position.x),int(actor.global_position.y)]
+		var current_field = get_parent().field_map
+		if current_field is OriginalPlayableField:
+			var source_cell: Vector2i = current_field.world_to_cell(actor.global_position) + current_field.coordinates.origin
+			coordinates_readout.text = "원본 좌표  %d, %d" % [source_cell.x,source_cell.y]
 	var cds: Dictionary = world.get("skill_cooldowns")
 	for index: int in range(quickslot_cooldown_labels.size()):
 		var remain: float = 0
@@ -1264,16 +1268,20 @@ func toggle_map() -> void:
 	var regions := VBoxContainer.new()
 	regions.custom_minimum_size.x=270
 	row.add_child(regions)
-	regions.add_child(UI.label("지역 선택  ·  %d개 지역" % map_records.size(),15))
+	var region_count: Label = UI.label("지역 선택  ·  %d개 지역" % map_records.size(),15)
+	region_count.name = "RegionCount"
+	regions.add_child(region_count)
 	region_selection=ItemList.new()
 	region_selection.name="RegionSelection"
 	region_selection.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	regions.add_child(region_selection)
 	for record: Dictionary in map_records:
-		region_selection.add_item(str(record.get("name",record.get("id",""))))
+		var index: int = region_selection.add_item(str(record.get("name",record.get("id",""))))
+		region_selection.set_item_metadata(index,str(record.id))
+	_add_original_map_controls(regions)
 	var enter := UI.button("선택 지역으로 이동",func() -> void:
 		var indices: PackedInt32Array=region_selection.get_selected_items()
-		if not indices.is_empty(): map_selected.emit(str(map_records[indices[0]].get("id",""))))
+		if not indices.is_empty(): map_selected.emit(str(region_selection.get_item_metadata(indices[0]))))
 	enter.name="EnterRegion"
 	regions.add_child(enter)
 	for index: int in range(map_records.size()):
@@ -1313,3 +1321,41 @@ func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)
+
+func _add_original_map_controls(regions: VBoxContainer) -> void:
+	var original: Array = get_parent().original_maps
+	if original.is_empty(): return
+	var selector := OptionButton.new()
+	selector.name = "MapEdition"
+	selector.add_item("기존 TWILIGHT 지역")
+	selector.add_item("우선 지역 · 아덴 / 오만 / 지배")
+	selector.add_item("원본 통행 지역 · %d" % original.size())
+	regions.add_child(selector)
+	regions.move_child(selector,1)
+	var search := LineEdit.new()
+	search.name = "OriginalMapSearch"
+	search.placeholder_text = "지역 이름 또는 원본 ID"
+	regions.add_child(search)
+	regions.move_child(search,2)
+	var populate := func() -> void:
+		region_selection.clear()
+		var records: Array = map_records if selector.selected == 0 else original
+		for record: Dictionary in records:
+			var mid: int = int(record.get("source_map_id",-1))
+			if selector.selected == 1 and mid != 4 and not (mid >= 101 and mid <= 111) and not (mid >= 12852 and mid <= 12862): continue
+			var title: String = str(record.name)
+			if mid == 4: title = "아덴 월드 · 본토"
+			if mid >= 0: title += " [%d]" % mid
+			if not search.text.is_empty() and not title.contains(search.text): continue
+			var index: int = region_selection.add_item(title)
+			region_selection.set_item_metadata(index,str(record.id))
+			if str(record.id) == str(get_parent().active_map_id): region_selection.select(index)
+		if region_selection.get_selected_items().is_empty() and region_selection.item_count > 0: region_selection.select(0)
+		(regions.get_node("RegionCount") as Label).text = "지역 선택  ·  %d개 지역" % region_selection.item_count
+	selector.item_selected.connect(func(_index: int) -> void: populate.call())
+	search.text_changed.connect(func(_text: String) -> void: populate.call())
+	if get_parent().field_map is OriginalPlayableField:
+		selector.select(1)
+		populate.call()
+	regions.add_child(UI.label("원본 통행 지역: 타일 이미지 미확보",11,UI.MUTED))
+	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))

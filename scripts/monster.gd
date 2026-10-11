@@ -265,7 +265,7 @@ func _physics_process(delta: float) -> void:
 	elif not motion.active and not is_stunned() and not is_held():
 		# Decisions/status clocks run at 30 Hz. Movement, facing, animation and
 		# strike markers still advance every physics frame at the engine cadence.
-		move_and_slide()
+		_move_on_map()
 	if is_stunned() or is_feared(): motion.cancel_attack()
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
 	if get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
@@ -303,7 +303,7 @@ func _tick_ai(delta: float) -> void:
 		if is_instance_valid(species_visual): species_visual.warning_active = false
 		velocity = _fear_velocity() if is_feared() and not is_held() else Vector2.ZERO
 		path = PackedVector2Array(); path_index = 0
-		move_and_slide()
+		_move_on_map()
 		return
 	var field_active: bool = world_controller.field_map!=null
 	var concealed: bool = world_controller.has_method("is_player_concealed") and world_controller.is_player_concealed()
@@ -413,7 +413,7 @@ func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 	var before_move: Vector2 = global_position
 	var tactical_speed: float = move_speed * speed_ratio * AI_POLICY.chase_speed_factor(enraged and not returning_home)
 	velocity = global_position.direction_to(point)*minf(tactical_speed,global_position.distance_to(point)/maxf(.001,delta))
-	move_and_slide()
+	_move_on_map()
 	path_stuck_elapsed = AI_POLICY.next_stuck_elapsed(path_stuck_elapsed,
 		global_position.distance_to(before_move),velocity.length(),delta)
 	if AI_POLICY.should_repath(path_stuck_elapsed):
@@ -494,7 +494,7 @@ func _roam_field(delta: float) -> void:
 		return
 	var direction: Vector2 = global_position.direction_to(path[path_index])
 	velocity = direction * minf(move_speed*.48,global_position.distance_to(path[path_index])/maxf(delta,.001))
-	move_and_slide()
+	_move_on_map()
 	if absf(velocity.x)>1:
 		sprite.flip_h = velocity.x<0
 
@@ -865,3 +865,9 @@ func _resolve_attack(id: int, kind: String, born: int = -1, ratio: float = 1.) -
 	if kind=="melee" and (id!=motion.sequence or global_position.distance_to(target_player.global_position)>current_attack_range()): return
 	if not world_controller._has_line_of_sight_world(global_position,target_player.global_position): return
 	player_hit.emit(self,maxi(1,int(attack_power*ratio)),kind)
+
+func _move_on_map() -> void:
+	var controller: Node = world_controller
+	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
+		controller.constrain_original_motion(self)
+	move_and_slide()
