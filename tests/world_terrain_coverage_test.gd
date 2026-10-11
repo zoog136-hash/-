@@ -29,7 +29,12 @@ func run() -> void:
 		world.hud._close_workspace()
 		var renderer: FieldRenderer = world.field_renderer
 		var coverage: Node = renderer.terrain_root.get_node_or_null("Ground/TerrainCoverage")
-		check(coverage != null, map_id + " full-world terrain layer exists")
+		var geography: Node = renderer.terrain_root.get_node_or_null("Ground/ReferenceGeography")
+		check(geography!=null if world.field_map.data.has("world_geometry") else coverage!=null,map_id+" active whole-map terrain representation")
+		if geography!=null:
+			check(geography.get_child_count()>0,map_id+" contour floor drawn")
+			for child: Polygon2D in geography.get_children():
+				check(not Geometry2D.triangulate_polygon(child.polygon).is_empty(),map_id+" valid structural polygon")
 		if coverage != null:
 			check(coverage.get_child_count() == 2, map_id + " two regional materials")
 			for child: Node in coverage.get_children():

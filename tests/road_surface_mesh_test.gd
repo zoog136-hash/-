@@ -110,7 +110,7 @@ func all_maps() -> void:
 		var bounds := Rect2(b[0], b[1], b[2], b[3])
 		var network: Node2D = ROADS.build(definition.roads, bounds, material)
 		var id: String = definition.map_id
-		check(network.get_child_count() > 0, id + " road geometry exists")
+		check(network.get_child_count() > 0 if not definition.roads.is_empty() else network.get_child_count()==0,id + " authored road coverage; open floors require no invented roads")
 		var probes: Dictionary = {}
 		var total_vertices: int = 0
 		for child: MeshInstance2D in network.get_children():

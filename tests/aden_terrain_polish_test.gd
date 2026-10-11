@@ -119,6 +119,7 @@ func run() -> void:
 	check(DisplayServer.get_name()!="headless","real rendering display")
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
+	preload("res://tests/legacy_aden_fixture.gd").install(world)
 	world.hud.complete_class_selection()
 	world.hud._close_workspace()
 	world._set_map("aden_world",false)

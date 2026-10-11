@@ -76,8 +76,15 @@ func _run() -> void:
 	world.player.global_position += Vector2(80,80)
 	for i: int in range(5): world.combat_flights._physics_process(.1)
 	check(hits[0]==0,"fixed aimed arrow misses a dodging player")
-	world.player.global_position = Vector2(6700,4300)
-	archer.global_position = Vector2(5500,4300)
+	var water: Dictionary = world.field_map.blockers.filter(func(shape: Dictionary)->bool:return str(shape.kind)=="water")[0]
+	var bank: PackedVector2Array = water.polygon
+	var center := Vector2.ZERO
+	for p: Vector2 in bank: center+=p/float(bank.size())
+	var tangent: Vector2 = (bank[1]-bank[0]).normalized()
+	var normal := Vector2(-tangent.y,tangent.x)
+	world.player.global_position = center+normal*600
+	archer.global_position = center-normal*600
+	check(not world.field_map.line_clear(archer.global_position,world.player.global_position),"current mapped river blocks sight")
 	archer._launch_projectile(archer.motion.sequence,"ranged")
 	for i: int in range(20): world.combat_flights._physics_process(.1)
 	check(hits[0]==0 and world.combat_flights.flights.is_empty(),"river blocks actual projectile")

@@ -79,7 +79,7 @@ func run() -> void:
 		var field: PlayableField = world.field_map
 		if phase == "after":
 			var network: Node = world.field_renderer.terrain_root.get_node_or_null("Road/RoadNetwork")
-			check(network != null and network.get_child_count() > 0, id + " new roads integrated in game")
+			check(network!=null and (network.get_child_count()>0 if not field.data.roads.is_empty() else network.get_child_count()==0),id+" real route coverage follows data")
 			if network != null:
 				for child: Node in network.get_children():
 					check(child is MeshInstance2D, id + " roads use actual triangle meshes")
@@ -100,8 +100,13 @@ func run() -> void:
 				var plazas: int = 0
 				for child: Node in world.field_renderer.terrain_root.get_node("GroundDetail").get_children():
 					if child is MeshInstance2D: plazas += 1
-				check(plazas == 3, "all three Aden courtyard meshes mounted")
+				check(plazas==0 if field.data.has("world_geometry") else plazas==3,"Aden uses mapped polygon town districts or legacy courtyards")
 		var roads: Array = field.data.roads
+		if roads.is_empty():
+			await capture(id,"route",Vector2(field.data.spawn_position[0],field.data.spawn_position[1]),.78)
+			await capture(id,"junction",Vector2(field.data.review_points.central[0],field.data.review_points.central[1]),1.0)
+			index+=1
+			continue
 		var first: Array = roads[0].points
 		var a := Vector2(first[0][0], first[0][1])
 		var b := Vector2(first[1][0], first[1][1])

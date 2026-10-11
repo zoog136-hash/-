@@ -22,15 +22,25 @@ func _draw() -> void:
 	if world==null or field==null: return
 	draw_style_box(UI.box(Color("111a1c"),UI.BRONZE,0),Rect2(Vector2.ZERO,size))
 	draw_rect(area,Color("24362e"))
+	_draw_structure_geography()
 	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	var font := get_theme_default_font()
 	draw_string(font,Vector2(14,26),"현재 지역 상세 지도",HORIZONTAL_ALIGNMENT_LEFT,size.x-28,17,UI.GOLD)
 	for surface: Dictionary in field.data.get("surfaces",[]):
+		if surface.has("polygon"):
+			draw_colored_polygon(_map_polygon(surface),Color("65625a"))
+			continue
 		var rect: Array=surface["rect"]
 		var top := _point(Vector2(float(rect[0]),float(rect[1])))
 		var end := _point(Vector2(float(rect[0])+float(rect[2]),float(rect[1])+float(rect[3])))
 		draw_rect(Rect2(top,end-top),Color("4b5156"))
 	for region: Dictionary in field.data.get("regions",[]):
+		if region.has("polygon"):
+			var polygon: PackedVector2Array = _map_polygon(region)
+			draw_colored_polygon(polygon,Color(str(region.color),.2))
+			if str(region.type)=="safe":
+				draw_string(font,_point(COORD.array_vector(region.center))+Vector2(5,-3),str(region.name),HORIZONTAL_ALIGNMENT_LEFT,-1,11,UI.GOLD)
+			continue
 		var point := _point(COORD.array_vector(region["center"]))
 		var radius := float(region["radius"])/bounds.size.x*area.size.x
 		var color := Color(str(region["color"]),.25)
@@ -51,6 +61,7 @@ func _draw() -> void:
 			draw_arc(point,8,0,TAU,24,Color(pair[1],.6),1,true)
 	for monster: TwilightMonster in world.monsters_root.get_children():
 		if not monster.dead: draw_circle(_point(monster.global_position),2,Color("cf7967"))
+	_draw_boss_regions()
 	var player_point := _point(world.player.global_position)
 	draw_circle(player_point,8,Color("0a171b"))
 	draw_circle(player_point,4,Color("faf0bb"))

@@ -26,6 +26,7 @@ func run() -> void:
 	seed(8404)
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
+	preload("res://tests/legacy_aden_fixture.gd").install(world)
 	world.hud.complete_class_selection()
 	world.hud._close_workspace()
 	world._set_map("aden_world",false)

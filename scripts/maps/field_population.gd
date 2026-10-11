@@ -136,13 +136,20 @@ func _spawn_slot(slot: Dictionary) -> void:
 			var saved_home := Vector2(float(home[0]),float(home[1]))
 			var rect: Array = region.rect
 			var box := Rect2(float(rect[0]),float(rect[1]),float(rect[2]),float(rect[3]))
-			if box.has_point(saved_home) and field.walkable(saved_home) and field.point_clear(saved_home) and not field.is_safe(saved_home): monster.home_position = saved_home
+			if box.has_point(saved_home) and field.spawn_contains(region,saved_home) and field.walkable(saved_home) and field.point_clear(saved_home) and not field.is_safe(saved_home): monster.home_position = saved_home
 		if position.size()==2:
 			var saved := Vector2(float(position[0]),float(position[1]))
-			if field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
+			if destination_allowed(monster,saved) and field.walkable(saved) and field.point_clear(saved) and not field.is_safe(saved) and saved.distance_to(monster.home_position)<float(monster.ai.get("leash_distance",820.)):
 				monster.global_position = saved
 		boss_director.capture(str(field.data.map_id),region,monster)
 	monster.set_physics_process(monster.global_position.distance_to(world.player.global_position)<float(field.data.streaming.monster_sleep_distance))
+
+func destination_allowed(monster: TwilightMonster, point: Vector2) -> bool:
+	var id: int = int(monster.get_meta("field_slot",-1))
+	if id < 0 or id >= slots.size(): return true
+	var region: Dictionary = slots[id].region
+	var patrol: Dictionary = region.get("patrol_region",{})
+	return patrol.is_empty() or field.REGION_GEOMETRY.contains(patrol,point)
 
 func release(monster: TwilightMonster) -> void:
 	var id: int = int(monster.get_meta("field_slot",-1))

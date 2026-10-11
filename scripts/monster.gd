@@ -367,7 +367,7 @@ func _tick_ai(delta: float) -> void:
 	if bool(ai.get("blink",false)) and distance<105. and blink_cooldown<=0. and not is_held():
 		blink_cooldown = 8.
 		var goal: Vector2 = target_player.global_position+target_player.global_position.direction_to(global_position)*190.
-		if field_active and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and not world_controller.field_map.is_safe(goal):
+		if field_active and _patrol_allows(goal) and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and not world_controller.field_map.is_safe(goal):
 			global_position = goal
 			repath_cooldown = 0.
 			if world_controller.combat_vfx!=null: world_controller.combat_vfx.ring(global_position,40.,Color(.7,.4,1.))
@@ -454,7 +454,7 @@ func _resolve_special() -> void:
 		if kind=="cone": hit = relative.length()<=radius*2. and relative.normalized().dot(aim)>=cos(.55)
 	if kind=="charge":
 		var goal: Vector2 = center+aim*minf(radius*2.,relative.length())
-		if world_controller.field_map!=null and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and world_controller.field_map.line_clear(center,goal):
+		if world_controller.field_map!=null and _patrol_allows(goal) and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and world_controller.field_map.line_clear(center,goal):
 			global_position = goal
 	if kind=="summon":
 		if world_controller.field_population!=null: world_controller.field_population.summon_for(self)
@@ -483,7 +483,7 @@ func _roam_field(delta: float) -> void:
 		roam_clock = world_controller.rng.randf_range(3.5,7.0)
 		var angle: float = world_controller.rng.randf_range(0.0,TAU)
 		var goal: Vector2 = home_position + Vector2.from_angle(angle)*world_controller.rng.randf_range(30.0,roaming_radius)
-		if world_controller.field_map.is_safe(goal) or not world_controller.field_map.walkable(goal) or not world_controller.field_map.point_clear(goal):
+		if not _patrol_allows(goal) or world_controller.field_map.is_safe(goal) or not world_controller.field_map.walkable(goal) or not world_controller.field_map.point_clear(goal):
 			goal = home_position
 		path = world_controller.find_world_path(global_position,goal)
 		path_index = 0
@@ -868,6 +868,12 @@ func _resolve_attack(id: int, kind: String, born: int = -1, ratio: float = 1.) -
 
 func _move_on_map() -> void:
 	var controller: Node = world_controller
+	if not _patrol_allows(global_position+velocity*get_physics_process_delta_time()): velocity = Vector2.ZERO
 	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
 		controller.constrain_original_motion(self)
 	move_and_slide()
+
+func _patrol_allows(point: Vector2) -> bool:
+	if not is_instance_valid(world_controller) or not is_boss: return true
+	var population: Node = world_controller.field_population
+	return not is_instance_valid(population) or not population.has_method("destination_allowed") or population.destination_allowed(self,point)

@@ -94,7 +94,10 @@ func _run() -> void:
 				if is_instance_valid(slot.monster): members.append(slot.monster)
 			check(members.size()==int(region.max_count),"dense zone fills independent cap "+id)
 			for mob: TwilightMonster in members:
-				check(mob.global_position.distance_to(center)<=float(region.spawn_radius)+.1,"compact dense radius "+id)
+				if region.has("polygon"):
+					check(Geometry2D.is_point_in_polygon(mob.global_position,preload("res://scripts/maps/map_region_geometry.gd").polygon(region)),"dense actors stay in mapped polygon "+id)
+				else:
+					check(mob.global_position.distance_to(center)<=float(region.spawn_radius)+.1,"compact dense radius "+id)
 			var inventory_before: Dictionary = world.inventory.duplicate(true)
 			for i: int in range(mini(6,members.size())): members[i].take_damage(9999999)
 			check(world.inventory==inventory_before,"kill never inserts ground items into inventory "+id)

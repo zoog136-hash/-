@@ -46,12 +46,14 @@ func _run() -> void:
 		_check(present, "NPC teleport guide connected in actual Aden field")
 		_check(existing.has("merchant") and existing.has("warden") and existing.has("warehouse_keeper"), "existing NPCs preserved")
 		var position: Variant = existing.get("merchant",{}).get("position",[])
-		var unchanged: bool = position is Array and position.size() == 2
-		if unchanged:
-			unchanged = is_equal_approx(float(position[0]),1980.0) and is_equal_approx(float(position[1]),3840.0)
-		_check(unchanged, "merchant original coordinates unchanged")
+		var retained: bool = position is Array and position.size() == 2
+		if retained:
+			var geometry = preload("res://scripts/maps/map_region_geometry.gd")
+			var town: Vector2 = geometry.reference_to_world(Vector2(260,408),original_npc)
+			retained = Vector2(position[0],position[1]).distance_to(town+Vector2(400,-260))<.1
+		_check(retained, "merchant retains local placement in relocated Gludio district")
 	if failures.is_empty():
-		print("NPC_TELEPORT_OK: 25 maps, costs, level gates, forged IDs and preserved NPC placement")
+		print("NPC_TELEPORT_OK: 25 maps, costs, level gates, forged IDs and geographically relocated NPC placement")
 		quit(0)
 	else:
 		print("NPC_TELEPORT_FAILED: %d failures" % failures.size())

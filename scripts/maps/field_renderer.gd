@@ -12,6 +12,7 @@ const REFERENCE_VISUALS = preload("res://scripts/maps/reference_visuals.gd")
 const WORLD_TERRAIN_COVERAGE = preload("res://scripts/maps/world_terrain_coverage.gd")
 const TERRAIN_VARIATION = preload("res://scripts/maps/terrain_variation_texture.gd")
 const ROAD_SURFACE_MESH = preload("res://scripts/maps/road_surface_mesh.gd")
+const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
 var reference_profile: Dictionary = {}
 const LANDMARK_BAKE_SCALE: float = 1.5
 const LANDMARK_CELL: Vector2 = Vector2(256,256)
@@ -238,22 +239,30 @@ func _road(points: Array, width: float, index: int, alpha: float) -> void:
 
 func _build_ground() -> void:
 	_select_layer("Ground")
-	_polygon(_box_points(field.bounds),int(field.data["background"].get("base_material",0)))
+	if field.data.has("world_geometry"):
+		_build_reference_ground()
+	else:
+		_polygon(_box_points(field.bounds),int(field.data["background"].get("base_material",0)))
 	# Map-bounds-wide regional ground mesh; existing surfaces/roads/walls
 	# still paint above it. No map, collision or navigation data is changed.
-	var coverage: Node2D = WORLD_TERRAIN_COVERAGE.build(
-		field.bounds, str(field.data.get("map_id","")),
-		str(field.data.get("family","")), Callable(self,"_terrain_material"))
-	ground.add_child(coverage)
+	if not field.data.has("world_geometry"):
+		var coverage: Node2D = WORLD_TERRAIN_COVERAGE.build(
+			field.bounds, str(field.data.get("map_id","")),
+			str(field.data.get("family","")), Callable(self,"_terrain_material"))
+		ground.add_child(coverage)
 	for surface: Dictionary in field.data.get("surfaces", []):
 		# Same world-space material is already visible through the wall complement.
 		# Redrawing every overlapping room/corridor costs fill rate without changing
 		# a single pixel. Keep explicit surfaces for distinct materials/tints only.
 		if int(surface.get("material",2)) == int(field.data["background"].get("base_material",0)) and not surface.has("tint"):
 			continue
-		var a: Array = surface["rect"]
-		var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
-		var poly: Polygon2D = _polygon(_box_points(box),int(surface.get("material",2)))
+		var points: PackedVector2Array
+		if surface.has("polygon"):
+			points = REGION_GEOMETRY.polygon(surface)
+		else:
+			var a: Array = surface["rect"]
+			points = _box_points(Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3])))
+		var poly: Polygon2D = _polygon(points,int(surface.get("material",2)))
 		if surface.has("tint"):
 			poly.modulate = Color(str(surface["tint"]))
 	_select_layer("Road")
@@ -340,6 +349,9 @@ func _build_ground() -> void:
 				cap.modulate = Color(1.15,1.12,.98,1)
 	_select_layer("Wall")
 	for shape: Dictionary in field.data["collision"]:
+		if str(shape.kind) in ["dungeon_boundary","dungeon_pit"]:
+			_build_boundary_wall(shape)
+			continue
 		if str(shape["kind"]) not in ["dungeon_wall","fortress_wall"]:
 			continue
 		var a: Array = shape["rect"]
@@ -358,6 +370,52 @@ func _build_ground() -> void:
 		shade.width = 14
 		shade.default_color = Color(0,0,0,.38)
 		ground.add_child(shade)
+
+func _build_reference_ground() -> void:
+	var structure: Dictionary = field.data.world_geometry
+	var outside := Polygon2D.new()
+	outside.name = "OutsideWorld"
+	outside.polygon = _box_points(field.bounds)
+	outside.color = Color(str(structure.void_color))
+	ground.add_child(outside)
+	var geography := Node2D.new()
+	geography.name = "ReferenceGeography"
+	ground.add_child(geography)
+	for raw: Array in field.data.navigable_polygons:
+		var points: PackedVector2Array = REGION_GEOMETRY.polygon({"polygon":raw})
+		var floor := Polygon2D.new()
+		floor.name = "PlayableFloor"
+		floor.polygon = points
+		floor.material = _ground_material(int(structure.floor_material))
+		geography.add_child(floor)
+		for zone: Dictionary in structure.terrain_zones:
+			for intersection: PackedVector2Array in Geometry2D.intersect_polygons(points,REGION_GEOMETRY.polygon(zone)):
+				var poly := Polygon2D.new()
+				poly.name = str(zone.id)
+				poly.polygon = intersection
+				poly.material = _ground_material(int(zone.material))
+				poly.modulate = Color(str(zone.tint)).lightened(.28)
+				geography.add_child(poly)
+
+func _build_boundary_wall(shape: Dictionary) -> void:
+	var points: PackedVector2Array = REGION_GEOMETRY.polygon(shape,"points")
+	var height: float = float(field.data.world_geometry.get("boundary_height",0))
+	if str(shape.kind)=="dungeon_pit":
+		var hole := Polygon2D.new()
+		hole.polygon = points
+		hole.color = Color("06080d")
+		ground.add_child(hole)
+		return
+	var top := PackedVector2Array()
+	for p: Vector2 in points: top.append(p-Vector2(0,height))
+	for i: int in range(points.size()):
+		var next: int = (i+1)%points.size()
+		var face: Polygon2D = _polygon(PackedVector2Array([points[i],points[next],top[next],top[i]]),2)
+		face.name = "BoundaryWallFace"
+		face.modulate = Color("555862") if points[next].x>points[i].x else Color("777982")
+	var cap: Polygon2D = _polygon(top,2)
+	cap.name = "BoundaryWallCap"
+	cap.modulate = Color("9b9d9e")
 
 func _configure_aden_river(poly: Polygon2D, material: ShaderMaterial, points: PackedVector2Array) -> void:
 	# Aden's existing three river polygons have paired bank samples. Use exact
@@ -542,7 +600,7 @@ func _load_chunk(key: Vector2i) -> void:
 		sprite.position = COORD.array_vector(record["position"])
 		# One existing north-village house receives authored stone/slate art.
 		# Keep its map record, anchor, scale, collision and occlusion behavior.
-		if aden_stone_cottage != null and kind == "house" and sprite.position == Vector2(1630,3610):
+		if aden_stone_cottage != null and kind == "house" and (sprite.position == Vector2(1630,3610) or str(record.get("asset",""))=="aden_stone_cottage_v1"):
 			sprite.texture = aden_stone_cottage
 		var tex_size: Vector2 = sprite.texture.get_size()
 		sprite.offset = Vector2(0,-tex_size.y*.46)

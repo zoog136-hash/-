@@ -44,7 +44,7 @@ func _run() -> void:
 		if field == null:
 			continue
 		var spawn: Vector2 = world.player.global_position
-		check(field.bounds.size.x>=7168 and field.bounds.size.y>=6656,id+" expanded actual world bounds")
+		check(field.bounds.size==Vector2(entry.bounds[2],entry.bounds[3]),id+" actual world bounds match registered map")
 		check(field.walkable(spawn) and field.point_clear(spawn),id+" player spawn has clearance")
 		check(field.is_safe(spawn),id+" entry is safe")
 		check(world.player.collision_mask==4,id+" player physics mask")

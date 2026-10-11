@@ -2,6 +2,7 @@ extends RefCounted
 class_name PlayableField
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
+const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
 var data: Dictionary
 var bounds: Rect2
 var cell_size: int = 32
@@ -12,9 +13,18 @@ var spawn_cells: Dictionary = {}
 var reachable: PackedByteArray
 var width: int
 var height: int
+var navigable_polygons: Array[PackedVector2Array] = []
+var blocker_buckets: Dictionary = {}
+var region_geometries: Array[Dictionary] = []
+var spawn_geometries: Dictionary = {}
+const BLOCKER_BUCKET: float = 1024.0
 
 func configure(definition: Dictionary) -> void:
 	data = definition
+	region_geometries.clear()
+	spawn_geometries.clear()
+	for region: Dictionary in data.get("regions",[]): region_geometries.append(REGION_GEOMETRY.prepare(region))
+	for region: Dictionary in data.get("monster_spawn",[]): spawn_geometries[str(region.id)] = REGION_GEOMETRY.prepare(region)
 	var b: Array = data["bounds"]
 	bounds = Rect2(float(b[0]), float(b[1]), float(b[2]), float(b[3]))
 	cell_size = int(data["navigation"]["cell_size"])
@@ -29,7 +39,16 @@ func configure(definition: Dictionary) -> void:
 	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar.update()
+	navigable_polygons.clear()
+	for raw: Array in data.get("navigable_polygons",[]):
+		navigable_polygons.append(REGION_GEOMETRY.polygon({"polygon":raw}))
+	if not navigable_polygons.is_empty():
+		for y: int in range(height):
+			for x: int in range(width):
+				var cell := Vector2i(x,y)
+				if not inside_navigable_area(cell_to_world(cell)): astar.set_point_solid(cell)
 	blockers.clear()
+	blocker_buckets.clear()
 	for raw: Dictionary in data["collision"]:
 		var shape: Dictionary = raw.duplicate(true)
 		var box: Rect2
@@ -52,6 +71,13 @@ func configure(definition: Dictionary) -> void:
 					box = box.expand(p)
 		shape["box"] = box
 		blockers.append(shape)
+		var bucket_lo := Vector2i((box.position/BLOCKER_BUCKET).floor())
+		var bucket_hi := Vector2i((box.end/BLOCKER_BUCKET).floor())
+		for by: int in range(bucket_lo.y,bucket_hi.y+1):
+			for bx: int in range(bucket_lo.x,bucket_hi.x+1):
+				var key := Vector2i(bx,by)
+				if not blocker_buckets.has(key): blocker_buckets[key] = []
+				blocker_buckets[key].append(shape)
 		var lo: Vector2i = world_to_cell(box.position - Vector2.ONE * clearance)
 		var hi: Vector2i = world_to_cell(box.end + Vector2.ONE * clearance)
 		for y: int in range(maxi(0, lo.y), mini(height - 1, hi.y) + 1):
@@ -70,7 +96,8 @@ func configure(definition: Dictionary) -> void:
 		for y: int in range(maxi(0, lo.y), mini(height, hi.y)):
 			for x: int in range(maxi(0, lo.x), mini(width, hi.x)):
 				var cell := Vector2i(x, y)
-				if reachable[y * width + x] != 0 and not is_safe(cell_to_world(cell)):
+				var point: Vector2 = cell_to_world(cell)
+				if reachable[y * width + x] != 0 and not is_safe(point) and spawn_contains(region,point):
 					cells.append(cell)
 		spawn_cells[str(region["id"])] = cells
 
@@ -92,12 +119,24 @@ func _inside_shape(p: Vector2, shape: Dictionary, padding: float) -> bool:
 	return false
 
 func point_clear(p: Vector2, padding: float = 24.0) -> bool:
-	if not bounds.grow(-padding).has_point(p):
+	if not bounds.grow(-padding).has_point(p) or not inside_navigable_area(p):
 		return false
-	for shape: Dictionary in blockers:
-		if _inside_shape(p, shape, padding):
-			return false
+	var lo := Vector2i(((p-Vector2.ONE*padding)/BLOCKER_BUCKET).floor())
+	var hi := Vector2i(((p+Vector2.ONE*padding)/BLOCKER_BUCKET).floor())
+	for y: int in range(lo.y,hi.y+1):
+		for x: int in range(lo.x,hi.x+1):
+			for shape: Dictionary in blocker_buckets.get(Vector2i(x,y),[]):
+				if _inside_shape(p, shape, padding): return false
 	return true
+
+func inside_navigable_area(point: Vector2) -> bool:
+	if navigable_polygons.is_empty(): return true
+	for polygon: PackedVector2Array in navigable_polygons:
+		if Geometry2D.is_point_in_polygon(point,polygon): return true
+	return false
+
+func spawn_contains(region: Dictionary, point: Vector2) -> bool:
+	return REGION_GEOMETRY.contains(spawn_geometries.get(str(region.get("id","")),region),point)
 
 func world_to_cell(p: Vector2) -> Vector2i:
 	return Vector2i(((p - bounds.position) / cell_size).floor())
@@ -195,8 +234,8 @@ func sample_spawn(region_id: String, random: RandomNumberGenerator) -> Vector2:
 	return cell_to_world(cells[random.randi_range(0, cells.size() - 1)])
 
 func region_at(p: Vector2) -> Dictionary:
-	for region: Dictionary in data.get("regions", []):
-		if p.distance_to(COORD.array_vector(region["center"])) <= float(region["radius"]):
+	for region: Dictionary in region_geometries:
+		if REGION_GEOMETRY.contains(region,p):
 			return region
 	return {"id":"frontier", "name":str(data.get("map_name", "아덴 변경")), "type":"combat"}
 
