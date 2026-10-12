@@ -14,7 +14,7 @@
       },
       "desc": "경험치 +41% · 무게 보너스 +3500 · 공격 속도 +15% · 스턴 내성 +15% · 공포 내성 +12% · 스턴 적중 +10%",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/116",
-      "pending": "린드비오르 디스펠 +2%: exact target/debuff semantics pending"
+      "pending": "제외된 고유 발동 스킬을 게임 대상에서 삭제함"
     },
     "안타라스": {
       "stats": {
@@ -30,7 +30,7 @@
       },
       "desc": "경험치 +35% · 무게 보너스 +3500 · 대미지 리덕션 +5 · 스턴 내성 +10% · 공포 내성 +7% · 스턴 적중 +15%",
       "source": "https://lineagem.inven.co.kr/db/magicdoll/60",
-      "pending": "안타라스 홀드 +1%: exact duration and resistance handling pending"
+      "pending": "제외된 고유 발동 스킬을 게임 대상에서 삭제함"
     },
     "판도라": {
       "stats": {
@@ -301,7 +301,7 @@
       },
       "desc": "경험치 +30% · 최대 HP +15% · 스킬 쿨타임 감소 15% · 스턴 내성 +10% · 공포 내성 +10% · 스턴 적중 +10% · 공포 적중 +10% · 일반~신화 스킬 레벨 +1",
       "source": "https://lineagem.inven.co.kr/db/hallows/",
-      "pending": "Unique named proc/skill functionality and skill level tier pending"
+      "pending": "전용 기술은 삭제됨; 스킬 레벨 등급 보너스는 미구현"
     },
     "진명황의 보주": {
       "stats": {
@@ -316,7 +316,7 @@
       },
       "desc": "경험치 +20% · 최대 HP +10% · 스킬 쿨타임 감소 10% · 스턴 적중 +5% · 대미지 리덕션 무시 +5 · 일반~전설 스킬 레벨 +1",
       "source": "https://lineagem.inven.co.kr/db/hallows/",
-      "pending": "집행 +3% proc has unspecified damage, and skill level tier pending"
+      "pending": "고유 발동은 삭제됨; 스킬 레벨 등급 보너스는 미구현"
     }
   }
 }
