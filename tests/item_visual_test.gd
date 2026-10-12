@@ -35,6 +35,7 @@ func _run() -> void:
 	check(RESOLVER.describe(wrong,wrong.name,{},true).status == "self_authored_substitute","ground cannot recover rejected ID through a reviewed name")
 	check(RESOLVER.describe({"sourceId":"unknown","name":first.name},first.name,{first.name:first.image_path}).path == "","unknown ID never borrows name image")
 	check(RESOLVER.texture({"name":"local weapon","slot":"weapon","type":"활"}).get_meta("item_family") == "bow","own bow is explicitly a family symbol")
+	check(RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전"},"드래곤의 루비",{"드래곤의 루비":"res://assets/ui/potionRed.png"}).family == "gem","legacy ruby placeholder becomes an explicit gem symbol")
 	check(RESOLVER.cache_size() <= 256,"bounded texture cache")
 	var clip := Control.new()
 	clip.clip_contents = true

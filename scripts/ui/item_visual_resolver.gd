@@ -93,12 +93,12 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 			result.path = bridge.resource_path
 			result.route = "a2_candidate"
 			return result
-		if not has_id and _valid(str(images.get(name_value, ""))):
-			result.path = str(images[name_value])
+		var indexed: String = str(images.get(name_value, ""))
+		# Old stock UI placeholders (e.g. a red potion for a ruby) are not
+		# original item art. Prefer the explicit item-family symbol below.
+		if not has_id and _valid(indexed) and not indexed.begins_with("res://assets/ui/"):
+			result.path = indexed
 			result.route = "legacy_exact_name_index"
-			# Project UI symbols are explicitly substitutes.
-			if result.path.begins_with("res://assets/ui/"):
-				result.status = "self_authored_substitute"
 			return result
 	result.family = FALLBACK.family(record, name_value)
 	result.route = "twilight_family_symbol"
