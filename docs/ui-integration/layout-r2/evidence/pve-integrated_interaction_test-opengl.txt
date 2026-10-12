@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PASS startup picker exposes class and confirmation controls
+PASS startup class selection uses real mouse input
+PASS native inventory drag registers a consumable without using it
+PASS native skill card drag registers authoritative skill
+PASS finger swipe down enables item auto use
+PASS second swipe down disables item auto use
+PASS finger horizontal swipe changes slot group
+PASS finger long press opens slot editor
+PASS locked healing item cannot bypass lock through HUD potion button
+PASS AUTO consumes owned potion and heals real HP
+PASS manual stop suppresses auto consumables
+PASS confirmation blocks world input
+PASS ESC cancels only the top confirmation
+PASS confirmation executes once and releases input capture
+PASS injected mobile safe area contains menu HUD and joystick
+PASS confirmation fits safe area
+PASS mobile back notification follows menu history
+PASS outside mouse click closes workspace
+PASS reopening windows does not multiply command connections
+PASS save command reports write success
+PASS intentionally empty 24-slot configuration survives save and load
+INTEGRATED_INTERACTION_OK

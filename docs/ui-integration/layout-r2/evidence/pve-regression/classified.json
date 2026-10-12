@@ -1,0 +1,32 @@
+{
+  "runtime_commit": "b215b20172fea1a2989a9b1fc3adebe950da7d8f",
+  "baseline_main": "cfbf0fb4307fbb6694163504eb49692f3e3391bf",
+  "test_followups": [
+    "fb102d1",
+    "2b35099"
+  ],
+  "pass": 112,
+  "fail": 0,
+  "blocked": 6,
+  "raw_pass": 111,
+  "raw_total": 118,
+  "raw_fail": [
+    "l1j_map_grid_test",
+    "l1j_png_load_test",
+    "l1j_spx_frames_test",
+    "lineage_side_ui_smoke_test"
+  ],
+  "raw_skip": [
+    "original_map_catalog_test",
+    "original_world_runtime_test",
+    "source_first_map_test"
+  ],
+  "retest": {
+    "lineage_side_ui_smoke_test": {
+      "result": "PASS",
+      "log": "../pve-fixed-menu.txt",
+      "reason": "Main removed quest; previous button-count expectation was obsolete. Replacement verifies 14 command signals and close."
+    }
+  },
+  "blocked_reason": "Private original map tile, PNG and SPX packs absent. Preserve raw 3 FAIL + 3 SKIP as BLOCKED, not PASS."
+}
