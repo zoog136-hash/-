@@ -1,0 +1,73 @@
+name: TWILIGHT renewed-map spawn validation
+
+on:
+  push:
+    branches: [feature/renewed-map-spawns-20261012]
+  pull_request:
+    paths:
+      - 'data/monsters/**'
+      - 'scripts/maps/**'
+      - 'scripts/monsters/**'
+      - 'tools/rebalance_world_spawns.py'
+      - 'tests/*spawn*'
+      - '.github/workflows/renewed-map-spawns.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: renewed-map-spawns-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Resource integrity preflight (before any layout generation)
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Prepare pinned Godot and reproducible tracked-source checkpoint
+        run: |
+          mkdir -p /tmp/spawn-validation
+          git rev-parse HEAD > /tmp/spawn-validation/source-sha.txt
+          git archive --format=tar.gz --output=/tmp/spawn-validation/tracked-source.tar.gz HEAD
+          curl -L --fail --retry 3 -o /tmp/spawn-validation/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/spawn-validation/godot.zip -d /tmp/spawn-validation
+          chmod +x /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64
+          /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --version
+          cd /tmp/spawn-validation && sha256sum tracked-source.tar.gz godot.zip > SHA256SUMS
+      - name: Publish exact source and engine checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: renewed-map-spawn-source-${{ github.sha }}
+          path: |
+            /tmp/spawn-validation/tracked-source.tar.gz
+            /tmp/spawn-validation/godot.zip
+            /tmp/spawn-validation/source-sha.txt
+            /tmp/spawn-validation/SHA256SUMS
+          retention-days: 7
+          if-no-files-found: error
+      - name: Spawn layout checks
+        run: |
+          if test -f tools/rebalance_world_spawns.py; then
+            python3 tools/rebalance_world_spawns.py --check
+          fi
+          python3 -m unittest discover -s tests -p 'test_*spawn*.py' -v
+          if test -f tests/renewed_map_spawn_test.gd; then
+            /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit
+            /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/renewed_map_spawn_test.gd
+          fi
+      - name: Full project regression
+        run: python3 tools/test_project.py --godot /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --logs /tmp/spawn-validation/test-results
+      - name: Publish validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: renewed-map-spawn-tests-${{ github.sha }}
+          path: /tmp/spawn-validation/test-results
+          retention-days: 14
+          if-no-files-found: warn
