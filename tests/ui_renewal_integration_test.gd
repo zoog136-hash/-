@@ -1,5 +1,7 @@
 extends SceneTree
 
+const QA = preload("res://tests/qa_class_selection.gd")
+
 # Headless integration smoke; no destructive enhancement or file loading.
 var failures: Array[String] = []
 var assertions: int = 0
@@ -40,6 +42,7 @@ func _run() -> void:
 	var world: Node = scene.instantiate()
 	root.add_child(world)
 	for frame: int in range(8): await process_frame
+	_check(QA.enter_game(world),"explicit class selection")
 	var hud: Node = world.get_node("HUD")
 	var workspace: PanelContainer = hud.get("workspace") as PanelContainer
 	_check(workspace != null,"renewal workspace exists")
@@ -82,6 +85,11 @@ func _run() -> void:
 	if buy != null and not buy.disabled:
 		buy.pressed.emit()
 		await process_frame
+		_check(int(world.get("gold")) == old_gold,"purchase waits for confirmation")
+		var dialog: Control = hud.get_node("Root").get_node_or_null("TwilightConfirmation")
+		_check(dialog != null,"purchase confirmation is visible")
+		if dialog != null: dialog._accept()
+		await process_frame
 		_check(int(world.get("gold")) == old_gold-50,"purchase deducts existing world currency")
 		var updated: Dictionary = world.get("inventory")
 		_check(int(updated.get("HP 물약",0)) == old_count+1,"purchase grants an existing item")
@@ -107,15 +115,7 @@ func _run() -> void:
 			_check(int(world.get("gold")) == gold_before_swipe,"shop swipe never purchases")
 	hud.call("toggle_menu")
 	await process_frame
-	var category: Button = workspace.find_child("MenuGroup_1",true,false) as Button
-	_check(category != null,"drawer exposes gameplay category")
-	if category != null:
-		var tab_point := _screen_point(category,category.size*.5)
-		_touch(42,tab_point,true)
-		_touch(42,tab_point,false)
-		for frame: int in 3: await process_frame
-		_check(hud.menu_group == 1 and workspace.find_child("MenuTile_crafting",true,false) != null,"native category touch reveals gameplay routes")
-		_check(workspace.find_child("WorkspaceNavigationScroll",true,false) == null,"drawer has one navigation hierarchy")
+	_check(workspace.find_child("WorkspaceNavigationScroll",true,false) == null,"window has no dashboard sidebar")
 	var menu_scroll: ScrollContainer = workspace.find_child("MenuContentScroll",true,false) as ScrollContainer
 	_check(menu_scroll != null,"main menu uses a vertical ScrollContainer")
 	_check(workspace.find_child("MenuTile_quest",true,false) == null,"no quest entry in main menu")
@@ -181,7 +181,7 @@ func _run() -> void:
 		var detail_tab: Button = hud.get("catalog_details_tab") as Button
 		var actions: ScrollContainer = workspace.find_child("CatalogActionsScroll",true,false) as ScrollContainer
 		_check(compact_tabs != null and compact_tabs.visible, "compact catalog exposes list and detail tabs")
-		_check(catalog_items.visible and catalog_items.max_columns == 2, "compact catalog keeps icon list visible")
+		_check(catalog_items.visible and catalog_items.max_columns == 4, "compact catalog keeps a four-column icon list visible")
 		_check(catalog_items.get_global_rect().end.x <= workspace.get_global_rect().end.x + 1.0, "catalog list stays inside window width")
 		var second_record: Dictionary = (hud.get("catalog_results") as Array)[1]
 		var second_point: Vector2 = _screen_point(catalog_items,catalog_items.get_item_rect(1).get_center())

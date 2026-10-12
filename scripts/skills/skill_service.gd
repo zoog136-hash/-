@@ -144,10 +144,6 @@ func cost_reason(skill: Dictionary) -> String:
 		if int(world.inventory.get(item, 0)) < int(skill.items[item]): return "%s %d개 필요" % [item, int(skill.items[item])]
 	return ""
 
-func cooldown_seconds(skill: Dictionary) -> float:
-	var duration: float = float(skill.get("cooldown", 0)) * world._skill_cooldown_factor()
-	return maxf(0, duration * clampf(1 - equipment_modifier(skill, "cooldown_percent") / 100.0, .1, 1))
-
 func spend(skill: Dictionary) -> bool:
 	if not cost_reason(skill).is_empty(): return false
 	world.mp -= int(skill.get("mp", 0))
@@ -187,7 +183,9 @@ func cast(record: Dictionary) -> bool:
 	# Validation ends here. Costs and cooldowns happen once, before the marker.
 	if not spend(skill): return false
 	var id := str(skill.id)
-	world.skill_cooldowns[str(skill.name)] = cooldown_seconds(skill)
+	var cooldown: float = float(skill.get("cooldown", 0)) * world._skill_cooldown_factor()
+	cooldown *= clampf(1 - equipment_modifier(skill, "cooldown_percent") / 100.0, .1, 1)
+	world.skill_cooldowns[str(skill.name)] = maxf(0, cooldown)
 	world.skill_global_cooldown = float(skill.get("global_cooldown", .3))
 	world._break_invisibility()
 	vfx.emit_skill(presentation_id(skill), "cast", world.player.global_position)
@@ -571,16 +569,26 @@ func export_state() -> Dictionary:
 func import_state(data: Dictionary) -> void:
 	clear()
 	toggles = data.get("toggles", {}).duplicate(true)
-	for id: String in data.get("shields", {}):
-		if catalog.record_for(id).is_empty(): continue
-		var value: Dictionary = data.shields[id]
-		shields[id] = {"amount":clampi(int(value.get("amount", 0)), 0, world._effective_max_hp()),"remaining":clampf(float(value.get("remaining", 0)), 0, 60)}
-		var record := catalog.record_for(id)
-		if str(record.mode) == "summon" and catalog.enabled(record) and int(shields[id].amount) > 0 and float(shields[id].remaining) > 0:
-			var shield := catalog.resolve(record)
-			shield.duration = float(shields[id].remaining)
-			apply_buff(shield)
-			world.active_skill_buffs[str(record.name)]["summon_stage"] = "shield"
+	var saved_shields: Variant = data.get("shields", {})
+	if saved_shields is Dictionary:
+		for id: String in saved_shields:
+			var record: Dictionary = catalog.record_for(id)
+			# A persisted shield must still belong to a learned, currently usable
+			# ability. Never let a non-shield skill ID absorb damage after a load.
+			if record.is_empty() or not catalog.enabled(record): continue
+			var skill: Dictionary = catalog.resolve(record)
+			var mode := str(record.get("mode", ""))
+			if mode != "summon" and (mode != "heal" or not bool(skill.get("overflow_shield", false))): continue
+			var value: Variant = saved_shields[id]
+			if typeof(value) != TYPE_DICTIONARY: continue
+			var amount := clampi(int(value.get("amount", 0)), 0, world._effective_max_hp())
+			var remaining := clampf(float(value.get("remaining", 0)), 0, 60)
+			if amount <= 0 or remaining <= 0: continue
+			shields[id] = {"amount":amount, "remaining":remaining}
+			if mode == "summon":
+				skill.duration = remaining
+				apply_buff(skill)
+				world.active_skill_buffs[str(record.name)]["summon_stage"] = "shield"
 	summons.restore_state(data.get("summon",{}))
 	for name: String in world.active_skill_buffs.keys():
 		var buff: Dictionary = world.active_skill_buffs[name]

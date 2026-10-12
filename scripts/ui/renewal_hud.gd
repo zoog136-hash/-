@@ -4,6 +4,8 @@ extends "res://scripts/hud_v20.gd"
 signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
+signal quickslot_edit_requested(action: String, source_index: int, target: int)
+
 signal shop_bulk_buy_requested(item_name: String, quantity: int)
 signal reviewed_shop_buy_requested(vendor_id: String, item_name: String, quantity: int)
 signal warehouse_transfer_requested(item_name: String, quantity: int, direction: String, instance_id: String)
@@ -11,32 +13,19 @@ signal npc_teleport_requested(map_id: String)
 signal craft_requested(recipe_id: String, batch: int)
 signal shop_sell_requested(item_name: String, quantity: int, instance_id: String)
 signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: String)
-signal quickslot_edit_requested(index: int, action: String, other: int)
-signal equipment_unequip_requested(reference: String)
-signal item_lock_requested(reference: String)
-signal pickup_requested
-
-const MENU = preload("res://scripts/ui/menu_registry.gd")
-const Router = preload("res://scripts/ui/menu_router.gd")
-const QuickController = preload("res://scripts/ui/quickslot_controller.gd")
-const SlotButton = preload("res://scripts/ui/quickslot_button.gd")
-const DialogUI = preload("res://scripts/ui/renewal_dialog.gd")
-const SafeArea = preload("res://scripts/ui/safe_area.gd")
-var router := Router.new()
-var quick_controller := QuickController.new()
-var opening_window: bool = false
-var window_backdrop: ColorRect
-var modal: Control
-var page_buttons: Array[Button] = []
-var menu_group: int = 0
-var buff_expanded: bool = true
-var buff_detail: RichTextLabel
-var move_readout: Label
-var quick_picker_kind: String = ""
-var quick_picker_id: String = ""
-var selected_quickslot: int = 0
 
 # UI-only adapter: existing HUD signals remain the sole write interface.
+const Layout = preload("res://scripts/ui/reference_layout.gd")
+const PointerTransfer = preload("res://scripts/ui/pointer_transfer.gd")
+const NavigationMemory = preload("res://scripts/ui/navigation_memory.gd")
+var navigation_memory = NavigationMemory.new()
+var switching_workspace: bool = false
+var combat_log_view: RichTextLabel
+var detail_window: PanelContainer
+var status_view: Control
+var pointer_transfer: Node
+var quick_page_buttons: Array[Button] = []
+
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const RenewalWindowScript = preload("res://scripts/ui/renewal_window.gd")
 const Inventory = preload("res://scripts/ui/renewal_inventory.gd")
@@ -96,33 +85,43 @@ var class_picker_backdrop: ColorRect
 var minimap_mounted: bool = false
 var cooldown_shades: Array[ColorRect] = []
 var catalog_test_tools: VBoxContainer
+var companion_window: PanelContainer
+var transaction_view: Control
+var shop_view: Control
+var catalog_view_state: Dictionary = {}
+var pending_quickslot_binding: Dictionary = {}
+var quickslot_picker_hint: Label
 var catalog_test_toggle: Button
 var catalog_clear_button: Button
+var catalog_grade_column: VBoxContainer
+var catalog_grade_buttons: Dictionary = {}
 
 func _build_v20_status() -> void:
 	super._build_v20_status()
 	var panel: PanelContainer = v20_layer.get_node("StatusPanel")
-	_place(panel,10,8,337,97)
+	_place(panel,8,8,307,76)
+	panel.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,.2),Color(0,0,0,0),0))
 	var content: Control = panel.get_child(0)
-	content.custom_minimum_size = Vector2(327,89)
-	_place(content.get_child(0),6,5,70,72)
-	_place(content.get_node("CharacterShortcut"),6,5,70,72)
-	_place(v20_level_badge,58,56,86,80)
-	_place(v20_status_name,78,3,318,24)
-	v20_status_name.add_theme_font_size_override("font_size",13)
-	_place(hp_bar,78,26,318,42)
-	_place(v20_hp_text,78,25,318,43)
-	_place(mp_bar,78,46,318,62)
-	_place(v20_mp_text,78,45,318,63)
-	_place(v20_stat_text,78,66,318,85)
+	content.custom_minimum_size = Vector2(299,68)
+	(content.get_child(0) as Control).hide()
+	_place(content.get_node("CharacterShortcut"),0,0,44,52)
+	_place(v20_level_badge,2,14,43,48)
+	v20_level_badge.add_theme_font_size_override("font_size",24)
+	_place(v20_status_name,48,0,291,18)
+	v20_status_name.add_theme_font_size_override("font_size",11)
+	_place(hp_bar,48,20,291,35)
+	_place(v20_hp_text,48,18,291,37)
+	_place(mp_bar,48,39,291,49)
+	_place(v20_mp_text,48,36,291,53)
+	_place(v20_stat_text,48,51,291,68)
 	v20_stat_text.add_theme_font_size_override("font_size",11)
 	for child: Node in v20_layer.get_children():
 		if child is Button and is_equal_approx(child.position.x,380.0):
-			_place(child,348,8,397,65)
+			_place(child,318,8,365,62)
 		elif child is Button and is_equal_approx(child.position.x,442.0):
-			_place(child,403,8,452,65)
-	_place(v20_potion_count,348,47,396,69)
-	_place(v20_leaf_count,403,47,451,69)
+			_place(child,373,8,420,62)
+	_place(v20_potion_count,318,43,365,64)
+	_place(v20_leaf_count,373,43,420,64)
 
 func set_auto(enabled: bool) -> void:
 	super.set_auto(enabled)
@@ -146,23 +145,8 @@ func _ready() -> void:
 	catalog_drag_icon.hide()
 	workspace = RenewalWindowScript.new()
 	$Root.add_child(workspace)
-	window_backdrop = ColorRect.new()
-	window_backdrop.name = "MenuBackdrop"
-	window_backdrop.color = Color(0,0,0,.18)
-	window_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	window_backdrop.offset_top = 82
-	window_backdrop.offset_bottom = -88
-	window_backdrop.z_index = 140
-	window_backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
-	window_backdrop.gui_input.connect(func(event: InputEvent) -> void:
-		if (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed):
-			_close_workspace()
-			get_viewport().set_input_as_handled())
-	$Root.add_child(window_backdrop)
-	window_backdrop.hide()
 	workspace.navigate.connect(_navigate)
-	workspace.back_requested.connect(go_back)
-	workspace.visibility_changed.connect(_sync_input_block)
+	workspace.back_requested.connect(_go_back)
 	workspace.closed.connect(_close_workspace)
 	workspace.resized.connect(_fit_catalog_browser_layout)
 	workspace.content.resized.connect(_fit_catalog_browser_layout)
@@ -184,36 +168,30 @@ func _ready() -> void:
 	_polish_hud_chrome()
 	_fit_hud()
 	SettingsUI.apply_saved(self)
-	var preferences := ConfigFile.new()
-	if preferences.load(SettingsUI.SETTINGS_PATH) == OK:
-		buff_expanded = bool(preferences.get_value("interface", "buff_expanded", true))
-		buff_row.visible = buff_expanded
-	_build_integration_shortcuts()
+	pointer_transfer = PointerTransfer.new()
+	$Root.add_child(pointer_transfer)
+	pointer_transfer.configure(self)
 
 func _polish_hud_chrome() -> void:
 	# The old canvas still owns all HP, MP, combat and touch signals.
 	# Restrict the pass to StyleBoxes; never duplicate gameplay state.
 	var status: PanelContainer = v20_layer.get_node_or_null("StatusPanel") as PanelContainer
 	if status != null:
-		status.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.028,.029,.034,.89),UI.BRONZE,0))
+		status.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,.22),Color(0,0,0,0),0))
 	if v20_target_panel != null:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
-		_place(v20_target_panel,468,86,812,136)
-		v20_target_panel.set_meta("renewal_base_position",v20_target_panel.position)
 	if v20_map_name != null:
 		v20_map_name.add_theme_color_override("font_color",UI.GOLD)
-		_place(v20_map_name.get_parent(),468,46,932,72)
-		v20_map_name.get_parent().set_meta("renewal_base_position",v20_map_name.get_parent().position)
+		_place(v20_map_name.get_parent(),755,10,933,44)
 		v20_map_name.add_theme_font_size_override("font_size",11)
 		v20_map_name.clip_text = true
 
 func _build_lineage_inventory_ui() -> void:
 	lineage_inventory_ui = Inventory.new() as TwilightInventoryUI
 	lineage_inventory_ui.name = "LineageInventoryUI"
+	lineage_inventory_ui.set("controller",self)
 	lineage_inventory_ui.item_activate_requested.connect(func(item_name: String) -> void: inventory_item_activated.emit(item_name))
 	lineage_inventory_ui.quickslot_requested.connect(_register_inventory_quickslot)
-	lineage_inventory_ui.connect("unequip_requested", func(reference: String) -> void: equipment_unequip_requested.emit(reference))
-	lineage_inventory_ui.connect("lock_requested", func(reference: String) -> void: item_lock_requested.emit(reference))
 	$Root.add_child(lineage_inventory_ui)
 	lineage_inventory_ui.set_catalog_data(catalog_data,item_image_index)
 	lineage_inventory_ui.set_character_state(character_state)
@@ -221,19 +199,28 @@ func _build_lineage_inventory_ui() -> void:
 func _build_lineage_side_ui() -> void:
 	lineage_side_ui=CharacterUI.new() as TwilightSideUI
 	lineage_side_ui.name="LineageSideUI"
+	lineage_side_ui.detailed_stats_requested.connect(open_detailed_status)
 	lineage_side_ui.action_requested.connect(_on_lineage_side_action)
 	lineage_side_ui.stat_increase_requested.connect(func(value: String) -> void: stat_increase_requested.emit(value))
 	lineage_side_ui.connect("class_selection_requested",func() -> void: open_class_selection())
 	lineage_side_ui.equipment_requested.connect(func(item: String) -> void:
-		if active_section=="inventory": _close_workspace()
-		toggle_inventory()
-		lineage_inventory_ui._select_item(item))
+		if not lineage_inventory_ui.is_visible_in_tree(): show_companion_bag()
+		lineage_inventory_ui._select_item(item)
+		lineage_inventory_ui.open_detail())
 	$Root.add_child(lineage_side_ui)
 	lineage_side_ui.set_character_state(character_state)
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
-	# hud_v20 already forwards this authoritative snapshot to both adapters.
+	if is_instance_valid(status_view): status_view.refresh(value)
+
+func blocks_keyboard_input() -> bool:
+	var focused: Control = get_viewport().gui_get_focus_owner()
+	if focused is LineEdit or focused is TextEdit: return true
+	if pointer_transfer != null and pointer_transfer.pointer != -2: return true
+	for dialog: Node in $Root.get_children():
+		if dialog.name == "TwilightConfirmation" and dialog.visible: return true
+	return false
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)
@@ -244,7 +231,7 @@ func _build_v20_buffs() -> void:
 	buff_row = HBoxContainer.new()
 	buff_row.name = "ActiveEffects"
 	buff_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(buff_row,12,102,430,146)
+	_place(buff_row,12,84,430,128)
 	v20_layer.add_child(buff_row)
 
 func _build_v20_top_menu() -> void:
@@ -252,7 +239,7 @@ func _build_v20_top_menu() -> void:
 	panel.name = "MainShortcuts"
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_place(panel,943,9,1268,78)
-	panel.add_theme_stylebox_override("panel",_panel_style(.9))
+	panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
 	v20_layer.add_child(panel)
 	var row := HBoxContainer.new()
 	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -263,7 +250,7 @@ func _build_v20_top_menu() -> void:
 		var b := UI.button("",_navigate.bind(id),Vector2(59,53))
 		b.name = "Shortcut_"+id
 		b.tooltip_text = str(spec[1])
-		b.add_theme_stylebox_override("normal",UI.slot_frame())
+		b.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
 		b.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		b.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
 		row.add_child(b)
@@ -323,83 +310,69 @@ func _build_v20_right_controls() -> void:
 	attack.add_theme_stylebox_override("pressed",_round_button_style(1.0,56,Color("f2d29a")))
 
 func _build_v20_bottom_bar() -> void:
-	var panel := PanelContainer.new()
+	var panel := Control.new()
 	panel.name = "Quickslots"
-	panel.add_theme_stylebox_override("panel",UI.box(Color(0,0,0,0),Color(0,0,0,0),0))
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,350,638,1268,712)
+	_place(panel,0,0,1280,720)
 	v20_layer.add_child(panel)
 	v20_skill_container = HBoxContainer.new()
-	v20_skill_container.add_theme_constant_override("separation",5)
-	v20_skill_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v20_skill_container.hide()
 	panel.add_child(v20_skill_container)
-	for index: int in range(8):
-		if index == 4:
-			var gap := Control.new()
-			gap.name = "QuickBankGap"
-			gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			v20_skill_container.add_child(gap)
-		if index % 4 == 0:
-			var bank: int = index / 4
-			var page := UI.button("",_change_quick_page.bind(bank,1),Vector2(36,58))
-			page.name = "QuickPage_%d" % bank
-			page.add_theme_font_size_override("font_size",11)
-			page.tooltip_text = "그룹 전환 · 좌우 각각 3페이지"
-			v20_skill_container.add_child(page)
-			page_buttons.append(page)
-		var b := SlotButton.new()
-		b.custom_minimum_size = Vector2(74,58)
-		b.activated.connect(_activate_visible_slot.bind(index))
-		b.edit_requested.connect(func() -> void: _open_slot_editor(quick_controller.index_for(index)))
-		b.auto_requested.connect(func() -> void: quickslot_edit_requested.emit(quick_controller.index_for(index),"auto",-1))
-		b.page_requested.connect(func(direction: int) -> void: _change_quick_page(index / 4,direction))
-		b.entry_dropped.connect(func(data: Dictionary) -> void: _drop_quickslot(quick_controller.index_for(index),data))
+	for index: int in range(10):
+		var b := UI.button("",_emit_quickslot.bind(index),Vector2(62,62))
 		b.name = "Quickslot_%d" % index
-		b.add_theme_font_size_override("font_size",10)
-		b.add_theme_constant_override("icon_max_width",24)
+		b.position = Vector2(Layout.quick_x(index),Layout.QUICK_Y)
+		b.size = Vector2(62,62)
 		b.add_theme_stylebox_override("normal",UI.slot_frame())
 		b.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
 		b.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
-		v20_skill_container.add_child(b)
+		panel.add_child(b)
 		v20_quickslot_buttons.append(b)
 		var icon := TextureRect.new()
-		icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.position=Vector2(13,4)
-		icon.size=Vector2(50,44)
-		icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.position = Vector2(4,4)
+		icon.size = Vector2(54,54)
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(icon)
 		quickslot_icons.append(icon)
-		var caption := UI.label("",10)
-		caption.position=Vector2(4,46)
-		caption.size=Vector2(68,18)
-		caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		var caption := UI.label("",12,UI.GOLD)
+		caption.position = Vector2(3,40)
+		caption.size = Vector2(54,20)
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		b.add_child(caption)
 		quickslot_captions.append(caption)
-		var number := UI.label(str(index+1),10,UI.MUTED)
-		number.position=Vector2(5,2)
+		var number := UI.label(str(index+1),9,UI.MUTED)
+		number.position = Vector2(4,1)
 		b.add_child(number)
-		var badge := UI.label("",9,UI.GOLD)
-		badge.position=Vector2(42,1)
+		var badge := UI.label("",10,Color("5bd5f5"))
+		badge.position = Vector2(14,60)
 		b.add_child(badge)
 		quickslot_auto_badges.append(badge)
 		var shade := ColorRect.new()
-		shade.color = Color(0,0,0,.68)
+		shade.color = Color(0,0,0,.65)
 		shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		shade.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		shade.hide()
 		b.add_child(shade)
 		cooldown_shades.append(shade)
-		var cooldown := UI.label("",14,Color.WHITE)
+		var cooldown := UI.label("",19,Color.WHITE)
 		cooldown.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		cooldown.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cooldown.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		cooldown.add_theme_color_override("font_outline_color",Color.BLACK)
-		cooldown.add_theme_constant_override("outline_size",3)
 		b.add_child(cooldown)
 		quickslot_cooldown_labels.append(cooldown)
-	exp_readout = UI.label("EXP",12,UI.GOLD)
+	for group: int in range(2):
+		for page: int in range(5):
+			var dot := UI.button(str(page+1),func() -> void:
+				if pointer_transfer != null: pointer_transfer.cancel()
+				quickslot_edit_requested.emit("page",group,page),Vector2(24,24))
+			dot.name = "QuickPage_%d_%d" % [group,page]
+			dot.add_theme_font_size_override("font_size",10)
+			dot.position = Vector2((550 if group == 0 else 1017)+page*26,690)
+			panel.add_child(dot)
+			quick_page_buttons.append(dot)
+	exp_readout = UI.label("EXP",12,UI.TEXT)
 	_place(exp_readout,12,686,314,710)
 	v20_layer.add_child(exp_readout)
 	exp_bar = ProgressBar.new()
@@ -407,29 +380,31 @@ func _build_v20_bottom_bar() -> void:
 	exp_bar.add_theme_stylebox_override("background",_bar_background())
 	exp_bar.add_theme_stylebox_override("fill",_bar_fill(UI.GOLD))
 	exp_bar.name = "ExperienceGauge"
-	_place(exp_bar,0,715,1280,720)
+	_place(exp_bar,0,717,1280,720)
 	v20_layer.add_child(exp_bar)
 	var sys := HBoxContainer.new()
-	_place(sys,12,638,330,679)
+	_place(sys,238,662,432,698)
 	v20_layer.add_child(sys)
-	for pair: Array in [["log","기록"],["quickslots","슬롯 설정"],["settings","설정"]]:
-		var system_button := UI.button(str(pair[1]),_navigate.bind(str(pair[0])),Vector2(92,36))
-		system_button.icon = UI.icon(str(pair[0]))
-		system_button.add_theme_constant_override("icon_max_width",16)
-		system_button.add_theme_font_size_override("font_size",11)
-		sys.add_child(system_button)
-	currency_readout = UI.label("아데나  0",14,UI.GOLD)
-	_place(currency_readout,468,12,748,40)
+	for pair: Array in [["auto","사냥"],["log","기록"],["settings","설정"]]:
+		var button := UI.button("",_navigate.bind(str(pair[0])),Vector2(40,36))
+		button.icon = UI.icon(str(pair[0]))
+		button.tooltip_text = str(pair[1])
+		button.add_theme_stylebox_override("normal",StyleBoxEmpty.new())
+		sys.add_child(button)
+	currency_readout = UI.label("",13,UI.GOLD)
+	_place(currency_readout,470,10,733,36)
 	v20_layer.add_child(currency_readout)
-	coordinates_readout = UI.label("",11,UI.MUTED)
-	_place(coordinates_readout,1038,277,1268,298)
+	coordinates_readout = UI.label("",10,UI.MUTED)
+	_place(coordinates_readout,1038,238,1268,258)
 	coordinates_readout.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	v20_layer.add_child(coordinates_readout)
-	var home := UI.button("귀환",func() -> void: return_pressed.emit(),Vector2(88,44))
-	home.name = "ReturnToSpawn"
-	home.icon = UI.icon("return")
-	_place(home,1080,649,1268,704)
-	v20_layer.add_child(home)
+
+func quickslot_index(visible_index: int) -> int:
+	return Layout.quick_index(visible_index,get_parent()._quickslot_pages())
+
+func _emit_quickslot(index: int) -> void:
+	if pointer_transfer != null and pointer_transfer.suppress_click: return
+	quickslot_pressed.emit(quickslot_index(index))
 
 func _build_v20_message_and_log() -> void:
 	message_label = UI.label("",16,UI.GOLD)
@@ -458,17 +433,16 @@ func _build_v20_message_and_log() -> void:
 
 func _fit_hud() -> void:
 	if v20_layer == null: return
-	var available: Rect2 = SafeArea.available(get_viewport())
-	var view: Vector2 = available.size
+	var view: Vector2 = get_viewport().get_visible_rect().size
 	var factor: float = minf(view.x/1280.0,view.y/720.0)
 	var logical: Vector2 = view/maxf(.01,factor)
 	v20_layer.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	v20_layer.position = available.position
+	v20_layer.position = Vector2.ZERO
 	v20_layer.size = logical
 	v20_layer.scale = Vector2.ONE*factor
 	var controls: Control = $Root/RightControls
 	controls.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
-	controls.position = available.position
+	controls.position = Vector2.ZERO
 	controls.size = logical
 	controls.scale = Vector2.ONE*factor
 	var extra_y: float = logical.y-720
@@ -482,21 +456,17 @@ func _fit_hud() -> void:
 		control.position = base
 		if base.y >= 449: control.position.y += extra_y
 		if base.x >= 943: control.position.x += extra_x
-		elif control.name == "Quickslots":
-			control.position.x += extra_x * .5
-			control.size.x = 918 + extra_x * .5
-		elif control == v20_target_panel:
+		elif control.name == "Quickslots" or control == v20_target_panel:
 			control.position.x += extra_x*.5
+	var quick_panel: Control = v20_layer.get_node("Quickslots")
+	quick_panel.position = Vector2.ZERO
+	quick_panel.size = logical
+	for i: int in range(v20_quickslot_buttons.size()):
+		v20_quickslot_buttons[i].position = Vector2(Layout.quick_x(i)+(extra_x*.5 if i < 5 else extra_x),Layout.QUICK_Y+extra_y)
+	for i: int in range(quick_page_buttons.size()):
+		quick_page_buttons[i].position = Vector2((550 if i < 5 else 1017)+(i%5)*26+(extra_x*.5 if i < 5 else extra_x),690+extra_y)
 	exp_bar.size.x = logical.x
 	joystick.scale = Vector2.ONE*factor
-	joystick.set_anchors_preset(Control.PRESET_TOP_LEFT)
-	joystick.position = available.position+Vector2(20,logical.y-244)*factor
-	joystick.size = Vector2(160,160)
-	if window_backdrop != null:
-		# Keep the visible HUD menu shortcuts usable while a drawer is open.
-		# The world input guard still rejects movement in this uncovered strip.
-		window_backdrop.offset_top = available.position.y+82*factor
-		window_backdrop.offset_bottom = -(get_viewport().get_visible_rect().end.y-available.end.y)-88*factor
 	if workspace != null: workspace.fit_viewport()
 
 func _process(delta: float) -> void:
@@ -505,7 +475,7 @@ func _process(delta: float) -> void:
 		var minimap: Control = $Root.get_node_or_null("FieldMinimap")
 		if minimap != null:
 			minimap.reparent(v20_layer)
-			_place(minimap,1042,86,1264,277)
+			_place(minimap,1096,88,1264,236)
 			minimap_mounted = true
 			_fit_hud()
 	refresh_clock -= delta
@@ -522,10 +492,16 @@ func _process(delta: float) -> void:
 		if current_field is OriginalPlayableField:
 			var source_cell: Vector2i = current_field.world_to_cell(actor.global_position) + current_field.coordinates.origin
 			coordinates_readout.text = "원본 좌표  %d, %d" % [source_cell.x,source_cell.y]
-	_render_quickslots(lineage_inventory_ui.inventory,world._combined_active_buffs())
-	if move_readout != null:
-		move_readout.text = "이동 중" if actor != null and actor.velocity.length() > 1 else "대기"
-	if buff_detail != null and is_instance_valid(buff_detail) and buff_detail.is_visible_in_tree(): _refresh_buff_detail()
+	var cds: Dictionary = world.get("skill_cooldowns")
+	for index: int in range(quickslot_cooldown_labels.size()):
+		var remain: float = 0
+		var absolute: int = quickslot_index(index)
+		if absolute<quickslot_entries.size() and quickslot_entries[absolute] is Dictionary:
+			var entry: Dictionary = quickslot_entries[absolute]
+			var cooldowns: Dictionary = world.item_use_cooldowns if entry.get("kind","") == "item" else cds
+			remain = float(cooldowns.get(str(entry.get("id","")),0))
+		quickslot_cooldown_labels[index].text = "%.1f" % remain if remain>0 else ""
+		if index < cooldown_shades.size(): cooldown_shades[index].visible = remain > 0
 	if workspace != null and workspace.visible:
 		workspace.footer.text = "아데나  %s  ·  Lv.%d  ·  %s  ·  Esc로 닫기" % [lineage_inventory_ui._format_number(int(character_state.get("gold",0))),int(character_state.get("level",1)),v20_map_name.text]
 	if v20_target_panel.visible:
@@ -564,7 +540,7 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 	for key: Variant in buffs.keys().slice(0,8):
 		var effect: Variant = buffs[key]
 		var time: int = int(ceil(float(effect.get("remaining",0)))) if effect is Dictionary else 0
-		var b := UI.button("",_open_buffs,Vector2(36,42))
+		var b := UI.button("",open_character,Vector2(36,42))
 		var icon := TextureRect.new()
 		icon.texture = _load_texture("res://assets/ui/rune.png")
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -582,93 +558,88 @@ func set_quickslot_state(entries: Array,inventory: Dictionary,buffs: Dictionary,
 		b.tooltip_text = str(key)+" · %d초" % time
 		buff_row.add_child(b)
 
-func _render_quickslots(inventory: Dictionary,buffs: Dictionary) -> void:
-	var world: Node = get_parent()
-	if lineage_inventory_ui == null or world == null: return
-	for bank: int in range(page_buttons.size()):
-		page_buttons[bank].text = "%s\n%d/3" % ["L" if bank == 0 else "R",quick_controller.pages[bank]+1]
-	for visible_index: int in range(quickslot_icons.size()):
-		var index: int = quick_controller.index_for(visible_index)
-		var button: Button = v20_quickslot_buttons[visible_index]
-		var entry: Dictionary = quickslot_entries[index] if index < quickslot_entries.size() and quickslot_entries[index] is Dictionary else {}
-		button.icon = null
+func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
+	for index: int in range(quickslot_icons.size()):
+		var button: Button = v20_quickslot_buttons[index]
+		var absolute: int = quickslot_index(index)
+		quickslot_icons[index].texture = null
+		quickslot_captions[index].text = ""
+		quickslot_auto_badges[index].text = ""
 		button.text = ""
-		button.set("payload", {"kind":"slot","index":index,"id":entry.get("id","")} if not entry.is_empty() else {})
-		quickslot_icons[visible_index].texture = null
-		quickslot_captions[visible_index].text = "비어 있음"
-		quickslot_auto_badges[visible_index].text = ""
-		quickslot_cooldown_labels[visible_index].text = ""
-		cooldown_shades[visible_index].hide()
-		button.tooltip_text = QuickController.label_for(index)+" · 우클릭/길게 누르기: 편집"
+		button.icon = null
+		button.tooltip_text = "빈 퀵슬롯 · 아이템/스킬을 끌어 등록"
+		button.add_theme_stylebox_override("normal",UI.slot_frame())
+		if absolute >= quickslot_entries.size() or not quickslot_entries[absolute] is Dictionary: continue
+		var entry: Dictionary = quickslot_entries[absolute]
 		if entry.is_empty(): continue
-		var id := str(entry.get("id",""))
-		var is_item: bool = entry.get("kind") == "item"
-		var skill: Dictionary = world._skill_record(str(entry.get("skill_id",id))) if not is_item else {}
-		var original: bool = skill.get("origin", "") == "LINEAGEM_20250617"
-		var resolved: Dictionary = world.original_skills.catalog.resolve(skill) if original else skill
-		var skill_name: String = str(skill.get("name",id))
-		var remain: float = float(world.item_use_cooldowns.get(id,0)) if is_item else float(world.skill_cooldowns.get(skill_name,0))
-		var learned_level: int = int(world.original_skills.catalog.learned.get(str(skill.get("id","")),0)) if original else 0
-		var unavailable := ""
-		if is_item:
-			quickslot_icons[visible_index].texture = UI.item_icon(lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}))
-			quickslot_captions[visible_index].text = id.left(3)+" ×%d" % int(inventory.get(id,0))
-			if int(inventory.get(id,0)) <= 0: unavailable = "없음"
-		elif not skill.is_empty():
-			quickslot_icons[visible_index].texture = load(str(skill.icon)) as Texture2D if skill.has("icon") else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
-			quickslot_captions[visible_index].text = skill_name.left(6)
-			if original: unavailable = world.original_skills.cost_reason(resolved)
-			elif int(character_state.get("mp",0)) < int(skill.get("mp",0)): unavailable = "MP 부족"
-			if not world._skill_owned_for_current_job(skill): unavailable = "사용 불가"
-		else: unavailable = "사용 불가"
-		quickslot_auto_badges[visible_index].text = "AUTO" if bool(entry.get("auto",false)) else ("효과" if buffs.has(skill_name) else "")
-		if learned_level > 0: quickslot_auto_badges[visible_index].text += " L%d" % learned_level
-		quickslot_cooldown_labels[visible_index].text = "%.1f" % remain if remain > 0 else unavailable
-		var duration: float = maxf(remain,1.0) if is_item else maxf(0.01,world.original_skills.cooldown_seconds(resolved) if original else preload("res://scripts/skill_rules.gd").cooldown_seconds(skill))
-		cooldown_shades[visible_index].anchor_top = 0.0 if unavailable != "" else 1.0-clampf(remain/duration,0,1)
-		cooldown_shades[visible_index].offset_top = 0
-		cooldown_shades[visible_index].visible = remain > 0 or unavailable != ""
-		button.tooltip_text += "\n"+(id if is_item else skill_name)+(" · 자동 ON" if bool(entry.get("auto",false)) else " · 자동 OFF")
-		if not skill.is_empty():
-			button.tooltip_text += " · MP %d" % int(resolved.get("mp",0))
-			button.tooltip_text += " · Lv.%d" % learned_level if original else " · 스킬 레벨 데이터 없음"
+		var id: String = str(entry.get("id",""))
+		button.tooltip_text = id+" · 아래로 끌기: AUTO / 위로 끌기: 해제"
+		if entry.get("kind","") == "item":
+			quickslot_icons[index].texture = UI.item_icon(lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}))
+			quickslot_captions[index].text = str(int(inventory.get(id,0)))
+			quickslot_icons[index].modulate = Color.WHITE if int(inventory.get(id,0)) > 0 else Color(.4,.4,.4)
+		else:
+			var skill: Dictionary = get_parent()._skill_record(str(entry.get("skill_id",id)))
+			var path: String = str(skill.get("icon",""))
+			quickslot_icons[index].texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
+			quickslot_icons[index].modulate = Color.WHITE
+		if bool(entry.get("auto",false)):
+			quickslot_auto_badges[index].text = "AUTO"
+			button.add_theme_stylebox_override("normal",UI.slot_frame(Color("4db3d5"),true))
+	var pages: Array = get_parent()._quickslot_pages()
+	if is_instance_valid(quickslot_picker_hint): quickslot_picker_hint.text = "왼쪽 %d페이지 · 오른쪽 %d페이지" % [int(pages[0])+1,int(pages[1])+1]
+	for i: int in range(quick_page_buttons.size()):
+		quick_page_buttons[i].add_theme_stylebox_override("normal",UI.tab_frame(i%5 == int(pages[i/5])))
 
 func append_log(value: String) -> void:
 	log_history.append(value)
 	if log_history.size()>120:
 		log_history.pop_front()
 	super.append_log(value)
-	if active_section == "log" and workspace != null and workspace.visible:
-		var history: RichTextLabel = workspace.content.find_child("CombatLogHistory",true,false) as RichTextLabel
-		if history != null: history.text = "\n".join(log_history)
+	if active_section == "log" and is_instance_valid(combat_log_view) and not combat_log_view.is_queued_for_deletion():
+		combat_log_view.text = "\n".join(log_history)
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if not event is InputEventKey or not event.pressed or event.echo: return
-	if event.keycode == KEY_ESCAPE:
-		go_back()
-		get_viewport().set_input_as_handled()
-		return
-	if blocks_keyboard_input(): return
-	if event.keycode >= KEY_1 and event.keycode <= KEY_8:
-		_activate_visible_slot(event.keycode-KEY_1)
-		get_viewport().set_input_as_handled()
-	elif event.keycode == KEY_BRACKETLEFT: _change_quick_page(0,1)
-	elif event.keycode == KEY_BRACKETRIGHT: _change_quick_page(1,1)
-	elif event.keycode == KEY_K: open_skills()
-	elif event.keycode == KEY_C: open_character()
-	elif event.keycode == KEY_ENTER: open_combat_log()
-	elif event.keycode == KEY_F: pickup_requested.emit()
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
+		if is_instance_valid(detail_window) and detail_window.visible:
+			detail_window.hide()
+			get_viewport().set_input_as_handled()
+			return
+		if lineage_inventory_ui.detail_active and lineage_inventory_ui.is_visible_in_tree():
+			lineage_inventory_ui.detail_active = false
+			lineage_inventory_ui._reflow()
+			get_viewport().set_input_as_handled()
+			return
+		if active_section == "skills" and is_instance_valid(skills_view):
+			var browser: Control = skills_view.cards.get_parent().get_parent()
+			if browser.detail_active:
+				browser.detail_active = false
+				browser.reflow()
+				get_viewport().set_input_as_handled()
+				return
+		if workspace != null and workspace.visible:
+			_go_back()
+			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
 	if class_picker_initial:
 		return
+	if workspace != null and workspace.visible:
+		navigation_memory.capture(active_section,workspace.content)
+	if not switching_workspace:
+		navigation_memory.clear_history()
+	combat_log_view = null
+	pending_quickslot_binding.clear()
+	if active_section in ["아이템","변신","마법인형","성물"] and catalog_list != null:
+		catalog_view_state[active_section] = {"query":catalog_search.text,"grade":catalog_grade_filter,"page":catalog_page,"id":str(selected_catalog_record.get("sourceId",selected_catalog_record.get("name",""))),"scroll":catalog_list.get_v_scroll_bar().value}
+	if pointer_transfer != null: pointer_transfer.cancel()
+	for dialog: Node in $Root.get_children():
+		if dialog.name == "TwilightConfirmation" and not dialog.is_queued_for_deletion(): dialog.dismiss()
+	if is_instance_valid(detail_window): detail_window.hide()
+	if is_instance_valid(companion_window): companion_window.hide()
 	if workspace != null:
-		router.capture(active_section, workspace.content)
 		workspace.hide()
-	if window_backdrop != null: window_backdrop.hide()
-	if not opening_window: router.clear()
 	active_section = ""
-	_sync_input_block()
 	if lineage_inventory_ui != null:
 		lineage_inventory_ui.hide_inventory()
 	if lineage_side_ui != null:
@@ -685,19 +656,45 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
-	router.enter(active_section, section)
-	opening_window = true
+	navigation_memory.enter(active_section,section)
+	switching_workspace = true
 	_hide_aux_panels()
-	opening_window = false
+	switching_workspace = false
 	_park_shared_panels()
 	workspace.clear()
 	workspace.open(section,title,description)
 	active_section = section
-	window_backdrop.show()
-	# Godot GUI hit testing follows tree order, not CanvasItem.z_index.
-	workspace.move_to_front()
-	_sync_input_block()
-	call_deferred("_restore_window_state", section)
+	workspace.set_back_available(navigation_memory.has_history())
+	call_deferred("_restore_navigation",section)
+
+func _restore_navigation(section: String) -> void:
+	if workspace != null and workspace.visible and active_section == section:
+		navigation_memory.restore(section,workspace.content)
+
+func _go_back() -> void:
+	if class_picker_initial: return
+	if active_section == "inventory" and lineage_inventory_ui.detail_active:
+		lineage_inventory_ui.detail_active = false
+		lineage_inventory_ui._reflow()
+		return
+	if active_section == "skills" and is_instance_valid(skills_view):
+		var browser: Control = skills_view.cards.get_parent().get_parent()
+		if browser.detail_active:
+			browser.detail_active = false
+			browser.reflow()
+			return
+	if active_section in ["변신","마법인형","성물","아이템"] and catalog_details_active:
+		_set_catalog_detail_view(false)
+		return
+	var previous: String = navigation_memory.back()
+	if previous.is_empty() or previous == "dialogue":
+		_close_workspace()
+		return
+	navigation_memory.returning = true
+	_navigate(previous)
+	navigation_memory.returning = false
+	if workspace != null:
+		workspace.set_back_available(navigation_memory.has_history())
 
 func open_class_selection(initial: bool = false) -> void:
 	# In the first session there is no class decision until the user confirms.
@@ -725,7 +722,6 @@ func complete_class_selection() -> void:
 	_close_workspace()
 
 func _navigate(section: String) -> void:
-	if section in MENU.EXCLUDED_PVE_FEATURES: return
 	if class_picker_initial:
 		return
 	match section:
@@ -734,42 +730,61 @@ func _navigate(section: String) -> void:
 		"character": open_character()
 		"skills": open_skills()
 		"shop": open_shop()
+		"npc_shop": open_npc_shop()
+		"teleport": open_npc_teleport()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
 		"auto": open_macro_info()
 		"log": open_combat_log()
-		"quickslots": _open_quickslot_settings()
-		"teleport": open_npc_teleport()
-		"crafting": open_crafting()
-		"warehouse": open_warehouse()
-		"sell": open_item_sell()
-		"dungeon", "special_dungeon": _open_dungeons(section)
-		"friends", "mail", "ranking", "events", "collection", "growth": _open_capability(section)
-		"controls", "info": _open_information(section)
-		"buffs": _open_buffs()
-		"exit": _confirm_exit()
 		"enhance": _open_enhance_chooser()
-		"변신", "마법인형", "성물", "아이템": open_catalog(section)
-		_: _open_capability(section)
+		"warehouse": open_warehouse()
+		"crafting": open_crafting()
+		"sell": open_item_sell()
+		_: open_catalog(section)
+
+func confirm_action(title: String, body: String, action: String, callback: Callable, maximum: int = 0) -> Control:
+	for dialog: Node in $Root.get_children():
+		if dialog.name == "TwilightConfirmation" and not dialog.is_queued_for_deletion(): return dialog
+	if pointer_transfer != null: pointer_transfer.cancel()
+	var dialog := preload("res://scripts/ui/renewal_confirmation.gd").new()
+	$Root.add_child(dialog)
+	dialog.configure(title,body,action,callback,maximum)
+	return dialog
 
 func open_shop() -> void:
-	_open_window("shop","잡화 상점","보유 아데나 · 아이템 검색 · 구매")
+	_open_window("shop","상점","")
 	var shop := ShopUI.new()
 	workspace.mount(shop)
 	shop.configure(self)
+	shop_view = shop
+
+func open_npc_shop() -> void:
+	_open_window("npc_shop","잡화 상인","")
+	var shop := ShopUI.new()
+	workspace.mount(shop)
+	shop.configure(self,true)
+	shop_view = shop
+
+func refresh_shop() -> void:
+	if active_section in ["shop","npc_shop"] and is_instance_valid(shop_view): shop_view._refresh()
+
+func refresh_service() -> void:
+	if active_section in ["warehouse","sell"] and is_instance_valid(transaction_view): transaction_view._refresh()
 
 func open_warehouse() -> void:
 	_open_window("warehouse","창고지기","아이템 보관/찾기 · 개별 강화 상태 보존")
 	var screen := WarehouseUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+	transaction_view = screen
+	show_companion_bag()
 
-func open_npc_teleport(destination: String = "") -> void:
+func open_npc_teleport() -> void:
 	_open_window("teleport","텔레포트 안내인","기존 25개 맵으로 이동 · 기존 충돌/좌표 보존")
 	var screen := TeleportUI.new()
 	workspace.mount(screen)
-	screen.configure(self,destination)
+	screen.configure(self)
 
 func open_crafting() -> void:
 	_open_window("crafting","제작 장인","재료·비용 검사 · TWILIGHT 자체 제작식")
@@ -782,6 +797,34 @@ func open_item_sell() -> void:
 	var screen := SellUI.new()
 	workspace.mount(screen)
 	screen.configure(self)
+	transaction_view = screen
+	show_companion_bag()
+
+func _companion(section: String,title: String) -> PanelContainer:
+	if not is_instance_valid(companion_window):
+		companion_window = RenewalWindowScript.new()
+		$Root.add_child(companion_window)
+		companion_window.z_index = 155
+		companion_window.closed.connect(func() -> void:
+			pointer_transfer.cancel()
+			companion_window.hide())
+	# Return reusable panels to Root before clearing a previous companion view.
+	for panel: Control in [lineage_inventory_ui,lineage_side_ui.character_panel]:
+		if companion_window.content.is_ancestor_of(panel): panel.reparent($Root); panel.hide()
+	companion_window.clear()
+	companion_window.open(section,title,"")
+	return companion_window
+
+func show_companion_bag() -> void:
+	var window: PanelContainer = _companion("inventory","가방")
+	window.mount(lineage_inventory_ui)
+	lineage_inventory_ui.show()
+	lineage_inventory_ui.show_inventory()
+
+func show_companion_equipment() -> void:
+	var window: PanelContainer = _companion("character","장비")
+	window.mount(lineage_side_ui.character_panel)
+	lineage_side_ui.show_character(character_state)
 
 func open_npc_dialogue(npc_id: String) -> void:
 	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
@@ -848,96 +891,85 @@ func open_combat_log() -> void:
 	var col: VBoxContainer = workspace.column()
 	col.add_child(UI.label("전투 / 시스템 로그",21,UI.GOLD))
 	var history := UI.rich("")
-	history.name = "CombatLogHistory"
-	history.bbcode_enabled = false
-	history.scroll_following = true
 	history.fit_content = false
 	history.scroll_active = true
 	history.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	history.name = "CombatLogHistory"
 	history.text = "\n".join(log_history) if not log_history.is_empty() else "아직 기록이 없습니다."
 	col.add_child(history)
+	combat_log_view = history
 
 func toggle_inventory() -> void:
 	if active_section=="inventory" and workspace.visible:
 		_close_workspace()
 		return
-	_open_window("inventory","인벤토리","아이템 선택 · 상세 옵션 · 장착 · 사용 · 퀵슬롯 등록")
+	_open_window("inventory","가방","")
 	workspace.mount(lineage_inventory_ui)
 	lineage_inventory_ui.show()
 	lineage_inventory_ui.show_inventory()
 
 func open_character() -> void:
-	_open_window("character","캐릭터 · 장비","현재 능력치와 착용 장비 · 남은 포인트로 능력치 증가")
+	_open_window("character","캐릭터 정보","")
 	var panel: PanelContainer = lineage_side_ui.character_panel
-	if workspace.content.size.y < 460 or workspace.content.size.x < 630:
-		var scroll := ScrollContainer.new()
-		scroll.name = "CharacterCompactScroll"
-		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		workspace.mount(scroll)
-		panel.reparent(scroll)
-		panel.custom_minimum_size = Vector2(0,490)
-		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	else:
-		panel.custom_minimum_size = Vector2.ZERO
-		workspace.mount(panel)
+	panel.custom_minimum_size = Vector2.ZERO
+	workspace.mount(panel)
 	panel.show()
 	lineage_side_ui.show_character(character_state)
 
+func open_detailed_status() -> void:
+	if not is_instance_valid(detail_window):
+		detail_window = RenewalWindowScript.new()
+		$Root.add_child(detail_window)
+		detail_window.z_index = 220
+		detail_window.closed.connect(func() -> void: detail_window.hide())
+	detail_window.clear()
+	detail_window.open("detailed_status","상세 스테이터스","")
+	status_view = preload("res://scripts/ui/renewal_status.gd").new()
+	detail_window.mount(status_view)
+	status_view.configure(character_state)
+
 func toggle_menu() -> void:
-	if active_section == "menu" and workspace.visible:
+	if active_section=="menu" and workspace.visible:
 		_close_workspace()
 		return
-	_open_window("menu","전체 메뉴","캐릭터 · 게임 플레이 · 커뮤니티 · 시스템")
+	_open_window("menu","메뉴","")
 	var col: VBoxContainer = workspace.column()
-	var tabs := HBoxContainer.new()
-	tabs.name = "MenuCategories"
-	col.add_child(tabs)
-	for group: int in MENU.GROUPS.size():
-		var tab := UI.button(MENU.GROUPS[group],func() -> void:
-			menu_group = group
-			active_section = ""
-			toggle_menu(),Vector2(90,40))
-		tab.name = "MenuGroup_%d" % group
-		tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		tab.add_theme_font_size_override("font_size",12)
-		tab.toggle_mode = true
-		tab.button_pressed = menu_group == group
-		tabs.add_child(tab)
 	var menu_scroll := ScrollContainer.new()
 	menu_scroll.name = "MenuContentScroll"
 	menu_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	menu_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	menu_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	menu_scroll.scroll_deadzone = 8
 	col.add_child(menu_scroll)
 	var grid := GridContainer.new()
 	grid.columns = 4
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
-	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/104.0),2,4))
-	for record: Array in MENU.ENTRIES:
-		if int(record[2]) != menu_group: continue
-		var id := str(record[0])
-		var title := str(record[1])
-		var button := UI.button("",func() -> void:
-			if not workspace.was_scroll_dragged(menu_scroll): _navigate(id),Vector2(100,90))
-		button.name = "MenuTile_"+id
-		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.tooltip_text = title+(" · 현재 미지원" if record[3] == "unavailable" else "")
+	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,4))
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["warehouse","창고"],["crafting","제작"],["sell","판매"],["settings","설정"],["log","전투 기록"]]:
+		var section_id: String = str(pair[0])
+		var button: Button = UI.button("",func() -> void:
+			if not workspace.was_scroll_dragged(menu_scroll):
+				_navigate(section_id),Vector2(92,88))
+		button.name = "MenuTile_"+section_id
+		button.add_theme_stylebox_override("normal",UI.slot_frame())
+		button.add_theme_stylebox_override("hover",UI.slot_frame(UI.GOLD,true))
+		button.add_theme_stylebox_override("pressed",UI.slot_frame(UI.GOLD,true))
+		var artwork := TextureRect.new()
+		artwork.texture = UI.icon(section_id)
+		artwork.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		artwork.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		artwork.position = Vector2(26,8)
+		artwork.size = Vector2(40,40)
+		artwork.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		button.add_child(artwork)
+		var caption := UI.label(str(pair[1]),11)
+		caption.position = Vector2(0,58)
+		caption.size = Vector2(92,20)
+		caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		button.add_child(caption)
 		grid.add_child(button)
-		var icon := TextureRect.new()
-		icon.texture = UI.icon(id)
-		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		icon.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
-		icon.position = Vector2(-17,9)
-		icon.size = Vector2(34,34)
-		button.add_child(icon)
-		var label := UI.label(title.replace(" · ","\n")+("\n미지원" if record[3] == "unavailable" else ""),11,UI.MUTED if record[3] == "unavailable" else UI.TEXT)
-		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		label.offset_top = 48
-		button.add_child(label)
 		workspace.register_scroll_drag(menu_scroll,button)
 
 func _open_utility_panel(title: String) -> void:
@@ -959,7 +991,7 @@ func _open_utility_panel(title: String) -> void:
 
 func open_catalog(category: String) -> void:
 	_reset_catalog_drag()
-	_open_window(category,category+" 도감","등급 · 이름으로 검색 / 로컬 도감 데이터")
+	_open_window(category,category,"")
 	workspace.mount(catalog_panel)
 	catalog_panel.show()
 	catalog_category = category
@@ -970,7 +1002,9 @@ func open_catalog(category: String) -> void:
 	collection_slot_filter.visible = category=="아이템"
 	collection_slot_filter.select(0)
 	catalog_search.set_text("")
-	collection_status.text = "아이콘 오른쪽 드래그로 장착/사용 · 보유 아이템만 적용" if category=="아이템" else "아이콘을 오른쪽으로 끌면 적용 · 선택 후 장착 버튼도 사용 가능"
+	collection_status.text = "아이템 정보" if category=="아이템" else "현재 적용: "+str(character_state.get("equipped",{}).get(category,{}).get("name","없음"))
+	for grade_name: String in catalog_grade_buttons:
+		catalog_grade_buttons[grade_name].button_pressed = grade_name == "전체"
 	playtest_grant_button.visible = category == "아이템"
 	playtest_grant_button.disabled = true
 	playtest_aden_button.visible = category == "아이템"
@@ -981,6 +1015,18 @@ func open_catalog(category: String) -> void:
 	catalog_test_tools.hide()
 	catalog_test_toggle.button_pressed = false
 	_refresh_catalog_list("")
+	var saved: Dictionary = catalog_view_state.get(category,{})
+	if not saved.is_empty():
+		catalog_grade_filter = str(saved.get("grade","전체"))
+		item_grade_filter = catalog_grade_filter
+		catalog_search.text = str(saved.get("query",""))
+		_refresh_catalog_list(catalog_search.text)
+		catalog_page = clampi(int(saved.get("page",0)),0,maxi(0,_catalog_page_count()-1))
+		_apply_catalog_page()
+		for i: int in range(catalog_results.size()):
+			if str(catalog_results[i].get("sourceId",catalog_results[i].get("name",""))) == str(saved.get("id","")): _select_catalog_index(i)
+		catalog_list.get_v_scroll_bar().set_deferred("value",float(saved.get("scroll",0)))
+		for grade_name: String in catalog_grade_buttons: catalog_grade_buttons[grade_name].button_pressed = grade_name == catalog_grade_filter
 	catalog_details_active = false
 	_fit_catalog_browser_layout()
 
@@ -1007,6 +1053,7 @@ func _build_catalog_panel() -> void:
 		item_grade_filter=catalog_grade_filter
 		_refresh_catalog_list(catalog_search.text))
 	top.add_child(rarity_filter)
+	rarity_filter.hide()
 	collection_slot_filter = OptionButton.new()
 	collection_slot_filter.name = "EquipmentTypeFilter"
 	collection_slot_filter.add_item("전체")
@@ -1026,17 +1073,38 @@ func _build_catalog_panel() -> void:
 	col.add_child(catalog_view_tabs)
 	catalog_view_tabs.hide()
 	var body := HBoxContainer.new()
+	body.add_theme_constant_override("separation",12)
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	col.add_child(body)
+	catalog_grade_column = VBoxContainer.new()
+	catalog_grade_column.name = "CatalogGrades"
+	catalog_grade_column.custom_minimum_size.x = 132
+	body.add_child(catalog_grade_column)
+	for grade_name: String in ["전체","유일","신화","전설","영웅","희귀","고급","일반"]:
+		var grade_button := UI.button(grade_name,func() -> void:
+			catalog_grade_filter = grade_name
+			item_grade_filter = grade_name
+			rarity_filter.select(["전체","일반","고급","희귀","영웅","전설","신화","유일"].find(grade_name))
+			for key: String in catalog_grade_buttons: catalog_grade_buttons[key].button_pressed = key == grade_name
+			_refresh_catalog_list(catalog_search.text),Vector2(124,44))
+		grade_button.toggle_mode = true
+		grade_button.add_theme_color_override("font_color",UI.grade(grade_name))
+		catalog_grade_column.add_child(grade_button)
+		catalog_grade_buttons[grade_name] = grade_button
+	for title: String in ["합성","컬렉션"]:
+		var unavailable := UI.button(title,Callable(),Vector2(124,36))
+		unavailable.disabled = true
+		unavailable.tooltip_text = "현재 게임에 카드 보유·중복 재료 및 "+title+" 시스템이 없어 사용할 수 없습니다"
+		catalog_grade_column.add_child(unavailable)
 	var left := VBoxContainer.new()
 	catalog_body_left = left
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_child(left)
 	catalog_list.reparent(left)
-	catalog_list.custom_minimum_size = Vector2(530,0)
+	catalog_list.custom_minimum_size = Vector2(0,0)
 	catalog_list.max_columns = 4
-	catalog_list.fixed_column_width = 126
-	catalog_list.fixed_icon_size = Vector2i(78,78)
+	catalog_list.fixed_column_width = 120
+	catalog_list.fixed_icon_size = Vector2i(94,116)
 	catalog_list.icon_mode = ItemList.ICON_MODE_TOP
 	catalog_list.max_text_lines = 2
 	catalog_list.same_column_width = true
@@ -1061,26 +1129,37 @@ func _build_catalog_panel() -> void:
 	right_scroll.name = "CatalogActionsScroll"
 	catalog_body_actions = right_scroll
 	right_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	right_scroll.custom_minimum_size.x = 315
+	right_scroll.custom_minimum_size.x = 520
+	right_scroll.size_flags_horizontal = Control.SIZE_FILL
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	body.add_child(right_scroll)
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 300
+	right.custom_minimum_size = Vector2(500,0)
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_scroll.add_child(right)
-	catalog_preview.reparent(right)
-	catalog_preview.custom_minimum_size = Vector2(0,190)
-	catalog_detail.reparent(right)
+	var preview_row := HBoxContainer.new()
+	preview_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right.add_child(preview_row)
+	catalog_preview.reparent(preview_row)
+	catalog_preview.custom_minimum_size = Vector2(180,0)
+	catalog_preview.size_flags_horizontal = Control.SIZE_FILL
+	catalog_preview.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	catalog_detail.reparent(preview_row)
 	catalog_detail.custom_minimum_size = Vector2(0,0)
-	catalog_detail.fit_content = true
-	catalog_detail.scroll_active = false
-	catalog_detail.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	catalog_detail.add_theme_font_size_override("normal_font_size",14)
+	catalog_detail.fit_content = false
+	catalog_detail.scroll_active = true
+	catalog_detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	catalog_detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	catalog_detail.add_theme_font_size_override("normal_font_size",13)
 	catalog_equip_button.reparent(right)
+	catalog_equip_button.custom_minimum_size.y = 46
 	catalog_equip_button.name = "ApplyCatalog"
 	catalog_clear_button = UI.button("현재 적용 해제",func() -> void:
-		if catalog_category != "아이템": catalog_equip_requested.emit(catalog_category,{}))
+		if catalog_category != "아이템":
+			var category: String = catalog_category
+			confirm_action("적용 해제",category+" 적용을 해제하시겠습니까?","해제",func(_count: int) -> void: catalog_equip_requested.emit(category,{})))
 	catalog_clear_button.name = "ClearCatalog"
 	right.add_child(catalog_clear_button)
 	# Clearly marked playtest grants. Runtime inventory and item-ID logic remain
@@ -1154,7 +1233,7 @@ func _continue_catalog_drag(point: Vector2) -> void:
 func _end_catalog_drag(point: Vector2) -> void:
 	var index: int = catalog_drag_index
 	var delta: Vector2 = point - catalog_drag_origin
-	var can_apply: bool = catalog_drag_ready and (delta.x >= 96.0 and delta.x > absf(delta.y) * 1.15 or _inside_catalog_control(catalog_equip_button, point))
+	var can_apply: bool = catalog_drag_ready and _inside_catalog_control(catalog_equip_button, point)
 	_reset_catalog_drag()
 	if can_apply and index >= 0 and index < catalog_results.size():
 		_select_catalog_index(index)
@@ -1194,35 +1273,26 @@ func _set_catalog_detail_view(show_details: bool) -> void:
 	_fit_catalog_browser_layout()
 
 func _fit_catalog_browser_layout() -> void:
-	if workspace == null or catalog_body_left == null or catalog_body_actions == null:
-		return
-	# A fixed 530px grid + 315px preview used to spill outside portrait/small
-	# windows. On narrow viewports show either full-width grid or full-width detail.
-	var compact: bool = get_window().size.x < 1180 or workspace.content.size.x < 840
+	if workspace == null or catalog_body_left == null or catalog_body_actions == null: return
+	var compact: bool = workspace.content.size.x < 1040
 	var short: bool = workspace.content.size.y < 430
 	collection_status.visible = not short
 	catalog_count.visible = not short
-	catalog_preview.custom_minimum_size.y = 120 if short else 190
-	catalog_list.fixed_icon_size = Vector2i(60,60) if short else Vector2i(78,78)
-	catalog_list.add_theme_constant_override("v_separation",8 if short else 12)
-	catalog_search.custom_minimum_size.y = 32 if short else 40
-	var pager: HBoxContainer = catalog_page_label.get_parent()
-	pager.custom_minimum_size.y = 28 if short else 40
-	for button: Control in [catalog_first_button,catalog_prev_button,catalog_next_button,catalog_last_button]:
-		button.custom_minimum_size.y = 28 if short else 34
-	catalog_page_label.custom_minimum_size.y = 28 if short else 34
-	catalog_list_tab.custom_minimum_size.y = 28 if short else 34
-	catalog_details_tab.custom_minimum_size.y = 28 if short else 34
-	catalog_view_tabs.visible = compact and active_section in ["아이템", "변신", "마법인형", "성물"]
+	catalog_preview.custom_minimum_size = Vector2(150 if compact else 180,0)
+	catalog_list.fixed_icon_size = Vector2i(78,92) if short else Vector2i(94,116)
+	catalog_list.add_theme_constant_override("v_separation",10)
+	catalog_search.custom_minimum_size.y = 34
+	catalog_view_tabs.visible = compact and active_section in ["아이템","변신","마법인형","성물"]
+	catalog_grade_column.visible = not compact
+	rarity_filter.visible = compact
 	catalog_body_left.visible = not compact or not catalog_details_active
 	catalog_body_actions.visible = not compact or catalog_details_active
-	catalog_list.custom_minimum_size.x = 0.0 if compact else 530.0
-	catalog_list.max_columns = 2 if compact else 4
-	catalog_list.fixed_column_width = 115 if compact else 126
-	catalog_body_actions.custom_minimum_size.x = 0.0 if compact else 315.0
-	var actions_content: Control = catalog_body_actions.get_child(0) as Control
-	if actions_content != null:
-		actions_content.custom_minimum_size.x = 0.0 if compact else 300.0
+	catalog_list.custom_minimum_size.x = 0
+	catalog_list.max_columns = 4
+	catalog_list.fixed_column_width = 116
+	catalog_body_actions.custom_minimum_size.x = 0 if compact else 520
+	var actions_content: Control = catalog_body_actions.get_child(0)
+	actions_content.custom_minimum_size.x = 0 if compact else 500
 	catalog_list_tab.disabled = compact and not catalog_details_active
 	catalog_details_tab.disabled = compact and catalog_details_active
 
@@ -1343,6 +1413,12 @@ func _on_catalog_item_selected(index: int) -> void:
 		playtest_grant_button.disabled = catalog_category != "아이템"
 	var item_name := str(selected_catalog_record.get("name",""))
 	var grade_name := str(selected_catalog_record.get("grade","일반"))
+	var option_lines := PackedStringArray()
+	for value: Variant in selected_catalog_record.get("sourceOptions",[]):
+		var option: String = str(value).replace("PVP","PVE").replace("PvP","PvE")
+		if option.contains("손상") or option.contains("저주"): continue
+		option_lines.append("• "+UI.safe(option)+CARD_OPTION_VISIBILITY.suffix(catalog_category,option,selected_catalog_record))
+	catalog_detail.text = "[font_size=18][b]%s[/b][/font_size]\n%s\n\n%s" % [UI.safe(item_name),UI.safe(selected_catalog_record.get("type","")),"\n".join(option_lines) if not option_lines.is_empty() else UI.safe(selected_catalog_record.get("desc",""))]
 	if catalog_category == "아이템":
 		var selected_texture: Texture2D = UI.item_icon(selected_catalog_record, item_name, item_image_index.get("아이템", {}))
 		if selected_texture != null:
@@ -1350,7 +1426,7 @@ func _on_catalog_item_selected(index: int) -> void:
 	catalog_detail.text="[color=#%s]%s[/color]\n%s" % [UI.grade(grade_name).to_html(false),UI.safe(grade_name),catalog_detail.text]
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0
-		catalog_detail.text+="\n보유 수량: %d\n테스트 지급 버튼으로 임시 획득 가능" % owned
+		catalog_detail.text+="\n보유 수량: %d" % owned
 		if selected_catalog_record.has("grade_evidence"):
 			catalog_detail.text+="\n등급 판정: 원본 이미지 파일명 기반 (검증 필요)"
 		var variants: int = _catalog_variant_count(item_name)
@@ -1364,8 +1440,9 @@ func _on_catalog_item_selected(index: int) -> void:
 	else:
 		var equipped: Dictionary = character_state.get("equipped",{}).get(catalog_category,{})
 		var applied := str(equipped.get("name",""))==item_name
-		catalog_equip_button.text="현재 적용 중" if applied else "로컬 적용"
+		catalog_equip_button.text="현재 적용 중" if applied else {"변신":"변신","마법인형":"소환","성물":"성물 적용"}.get(catalog_category,"적용")
 		catalog_equip_button.disabled=applied
+		catalog_detail.text += "\n\n현재 적용: "+UI.safe(equipped.get("name","없음"))
 
 func _equip_selected_catalog() -> void:
 	if selected_catalog_record.is_empty(): return
@@ -1380,78 +1457,49 @@ func _equip_selected_catalog() -> void:
 			else:
 				inventory_item_activated.emit(item_name)
 	else:
-		catalog_equip_requested.emit(catalog_category,selected_catalog_record.duplicate(true))
-		catalog_equip_button.text="현재 적용 중"
-		catalog_equip_button.disabled=true
+		var category: String = catalog_category
+		var record: Dictionary = selected_catalog_record.duplicate(true)
+		confirm_action({"변신":"변신 확인","마법인형":"소환 확인","성물":"성물 적용"}.get(category,"적용 확인"),str(record.get("name",""))+"을(를) 적용하시겠습니까?","적용",func(_count: int) -> void:
+			catalog_equip_requested.emit(category,record)
+			if catalog_category == category and selected_catalog_record == record:
+				catalog_equip_button.text="현재 적용 중"
+				catalog_equip_button.disabled=true)
 
 func toggle_map() -> void:
-	if active_section == "map" and workspace.visible:
+	if active_section=="map" and workspace.visible:
 		_close_workspace()
 		return
-	_open_window("map","월드맵","현재 지역 상세 지도 · 지역 검색과 이동")
-	var col: VBoxContainer = workspace.column()
+	_open_window("map","월드맵","지역을 선택하면 기존 이동 기능으로 해당 지역에 진입합니다.")
+	var col: VBoxContainer=workspace.column()
 	col.add_child(UI.label("WORLD OF ADEN",20,UI.GOLD))
 	var row := HBoxContainer.new()
-	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	row.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	col.add_child(row)
 	var regions := VBoxContainer.new()
-	regions.custom_minimum_size.x = 270
+	regions.custom_minimum_size.x=270
 	row.add_child(regions)
-	var region_count := UI.label("지역 선택",15)
+	var region_count: Label = UI.label("지역 선택  ·  %d개 지역" % map_records.size(),15)
 	region_count.name = "RegionCount"
 	regions.add_child(region_count)
-	var search := LineEdit.new()
-	search.name = "RegionSearch"
-	search.placeholder_text = "지역 이름 검색"
-	regions.add_child(search)
-	region_selection = ItemList.new()
-	region_selection.name = "RegionSelection"
-	region_selection.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	region_selection=ItemList.new()
+	region_selection.name="RegionSelection"
+	region_selection.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	regions.add_child(region_selection)
-	var detail := UI.label("",12,UI.MUTED)
-	detail.name = "RegionDetails"
-	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	regions.add_child(detail)
+	for record: Dictionary in map_records:
+		var index: int = region_selection.add_item(str(record.get("name",record.get("id",""))))
+		region_selection.set_item_metadata(index,str(record.id))
+	_add_original_map_controls(regions)
 	var enter := UI.button("선택 지역으로 이동",func() -> void:
-		var indices: PackedInt32Array = region_selection.get_selected_items()
+		var indices: PackedInt32Array=region_selection.get_selected_items()
 		if not indices.is_empty(): map_selected.emit(str(region_selection.get_item_metadata(indices[0]))))
-	enter.name = "EnterRegion"
+	enter.name="EnterRegion"
 	regions.add_child(enter)
-	region_selection.item_selected.connect(func(index: int) -> void:
-		var id := str(region_selection.get_item_metadata(index))
-		var record: Dictionary = get_parent().maps_by_id.get(id,{})
-		var blocked: bool = get_parent().player.is_stunned() or get_parent().player.is_feared() or get_parent().player.is_held()
-		detail.text = str(record.get("name",id))+"\n"+("현재 지역" if id == str(get_parent().active_map_id) else "로컬 월드맵 이동 가능")
-		if record.has("source_definition"): detail.text = str(record.get("name",id))+"\n원본 통행 지역 · 팩 검증 후 이동"
-		if blocked: detail.text += "\n현재 상태에서는 이동 불가"
-		enter.disabled = record.is_empty() or blocked)
-	search.text_changed.connect(func(query: String) -> void:
-		region_selection.clear()
-		var edition: int = int(search.get_meta("map_edition",0))
-		var records: Array = map_records if edition == 0 else get_parent().original_maps
-		for record: Dictionary in records:
-			var source_id: int = int(record.get("source_map_id",-1))
-			if edition == 1 and source_id != 4 and not (source_id >= 101 and source_id <= 111) and not (source_id >= 12852 and source_id <= 12862): continue
-			var id := str(record.get("id",""))
-			var title := str(record.get("name",id))
-			if source_id == 4: title = "아덴 월드 · 본토"
-			if source_id >= 0: title += " [%d]" % source_id
-			if query != "" and not title.to_lower().contains(query.to_lower()): continue
-			var index: int = region_selection.add_item(title)
-			region_selection.set_item_metadata(index,id)
-			if id == str(get_parent().active_map_id): region_selection.select(index)
-		region_count.text = "지역 선택  ·  %d개 지역" % region_selection.item_count
-		if region_selection.item_count > 0:
-			if region_selection.get_selected_items().is_empty(): region_selection.select(0)
-			region_selection.item_selected.emit(region_selection.get_selected_items()[0])
-		else:
-			enter.disabled = true
-			detail.text = "검색 결과가 없습니다")
-	_add_original_map_controls(regions,search)
-	search.text_changed.emit("")
+	for index: int in range(map_records.size()):
+		if str(map_records[index].get("id",""))==str(get_parent().active_map_id): region_selection.select(index)
+	if region_selection.get_selected_items().is_empty() and region_selection.item_count>0: region_selection.select(0)
 	var map_view := RegionMapUI.new()
-	map_view.name = "RegionMap"
-	map_view.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	map_view.name="RegionMap"
+	map_view.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	row.add_child(map_view)
 	map_view.configure(get_parent(),get_parent().field_map)
 	col.add_child(UI.label("금색: NPC · 청록: 이동석 · 붉은색: 몬스터 · 십자: 내 위치",12,UI.MUTED))
@@ -1461,16 +1509,38 @@ func refresh_maps(value: Array) -> void:
 	super.refresh_maps(value)
 
 func open_skills() -> void:
-	_open_window("skills","스킬 · 성장","직업별 스킬 · 패시브 · 퀵슬롯 · 자동사용")
+	_open_window("skills","스킬","")
 	skills_view=SkillsUI.new()
 	workspace.mount(skills_view)
 	skills_view.configure(self)
 
+func _open_quickslot_picker(entry_kind: String,entry_id: String,display_name: String) -> void:
+	var reason: String = get_parent()._quickslot_registration_error(entry_kind,entry_id)
+	if not reason.is_empty(): show_message(reason); return
+	_open_window("quickbind","퀵슬롯 등록","")
+	pending_quickslot_binding = {"kind":entry_kind,"id":entry_id}
+	var column: VBoxContainer = workspace.column()
+	column.add_child(UI.section(display_name,17))
+	column.add_child(UI.section("하단 퀵슬롯 또는 아래 위치를 누르세요.\n페이지 버튼으로 등록할 페이지를 바꿀 수 있습니다.",13))
+	quickslot_picker_hint = UI.label("",12,UI.GOLD)
+	column.add_child(quickslot_picker_hint)
+	var grid := GridContainer.new()
+	grid.columns = 2
+	column.add_child(grid)
+	for slot: int in range(5):
+		for group: int in range(2):
+			var visible_index: int = group*5+slot
+			var button := UI.button(("왼쪽" if group == 0 else "오른쪽")+" %d" % (slot+1),func() -> void:
+				_emit_quickslot_assignment(quickslot_index(visible_index),entry_kind,entry_id),Vector2(162,40))
+			grid.add_child(button)
+	column.add_child(UI.button("취소",_close_workspace))
+	_render_quickslots(lineage_inventory_ui.inventory,{})
+
 func _emit_quickslot_assignment(slot_index: int,entry_kind: String,entry_id: String) -> void:
+	var reason: String = get_parent()._quickslot_registration_error(entry_kind,entry_id)
+	if not reason.is_empty(): show_message(reason); return
 	quickslot_assignment_requested.emit(slot_index,entry_kind,entry_id)
-	if slot_index < quickslot_entries.size() and entry_id in [str(quickslot_entries[slot_index].get("id","")),str(quickslot_entries[slot_index].get("skill_id",""))]:
-		show_message(QuickController.label_for(slot_index)+" 등록 완료")
-		go_back()
+	_close_workspace()
 
 func _open_enhance_chooser() -> void:
 	_open_window("enhance","장비 강화","기존 인벤토리 주문서 · 실제 게임 강화 확률")
@@ -1486,251 +1556,7 @@ func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)
 
-func blocks_world_input() -> bool:
-	return class_picker_initial or (workspace != null and workspace.visible) or is_instance_valid(modal)
-
-func blocks_keyboard_input() -> bool:
-	var focus: Control = get_viewport().gui_get_focus_owner()
-	return blocks_world_input() or focus is LineEdit or focus is TextEdit
-
-func _sync_input_block() -> void:
-	var actor: Node = get_parent().get_node_or_null("Player")
-	if actor != null:
-		actor.set("interface_input_blocked", blocks_keyboard_input())
-		if blocks_world_input():
-			joystick._release_pointer()
-			if not actor.auto_enabled: actor.clear_click_path()
-
-func _restore_window_state(section: String) -> void:
-	if section == active_section and workspace.visible:
-		router.restore(section,workspace.content)
-
-func go_back() -> void:
-	if class_picker_initial: return
-	if is_instance_valid(modal):
-		modal.queue_free()
-		modal = null
-		_sync_input_block()
-		return
-	# A compact detail is a child view: Back first returns to its list,
-	# preserving the selected item, search and scroll position.
-	if workspace.visible:
-		if active_section == "inventory" and lineage_inventory_ui.call("back_to_list"):
-			return
-		for node: Node in workspace.content.find_children("*", "", true, false):
-			if node.has_method("back_to_list") and node.call("back_to_list"):
-				return
-	var previous: String = router.previous()
-	if previous == "":
-		_close_workspace()
-		return
-	router.returning = true
-	_navigate(previous)
-	router.returning = false
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST: go_back()
-
-func confirm_action(title: String, message: String, action: Callable) -> void:
-	if is_instance_valid(modal): return
-	modal = DialogUI.new()
-	modal.title_text = title
-	modal.message_text = message
-	$Root.add_child(modal)
-	if action.is_valid(): modal.confirmed.connect(action)
-	modal.tree_exited.connect(func() -> void: modal = null; _sync_input_block())
-	_sync_input_block()
-
-func _store_preference(key: String, value: Variant) -> void:
-	var cfg := ConfigFile.new()
-	cfg.load(SettingsUI.SETTINGS_PATH)
-	cfg.set_value("interface",key,value)
-	if cfg.save(SettingsUI.SETTINGS_PATH) != OK: show_message("UI 설정 저장 실패")
-
-func _build_integration_shortcuts() -> void:
-	var services := HBoxContainer.new()
-	services.name = "ServiceShortcuts"
-	_place(services,764,8,928,50)
-	v20_layer.add_child(services)
-	for pair: Array in [["crafting","제작"],["mail","우편"],["events","알림"]]:
-		var b := UI.button(pair[1],_navigate.bind(pair[0]),Vector2(50,36))
-		b.add_theme_font_size_override("font_size",11)
-		services.add_child(b)
-	var buff_toggle := UI.button("효과",func() -> void:
-		buff_expanded = not buff_expanded
-		buff_row.visible = buff_expanded
-		_store_preference("buff_expanded",buff_expanded),Vector2(52,32))
-	buff_toggle.name = "BuffCollapse"
-	_place(buff_toggle,12,105,64,137)
-	v20_layer.add_child(buff_toggle)
-	buff_row.position.x = 70
-	buff_row.set_meta("renewal_base_position",buff_row.position)
-	var detail := UI.button("효과 상세",_open_buffs,Vector2(88,28))
-	detail.add_theme_font_size_override("font_size",11)
-	_place(detail,12,141,108,169)
-	v20_layer.add_child(detail)
-	var pickup := UI.button("줍기",func() -> void: pickup_requested.emit(),Vector2(82,42))
-	pickup.name = "PickupLoot"
-	_place(pickup,979,553,1055,601)
-	v20_layer.add_child(pickup)
-	var auto_skills := UI.button("자동 스킬",_open_quickslot_settings,Vector2(88,36))
-	auto_skills.name = "AutoSkills"
-	_place(auto_skills,967,486,1065,528)
-	v20_layer.add_child(auto_skills)
-	var home: Control = v20_layer.get_node("ReturnToSpawn")
-	_place(home,1078,401,1268,441)
-	home.set_meta("renewal_base_position",home.position)
-	move_readout = UI.label("대기",11,UI.MUTED)
-	_place(move_readout,66,443,158,467)
-	v20_layer.add_child(move_readout)
-	_fit_hud()
-
-func _activate_visible_slot(visible_index: int) -> void:
-	if blocks_world_input(): return
-	quickslot_pressed.emit(quick_controller.index_for(visible_index))
-
-func _change_quick_page(bank: int, direction: int) -> void:
-	quick_controller.change_page(bank,direction)
-	_render_quickslots(lineage_inventory_ui.inventory,get_parent()._combined_active_buffs())
-
-func _drop_quickslot(index: int, data: Dictionary) -> void:
-	if data.get("kind") == "slot":
-		quickslot_edit_requested.emit(index,"swap",int(data.get("index",-1)))
-	else:
-		quickslot_assignment_requested.emit(index,str(data.get("kind","")),str(data.get("id","")))
-
-func _open_quickslot_picker(entry_kind: String, entry_id: String, _display_name: String) -> void:
-	quick_picker_kind = entry_kind
-	quick_picker_id = entry_id
-	_open_quickslot_settings(true)
-
-func _open_quickslot_settings(registering: bool = false) -> void:
-	_open_window("quickslots","퀵슬롯", "좌우 4칸 · 각각 3그룹 · 길게 누르기/우클릭: 편집")
-	var col: VBoxContainer = workspace.column()
-	var picker_name: String = str(get_parent()._skill_record(quick_picker_id).get("name",quick_picker_id)) if quick_picker_kind in ["skill","skill_auto"] else quick_picker_id
-	col.add_child(UI.section("등록할 위치: "+picker_name if registering else "24칸 퀵슬롯 관리",16))
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	col.add_child(scroll)
-	var rows := VBoxContainer.new()
-	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(rows)
-	for page: int in 3:
-		rows.add_child(UI.label("그룹 %d" % (page+1),14,UI.GOLD))
-		var banks := HBoxContainer.new()
-		rows.add_child(banks)
-		for bank: int in 2:
-			var grid := GridContainer.new()
-			grid.columns = 2
-			grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			banks.add_child(grid)
-			for slot: int in 4:
-				var index: int = page * 8 + bank * 4 + slot
-				var entry: Dictionary = quickslot_entries[index] if index < quickslot_entries.size() else {}
-				var caption := QuickController.label_for(index)+"\n"+str(entry.get("id","비어 있음"))
-				var b := UI.button(caption,func() -> void:
-					if workspace.was_scroll_dragged(scroll): return
-					if registering: _emit_quickslot_assignment(index,quick_picker_kind,quick_picker_id)
-					else: _open_slot_editor(index),Vector2(146,62))
-				b.name = "AssignQuickslot_%d" % index
-				b.add_theme_font_size_override("font_size",11)
-				grid.add_child(b)
-				workspace.register_scroll_drag(scroll,b)
-	col.add_child(UI.section("PC: 1–8 사용 · [ / ] 그룹 전환 · 드래그로 자리 교환\n터치: 슬롯 좌우 밀기 그룹 전환 · 아래로 밀기 자동사용 · 길게 누르기 편집",12))
-
-func _open_slot_editor(index: int) -> void:
-	selected_quickslot = index
-	_open_window("quickslots","슬롯 편집",QuickController.label_for(index))
-	var entry: Dictionary = quickslot_entries[index] if index < quickslot_entries.size() else {}
-	var col: VBoxContainer = workspace.column()
-	col.add_child(UI.section(str(entry.get("id","비어 있는 슬롯")),22))
-	var state := UI.section("자동사용 ON" if bool(entry.get("auto",false)) else "자동사용 OFF",14)
-	col.add_child(state)
-	var toggle := UI.button("자동사용 전환",func() -> void:
-		quickslot_edit_requested.emit(index,"auto",-1)
-		_open_slot_editor(index))
-	toggle.name = "ToggleSlotAuto"
-	toggle.disabled = entry.is_empty() or (not bool(entry.get("auto",false)) and not get_parent()._quickslot_can_auto(entry))
-	col.add_child(toggle)
-	col.add_child(UI.section("공격/회복 스킬과 소모품은 AUTO 사냥 중 사용합니다. 버프 자동사용은 SELF OFF에서 실행됩니다.",12))
-	var clear := UI.button("슬롯 해제",func() -> void:
-		quickslot_edit_requested.emit(index,"clear",-1)
-		_open_quickslot_settings())
-	clear.name = "ClearQuickslot"
-	clear.disabled = entry.is_empty()
-	col.add_child(clear)
-	col.add_child(UI.button("스킬에서 변경",open_skills))
-	col.add_child(UI.button("인벤토리에서 변경",func() -> void: _navigate("inventory")))
-	col.add_child(UI.button("전체 퀵슬롯",_open_quickslot_settings))
-
-func _open_capability(section: String) -> void:
-	var record: Array = MENU.entry(section)
-	_open_window(section,str(record[1]),"현재 로컬 버전에서 미지원")
-	var col: VBoxContainer = workspace.column()
-	col.add_child(UI.section(str(record[1]),24))
-	col.add_child(UI.section(MENU.requirement(section),16))
-	col.add_child(UI.section("TWILIGHT는 서버에 연결되지 않은 로컬 게임입니다.",13))
-	if section in ["collection","growth"]:
-		col.add_child(UI.button("아이템 도감",func() -> void: _navigate("아이템")))
-	col.add_child(UI.button("전체 메뉴",toggle_menu))
-
-func _open_dungeons(section: String) -> void:
-	_open_window(section,"특수 던전" if section == "special_dungeon" else "던전","현재 월드 데이터의 지역 · 이동 안내")
-	var col: VBoxContainer = workspace.column()
-	var scroll := ScrollContainer.new()
-	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	col.add_child(scroll)
-	var list := VBoxContainer.new()
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(list)
-	for record: Dictionary in map_records:
-		var id := str(record.get("id",""))
-		var title := str(record.get("name",id))
-		if id == "aden_world": continue
-		var special: bool = not (id.begins_with("oman") or id.begins_with("faith") or title.contains("탑"))
-		if special != (section == "special_dungeon"): continue
-		var b := UI.button(title,func() -> void:
-			if not workspace.was_scroll_dragged(scroll): open_npc_teleport(id))
-		list.add_child(b)
-		workspace.register_scroll_drag(scroll,b)
-	col.add_child(UI.section("지역 선택과 비용·레벨 조건은 이동 안내에서 확인할 수 있습니다.",12))
-	col.add_child(UI.button("이동 안내",open_npc_teleport))
-
-func _open_information(section: String) -> void:
-	_open_window(section,"조작 · 단축키" if section == "controls" else "게임 정보","TWILIGHT")
-	var col: VBoxContainer = workspace.column()
-	if section == "controls":
-		col.add_child(UI.section("WASD / 방향키: 이동 · Space: 공격 · T: 자동사냥\nI: 인벤토리 · K: 스킬 · C: 캐릭터 · M: 메뉴 · Tab: 지도\n1–8: 퀵슬롯 · [ / ]: 좌우 그룹 · F: 줍기 · Enter: 전투 기록\nEsc / 모바일 뒤로가기: 이전 화면 · 창 바깥: 닫기\nF5: 저장 · F9: 불러오기\n슬롯 길게 누르기/우클릭: 편집 · 아래로 밀기: 자동사용",16))
-	else:
-		col.add_child(UI.section("TWILIGHT · 로컬 RPG\n현재 저장과 전투는 이 기기에서 처리됩니다.\nPvE 전용 · 전투 및 시스템 기록을 제공합니다.\n변신·인형·성물 도감의 적용은 기존 로컬 시험 기능입니다.",16))
-	col.add_child(UI.button("환경 설정",open_settings_info))
-
-func _confirm_exit() -> void:
-	confirm_action("저장 후 종료","현재 진행도를 저장하고 게임을 종료합니다.",func() -> void:
-		if get_parent()._save_game(false): get_tree().quit())
-
-func _open_buffs() -> void:
-	_open_window("buffs","현재 효과","남은 시간 · 버프와 상태이상")
-	var col: VBoxContainer = workspace.column()
-	buff_detail = UI.rich("")
-	buff_detail.fit_content = false
-	buff_detail.scroll_active = true
-	buff_detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	col.add_child(buff_detail)
-	_refresh_buff_detail()
-
-func _refresh_buff_detail() -> void:
-	if not is_instance_valid(buff_detail): return
-	var lines: Array[String] = []
-	for key: String in get_parent()._combined_active_buffs():
-		var effect: Dictionary = get_parent()._combined_active_buffs()[key]
-		lines.append("%s · %d초\n%s" % [UI.safe(key),ceili(float(effect.get("remaining",0))),UI.safe(effect.get("desc",""))])
-	var actor: Node = get_parent().player
-	for pair: Array in [["is_stunned","기절"],["is_silenced","침묵"],["is_held","속박"],["is_feared","공포"]]:
-		if actor.call(pair[0]): lines.append("[color=#e97772]"+pair[1]+"[/color]")
-	buff_detail.text = "\n\n".join(lines) if not lines.is_empty() else "활성 효과가 없습니다."
-
-func _add_original_map_controls(regions: VBoxContainer, search: LineEdit) -> void:
+func _add_original_map_controls(regions: VBoxContainer) -> void:
 	var original: Array = get_parent().original_maps
 	if original.is_empty(): return
 	var selector := OptionButton.new()
@@ -1740,13 +1566,30 @@ func _add_original_map_controls(regions: VBoxContainer, search: LineEdit) -> voi
 	selector.add_item("원본 통행 지역 · %d" % original.size())
 	regions.add_child(selector)
 	regions.move_child(selector,1)
+	var search := LineEdit.new()
 	search.name = "OriginalMapSearch"
 	search.placeholder_text = "지역 이름 또는 원본 ID"
-	selector.item_selected.connect(func(index: int) -> void:
-		search.set_meta("map_edition",index)
-		search.text_changed.emit(search.text))
+	regions.add_child(search)
+	regions.move_child(search,2)
+	var populate := func() -> void:
+		region_selection.clear()
+		var records: Array = map_records if selector.selected == 0 else original
+		for record: Dictionary in records:
+			var mid: int = int(record.get("source_map_id",-1))
+			if selector.selected == 1 and mid != 4 and not (mid >= 101 and mid <= 111) and not (mid >= 12852 and mid <= 12862): continue
+			var title: String = str(record.name)
+			if mid == 4: title = "아덴 월드 · 본토"
+			if mid >= 0: title += " [%d]" % mid
+			if not search.text.is_empty() and not title.contains(search.text): continue
+			var index: int = region_selection.add_item(title)
+			region_selection.set_item_metadata(index,str(record.id))
+			if str(record.id) == str(get_parent().active_map_id): region_selection.select(index)
+		if region_selection.get_selected_items().is_empty() and region_selection.item_count > 0: region_selection.select(0)
+		(regions.get_node("RegionCount") as Label).text = "지역 선택  ·  %d개 지역" % region_selection.item_count
+	selector.item_selected.connect(func(_index: int) -> void: populate.call())
+	search.text_changed.connect(func(_text: String) -> void: populate.call())
 	if get_parent().field_map is OriginalPlayableField:
 		selector.select(1)
-		search.set_meta("map_edition",1)
-	regions.add_child(UI.section("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11))
-	regions.add_child(UI.section("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11))
+		populate.call()
+	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
+	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))

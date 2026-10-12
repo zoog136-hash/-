@@ -93,6 +93,11 @@ func _run() -> void:
 		list_node.item_selected.emit(1)
 		button.pressed.emit()
 		await process_frame
+		_check(str(recorded["target"]).is_empty(),"Forge awaits confirmation before consuming scroll")
+		var confirm: Control = hud.get_node("Root").get_node_or_null("TwilightConfirmation")
+		_check(confirm != null,"Forge has confirmation")
+		if confirm != null: confirm._accept()
+		await process_frame
 		_check(str(recorded["target"]).contains("@@@"), "Forge submits physical target_id")
 
 	world.queue_free()

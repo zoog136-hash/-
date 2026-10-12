@@ -1,0 +1,62 @@
+name: Hit Feedback Focused Validate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/animation/impact_visuals.gd'
+      - 'scripts/animation/combat_vfx.gd'
+      - 'scripts/animation/player_action_fx.gd'
+      - 'tests/hit_feedback*'
+      - '.github/workflows/hit-feedback-validate.yml'
+permissions:
+  contents: read
+concurrency:
+  group: hit-feedback-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  hit-feedback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resource preflight
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned engine and OpenGL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import and targeted regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-results
+          export XDG_DATA_HOME="${RUNNER_TEMP}/hit-feedback"
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/hit-import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/hit-import.log; then exit 1; fi
+          for name in hit_feedback_test combat_vfx_test actor_motion_test combat_timing_test volley_motion_test; do
+            "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.log"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/${name}.log"; then exit 1; fi
+            grep -q '_OK' "test-results/${name}.log"
+          done
+      - name: Actual OpenGL effect renders
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/hit-feedback"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/hit_feedback_render_test.gd 2>&1 | tee test-results/hit-render.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' test-results/hit-render.log; then exit 1; fi
+          grep -q HIT_FEEDBACK_RENDER_OK test-results/hit-render.log
+      - name: Upload review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hit-feedback-review-${{ github.sha }}
+          path: |
+            test-results/
+            ${{ runner.temp }}/hit-feedback/**/hit-feedback-review/
+          if-no-files-found: error

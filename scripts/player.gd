@@ -46,7 +46,6 @@ var touch_vector: Vector2 = Vector2.ZERO
 var click_path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
 var auto_enabled: bool = false
-var interface_input_blocked: bool = false
 var movement_locked: bool = false
 var class_index: int = 0
 var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
@@ -126,9 +125,10 @@ func _physics_process(delta: float) -> void:
 		_move_on_map()
 		_update_visual(delta)
 		return
-	if not interface_input_blocked and Input.is_action_just_pressed("attack") and not is_feared():
+	var ui_blocks: bool = get_parent().get("hud") != null and get_parent().hud.has_method("blocks_keyboard_input") and get_parent().hud.blocks_keyboard_input()
+	if not ui_blocks and Input.is_action_just_pressed("attack") and not is_feared():
 		attack_requested.emit()
-	if not interface_input_blocked and Input.is_action_just_pressed("toggle_auto"):
+	if not ui_blocks and Input.is_action_just_pressed("toggle_auto"):
 		set_auto_enabled(not auto_enabled)
 
 	if is_held():
@@ -155,10 +155,10 @@ func _physics_process(delta: float) -> void:
 		_update_visual(delta)
 		return
 
-	var keyboard: Vector2 = Vector2.ZERO if interface_input_blocked else Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var keyboard: Vector2 = Vector2.ZERO if ui_blocks else Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var manual: Vector2 = keyboard
 	if manual.length_squared() < 0.01:
-		manual = Vector2.ZERO if interface_input_blocked else touch_vector
+		manual = Vector2.ZERO if ui_blocks else touch_vector
 
 	if manual.length_squared() > 0.01:
 		cancel_attack()

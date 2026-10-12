@@ -1,0 +1,117 @@
+EXCERPT ONLY: complete output is preserved in original_skill_catalog_runtime_test.log.gz
+Original bytes: 527633
+Original SHA-256: 6dda0a06a33f9c537fe0683959fcc9f58bbe2e755a554762f0134c33d88cbbc5
+
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ORIGINAL_SKILL_CATALOG_RUNTIME_OK records=125 active=63
+ERROR: Can't get if point is disabled. Point (67, 758) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (1084, 74) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (803, 665) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (1356, 392) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (1090, 385) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (959, 327) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (1308, 266) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (581, 672) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (1137, 405) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (939, 418) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (1106, 412) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] cast (res://scripts/skills/skill_service.gd:214)
+       [2] _cast_job_skill (res://scripts/world.gd:4686)
+       [3] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+
+... repeated engine errors omitted from this readable excerpt ...
+
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] spawn (res://scripts/skills/summon_service.gd:41)
+       [2] cast (res://scripts/skills/skill_service.gd:224)
+       [3] _cast_job_skill (res://scripts/world.gd:4686)
+       [4] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (1386, 310) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] spawn (res://scripts/skills/summon_service.gd:41)
+       [2] cast (res://scripts/skills/skill_service.gd:224)
+       [3] _cast_job_skill (res://scripts/world.gd:4686)
+       [4] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (318, 603) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _random_walkable_position (res://scripts/world.gd:1488)
+       [1] spawn (res://scripts/skills/summon_service.gd:41)
+       [2] cast (res://scripts/skills/skill_service.gd:224)
+       [3] _cast_job_skill (res://scripts/world.gd:4686)
+       [4] run (res://tests/original_skill_catalog_runtime_test.gd:52)
+ERROR: Can't get if point is disabled. Point (750, 0) out of bounds [P: (0, 0), S: (750, 393)].
+   at: is_point_solid (core/math/a_star_grid_2d.cpp:227)
+   GDScript backtrace (most recent call first):
+       [0] _spawn_position_fallback (res://scripts/world.gd:1506)
+       [1] _random_walkable_position (res://scripts/world.gd:1498)
+       [2] spawn (res://scripts/skills/summon_service.gd:41)
+       [3] cast (res://scripts/skills/skill_service.gd:224)
+       [4] _cast_job_skill (res://scripts/world.gd:4686)
+       [5] run (res://tests/original_skill_catalog_runtime_test.gd:52)

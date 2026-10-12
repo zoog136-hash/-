@@ -18,7 +18,7 @@ func configure(controller: Node) -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var title := Label.new()
-	title.text = "아덴 아이템 매입 · 개별 장비 강화 상태 확인"
+	title.text = "판매할 아이템을 선택하세요"
 	add_child(title)
 	var filters := HBoxContainer.new()
 	add_child(filters)
@@ -97,7 +97,7 @@ func _refresh() -> void:
 						ids.append(id)
 			ids.sort()
 			for id: String in ids:
-				_add_item(name,1,id,"+%d · #%s" % [int((instances[id] as Dictionary).get("level",0)),id])
+				_add_item(name,1,id,"+%d" % int((instances[id] as Dictionary).get("level",0)))
 	action.disabled = entries.is_empty()
 	if not entries.is_empty():
 		listing.select(0)
@@ -137,5 +137,29 @@ func _sell() -> void:
 	if selected < 0 or selected >= entries.size():
 		return
 	var entry: Dictionary = entries[selected]
-	if hud.has_signal("shop_sell_requested"):
-		hud.emit_signal("shop_sell_requested",str(entry["name"]),int(quantity.value),str(entry.get("instance_id","")))
+	var item: String = str(entry["name"])
+	var count: int = int(quantity.value)
+	var id: String = str(entry.get("instance_id",""))
+	if world._item_locked(item,id):
+		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
+		return
+	hud.confirm_action("판매 확인",item+" ×%d\n" % count+details.text,"판매",func(_amount: int) -> void:
+		hud.emit_signal("shop_sell_requested",item,count,id))
+
+func request_drop(reference: String) -> void:
+	var parts: PackedStringArray = reference.split("@@@")
+	var item: String = parts[0]
+	var id: String = parts[1] if parts.size() == 2 else ""
+	for index: int in range(entries.size()):
+		if str(entries[index].name) == item and str(entries[index].get("instance_id","")) == id:
+			listing.select(index)
+			_select(index)
+			if action.disabled or world._item_locked(item,id):
+				hud.show_message("판매할 수 없는 아이템입니다")
+				return
+			var maximum: int = int(quantity.max_value)
+			hud.confirm_action("판매 수량",item+"\n다음 화면에서 최종 판매 금액을 확인합니다","금액 확인",func(count: int) -> void:
+				quantity.value = count
+				_sell(),maximum)
+			return
+	hud.show_message("장착 중이거나 판매할 수 없는 아이템입니다")

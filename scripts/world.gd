@@ -1,6 +1,8 @@
 extends Node2D
 class_name TwilightWorld
 
+const QUICK_LAYOUT = preload("res://scripts/ui/reference_layout.gd")
+
 const SAVE_PATH: String = "user://twilight_v20_save.json"
 const MAPS_PATH: String = "res://data/maps_v18.json"
 const DB_PATH: String = "res://data/game_db_v17.json"
@@ -122,10 +124,8 @@ var active_item_buffs: Dictionary = {}
 var item_use_cooldowns: Dictionary = {}
 var consumable_service: Node = null
 var quickslots: Array = []
-const QUICK_LAYOUT = preload("res://scripts/ui/quickslot_controller.gd")
-var quickslots_customized: bool = false
-var item_locks: Dictionary = {}
-var auto_item_timer: float = 0.0
+var ui_preferences: Dictionary = {"quickslot_pages":{}, "edited_quickslots":{}, "item_locks":{}}
+var auto_item_clock: float = 0.0
 var self_mode_enabled: bool = false
 var auto_buff_check_timer: float = 0.0
 var catalog_db: Dictionary = {}
@@ -353,8 +353,8 @@ func _process(delta: float) -> void:
 		_run_auto_heal_quickslots()
 		_run_auto_hunt()
 	_update_companion(delta)
-	_update_target_hud()
 	if hud.blocks_keyboard_input():
+		_update_target_hud()
 		return
 	if Input.is_action_just_pressed("open_inventory"):
 		_open_inventory()
@@ -377,7 +377,7 @@ func _process(delta: float) -> void:
 	_update_target_hud()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if bool(hud.get("class_picker_initial")) or hud.blocks_world_input():
+	if bool(hud.get("class_picker_initial")):
 		return
 	if event is InputEventMouseButton:
 		var mouse_event: InputEventMouseButton = event
@@ -1081,10 +1081,7 @@ func _connect_signals() -> void:
 	hud.job_skill_pressed.connect(_cast_job_skill)
 	hud.quickslot_pressed.connect(_on_quickslot_pressed)
 	hud.quickslot_assignment_requested.connect(_on_quickslot_assignment_requested)
-	hud.quickslot_edit_requested.connect(_edit_quickslot)
-	hud.equipment_unequip_requested.connect(_unequip_item)
-	hud.item_lock_requested.connect(_toggle_item_lock)
-	hud.pickup_requested.connect(_pickup_nearest_from_hud)
+	hud.quickslot_edit_requested.connect(_on_quickslot_edit_requested)
 	hud.self_mode_changed.connect(_on_self_mode_changed)
 	hud.shop_buy_requested.connect(_buy_shop_item)
 	if hud.has_signal("shop_bulk_buy_requested"):
@@ -1403,7 +1400,7 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		hud.show_message("대화 조건 또는 NPC 접근 거리가 맞지 않습니다")
 		return
 	match action:
-		"shop": hud.open_shop()
+		"shop": hud.open_npc_shop()
 		"warehouse": hud.call("open_warehouse")
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
@@ -1417,7 +1414,7 @@ func _set_click_destination(target: Vector2) -> void:
 			var npc_position: Vector2 = COORD.array_vector(npc["position"])
 			if target.distance_to(npc_position) < 55 and player.global_position.distance_to(npc_position) < 190:
 				if str(npc["role"]) == "shop":
-					hud.open_shop()
+					hud.open_npc_shop()
 				elif str(npc["role"]) == "warehouse":
 					hud.call("open_warehouse")
 				elif str(npc["role"]) == "teleport":
@@ -2595,18 +2592,12 @@ func _check_level_up() -> void:
 		hud.call_deferred("open_character")
 
 func _select_nearest_target() -> void:
-	var candidates: Array[TwilightMonster] = []
-	for node: Node in monsters_root.get_children():
-		if node is TwilightMonster and not node.dead and player.global_position.distance_to(node.global_position) < 600.0 and _has_line_of_sight_world(player.global_position,node.global_position):
-			candidates.append(node)
-	candidates.sort_custom(func(a: TwilightMonster,b: TwilightMonster) -> bool:
-		return player.global_position.distance_squared_to(a.global_position) < player.global_position.distance_squared_to(b.global_position))
-	if candidates.is_empty():
+	var target: TwilightMonster = _nearest_reachable_monster(600.0)
+	if target == null:
 		hud.show_message("선택할 수 있는 몬스터가 없습니다")
 		return
-	var index: int = candidates.find(selected_monster)
-	_select_monster(candidates[(index+1) % candidates.size()])
-	hud.show_message("대상 선택: %s" % selected_monster.monster_name)
+	_select_monster(target)
+	hud.show_message("대상 선택: %s" % target.monster_name)
 
 func _scroll_kind(scroll_name: String) -> String:
 	if scroll_name.find("무기 마법 주문서") >= 0:
@@ -2684,9 +2675,6 @@ func _grant_playtest_aden() -> void:
 func _on_inventory_item_activated(item_name: String) -> void:
 	var selected: Dictionary = _parse_enhancement_target(item_name)
 	item_name = str(selected.get("name", item_name))
-	if _item_is_locked(item_name) and _equipment_slot_base(_find_catalog_item_record(item_name)).is_empty():
-		hud.show_message("잠금 아이템은 사용할 수 없습니다")
-		return
 	if CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("삭제된 상태이상 해제 물약입니다")
 		return
@@ -3190,16 +3178,15 @@ func _is_item_equipped(item_name: String) -> bool:
 	return false
 
 func _attempt_enhancement(scroll_name: String, target_name: String) -> void:
-	var lock_target := _parse_enhancement_target(target_name)
-	if _item_is_locked(str(lock_target.get("name", "")), str(lock_target.get("id", ""))) or _item_is_locked(scroll_name):
-		hud.show_message("잠금 아이템은 강화할 수 없습니다")
-		return
 	var selected: Dictionary = _parse_enhancement_target(target_name)
 	var item_id: String = str(selected.get("id", ""))
 	target_name = str(selected.get("name", target_name))
 	_sync_item_instances()
 	if item_id.is_empty():
 		item_id = _chosen_instance(target_name)
+	if _item_locked(target_name,item_id):
+		hud.show_message("강화하려면 아이템 잠금을 해제하세요")
+		return
 	if not item_instances.has(item_id) or str((item_instances[item_id] as Dictionary).get("name", "")) != target_name:
 		hud.show_message("해당 장비 개체를 찾을 수 없습니다")
 		return
@@ -3370,8 +3357,8 @@ func _buy_shop_item(item_name: String, _ui_price: int) -> void:
 	_buy_shop_bulk(item_name, 1)
 
 func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> void:
-	if _item_is_locked(item_name, instance_id):
-		hud.show_message("잠금 아이템은 판매할 수 없습니다")
+	if _item_locked(item_name,instance_id):
+		hud.show_message("잠긴 아이템은 판매할 수 없습니다")
 		return
 	# Validate the current inventory, bound flags and exact instance ID at
 	# commit time. The UI never submits the price or enhancement bonus.
@@ -3391,8 +3378,8 @@ func _sell_shop_item(item_name: String, quantity: int, instance_id: String) -> v
 	hud.refresh_inventory(inventory)
 	hud.append_log("아이템 매입 · %s ×%d (+%d 아데나)" % [item_name,quantity,int(transaction["payment"])])
 	hud.show_message("매입 완료 · %d 아데나" % int(transaction["payment"]))
-	if hud.has_method("open_item_sell"):
-		hud.call("open_item_sell")
+	if hud.has_method("refresh_service"):
+		hud.call("refresh_service")
 
 func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	if CONSUMABLE_RULES.is_removed_item(item_name):
@@ -3431,8 +3418,8 @@ func _buy_shop_bulk(item_name: String, quantity: int) -> void:
 	hud.append_log("상점 구매 · %s ×%d (-%d)" % [item_name, quantity, total])
 	_update_hud()
 	_save_game(true)
-	if hud.has_method("open_shop"):
-		hud.call("open_shop")
+	if hud.has_method("refresh_shop"):
+		hud.call("refresh_shop")
 
 
 # The original static crafting service remains available for saved-game and
@@ -3469,8 +3456,8 @@ func _buy_reviewed_shop_item(vendor_id: String, item_name: String, quantity: int
 	hud.append_log("원본 NPC 상점 구매 · %s ×%d (-%d)" % [item_name, quantity, total])
 	_update_hud()
 	_save_game(true)
-	if hud.has_method("open_shop"):
-		hud.call("open_shop")
+	if hud.has_method("refresh_shop"):
+		hud.call("refresh_shop")
 
 
 func _craft_item_index() -> Dictionary:
@@ -3478,16 +3465,12 @@ func _craft_item_index() -> Dictionary:
 
 func _craft_quote(recipe_id: String, batches: int) -> Dictionary:
 	_sync_item_instances()
-	if _recipe_has_locked_stack(recipe_id): return {"ok":false, "reason":"잠금 재료를 먼저 해제하세요"}
 	return crafting.quote(
 		recipe_id, batches, inventory, gold, _craft_item_index(), item_instances,
 		equipped_items, _inventory_total_weight(), _carrying_capacity()
 	)
 
 func _craft_requested(recipe_id: String, batches: int) -> void:
-	if _recipe_has_locked_stack(recipe_id):
-		hud.show_message("잠금 재료를 먼저 해제하세요")
-		return
 	# Revalidate authoritative ingredients, wallet, weight and physical IDs.
 	# The service stages mutations and commits only if every check succeeds.
 	_sync_item_instances()
@@ -3569,16 +3552,13 @@ func _warehouse_transfer(item_name: String, quantity: int, direction: String, in
 	_save_game(true)
 	hud.append_log("창고 %s · %s ×%d" % ["보관" if direction == "deposit" else "찾기",item_name,quantity])
 	hud.show_message("창고 이용 완료")
-	if hud.has_method("open_warehouse"):
-		hud.call("open_warehouse")
+	if hud.has_method("refresh_service"):
+		hud.call("refresh_service")
 
 func _use_potion() -> void:
 	_use_healing_item("HP 물약", 320)
 
 func _use_quick_item(item_name: String) -> void:
-	if _item_is_locked(item_name):
-		hud.show_message("잠금 아이템은 사용할 수 없습니다")
-		return
 	if bool(consumable_service.call("try_use", item_name)):
 		return
 	var record: Dictionary = _find_catalog_item_record(item_name)
@@ -3594,9 +3574,6 @@ func _use_quick_item(item_name: String) -> void:
 	hud.show_message("사용할 수 없는 퀵 아이템입니다")
 
 func _use_healing_item(item_name: String, heal_amount: int) -> void:
-	if _item_is_locked(item_name):
-		hud.show_message("잠금 아이템은 사용할 수 없습니다")
-		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("%s이(가) 없습니다" % item_name)
 		return
@@ -3637,10 +3614,7 @@ func _open_inventory() -> void:
 	hud.toggle_inventory()
 
 func _on_map_selected(map_id: String) -> void:
-	if player.is_stunned() or player.is_feared() or player.is_held():
-		hud.show_message("현재 상태에서는 이동할 수 없습니다")
-		return
-	hud._close_workspace()
+	hud.toggle_map()
 	_set_map(map_id, false)
 
 func _update_hud() -> void:
@@ -3670,8 +3644,8 @@ func _update_hud() -> void:
 	character_state["equipped_items"] = _equipped_items_snapshot()
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
-	character_state["item_locks"] = item_locks
 	character_state["gold"] = gold
+	character_state["item_locks"] = ui_preferences.get("item_locks",{})
 	hud.set_character_state(character_state)
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
@@ -3688,10 +3662,10 @@ func _refresh_combat_hud() -> void:
 	var display_max_mp: int = int(hud.character_state.get("max_mp", max_mp))
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
-func _save_game(quiet: bool) -> bool:
+func _save_game(quiet: bool) -> void:
 	if source_save_blocked:
 		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
-		return false
+		return
 	_sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
@@ -3726,8 +3700,7 @@ func _save_game(quiet: bool) -> bool:
 		"class_index": class_index,
 		"job_class": job_class,
 		"quickslots": quickslots,
-		"quickslots_customized": quickslots_customized,
-		"item_locks": item_locks,
+		"ui_preferences": ui_preferences,
 		"self_mode_enabled": self_mode_enabled,
 		"active_skill_buffs": active_skill_buffs,
 		"skill_cooldowns": skill_cooldowns,
@@ -3748,13 +3721,11 @@ func _save_game(quiet: bool) -> bool:
 	if result != OK:
 		hud.append_log("저장 실패 · 이전 저장 파일 보존 · 오류 %d" % result)
 		if not quiet: hud.show_message("저장 실패")
-		return false
+		return
 	if not quiet:
 		hud.show_message("저장 완료")
-	return true
 
 func _load_game(quiet: bool) -> void:
-	_clear_combat_actions()
 	if not FileAccess.file_exists(SAVE_PATH):
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
@@ -3784,13 +3755,16 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
 			return
 		saved_field.close()
-	source_save_blocked = false
 	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(SAVE_PATH + ".pre-original-skills"):
 		var backup_error := DirAccess.copy_absolute(SAVE_PATH, SAVE_PATH + ".pre-original-skills")
 		if backup_error != OK:
 			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
 			if not quiet: hud.show_message("저장 이전 백업 실패")
 			return
+	# Reject missing/corrupt saves and failed migration backups before retiring
+	# any live combat, summons or shields. Only an accepted load may reset them.
+	source_save_blocked = false
+	_clear_combat_actions()
 	warehouse.restore(data.get("warehouse", {}))
 	crafting_log.clear()
 	var old_log: Variant = data.get("crafting_log", [])
@@ -3827,12 +3801,13 @@ func _load_game(quiet: bool) -> void:
 	job_class = str(data.get("job_class", job_class))
 	if not JOB_CLASS_ORDER.has(job_class):
 		job_class = "기사"
+	var saved_ui: Variant = data.get("ui_preferences", {})
+	ui_preferences = saved_ui.duplicate(true) if saved_ui is Dictionary else {}
+	for key: String in ["quickslot_pages","edited_quickslots","item_locks"]:
+		if not ui_preferences.get(key) is Dictionary: ui_preferences[key] = {}
 	var quickslots_value: Variant = data.get("quickslots", quickslots)
 	if quickslots_value is Array:
 		quickslots = quickslots_value as Array
-	quickslots_customized = bool(data.get("quickslots_customized", false))
-	var saved_locks: Variant = data.get("item_locks", {})
-	item_locks = saved_locks if saved_locks is Dictionary else {}
 	self_mode_enabled = bool(data.get("self_mode_enabled", self_mode_enabled))
 	var skill_buffs_value: Variant = data.get("active_skill_buffs", {})
 	active_skill_buffs = skill_buffs_value as Dictionary if skill_buffs_value is Dictionary else {}
@@ -4018,8 +3993,6 @@ func _on_job_class_selected(job_name: String) -> void:
 	_clear_combat_actions()
 	if original_skills != null: original_skills.catalog.class_slots[job_class] = quickslots.duplicate(true)
 	job_class = job_name
-	# A cached class layout may intentionally contain 24 empty slots.
-	quickslots_customized = original_skills != null and original_skills.catalog.class_slots.has(job_name)
 	if original_skills != null and original_skills.catalog.class_slots.has(job_name):
 		quickslots = original_skills.catalog.class_slots[job_name].duplicate(true)
 	var record: Dictionary = _job_transform_record(job_class)
@@ -4109,11 +4082,19 @@ func _sanitize_quickslots_for_current_job() -> bool:
 			changed = true
 			continue
 		var entry: Dictionary = value as Dictionary
-		if entry.is_empty() or str(entry.get("kind", "")) != "skill":
+		if entry.is_empty(): continue
+		if str(entry.get("kind", "")) == "item":
+			if not _quickslot_item_supported(str(entry.get("id",""))):
+				quickslots[index] = {}
+				changed = true
+			continue
+		if str(entry.get("kind", "")) != "skill":
+			quickslots[index] = {}
+			changed = true
 			continue
 		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		var skill: Dictionary = _skill_record(skill_name)
-		if skill.is_empty() or _is_passive_skill(skill):
+		if skill.is_empty() or _is_passive_skill(skill) or (skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill)):
 			quickslots[index] = {}
 			changed = true
 			continue
@@ -4148,14 +4129,14 @@ func _prune_active_skill_buffs_for_current_job() -> bool:
 	return changed
 
 func _normalize_quickslots() -> void:
-	while quickslots.size() < QUICK_LAYOUT.CAPACITY:
+	while quickslots.size() < QUICK_LAYOUT.QUICK_CAPACITY:
 		quickslots.append({})
-	while quickslots.size() > QUICK_LAYOUT.CAPACITY:
+	while quickslots.size() > QUICK_LAYOUT.QUICK_CAPACITY:
 		quickslots.pop_back()
 
 func _ensure_quickslots_seeded() -> void:
 	var sanitized_changed: bool = _sanitize_quickslots_for_current_job()
-	if quickslots_customized: return
+	if bool(ui_preferences.get("edited_quickslots",{}).get(job_class,false)): return
 	var has_any: bool = false
 	var skill_count: int = 0
 	var item_count: int = 0
@@ -4179,7 +4160,6 @@ func _ensure_quickslots_seeded() -> void:
 			if value is Dictionary:
 				var skill: Dictionary = value as Dictionary
 				quickslots[slot_index] = {"kind":"skill", "id":str(skill.get("name", ""))}
-				if skill.get("origin", "") == "LINEAGEM_20250617": quickslots[slot_index]["skill_id"] = str(skill.id)
 				slot_index += 1
 		for item_name: String in ["HP 물약", "강력 HP 물약", "축복받은 HP 물약"]:
 			if slot_index >= 8:
@@ -4213,12 +4193,15 @@ func _ensure_quickslots_seeded() -> void:
 			var current_value: Variant = quickslots[index]
 			if current_value is Dictionary and (current_value as Dictionary).is_empty():
 				quickslots[index] = {"kind":"skill", "id":skill_name}
-				if skill.get("origin", "") == "LINEAGEM_20250617": quickslots[index]["skill_id"] = str(skill.id)
 				skill_count += 1
 				break
 
 func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, entry_id: String) -> void:
-	if slot_index < 0 or slot_index >= QUICK_LAYOUT.CAPACITY:
+	if slot_index < 0 or slot_index >= QUICK_LAYOUT.QUICK_CAPACITY:
+		return
+	var registration_error: String = _quickslot_registration_error(entry_kind,entry_id)
+	if not registration_error.is_empty():
+		hud.show_message(registration_error)
 		return
 	_normalize_quickslots()
 	var is_auto_skill: bool = entry_kind == "skill_auto"
@@ -4233,7 +4216,7 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 		if _is_passive_skill(skill):
 			hud.show_message("%s은(는) 패시브 스킬이라 퀵슬롯 등록이 필요 없습니다" % entry_id)
 			return
-		if is_auto_skill and not SKILL_RULES.can_auto_cast(skill) and not _is_buff_skill(skill):
+		if is_auto_skill and not SKILL_RULES.can_auto_cast(skill):
 			hud.show_message("%s은(는) 자동 공격/회복용 스킬이 아닙니다" % entry_id)
 			return
 		var skill_class: String = str(skill.get("class", "공용"))
@@ -4246,8 +4229,8 @@ func _on_quickslot_assignment_requested(slot_index: int, entry_kind: String, ent
 			return
 	else:
 		return
+	ui_preferences.edited_quickslots[job_class] = true
 	quickslots[slot_index] = {"kind":"skill" if is_auto_skill else entry_kind, "id":entry_id, "auto":is_auto_skill}
-	quickslots_customized = true
 	if str(quickslots[slot_index].kind) == "skill":
 		var slotted := _skill_record(entry_id)
 		if slotted.get("origin", "") == "LINEAGEM_20250617":
@@ -4274,20 +4257,122 @@ func _on_quickslot_pressed(slot_index: int) -> void:
 		_use_quickslot_item(entry_id)
 
 func _use_quickslot_item(item_name: String) -> void:
-	if _item_is_locked(item_name):
-		hud.show_message("잠금 아이템은 사용할 수 없습니다")
-		return
 	if int(inventory.get(item_name, 0)) <= 0:
 		hud.show_message("%s이(가) 없습니다" % item_name)
 		_update_hud()
 		return
-	var record: Dictionary = _find_catalog_item_record(item_name)
-	if _scroll_kind(item_name) != "":
+	if _quickslot_item_supported(item_name):
 		_on_inventory_item_activated(item_name)
-	elif not record.is_empty() and (_is_timed_buff_item(record) or str(record.get("slot", "")) == "consumable"):
-		_use_quick_item(item_name)
 	else:
-		hud.show_message("DB 설명에 직접 사용 효과가 없는 아이템입니다")
+		hud.show_message("직접 사용할 수 없는 아이템입니다")
+
+func _quickslot_item_supported(item_name: String) -> bool:
+	if CONSUMABLE_RULES.is_removed_item(item_name): return false
+	if not CONSUMABLE_RULES.definition(item_name).is_empty() or _scroll_kind(item_name) != "": return true
+	var record: Dictionary = _find_catalog_item_record(item_name)
+	return not record.is_empty() and (_is_timed_buff_item(record) or int(record.get("heal",0)) > 0)
+
+func _quickslot_registration_error(kind: String, id: String) -> String:
+	if kind == "item":
+		if int(inventory.get(id,0)) <= 0: return "보유하지 않은 아이템입니다"
+		if not _quickslot_item_supported(id): return "장비와 재료는 퀵슬롯에 등록할 수 없습니다"
+		return ""
+	if kind not in ["skill","skill_auto"]: return "등록할 수 없는 항목입니다"
+	var skill: Dictionary = _skill_record(id)
+	if skill.is_empty(): return "삭제되었거나 존재하지 않는 스킬입니다"
+	if _is_passive_skill(skill): return "패시브는 직접 사용할 수 없습니다"
+	if kind == "skill_auto" and not SKILL_RULES.can_auto_cast(skill): return "자동사용을 지원하지 않는 스킬입니다"
+	if str(skill.get("class","공용")) not in [job_class,"공용"]: return "현재 직업의 스킬이 아닙니다"
+	if skill.get("origin", "") == "LINEAGEM_20250617" and not original_skills.catalog.owned(skill): return "미습득 스킬입니다"
+	return ""
+
+func _set_item_locked(reference: String, locked: bool) -> void:
+	var parsed: Dictionary = _parse_enhancement_target(reference)
+	var item_name: String = str(parsed.get("name",reference))
+	var id: String = str(parsed.get("id",""))
+	if int(inventory.get(item_name,0)) <= 0: return
+	if not id.is_empty() and (not item_instances.has(id) or item_instances[id].get("name","") != item_name): return
+	if locked: ui_preferences.item_locks[reference] = true
+	else: ui_preferences.item_locks.erase(reference)
+	_update_hud()
+	_save_game(true)
+
+func _item_locked(item_name: String, instance_id: String = "") -> bool:
+	return bool(ui_preferences.get("item_locks",{}).get(item_name+("@@@"+instance_id if not instance_id.is_empty() else ""),false))
+
+func _unequip_item_reference(reference: String) -> void:
+	var parsed: Dictionary = _parse_enhancement_target(reference)
+	var id: String = str(parsed.get("id",""))
+	if id.is_empty(): return
+	for slot: String in equipped_items.keys():
+		if str(equipped_items[slot].get("instance_id","")) != id: continue
+		equipped_items.erase(slot)
+		hp = mini(hp,_effective_max_hp())
+		mp = mini(mp,_effective_max_mp())
+		_refresh_speed_modifiers()
+		_update_hud()
+		hud.refresh_inventory(inventory)
+		_save_game(true)
+		return
+
+func _quickslot_pages() -> Array:
+	var value: Variant = ui_preferences.get("quickslot_pages",{}).get(job_class,[0,0])
+	if not value is Array or value.size() != 2: return [0,0]
+	return [clampi(int(value[0]),0,4),clampi(int(value[1]),0,4)]
+
+func _quickslot_auto_allowed(entry: Dictionary) -> bool:
+	if entry.get("kind","") == "skill":
+		return SKILL_RULES.can_auto_cast(_skill_record(str(entry.get("skill_id",entry.get("id","")))))
+	var record: Dictionary = _find_catalog_item_record(str(entry.get("id","")))
+	var spec: Dictionary = CONSUMABLE_RULES.definition(str(entry.get("id","")))
+	return int(record.get("heal",0)) > 0 or str(spec.get("kind","")) in ["regen","food","buff","instant_mp"]
+
+func _on_quickslot_edit_requested(action: String, source_index: int, target: int) -> void:
+	_normalize_quickslots()
+	if action == "page":
+		if source_index < 0 or source_index > 1: return
+		var pages: Array = _quickslot_pages()
+		pages[source_index] = posmod(target,5)
+		ui_preferences.quickslot_pages[job_class] = pages
+	else:
+		if source_index < 0 or source_index >= quickslots.size(): return
+		match action:
+			"swap":
+				if target < 0 or target >= quickslots.size() or target == source_index: return
+				var source_entry: Dictionary = quickslots[source_index].duplicate(true)
+				quickslots[source_index] = quickslots[target].duplicate(true)
+				quickslots[target] = source_entry
+			"clear": quickslots[source_index] = {}
+			"auto_on", "auto_off":
+				if quickslots[source_index].is_empty(): return
+				if action == "auto_on" and not _quickslot_auto_allowed(quickslots[source_index]):
+					hud.show_message("자동사용을 지원하지 않는 항목입니다")
+					return
+				quickslots[source_index]["auto"] = action == "auto_on"
+			_: return
+		ui_preferences.edited_quickslots[job_class] = true
+	_update_hud()
+	_save_game(true)
+
+func _run_auto_item_quickslots(delta: float) -> void:
+	auto_item_clock -= delta
+	if auto_item_clock > 0 or hp <= 0 or player.is_stunned() or player.is_feared(): return
+	auto_item_clock = 0.2
+	for entry: Dictionary in quickslots:
+		if entry.get("kind","") != "item" or not bool(entry.get("auto",false)): continue
+		var item: String = str(entry.get("id",""))
+		if int(inventory.get(item,0)) <= 0 or float(item_use_cooldowns.get(item,0)) > 0: continue
+		var record: Dictionary = _find_catalog_item_record(item)
+		var spec: Dictionary = CONSUMABLE_RULES.definition(item)
+		var wanted: bool = int(record.get("heal",0)) > 0 and hp < _effective_max_hp()
+		if spec.get("kind","") == "instant_mp": wanted = mp < _effective_max_mp()
+		if spec.get("kind","") in ["regen","food","buff"]:
+			wanted = not active_item_buffs.has(item)
+			for buff: Dictionary in active_item_buffs.values():
+				if not str(spec.get("group","")).is_empty() and buff.get("group","") == spec.group: wanted = false
+		if wanted and _quickslot_auto_allowed(entry):
+			_use_quickslot_item(item)
+			return
 
 func _on_self_mode_changed(enabled: bool) -> void:
 	self_mode_enabled = enabled
@@ -4363,8 +4448,6 @@ func _run_auto_buff_quickslots(delta: float) -> void:
 		var entry: Dictionary = value as Dictionary
 		if str(entry.get("kind", "")) != "skill":
 			continue
-		# Preserve legacy saves without the flag; explicit OFF must stay OFF.
-		if entry.has("auto") and not bool(entry["auto"]): continue
 		var skill_name: String = str(entry.get("skill_id", entry.get("id", "")))
 		if skill_name == "":
 			continue
@@ -5124,7 +5207,16 @@ func _equip_catalog(category: String, record: Dictionary) -> void:
 	hud.append_log("%s 적용 · %s" % [category, str(record.get("name", ""))])
 	_update_hud()
 
-func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "") -> void:
+func _equip_reference_in_slot(reference: String, target: String) -> void:
+	var parts: PackedStringArray = reference.split("@@@")
+	if parts.size() != 2 or not item_instances.has(parts[1]): return
+	var physical: Dictionary = item_instances[parts[1]]
+	if str(physical.get("name","")) != parts[0] or int(inventory.get(parts[0],0)) < 1: return
+	var record: Dictionary = physical.get("record",_find_catalog_item_record(parts[0]))
+	_equip_or_acquire_item(record,false,parts[1],target)
+	_save_game(true)
+
+func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, requested_id: String = "", requested_slot: String = "") -> void:
 	# A physical item with a source ID outranks the legacy name-only lookup.
 	if requested_id != "" and item_instances.has(requested_id):
 		var pinned: Variant = (item_instances[requested_id] as Dictionary).get("record", {})
@@ -5151,6 +5243,14 @@ func _equip_or_acquire_item(record: Dictionary, add_to_inventory: bool = true, r
 		_update_hud()
 		return
 	var equip_slot: String = _equipment_slot_for_record(record)
+	if not requested_slot.is_empty():
+		var compatible: bool = equip_slot == requested_slot
+		for pair: Array in [["ring1","ring2"],["earring1","earring2"],["seal1","seal2"]]:
+			if equip_slot in pair and requested_slot in pair: compatible = true
+		if not compatible:
+			hud.show_message("해당 부위에 착용할 수 없는 장비입니다")
+			return
+		equip_slot = requested_slot
 	if _is_offhand_record(record):
 		equip_slot = "offhand"
 		if not _can_equip_offhand(record):
@@ -6083,6 +6183,8 @@ func _character_stats_snapshot() -> Dictionary:
 		"wis": _effective_attribute("WIS"),
 		"cha": _effective_attribute("CHA"),
 		"stat_points": stat_points,
+		"base_attributes":{"str":str_stat,"dex":dex_stat,"con":con_stat,"int":int_stat,"wis":wis_stat,"cha":cha_stat},
+		"skill_cooldown_reduction": (1.0-_skill_cooldown_factor())*100.0,
 		"consumable_state": consumable_service.call("export_state"),
 		"inventory_weight": _inventory_total_weight(),
 		"carrying_capacity": _carrying_capacity(),
@@ -6386,112 +6488,6 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
 		_save_game(true)
-
-# Integrated UI commands validate live world state, never a copied UI snapshot.
-func _edit_quickslot(index: int, action: String, other: int = -1) -> void:
-	_normalize_quickslots()
-	if index < 0 or index >= quickslots.size(): return
-	var entry: Dictionary = quickslots[index]
-	match action:
-		"clear": quickslots[index] = {}
-		"swap":
-			if other < 0 or other >= quickslots.size(): return
-			quickslots[index] = quickslots[other]
-			quickslots[other] = entry
-		"auto":
-			if entry.is_empty(): return
-			if not bool(entry.get("auto", false)) and not _quickslot_can_auto(entry):
-				hud.show_message("이 항목은 자동사용을 지원하지 않습니다")
-				return
-			entry["auto"] = not bool(entry.get("auto", false))
-		_: return
-	quickslots_customized = true
-	_update_hud()
-	_save_game(true)
-
-func _quickslot_can_auto(entry: Dictionary) -> bool:
-	var id := str(entry.get("id", ""))
-	if entry.get("kind") == "skill":
-		var skill := _skill_record(str(entry.get("skill_id", id)))
-		return not skill.is_empty() and not _is_passive_skill(skill) and (SKILL_RULES.can_auto_cast(skill) or _is_buff_skill(skill))
-	var record := _find_catalog_item_record(id)
-	return entry.get("kind") == "item" and (int(record.get("heal", 0)) > 0 or _is_timed_buff_item(record))
-
-func _run_auto_item_quickslots(delta: float) -> void:
-	auto_item_timer -= delta
-	if auto_item_timer > 0 or not player.auto_enabled: return
-	auto_item_timer = 0.8
-	for raw: Variant in quickslots:
-		if not raw is Dictionary: continue
-		var entry: Dictionary = raw
-		if entry.get("kind") != "item" or not bool(entry.get("auto", false)): continue
-		var id := str(entry.get("id", ""))
-		if int(inventory.get(id, 0)) <= 0 or float(item_use_cooldowns.get(id, 0)) > 0: continue
-		if _item_is_locked(id) or not _quickslot_can_auto(entry): continue
-		var record := _find_catalog_item_record(id)
-		if int(record.get("heal", 0)) > 0:
-			if hp >= int(_effective_max_hp() * 0.7): continue
-		elif active_item_buffs.has(id): continue
-		_use_quickslot_item(id)
-		break
-
-func _unequip_item(reference: String) -> void:
-	var selected := _parse_enhancement_target(reference)
-	var id := str(selected.get("id", ""))
-	var item_name := str(selected.get("name", ""))
-	for slot: String in equipped_items.keys():
-		var record: Dictionary = equipped_items[slot]
-		if str(record.get("name", "")) != item_name: continue
-		if id != "" and str(record.get("instance_id", "")) != id: continue
-		equipped_items.erase(slot)
-		_clear_combat_actions()
-		hp = mini(hp, _effective_max_hp())
-		mp = mini(mp, _effective_max_mp())
-		_update_hud()
-		hud.refresh_inventory(inventory)
-		_save_game(true)
-		hud.show_message("%s 장착 해제" % item_name)
-		return
-	hud.show_message("현재 장착한 아이템이 아닙니다")
-
-func _item_is_locked(item_name: String, instance_id: String = "") -> bool:
-	return bool(item_locks.get(item_name, false)) or (instance_id != "" and bool(item_instances.get(instance_id, {}).get("locked", false)))
-
-func _toggle_item_lock(reference: String) -> void:
-	var selected := _parse_enhancement_target(reference)
-	var id := str(selected.get("id", ""))
-	var item_name := str(selected.get("name", ""))
-	if int(inventory.get(item_name, 0)) <= 0: return
-	if id != "":
-		if not item_instances.has(id) or str(item_instances[id].get("name", "")) != item_name: return
-		item_instances[id]["locked"] = not bool(item_instances[id].get("locked", false))
-	else:
-		if bool(item_locks.get(item_name, false)): item_locks.erase(item_name)
-		else: item_locks[item_name] = true
-	_update_hud()
-	hud.refresh_inventory(inventory)
-	_save_game(true)
-
-func _recipe_has_locked_stack(recipe_id: String) -> bool:
-	var recipe: Dictionary = crafting.recipes.get(recipe_id, {})
-	for material: Dictionary in recipe.get("materials", []):
-		if bool(item_locks.get(str(material.get("item", "")), false)): return true
-	return false
-
-func _pickup_nearest_from_hud() -> void:
-	var nearest: Button
-	var distance: float = 460.0
-	for view: Variant in ground_loot.views.values():
-		if not is_instance_valid(view) or not ground_loot.valid_view(view): continue
-		var next_distance: float = player.global_position.distance_to(view.global_position)
-		if next_distance < distance:
-			distance = next_distance
-			nearest = view
-	if nearest == null:
-		hud.show_message("주변에 주울 아이템이 없습니다")
-		return
-	loot_pickup.select(nearest)
-	loot_pickup.request_selected()
 
 func constrain_original_motion(actor: CharacterBody2D) -> void:
 	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:

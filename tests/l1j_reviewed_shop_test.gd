@@ -60,7 +60,7 @@ func _run() -> void:
 	check(SHOPS.validate(bad_sql,catalog,visuals).is_empty(), "unreviewed source snapshot rejected")
 
 	world.gold = 500000
-	world.hud.open_shop()
+	world.hud.open_npc_shop()
 	var default_vendor: OptionButton = world.hud.workspace.find_child("ShopVendor",true,false)
 	check(default_vendor != null and default_vendor.item_count == 5, "default plus four vendors visible")
 	var default_shop: Node = default_vendor.get_parent()
@@ -79,7 +79,7 @@ func _run() -> void:
 	var old_weapon: Dictionary = world.item_instances[old_id].duplicate(true)
 	var purchases: int = 0
 	for profile: Dictionary in profiles:
-		world.hud.open_shop()
+		world.hud.open_npc_shop()
 		var selector: OptionButton = world.hud.workspace.find_child("ShopVendor",true,false)
 		var shop: Node = selector.get_parent()
 		var index: int = -1
@@ -93,6 +93,10 @@ func _run() -> void:
 		check(shop.purchase_quantity.max_value == 1 and not shop.purchase_quantity.editable, "source pack quantity is one")
 		var before: Dictionary = _snapshot()
 		shop.call("_buy")
+		check(world.gold == int(before.gold),"source shop awaits purchase confirmation")
+		var confirmation: Control = world.hud.get_node("Root").get_node_or_null("TwilightConfirmation")
+		check(confirmation != null,"reviewed purchase confirmation exists")
+		if confirmation != null: confirmation._accept()
 		var price: int = int(profile.goods[0].price)
 		check(world.gold == int(before.gold)-price, "authoritative vendor base price " + str(profile.name))
 		check(int(world.inventory.get("은장검",0)) == int(before.inventory.get("은장검",0))+1, "one weapon acquired")
@@ -129,7 +133,7 @@ func _run() -> void:
 	SHOPS.set_enabled(false)
 	guard = _snapshot()
 	world._buy_reviewed_shop_item("ext:a3:npc:70039","은장검",1)
-	world.hud.open_shop()
+	world.hud.open_npc_shop()
 	var rolled_back: OptionButton = world.hud.workspace.find_child("ShopVendor",true,false)
 	check(_snapshot() == guard and rolled_back.item_count == 1 and SHOP_UI.selected_vendor_id == "", "rollback hides vendors and preserves owned weapons")
 	world._buy_shop_bulk("HP 물약",3)

@@ -2,8 +2,13 @@ extends Node2D
 class_name TwilightPlayerActionFX
 
 # Read-only presentation. Never calls attack, modifies physics or awards damage.
+const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
 var actor: TwilightPlayer
 var clock: float = 0.0
+var visuals = VISUALS.new()
+
+func _ready() -> void:
+	visuals.prepare()
 
 func _process(delta: float) -> void:
 	if not is_instance_valid(actor): return
@@ -18,26 +23,27 @@ func _draw() -> void:
 		var phase: float = clampf(motion.visual_progress, 0.0, 1.0)
 		var aim: Vector2 = motion.direction.normalized()
 		if aim.length_squared() < .1: aim = Vector2.DOWN
-		var direction_angle: float = aim.angle()
-		var center := Vector2(0.0, -48.0)
-		var fade: float = sin(phase * PI)
-		if motion.attack_style in ["magic", "staff"]:
-			var radius: float = 19.0 + phase * 31.0
-			draw_arc(center, radius, 0.0, TAU, 36, Color(.60,.48,1.0,.65*fade), 3.2, true)
-			draw_arc(center, radius*.75, 0.0, TAU, 28, Color(.92,.80,1.0,.40*fade), 2.0, true)
-		elif motion.attack_style == "bow":
-			var tip: Vector2 = center + aim * (30.0 + phase * 34.0)
-			draw_line(center,tip,Color(1.0,.86,.50,.88*fade),3.0,true)
-			draw_circle(tip,4.5,Color(1.0,.94,.73,.8*fade))
-		else:
-			var start_angle: float = direction_angle - 1.15 + phase * 1.85
-			var end_angle: float = start_angle + .88
-			draw_arc(center + aim*11.0, 35.0, start_angle,end_angle,22,Color(1.0,.83,.41,.84*fade),5.0,true)
-			draw_arc(center + aim*11.0, 40.0, start_angle+.12,end_angle-.12,18,Color(1.0,1.0,.86,.53*fade),2.0,true)
+		var center: Vector2 = to_local(actor.combat_hit_position())
+		var fade: float = VISUALS.swing_envelope(phase, motion.attack_hit_ratio)
+		var kind: String = VISUALS.family(motion.attack_style)
+		match kind:
+			"magic":
+				var charge: float = sin(phase * PI) * 0.18 + fade * 0.5
+				visuals.halo(self, center + aim * 18.0, Vector2.ONE * 46.0, Color(.59, .55, 1.0, charge))
+				draw_arc(center, 18.0 + phase * 10.0, -phase, TAU - phase, 28, Color(.74, .73, 1.0, charge), 1.5, true)
+			"arrow", "bullet":
+				# A release glint only. The existing flight system owns the projectile.
+				visuals.beam(self, center + aim * 30.0, aim, 13.0 if kind == "arrow" else 20.0, 2.2, Color(1.0, .93, .73, fade * .65))
+			"thrust":
+				visuals.beam(self, center + aim * (22.0 + phase * 18.0), aim, 24.0, 1.8, Color(1.0, .94, .80, fade * .72))
+			_:
+				var radius: float = 43.0 if kind == "heavy" else 35.0
+				var tip: Vector2 = center + aim * 22.0
+				visuals.crescent(self, tip, aim, radius, phase, Color(1.0, .62, .24, fade * .28))
+				visuals.crescent(self, tip, aim, radius * .90, phase, Color(1.0, .96, .80, fade * .68))
 		return
 	if motion.move_ratio <= .10: return
-	# Footfalls read the same gait clock as the movement sheet. Lightweight
-	# ground dust distinguishes fast travel from idle without sprite replacements.
+	# Preserve the existing movement dust and gait clock.
 	var stride: float = absf(sin(motion.gait * PI))
 	var motion_alpha: float = clampf(motion.move_ratio*.35,0.0,.48)*stride
 	var foot: Vector2 = Vector2(-7.0 if sin(motion.gait * PI)>0.0 else 7.0, 1.0)

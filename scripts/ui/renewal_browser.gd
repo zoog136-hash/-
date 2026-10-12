@@ -13,7 +13,6 @@ var touch_distance: float = 0
 var touch_dragged: bool = false
 
 func configure(list_control: Control, detail_control: Control, width: float = 280) -> void:
-	name = "SelectionBrowser"
 	listing = list_control
 	details = detail_control
 	detail_width = width
@@ -41,20 +40,6 @@ func reflow() -> void:
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	(tabs.get_child(0) as Button).disabled = not detail_active
 	(tabs.get_child(1) as Button).disabled = detail_active
-
-func back_to_list() -> bool:
-	if tabs.visible and detail_active:
-		detail_active = false
-		reflow()
-		return true
-	return false
-
-func capture_navigation_state() -> Dictionary:
-	return {"details":detail_active}
-
-func restore_navigation_state(state: Dictionary) -> void:
-	detail_active = bool(state.get("details",false))
-	reflow()
 
 func enable_item_touch() -> void:
 	listing.gui_input.connect(_item_touch_start)

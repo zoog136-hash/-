@@ -22,6 +22,7 @@ const PATHS = {
 	"target":"M32 16a16 16 0 1 0 0 32a16 16 0 1 0 0-32 M32 7v16 M32 41v16 M7 32h16 M41 32h16 M32 28v8 M28 32h8",
 	"return":"M29 12L9 32l20 20 M9 32h35l11 17",
 	"close":"M16 16l32 32 M48 16L16 48"
+	,"lock":"M18 28h28v26H18z M23 28V17a9 9 0 0 1 18 0v11 M32 37v9"
 }
 const ALIASES={"아이템":"catalog","변신":"transform","마법인형":"doll","성물":"relic"}
 static var cache: Dictionary={}

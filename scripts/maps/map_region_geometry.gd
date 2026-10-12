@@ -7,22 +7,35 @@ static func polygon(record: Dictionary, key: String = "polygon") -> PackedVector
 	return points
 
 static func contains(record: Dictionary, point: Vector2) -> bool:
+	var inside: bool = false
 	if record.has("_prepared_polygon"):
-		return Geometry2D.is_point_in_polygon(point,record["_prepared_polygon"])
-	if record.has("polygon"):
-		return Geometry2D.is_point_in_polygon(point,polygon(record))
-	if record.has("polygons"):
+		inside = Geometry2D.is_point_in_polygon(point,record["_prepared_polygon"])
+	elif record.has("polygon"):
+		inside = Geometry2D.is_point_in_polygon(point,polygon(record))
+	elif record.has("polygons"):
 		for raw: Array in record.polygons:
-			if Geometry2D.is_point_in_polygon(point,polygon({"polygon":raw})): return true
-		return false
-	if record.has("rect"):
+			if Geometry2D.is_point_in_polygon(point,polygon({"polygon":raw})):
+				inside = true
+				break
+	elif record.has("rect"):
 		var a: Array = record.rect
-		return Rect2(a[0],a[1],a[2],a[3]).has_point(point)
-	return point.distance_squared_to(Vector2(record.center[0],record.center[1])) <= pow(float(record.radius),2)
+		inside = Rect2(a[0],a[1],a[2],a[3]).has_point(point)
+	else:
+		inside = point.distance_squared_to(Vector2(record.center[0],record.center[1])) <= pow(float(record.radius),2)
+	if not inside: return false
+	# Exclusions are holes, not additional allowed areas. Both cached spawn cells
+	# and saved boss homes use this same predicate, including prepared geometry.
+	for excluded: Dictionary in record.get("_prepared_exclusions", record.get("exclusions", [])):
+		if contains(excluded, point): return false
+	return true
 
 static func prepare(record: Dictionary) -> Dictionary:
 	var prepared: Dictionary = record.duplicate(false)
 	if record.has("polygon"): prepared["_prepared_polygon"] = polygon(record)
+	if record.has("exclusions"):
+		var exclusions: Array = []
+		for excluded: Dictionary in record.exclusions: exclusions.append(prepare(excluded))
+		prepared["_prepared_exclusions"] = exclusions
 	return prepared
 
 static func reference_to_world(point: Vector2, definition: Dictionary) -> Vector2:

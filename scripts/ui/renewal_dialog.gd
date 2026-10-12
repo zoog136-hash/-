@@ -3,7 +3,6 @@ extends Control
 signal confirmed
 signal canceled
 const UI = preload("res://scripts/ui/renewal_theme.gd")
-const SafeArea = preload("res://scripts/ui/safe_area.gd")
 var title_text: String = "확인"
 var message_text: String = ""
 var card: Panel
@@ -40,21 +39,16 @@ func _ready() -> void:
 	var actions := HBoxContainer.new()
 	actions.alignment = BoxContainer.ALIGNMENT_END
 	stack.add_child(actions)
-	var cancel := UI.button("취소",func() -> void: canceled.emit(); queue_free(),Vector2(110,42))
-	cancel.name = "CancelAction"
-	actions.add_child(cancel)
-	var confirm := UI.button("확인",func() -> void: confirmed.emit(); queue_free(),Vector2(110,42))
-	confirm.name = "ConfirmAction"
-	actions.add_child(confirm)
+	actions.add_child(UI.button("취소",func() -> void: canceled.emit(); queue_free(),Vector2(110,42)))
+	actions.add_child(UI.button("확인",func() -> void: confirmed.emit(); queue_free(),Vector2(110,42)))
 	resized.connect(_fit)
 	_fit()
 
 func _fit() -> void:
 	var stretch: float = maxf(.01,get_viewport().get_final_transform().get_scale().x)
 	card.scale = Vector2.ONE/maxf(.01,minf(1.0,stretch))
-	var safe: Rect2 = SafeArea.available(get_viewport())
-	card.size = Vector2(minf(500,safe.size.x/card.scale.x-24),minf(220,safe.size.y/card.scale.y-24))
-	card.position = safe.position + (safe.size-card.size*card.scale)*.5
+	card.size = Vector2(minf(500,size.x/card.scale.x-24),220)
+	card.position = (size-card.size*card.scale)*.5
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
