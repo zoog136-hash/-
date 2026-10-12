@@ -1,134 +1,20 @@
 # PR59 guarded merge failure report
 
-Source: 66715a2ceb05039798a14f86f5717850944a5d4d
-Main: cfbf0fb4307fbb6694163504eb49692f3e3391bf
-Exit status: 2
+Source: e806d2a7846ea102b1cfb4c621efd67cbbb89d2c
+Main: f759112bca672ef909cc695a98fa99b1b123e1d3
+Exit status: 1
 
 ## Failure details
 ~~~text
-Resolved exactly README.md and scripts/world.gd; preserved original skill save + source-map checks; checked PvE quest exclusions
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+AssertionError: Unexpected merge conflicts: set()
 ~~~
 
 ## Git state
-A  .gitattributes
-A  .github/pull_request_template.md
-A  .github/workflows/card-special-policy-validate.yml
-A  .github/workflows/pr84-world-terrain.yml
-A  .github/workflows/resource-integrity.yml
-A  .github/workflows/restore-pr80-original-assets.yml
-A  .github/workflows/restore-pr80-visual-assets.yml
-M  .github/workflows/ui-renewal-validate.yml
-M  .gitignore
-A  AGENTS.md
-M  README.md
-M  TWILIGHT_PROJECT_RULES.md
-M  addons/twilight_l1j/twilight_map_attributes.gd
-A  addons/twilight_l1j/twilight_source_map_catalog.gd
-M  addons/twilight_l1j/twilight_source_navigation.gd
-M  addons/twilight_l1j/twilight_tile_coordinates.gd
-A  assets/catalog_motion/doll/1.webp
-A  assets/catalog_motion/doll/10.webp
-A  assets/catalog_motion/doll/100.webp
-A  assets/catalog_motion/doll/101.webp
-A  assets/catalog_motion/doll/102.webp
-A  assets/catalog_motion/doll/103.webp
-A  assets/catalog_motion/doll/104.webp
-A  assets/catalog_motion/doll/105.webp
-A  assets/catalog_motion/doll/106.webp
-A  assets/catalog_motion/doll/107.webp
-A  assets/catalog_motion/doll/108.webp
-A  assets/catalog_motion/doll/109.webp
-A  assets/catalog_motion/doll/11.webp
-A  assets/catalog_motion/doll/110.webp
-A  assets/catalog_motion/doll/111.webp
-A  assets/catalog_motion/doll/112.webp
-A  assets/catalog_motion/doll/113.webp
-A  assets/catalog_motion/doll/114.webp
-A  assets/catalog_motion/doll/115.webp
-A  assets/catalog_motion/doll/116.webp
-A  assets/catalog_motion/doll/117.webp
-A  assets/catalog_motion/doll/118.webp
-A  assets/catalog_motion/doll/119.webp
-A  assets/catalog_motion/doll/12.webp
-A  assets/catalog_motion/doll/120.webp
-A  assets/catalog_motion/doll/121.webp
-A  assets/catalog_motion/doll/122.webp
-A  assets/catalog_motion/doll/123.webp
-A  assets/catalog_motion/doll/124.webp
-A  assets/catalog_motion/doll/125.webp
-A  assets/catalog_motion/doll/126.webp
-A  assets/catalog_motion/doll/127.webp
-A  assets/catalog_motion/doll/128.webp
-A  assets/catalog_motion/doll/129.webp
-A  assets/catalog_motion/doll/13.webp
-A  assets/catalog_motion/doll/130.webp
-A  assets/catalog_motion/doll/131.webp
-A  assets/catalog_motion/doll/132.webp
-A  assets/catalog_motion/doll/133.webp
-A  assets/catalog_motion/doll/134.webp
-A  assets/catalog_motion/doll/135.webp
-A  assets/catalog_motion/doll/136.webp
-A  assets/catalog_motion/doll/137.webp
-A  assets/catalog_motion/doll/138.webp
-A  assets/catalog_motion/doll/139.webp
-A  assets/catalog_motion/doll/14.webp
-A  assets/catalog_motion/doll/140.webp
-A  assets/catalog_motion/doll/141.webp
-A  assets/catalog_motion/doll/142.webp
-A  assets/catalog_motion/doll/143.webp
-A  assets/catalog_motion/doll/144.webp
-A  assets/catalog_motion/doll/145.webp
-A  assets/catalog_motion/doll/146.webp
-A  assets/catalog_motion/doll/147.webp
-A  assets/catalog_motion/doll/148.webp
-A  assets/catalog_motion/doll/149.webp
-A  assets/catalog_motion/doll/15.webp
-A  assets/catalog_motion/doll/150.webp
-A  assets/catalog_motion/doll/151.webp
-A  assets/catalog_motion/doll/152.webp
-A  assets/catalog_motion/doll/153.webp
-A  assets/catalog_motion/doll/154.webp
-A  assets/catalog_motion/doll/155.webp
-A  assets/catalog_motion/doll/156.webp
-A  assets/catalog_motion/doll/157.webp
-A  assets/catalog_motion/doll/158.webp
-A  assets/catalog_motion/doll/159.webp
-A  assets/catalog_motion/doll/16.webp
-A  assets/catalog_motion/doll/160.webp
-A  assets/catalog_motion/doll/161.webp
-A  assets/catalog_motion/doll/162.webp
-A  assets/catalog_motion/doll/163.webp
-A  assets/catalog_motion/doll/164.webp
-A  assets/catalog_motion/doll/165.webp
-A  assets/catalog_motion/doll/166.webp
-A  assets/catalog_motion/doll/17.webp
-A  assets/catalog_motion/doll/18.webp
-A  assets/catalog_motion/doll/19.webp
-A  assets/catalog_motion/doll/2.webp
-A  assets/catalog_motion/doll/20.webp
-A  assets/catalog_motion/doll/21.webp
-A  assets/catalog_motion/doll/22.webp
-A  assets/catalog_motion/doll/23.webp
-A  assets/catalog_motion/doll/24.webp
-A  assets/catalog_motion/doll/25.webp
-A  assets/catalog_motion/doll/26.webp
-A  assets/catalog_motion/doll/27.webp
-A  assets/catalog_motion/doll/28.webp
-A  assets/catalog_motion/doll/29.webp
-A  assets/catalog_motion/doll/3.webp
-A  assets/catalog_motion/doll/30.webp
-A  assets/catalog_motion/doll/31.webp
-A  assets/catalog_motion/doll/32.webp
-A  assets/catalog_motion/doll/33.webp
-A  assets/catalog_motion/doll/34.webp
-A  assets/catalog_motion/doll/35.webp
-A  assets/catalog_motion/doll/36.webp
-A  assets/catalog_motion/doll/37.webp
-A  assets/catalog_motion/doll/38.webp
-A  assets/catalog_motion/doll/39.webp
-A  assets/catalog_motion/doll/4.webp
-A  assets/catalog_motion/doll/40.webp
-A  assets/catalog_motion/doll/41.webp
-A  assets/catalog_motion/doll/42.webp
+D  .github/workflows/pr59-safe-merge-diagnostic.yml
+D  docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+D  docs/skills/PR59_RESOLUTION_TRIGGER_20261012.txt
+?? docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
 
 ## Unmerged paths
