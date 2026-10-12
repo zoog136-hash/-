@@ -1,0 +1,20 @@
+{
+  "runtime_commit": "06149aca69bf7902ad00c5aceb4661b1676c16e6",
+  "baseline_main": "68283b12b18d6e38f462f7b3d58587741756947e",
+  "pass": 110,
+  "fail": 0,
+  "blocked": 6,
+  "runner_exit": 1,
+  "raw_fail": [
+    "l1j_map_grid_test",
+    "l1j_png_load_test",
+    "l1j_spx_frames_test"
+  ],
+  "raw_skip": [
+    "original_map_catalog_test",
+    "original_world_runtime_test",
+    "source_first_map_test"
+  ],
+  "reason": "Installed original map tile bytes, PNG and SPX packs are absent. Original pack-specific skips are also BLOCKED, never PASS.",
+  "note": "Historical snapshot before PvE/card main sync; tests ran isolated save directories."
+}
