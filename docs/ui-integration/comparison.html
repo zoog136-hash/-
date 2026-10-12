@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TWILIGHT 통합 HUD 배치 비교</title>
+<style>
+body{margin:24px;background:#16181c;color:#eee;font:16px/1.6 system-ui,sans-serif}a{color:#dfc68d}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:20px}figure{margin:0}img{width:100%;height:auto;border:1px solid #75623d}small{color:#c5c5c5}
+</style>
+<h1>전체 배치와 슬롯 동선 비교</h1>
+<p>공식 가이드의 공개 캡처를 원격 URL로 표시합니다. 원본 이미지는 저장소나 게임 자산에 포함하지 않았습니다. 최신 한국 서비스와 완전히 같은 화면이라는 의미는 아닙니다.</p>
+<main>
+<figure><img src="https://st.ncjapan.co.jp/ncjapan/ncsoft/lm/official/guide/beginner_community/s002_029.jpg" alt="리니지M 일본 공식 가이드의 스킬창과 중앙·오른쪽 퀵슬롯"><figcaption><a href="https://lm.ncsoft.jp/guides/lm/guides/beginner_community">일본 공식 가이드</a> — 오른쪽 스킬 상세, 하단 중앙 4칸/오른쪽 4칸, 각 3그룹.</figcaption></figure>
+<figure><img src="screenshots/skills-1280x720.png" alt="실제 Godot 실행의 TWILIGHT 스킬창"><figcaption>TWILIGHT 실제 실행 — 기존 스킬 상세, 직접 슬롯 등록, 좌우 독립 그룹 전환.</figcaption></figure>
+<figure><img src="screenshots/hud-1280x720.png" alt="1280×720 TWILIGHT 전체 HUD"><figcaption>1280×720 HUD — 상태, 퀘스트/파티, 조이스틱/채팅, 슬롯, 실제 전투 조작, 미니맵.</figcaption></figure>
+<figure><img src="screenshots/hud-2400x1080.png" alt="2400×1080 TWILIGHT 전체 HUD"><figcaption>2400×1080 — 좌우 외곽 유지와 넓은 중앙 시야. 지역명/대상 정보 겹침 방지.</figcaption></figure>
+</main>
+<p><a href="REFERENCE_AND_FLOW.md">확인된 배치·추정/적응 설계·미지원 기능 구분</a></p>
+<small>Godot 4.7.2 / Compatibility / Linux llvmpipe. 실제 모바일 기기의 성능과 입력 검증은 별도입니다.</small>
+</html>

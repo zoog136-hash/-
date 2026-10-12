@@ -40,12 +40,14 @@
 
 서버 권한이 필요한 기능을 로컬 성공 응답이나 가짜 보상으로 대체하지 않았다. 전체 UI의 **진입 구조**와 현재 구현된 로컬 기능의 연결을 제공하며, 리니지M 온라인 기능 전체 또는 최신 한국판 화면과 100% 동일하다고 주장하지 않는다.
 
-## 검증 중간 체크포인트
+## 검증과 전달
 
-- 통합 UI 78개 항목: 77 PASS, 온라인/실기기 1 BLOCKED. Linux OpenGL 실행에서도 동일 결과.
-- 추가 네이티브 입력 21개: headless PASS. 실제 클래스 버튼, 인벤토리/스킬 드래그, 터치 스와이프/롱프레스, 자동 물약, 잠금, 모달, 가상 안전 영역, 비어 있는 슬롯 저장 확인.
-- 기존 UI fidelity: **75 assertions PASS**.
-- 전체 회귀 첫 실행: 83/88. 에디터 sandbox 소켓 실패 1건, 미설치 원본 팩 의존 3건, 퀘스트 영역 높이 1건. 높이는 수정하고 기존 검사 그대로 통과. 최종 전체 실행 결과는 후속 증거에 기록한다.
-- 원본 리소스 무결성 검사는 기존 723개 시트를 검증했다. 누락된 원본 맵/PNG/SPX 팩을 전달 완료로 바꾸지 않았다.
+- 실제 게임 코드 커밋: `4fc43cd1b08040015c51da42ddf2c80ae8e6a089`(통합 기능), `cfb51e749feb386fa399cd7cebe8ba872e7e3cec`(대상/지역명 겹침 수정).
+- 첫 커밋은 새 feature 브랜치에 정상 push했고 [초안 PR #86](https://github.com/zoog136-hash/-/pull/86)을 생성했다. 후속 증거 커밋과 최종 HEAD는 PR에 표시된다. 강제 push와 main 병합 없음.
+- 전체 회귀: **86 PASS / 0 기능 FAIL / 3 BLOCKED**. 원본 팩 부재 3건 때문에 원본 실행기의 결과는 `86/89`, 종료 코드 1이다. 실패를 숨기지 않고 [원본 결과](ui-integration/evidence/regression-raw.json)와 [이유를 포함한 분류](ui-integration/evidence/regression-classified.json)를 모두 보존한다.
+- 실제 Linux OpenGL 통합 UI: **80 PASS / 0 FAIL / 1 BLOCKED**(온라인·실기기). 추가 실제 마우스/터치 이벤트 **21 PASS**. 기존 UI fidelity **75 assertions PASS**.
+- 실제 렌더 캡처 **67장**: 신규 클래스 선택 1장 + 22개 상태 × 3해상도. 이 중 8개 PNG 원본과 전체 67개 파일의 SHA-256/실제 게임 상태/크기를 저장소에 보존한다. 전체 캡처는 로컬 `/workspace/evidence/integrated-ui-delivery`와 UI CI artifact에 생성된다. CI artifact 업로드 성공은 Actions 결과에서 별도 확인해야 한다.
+- 기존 723개 시트/41,442프레임/233,420,026바이트의 Git 추적 및 SHA-256 무결성 PASS. 원본 맵/PNG/SPX 팩의 미전달 상태는 유지한다.
+- 상세 [필수 18개 시나리오와 재현 방법](ui-integration/VALIDATION.md), [공식 자료의 확인/추정 구분](ui-integration/REFERENCE_AND_FLOW.md), [화면 비교](ui-integration/comparison.html), [소스 SHA-256](ui-integration/evidence/snapshot.json).
 
-최종 화면, 18개 필수 시나리오, 공식 레퍼런스의 확인/추정 구분과 최종 커밋/원격 전달 상태는 이 기록에 이어 추가한다.
+실제 수정한 구현 파일은 `project.godot`, `scripts/world.gd`, `scripts/player.gd`, `scripts/crafting/expanded_crafting.gd`, `scripts/ui/{menu_registry,menu_router,quickslot_controller,quickslot_button,safe_area,renewal_hud,renewal_window,renewal_dialog,renewal_inventory,renewal_skills,renewal_quest,renewal_settings,renewal_teleport}.gd`다. 검증용 변경은 `tests/{integrated_ui_test,integrated_interaction_test,capture_integrated_hud,quickslot_smoke_test}.gd`와 `.github/workflows/ui-renewal-validate.yml`이다. 문서/로그/PNG는 `docs/ui-integration/`에 있다. 맵 제작 파일은 변경 목록에 없다.

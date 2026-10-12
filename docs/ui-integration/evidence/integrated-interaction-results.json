@@ -1,0 +1,86 @@
+[
+	{
+		"name": "startup picker exposes class and confirmation controls",
+		"status": "PASS"
+	},
+	{
+		"name": "startup class selection uses real mouse input",
+		"status": "PASS"
+	},
+	{
+		"name": "native inventory drag registers a consumable without using it",
+		"status": "PASS"
+	},
+	{
+		"name": "native skill card drag registers authoritative skill",
+		"status": "PASS"
+	},
+	{
+		"name": "finger swipe down enables item auto use",
+		"status": "PASS"
+	},
+	{
+		"name": "second swipe down disables item auto use",
+		"status": "PASS"
+	},
+	{
+		"name": "finger horizontal swipe changes slot group",
+		"status": "PASS"
+	},
+	{
+		"name": "finger long press opens slot editor",
+		"status": "PASS"
+	},
+	{
+		"name": "locked healing item cannot bypass lock through HUD potion button",
+		"status": "PASS"
+	},
+	{
+		"name": "AUTO consumes owned potion and heals real HP",
+		"status": "PASS"
+	},
+	{
+		"name": "manual stop suppresses auto consumables",
+		"status": "PASS"
+	},
+	{
+		"name": "confirmation blocks world input",
+		"status": "PASS"
+	},
+	{
+		"name": "ESC cancels only the top confirmation",
+		"status": "PASS"
+	},
+	{
+		"name": "confirmation executes once and releases input capture",
+		"status": "PASS"
+	},
+	{
+		"name": "injected mobile safe area contains menu HUD and joystick",
+		"status": "PASS"
+	},
+	{
+		"name": "confirmation fits safe area",
+		"status": "PASS"
+	},
+	{
+		"name": "mobile back notification follows menu history",
+		"status": "PASS"
+	},
+	{
+		"name": "outside mouse click closes workspace",
+		"status": "PASS"
+	},
+	{
+		"name": "reopening windows does not multiply command connections",
+		"status": "PASS"
+	},
+	{
+		"name": "save command reports write success",
+		"status": "PASS"
+	},
+	{
+		"name": "intentionally empty 24-slot configuration survives save and load",
+		"status": "PASS"
+	}
+]

@@ -1,0 +1,461 @@
+[
+  {
+    "test": "import",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "boot",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "actor_motion_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "ainhasad_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "animation_catalog_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "animation_restore_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "authored_frames_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "authored_state_motion_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "catalog_effects_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "catalog_full_browser_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "combat_hud_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "combat_resolution_equivalence_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "combat_timing_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "combat_vfx_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "consumable_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "crafting_atomic_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "crafting_material_drop_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "crafting_scroll_grade_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "equipment_blessing_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "equipment_slot_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "external_a2_bridge_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "external_spx_actor_runtime_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "field_world_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "flight_lifecycle_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "follower_motion_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "full_inven_catalog_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "full_visual_manifest_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "ground_drop_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "ground_loot_system_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "hp_mp_unique_effects_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "input_routing_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "integrated_interaction_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "integrated_ui_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "inventory_db_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "item_buff_description_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "item_db_slot_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "item_icon_art_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "item_options_runtime_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "item_weight_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "job_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "l1j_full_source_data_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "l1j_map_grid_test",
+    "status": "BLOCKED",
+    "raw_runner_result": "FAIL",
+    "reason": "Required optional source pack is absent; no synthetic fixtures installed in this local run.",
+    "missing_paths": [
+      "data/l1j/maps/raw/4.bin"
+    ]
+  },
+  {
+    "test": "l1j_optional_bridge_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "l1j_packed_assets_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "l1j_png_load_test",
+    "status": "BLOCKED",
+    "raw_runner_result": "FAIL",
+    "reason": "Required optional source pack is absent; no synthetic fixtures installed in this local run.",
+    "missing_paths": [
+      "assets/l1j/preview/a2/items/34.png",
+      "assets/l1j/preview/a2/monsters/ms852.png"
+    ]
+  },
+  {
+    "test": "l1j_reviewed_shop_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "l1j_runtime_game_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "l1j_source_navigation_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "l1j_spx_frames_test",
+    "status": "BLOCKED",
+    "raw_runner_result": "FAIL",
+    "reason": "Required optional source pack is absent; no synthetic fixtures installed in this local run.",
+    "missing_paths": [
+      "assets/l1j/candidates/spx_converted/21624-0/SpriteFrames.tres",
+      "assets/l1j/candidates/spx_converted/21624-0/frame_metadata.json"
+    ]
+  },
+  {
+    "test": "l1j_visual_link_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "lineage_inventory_ui_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "lineage_side_ui_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "lineagem_ui_visual_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "local_crafting_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "loot_balance_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "map_visual_toggle_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "mobile_scroll_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "monster_ai_leash_path_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "monster_attack_profiles_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "monster_motion_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "monster_world_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "non_skill_options_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "npc_dialogue_branching_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "npc_teleport_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "option_finalize_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "original_lineagem_effects_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "passive_skill_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "per_instance_enchantments_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "playtest_catalog_drag_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "pr80_original_resources_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "pr80_resource_assets_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "quickslot_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "relic_motion_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "shield_rules_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "shop_authority_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "shop_buyback_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "skill_element_integration_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "skill_mechanism_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "speed_option_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "stage5_save_compatibility_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "ui_fidelity_regression_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "ui_renewal_integration_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "ui_stage4_item_instance_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "visible_gameplay_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "volley_motion_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "warehouse_persistence_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "weapon_rules_smoke_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "world_region_portals_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  },
+  {
+    "test": "world_regions_test",
+    "status": "PASS",
+    "raw_runner_result": "PASS"
+  }
+]
