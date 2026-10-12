@@ -17,6 +17,7 @@ var attack_elapsed: float = 0.0
 var attack_duration: float = 0.0
 var attack_hit_ratio: float = 0.44
 var attack_style: String = "slash"
+var weapon_variant: String = "" # visual only; the existing style still owns hit timing
 var released: bool = false
 var active: bool = false
 var dead: bool = false
@@ -28,6 +29,11 @@ var idle_clock: float = 0.0
 var visual_hold: float = 0.0
 var visual_progress: float = 0.0
 var move_ratio: float = 0.0
+var locomotion_weight: float = 0.0
+var stride_phase: float = 0.0
+var hit_direction: Vector2 = Vector2.ZERO
+var hit_strength: float = 1.0
+var action_role: String = ""
 var hit_duration: float = 0.085
 var state_clock: float = 0.0
 var frame_source: SpriteFrames = null # optional authored frames for an existing Sprite2D
@@ -63,6 +69,8 @@ func begin_attack(total: float, aim: Vector2, style: String = "", marker: float 
 	attack_elapsed = 0.0
 	attack_duration = maxf(0.06, total)
 	attack_style = profile.motion_style if style.is_empty() else style
+	weapon_variant = ""
+	action_role = ""
 	invalidate_pose()
 	attack_hit_ratio = profile.attack_hit_ratio if marker < 0.0 else clampf(marker, 0.1, 0.85)
 	active = true
@@ -95,9 +103,13 @@ func cancel_attack() -> void:
 	visual_hold = 0.0
 	_set_state("idle")
 
-func react(critical: bool = false) -> void:
+func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
+	if dead: return
+	# Repeated hits replace a bounded envelope, never accumulate displacement.
 	hit_duration = 0.13 if critical else 0.085
 	hit_clock = hit_duration
+	hit_strength = 1.45 if critical else 1.0
+	hit_direction = incoming.normalized() if incoming.length_squared() > 0.001 else -direction
 	# Pose freeze only: physics, cooldowns and attack markers are never paused.
 	visual_hold = 0.028 if critical else 0.0
 
@@ -109,6 +121,7 @@ func die() -> void:
 	state = "death"
 
 func advance(delta: float, real_velocity: Vector2) -> void:
+	delta = maxf(0.0, delta)
 	idle_clock += delta
 	hit_clock = maxf(0.0, hit_clock - delta)
 	turn_clock = maxf(0.0, turn_clock - delta)
@@ -118,6 +131,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 		_set_state("death" if death_clock < 0.35 else "corpse", delta)
 		return
 	move_ratio = real_velocity.length() / maxf(1.0, profile.reference_speed)
+	locomotion_weight = move_toward(locomotion_weight, minf(move_ratio, 1.5) if not active else 0.0, delta * 12.0)
 	gait += delta * profile.movement_fps * move_ratio
 	if active:
 		var struck_this_tick: bool = false
@@ -153,7 +167,14 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	if not is_instance_valid(sprite): return
 	var source: SpriteFrames = (sprite as AnimatedSprite2D).sprite_frames if sprite is AnimatedSprite2D else frame_source
-	if dead and source != null: _resolve_frames(source)
+	if source != null: _resolve_frames(source)
+	var stride_frames: int = 6
+	if source != null and source.has_animation(_resolved_key): stride_frames = maxi(2, source.get_frame_count(_resolved_key))
+	stride_phase = gait * TAU / float(stride_frames)
+	# Local atlas/native limb motion already supplies the stride and swing.
+	# Only a small root accent is needed; avoid double bouncing/rotating art.
+	var authored: bool = source != null and _resolved_role != "legacy" and profile.layout != "class5"
+	var weight: float = profile.authored_motion_weight if authored else 1.0
 	var bob: float = 0.0
 	var stretch: Vector2 = Vector2.ONE
 	var lean: float = 0.0
@@ -162,34 +183,51 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 		var fall: float = clampf(death_clock / 0.35, 0.0, 1.0)
 		# Authored death art already contains its fall; retain the shared fade only.
 		if source == null or _resolved_role not in ["death", "corpse"]:
-			lean = fall * 1.35 * (-1.0 if direction.x < 0.0 else 1.0)
+			lean = fall * profile.death_tilt * (-1.0 if direction.x < 0.0 else 1.0)
 			offset.y = 9.0 * fall
 			stretch = Vector2(1.0, 1.0 - fall * 0.2)
 	else:
-		bob = sin(idle_clock * 2.5) * (2.2 if profile.floating else 0.4)
-		if move_ratio > 0.01 and not active:
-			var footfall: float = absf(sin(gait * PI))
+		bob = sin(idle_clock * 2.5) * (maxf(1.2, profile.idle_amplitude) if profile.floating else profile.idle_amplitude) * weight
+		stretch.y = 1.0 + sin(idle_clock * 2.5) * 0.003 * weight
+		if locomotion_weight > 0.001 and not active:
+			var footfall: float = absf(sin(stride_phase))
 			var running: bool = state == "run"
-			bob -= footfall * (1.2 if profile.floating else (4.6 if running else 2.3))
-			lean = sin(gait * PI) * (0.050 if running else (0.025 if profile.motion_style != "crawl" else 0.05))
+			bob -= footfall * profile.stride_bob * (1.45 if running else 1.0) * locomotion_weight * weight
+			lean = sin(stride_phase) * profile.stride_lean * locomotion_weight * weight
 			if running and not profile.floating:
-				stretch = Vector2(1.0 + footfall * .035, 1.0 - footfall * .044)
+				stretch = Vector2(1.0 + footfall * .012 * weight, 1.0 - footfall * .016 * weight)
 		if active:
 			var p: float = visual_progress
-			var impact: float = sin(clampf(p / attack_hit_ratio, 0.0, 1.0) * PI * 0.5) if p <= attack_hit_ratio else 1.0 - smoothstep(attack_hit_ratio, 1.0, p)
+			var windup: float = smoothstep(0.0, attack_hit_ratio * 0.72, p)
+			var release: float = smoothstep(attack_hit_ratio * 0.72, attack_hit_ratio, p)
+			var recover: float = 1.0 - smoothstep(attack_hit_ratio, 1.0, p)
+			var impact: float = release * recover
+			var anticipation: float = windup * (1.0 - release)
 			match attack_style:
 				"bow":
-					offset = direction * (-4.0 if p < attack_hit_ratio else 2.0) * impact
-					stretch = Vector2(1.0 - impact * 0.045, 1.0)
+					offset = direction * (-3.0 * anticipation + 2.0 * impact)
+					stretch = Vector2(1.0 - anticipation * 0.025 * weight, 1.0)
 				"magic":
-					bob -= impact * 4.0
-					stretch = Vector2.ONE * (1.0 + impact * 0.035)
+					bob -= (anticipation * 2.0 + impact) * weight
+					stretch = Vector2.ONE * (1.0 + anticipation * 0.018 * weight)
 				"heavy":
-					lean = (-0.10 + impact * 0.22) * signf(direction.x if absf(direction.x) > 0.1 else 1.0)
-					offset = direction * impact * 7.0
+					lean = (-anticipation * 0.075 + impact * 0.09) * signf(direction.x if absf(direction.x) > 0.1 else 1.0)
+					offset = direction * (-anticipation * 3.0 + impact * 6.0)
 				_:
-					offset = direction * impact * (9.0 if attack_style == "thrust" else 5.0)
-					lean = sin(p * TAU) * 0.065 * signf(direction.x if absf(direction.x) > 0.1 else 1.0)
+					offset = direction * (-anticipation * 2.0 + impact * (7.0 if attack_style == "thrust" else 4.0))
+					lean = (-anticipation * .04 + impact * .055) * signf(direction.x if absf(direction.x) > 0.1 else 1.0)
+			offset *= weight * profile.attack_recoil
+			lean *= weight * profile.attack_recoil
+			match weapon_variant:
+				"단검": offset *= .65; lean *= .7
+				"창", "체인소드": offset *= 1.2; lean *= .5
+				"도끼": lean *= 1.25
+				"둔기": offset *= .8; bob += impact * 1.5 * weight
+				"양손검", "그레이트소드": lean *= 1.1
+				"총", "라이플", "핸드캐넌", "권총": offset = -direction * impact * 3.0 * weight
+		if hit_clock > 0.0:
+			var recoil: float = sin((hit_clock / hit_duration) * PI * 0.5) * profile.hit_recoil * hit_strength
+			offset += hit_direction * recoil
 	var anchor: Vector2 = profile.sprite_offset
 	# Rotate/scale around the established foot anchor, never the collision body.
 	sprite.scale = base_scale * stretch
@@ -221,6 +259,7 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	if active and state in ["attack", "recovery"]:
 		if attack_style == "bow": roles.push_front("ranged_attack")
 		elif attack_style == "magic": roles.push_front("cast")
+		if not action_role.is_empty(): roles.push_front(action_role)
 	match state:
 		"recovery": roles.append("attack")
 		"run": roles.append("walk")
@@ -296,7 +335,7 @@ func apply_frames(sprite: Node2D) -> void:
 	var track: Dictionary = _track(frames, key)
 	var count: int = track.count
 	var frame_value: int = 0
-	if active and _resolved_role in ["attack", "ranged_attack", "cast"]:
+	if active and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
 		var marker_frame: int = clampi(profile.attack_hit_frame, 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))

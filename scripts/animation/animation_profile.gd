@@ -21,6 +21,16 @@ class_name TwilightAnimationProfile
 @export var floating: bool = false
 @export var dedicated_attack: bool = false
 @export var animation_names: Dictionary = {}
+## Presentation amplitudes; never used by attack clocks or damage calculations.
+@export var body_kind: String = "humanoid"
+@export var idle_amplitude: float = 0.4
+@export var stride_bob: float = 2.0
+@export var stride_lean: float = 0.022
+@export var attack_recoil: float = 1.0
+@export var hit_recoil: float = 2.5
+@export var death_tilt: float = 1.25
+@export var authored_motion_weight: float = 0.18
+@export var presentation: Dictionary = {}
 
 func marker_for(style: String) -> float:
 	return clampf(attack_hit_ratio, 0.1, 0.85) if use_profile_hit_ratio else hit_ratio(style)

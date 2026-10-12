@@ -4,6 +4,7 @@ class_name TwilightAnimationCatalog
 const PROFILE = preload("res://scripts/animation/animation_profile.gd")
 const PROFILE_PATH = "res://data/combat_animation_profiles.json"
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
+const PRESENTATION = preload("res://scripts/animation/presentation_catalog.gd")
 const MAX_FRAME_CACHE = 96
 static var records: Dictionary = {}
 static var frame_cache: Dictionary = {}
@@ -33,7 +34,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if not settings.has("attack_hit_ratio"): result.attack_hit_ratio = PROFILE.hit_ratio(result.motion_style)
 	if not settings.has("movement_fps"): result.movement_fps = 7.0 if result.motion_style == "heavy" else 9.0
 	var authored: Dictionary = VISUALS.record(key)
-	if not authored.is_empty() and ResourceLoader.exists(str(authored.get("atlas", ""))):
+	if result.frames_path.is_empty() and not authored.is_empty() and ResourceLoader.exists(str(authored.get("atlas", ""))):
 		# Keep gameplay hit ratios and attack clocks. Only pose/anchor metadata
 		# belongs to the generated local atlas.
 		result.frames_path = str(authored.atlas)
@@ -44,6 +45,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 		result.movement_fps = float(authored.get("movement_fps", result.movement_fps))
 		var anchor: Array = authored.get("sprite_offset", [0, result.sprite_offset.y])
 		result.sprite_offset = Vector2(float(anchor[0]), float(anchor[1]))
+	PRESENTATION.configure(result, kind, record)
 	return result
 
 static func frames(path: String, layout: String) -> SpriteFrames:
@@ -105,9 +107,12 @@ static func first_texture(source: SpriteFrames) -> Texture2D:
 	return null
 
 static func frames_for_profile(profile: TwilightAnimationProfile, fallback: String) -> SpriteFrames:
+	# Optional authored art must never remove an otherwise valid existing appearance.
+	if profile.frames_path.get_extension() in ["tres", "res"] and ResourceLoader.exists(profile.frames_path):
+		var authored: SpriteFrames = frames(profile.frames_path, profile.layout)
+		if first_texture(authored) != null: return authored
 	var from_manifest: SpriteFrames = VISUALS.catalog_frames(profile.profile_id)
 	if from_manifest != null: return from_manifest
-	# Optional authored art must never remove an otherwise valid existing appearance.
 	if not profile.frames_path.is_empty() and ResourceLoader.exists(profile.frames_path):
 		var authored: SpriteFrames = frames(profile.frames_path, profile.layout)
 		if first_texture(authored) != null: return authored

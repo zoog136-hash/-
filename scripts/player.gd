@@ -373,7 +373,7 @@ func show_miss() -> void:
 	_show_combat_text("MISS", Color(0.78, 0.86, 1.0, 1.0), Vector2(-38.0, -112.0))
 
 func show_received_damage(amount: int, critical: bool = false, kind: String = "melee", source: Vector2 = Vector2.ZERO) -> void:
-	motion.react(critical)
+	motion.react(critical, source.direction_to(combat_hit_position()))
 	var world: Node = get_parent()
 	if world is TwilightWorld and world.combat_vfx != null:
 		world.combat_vfx.impact(combat_hit_position(), source.direction_to(combat_hit_position()), kind, critical)

@@ -6409,6 +6409,7 @@ func _queue_player_attack(target: TwilightMonster, kind: String, callback: Calla
 	var style: String = TwilightAnimationProfile.weapon_style(_current_weapon_type(), kind)
 	var marker: float = player.motion.profile.marker_for(style)
 	var id: int = player.start_combat_attack(target.global_position, duration, style, marker)
+	player.motion.weapon_variant = _current_weapon_type()
 	pending_attack = {"id":id, "target":weakref(target), "callback":callback, "kind":kind,
 		"style":style, "normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation}
 
