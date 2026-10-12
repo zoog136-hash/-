@@ -12,7 +12,7 @@
 | 시작 시 확인한 최신 main | `9fbcd1a02505a2d9685507411faff577c7e236f6` |
 | PR #92 포함 여부 | 포함. 병합 커밋 `06803c4`, 기존 타격·크리티컬 VFX를 재사용 |
 | 작업 브랜치 | `feature/animation-profiles-boss-presentation` |
-| 최종 구현 커밋 | `41566426fa0e3394df9cc012cc756e3851c1ff37` |
+| 최종 런타임 구현 커밋 | `41566426fa0e3394df9cc012cc756e3851c1ff37` |
 | 검증 엔진 | `4.7.2.stable.official.ed1daf0bf` |
 | PR | https://github.com/zoog136-hash/-/pull/95 |
 | 변경 파일 | [CHANGED_FILES.txt](CHANGED_FILES.txt), PR Files changed |
@@ -103,6 +103,7 @@ Idle/Walk/Run/Attack/Hit/Death는 기존 트랙을 사용한다. RangedAttack/Ca
 - 최종 집중 검사 **12개 통과**. 전체 변신/몬스터 검사는 **76,231개 assertion**, 보스 검사는 **693개 assertion**, 실패 0이다. `evidence/*_test.txt`에 실제 출력이 있다.
 - 공격 타이밍, 기존 전투 결과 동등성, volley, 변신 복귀, PR #92 타격/VFX, 원화 트랙 우선, 몬스터 모션을 검사했다. 원래 전투 계산 파일·세이브 구조·맵/충돌·인벤토리·장비 DB는 변경하지 않았다.
 - 전체 회귀의 변경 전·후 결과와 기존 실패는 [REGRESSION.md](REGRESSION.md)에 별도로 기록한다. 집중 검사 통과를 전체 회귀 통과로 표현하지 않는다.
+- Android preset의 실제 PCK 내보내기와 별도 빈 프로젝트의 pack 로딩 검사를 통과했다. 새 검증 폴더는 `exclude_filter`와 `.gdignore`로 제외해 이미지/영상/CSV 번역 import가 게임 용량을 늘리지 않게 했다. 런타임 JSON·Main 장면·변신 텍스처가 pack에 남는 것을 확인했다. 이는 APK 설치/실기기 테스트가 아니다. [검사 출력](evidence/export-filter.txt), [사용한 probe](evidence/export-filter-probe.gd).
 - 무결성 검사: 기존 723 atlas / 41,442 프레임 / 233,420,026 bytes, 변신 413·인형 166·성물 144. 자산/manifest 변경 없음.
 
 ### 실제 렌더 증거와 눈으로 확인한 범위
