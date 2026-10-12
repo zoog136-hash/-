@@ -2,6 +2,8 @@ extends Control
 class_name FieldMinimap
 
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
+const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
+var source_overview: Texture2D
 var world: Node
 var field: PlayableField
 var bounds := Rect2(0,0,1,1)
@@ -12,6 +14,7 @@ func configure(controller: Node, value: PlayableField) -> void:
 	world = controller
 	field = value
 	bounds = field.bounds if field != null else Rect2(Vector2.ZERO,world.world_size)
+	source_overview = (field as OriginalPlayableField).overview_texture() if field is OriginalPlayableField else null
 	queue_redraw()
 
 func _ready() -> void:
@@ -33,17 +36,31 @@ func _draw() -> void:
 		return
 	draw_style_box(_panel(),Rect2(Vector2.ZERO,size))
 	draw_rect(area,Color("202e27"))
+	if source_overview != null: draw_texture_rect(source_overview,area,false)
 	var font: Font = get_theme_default_font()
 	var heading: String = str(field.data.get("minimap",{}).get("title","ADEN  /  WORLD")) if field != null else "REGION  /  MAP"
+	if field is OriginalPlayableField: heading = str(field.data.map_name)
 	draw_string(font,Vector2(10,18),heading.to_upper(),HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("decfae"))
 	if field != null:
+		_draw_structure_geography()
 		for surface: Dictionary in field.data.get("surfaces",[]):
+			if field.data.has("hunting_paths") and field.data.has("world_geometry") and not surface.has("polygon"): continue
+			if surface.has("polygon"):
+				draw_colored_polygon(_map_polygon(surface),Color("56565b"))
+				continue
 			var a: Array = surface["rect"]
 			var top: Vector2 = _point(Vector2(float(a[0]),float(a[1])))
 			var end: Vector2 = _point(Vector2(float(a[0])+float(a[2]),float(a[1])+float(a[3])))
 			draw_rect(Rect2(top,end-top),Color("56565b"))
 		for region: Dictionary in field.data["regions"]:
+			if region.has("polygon"):
+				var polygon: PackedVector2Array = _map_polygon(region)
+				draw_colored_polygon(polygon,Color(str(region.color),.2))
+				continue
 			var p: Vector2 = _point(COORD.array_vector(region["center"]))
+			if field.data.has("hunting_paths"):
+				_draw_hunting_region(region)
+				continue
 			var r: float = float(region["radius"])/bounds.size.x*area.size.x
 			var color := Color(str(region["color"]),.3)
 			draw_circle(p,r,color)
@@ -65,6 +82,8 @@ func _draw() -> void:
 		for region: Dictionary in field.data["regions"]:
 			if str(region["type"]) in ["safe","boss"]:
 				draw_circle(_point(COORD.array_vector(region["center"])),3.0,Color("e6c16f") if str(region["type"])=="safe" else Color("dd7762"))
+		_draw_boss_regions()
+		_draw_hunting_obstacles()
 	for monster: TwilightMonster in world.monsters_root.get_children():
 		if monster.global_position.distance_squared_to(world.player.global_position) < 1600000:
 			draw_circle(_point(monster.global_position),1.3,Color("d68b73"))
@@ -82,7 +101,66 @@ func _draw() -> void:
 	if field != null:
 		var region: Dictionary = field.region_at(world.player.global_position)
 		title = str(region["name"]) + (" · 안전" if str(region["type"])=="safe" else " · 사냥터")
+		if field is OriginalPlayableField: title = str(field.data.short_name)
 	draw_string(font,Vector2(9,181),title,HORIZONTAL_ALIGNMENT_LEFT,204,12,Color("d7ceba"))
+
+func _map_polygon(record: Dictionary, key: String = "polygon") -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for p: Vector2 in REGION_GEOMETRY.polygon(record,key): points.append(_point(p))
+	return points
+
+func _draw_structure_geography() -> void:
+	if not field.data.has("world_geometry"): return
+	var structure: Dictionary = field.data.world_geometry
+	draw_rect(area,Color(str(structure.void_color)))
+	for raw: Array in field.data.navigable_polygons:
+		draw_colored_polygon(_map_polygon({"polygon":raw}),Color("64715d") if str(field.data.map_id)=="aden_world" else Color("777578"))
+	for zone: Dictionary in structure.terrain_zones:
+		for raw: Array in field.data.navigable_polygons:
+			for polygon: PackedVector2Array in Geometry2D.intersect_polygons(REGION_GEOMETRY.polygon(zone),REGION_GEOMETRY.polygon({"polygon":raw})):
+				var points := PackedVector2Array()
+				for p: Vector2 in polygon: points.append(_point(p))
+				draw_colored_polygon(points,Color(str(zone.tint)))
+	for shape: Dictionary in field.data.collision:
+		if str(shape.kind)=="dungeon_pit": draw_colored_polygon(_map_polygon(shape,"points"),Color("090b10"))
+
+func _draw_boss_regions() -> void:
+	for spawn: Dictionary in field.data.get("monster_spawn",[]):
+		if str(spawn.get("mode",""))!="boss" or not spawn.has("polygon"): continue
+		var points: PackedVector2Array = _map_polygon(spawn)
+		var cells: Array = field.spawn_cells.get(str(spawn.id),[])
+		var stride: int = maxi(1,ceili(float(cells.size())/480.0))
+		for i: int in range(0,cells.size(),stride):
+			draw_circle(_point(field.cell_to_world(cells[i])),1.1,Color(.9,.35,.25,.45))
+		points.append(points[0])
+		draw_polyline(points,Color(.9,.35,.25,.7),1.0,true)
+
+func _draw_hunting_region(region: Dictionary) -> void:
+	if str(region.type)=="safe": return
+	for spawn: Dictionary in field.data.get("monster_spawn",[]):
+		if str(spawn.id)!=str(region.id): continue
+		var geometry: PackedVector2Array
+		if spawn.has("polygon"):
+			geometry=REGION_GEOMETRY.polygon(spawn)
+		else:
+			var a: Array=spawn.rect
+			geometry=PackedVector2Array([Vector2(a[0],a[1]),Vector2(a[0]+a[2],a[1]),Vector2(a[0]+a[2],a[1]+a[3]),Vector2(a[0],a[1]+a[3])])
+		for floor: PackedVector2Array in field.navigable_polygons:
+			for clipped: PackedVector2Array in Geometry2D.intersect_polygons(geometry,floor):
+				var outline := PackedVector2Array()
+				for p: Vector2 in clipped: outline.append(_point(p))
+				draw_colored_polygon(outline,Color(str(region.color),.16))
+
+func _draw_hunting_obstacles() -> void:
+	if not field.data.has("hunting_paths"): return
+	# Draw the same physical objects and boundary shapes used by walking.
+	for obstacle: Dictionary in field.data.collision:
+		if str(obstacle.get("placement_group",""))!="hunting_paths_v1": continue
+		if obstacle.shape=="polygon":
+			draw_colored_polygon(_map_polygon(obstacle,"points"),Color("30323b"))
+		elif obstacle.shape=="circle" and obstacle.has("hunting_lane"):
+			var radius: float=maxf(.55,float(obstacle.radius)/bounds.size.x*area.size.x)
+			draw_circle(_point(COORD.array_vector(obstacle.center)),radius,Color("30323b"))
 
 func _panel() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()

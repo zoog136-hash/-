@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+ADEN_BOUNDARY {"after":0.000561683011862139,"before":0.00230800682523598,"boundary":"primary_x"}
+ADEN_BOUNDARY {"after":0.000479983709131678,"before":0.000428921620671948,"boundary":"primary_y"}
+ADEN_BOUNDARY {"after":0.000357434638620665,"before":0.000418709125369787,"boundary":"rotated_x"}
+ADEN_BOUNDARY {"after":0.000357434619218111,"before":0.000520833457509677,"boundary":"rotated_y"}
+ADEN_CONTINUITY_RESULT {"boundaries":[{"after":0.000561683011862139,"before":0.00230800682523598,"boundary":"primary_x"},{"after":0.000479983709131678,"before":0.000428921620671948,"boundary":"primary_y"},{"after":0.000357434638620665,"before":0.000418709125369787,"boundary":"rotated_x"},{"after":0.000357434619218111,"before":0.000520833457509677,"boundary":"rotated_y"}],"display":"X11","failures":["primary_y must halve the old jump","rotated_x must halve the old jump","rotated_y must halve the old jump"],"metric":"mean absolute RGB difference at adjacent pixels straddling sampler wrap; 128x horizontal magnification"}

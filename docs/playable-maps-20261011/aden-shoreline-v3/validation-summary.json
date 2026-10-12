@@ -1,0 +1,58 @@
+{
+  "map": "aden_world",
+  "remote_base": "d87559ee8b1af4a3b236b1a3f22095b9e094d16e",
+  "change": "wet bank, visible riverbed in shallows and depth gradient inside existing river polygons",
+  "gameplay": {
+    "checks": 25,
+    "failures": [],
+    "original_restored": false,
+    "phase": "shoreline",
+    "physical_devices_tested": false,
+    "platform": "Godot 4.7.2 Linux software OpenGL",
+    "seam_mean_rgb_delta": 0.00695465703029186
+  },
+  "shoreline": {
+    "checks": 23,
+    "display": "X11",
+    "failures": [],
+    "original_restored": false,
+    "scope": "three original river outlines/area, two bridge clearance and blocked adjacent water, three actual rendered views"
+  },
+  "preserved_sha256": {
+    "data/maps/aden_field.json": "6a6c23764c2eb25141d450372f6006efaffc41b788f98acde2d1c4fde41f25b6",
+    "data/maps/reference_visual_profiles.json": "45b73ac5d30188dbe3d93063c9fd6cac3bcb708f0ad2e693dc2480d16b2c270f",
+    "data/maps/field_index.json": "449c87c882f7842974ec9c951cacee1699bb8f717788aad61a401a480c61dc2a",
+    "scripts/maps/playable_field.gd": "f15fca44b11e1b8373a23ba970ad8876741008c3616096fd2d693acbd896fe13",
+    "scripts/world.gd": "d51e627e1c5ffabc38f77fb47f562433babe80e9a305a5116c4c03a59f1dbed7",
+    "assets/maps/reference_expansion_v2/terrain.png": "4a4fe796ec4304c264719d2af4457c76ac87979bc33c557a0c3bdb72d8ac03af",
+    "assets/maps/reference_expansion_v2/props.png": "edec31e6596f5bc036a0ee4eb5fe94ef7c1ff987dd0e20bfbe7a949d880e8199"
+  },
+  "before_north_bridge": "../aden-polish-v3/after/03-bridge.png",
+  "north_bridge_exact_camera": [
+    6180,
+    3000
+  ],
+  "screenshots": [
+    {
+      "path": "screenshots/01-north-bridge.png",
+      "bytes": 1593765,
+      "sha256": "2988591aa0c1d3e605c6ac3b55994b5148294e80766a52b936b3d21b3a2679d2"
+    },
+    {
+      "path": "screenshots/02-south-bridge.png",
+      "bytes": 1591520,
+      "sha256": "8422ede7ef9e7e58044b503e0a6b1d047c921314a252ce01e1c0750520e77c70"
+    },
+    {
+      "path": "screenshots/03-curved-bank.png",
+      "bytes": 1426271,
+      "sha256": "f4f24df7b7107cb8bc60b1b8c084ef72d249d61f1cfc76dfdf810cdc23a99fcb"
+    }
+  ],
+  "not_done": [
+    "Windows/Android device runs",
+    "original art restoration",
+    "exact Lineage M visual correspondence",
+    "main merge"
+  ]
+}

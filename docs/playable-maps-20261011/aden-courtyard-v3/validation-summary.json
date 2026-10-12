@@ -1,0 +1,51 @@
+{
+  "map": "aden_world",
+  "remote_base": "57063ce7cedfe2cab9e9e39ef73fa589aaf5856f",
+  "change": "weathered stone-to-grass courtyard edge replacing three hard oval layers",
+  "gameplay": {
+    "checks": 25,
+    "failures": [],
+    "original_restored": false,
+    "phase": "courtyard",
+    "physical_devices_tested": false,
+    "platform": "Godot 4.7.2 Linux software OpenGL",
+    "seam_mean_rgb_delta": 0.00695465703029186
+  },
+  "styles_and_views": {
+    "checks": 13,
+    "failures": [],
+    "platform": "Godot 4.7.2 Linux software OpenGL",
+    "scope": "three courtyard placements, classic/default style restoration, navigation identity, three real viewports, non-Aden scope"
+  },
+  "before_village": "../aden-polish-v3/after/01-village.png",
+  "preserved_sha256": {
+    "data/maps/aden_field.json": "6a6c23764c2eb25141d450372f6006efaffc41b788f98acde2d1c4fde41f25b6",
+    "data/maps/reference_visual_profiles.json": "45b73ac5d30188dbe3d93063c9fd6cac3bcb708f0ad2e693dc2480d16b2c270f",
+    "scripts/world.gd": "d51e627e1c5ffabc38f77fb47f562433babe80e9a305a5116c4c03a59f1dbed7",
+    "scripts/maps/playable_field.gd": "f15fca44b11e1b8373a23ba970ad8876741008c3616096fd2d693acbd896fe13"
+  },
+  "screenshots": [
+    {
+      "path": "screenshots/01-village.png",
+      "bytes": 1853601,
+      "sha256": "e1a5eb06ba38d69c454cb02f7f99fa440d35cc37daa5a0531f7419913b19edd6"
+    },
+    {
+      "path": "screenshots/02-village-classic.png",
+      "bytes": 1686000,
+      "sha256": "e08f0a16c2cda8873cc58fa154e72d27ca02f16f0bccf482eb55227242fbed9c"
+    },
+    {
+      "path": "screenshots/03-ruins.png",
+      "bytes": 1913575,
+      "sha256": "4c17326f4a74a051d0de87f9ba35e9b8e60e1c98d9b154c893c91c94d4f3ce92"
+    },
+    {
+      "path": "screenshots/04-north-courtyard.png",
+      "bytes": 1687352,
+      "sha256": "11a97e42f02b54902ca4da9d0bbf376bc55bec67599ed648bc9bfc924c76b70b"
+    }
+  ],
+  "original_restored": false,
+  "device_validation": false
+}

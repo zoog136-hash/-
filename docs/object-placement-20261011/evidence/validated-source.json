@@ -1,0 +1,31 @@
+{
+  "game_source_equal_to_validation_checkout": true,
+  "files": [
+    {
+      "path": "data/maps/aden_field.json",
+      "sha256": "2589cc607b4dabbfeb0fedd06bb0e53371eda1bb151f86580aeeb7c958123b69"
+    },
+    {
+      "path": "data/maps/oman_01.json",
+      "sha256": "3ce424ead3703aedcb9b1117cb9fda24f10b614046a466d801536013314c8466"
+    },
+    {
+      "path": "scripts/maps/field_renderer.gd",
+      "sha256": "c380b0b7732d26892e732b20ce3b60a94e043a802489de67e469e4f4e3431995"
+    },
+    {
+      "path": "tests/reference_object_placement_test.gd",
+      "sha256": "67db1bc7568ee1aab46797322098b57ca4c101096bc55a53939cf10886311f15"
+    },
+    {
+      "path": "tests/reference_object_capture_test.gd",
+      "sha256": "049513215be2d47a56aaa4f1f63cff9cc61a0ff233214880e659b6004c2b5332"
+    },
+    {
+      "path": "tests/world_regions_test.gd",
+      "sha256": "a5cb949785b621a8bf3a230e0ff05b830c8227289db04baeb764e74b6f0e82f7"
+    }
+  ],
+  "game_source_commit": "a713a473b00656440a3b1a62048bf89261889dd2",
+  "test_fixture_note": "Updated region test was verified separately and is committed with this evidence."
+}

@@ -1,0 +1,33 @@
+{
+  "initial": {
+    "passed": 91,
+    "total": 95,
+    "failed": [
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test",
+      "original_map_catalog_test"
+    ]
+  },
+  "targeted_rechecks": {
+    "synthetic_fixtures_in_isolated_worktree": {
+      "passed": 3,
+      "tests": [
+        "l1j_map_grid_test",
+        "l1j_png_load_test",
+        "l1j_spx_frames_test"
+      ]
+    },
+    "source_catalog_repaired": {
+      "passed": true,
+      "preserved": 1000,
+      "loaded_with_valid_spawn": 998
+    }
+  },
+  "remaining_failed_checks": [],
+  "full_suite_not_repeated_after_targeted_rechecks": true,
+  "rendered_twilight_maps": 25,
+  "render_checks": 240,
+  "source_mainland_GL_checks": 37,
+  "platform": "Linux Godot 4.7.2 software OpenGL llvmpipe; no Windows/Android device validation"
+}

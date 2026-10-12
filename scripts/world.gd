@@ -13,6 +13,10 @@ const FIELD_INDEX_PATH: String = "res://data/maps/field_index.json"
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
+const SOURCE_FIELD = preload("res://scripts/maps/source_field.gd")
+const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
+const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
+const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const MONSTER_CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
@@ -70,6 +74,10 @@ var field_renderer: FieldRenderer = null
 var field_physics: StaticBody2D = null
 var field_population: FieldPopulation = null
 var field_minimap: FieldMinimap = null
+var original_maps: Array = []
+var legacy_population: FieldPopulation
+var original_population: OriginalSourcePopulation
+var source_save_blocked: bool = false
 var portal_cooldown: float = 2.0
 var auto_repath_timer: float = 0.0
 var auto_last_position: Vector2 = Vector2.ZERO
@@ -399,6 +407,9 @@ func _load_data() -> void:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
 			maps_by_id[str(map_data.get("id", ""))] = map_data
+	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
+		original_maps.append(record)
+		maps_by_id[str(record.id)] = record
 	var db_text: String = FileAccess.get_file_as_string(DB_PATH)
 	var db_value: Variant = JSON.parse_string(db_text)
 	if db_value is Dictionary:
@@ -1090,7 +1101,15 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			push_error("Invalid playable field: " + map_id)
 			return
 		requested_field = loaded_field as Dictionary
+	var requested_original: OriginalPlayableField = null
+	if requested_map.has("source_definition"):
+		requested_original = SOURCE_TRAVEL.load_field(requested_map)
+		if requested_original == null:
+			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
+			return
 	field_population.configure(self, null)
+	field_population = original_population if requested_original != null else legacy_population
+	if field_map is OriginalPlayableField: (field_map as OriginalPlayableField).close()
 	if is_instance_valid(return_gate):
 		remove_child(return_gate)
 		return_gate.queue_free()
@@ -1118,9 +1137,15 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	for shape: Node in map_collision.get_children():
 		map_collision.remove_child(shape)
 		shape.queue_free()
-	if not requested_field.is_empty():
-		field_map = FIELD_SCRIPT.new()
-		field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
+	if requested_original != null or not requested_field.is_empty():
+		if requested_original != null:
+			field_map = requested_original
+			world_size = field_map.bounds.size
+			player.camera.limit_right = int(world_size.x)
+			player.camera.limit_bottom = int(world_size.y)
+		else:
+			field_map = FIELD_SCRIPT.new()
+			field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
 		astar = field_map.astar
 		field_physics = field_map.build_physics(self)
 		map_background.texture = null
@@ -1156,7 +1181,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		field_renderer = FIELD_RENDERER.new()
+		field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
@@ -1254,6 +1279,7 @@ func _setup_collision_tileset() -> void:
 
 func _build_collision_debug_tiles() -> void:
 	collision_tiles.clear()
+	if field_map is OriginalPlayableField: return
 	if field_map != null:
 		if collision_debug:
 			for y: int in range(field_map.height):
@@ -1294,6 +1320,7 @@ func _world_to_cell(position_value: Vector2) -> Vector2i:
 	return Vector2i(int(floor(position_value.x / tile_size)), int(floor(position_value.y / tile_size)))
 
 func _is_walkable_world(position_value: Vector2) -> bool:
+	if field_map != null: return field_map.walkable(position_value)
 	if astar == null:
 		return false
 	var cell: Vector2i = _world_to_cell(position_value)
@@ -1317,6 +1344,7 @@ func find_world_path(from_position: Vector2, to_position: Vector2) -> PackedVect
 	return result
 
 func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
+	if field_map is OriginalPlayableField: return field_map.nearest_cell(field_map.cell_to_world(origin))
 	if astar != null and astar.is_in_boundsv(origin) and not astar.is_point_solid(origin):
 		return origin
 	for radius: int in range(1, 12):
@@ -1370,6 +1398,8 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_crafting")
 				elif str(npc["role"]) == "buyback":
 					hud.call("open_item_sell")
+				elif field_map is OriginalPlayableField:
+					hud.show_message(str(npc.name)+" · 원본 대화 기능 미매핑")
 				elif str(npc["role"]) == "guide":
 					hud.call("open_npc_dialogue",str(npc.get("id","")))
 				else:
@@ -1421,6 +1451,7 @@ func _monster_texture(record: Dictionary) -> Texture2D:
 	return null
 
 func _random_walkable_position(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
+	if field_map is OriginalPlayableField: return (field_map as OriginalPlayableField).random_landing(rng,near,min_distance,max_distance)
 	var width: int = int(active_map.get("width", 1))
 	var height: int = int(active_map.get("height", 1))
 	var require_reachable: bool = near != Vector2.ZERO
@@ -3600,6 +3631,9 @@ func _refresh_combat_hud() -> void:
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func _save_game(quiet: bool) -> void:
+	if source_save_blocked:
+		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
+		return
 	_sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
@@ -3628,7 +3662,9 @@ func _save_game(quiet: bool) -> void:
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
-		"monster_world": field_population.export_state(),
+		"monster_world": legacy_population.export_state(),
+		"original_monster_world": original_population.export_state(),
+		"original_position": SOURCE_TRAVEL.snapshot(self),
 		"class_index": class_index,
 		"job_class": job_class,
 		"quickslots": quickslots,
@@ -3653,7 +3689,7 @@ func _save_game(quiet: bool) -> void:
 			hud.show_message("저장 실패")
 		hud.append_log("저장 파일을 열 수 없습니다")
 		return
-	file.store_string(JSON.stringify(data))
+	file.store_string(JSON.stringify(data,"",true,true))
 	file.close()
 	if not quiet:
 		hud.show_message("저장 완료")
@@ -3681,6 +3717,15 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var saved_map_id: String = str(data.get("map_id", ""))
+	if saved_map_id.begins_with("l1_"):
+		var saved_field: OriginalPlayableField = SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
+		if saved_field == null:
+			source_save_blocked = true
+			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
+			return
+		saved_field.close()
+	source_save_blocked = false
 	warehouse.restore(data.get("warehouse", {}))
 	crafting_log.clear()
 	var old_log: Variant = data.get("crafting_log", [])
@@ -3768,11 +3813,14 @@ func _load_game(quiet: bool) -> void:
 	# Capture outgoing actors before importing; otherwise map teardown could
 	# overwrite the loaded boss snapshot with the pre-load HP/cooldown.
 	field_population.configure(self,null)
-	field_population.import_state(data.get("monster_world",{}))
+	legacy_population.import_state(data.get("monster_world",{}))
+	original_population.import_state(data.get("original_monster_world",{}))
 	_set_map(map_id, false)
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
+	if field_map is OriginalPlayableField:
+		position_value = SOURCE_TRAVEL.restore_position(self,data.get("original_position",{}))
 	if position_value is Array and compatible_layout:
 		var position_array: Array = position_value as Array
 		if position_array.size() >= 2:
@@ -4871,6 +4919,9 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	if field_map is OriginalPlayableField and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
+		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
+		return false
 	for _attempt: int in range(100):
 		var candidate: Vector2 = player.global_position + Vector2(rng.randf_range(-700.0, 700.0), rng.randf_range(-500.0, 500.0))
 		var safe_only: bool = bool(skill.get("safe_zone_only", false))
@@ -6004,6 +6055,11 @@ func _setup_field_services() -> void:
 	field_population.name = "FieldPopulation"
 	add_child(field_population)
 	field_population.set_process(false)
+	legacy_population = field_population
+	original_population = SOURCE_POPULATION.new()
+	original_population.name = "OriginalSourcePopulation"
+	add_child(original_population)
+	original_population.set_process(false)
 	field_minimap = FIELD_MINIMAP.new()
 	field_minimap.name = "FieldMinimap"
 	hud.get_node("Root").add_child(field_minimap)
@@ -6038,6 +6094,9 @@ func use_field_portal(portal_id: String) -> bool:
 	for portal: Dictionary in field_map.data["portal"]:
 		if str(portal["id"]) != portal_id:
 			continue
+		if portal.has("target_source"):
+			if level < int(portal.get("min_level",0)) or (int(portal.get("max_level",0)) > 0 and level > int(portal.max_level)): return false
+			return SOURCE_TRAVEL.enter(self,str(portal.target_map),COORD.array_vector(portal.target_source))
 		var target_map: String = str(portal["target_map"])
 		if not maps_by_id.has(target_map):
 			return false
@@ -6198,3 +6257,11 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
 		_save_game(true)
+
+func constrain_original_motion(actor: CharacterBody2D) -> void:
+	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
+		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
+		if not field_map.line_clear(actor.global_position,target): actor.velocity = Vector2.ZERO
+
+func return_from_original_map() -> bool:
+	return SOURCE_TRAVEL.return_home(self)

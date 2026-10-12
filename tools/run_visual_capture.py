@@ -4,7 +4,7 @@
 Xvfb and Godot share one process/network namespace. Ordinary desktop users can
 omit --xvfb and use their existing DISPLAY. No privileged package install needed.
 """
-import argparse, os, pathlib, socket, subprocess, tempfile, time
+import argparse, os, pathlib, random, socket, subprocess, tempfile, time
 
 p=argparse.ArgumentParser()
 p.add_argument('--godot',required=True)
@@ -21,7 +21,10 @@ env=os.environ.copy();env['XDG_DATA_HOME']=str(a.data.resolve());env['LIBGL_ALWA
 server=None;log=None
 try:
     if a.xvfb:
-        display=130+os.getpid()%1000
+        # PID namespaces may reuse PID 2 while X lock files survive an interrupted run.
+        # Never delete another display's lock; choose a fresh display instead.
+        display=next(n for n in random.sample(range(200,1200),1000)
+                     if not pathlib.Path(f'/tmp/.X{n}-lock').exists())
         env['DISPLAY']=f'127.0.0.1:{display}'
         if a.xlib:env['LD_LIBRARY_PATH']=str(a.xlib.resolve())
         log=open(a.log.with_suffix('.xvfb.log'),'w')
