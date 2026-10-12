@@ -1,0 +1,67 @@
+name: PR59 Safe Merge Diagnostic
+on:
+  push:
+    branches:
+      - feature/original-lineagem-skill-complete-20261010
+permissions:
+  contents: write
+jobs:
+  diagnose:
+    if: "!contains(github.event.head_commit.message, '[pr59 diagnostic]')"
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Check the actual merge, preserving both histories
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          main_sha=$(git rev-parse origin/main)
+          head_sha=$(git rev-parse HEAD)
+          set +e
+          git merge --no-commit --no-ff origin/main > /tmp/pr59-merge-output.txt 2>&1
+          status=$?
+          set -e
+          if [[ "$status" == 0 ]]; then
+            git commit -m "Merge latest main into PR59 after clean 3-way merge"
+            git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
+            exit 0
+          fi
+          mkdir -p docs/skills
+          {
+            echo "# PR59 actual merge diagnostics"
+            echo
+            echo "- Source PR59 head before attempt: \`$head_sha\`"
+            echo "- Target main: \`$main_sha\`"
+            echo "- Automatic merge exit code: $status"
+            echo
+            echo "## Git merge output"
+            echo '~~~text'
+            cat /tmp/pr59-merge-output.txt
+            echo '~~~'
+            echo
+            echo "## Unmerged paths"
+            echo '~~~text'
+            git diff --name-only --diff-filter=U
+            echo '~~~'
+            echo
+            echo "## Conflict hunk text (first 300 lines per file)"
+            while IFS= read -r file; do
+              [[ -f "$file" ]] || continue
+              echo
+              echo "### \`$file\`"
+              echo '~~~text'
+              awk 'BEGIN{inside=0;n=0} /^<<<<<<< /{inside=1} inside {if (n++ < 300) print} /^>>>>>>> /{inside=0}' "$file"
+              echo '~~~'
+            done < <(git diff --name-only --diff-filter=U)
+          } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+          git merge --abort || git reset --merge
+          git add docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+          git commit -m "[pr59 diagnostic] Record actual conflict hunks without changing game code"
+          git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
