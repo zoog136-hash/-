@@ -1,12 +1,16 @@
 # 화면 변경 재확인과 오른쪽 패널 수정 — 2026-10-12
 
+맵 통합 단계의 실행 코드: **`06149aca69bf7902ad00c5aceb4661b1676c16e6`**. 작업 중 새 main **`68283b12b18d6e38f462f7b3d58587741756947e`**에 PR #84의 맵이 병합되어 UI 브랜치에도 통합했다. `assets/`, `data/`, `scripts/maps/`, `addons/twilight_l1j/`는 이 main과 바이트 차이가 없다. 원본 맵 브랜치와 main에는 쓰지 않았다.
+
+현재 [전후 비교](ui-integration/layout-r2/comparison.html)는 **같은 최신 맵** 위의 main `68283b1`과 UI 통합본 `06149ac`이다. 이전 맵 기준 캡처는 `1678227` 커밋과 [이전 manifest](ui-integration/layout-r2/evidence/captures-before-main-sync.json)에 보존한다.
+
 ## 기존과 같아 보였던 이유
 
 첫 통합 PR(`281001d`)은 24칸 퀵슬롯·메뉴 분류·뒤로가기·잠금·입력 충돌 처리 등을 추가했지만, 기존의 큰 창과 왼쪽 메뉴 목록을 유지했다. 인벤토리·장비·스킬·전투·제작·상점의 기본 시스템은 이미 main에 있었다. 이 재사용 기능을 신규 완성 항목과 구분하지 않은 이전 보고는 변경 폭을 과장했다.
 
 또한 변경은 `feature/twilight-integrated-hud-20261012`와 [PR #86](https://github.com/zoog136-hash/-/pull/86)에만 있다. main이나 사용자의 이전 Windows/Android 실행파일에 자동 반영되지 않는다. 사용자가 실행한 버전은 아직 확인되지 않았으므로 같은 화면을 본 이유를 브랜치 문제로 단정하지 않는다.
 
-`main`의 `2f5ae1013da5c7281d3020719d8a723a23adb8cc`를 별도 detached worktree에서 실제 Godot로 실행하고, 이전 PR과 후속 수정 화면을 비교했다. [전후 화면 비교](ui-integration/layout-r2/comparison.html)에서 main/이전 PR을 선택해 볼 수 있다.
+처음에는 당시 main `2f5ae10`을 별도 detached worktree에서 실제 Godot로 실행해 비교했고, 원격 갱신 확인 후 비교용 worktree와 UI 통합본을 모두 최신 맵으로 갱신했다. [전후 화면 비교](ui-integration/layout-r2/comparison.html)에서 최신 main/이전 PR을 선택해 볼 수 있다. 이전 PR 비교에는 당시의 맵이 표시됨을 SHA로 구분한다.
 
 ## 이번에 실제 수정한 범위
 
@@ -36,18 +40,21 @@
 - Godot 4.7.2 공식 바이너리, Compatibility / Linux OpenGL llvmpipe.
 - 새 `gameplay_drawer_test.gd`: **46 PASS / 0 FAIL**. 실제 GUI에 마우스·터치 이벤트를 주입해 3해상도에서 메뉴 전환, 아이템 상세, 뒤로가기, 드래그 등록, 스킬 등록 후 상세 복귀, 입력 차단 해제를 확인했다. [로그](ui-integration/layout-r2/evidence/native-drawer.txt).
 - 기존 통합 UI·제스처·fidelity와 전체 프로젝트 회귀 결과는 최종 [검증 요약](ui-integration/layout-r2/evidence/results.json)에 기록한다. 먼저 끝난 일부 검사를 전체 완료로 계산하지 않는다.
+- 최신 main 통합 후 OpenGL 주요 UI **80 PASS / 1 BLOCKED**, 오른쪽 패널 입력 **46 PASS**. 지도 선택·원본 좌표·원본 팩 누락 시 저장 보호를 유지했고 검색창을 하나로 통합했다. 이전 기반의 전체 결과는 **87 PASS / 3 BLOCKED**, raw 87/90으로 보존한다. 최신 맵을 포함한 전체 116개 검사는 별도 결과로 기록한다.
 - 테스트 사용자 디렉터리를 별도로 만들어 실제 사용자 저장 데이터를 변경하지 않았다. 새 입력 검사는 기존 시작 아이템·스킬을 사용한다.
 - 실제 휴대폰·Windows GPU는 **BLOCKED/미검증**. Linux에 주입한 터치 이벤트를 실기기 테스트로 취급하지 않는다.
 - 서버 채팅·파티·혈맹·우편·거래소, 퀘스트 보상/목적지, 카드 소유/합성, 스킬 습득 모델의 기존 미구현 상태는 그대로다.
 
 이전 PR SHA의 UI Renewal Validate와 Integration Validate는 PASS였다. 같은 SHA의 L1J Runtime CI는 기존 fixture 덮어쓰기 보호에서 FAIL, 25 Map Visual Styles CI는 import 및 후속 5개 검사 FAIL이었다. 새 SHA의 결과와 혼동하지 않는다. 최신 CI와 전달 HEAD는 PR에서 확인한다.
 
+**후속 통합 진행:** 원격 main이 `cfbf0fb`(PvE 범위 정리 PR #85, 카드 정책 PR #87)로 갱신됐다. 아래 캡처와 위 검증은 `06149ac`의 기록이며, 새 main 통합 결과로 대신 계산하지 않는다. 새 main의 제거된 기능을 보존하며 오른쪽 패널·슬롯·전투 기록을 통합한다.
+
 ## 전달과 남은 작업
 
 - 코드와 후속 회귀 수정은 기존 feature 브랜치에 정상 push. 강제 push, main 병합 없음.
 - 이전 보고/증거는 이전 SHA의 이력으로 보존하고 이 문서로 변경 범위를 정정한다.
-- 실제 캡처 사본과 SHA-256: [layout-r2](ui-integration/layout-r2/), [manifest](ui-integration/layout-r2/evidence/captures.json). 전체 캡처 경로는 `/workspace/evidence/drawer-reviewed-captures`이며 추적된 대표 사본과 로컬에만 있는 전체를 구분한다.
-- 총 82장 중 비교에 필요한 9개 PNG(기존 main 3장 포함)를 Git에 보존한다. 캡처 코드는 `62d085f`; 이후 창 드래그 보존 수정은 별도 입력 회귀로 검증했다. 문서 폴더의 `.gdignore`는 검토용 스크린샷을 Godot 게임 자산으로 재가져오지 않게 하며, Git 추적/전달은 유지한다.
+- 실제 캡처 사본과 SHA-256: [layout-r2](ui-integration/layout-r2/), [manifest](ui-integration/layout-r2/evidence/captures.json). 전체 캡처 경로는 `/workspace/evidence/merged-final-captures`이며 추적된 대표 사본과 로컬에만 있는 전체를 구분한다.
+- 통합본 82장 중 대표 8장과 최신 main 비교 3장, 총 11개 PNG를 Git에 보존한다. 캡처 코드는 `06149ac`다. 문서 폴더의 `.gdignore`는 검토용 스크린샷을 Godot 게임 자산으로 재가져오지 않게 하며, Git 추적/전달은 유지한다.
 - 다음 UI 우선순위는 미완료 메뉴의 내부 동선과 설정 분류, 퀵슬롯 자동사용 정책의 화면 안내다. 온라인/보상/소유 시스템은 실제 계약과 데이터 모델 구현이 선행되어야 한다.
 
 이 후속 수정은 메뉴의 화면 점유와 탐색 흐름을 바로잡은 단위다. 리니지M 수준의 전체 UI/UX가 100% 완료됐다고 보고하지 않는다.
