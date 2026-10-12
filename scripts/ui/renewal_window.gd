@@ -1,6 +1,7 @@
 extends PanelContainer
 
 signal navigate(section: String)
+signal back_requested
 signal closed
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
@@ -20,6 +21,7 @@ var viewport_fitted: bool = false
 var navigation_scroll: ScrollContainer
 var navigation_separator: VSeparator
 var compact_menu_button: Button
+var back_button: Button
 var header_crest: Label
 var scroll_gestures: Dictionary = {}
 var current_section: String = ""
@@ -48,6 +50,11 @@ func _ready() -> void:
 	subtitle = UI.label("",11,UI.MUTED)
 	titles.add_child(subtitle)
 	subtitle.hide()
+	back_button = UI.button("← 뒤로",func() -> void: back_requested.emit(),Vector2(72,32))
+	back_button.name = "BackWindow"
+	back_button.tooltip_text = "이전 화면 · Esc"
+	back_button.hide()
+	title_row.add_child(back_button)
 	var close := UI.button("",func() -> void: closed.emit(),Vector2(32,32))
 	close.icon = UI.icon("close")
 	close.tooltip_text = "닫기 · Esc"
@@ -231,6 +238,10 @@ func open(section: String, title: String, description: String) -> void:
 		(navigation[key] as Button).button_pressed = key == section
 	show()
 	fit_viewport()
+
+func set_back_available(enabled: bool) -> void:
+	if is_instance_valid(back_button):
+		back_button.visible = enabled
 
 func clear() -> void:
 	for child: Node in content.get_children():
