@@ -5,6 +5,7 @@ Each test receives temporary Linux and Windows data directories, never the playe
 """
 import argparse
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
@@ -46,7 +47,10 @@ not_run=[]
 for name,extra in tests:
     executed.append(name)
     source=root/'tests'/(name+'.gd')
-    visual=args.render_visual_tests and source.is_file() and 'RenderingServer.frame_post_draw' in source.read_text(encoding='utf-8')
+    needs_draw=source.is_file() and 'RenderingServer.frame_post_draw' in source.read_text(encoding='utf-8')
+    # A headless RenderingServer never emits frame_post_draw. Historically
+    # these tests silently ran for 150 seconds each before timing out.
+    visual=needs_draw and (args.render_visual_tests or os.environ.get('GITHUB_ACTIONS','').lower()=='true')
     display_args=['--rendering-driver','opengl3','--audio-driver','Dummy'] if visual else ['--headless']
     with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
         env=os.environ.copy()
@@ -55,13 +59,19 @@ for name,extra in tests:
         # the PCK probe child, must inherit its own empty save/config directory.
         env['APPDATA']=user_data
         env['LOCALAPPDATA']=user_data
+        if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
         try:
             # This integration case visits 24 fields, saves/loads each one and
             # returns to the enlarged Aden continent after every visit.
             # Preserve every assertion while giving these repeated scene loads
             # their own bounded budget; other tests keep the selected limit.
             budget=max(args.timeout,args.import_timeout) if name=='import' else max(args.timeout,540) if name=='world_regions_test' else args.timeout
-            p=subprocess.run([args.godot,*display_args,'--path',str(root),*extra],capture_output=True,text=True,env=env,timeout=budget)
+            command=[args.godot,*display_args,'--path',str(root),*extra]
+            if visual and not env.get('DISPLAY'):
+                if not shutil.which('xvfb-run'):
+                    raise RuntimeError('Visual test requires xvfb-run (or DISPLAY); never wait for frame_post_draw in headless mode')
+                command=['xvfb-run','-a','-s','-screen 0 1280x720x24',*command]
+            p=subprocess.run(command,capture_output=True,text=True,env=env,timeout=budget)
             output=p.stdout+p.stderr
             ok=p.returncode==0 and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
             is_skipped=p.returncode==0 and '_SKIP:' in output and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
@@ -77,6 +87,8 @@ for name,extra in tests:
                         except json.JSONDecodeError: pass
                 result_ok=bool(reports) and all(report.get('failures')==[] for report in reports)
                 ok=ok and ('_OK' in output or result_ok)
+        except RuntimeError as exc:
+            output='VISUAL_SETUP_FAILED '+str(exc);ok=False
         except subprocess.TimeoutExpired as exc:
             output='TIMEOUT '+str(exc)+'\n'+(exc.stdout.decode(errors='replace') if isinstance(exc.stdout,bytes) else (exc.stdout or ''))+'\n'+(exc.stderr.decode(errors='replace') if isinstance(exc.stderr,bytes) else (exc.stderr or ''));ok=False
         (logs/(name+'.log')).write_text(output,encoding='utf-8')
