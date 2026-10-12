@@ -34,8 +34,23 @@ func _run() -> void:
 		_fail("menu toggle did not open right menu")
 
 	var menu_buttons := menu_panel.find_children("*", "Button", true, false) if menu_panel != null else []
-	if menu_buttons.size() < 16:
-		_fail("expected at least 16 menu buttons, got %d" % menu_buttons.size())
+	# PvE scope removed the old quest action. Verify every remaining command
+	# and the close behavior, rather than assuming the obsolete button count.
+	var expected_actions: Array[String] = ["shop", "inventory", "skills", "character", "transform", "doll", "relic", "itemdb", "map", "craft", "macro", "save", "load", "settings"]
+	var actions: Array[String] = []
+	ui.action_requested.connect(func(action: String) -> void: actions.append(action))
+	if menu_buttons.size() != expected_actions.size() + 1:
+		_fail("expected 14 PvE commands and close, got %d" % menu_buttons.size())
+	for button: Button in menu_buttons:
+		if button.text.contains("퀘스트"):
+			_fail("excluded quest button remains")
+		button.pressed.emit()
+	expected_actions.sort()
+	actions.sort()
+	if actions != expected_actions:
+		_fail("menu commands missing, duplicated or incorrectly bound: " + str(actions))
+	if menu_panel != null and menu_panel.visible:
+		_fail("menu close action did not close panel")
 
 	var state := {
 		"character_name":"황혼의 기사",
