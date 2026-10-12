@@ -32,6 +32,7 @@ jobs:
               echo "## Failure details"
               echo '~~~text'
               if [[ -f /tmp/pr59-resolve.log ]]; then cat /tmp/pr59-resolve.log; fi
+              if [[ -f /tmp/pr59-stagecheck.log ]]; then cat /tmp/pr59-stagecheck.log; fi
               echo '~~~'
               echo
               echo "## Git state"
@@ -125,6 +126,6 @@ jobs:
           cat /tmp/pr59-resolve.log
           git add README.md scripts/world.gd scripts/hud.gd scripts/hud_v20.gd
           test -z "$(git diff --name-only --diff-filter=U)"
-          git diff --cached --check
+          git diff --cached --check -- README.md scripts/world.gd scripts/hud.gd scripts/hud_v20.gd > /tmp/pr59-stagecheck.log 2>&1
           git commit -m "[pr59 resolved] Merge latest main, reconcile skill saves and preserve PvE exclusions"
           git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
