@@ -12,6 +12,7 @@ on:
       - 'project.godot'
       - 'tests/integrated_*test.gd'
       - 'tests/gameplay_drawer_test.gd'
+      - 'tests/ui_source_save_guard_test.gd'
       - 'tests/capture_integrated_hud.gd'
       - 'scripts/ui/item_icon_art.gd'
       - 'scripts/animation/combat_vfx.gd'
@@ -63,7 +64,7 @@ jobs:
       - name: Integrated HUD with native mouse and touch input
         run: |
           set -o pipefail
-          for check in integrated_ui_test integrated_interaction_test gameplay_drawer_test; do
+          for check in integrated_ui_test integrated_interaction_test gameplay_drawer_test ui_source_save_guard_test; do
             export XDG_DATA_HOME="$PWD/$check-data"
             ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/$check.gd" 2>&1 | tee "$check.log"
             ! grep -E "SCRIPT ERROR:|ERROR:|FAIL:" "$check.log"
@@ -109,6 +110,7 @@ jobs:
             integrated_ui_test.log
             integrated_interaction_test.log
             gameplay_drawer_test.log
+            ui_source_save_guard_test.log
             integrated-capture.log
             integrated-captures/**
             integrated_ui_test-data/**/integrated-ui-results.json
