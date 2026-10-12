@@ -1,0 +1,1327 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ORIGINAL_MAP_CATALOG_RESULT preserved=1000 loaded_with_valid_spawn=949 failures=["Cannot load delivered map l1_15871", "Cannot load delivered map l1_15872", "Cannot load delivered map l1_15873", "Cannot load delivered map l1_15874", "Cannot load delivered map l1_15875", "Cannot load delivered map l1_15876", "Cannot load delivered map l1_15877", "Cannot load delivered map l1_15878", "Cannot load delivered map l1_15879", "Cannot load delivered map l1_15880", "Cannot load delivered map l1_15881", "Cannot load delivered map l1_15882", "Cannot load delivered map l1_15883", "Cannot load delivered map l1_15884", "Cannot load delivered map l1_15885", "Cannot load delivered map l1_15886", "Cannot load delivered map l1_15887", "Cannot load delivered map l1_15888", "Cannot load delivered map l1_15889", "Cannot load delivered map l1_15891", "Cannot load delivered map l1_15892", "Cannot load delivered map l1_15893", "Cannot load delivered map l1_15894", "Cannot load delivered map l1_15895", "Cannot load delivered map l1_15896", "Cannot load delivered map l1_15897", "Cannot load delivered map l1_15898", "Cannot load delivered map l1_15899", "Cannot load delivered map l1_15900", "Cannot load delivered map l1_15901", "Cannot load delivered map l1_15902", "Cannot load delivered map l1_16384", "Cannot load delivered map l1_16896", "Cannot load delivered map l1_17408", "Cannot load delivered map l1_17920", "Cannot load delivered map l1_18432", "Cannot load delivered map l1_18944", "Cannot load delivered map l1_19456", "Cannot load delivered map l1_19968", "Cannot load delivered map l1_20480", "Cannot load delivered map l1_20992", "Cannot load delivered map l1_21504", "Cannot load delivered map l1_22016", "Cannot load delivered map l1_22528", "Cannot load delivered map l1_23040", "Cannot load delivered map l1_23552", "Cannot load delivered map l1_24064", "Cannot load delivered map l1_24576", "Cannot load delivered map l1_25088", "Unexpected preserved/activated counts"]
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15871
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15872
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15873
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15874
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15875
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15876
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15877
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15878
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15879
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15880
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15881
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15882
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15883
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15884
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15885
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15886
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15887
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15888
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15889
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15891
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15892
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15893
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15894
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15895
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15896
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15897
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15898
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15899
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15900
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15901
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_15902
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_16384
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_16896
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_17408
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_17920
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_18432
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_18944
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_19456
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_19968
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_20480
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_20992
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_21504
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_22016
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_22528
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_23040
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_23552
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_24064
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_24576
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Compressed buffer size must be greater than zero.
+   at: func_PackedByteArray_decompress (core/variant/variant_call.cpp:821)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:77)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Condition "len == 0" is true. Returning: FAILED
+   at: update (core/crypto/hashing_context.cpp:54)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:80)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ERROR: Original chunk integrity failure: l1_25088
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _chunk (res://scripts/maps/source_field.gd:83)
+       [1] value_at (res://scripts/maps/source_field.gd:100)
+       [2] walkable (res://scripts/maps/source_field.gd:107)
+       [3] configure_source (res://scripts/maps/source_field.gd:59)
+       [4] load_field (res://scripts/maps/source_travel.gd:34)
+       [5] _initialize (res://tests/original_map_catalog_test.gd:13)
+ORIGINAL_MAP_CATALOG_FAIL: ["Cannot load delivered map l1_15871", "Cannot load delivered map l1_15872", "Cannot load delivered map l1_15873", "Cannot load delivered map l1_15874", "Cannot load delivered map l1_15875", "Cannot load delivered map l1_15876", "Cannot load delivered map l1_15877", "Cannot load delivered map l1_15878", "Cannot load delivered map l1_15879", "Cannot load delivered map l1_15880", "Cannot load delivered map l1_15881", "Cannot load delivered map l1_15882", "Cannot load delivered map l1_15883", "Cannot load delivered map l1_15884", "Cannot load delivered map l1_15885", "Cannot load delivered map l1_15886", "Cannot load delivered map l1_15887", "Cannot load delivered map l1_15888", "Cannot load delivered map l1_15889", "Cannot load delivered map l1_15891", "Cannot load delivered map l1_15892", "Cannot load delivered map l1_15893", "Cannot load delivered map l1_15894", "Cannot load delivered map l1_15895", "Cannot load delivered map l1_15896", "Cannot load delivered map l1_15897", "Cannot load delivered map l1_15898", "Cannot load delivered map l1_15899", "Cannot load delivered map l1_15900", "Cannot load delivered map l1_15901", "Cannot load delivered map l1_15902", "Cannot load delivered map l1_16384", "Cannot load delivered map l1_16896", "Cannot load delivered map l1_17408", "Cannot load delivered map l1_17920", "Cannot load delivered map l1_18432", "Cannot load delivered map l1_18944", "Cannot load delivered map l1_19456", "Cannot load delivered map l1_19968", "Cannot load delivered map l1_20480", "Cannot load delivered map l1_20992", "Cannot load delivered map l1_21504", "Cannot load delivered map l1_22016", "Cannot load delivered map l1_22528", "Cannot load delivered map l1_23040", "Cannot load delivered map l1_23552", "Cannot load delivered map l1_24064", "Cannot load delivered map l1_24576", "Cannot load delivered map l1_25088", "Unexpected preserved/activated counts"]

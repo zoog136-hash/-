@@ -56,4 +56,5 @@ static func apply_map(definition: Dictionary) -> Dictionary:
 				if str(result.regions[i].get("type",""))=="safe": insertion = i+1
 			result.regions.insert(insertion,{"id":spawn.id,"name":"폭젠 · 밀집 사냥터","type":"dense",
 				"center":[float(a[0])+float(a[2])*.5,float(a[1])+float(a[3])*.5],"radius":spawn.spawn_radius,"color":"dc865e"})
+			if spawn.has("polygon"): result.regions[insertion]["polygon"] = spawn.polygon.duplicate(true)
 	return result

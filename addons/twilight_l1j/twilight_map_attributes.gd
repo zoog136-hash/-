@@ -5,7 +5,7 @@ var _dimensions: Vector2i = Vector2i.ZERO
 var _raw: PackedByteArray = PackedByteArray()
 var _source_id: int = -1
 
-func load_a3(map_id: int, dimensions: Vector2i) -> bool:
+func load_a3(map_id: int, dimensions: Vector2i, raw_directory: String = "res://data/l1j/maps/raw") -> bool:
     _raw = PackedByteArray()
     _dimensions = Vector2i.ZERO
     _source_id = -1
@@ -13,7 +13,7 @@ func load_a3(map_id: int, dimensions: Vector2i) -> bool:
         return false
     if dimensions.x <= 0 or dimensions.y <= 0 or dimensions.x > 4096 or dimensions.y > 4096:
         return false
-    var path: String = "res://data/l1j/maps/raw/%d.bin" % map_id
+    var path: String = raw_directory.path_join("%d.bin" % map_id)
     if not FileAccess.file_exists(path):
         return false
     var raw_bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)

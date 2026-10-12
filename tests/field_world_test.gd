@@ -18,6 +18,7 @@ func _run() -> void:
 	var started: int = Time.get_ticks_msec()
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
+	preload("res://tests/legacy_aden_fixture.gd").install(world)
 	await physics_frame
 	await process_frame
 	world._set_map("aden_world",false)

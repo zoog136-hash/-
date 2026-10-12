@@ -578,6 +578,10 @@ func _process(delta: float) -> void:
 	var actor: Node = world.get("player")
 	if actor != null and coordinates_readout != null:
 		coordinates_readout.text = "좌표  %d, %d" % [int(actor.global_position.x),int(actor.global_position.y)]
+		var current_field = get_parent().field_map
+		if current_field is OriginalPlayableField:
+			var source_cell: Vector2i = current_field.world_to_cell(actor.global_position) + current_field.coordinates.origin
+			coordinates_readout.text = "원본 좌표  %d, %d" % [source_cell.x,source_cell.y]
 	_render_quickslots(lineage_inventory_ui.inventory,world._combined_active_buffs())
 	if move_readout != null:
 		move_readout.text = "이동 중" if actor != null and actor.velocity.length() > 1 else "대기"
@@ -1452,6 +1456,9 @@ func toggle_map() -> void:
 	var regions := VBoxContainer.new()
 	regions.custom_minimum_size.x = 270
 	row.add_child(regions)
+	var region_count := UI.label("지역 선택",15)
+	region_count.name = "RegionCount"
+	regions.add_child(region_count)
 	var search := LineEdit.new()
 	search.name = "RegionSearch"
 	search.placeholder_text = "지역 이름 검색"
@@ -1474,23 +1481,32 @@ func toggle_map() -> void:
 		var record: Dictionary = get_parent().maps_by_id.get(id,{})
 		var blocked: bool = get_parent().player.is_stunned() or get_parent().player.is_feared() or get_parent().player.is_held()
 		detail.text = str(record.get("name",id))+"\n"+("현재 지역" if id == str(get_parent().active_map_id) else "로컬 월드맵 이동 가능")
+		if record.has("source_definition"): detail.text = str(record.get("name",id))+"\n원본 통행 지역 · 팩 검증 후 이동"
 		if blocked: detail.text += "\n현재 상태에서는 이동 불가"
 		enter.disabled = record.is_empty() or blocked)
 	search.text_changed.connect(func(query: String) -> void:
 		region_selection.clear()
-		for record: Dictionary in map_records:
+		var edition: int = int(search.get_meta("map_edition",0))
+		var records: Array = map_records if edition == 0 else get_parent().original_maps
+		for record: Dictionary in records:
+			var source_id: int = int(record.get("source_map_id",-1))
+			if edition == 1 and source_id != 4 and not (source_id >= 101 and source_id <= 111) and not (source_id >= 12852 and source_id <= 12862): continue
 			var id := str(record.get("id",""))
 			var title := str(record.get("name",id))
+			if source_id == 4: title = "아덴 월드 · 본토"
+			if source_id >= 0: title += " [%d]" % source_id
 			if query != "" and not title.to_lower().contains(query.to_lower()): continue
 			var index: int = region_selection.add_item(title)
 			region_selection.set_item_metadata(index,id)
 			if id == str(get_parent().active_map_id): region_selection.select(index)
+		region_count.text = "지역 선택  ·  %d개 지역" % region_selection.item_count
 		if region_selection.item_count > 0:
 			if region_selection.get_selected_items().is_empty(): region_selection.select(0)
 			region_selection.item_selected.emit(region_selection.get_selected_items()[0])
 		else:
 			enter.disabled = true
 			detail.text = "검색 결과가 없습니다")
+	_add_original_map_controls(regions,search)
 	search.text_changed.emit("")
 	var map_view := RegionMapUI.new()
 	map_view.name = "RegionMap"
@@ -1829,3 +1845,24 @@ func _refresh_buff_detail() -> void:
 	for pair: Array in [["is_stunned","기절"],["is_silenced","침묵"],["is_held","속박"],["is_feared","공포"]]:
 		if actor.call(pair[0]): lines.append("[color=#e97772]"+pair[1]+"[/color]")
 	buff_detail.text = "\n\n".join(lines) if not lines.is_empty() else "활성 효과가 없습니다."
+
+func _add_original_map_controls(regions: VBoxContainer, search: LineEdit) -> void:
+	var original: Array = get_parent().original_maps
+	if original.is_empty(): return
+	var selector := OptionButton.new()
+	selector.name = "MapEdition"
+	selector.add_item("기존 TWILIGHT 지역")
+	selector.add_item("우선 지역 · 아덴 / 오만 / 지배")
+	selector.add_item("원본 통행 지역 · %d" % original.size())
+	regions.add_child(selector)
+	regions.move_child(selector,1)
+	search.name = "OriginalMapSearch"
+	search.placeholder_text = "지역 이름 또는 원본 ID"
+	selector.item_selected.connect(func(index: int) -> void:
+		search.set_meta("map_edition",index)
+		search.text_changed.emit(search.text))
+	if get_parent().field_map is OriginalPlayableField:
+		selector.select(1)
+		search.set_meta("map_edition",1)
+	regions.add_child(UI.section("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11))
+	regions.add_child(UI.section("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11))

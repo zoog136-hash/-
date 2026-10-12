@@ -123,7 +123,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
 		clear_click_path()
-		move_and_slide()
+		_move_on_map()
 		_update_visual(delta)
 		return
 	if not interface_input_blocked and Input.is_action_just_pressed("attack") and not is_feared():
@@ -135,7 +135,7 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector2.ZERO
 		touch_vector = Vector2.ZERO
 		clear_click_path()
-		move_and_slide()
+		_move_on_map()
 		_update_visual(delta)
 		return
 
@@ -144,14 +144,14 @@ func _physics_process(delta: float) -> void:
 		touch_vector = Vector2.ZERO
 		clear_click_path()
 		velocity = _fear_velocity()
-		move_and_slide()
+		_move_on_map()
 		_update_facing(velocity)
 		_update_visual(delta)
 		return
 
 	if movement_locked:
 		velocity = Vector2.ZERO
-		move_and_slide()
+		_move_on_map()
 		_update_visual(delta)
 		return
 
@@ -169,7 +169,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity = _click_path_velocity()
 
-	move_and_slide()
+	_move_on_map()
 	_update_facing(velocity)
 	_update_visual(delta)
 
@@ -553,3 +553,9 @@ func pulse_attack() -> void:
 	if motion.active: return
 	attack_visual_duration = clampf(0.42 / maxf(0.5, attack_speed_multiplier), 0.10, 0.84)
 	start_combat_attack(global_position + motion.direction, attack_visual_duration, motion.profile.motion_style)
+
+func _move_on_map() -> void:
+	var controller: Node = get_parent()
+	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
+		controller.constrain_original_motion(self)
+	move_and_slide()

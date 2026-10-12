@@ -10,13 +10,13 @@ var coordinates: TwilightL1JTileCoordinates = COORDINATES.new()
 var dimensions: Vector2i = Vector2i.ZERO
 var loaded: bool = false
 
-func configure(map_id: int, size: Vector2i, origin: Vector2i, projection: Transform2D) -> bool:
+func configure(map_id: int, size: Vector2i, origin: Vector2i, projection: Transform2D, raw_directory: String = "res://data/l1j/maps/raw") -> bool:
 	loaded = false
 	dimensions = Vector2i.ZERO
 	attributes = ATTRIBUTES.new()
 	coordinates = COORDINATES.new()
 	if not coordinates.configure(size, origin, projection): return false
-	if not attributes.load_a3(map_id, size): return false
+	if not attributes.load_a3(map_id, size, raw_directory): return false
 	dimensions = size
 	loaded = true
 	return true
@@ -45,12 +45,20 @@ func find_path(start: Vector2i, goal: Vector2i, max_nodes: int = 8192) -> Array[
 	var result: Array[Vector2i] = []
 	if not loaded or not coordinates.in_bounds(start) or not coordinates.in_bounds(goal) or max_nodes < 1: return result
 	max_nodes = mini(max_nodes, 65536)
-	var queue: Array[Vector2i] = [start]
+	if start == goal: return [start]
+	if max_nodes == 1: return result
+	# A direct edge needs exactly two stored cells, regardless of neighbor order.
+	var direct_heading: int = DIRECTIONS.find(goal-start)
+	if direct_heading >= 0 and can_step(start,direct_heading): return [start,goal]
+	# Unit-cost A* retains the source's shortest-step semantics. Chebyshev distance
+	# is admissible for all eight headings, including blocked corner routes.
+	var frontier: Array[Vector3i] = [Vector3i(start.x,start.y,_distance(start,goal))]
 	var previous: Dictionary = {start:start}
-	var read: int = 0
-	while read < queue.size():
-		var current: Vector2i = queue[read]
-		read += 1
+	var costs: Dictionary = {start:0}
+	while not frontier.is_empty():
+		var entry: Vector3i = _pop_frontier(frontier,goal)
+		var current := Vector2i(entry.x,entry.y)
+		if entry.z != int(costs[current]) + _distance(current,goal): continue
 		if current == goal:
 			result.append(current)
 			while current != start:
@@ -61,8 +69,46 @@ func find_path(start: Vector2i, goal: Vector2i, max_nodes: int = 8192) -> Array[
 		for heading: int in range(8):
 			if not can_step(current, heading): continue
 			var next: Vector2i = current + DIRECTIONS[heading]
-			if previous.has(next): continue
-			if queue.size() >= max_nodes: return []
+			var cost: int = int(costs[current])+1
+			if costs.has(next) and int(costs[next]) <= cost: continue
+			# Once the budget is full, finish searching already stored cells. One
+			# unrelated new neighbor must not discard a reachable queued goal.
+			if not costs.has(next) and costs.size() >= max_nodes: continue
 			previous[next] = current
-			queue.append(next)
+			costs[next] = cost
+			_push_frontier(frontier,Vector3i(next.x,next.y,cost+_distance(next,goal)),goal)
+	return result
+
+func _distance(cell: Vector2i, goal: Vector2i) -> int:
+	return maxi(absi(cell.x-goal.x),absi(cell.y-goal.y))
+
+func _earlier(left: Vector3i, right: Vector3i, goal: Vector2i) -> bool:
+	if left.z != right.z: return left.z < right.z
+	return _distance(Vector2i(left.x,left.y),goal) < _distance(Vector2i(right.x,right.y),goal)
+
+func _push_frontier(frontier: Array[Vector3i], entry: Vector3i, goal: Vector2i) -> void:
+	frontier.append(entry)
+	var index: int = frontier.size()-1
+	while index > 0:
+		var parent: int = (index-1)/2
+		if not _earlier(frontier[index],frontier[parent],goal): break
+		var swap: Vector3i = frontier[parent]
+		frontier[parent] = frontier[index]
+		frontier[index] = swap
+		index = parent
+
+func _pop_frontier(frontier: Array[Vector3i], goal: Vector2i) -> Vector3i:
+	var result: Vector3i = frontier[0]
+	var last: Vector3i = frontier.pop_back()
+	if frontier.is_empty(): return result
+	frontier[0] = last
+	var index: int = 0
+	while index*2+1 < frontier.size():
+		var child: int = index*2+1
+		if child+1 < frontier.size() and _earlier(frontier[child+1],frontier[child],goal): child += 1
+		if not _earlier(frontier[child],frontier[index],goal): break
+		var swap: Vector3i = frontier[index]
+		frontier[index] = frontier[child]
+		frontier[child] = swap
+		index = child
 	return result

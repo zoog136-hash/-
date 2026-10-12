@@ -9,7 +9,12 @@ def main():
     for section, fields in [('items',[('inventory_texture','inventory_sha256'),('ground_texture','ground_sha256')]),('monsters',[('texture','sha256')])]:
         for record in manifest[section]:
             for key,digest in fields:
-                destination=root/record[key].removeprefix('res://')
+                # PR82 now ships reviewed images at the original binding paths.
+                # CI fixtures use a separate subdirectory; never replace those images.
+                relative=pathlib.PurePosixPath(record[key].removeprefix('res://'))
+                relative=relative.parent/'_ci_fixture'/relative.name
+                record[key]='res://'+relative.as_posix()
+                destination=root/relative
                 if destination.exists(): raise ValueError('refusing to overwrite original art '+str(destination))
                 destination.parent.mkdir(parents=True,exist_ok=True)
                 # Keep the existing visible-body regression meaningful. The tiny
