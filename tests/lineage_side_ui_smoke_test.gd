@@ -34,8 +34,11 @@ func _run() -> void:
 		_fail("menu toggle did not open right menu")
 
 	var menu_buttons := menu_panel.find_children("*", "Button", true, false) if menu_panel != null else []
-	if menu_buttons.size() < 16:
-		_fail("expected at least 16 menu buttons, got %d" % menu_buttons.size())
+	if menu_buttons.size() != 15:
+		_fail("expected fourteen retained routes and close, got %d" % menu_buttons.size())
+	for button: Button in menu_buttons:
+		if button.text.contains("퀘스트") or button.text.contains("혈맹") or button.text.contains("거래소"):
+			_fail("removed system is reachable from legacy menu")
 
 	var state := {
 		"character_name":"황혼의 기사",

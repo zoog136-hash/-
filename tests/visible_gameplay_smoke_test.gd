@@ -6,6 +6,7 @@ const MAP = preload("res://scripts/maps/field_renderer.gd")
 const INVENTORY = preload("res://scripts/ui/renewal_inventory.gd")
 const CATALOG = preload("res://scripts/ui/renewal_hud.gd")
 const SHOP = preload("res://scripts/ui/renewal_shop.gd")
+const TRANSFER = preload("res://scripts/ui/pointer_transfer.gd")
 
 func _initialize() -> void:
 	call_deferred("_verify")
@@ -24,14 +25,15 @@ func _verify() -> void:
 	var inventory_ui: Node = INVENTORY.new()
 	var catalog_ui: Node = CATALOG.new()
 	var shop = SHOP.new()
+	var transfer: Node = TRANSFER.new()
 	assert(fx.has_method("_draw"))
 	assert(map_renderer.has_method("_scatter_ambient_details"))
-	assert(inventory_ui.has_method("_activate_dragged_equipment"))
+	assert(transfer.has_method("_drop"),"Shared transfer controller owns target-based equipment drops")
 	assert(catalog_ui.has_method("_end_catalog_drag"))
 	shop.filtered = [["테스트 상품", 100, "물약"]]
 	shop._select(0)
 	assert(str(shop.selected[0]) == "테스트 상품")
-	for node: Node in [fx, map_renderer, inventory_ui, catalog_ui, shop]:
+	for node: Node in [fx, map_renderer, inventory_ui, catalog_ui, shop, transfer]:
 		node.free()
 	print("VISIBLE_GAMEPLAY_SMOKE_OK")
 	quit(0)

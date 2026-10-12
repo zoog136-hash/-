@@ -88,7 +88,7 @@ func _build() -> void:
 			listing.add_item("%s  ×%d" % [str(entry.get("name","")),int(entry.get("count",0))])
 		else:
 			listing.add_item("%s  +%d%s" % [
-				str(entry.get("name","")) + (" [ID:%s]" % str(entry.get("instance_id", "")) if str(entry.get("instance_id", "")) != "" else ""), int(entry.get("level",0)),
+				str(entry.get("name","")),int(entry.get("level",0)),
 				"  [장착]" if bool(entry.get("equipped",false)) else ""
 			])
 		var reference: String = str(entry.get("target_id",entry.get("name","")))
@@ -138,4 +138,6 @@ func _execute() -> void:
 	else:
 		var target := str(entry.get("target_id", entry.get("name","")))
 		if target != "":
-			hud.enhancement_requested.emit(scroll_name,target)
+			var scroll: String = scroll_name
+			hud.confirm_action("강화 확인","%s +%d\n%s 1장 소모\n성공 %.1f%% · 하락 %.1f%% · 소실 %.1f%%" % [str(entry.get("name","")),int(entry.get("level",0)),scroll,float(entry.get("success_chance",0)),float(entry.get("decrease_chance",0)),float(entry.get("destroy_chance",0))],"강화",func(_count: int) -> void:
+				hud.enhancement_requested.emit(scroll,target))

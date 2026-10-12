@@ -6,12 +6,12 @@ extends RefCounted
 const ITEM_ART = preload("res://scripts/ui/item_icon_art.gd")
 const ICONS = preload("res://scripts/ui/renewal_icons.gd")
 
-const GOLD = Color("e2c187")
-const BRONZE = Color("786342")
+const GOLD = Color("dcc391")
+const BRONZE = Color("766452")
 const TEXT = Color("f0e8d9")
 const MUTED = Color("afa28d")
 const SLATE = Color("101114")
-const DEEP = Color("0b0b0e")
+const DEEP = Color("15130f")
 const RAISED = Color("24201a")
 const FONT = preload("res://assets/fonts/NotoSansKR.ttf")
 const GRADES = {"일반":Color("ddd6c5"),"고급":Color("79bf83"),"희귀":Color("73b4ee"),"영웅":Color("e97772"),"전설":Color("bc89e3"),"신화":Color("e5be60"),"유일":Color("66dfc2")}
@@ -24,7 +24,7 @@ static func box(bg: Color = Color(0.035,0.035,0.044,0.97), border: Color = BRONZ
 	s.bg_color = bg
 	s.border_color = border
 	s.set_border_width_all(1)
-	s.set_corner_radius_all(2)
+	s.set_corner_radius_all(0)
 	s.content_margin_left = margin
 	s.content_margin_right = margin
 	s.content_margin_top = margin
@@ -36,16 +36,16 @@ static func box(bg: Color = Color(0.035,0.035,0.044,0.97), border: Color = BRONZ
 
 static func chrome_panel(bg: Color = Color("0c0d11"), rim: Color = GOLD, margin: int = 12) -> StyleBoxFlat:
 	var s := box(bg, rim, margin)
-	s.border_width_left = 2
+	s.border_width_left = 1
 	s.border_width_top = 2
-	s.border_width_right = 2
-	s.border_width_bottom = 2
+	s.border_width_right = 1
+	s.border_width_bottom = 1
 	s.shadow_size = 9
 	s.shadow_color = Color(0,0,0,.55)
 	return s
 
 static func slot_frame(rim: Color = BRONZE, active: bool = false) -> StyleBoxFlat:
-	var s := box(Color("29251d") if active else Color("16171a"), GOLD if active else rim, 3)
+	var s := box(Color("26343c") if active else Color("080808"), rim, 3)
 	s.set_corner_radius_all(1)
 	s.shadow_size = 0
 	return s
@@ -59,6 +59,8 @@ static func item_frame(grade_name: String, active: bool = false) -> StyleBoxFlat
 	s.shadow_color = Color(tint,.18)
 	return s
 static func icon(kind: String) -> Texture2D:
+	var files: Dictionary = {"inventory":"bag","shop":"shop","skills":"skill","settings":"settings","auto":"macro","map":"teleport","attack":"attack","return":"return","enhance":"sword"}
+	if files.has(kind): return load("res://assets/ui/"+str(files[kind])+".png") as Texture2D
 	return ICONS.texture(kind)
 static func section(value: String, font_size: int = 16) -> Label:
 	var l := label(value,font_size,GOLD)

@@ -82,7 +82,8 @@ func _run() -> void:
 	var moved: Vector2 = workspace.position
 	hud.call("open_shop")
 	await process_frame
-	_check(workspace.position.distance_to(moved) < 1.0, "Position preserved across shop/catalog navigation")
+	_check(workspace.position == Vector2.ZERO, "Full shop restores its screen anchor after a dragged catalog")
+	moved = workspace.position
 	var first_touch: InputEventScreenTouch = InputEventScreenTouch.new()
 	first_touch.pressed = true
 	workspace.call("_on_title_drag_input",first_touch)
