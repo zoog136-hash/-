@@ -1,0 +1,151 @@
+{
+	"adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+	"note": "32/96/192 controlled-HP actors, hunt vs one existing cone boss with adds; 60 warmup + 180 sampled frames. Real AI/AUTO/flight callbacks. Software GL, no device FPS guarantee.",
+	"rendered": true,
+	"samples": [
+		{
+			"flights_returned": true,
+			"frames": 180,
+			"hud_work": {
+				"character_snapshots": 0,
+				"equipment_syncs": 0,
+				"full_hud_refreshes": 0,
+				"max_hp_queries": 0,
+				"max_mp_queries": 0
+			},
+			"median_ms": 34.284,
+			"mode": "hunt",
+			"monster_released_hits": 73,
+			"orphans": 0,
+			"p95_ms": 46.21,
+			"peak_flights": 3,
+			"peak_nodes": 6795,
+			"physics_p95_ms": 9.008,
+			"player_landed_hits": 28,
+			"population": 32,
+			"process_p95_ms": 53.291,
+			"vfx_high_water": 19,
+			"vfx_returned": true
+		},
+		{
+			"flights_returned": true,
+			"frames": 180,
+			"hud_work": {
+				"character_snapshots": 0,
+				"equipment_syncs": 0,
+				"full_hud_refreshes": 0,
+				"max_hp_queries": 0,
+				"max_mp_queries": 0
+			},
+			"median_ms": 76.629,
+			"mode": "hunt",
+			"monster_released_hits": 428,
+			"orphans": 0,
+			"p95_ms": 113.394,
+			"peak_flights": 6,
+			"peak_nodes": 7307,
+			"physics_p95_ms": 21.243,
+			"player_landed_hits": 56,
+			"population": 96,
+			"process_p95_ms": 89.418,
+			"vfx_high_water": 36,
+			"vfx_returned": true
+		},
+		{
+			"flights_returned": true,
+			"frames": 180,
+			"hud_work": {
+				"character_snapshots": 0,
+				"equipment_syncs": 0,
+				"full_hud_refreshes": 0,
+				"max_hp_queries": 0,
+				"max_mp_queries": 0
+			},
+			"median_ms": 153.725,
+			"mode": "hunt",
+			"monster_released_hits": 1334,
+			"orphans": 0,
+			"p95_ms": 184.83,
+			"peak_flights": 9,
+			"peak_nodes": 8075,
+			"physics_p95_ms": 25.013,
+			"player_landed_hits": 91,
+			"population": 192,
+			"process_p95_ms": 97.251,
+			"vfx_high_water": 58,
+			"vfx_returned": true
+		},
+		{
+			"flights_returned": true,
+			"frames": 180,
+			"hud_work": {
+				"character_snapshots": 0,
+				"equipment_syncs": 0,
+				"full_hud_refreshes": 0,
+				"max_hp_queries": 0,
+				"max_mp_queries": 0
+			},
+			"median_ms": 37.997,
+			"mode": "boss",
+			"monster_released_hits": 78,
+			"orphans": 0,
+			"p95_ms": 53.927,
+			"peak_flights": 3,
+			"peak_nodes": 6795,
+			"physics_p95_ms": 10.239,
+			"player_landed_hits": 33,
+			"population": 32,
+			"process_p95_ms": 54.626,
+			"vfx_high_water": 58,
+			"vfx_returned": true
+		},
+		{
+			"flights_returned": true,
+			"frames": 180,
+			"hud_work": {
+				"character_snapshots": 0,
+				"equipment_syncs": 0,
+				"full_hud_refreshes": 0,
+				"max_hp_queries": 0,
+				"max_mp_queries": 0
+			},
+			"median_ms": 70.382,
+			"mode": "boss",
+			"monster_released_hits": 408,
+			"orphans": 0,
+			"p95_ms": 89.503,
+			"peak_flights": 6,
+			"peak_nodes": 7307,
+			"physics_p95_ms": 17.271,
+			"player_landed_hits": 54,
+			"population": 96,
+			"process_p95_ms": 77.553,
+			"vfx_high_water": 58,
+			"vfx_returned": true
+		},
+		{
+			"flights_returned": true,
+			"frames": 180,
+			"hud_work": {
+				"character_snapshots": 0,
+				"equipment_syncs": 0,
+				"full_hud_refreshes": 0,
+				"max_hp_queries": 0,
+				"max_mp_queries": 0
+			},
+			"median_ms": 145.317,
+			"mode": "boss",
+			"monster_released_hits": 1049,
+			"orphans": 0,
+			"p95_ms": 165.524,
+			"peak_flights": 8,
+			"peak_nodes": 8075,
+			"physics_p95_ms": 22.722,
+			"player_landed_hits": 84,
+			"population": 192,
+			"process_p95_ms": 72.561,
+			"vfx_high_water": 58,
+			"vfx_returned": true
+		}
+	]
+}

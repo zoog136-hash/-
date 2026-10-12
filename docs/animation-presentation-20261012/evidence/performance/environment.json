@@ -1,0 +1,33 @@
+{
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "cpu": "AMD EPYC 9V74; 5 visible logical CPUs, cgroup quota 400000/100000 (4 CPUs)",
+  "renderer": "OpenGL 4.5, Mesa 25.0.7-2+deb13u1, llvmpipe LLVM 19.1.7 (256 bits)",
+  "display": "Xvfb :99 1280x720x24",
+  "os": "Linux x86_64",
+  "samples_per_scenario": 180,
+  "warmup_frames": 60,
+  "script_sha256": "99f34c35cc303fdfaad4a27c270141d93401c51fcdc4b874bdfabf31ffa0e255",
+  "run_order": [
+    {
+      "folder": "baseline",
+      "runtime_sha": "9fbcd1a02505a2d9685507411faff577c7e236f6"
+    },
+    {
+      "folder": "initial",
+      "runtime_sha": "dcdc32b0473d4452076d9dbe4aee238b0d7e7db5"
+    },
+    {
+      "folder": "optimized",
+      "runtime_sha": "49d1e94c2f9600725b8e18907992df69b6c75ca4"
+    },
+    {
+      "folder": "baseline-repeat",
+      "runtime_sha": "9fbcd1a02505a2d9685507411faff577c7e236f6"
+    },
+    {
+      "folder": "final",
+      "runtime_sha": "41566426fa0e3394df9cc012cc756e3851c1ff37"
+    }
+  ],
+  "note": "Sequential battle runs. No concurrent Godot workload. Controlled HP/normal attack modes; boss retains existing mode/pattern. CPU-only motion tests are separate. Documentation crowd captures are JPEG q92; original PNGs remain in the execution workspace; the CI workflow is configured to upload PNGs when it runs. Not Android or GPU hardware performance."
+}
