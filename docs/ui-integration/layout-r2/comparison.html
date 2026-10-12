@@ -13,12 +13,12 @@ body{margin:0;background:#121417;color:#eee8dd;font:16px/1.65 system-ui,sans-ser
 <button data-view="menu" aria-pressed="true">전체 메뉴</button>
 <button data-view="inventory" aria-pressed="false">가방</button>
 <button data-view="skills" aria-pressed="false">스킬</button>
-<label>변경 전 <select id="baseline"><option value="main">main · cfbf0fb</option><option value="pr">이전 PR · 281001d</option></select></label>
+<label>변경 전 <select id="baseline"><option value="main">main · f759112</option><option value="pr">이전 PR · 281001d</option></select></label>
 </nav>
 <div class="facts"><span>메뉴 폭 790 → 480px</span><span>가방·스킬 폭 1010 → 480px</span><span>중앙 플레이 화면 확보</span><span>상단 단축 버튼 · 하단 퀵슬롯 접근 유지</span></div>
 <div class="pair">
-<figure><figcaption id="before-caption">변경 전 main · cfbf0fb</figcaption><a id="before-link" href="main-menu.png"><img id="before" src="main-menu.png" alt="기존 main 전체 메뉴"></a></figure>
-<figure><figcaption>후속 수정 · b215b20 · 오른쪽 패널</figcaption><a id="after-link" href="drawer-menu.png"><img id="after" src="drawer-menu.png" alt="수정한 오른쪽 전체 메뉴"></a></figure>
+<figure><figcaption id="before-caption">변경 전 main · f759112</figcaption><a id="before-link" href="main-menu.png"><img id="before" src="main-menu.png" alt="기존 main 전체 메뉴"></a></figure>
+<figure><figcaption>후속 수정 · b8d6586 · 오른쪽 패널</figcaption><a id="after-link" href="drawer-menu.png"><img id="after" src="drawer-menu.png" alt="수정한 오른쪽 전체 메뉴"></a></figure>
 </div>
 <p><a href="drawer-hud-1280x720.png">전체 HUD</a> · <a href="drawer-log-1280x720.png">실시간 전투 기록</a> · <a href="drawer-inventory-detail.png">아이템 상세</a> · <a href="drawer-skills-detail.png">스킬 상세·퀵슬롯 등록</a> · <a href="../../UI_DRAWER_CORRECTION_20261012.md">실제 변경·검증 범위</a> · <a href="https://github.com/zoog136-hash/-/pull/86">PR #86</a></p>
 <small>1280×720, Godot 4.7.2, 실제 Main.tscn 실행 캡처. 전후의 HP·MP·버프는 각 실행 시점의 게임 상태이며 배치 비교에 사용했습니다. 최신 main의 PvE 범위(PR #85)에 따라 퀘스트·채팅·파티·혈맹·거래소를 복원하지 않았습니다. 이 코드는 feature/twilight-integrated-hud-20261012에 있으며 main/기존 배포 파일은 변경하지 않았습니다. 전체 리니지M UI 완성 또는 온라인 기능 제공을 뜻하지 않습니다.</small>
@@ -26,7 +26,7 @@ body{margin:0;background:#121417;color:#eee8dd;font:16px/1.65 system-ui,sans-ser
 <script>
 let view='menu';
 const labels={menu:'전체 메뉴',inventory:'가방',skills:'스킬'};
-function render(){const baseline=document.getElementById('baseline').value;const before=baseline==='main'?`main-${view}.png`:`../screenshots/${view}-1280x720.png`;const after=`drawer-${view}.png`;document.getElementById('before').src=before;document.getElementById('after').src=after;document.getElementById('before-link').href=before;document.getElementById('after-link').href=after;document.getElementById('before').alt=`변경 전 ${labels[view]}`;document.getElementById('after').alt=`수정 후 ${labels[view]}`;document.getElementById('before-caption').textContent=baseline==='main'?'변경 전 main · cfbf0fb':'이전 PR · 281001d · 큰 창 유지';for(const button of document.querySelectorAll('[data-view]'))button.setAttribute('aria-pressed',String(button.dataset.view===view));}
+function render(){const baseline=document.getElementById('baseline').value;const before=baseline==='main'?`main-${view}.png`:`../screenshots/${view}-1280x720.png`;const after=`drawer-${view}.png`;document.getElementById('before').src=before;document.getElementById('after').src=after;document.getElementById('before-link').href=before;document.getElementById('after-link').href=after;document.getElementById('before').alt=`변경 전 ${labels[view]}`;document.getElementById('after').alt=`수정 후 ${labels[view]}`;document.getElementById('before-caption').textContent=baseline==='main'?'변경 전 main · f759112':'이전 PR · 281001d · 큰 창 유지';for(const button of document.querySelectorAll('[data-view]'))button.setAttribute('aria-pressed',String(button.dataset.view===view));}
 for(const button of document.querySelectorAll('[data-view]'))button.onclick=()=>{view=button.dataset.view;render();};
 document.getElementById('baseline').onchange=render;
 </script>
