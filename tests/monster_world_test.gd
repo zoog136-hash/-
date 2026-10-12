@@ -195,8 +195,13 @@ func _run() -> void:
 		if str(slot.region.get("mode",""))=="boss": boss_slot = slot
 	check(not is_instance_valid(boss_slot.monster),"no boss clone on reload while cooldown")
 	check(world._ground_drops_snapshot().size()==saved_drops.size(),"ground loot survives boss-state restore")
-	world.field_population._process(float(boss_slot.region.respawn_time)-.1)
-	check(not is_instance_valid(boss_slot.monster),"boss cannot respawn early")
+	var director: TwilightBossDirector = world.field_population.boss_director
+	var wall_key: String = director.key("oman_10", boss_slot.region)
+	check(int(boss_slot.region.respawn_time)==86400, "non-Aden boss uses 24h wall-clock cooldown")
+	director.states[wall_key]["ready_at"] = Time.get_unix_time_from_system() + 60.0
+	world.field_population._process(.2)
+	check(not is_instance_valid(boss_slot.monster),"boss cannot respawn before wall-clock deadline")
+	director.states[wall_key]["ready_at"] = Time.get_unix_time_from_system() - 1.0
 	world.field_population._process(.2)
 	pause_actors()
 	check(is_instance_valid(boss_slot.monster) and boss_slot.monster.hp==boss_slot.monster.max_hp,"boss respawns once after game-time cooldown")
