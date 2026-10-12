@@ -263,7 +263,9 @@ func _on_title_drag_input(event: InputEvent) -> void:
 		accept_event()
 
 func open(section: String, title: String, description: String) -> void:
-	if current_section != section:
+	# Preserve the player's dragged position within the same kind of window.
+	# Crossing between a wide screen and a gameplay drawer restores its anchor.
+	if is_drawer() != (section in DRAWER_SECTIONS):
 		title_dragged = false
 	current_section = section
 	heading.text = title
