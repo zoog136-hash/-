@@ -17,6 +17,10 @@ signal npc_dialogue_action_requested(npc_id: String, node_id: String, action: St
 # UI-only adapter: existing HUD signals remain the sole write interface.
 const Layout = preload("res://scripts/ui/reference_layout.gd")
 const PointerTransfer = preload("res://scripts/ui/pointer_transfer.gd")
+const NavigationMemory = preload("res://scripts/ui/navigation_memory.gd")
+var navigation_memory = NavigationMemory.new()
+var switching_workspace: bool = false
+var combat_log_view: RichTextLabel
 var detail_window: PanelContainer
 var status_view: Control
 var pointer_transfer: Node
@@ -142,6 +146,7 @@ func _ready() -> void:
 	workspace = RenewalWindowScript.new()
 	$Root.add_child(workspace)
 	workspace.navigate.connect(_navigate)
+	workspace.back_requested.connect(_go_back)
 	workspace.closed.connect(_close_workspace)
 	workspace.resized.connect(_fit_catalog_browser_layout)
 	workspace.content.resized.connect(_fit_catalog_browser_layout)
@@ -591,6 +596,8 @@ func append_log(value: String) -> void:
 	if log_history.size()>120:
 		log_history.pop_front()
 	super.append_log(value)
+	if active_section == "log" and is_instance_valid(combat_log_view) and not combat_log_view.is_queued_for_deletion():
+		combat_log_view.text = "\n".join(log_history)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
@@ -611,12 +618,17 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 		if workspace != null and workspace.visible:
-			_close_workspace()
+			_go_back()
 			get_viewport().set_input_as_handled()
 
 func _close_workspace() -> void:
 	if class_picker_initial:
 		return
+	if workspace != null and workspace.visible:
+		navigation_memory.capture(active_section,workspace.content)
+	if not switching_workspace:
+		navigation_memory.clear_history()
+	combat_log_view = null
 	pending_quickslot_binding.clear()
 	if active_section in ["아이템","변신","마법인형","성물"] and catalog_list != null:
 		catalog_view_state[active_section] = {"query":catalog_search.text,"grade":catalog_grade_filter,"page":catalog_page,"id":str(selected_catalog_record.get("sourceId",selected_catalog_record.get("name",""))),"scroll":catalog_list.get_v_scroll_bar().value}
@@ -644,11 +656,45 @@ func _park_shared_panels() -> void:
 		panel.hide()
 
 func _open_window(section: String,title: String,description: String) -> void:
+	navigation_memory.enter(active_section,section)
+	switching_workspace = true
 	_hide_aux_panels()
+	switching_workspace = false
 	_park_shared_panels()
 	workspace.clear()
 	workspace.open(section,title,description)
 	active_section = section
+	workspace.set_back_available(navigation_memory.has_history())
+	call_deferred("_restore_navigation",section)
+
+func _restore_navigation(section: String) -> void:
+	if workspace != null and workspace.visible and active_section == section:
+		navigation_memory.restore(section,workspace.content)
+
+func _go_back() -> void:
+	if class_picker_initial: return
+	if active_section == "inventory" and lineage_inventory_ui.detail_active:
+		lineage_inventory_ui.detail_active = false
+		lineage_inventory_ui._reflow()
+		return
+	if active_section == "skills" and is_instance_valid(skills_view):
+		var browser: Control = skills_view.cards.get_parent().get_parent()
+		if browser.detail_active:
+			browser.detail_active = false
+			browser.reflow()
+			return
+	if active_section in ["변신","마법인형","성물","아이템"] and catalog_details_active:
+		_set_catalog_detail_view(false)
+		return
+	var previous: String = navigation_memory.back()
+	if previous.is_empty() or previous == "dialogue":
+		_close_workspace()
+		return
+	navigation_memory.returning = true
+	_navigate(previous)
+	navigation_memory.returning = false
+	if workspace != null:
+		workspace.set_back_available(navigation_memory.has_history())
 
 func open_class_selection(initial: bool = false) -> void:
 	# In the first session there is no class decision until the user confirms.
@@ -684,6 +730,8 @@ func _navigate(section: String) -> void:
 		"character": open_character()
 		"skills": open_skills()
 		"shop": open_shop()
+		"npc_shop": open_npc_shop()
+		"teleport": open_npc_teleport()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
@@ -846,8 +894,10 @@ func open_combat_log() -> void:
 	history.fit_content = false
 	history.scroll_active = true
 	history.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	history.name = "CombatLogHistory"
 	history.text = "\n".join(log_history) if not log_history.is_empty() else "아직 기록이 없습니다."
 	col.add_child(history)
+	combat_log_view = history
 
 func toggle_inventory() -> void:
 	if active_section=="inventory" and workspace.visible:

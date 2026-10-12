@@ -1,0 +1,78 @@
+name: TWILIGHT PR86 Selective Port Validate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/ui/navigation_memory.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/ui/renewal_window.gd'
+      - 'scripts/ui/safe_area.gd'
+      - 'scripts/world.gd'
+      - 'tests/ui_navigation_preservation_test.gd'
+      - 'tests/pr93_landing_bounds_test.gd'
+      - '.github/workflows/pr86-selective-port-validate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/ui/navigation_memory.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/ui/renewal_window.gd'
+      - 'scripts/ui/safe_area.gd'
+      - 'scripts/world.gd'
+      - 'tests/ui_navigation_preservation_test.gd'
+      - 'tests/pr93_landing_bounds_test.gd'
+      - '.github/workflows/pr86-selective-port-validate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pr86-selective-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  navigation-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Godot
+        run: |
+          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          chmod +x Godot_v4.7.2-stable_linux.x86_64
+      - name: Resource preflight
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Import and run isolated navigation, landing and PR91 regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-import"
+          GODOT=./Godot_v4.7.2-stable_linux.x86_64
+          timeout 300 "$GODOT" --headless --path . --import 2>&1 | tee import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' import.log; then
+            exit 1
+          fi
+          failed=0
+          for test in ui_navigation_preservation_test pr93_landing_bounds_test ui_pointer_transfer_test quickslot_smoke_test ui_renewal_integration_test ui_fidelity_regression_test; do
+            export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-${test}"
+            mkdir -p "$XDG_DATA_HOME"
+            if ! timeout 180 "$GODOT" --headless --path . --script "res://tests/${test}.gd" 2>&1 | tee "${test}.log"; then
+              failed=1
+            fi
+            if grep -E 'SCRIPT ERROR:|ERROR:|UI_NAVIGATION FAIL:|PR93_LANDING FAIL:|UI_POINTER FAIL:|QUICKSLOT FAIL:|UI RENEWAL FAIL:|UI FIDELITY FAIL:' "${test}.log"; then
+              failed=1
+            fi
+          done
+          grep -q 'UI_NAVIGATION_OK' ui_navigation_preservation_test.log || failed=1
+          grep -q 'PR93_LANDING_OK' pr93_landing_bounds_test.log || failed=1
+          grep -q 'QUICKSLOT_SMOKE_OK' quickslot_smoke_test.log || failed=1
+          grep -q 'UI_RENEWAL_INTEGRATION_OK' ui_renewal_integration_test.log || failed=1
+          grep -q 'UI_FIDELITY_REGRESSION_OK' ui_fidelity_regression_test.log || failed=1
+          grep -q '"failures":\[\]' ui_pointer_transfer_test.log || failed=1
+          exit "$failed"
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr86-selective-port-logs-${{ github.sha }}
+          path: '*.log'
+          if-no-files-found: error
