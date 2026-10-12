@@ -14,6 +14,7 @@ func _check(condition: bool, description: String) -> void:
 		printerr("LINEAGEM_UI_FAIL: " + description)
 
 func _run() -> void:
+	root.size = Vector2i(1280,720)
 	var theme: Theme = UI.make_theme()
 	_check(theme.has_stylebox("panel","PanelContainer"),"shared panel theme")
 	_check(theme.has_stylebox("normal","Button"),"shared button theme")
