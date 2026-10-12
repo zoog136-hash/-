@@ -4,6 +4,7 @@
 
 - 기준 저장소: `https://github.com/zoog136-hash/-`
 - 시작 기준: 최신 `main` `49f5470e6d9561183e0a8e8e56901da6d4d93f27`
+- 후속 통합: 작업 도중 들어온 최신 main `0258f413b756fb78106803b87f9525ec4c675372`를 작업 브랜치에 충돌 없이 통합했다. 키 바인딩·실패한 로드 상태 보존·제작 귀속·보호막 복원·CI 수정은 upstream 그대로 유지했다.
 - 작업 브랜치: `feature/twilight-ui-rebuild-20261012`
 - 실제 작업 경로: `/workspace/twilight`. 시작 시 미커밋 변경 없음. 과거 ZIP이나 새 프로젝트로 대체하지 않았다.
 - 엔진: 공식 Godot `4.7.2.stable.official.ed1daf0bf`, Compatibility / Mesa llvmpipe.

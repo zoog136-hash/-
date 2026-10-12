@@ -2,6 +2,10 @@
 
 기준 `main`은 `49f5470e6d9561183e0a8e8e56901da6d4d93f27`. Godot `4.7.2.stable.official.ed1daf0bf`로 프로젝트를 실행했다. Linux headless 입력 검사와 Xvfb + Mesa llvmpipe OpenGL 렌더를 구분했다. 각 테스트는 임시 사용자 데이터 디렉터리를 사용하며 실제 사용자 저장 파일을 덮어쓰지 않는다.
 
+작업 중 main이 `0258f413b756fb78106803b87f9525ec4c675372`로 진행되어 UI 체크포인트 `ad49418`을 먼저 커밋하고, 작업 브랜치에서 병합 커밋 `f57ed04514ceaaa74d3a89de1d5f553ddf8eb3b7`로 통합했다. `scripts/world.gd`의 저장 실패 시 현재 상태를 보존하는 수정은 UI 저장 필드와 함께 유지됐다. 기본 브랜치는 수정하지 않았다. 통합 후 새 main 검사 4개와 UI 검사 3개가 **7/7 통과**했으며 [통합 재검사](evidence/merged-checks/)에 로그를 남겼다.
+
+첫 전체 검사는 UI 체크포인트 단계의 증거다. 통합 뒤 기본 스탯을 참조의 2열 순서(STR/INT, DEX/WIS, CON/CHA)로 맞추고 카드 등급 순서를 전체·유일·신화·전설·영웅·희귀·고급·일반으로 정리했다. 이 최종 배치에서 입력49·UI88·통합62 검사를 다시 실행했고, 102개 렌더도 다시 생성했다. 로그·이미지의 검증 시점을 혼합하여 전부 단일 전체 실행이라고 주장하지 않는다.
+
 ## UI 기능과 렌더
 
 | 검사 | 실제 결과 | 증거 |
@@ -29,7 +33,7 @@
 | `lineage_side_ui_smoke` | 원래 삭제한 퀘스트를 포함하는 16개 기대값을 유지 메뉴 14개+닫기로 교정. 삭제 기능이 없는지 추가 검사 |
 | `lineagem_ui_visual_smoke` | 1280 논리 뷰포트를 명시하고 없앤 공통 사이드바 대신 우측 소형 창을 검사 |
 | `original_skill_provenance` | 상세창 재구성 때 빠진 원작 확인/추정·학습·가격 출처 표시를 복원. 재검사 통과 |
-| `inventory_db_smoke`, `ground_loot_system`, `original_skill_learning_conditions`, `original_turn_undead_rewards`, `world_structure` | 첫 실행의 150초 제한 시간 초과. 450초 제한의 별도 재검사 결과를 `evidence/rechecks`에 보관 |
+| `inventory_db_smoke`, `ground_loot_system`, `original_skill_learning_conditions`, `original_turn_undead_rewards`, `world_structure` | 첫 실행의 150초 제한 시간 초과. 450초 재검사에서 inventory/ground_loot/learning_conditions는 통과, turn_undead_rewards와 world_structure는 450초에도 다시 시간 초과. [실제 결과](evidence/rechecks/summary.json) |
 | `hunting_navigation_cache` | 수정 전 main에서도 25개 서명 불일치 재현. UI 작업에서 맵 캐시를 재작성하지 않음 |
 | `monster_world` | 수정 전 main에서도 보스 별도 스킬/밀집 리젠 6개 실패 재현 |
 | `renewed_map_spawn` | 수정 전 main에서도 리젠 보존 관련 30개 실패 재현 |
@@ -40,6 +44,8 @@
 | `original_map_catalog`, `original_world_runtime`, `source_first_map` | 원본 팩 부재로 SKIP. 통과 수에 넣지 않음 |
 
 [수정 전 main 재현 로그](evidence/baseline/)에는 해당 기준 SHA에서 실행한 오류를 보존했다. `world_regions`와 리소스 누락까지 모두 ‘기존 main 재현 완료’라고 확대하지 않는다. 전체 첫 실행은 새 입력 테스트 파일이 발견 목록에 들어가기 전에 시작됐으므로 신규 입력 회귀는 별도로 실행했다.
+
+대량 반복 오류 로그는 `.log.gz`로 원문을 손실 없이 보관하고 `.log`에는 앞뒤 발췌를 표시했다. [압축 원문·SHA-256 목록](evidence/compressed-logs.json)을 통해 전체 로그를 확인할 수 있다.
 
 ## 재현 명령
 

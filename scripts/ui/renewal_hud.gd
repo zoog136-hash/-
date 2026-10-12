@@ -1030,7 +1030,7 @@ func _build_catalog_panel() -> void:
 	catalog_grade_column.name = "CatalogGrades"
 	catalog_grade_column.custom_minimum_size.x = 132
 	body.add_child(catalog_grade_column)
-	for grade_name: String in ["전체","일반","고급","희귀","영웅","전설","신화","유일"]:
+	for grade_name: String in ["전체","유일","신화","전설","영웅","희귀","고급","일반"]:
 		var grade_button := UI.button(grade_name,func() -> void:
 			catalog_grade_filter = grade_name
 			item_grade_filter = grade_name

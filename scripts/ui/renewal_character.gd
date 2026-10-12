@@ -131,11 +131,24 @@ func _build_stats_page() -> Control:
 	var page: Control = super._build_stats_page()
 	var column: VBoxContainer = page.get_child(0)
 	var grid: GridContainer = column.get_child(1)
-	grid.columns = 1
-	grid.add_theme_constant_override("v_separation",2)
-	for row: Control in grid.get_children():
-		row.custom_minimum_size.y = 31
-		(row.get_child(2) as Button).custom_minimum_size = Vector2(32,28)
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation",8)
+	grid.add_theme_constant_override("v_separation",8)
+	var rows: Array[Node] = grid.get_children()
+	# The reference pairs STR/INT, DEX/WIS, CON/CHA in two columns.
+	for index: int in range(6): grid.move_child(rows[[0,3,1,4,2,5][index]],index)
+	for row: HBoxContainer in grid.get_children():
+		row.custom_minimum_size = Vector2(0,66)
+		row.add_theme_constant_override("separation",4)
+		var title: Label = row.get_child(0)
+		title.custom_minimum_size.x = 32
+		title.add_theme_font_size_override("font_size",14)
+		var value: Label = row.get_child(1)
+		value.custom_minimum_size.x = 0
+		value.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		(row.get_child(2) as Button).custom_minimum_size = Vector2(28,28)
+		(row.get_child(2) as Button).size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	var note: Label = column.get_child(2)
 	note.text = "최종 (기본 + 추가)"
 	return page
@@ -169,7 +182,7 @@ func _refresh_character() -> void:
 		var base: int = int(character_state.get("base_attributes",{}).get(key.to_lower(),0))
 		var total: int = int(character_state.get(key.to_lower(),0))
 		if label != null:
-			label.text = "%d  (%d %+d)" % [total,base,total-base]
+			label.text = "%d\n(%d %+d)" % [total,base,total-base]
 			label.add_theme_font_size_override("font_size",13)
 			label.tooltip_text = "최종 능력치 (기본 + 추가)"
 	paperdoll.texture = character_preview.texture
