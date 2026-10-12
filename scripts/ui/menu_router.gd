@@ -29,6 +29,8 @@ func _capture(root: Node, state: Dictionary) -> void:
 		elif node is OptionButton: state[key] = node.selected
 		elif node is ItemList: state[key] = node.get_selected_items()
 		elif node is ScrollContainer: state[key] = node.scroll_vertical
+		if node.has_method("capture_navigation_state"):
+			state["view:"+key] = node.call("capture_navigation_state")
 		_capture(node, state)
 
 func restore(section: String, root: Node) -> void:
@@ -51,3 +53,5 @@ func _restore(root: Node, state: Dictionary) -> void:
 						node.item_selected.emit(index)
 			elif node is ScrollContainer: node.scroll_vertical = int(state[key])
 		_restore(node, state)
+		if state.has("view:"+key) and node.has_method("restore_navigation_state"):
+			node.call("restore_navigation_state",state["view:"+key])

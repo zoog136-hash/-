@@ -43,7 +43,7 @@ func configure(controller: Node) -> void:
 	cards.name="SkillCards"
 	cards.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	cards.max_columns=4
-	cards.fixed_column_width=110
+	cards.fixed_column_width=94
 	cards.fixed_icon_size=Vector2i(54,54)
 	cards.icon_mode=ItemList.ICON_MODE_TOP
 	cards.max_text_lines=2

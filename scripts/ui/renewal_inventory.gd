@@ -73,9 +73,30 @@ func _reflow() -> void:
 	inventory_left.visible = not compact or not detail_active
 	detail_panel.visible = not compact or detail_active
 	detail_panel.custom_minimum_size.x = 0 if compact else 260
+	detail_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL if compact else Control.SIZE_FILL
 	var width: float = inventory_panel.size.x-26-(0 if compact else 270)
 	item_grid.columns = clampi(floori(width/77.0),2,7)
 	for button: Button in tab_buttons.values(): button.custom_minimum_size.x = 68
+	(compact_tabs.get_child(0) as Button).disabled = not detail_active
+	(compact_tabs.get_child(1) as Button).disabled = detail_active or selected_item.is_empty()
+
+func back_to_list() -> bool:
+	if compact_tabs.visible and detail_active:
+		detail_active = false
+		_reflow()
+		return true
+	return false
+
+func capture_navigation_state() -> Dictionary:
+	return {"details":detail_active,"selection":selected_item}
+
+func restore_navigation_state(state: Dictionary) -> void:
+	var reference := str(state.get("selection",""))
+	if slot_buttons.has(reference):
+		selected_item = reference
+		_refresh_detail(reference)
+	detail_active = bool(state.get("details",false)) and not selected_item.is_empty()
+	_reflow()
 
 # Swipe a slot horizontally to equip; vertical gestures remain native scrolling.
 # We emit the same authoritative inventory signal as the visible detail button.

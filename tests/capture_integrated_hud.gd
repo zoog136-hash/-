@@ -36,7 +36,24 @@ func _run() -> void:
 		await _capture("hud"+suffix)
 		for section: String in ["menu","inventory","character","skills","quickslots","map","quest","chat","party","crafting","settings","teleport","shop","exchange","변신","마법인형","성물"]:
 			hud._navigate(section)
+			# Re-entry restores the previous detail view. Explicitly return to
+			# the list so each capture label describes what is actually visible.
+			for frame: int in 3: await process_frame
+			if section == "inventory": hud.lineage_inventory_ui.back_to_list()
+			elif section == "skills": hud.skills_view.cards.get_parent().get_parent().back_to_list()
 			await _capture(section+suffix)
+			if section == "menu":
+				for group: int in range(1,4):
+					(hud.workspace.find_child("MenuGroup_%d" % group,true,false) as Button).pressed.emit()
+					await _capture("menu-category-%d" % group+suffix)
+				(hud.workspace.find_child("MenuGroup_0",true,false) as Button).pressed.emit()
+			elif section == "inventory":
+				hud.lineage_inventory_ui._select_item("HP 물약")
+				await _capture("inventory-detail"+suffix)
+			elif section == "skills":
+				var browser: Node = hud.skills_view.cards.get_parent().get_parent()
+				(browser.tabs.get_child(1) as Button).pressed.emit()
+				await _capture("skills-detail"+suffix)
 			hud._close_workspace()
 		world._set_click_destination(world.player.global_position+Vector2(200,0))
 		await create_timer(.2).timeout

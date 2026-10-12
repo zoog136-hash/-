@@ -10,7 +10,6 @@ var heading: Label
 var subtitle: Label
 var footer: Label
 var content: Control
-var navigation: Dictionary = {}
 var title_dragging: bool = false
 var title_dragged: bool = false
 var title_drag_touch: int = -1
@@ -19,12 +18,22 @@ var active_scroll: ScrollContainer
 var active_scroll_touch: int = -1
 var active_scroll_mouse: bool = false
 var viewport_fitted: bool = false
-var navigation_scroll: ScrollContainer
-var navigation_separator: VSeparator
 var compact_menu_button: Button
 var header_crest: Label
 var scroll_gestures: Dictionary = {}
 var current_section: String = ""
+var title_row: HBoxContainer
+var back_button: Button
+var footer_separator: HSeparator
+
+# Gameplay tools share a right-hand drawer. Views that need a map or a
+# character stage use the wider workspace; neither carries a second menu rail.
+const DRAWER_SECTIONS := ["menu", "inventory", "skills", "quest", "buffs",
+	"party", "clan", "friends", "mail", "ranking", "events", "exchange",
+	"collection", "growth", "dialogue", "dungeon", "special_dungeon"]
+
+func is_drawer() -> bool:
+	return current_section in DRAWER_SECTIONS
 
 func _ready() -> void:
 	name = "RenewalWindow"
@@ -41,13 +50,14 @@ func _ready() -> void:
 	accent.custom_minimum_size.y = 2
 	accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layout.add_child(accent)
-	var title_row := HBoxContainer.new()
+	title_row = HBoxContainer.new()
 	title_row.custom_minimum_size.y = 44
 	title_row.add_theme_constant_override("separation",8)
 	layout.add_child(title_row)
-	var back := UI.button("‹ 이전",func() -> void: back_requested.emit(),Vector2(68,40))
-	back.name = "BackWindow"
-	title_row.add_child(back)
+	back_button = UI.button("‹",func() -> void: back_requested.emit(),Vector2(40,40))
+	back_button.name = "BackWindow"
+	back_button.tooltip_text = "이전 화면 · Esc"
+	title_row.add_child(back_button)
 	header_crest = UI.label("✧",31,UI.GOLD)
 	header_crest.name = "HeaderCrest"
 	header_crest.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -68,9 +78,9 @@ func _ready() -> void:
 	subtitle.clip_text = true
 	titles.add_child(subtitle)
 	subtitle.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	compact_menu_button = UI.button("☰ 메뉴",func() -> void: navigate.emit("menu"),Vector2(86,40))
+	compact_menu_button = UI.button("☰",func() -> void: navigate.emit("menu"),Vector2(40,40))
 	compact_menu_button.name = "CompactMenuButton"
-	compact_menu_button.visible = false
+	compact_menu_button.tooltip_text = "전체 메뉴"
 	title_row.add_child(compact_menu_button)
 	var close := UI.button("",func() -> void: closed.emit(),Vector2(40,40))
 	close.icon = UI.icon("close")
@@ -79,48 +89,14 @@ func _ready() -> void:
 	close.add_theme_stylebox_override("normal",UI.tab_frame())
 	title_row.add_child(close)
 	layout.add_child(HSeparator.new())
-	var body := HBoxContainer.new()
-	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	layout.add_child(body)
-	navigation_scroll = ScrollContainer.new()
-	navigation_scroll.name = "WorkspaceNavigationScroll"
-	navigation_scroll.custom_minimum_size.x = 132
-	navigation_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	navigation_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	navigation_scroll.scroll_deadzone = 8
-	body.add_child(navigation_scroll)
-	var nav := VBoxContainer.new()
-	nav.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	nav.mouse_filter = Control.MOUSE_FILTER_PASS
-	navigation_scroll.add_child(nav)
-	for pair: Array in [["character","캐릭터 · 장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬 · 성장"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"],["log","전투 기록"]]:
-		var id := str(pair[0])
-		var b := UI.button(str(pair[1]),func() -> void:
-			if not was_scroll_dragged(navigation_scroll):
-				navigate.emit(id),Vector2(124,36))
-		b.toggle_mode = true
-		b.add_theme_stylebox_override("normal",UI.tab_frame())
-		b.add_theme_stylebox_override("hover",UI.box(Color("342a1c"),UI.BRONZE,7))
-		b.add_theme_stylebox_override("pressed",UI.tab_frame(true))
-		b.add_theme_color_override("font_pressed_color",UI.GOLD)
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.add_theme_font_size_override("font_size",12)
-		b.name = "Nav_"+id
-		b.icon = UI.icon(id)
-		b.add_theme_constant_override("icon_max_width",19)
-		b.add_theme_stylebox_override("normal",UI.box(Color("111318"),Color("292722"),5))
-		nav.add_child(b)
-		register_scroll_drag(navigation_scroll,b)
-		navigation[id] = b
-	navigation_separator = VSeparator.new()
-	body.add_child(navigation_separator)
 	content = Control.new()
 	content.name = "Content"
 	content.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	content.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	content.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	body.add_child(content)
-	layout.add_child(HSeparator.new())
+	layout.add_child(content)
+	footer_separator = HSeparator.new()
+	layout.add_child(footer_separator)
 	footer = UI.label("TWILIGHT  ·  황혼의 기사",11,UI.MUTED)
 	footer.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	layout.add_child(footer)
@@ -222,27 +198,29 @@ func fit_viewport() -> void:
 	scale = Vector2.ONE/maxf(.01,minf(1.0,stretch))
 	var available: Rect2 = SafeArea.available(get_viewport())
 	var viewport := available.size/scale
-	footer.visible = viewport.y >= 500
-	subtitle.visible = viewport.y >= 450
+	var drawer: bool = is_drawer()
+	footer.visible = not drawer and viewport.y >= 500
+	footer_separator.visible = footer.visible
+	subtitle.visible = not drawer and viewport.y >= 450
 	(get_child(0) as VBoxContainer).add_theme_constant_override("separation",5 if viewport.y < 500 else 8)
-	var preferred_width: float = 1080.0
+	var preferred_width: float = 960.0
 	var preferred_height: float = 560.0
-	if current_section == "menu": preferred_width = 790.0
-	elif current_section in ["inventory","character","skills","shop","enhance"]: preferred_width = 1010.0
-	elif current_section in ["settings","auto","quest","log"]: preferred_width = 960.0
+	if drawer: preferred_width = 480.0
+	elif current_section == "character": preferred_width = 900.0
+	elif current_section in ["settings","auto","log","chat","controls","info"]: preferred_width = 800.0
 	elif current_section in ["map","class_select"]: preferred_width = 1160.0
-	if current_section == "menu": preferred_height = 470.0
-	var extent := Vector2(maxf(200.0,minf(preferred_width,viewport.x-24.0)),maxf(140.0,minf(preferred_height,viewport.y-116.0)))
+	# Keep HUD shortcuts above, and both quickslot banks below, the drawer.
+	var top: float = minf(82.0,viewport.y*.115)
+	var bottom: float = minf(88.0,viewport.y*.125)
+	if drawer: preferred_height = viewport.y-top-bottom
+	var extent := Vector2(maxf(200.0,minf(preferred_width,viewport.x-24.0)),maxf(140.0,minf(preferred_height,viewport.y-top-bottom)))
 	var compact: bool = viewport.x < 840.0
-	navigation_scroll.visible = not compact
-	navigation_separator.visible = not compact
-	navigation_scroll.custom_minimum_size.x = 132.0 if not compact else 0.0
 	compact_menu_button.visible = true
-	header_crest.visible = not compact
+	header_crest.visible = not drawer and not compact
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	size = extent
 	if not viewport_fitted or not title_dragged:
-		position = available.position+(Vector2(viewport.x-extent.x-12.0,(viewport.y-100.0-extent.y)*.5) if current_section in ["inventory","menu","skills","shop"] and not compact else (viewport-Vector2(0,100)-extent)*.5)*scale
+		position = available.position+(Vector2(viewport.x-extent.x-12.0,top) if drawer else Vector2((viewport.x-extent.x)*.5,top+(viewport.y-top-bottom-extent.y)*.5))*scale
 	else:
 		_keep_title_visible()
 	viewport_fitted = true
@@ -285,11 +263,11 @@ func _on_title_drag_input(event: InputEvent) -> void:
 		accept_event()
 
 func open(section: String, title: String, description: String) -> void:
+	if current_section != section:
+		title_dragged = false
 	current_section = section
 	heading.text = title
 	subtitle.text = description
-	for key: String in navigation:
-		(navigation[key] as Button).button_pressed = key == section
 	show()
 	fit_viewport()
 

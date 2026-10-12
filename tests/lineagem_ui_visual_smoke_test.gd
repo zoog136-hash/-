@@ -27,16 +27,15 @@ func _run() -> void:
 	root.add_child(window)
 	await process_frame
 	var title: Control = window.find_child("WorkspaceTitleDragArea",true,false) as Control
-	var nav: ScrollContainer = window.find_child("WorkspaceNavigationScroll",true,false) as ScrollContainer
 	var crest: Control = window.find_child("DecorativeFrame",true,false) as Control
 	var compact: Button = window.find_child("CompactMenuButton",true,false) as Button
 	_check(title != null and title.mouse_filter == Control.MOUSE_FILTER_STOP,"title drag zone preserved")
-	_check(nav != null and nav.get_child_count() > 0,"desktop scrolling navigation preserved")
+	_check(window.find_child("WorkspaceNavigationScroll",true,false) == null,"global navigation rail no longer covers the playfield")
 	_check(crest != null and crest.mouse_filter == Control.MOUSE_FILTER_IGNORE,"ornament is input-transparent")
 	_check(compact != null,"compact workspace navigation fallback")
 	window.open("inventory","인벤토리","선택한 장비를 확인합니다.")
-	var active: Button = window.find_child("Nav_inventory",true,false) as Button
-	_check(active != null and active.button_pressed,"active inventory route highlighted")
+	_check(window.is_drawer() and window.heading.text == "인벤토리","active inventory route uses gameplay drawer")
+	_check(window.size.x <= 480 and window.position.x >= root.get_visible_rect().size.x*.5,"inventory occupies the right edge and leaves the center visible")
 	_check(window.find_child("CloseWindow",true,false) != null,"close and Esc action retained")
 	window.queue_free()
 	await process_frame

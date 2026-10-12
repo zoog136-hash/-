@@ -107,22 +107,15 @@ func _run() -> void:
 			_check(int(world.get("gold")) == gold_before_swipe,"shop swipe never purchases")
 	hud.call("toggle_menu")
 	await process_frame
-	var nav_scroll: ScrollContainer = workspace.find_child("WorkspaceNavigationScroll",true,false) as ScrollContainer
-	var nav_button: Button = workspace.find_child("Nav_character",true,false) as Button
-	_check(nav_scroll != null and nav_button != null,"navigation sidebar scroll exists")
-	if nav_scroll != null and nav_button != null:
-		var nav_bar: VScrollBar = nav_scroll.get_v_scroll_bar()
-		_check(nav_bar.max_value > nav_bar.page,"navigation overflows shortened viewport")
-		if nav_bar.max_value > nav_bar.page:
-			nav_scroll.scroll_vertical = 0
-			var nav_start: Vector2 = _screen_point(nav_button,nav_button.size*0.5)
-			_touch(42,nav_start,true)
-			_drag(42,nav_start+Vector2(0,-40),Vector2(0,-40))
-			_drag(42,nav_start+Vector2(0,-100),Vector2(0,-60))
-			_touch(42,nav_start+Vector2(0,-100),false)
-			await process_frame
-			_check(nav_scroll.scroll_vertical > 0,"finger dragging sidebar button scrolls navigation")
-			_check(str(hud.get("active_section")) == "menu","sidebar swipe does not activate menu button")
+	var category: Button = workspace.find_child("MenuGroup_1",true,false) as Button
+	_check(category != null,"drawer exposes gameplay category")
+	if category != null:
+		var tab_point := _screen_point(category,category.size*.5)
+		_touch(42,tab_point,true)
+		_touch(42,tab_point,false)
+		for frame: int in 3: await process_frame
+		_check(hud.menu_group == 1 and workspace.find_child("MenuTile_crafting",true,false) != null,"native category touch reveals gameplay routes")
+		_check(workspace.find_child("WorkspaceNavigationScroll",true,false) == null,"drawer has one navigation hierarchy")
 	var menu_scroll: ScrollContainer = workspace.find_child("MenuContentScroll",true,false) as ScrollContainer
 	_check(menu_scroll != null,"main menu uses a vertical ScrollContainer")
 	if menu_scroll != null:

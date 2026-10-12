@@ -157,6 +157,7 @@ func _ready() -> void:
 	window_backdrop.name = "MenuBackdrop"
 	window_backdrop.color = Color(0,0,0,.18)
 	window_backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	window_backdrop.offset_top = 82
 	window_backdrop.offset_bottom = -88
 	window_backdrop.z_index = 140
 	window_backdrop.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -550,6 +551,11 @@ func _fit_hud() -> void:
 	joystick.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	joystick.position = available.position+Vector2(20,logical.y-244)*factor
 	joystick.size = Vector2(160,160)
+	if window_backdrop != null:
+		# Keep the visible HUD menu shortcuts usable while a drawer is open.
+		# The world input guard still rejects movement in this uncovered strip.
+		window_backdrop.offset_top = available.position.y+82*factor
+		window_backdrop.offset_bottom = -(get_viewport().get_visible_rect().end.y-available.end.y)-88*factor
 	_fit_tracker()
 	if workspace != null: workspace.fit_viewport()
 
@@ -938,13 +944,16 @@ func toggle_menu() -> void:
 	_open_window("menu","전체 메뉴","캐릭터 · 게임 플레이 · 커뮤니티 · 시스템")
 	var col: VBoxContainer = workspace.column()
 	var tabs := HBoxContainer.new()
+	tabs.name = "MenuCategories"
 	col.add_child(tabs)
 	for group: int in MENU.GROUPS.size():
 		var tab := UI.button(MENU.GROUPS[group],func() -> void:
 			menu_group = group
 			active_section = ""
-			toggle_menu(),Vector2(112,40))
+			toggle_menu(),Vector2(90,40))
 		tab.name = "MenuGroup_%d" % group
+		tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tab.add_theme_font_size_override("font_size",12)
 		tab.toggle_mode = true
 		tab.button_pressed = menu_group == group
 		tabs.add_child(tab)
@@ -957,18 +966,32 @@ func toggle_menu() -> void:
 	grid.columns = 4
 	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	menu_scroll.add_child(grid)
-	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/118.0),2,4))
+	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/104.0),2,4))
 	for record: Array in MENU.ENTRIES:
 		if int(record[2]) != menu_group: continue
 		var id := str(record[0])
 		var title := str(record[1])
-		var button := UI.button(title+("\n미지원" if record[3] == "unavailable" else ""),func() -> void:
-			if not workspace.was_scroll_dragged(menu_scroll): _navigate(id),Vector2(116,86))
+		var button := UI.button("",func() -> void:
+			if not workspace.was_scroll_dragged(menu_scroll): _navigate(id),Vector2(100,90))
 		button.name = "MenuTile_"+id
-		button.add_theme_font_size_override("font_size",12)
-		button.icon = UI.icon(id)
-		button.add_theme_constant_override("icon_max_width",28)
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		button.tooltip_text = title+(" · 현재 미지원" if record[3] == "unavailable" else "")
 		grid.add_child(button)
+		var icon := TextureRect.new()
+		icon.texture = UI.icon(id)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+		icon.position = Vector2(-17,9)
+		icon.size = Vector2(34,34)
+		button.add_child(icon)
+		var label := UI.label(title.replace(" · ","\n")+("\n미지원" if record[3] == "unavailable" else ""),11,UI.MUTED if record[3] == "unavailable" else UI.TEXT)
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		label.offset_top = 48
+		button.add_child(label)
 		workspace.register_scroll_drag(menu_scroll,button)
 
 func _open_utility_panel(title: String) -> void:
@@ -1532,6 +1555,14 @@ func go_back() -> void:
 		modal = null
 		_sync_input_block()
 		return
+	# A compact detail is a child view: Back first returns to its list,
+	# preserving the selected item, search and scroll position.
+	if workspace.visible:
+		if active_section == "inventory" and lineage_inventory_ui.call("back_to_list"):
+			return
+		for node: Node in workspace.content.find_children("*", "", true, false):
+			if node.has_method("back_to_list") and node.call("back_to_list"):
+				return
 	var previous: String = router.previous()
 	if previous == "":
 		_close_workspace()

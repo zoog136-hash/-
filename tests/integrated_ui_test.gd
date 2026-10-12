@@ -90,6 +90,7 @@ func _run() -> void:
 	await frames()
 	var inv: Control = hud.lineage_inventory_ui
 	inv._select_item(reference)
+	await frames()
 	var attack_before: int = world._effective_attack()
 	await click(inv.detail_action)
 	check(not world.equipped_items.has("helmet") and int(hud.character_state.get("attack",0)) == world._effective_attack(),"04 exact equipment unequip and shared stats")
@@ -103,6 +104,7 @@ func _run() -> void:
 	await click(inv.lock_button)
 	inv.gesture_dragged = false
 	inv._select_item("HP 물약")
+	await frames()
 	await click(inv.quick_button)
 	check(hud.active_section == "quickslots","05 inventory opens slot registration")
 	# Scroll third page into view before interacting with its actual button.
@@ -127,6 +129,8 @@ func _run() -> void:
 	check(skill_index >= 0,"06 current job has implemented buff skill")
 	if skill_index >= 0:
 		view.select(skill_index)
+		# Narrow gameplay drawers expose actions through their detail tab.
+		await click((view.cards.get_parent().get_parent().tabs as HBoxContainer).get_child(1))
 		var skill_name := str(view.selected.get("name",""))
 		await click(view.quick_button)
 		await click(named("AssignQuickslot_0"))
