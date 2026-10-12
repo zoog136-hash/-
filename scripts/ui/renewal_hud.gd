@@ -562,6 +562,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	for index: int in range(quickslot_icons.size()):
 		var button: Button = v20_quickslot_buttons[index]
 		var absolute: int = quickslot_index(index)
+		UI.clear_item_visual(quickslot_icons[index])
 		quickslot_icons[index].texture = null
 		quickslot_captions[index].text = ""
 		quickslot_auto_badges[index].text = ""
@@ -575,7 +576,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		var id: String = str(entry.get("id",""))
 		button.tooltip_text = id+" · 아래로 끌기: AUTO / 위로 끌기: 해제"
 		if entry.get("kind","") == "item":
-			quickslot_icons[index].texture = UI.item_icon(lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}))
+			UI.apply_item_visual(quickslot_icons[index],lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}),"quickslot")
 			quickslot_captions[index].text = str(int(inventory.get(id,0)))
 			quickslot_icons[index].modulate = Color.WHITE if int(inventory.get(id,0)) > 0 else Color(.4,.4,.4)
 		else:
@@ -1334,6 +1335,7 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	_apply_catalog_page()
 
 func _apply_catalog_page() -> void:
+	UI.clear_item_visual(catalog_preview)
 	catalog_icon_generation += 1
 	var request_id: int = catalog_icon_generation
 	super._apply_catalog_page()
@@ -1405,6 +1407,7 @@ func _catalog_pinned_instance_id(record: Dictionary) -> String:
 	return ""
 
 func _on_catalog_item_selected(index: int) -> void:
+	UI.clear_item_visual(catalog_preview)
 	super._on_catalog_item_selected(index)
 	if selected_catalog_record.is_empty():
 		if playtest_grant_button != null: playtest_grant_button.disabled = true
@@ -1420,9 +1423,9 @@ func _on_catalog_item_selected(index: int) -> void:
 		option_lines.append("• "+UI.safe(option)+CARD_OPTION_VISIBILITY.suffix(catalog_category,option,selected_catalog_record))
 	catalog_detail.text = "[font_size=18][b]%s[/b][/font_size]\n%s\n\n%s" % [UI.safe(item_name),UI.safe(selected_catalog_record.get("type","")),"\n".join(option_lines) if not option_lines.is_empty() else UI.safe(selected_catalog_record.get("desc",""))]
 	if catalog_category == "아이템":
-		var selected_texture: Texture2D = UI.item_icon(selected_catalog_record, item_name, item_image_index.get("아이템", {}))
-		if selected_texture != null:
-			catalog_preview.texture = selected_texture
+		UI.apply_item_visual(catalog_preview,selected_catalog_record,item_name,item_image_index.get("아이템",{}),"detail")
+		if catalog_preview.get_meta("item_visual",{}).get("status","") == "self_authored_substitute":
+			catalog_detail.text += "\n대체 아이콘 ◇"
 	catalog_detail.text="[color=#%s]%s[/color]\n%s" % [UI.grade(grade_name).to_html(false),UI.safe(grade_name),catalog_detail.text]
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0

@@ -38,13 +38,14 @@ func _verify() -> void:
 		var mythic: Texture2D = ART.render(path, "신화", item_name)
 		check(original != null and rare != null and mythic != null, "textures load: " + item_name)
 		if rare != null and mythic != null:
-			check(rare.get_size() == Vector2(96, 96), "icon resolution: " + item_name)
-			check(rare != mythic, "grade variant cache: " + item_name)
+			check(rare.get_size() == original.get_size(), "native resolution preserved: " + item_name)
+			check(rare == mythic, "grades share native texture; effect is separate: " + item_name)
 			check(ART.render(path, "희귀", item_name) == rare, "reuses icon cache: " + item_name)
 			var rendered: Image = rare.get_image()
+			check(rendered.get_data() == original.get_image().get_data(), "dark details and alpha unchanged: " + item_name)
 			var bright_pixels: int = 0
-			for y: int in range(20,76):
-				for x: int in range(20,76):
+			for y: int in range(rendered.get_height()):
+				for x: int in range(rendered.get_width()):
 					var pixel: Color = rendered.get_pixel(x,y)
 					if maxf(pixel.r,maxf(pixel.g,pixel.b)) > 0.35:
 						bright_pixels += 1
