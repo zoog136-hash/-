@@ -7,7 +7,6 @@ permissions:
   contents: write
 jobs:
   resolve:
-    if: "!contains(github.event.head_commit.message, '[pr59 resolved]') && !contains(github.event.head_commit.message, '[pr59 diagnostic]')"
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -21,6 +20,19 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          subject=$(git log -1 --pretty=%s)
+          if [[ "$subject" == *"[pr59 diagnostic]"* || "$subject" == *"[pr59 resolved]"* || "$subject" == *"[pr59 started]"* ]]; then
+            exit 0
+          fi
+          {
+            echo "# PR59 conflict resolution started"
+            echo
+            echo "Starting commit: $(git rev-parse HEAD)"
+            echo "GitHub Actions safely checking against current main."
+          } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+          git add docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+          git commit -m "[pr59 started] Mark the guarded merge resolution execution"
+          git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
           git fetch origin main
           git merge --no-commit --no-ff origin/main || true
           if ! python3 - <<'PY' > /tmp/pr59-resolve.log 2>&1
