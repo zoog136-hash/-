@@ -1,0 +1,31 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+SCRIPT ERROR: Parse Error: Preload file "res://assets/fonts/NotoSansKR.ttf" has no resource loaders (unrecognized file extension).
+          at: GDScript::reload (res://scripts/animation/combat_vfx.gd:16)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://scripts/world.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://tests/hunting_world_capture_test.gd:0)
+ERROR: Failed to load script "res://tests/hunting_world_capture_test.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Parse Error: Preload file "res://assets/fonts/NotoSansKR.ttf" has no resource loaders (unrecognized file extension).
+          at: GDScript::reload (res://scripts/ui/renewal_theme.gd:16)
+          GDScript backtrace (most recent call first):
+              [0] run (res://tests/hunting_world_capture_test.gd:20)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+          at: GDScript::reload (res://scripts/ui/renewal_hud.gd:0)
+          GDScript backtrace (most recent call first):
+              [0] run (res://tests/hunting_world_capture_test.gd:20)
+ERROR: Failed to load script "res://scripts/ui/renewal_hud.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] run (res://tests/hunting_world_capture_test.gd:20)
+SCRIPT ERROR: Invalid call. Nonexistent function 'label' in base 'GDScript'.
+          at: _build_catalog_panel (res://scripts/ui/renewal_hud.gd:888)
+          GDScript backtrace (most recent call first):
+              [0] _build_catalog_panel (res://scripts/ui/renewal_hud.gd:888)
+              [1] _ready (res://scripts/hud.gd:150)
+... remaining cascading errors omitted; see before-import.txt and before-exact-cameras.txt for corrected run.

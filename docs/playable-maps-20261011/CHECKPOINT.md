@@ -1,3 +1,19 @@
+# PR84 latest resume — all 25 hunting pathways and boundaries (2026-10-12)
+
+The current resume point supersedes the historical entries below:
+[25-map checkpoint](../hunting-paths-20261012/CHECKPOINT.md).
+Verified implementation: `f55c2a6a95897054b566d345637549ad3078e03a`.
+Continue from the latest remote PR84 HEAD, including its evidence commit.
+All 25 existing maps now have object collision pathways and boundary dressing;
+existing assets, actors, portals and coordinates survive. Actual per-map movement,
+spawn/portal regression, 150 matching-camera captures and 50 HUD/map captures are
+recorded. Full project final result: 110 passed, 0 unresolved failures, 3 original-pack
+skips, after correcting the dense-spawn overlap and rerunning affected checks.
+Original exact map/coordinate restoration and device performance remain unverified.
+Next: refine regional geography against actual references, preserving these results.
+
+---
+
 # PR84 bounded resume — one Aden stone cottage completed (2026-10-11)
 
 This entry supersedes the stale next-step text below. Start from the current
