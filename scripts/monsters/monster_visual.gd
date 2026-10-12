@@ -86,6 +86,7 @@ func update_pose() -> void:
 		# Native directions are selected by ActorMotion, never warped into fake views.
 		var facing_scale: float = .94 if actor.motion.facing8 in [2,6] else (.97 if actor.motion.facing8 % 2 == 1 else 1.0)
 		actor.sprite.scale.x *= facing_scale * float(visual.get("width",1.0))
+	if not actor.is_boss and (original_source or actor.motion.frame_source != null): return
 	queue_redraw()
 
 func _shape(points: PackedVector2Array, center: Vector2, tint: Color, fill: float) -> void:

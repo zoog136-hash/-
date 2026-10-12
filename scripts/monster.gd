@@ -252,7 +252,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	elif is_instance_valid(species_visual): species_visual.hide()
 
 func _physics_process(delta: float) -> void:
-	if is_instance_valid(species_visual): species_visual.tick(delta)
+	# Only bosses own warning/release lifetimes; normal actors have no such clock.
+	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
 		velocity = Vector2.ZERO
 		motion.advance(delta, Vector2.ZERO)
