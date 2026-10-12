@@ -48,7 +48,9 @@ jobs:
           export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-import"
           GODOT=./Godot_v4.7.2-stable_linux.x86_64
           timeout 300 "$GODOT" --headless --path . --import 2>&1 | tee import.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:' import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' import.log; then
+            exit 1
+          fi
           failed=0
           for test in ui_navigation_preservation_test pr93_landing_bounds_test ui_pointer_transfer_test quickslot_smoke_test ui_renewal_integration_test ui_fidelity_regression_test; do
             export XDG_DATA_HOME="${RUNNER_TEMP}/pr93-${test}"
