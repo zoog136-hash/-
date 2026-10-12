@@ -17,25 +17,46 @@ jobs:
       - name: Merge main with guarded two-file conflict resolution
         shell: bash
         run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          set -eEuo pipefail
+          report_failure() {
+            status=$?
+            trap - ERR
+            mkdir -p docs/skills
+            {
+              echo "# PR59 guarded merge failure report"
+              echo
+              echo "Source: $(git rev-parse HEAD)"
+              echo "Main: $(git rev-parse origin/main 2>/dev/null || echo unavailable)"
+              echo "Exit status: $status"
+              echo
+              echo "## Failure details"
+              echo '~~~text'
+              if [[ -f /tmp/pr59-resolve.log ]]; then cat /tmp/pr59-resolve.log; fi
+              echo '~~~'
+              echo
+              echo "## Git state"
+              git status --short | head -120
+              echo
+              echo "## Unmerged paths"
+              git diff --name-only --diff-filter=U || true
+            } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+            git merge --abort || true
+            git add docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+            git commit -m "[pr59 diagnostic] Capture guarded merge failure and preserve source branch" || true
+            git push origin "HEAD:feature/original-lineagem-skill-complete-20261010" || true
+            exit "$status"
+          }
+          trap report_failure ERR
           subject=$(git log -1 --pretty=%s)
-          if [[ "$subject" == *"[pr59 diagnostic]"* || "$subject" == *"[pr59 resolved]"* || "$subject" == *"[pr59 started]"* ]]; then
+          if [[ "$subject" == *"[pr59 diagnostic]"* || "$subject" == *"[pr59 resolved]"* ]]; then
+            trap - ERR
             exit 0
           fi
-          {
-            echo "# PR59 conflict resolution started"
-            echo
-            echo "Starting commit: $(git rev-parse HEAD)"
-            echo "GitHub Actions safely checking against current main."
-          } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
-          git add docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
-          git commit -m "[pr59 started] Mark the guarded merge resolution execution"
-          git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
           git merge --no-commit --no-ff origin/main || true
-          if ! python3 - <<'PY' > /tmp/pr59-resolve.log 2>&1
+          python3 - <<'PY' > /tmp/pr59-resolve.log 2>&1
           import pathlib, re, subprocess
           get = lambda cmd: subprocess.check_output(cmd, text=True).strip()
           unmerged = set(get(["git","diff","--name-only","--diff-filter=U"]).splitlines())
@@ -101,37 +122,6 @@ jobs:
               assert "<<<<<<<" not in f.read_text(), f"Conflict markers persist in {f}"
           print("Resolved exactly README.md and scripts/world.gd; preserved original skill save + source-map checks; checked PvE quest exclusions")
           PY
-          then
-            {
-              echo "# PR59 merge resolution check failure"
-              echo
-              echo "Source HEAD: $(git rev-parse HEAD)"
-              echo "Main HEAD: $(git rev-parse origin/main)"
-              echo
-              echo "## Python validation output"
-              echo '~~~text'
-              cat /tmp/pr59-resolve.log
-              echo '~~~'
-              echo
-              echo "## Conflicting files"
-              git diff --name-only --diff-filter=U
-              echo
-              echo "## Merge context around markers"
-              python3 - <<'DIAG'
-          import pathlib
-          path = pathlib.Path("scripts/world.gd")
-          lines = path.read_text().splitlines()
-          for i, line in enumerate(lines):
-              if line.startswith("<<<<<<< "):
-                  print("\n".join(f"{j+1}: {lines[j]}" for j in range(max(0,i-10),min(len(lines),i+35))))
-          DIAG
-            } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
-            git merge --abort || git reset --merge
-            git add docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
-            git commit -m "[pr59 diagnostic] Record failed guarded resolution for inspection"
-            git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
-            exit 1
-          fi
           cat /tmp/pr59-resolve.log
           git add README.md scripts/world.gd scripts/hud.gd scripts/hud_v20.gd
           test -z "$(git diff --name-only --diff-filter=U)"
