@@ -30,7 +30,7 @@ env:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
         with:
@@ -50,7 +50,9 @@ jobs:
           chmod +x "$GODOT"
           "$GODOT" --version | tee /tmp/spawn-validation/test-results/godot-version.txt
       - name: Import scripts and resources
-        run: timeout 420s "$GODOT" --headless --editor --path . --quit 2>&1 | tee /tmp/spawn-validation/test-results/import.log
+        run: |
+          set -o pipefail
+          timeout 900s "$GODOT" --headless --import --path . 2>&1 | tee /tmp/spawn-validation/test-results/import.log
       - name: Validate all 25 current maps and export effective placements
         run: |
           timeout 600s "$GODOT" --headless --path . --script res://tests/renewed_map_spawn_test.gd -- --output /tmp/spawn-validation/test-results/renewed-map-spawns.json 2>&1 | tee /tmp/spawn-validation/test-results/terrain.log
