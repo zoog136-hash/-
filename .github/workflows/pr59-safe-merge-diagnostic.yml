@@ -35,11 +35,11 @@ jobs:
               echo '~~~'
               echo
               echo "## Git state"
-              git status --short | head -120
+              git status --short | head -120 || true
               echo
               echo "## Unmerged paths"
               git diff --name-only --diff-filter=U || true
-            } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
+            } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md || true
             git merge --abort || true
             git add docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
             git commit -m "[pr59 diagnostic] Capture guarded merge failure and preserve source branch" || true
