@@ -1,0 +1,72 @@
+name: Animation Presentation Validate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/animation/**'
+      - 'scripts/monsters/**'
+      - 'scripts/monster.gd'
+      - 'scripts/player.gd'
+      - 'scripts/world.gd'
+      - 'data/animation_presentation.json'
+      - 'tests/*presentation*'
+      - '.github/workflows/animation-presentation-validate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: animation-presentation-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  presentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify existing resource ledger
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned Godot and software GL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import and full identity / combat regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          mkdir -p test-results
+          "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then exit 1; fi
+          for name in actor_motion_test animation_presentation_test boss_presentation_test authored_state_motion_test animation_restore_test monster_attack_profiles_test combat_timing_test combat_resolution_equivalence_test volley_motion_test hit_feedback_test combat_vfx_test; do
+            "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/${name}.txt"; then exit 1; fi
+            grep -q '_OK' "test-results/${name}.txt"
+          done
+      - name: All boss poses and real gameplay renders
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/presentation"
+          export LIBGL_ALWAYS_SOFTWARE=1
+          for name in capture_presentation_gallery capture_presentation_sequences capture_combat benchmark_presentation_battles; do
+            xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|FAILED' "test-results/${name}.txt"; then exit 1; fi
+          done
+      - name: Preserve runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: animation-presentation-${{ github.sha }}
+          path: |
+            test-results/
+            ${{ runner.temp }}/presentation/**/animation-presentation-coverage.json
+            ${{ runner.temp }}/presentation/**/boss-presentation-results.json
+            ${{ runner.temp }}/presentation/**/presentation-gallery/
+            ${{ runner.temp }}/presentation/**/presentation-sequences/
+            ${{ runner.temp }}/presentation/**/combat-review/
+            ${{ runner.temp }}/presentation/**/presentation-benchmark/
+          if-no-files-found: error

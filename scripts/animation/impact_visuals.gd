@@ -4,9 +4,13 @@ extends RefCounted
 ## docs/HIT_FEEDBACK_20261012.md. No source-game textures, RNG or gameplay calls.
 const DETAIL_LIMIT: int = 32
 var glow: ImageTexture
+static var shared_glow: ImageTexture
 
 func prepare() -> void:
 	if glow != null: return
+	if shared_glow != null:
+		glow = shared_glow
+		return
 	var image: Image = Image.create(48, 48, false, Image.FORMAT_RGBA8)
 	for y: int in range(48):
 		for x: int in range(48):
@@ -14,6 +18,7 @@ func prepare() -> void:
 			var opacity: float = pow(maxf(0.0, 1.0 - distance), 2.4)
 			image.set_pixel(x, y, Color(1.0, 1.0, 1.0, opacity))
 	glow = ImageTexture.create_from_image(image)
+	shared_glow = glow
 
 static func family(style: String) -> String:
 	match style:

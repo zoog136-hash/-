@@ -1,0 +1,3258 @@
+{
+  "schema": 1,
+  "basis_main": "9fbcd1a02505a2d9685507411faff577c7e236f6",
+  "policy": "Presentation only. Timings are TWILIGHT tuning, not measured Lineage M values. New IDs use conservative humanoid defaults; native SpriteFrames take priority. Current atlas contact review covers morphology only, not unseen views or articulated animation quality.",
+  "archetypes": {
+    "humanoid": {
+      "idle_amplitude": 0.35,
+      "stride_bob": 1.7,
+      "stride_lean": 0.018,
+      "attack_recoil": 1.0,
+      "hit_recoil": 2.5,
+      "death_tilt": 1.25,
+      "authored_motion_weight": 0.18
+    },
+    "armored": {
+      "idle_amplitude": 0.25,
+      "stride_bob": 1.3,
+      "stride_lean": 0.012,
+      "attack_recoil": 0.9,
+      "hit_recoil": 1.8,
+      "death_tilt": 1.15,
+      "authored_motion_weight": 0.16
+    },
+    "caster": {
+      "idle_amplitude": 0.5,
+      "stride_bob": 1.0,
+      "stride_lean": 0.012,
+      "attack_recoil": 0.75,
+      "hit_recoil": 2.2,
+      "death_tilt": 1.1,
+      "authored_motion_weight": 0.16
+    },
+    "archer": {
+      "idle_amplitude": 0.3,
+      "stride_bob": 1.6,
+      "stride_lean": 0.017,
+      "attack_recoil": 0.85,
+      "hit_recoil": 2.2,
+      "death_tilt": 1.2,
+      "authored_motion_weight": 0.18
+    },
+    "large": {
+      "idle_amplitude": 0.45,
+      "stride_bob": 1.1,
+      "stride_lean": 0.01,
+      "attack_recoil": 1.15,
+      "hit_recoil": 1.5,
+      "death_tilt": 0.95,
+      "authored_motion_weight": 0.16
+    },
+    "beast": {
+      "idle_amplitude": 0.3,
+      "stride_bob": 1.25,
+      "stride_lean": 0.01,
+      "attack_recoil": 1.15,
+      "hit_recoil": 2.1,
+      "death_tilt": 0.3,
+      "authored_motion_weight": 0.15
+    },
+    "undead": {
+      "idle_amplitude": 0.18,
+      "stride_bob": 1.2,
+      "stride_lean": 0.016,
+      "attack_recoil": 0.9,
+      "hit_recoil": 2.0,
+      "death_tilt": 1.3,
+      "authored_motion_weight": 0.16
+    },
+    "golem": {
+      "idle_amplitude": 0.15,
+      "stride_bob": 0.7,
+      "stride_lean": 0.008,
+      "attack_recoil": 0.85,
+      "hit_recoil": 0.8,
+      "death_tilt": 0.6,
+      "authored_motion_weight": 0.12
+    },
+    "flying": {
+      "idle_amplitude": 1.3,
+      "stride_bob": 0.45,
+      "stride_lean": 0.009,
+      "attack_recoil": 0.8,
+      "hit_recoil": 1.7,
+      "death_tilt": 0.3,
+      "authored_motion_weight": 0.12
+    },
+    "spirit": {
+      "idle_amplitude": 0.9,
+      "stride_bob": 0.25,
+      "stride_lean": 0.006,
+      "attack_recoil": 0.65,
+      "hit_recoil": 1.0,
+      "death_tilt": 0.08,
+      "authored_motion_weight": 0.12
+    },
+    "special": {
+      "idle_amplitude": 0.25,
+      "stride_bob": 0.5,
+      "stride_lean": 0.008,
+      "attack_recoil": 0.7,
+      "hit_recoil": 1.2,
+      "death_tilt": 0.15,
+      "authored_motion_weight": 0.12
+    }
+  },
+  "transforms": {
+    "393": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "144bc18d9b705484a5d14cb141d6ccaf173adc0d44af6e4307895a98b2fedf59"
+    },
+    "267": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "296b9f2601bacd5fafac189cc52f48f454a82f6c8dc22f06b6c3e5da61bd1a31"
+    },
+    "413": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a9dffcfa219a9e602ad9bbc5058109833c4846cc0327062c133ee19ad1a7457f"
+    },
+    "412": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "603871d19570a90c45b4de118c3bd590d3ff153f84c971fd875f81ac5df5b533"
+    },
+    "411": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f2c8914d634729ce018681f257c7cbaf9dba0976c83fae7ce150e06a17c89530"
+    },
+    "410": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "bf915947db8ec1648b23471b00ac325fba9713c0dade3e544abcfa13a2ab0695"
+    },
+    "399": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0c20aeb428735511807a0673f7b25c613fd5a4ff70b66c5494acaa07309fb8e2"
+    },
+    "367": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9af7e63d905bf18869727c128b57ebf3ea43b7d6cec22f4ec1177eb9fe58e30c"
+    },
+    "346": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c338cfb70c7705f54db8121071d2c7df2753959d8fa7d29c03c530eecd937f51"
+    },
+    "345": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "11b446bbfa02ab2ee84cb0fa2cd719e19d76ddf9ff8240a156f0986f286c73dc"
+    },
+    "283": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b23e576a0a07721ec88a760fd5af6db32e02d295cabfa35902b46b43218f2a39"
+    },
+    "258": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "76bccebba64d64b7b2f1bf74b1a727084aaf3bd386e8f481cbe43efbe774ad12"
+    },
+    "242": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f35a783d48c99daa18b18032b51cb3a0cc70bfe9e5494f79c343015129392acd"
+    },
+    "224": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5e7f113f22d16761a28631c881fd5978d793f6014bd3fa73682d0d150f776b00"
+    },
+    "212": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c01180ce48913cb3120fd832b18f011653830d3727301238f1eb1f2392d4ba2f"
+    },
+    "189": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ffcb6f5f39b364728f24af2a088743f8362bb10c78bf5bc47dccf8ec1a8c741f"
+    },
+    "174": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "7b3e15eb285a6acd99e8f4a36eab1c96e697d3d6393f590d26056e20e5e7fa01"
+    },
+    "161": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a719c61db9966b4c0a39238bc5558edebb04f1b4cef9f6ab26f611258a772b4d"
+    },
+    "142": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d5483870d39785465978c6e909b29ecf3b84c5002607a199cffa7e5f151aa022"
+    },
+    "141": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "362503a63f5e649a4afe76433f5a4775d06669bce112f384cf4e7b29b8593c2c"
+    },
+    "140": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "143c65c7025df51d0b89bc27786cdd0d65a1d06d33fe1db906560da2aaa6bdd1"
+    },
+    "139": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a19a0c18f8a4400f4d87a9d92b02b61db61a51b21d368b53ea1f99cbe0d40334"
+    },
+    "138": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "656b951c1c6819f49bf36c8202b789dcea5661945ff869496286e19a52227a4a"
+    },
+    "137": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1addb553ed500adb778685afdbe1729e2e33fbd85deab4816a324573ee5cd70b"
+    },
+    "136": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "20d55c745ff98910ceaed3f836715e6f1126a9271c1d633975df55df50246dbe"
+    },
+    "135": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ddf734102a1b1847e4e9adbe61d6b093c263ff2a562d5f870469f7490eb2996f"
+    },
+    "134": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e99489fb59d6cb4f0f1e35d659a5607193715bb715a790286d8cd8919f61b38f"
+    },
+    "133": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "fe7b2fed76834047e4de5ccb1e3b4e22f46292aafa47d13741bc18f0da6974ea"
+    },
+    "132": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0b04ab16390336f6cb405c865f39e987dad003e1c6b3fec4c574d21c41d09a0b"
+    },
+    "131": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2d282d621e8d618b667c834784b9a47099bd6c9ea80bf0a6c187e8b179eaf26e"
+    },
+    "130": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "de5f3c6524752fb0747e0bc3d2b747a04047abe10f7f6ba67aefaa421493e6e7"
+    },
+    "402": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a7e4c9bbf95592bbd5b9de2c42662045758287cd394337124b4509f4b1a221a2"
+    },
+    "387": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4da91f2f64aea964cb08a7fb6bd1d903263d7e9107fc85c6788477b9760351e1"
+    },
+    "375": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "545d4020d218d1d133a64d9704fefe204e73b17b384e6f89f062e4fdfcc95c2d"
+    },
+    "368": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "11bf6f87247d7728ae5b63ebc6de02e8f1e9e75f8256e6255f4c640669a66922"
+    },
+    "339": {
+      "body": "spirit",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "06eeca60282e453b2efbca1aef2987d6c2a529d99f8ca9c88762b18356b324c7"
+    },
+    "338": {
+      "body": "spirit",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d319b955d33b461a458f083117cbe1b5af29f82b736b647d530c4f65444627d5"
+    },
+    "337": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "810984adc480cc525efa6c08abc97c4d4a9cde299e7685d083b1f566606335cb"
+    },
+    "332": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "648fe1bef5b7a88ac34ad8bf39753060e2f469ac7549e906f72cfa80ecc5c21c"
+    },
+    "331": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4ae93615111775b054b1b7692351444add6c027e94adb5287e2320377d560093"
+    },
+    "330": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2effeced8396e2748092840e9fa0395ed87d95bbf79631599dbae7919aa1afec"
+    },
+    "282": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ad73b232d27b5c09b3626619c9dc062939d75961961d26cc40532e583be1ef96"
+    },
+    "275": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "fd71c1794ba344403565b32e810ceec1778ecee7ae05dfb55fd41e0005df6be8"
+    },
+    "274": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "973b206bd5910808de7ac387e61caa5d8e24cd1718ada91a333df43c18cc4a76"
+    },
+    "273": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "897dcc8bf1aab8f67e4363f88b93543f59c9626ecfb28d7a4d6af36b20afcf7e"
+    },
+    "259": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a4b5e97debab801d88528c9bf45688101c08ccd0acca15a30c5dac32d3fbc843"
+    },
+    "245": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2c416ebdf1d7bb63c8f83c38dcbce9ae3fea30624c8daf2f1ae537acaf7fb6b2"
+    },
+    "244": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "93e4d3aab1facbb08b4f0758568d1710491b13c23d6878fe6c8e0b654ac91838"
+    },
+    "243": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c01185c55291bcdd6a624721851e9833c45a2e0a8009b6ea9ab4c0ba3a4aa18b"
+    },
+    "227": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "7e595ce13ab309f54c3027661251285d93e47bac9582f2b66ad59b9705a7f0bf"
+    },
+    "226": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c17ce2100868770298b05cf28eb676024005da92e8c47eba1a5e5fa7461d31c7"
+    },
+    "225": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "56c50fddc42db7916f09a9f46ae536ecc0d477357f8b507ae7905925bea2ee01"
+    },
+    "213": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "580faba56ef0d1e6da46ada8fc61e0ca7f5251211411af4d15420f3c0372e99a"
+    },
+    "194": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b3f03a24c6e6fd1c0498a82cdfafb50cadd0535444a7ff42cc4771ea4f71fb35"
+    },
+    "193": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "890edbea52091970fd4acd58feec7fb4d2f1ded0a57f577d1e5e00bbca9dac1a"
+    },
+    "192": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "037c88e9a88bc8e31da6adc689c6fa730f896c8b7b8d767b186343ab772be1af"
+    },
+    "191": {
+      "body": "spirit",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f2bf2aa1933087ce7663138df665462269c8257f838f176e0362cf6107ce8054"
+    },
+    "190": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "01eb3ff54fd524a6264cf1827823cf680e71a77cbd8632fcd3e7c815dc18ae1e"
+    },
+    "178": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3fef8c9d67c4c9ca4192427d553a364fbcea8314eda0ab32341dce7bfae61c3c"
+    },
+    "177": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9d88d8f11092230262546c47d2322031cce9d7ca30e82db32200be3e92333780"
+    },
+    "176": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "aa7d16bff77c6c05c4f3dfed3cb9fc77ed564d6aab809dfe377ad6560be9be28"
+    },
+    "175": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3df935b17d7c82bc321724233ef3a95dbadf1abca4f3c4674a396dcb05fe60d9"
+    },
+    "166": {
+      "body": "spirit",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "467857ba3e1c53a424ae813f0cfafca912582dd0a775d06ae137d2b63acfcc77"
+    },
+    "165": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "00e549a844901186a761a1b140fa93828071c23b806e9c53da3b46a324d65b76"
+    },
+    "160": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d5f31525ad4b2718754b2864905a61cb7fce8c3737df8175c49c4915bd6f17eb"
+    },
+    "143": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "27c6b6d013215327890827631571af05754778e72a3da25d8da4b598e58aa42d"
+    },
+    "122": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9c288f4810e4fcd5b3ecf7b7442549e39d86befada7cc30a5cd3068b80e7ab2b"
+    },
+    "114": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f7169f60d6f578c7e6a06a3f8dc6f0d8cc7b16cbf0ecc31d3f2e478d61c9ef07"
+    },
+    "113": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f7936ed82ea30806581fb8defa61c3df3d7ad644f12835d88d6ad7e19a089d30"
+    },
+    "112": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "68c0511194b851b9f662e5a1168b3bbafa6c3406fc5acf71839d0cf8a1c6aec3"
+    },
+    "1": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "edffdb778d422ffdf684cf266f90822c4928ce7f62d78458baab565b8aa782d0"
+    },
+    "408": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "214d8becb72bba29ea881bb14624a24453f12dfb88943e4d91d534e348e92967"
+    },
+    "407": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0dc850c45115e27bac3f89ba61b7109194bd1d6c9a00b22bfbeed40ff79770aa"
+    },
+    "406": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3b87dff78bdb02243c3132c58037e4767de35ca09bf27e29cdefe03446ae8fd6"
+    },
+    "405": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "734ae2d15050e2ac1bdeb41dc3115948ee98e2e9d4936a12a2eb1702cf092efa"
+    },
+    "403": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "878c8da910b45983547a1700cf10bd06891933018c86f868963db0d16557d0e4"
+    },
+    "401": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "bdb6e67d72328e98ea1dc8a25e1a121e758b750c333c0ce97160523f5eb25d19"
+    },
+    "398": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "544c0d41a156556b193878ef11815af4550436841f1551e725e121425160bca3"
+    },
+    "397": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "15005e54f40fa10f8033e26899cecdb2bd6d008bc018b9b7556defc76f7078d4"
+    },
+    "392": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3ef8118015a353f3a172cf8a041f59410f7622cc04b1465b5de57533e4267b9e"
+    },
+    "391": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1743806eedd62f655ff101dda8b264c750e0223d0e3acb37821579cc9a877db9"
+    },
+    "390": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4d7f7e9d0732d81f267f6a07b68fa187fc76119c9fde88c1016f222e93f8b08e"
+    },
+    "389": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "cb0943af52d0179a9535c893be479d46118cdfc27a8d59f34e1ade269143f897"
+    },
+    "388": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ee8c7ecd2230e9ae2d4d27c0df118b27f598eaf208c8196eca14c28282d41115"
+    },
+    "386": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "aa2f7fd22c1463c53d9543adbb35cbd63b5428263bc87063acc36351f283ef46"
+    },
+    "385": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4c07a30eb82be2f84eaba53ed55a26fae156c5ab227740bcf53da3fb762e634b"
+    },
+    "384": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "181ec69d4f20bb9bbce976bee88dba8be3d023a6538dfa9aa30b24c3ef0b44b8"
+    },
+    "376": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "84301184a431c3ed8242a6e1de98f922a4e0ac337d06825c49eedd8ec6a30e58"
+    },
+    "374": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "96738c906fb04475767223b9a2b30f8397dedce579427fb2d5785b398bc989a1"
+    },
+    "369": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ee66ce63fa8b7095b0352e9d7f565f903ea0926cbac32ba309d9deb36c0c4f89"
+    },
+    "360": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "087077701c126ab7629c74bc5decf6cc3852b49f685fc73641a77c40809124cf"
+    },
+    "359": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a09bf7536668514307c2933e5bb5ad5353b6fb719c2a5351abb4b202a42590ed"
+    },
+    "358": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ee60eb9bc743decbdf078bc8d078e90016f2fd0268ed3ccc93691f28f0912fa6"
+    },
+    "357": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1baf44e7866574d8a04a6c6e559b8d795207af51102a5fac2cf9def9a2ef4960"
+    },
+    "352": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "26a006523542fc2f6e494d705d53d7d40dc2b4d67078037963031ddca36b46d0"
+    },
+    "351": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9b05b383ceb674e913bdaf988273a9a8dfc0f0ac26d11bdd2123e443a40ff581"
+    },
+    "350": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e58dca68f52eaa66347437ee6ce6b9222f486715ccaf64c8aa05a48ba8665dc0"
+    },
+    "349": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b88afa6f9ec7398c2ad26faacf05e0e8bb0dddabf76d30ab52eff9b7e8076fec"
+    },
+    "344": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "929a1df0a530564b7f3c45b22f646908b79582ea8dfe481dc4cb9337d5a18686"
+    },
+    "343": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "11d87285dd6a660246f0fbdc579edbd912b6049faf13dc867bb719a708bf69d0"
+    },
+    "342": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "927d2b0e5925f372b91c22ef0102c7f6131a60e6022b7671901b81649ac78ed5"
+    },
+    "341": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9e5caa9b0c3e84702f972432ba8640e13a4054272916ff9f0cfb34e70cc4d139"
+    },
+    "340": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "eb561e81bb4ad9257377df45827f23a5cb0b660181171eab9ac5dbd226ba12a0"
+    },
+    "329": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "37796263d8e1d974791f332dd2495492cdd5ddd7d9960075667e5de451ff835d"
+    },
+    "328": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2609278600742182a7c8eae756e860949f18c66d256e5fef07c79acfa4f3c167"
+    },
+    "294": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f4e9c83d4a8e0ec6a1d0c8e5c223b8d17d4dd2d0600519916683857a8f96b015"
+    },
+    "293": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "77c7d98f5d64ce4107d1951ea23581eae9e090f80e4e41d03faf9f348ffc3c98"
+    },
+    "292": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "195e36b453c6b66aa5db0befa3ee8c9069f1864fd91c7e7269d2ef152f97d70e"
+    },
+    "291": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6f55797ae90a963a9278bc25cdbb57daeeb3321d7824a6ed1876ce6cf9c1ca48"
+    },
+    "290": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "29091e6e13708d4c78fe4387df2ff49d64bbc540a888e6450a1104d4df02386c"
+    },
+    "289": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ac11386731f20ba2ad52fc97c695d9170c70951acfeda44cdfc08c48e4fcf46a"
+    },
+    "288": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2eee79c3a06229d69a353a9f428a8e40f68ec14abfb391be0b551ebe440c8c4c"
+    },
+    "287": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "84a968b88fdfd1e290c7019d0ea036ec1ad40ef69c6080caff667d437e84a447"
+    },
+    "286": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d3c810774a6d35a9d07445b9ff77cc75d01f82aadde8236315ace893d989710e"
+    },
+    "285": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "83a0c8e35f7fc48ba6da3c6813667bfe62d43d36f7cec3fe629f822cc7529b48"
+    },
+    "284": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f9351c4eebca7b787701656049acf23e209b296de3a4cb3eb5bb1d163eb04e48"
+    },
+    "281": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3bf87dd0707fe2f35ebc2bbc4cfbdf12ef5afd64ec384bd6f8b47a4c0761fcc1"
+    },
+    "276": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b8ed2fd9b9970e59b24717bdbc938df874aba47037b2e92bf0c56aa5860b0cee"
+    },
+    "269": {
+      "body": "golem",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "61dbaf4b6182f48c23cc77f9978080c5989bf9a01f9a36f032aadd6c7e7c52a4"
+    },
+    "268": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2ef1d8bf84e250e7559fd53f155dde5a49bbbc3d00e6574fcbd3743c1917cc6a"
+    },
+    "260": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "405e3cadb9fb8bb43c827b81655e71187b7debe310b2843b52f016e10e4d1be0"
+    },
+    "249": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d1a948c2a1ac34edf3fc2e1e2be9628e47342400ff776e99a0853981f6dcd021"
+    },
+    "248": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ecb6d43451b7403c8fe2e42cd9d7cd924a00b9d8a50da994b26f7fc7ac4df208"
+    },
+    "247": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5b7803f3d6f53bf3fd85f4a7cda79c4a4c7856f5c0f0c7759a8faf16caf6e771"
+    },
+    "246": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "dd0b9f3d8775f5c0f0886f652de7c8eead10620e3187db9f0b7c9110eccd10ea"
+    },
+    "232": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "fb55a4969cff76361bb92cc129f1b8340d8032224edce2feaa9add0082a8e7e0"
+    },
+    "231": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ba6907dbea2c34a26f85fa496fdfdabccf40128e0704238e292d7eb3f1ad0497"
+    },
+    "230": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e7ed67af9d1b861e1b2023ca2c82046434812903f48d0dd1eb125736ac968ca5"
+    },
+    "229": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "493a4b6621c8edf721862216840b0ccd68066300674a8402527741ed3f4464f9"
+    },
+    "228": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f3524f7630da84a995db2327f29a527095bc834f3cf34ab4a41cd9c2096db58d"
+    },
+    "218": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "07a76dc7d8f8d58fcc29e64c8de94edd34b525010a5287e37740260c1bf594bd"
+    },
+    "217": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5eb4635b6f84421470d29b75fc010249e7dc12d965610bae13a3f54ad643b776"
+    },
+    "214": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9ccdc1fe4ff1c9cde7d8d35a6f8f4325432e13a2dc6c148a2493c2420ec3cf65"
+    },
+    "209": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "dbffd898558ee49aa189a743269439f3ef69370f3e72254f644847b3b094b44c"
+    },
+    "198": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "7aea0962fdeb9853df4071de6d572c28d789b799538e93b22da0f4ae891cd0d4"
+    },
+    "197": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d417b1f5d3ee7c55831dc527fd2610c21e0690c8b78af07eb9844acabd69d8ab"
+    },
+    "196": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0f69fdd619eae1dd18c4bdd999d8b3aca0ff070989397dfe89242f2e96fc8530"
+    },
+    "195": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "468f4c60594556cf07e80cdbab4f2a3e9adf98c7909ef8f7c9242b62100770ba"
+    },
+    "183": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "7dbab1c14ab8b26ed0194493cca3d3a180475a4d4351362f9d28dddf492e1c04"
+    },
+    "182": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "30093d3a89f4872b8c381521a37501ef2e9b25e15cb0e5e65532d091f6301b59"
+    },
+    "181": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ac5f59488d432a071d86168dc98b55f2623df81efbf3e79eec076e467b3505ce"
+    },
+    "180": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "93d09715c8a23a8e7bea35ef21c63c009cea338b4087409200eaa94be61e22cf"
+    },
+    "179": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5fc49e11052bffdd1f74f1db55c00533cd577a42f662db709374350ca87ace17"
+    },
+    "173": {
+      "body": "spirit",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "47f93681a9b8b5f6b8c83c20881303d97e4d5ab5a0bc0a53bf6aaf9cecc77f69"
+    },
+    "168": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "30ce908f21c996ba9d6ba3a2a8ecfe26b7e80f82c407311452da3f7359830b89"
+    },
+    "167": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1772a04a254bf2e90314a2d126b93b2f4e5a1bae81ffb3d2ca528d5a99073832"
+    },
+    "164": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "31ec8a6cf8f086e2c8c939c4510d22432eb6d9beb340fecaceae51beabb53819"
+    },
+    "159": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3427d79766a910c8aaad13b9e56eef50423d025e37ef943377454457eb02e104"
+    },
+    "158": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3cb590d7e43d73aabc1992479917bdbbac5bd2626a3cd27eee6e0dac6222e6d9"
+    },
+    "155": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "cb32470f6529c7b36830742fec2200d3c899c74ae9f99dcbbc6d48c9b194b006"
+    },
+    "147": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f7d3f5537336638d9ae971086402b4ff42bb9683b843c3768852af338e08dc6f"
+    },
+    "146": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "57b3e6dea6090784467528821f2f444aa2948d4daad2a779ab9245f4623c99dc"
+    },
+    "145": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "30ef4dec39354f69c07a236181665dfaa3afe1b3c6556e9d23da34c33be7a84c"
+    },
+    "144": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "53f55cfc96f5974e9fa90d6fca0d3473b84a06cae2eb0401b44ad787fdf28477"
+    },
+    "123": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f7eb453f53e303e7f105e936b316b40d0d50f43e4d8abaebd1ad74b1d20a28bc"
+    },
+    "111": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b2aba8cfc4287eff2decf2171d98042bcef8bbdb01b12443c8608a329eca88de"
+    },
+    "110": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "07757b7256740158457b6474e11387ae72bd3717dd690fa35ede56ed4437b960"
+    },
+    "109": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0d9af2354852abe235be323f6b721093c69336749f3b1b44aca00d0493320264"
+    },
+    "103": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "bd3347823f4b0479b46aad49a16e01c260a567c43b5d655ac23937a0dff17ecc"
+    },
+    "102": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "35a49264223423e56222285a1684ee45b00636401ecc7820e72e13a6a3c4c9fd"
+    },
+    "98": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0f55ca34944d19cb1ba550dd4885658dd3e34c4cb9763b18ee5c8bf8fdc8d458"
+    },
+    "96": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "dacad55ea0c732137e6b74e91efe4c19e5c92c3474ccc86d7a21e6a0e15ae294"
+    },
+    "95": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f17d7b319cf0b42577e4ebb2733c4a703aa2d0bef48a5b744161a7c5850538a7"
+    },
+    "94": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "525d6bc135c53bf04d9b846178bf7868cd850896ad617551dcbc59b0b95acfe9"
+    },
+    "93": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "7d2718906f5dc750791e2e8e97bbe26488d4ad4e043b807fc358019a6989a942"
+    },
+    "16": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5dbfc70aa618fc070235cbb2e33415d18a819882aae76d85a9526e95e4ea0216"
+    },
+    "15": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b6fad14172c543803d053abb8233f23e9bd201bbf60958676e4844acf20f40a2"
+    },
+    "14": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e3d555483dd70270b2a1c5a2376ba2d45cedb80cc3f7774a126e625fd330adf7"
+    },
+    "13": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "169b0407eaddfe1311c6d15e2c60efaf57fa04c039f1756c9f3bef1671eb7fb7"
+    },
+    "12": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "8dee7b89801de85a98d826e97bed30e1cdc0d236e16419b78773d8970691cec1"
+    },
+    "11": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d6da8a1468ade18c3319c773461c9d701479d665ba489e6a2df97f1d45217630"
+    },
+    "10": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "eb9a3b1469f5b45a3a68fe60aa01baa5a516bfdc34fc699212e05ac2a2f0fede"
+    },
+    "9": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "8f7c9b039245f339b173ac7b6d3c2a38b492a58ff9bca7ef6ee1fad6d17acf41"
+    },
+    "8": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "88839d387a6f8e3e67a72fbf67073bf401a48760f6fc0effb3b9c072282707a2"
+    },
+    "7": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "8a692df46f780926b1c113244b8f4acff04ec61e6e884ee42f7e0c0a7568618d"
+    },
+    "6": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "48c779a46d077108e0fea69765b2855f041ffc354cb119f0787ba6f5d22865f2"
+    },
+    "5": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "be2dcd62a882747b48d77dd30f99848cc5c6f1ca7ac52e012c45c70eb1c5bd79"
+    },
+    "4": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "acf1aef7482e652782b4e2f32cbef45a41d9635388bbe199f60e2ee4447d14f5"
+    },
+    "3": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "bd0832988bc561cadba46f1b3c87e536556d3a680caa82b5fff2f844654c63ed"
+    },
+    "2": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d7def490322a5b54b651f9516f22048eb86307d5bf059005bac4458527e09bd7"
+    },
+    "409": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "412c26733741d5f9d07cab83f7a2d672f883f92022e7cd5f80bca339f9b2ace6"
+    },
+    "404": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1da053d0a6eba5f79a8f0bde7c9835066cfb4c7d47bc9a9815859ec98feb40d5"
+    },
+    "400": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1724b950d99f8007d6adf4ad7a1f17de470c69df8eade8241b4a8cbdf6b41370"
+    },
+    "396": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0db55303e7fdffea5ab5907d9cd4eaa589ff5435670a7814ca024520fcebf3b4"
+    },
+    "395": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4f01aec66471dacd2b3131ac47d57a98c62a77390f8a9787628f0f666dbf32e3"
+    },
+    "394": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2537859dfa0fd253a5551e63a02a548f9e5b5a43e3404fb0c34b1af01ae093b3"
+    },
+    "383": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "607819b15ac944463a438829d1c008ad26b978d7145c86a44d415d5e899ed6b3"
+    },
+    "382": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "8ccae90be96e0535bc5735d5464112c990096c7f32e443b136aebb6426dbf4f6"
+    },
+    "381": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "58cef7780b08ad16a4ac6dd3f38249a099796b2c4872ca13f5e53d7d4b6b1ffa"
+    },
+    "380": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "80a6365a83a4aae4fd6f26727d6745a9f55be5b2a091a5ee14434f582cf9339b"
+    },
+    "379": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "de8ca9754570e6172c65e2993bff85d240e2330ca323515e344799abddd6b173"
+    },
+    "377": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e872a5935033c91b42e5eb3415c08dba70e22a9eb0ac7822d48a76e760af8f20"
+    },
+    "373": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9d7f84100f90fd0f7678d2b96be277ca8016d25ed45881493a80d5beb343b053"
+    },
+    "372": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "03bbfabdc860d5819e44d20bdcbaca1afbf288fba6d751d57beaa7251ccfe245"
+    },
+    "371": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "103308ee446b85f80e7b883344c640869db7571cfbd2f2bc77d5e66689730b2d"
+    },
+    "370": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5127f8797e854f6fa423a41832bc0067264e00bfdad65ee8dc7f326073073413"
+    },
+    "366": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2c9f6c1e71ef4af031477fb84faa8ce336e4ab06e7268ff2575c8ec0cd583db2"
+    },
+    "365": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a171b2466ad566a763cbfa3672c3830457a4adee381acaacc2224ac3198053eb"
+    },
+    "364": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5d4ce11767123d455d358be42494494745a7bcc9f0c8b069ac60406903979cb7"
+    },
+    "363": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9ed6f322df5b0b46773c8bde1ee8dc37414e1eb6e17cbac582c72bd23d859d19"
+    },
+    "362": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "71297459e31514b627d11dd37be942f9245e71e451859eed2e5ce8b5e4177935"
+    },
+    "361": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "cca712f44bb85df19ad1d2fb0af3885125aabf9b3322f7421406f405448e24e5"
+    },
+    "356": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "841d583c9af61e4145364ef568b3e636d8227b8db18c603886271c95fea1be95"
+    },
+    "355": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "92f345d477078af23aee84ffbeea0ca611185734781070183903936759776f81"
+    },
+    "354": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f3c3b76cfa04ac84d4dc6ad70cd20cf4dac02937f640c298e44cbe040933f7fb"
+    },
+    "353": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d882a8c2a80de946275c58d672e6d9946d0982905ae439e4aecb69969c6ba4bf"
+    },
+    "348": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b8813069a97da1df141302fd48ffce0a95c443d0f3929d017b024787b80ed628"
+    },
+    "347": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4af215c1c5ec2e585297b4c855e3bfb8d233851aaf04b62ac254b64bbb9fb48c"
+    },
+    "336": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "25536c9956354ace9362ef1ffbf6e58ab877ca2bcaca8220175369c943a0c6e1"
+    },
+    "335": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6559a0811979bf2198ab6829463cac56cefe3d9437d691f280f80a3f428778bf"
+    },
+    "334": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "98dee3153f04c44d955d34c3712202c54e9d6bbdb820f55b70b7aec2136f3d35"
+    },
+    "333": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a307278baddd57857d25316f41902bf5a701d4b515e044f090f951096e8e8c04"
+    },
+    "300": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d0856c68724bacce980c59c5805117a296dde10b85ebc92b03d51967fce1fdb0"
+    },
+    "299": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "40cdab786a44895038226b3d3539ecd8a102b3ed0a007bdde72db74eeecb595d"
+    },
+    "298": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d300daedf86dc599110b1ecefe1840d25d422aab90c8bb7379cb4a5de80caeee"
+    },
+    "297": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "49baa7b1c54d427f9335efc0c867913ffa89313ee93d01b3e7114a87ea49b9be"
+    },
+    "296": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "bd7f3479a594111a06c61a1425dd5d62d94c3a98eab5fa246f83a3c20bea0c30"
+    },
+    "295": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "41ec262c56ed2bc0a06156febfd3cad7d5b4355cf18ee22b4f14ad33266674d0"
+    },
+    "280": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2e93f1cffb0557d8da4c5a093dc5ba7546b84e0a385d45def4dff0e10cc62d10"
+    },
+    "279": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "af0d0708a3661f98d720a4399b36ca76c0a9b61ea00e02f581b45f3c8eec1097"
+    },
+    "278": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "8de69ff3092ace21dba38ab166bdf3376229bc9dc1ee8145b95e116ea5ddb30b"
+    },
+    "277": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c53b72b636942de7aae9ce440d1a9997dad55d402953c8ab4c1127651accdbcd"
+    },
+    "272": {
+      "body": "golem",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1f057d7cd16087be0118c6af1d4368af99efb10529ff379a4e3b41678c203a00"
+    },
+    "271": {
+      "body": "golem",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a8bb60f3f0553a9d49e0de97b92830ca7d81bd8a490f91ff670d9aa698281aca"
+    },
+    "270": {
+      "body": "golem",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b9b34134fecec065d9f29a0d45dbe72b513f299b86ce467b9eece6ae1abd5ceb"
+    },
+    "266": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2d8a6d145d5b528fad11f00979ac8afe80cc8f5664fccb2447450c66c5dad22f"
+    },
+    "265": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5cdea495d9adf773c60ae0b70e539dc44ec54f224f7bb0f6f13a3761fbdfcc79"
+    },
+    "264": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d59c373720cc5618cebb28f6aca5d52ade8d317a0c28ff14a1188884fb6a1751"
+    },
+    "263": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a956de254622b84f282bf22c62050f2ea8ee4c0ed36aea23d9df9d8875908293"
+    },
+    "262": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "eb745845632c3c6a3d70af2953eab0b167337d3a775b495f924bf5c0fd27856f"
+    },
+    "261": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0dae6381e0b2437497078bb70742eeea82f81d119464bc34107b8886ebe45d64"
+    },
+    "257": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6d8d28e6499b18a4ac176aeb16b9a25c8b3cf8db152bd77d7a623d52a626430e"
+    },
+    "256": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2136f348e81a68f0f594c5a9b6a777fa697d03410d925f270b1ecd9aa5269ba7"
+    },
+    "255": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f6202b95f8c108d4a5147559ace2b4c6e15d238010c3db8ba589deee82938546"
+    },
+    "254": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "720b40757a66cf9c6232233ad4e7b7d8fc268baefcca149b99dce0b7ee4b837b"
+    },
+    "253": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6db2b56fe0a2fbdd64de9c16a7b1567119e0122e157aeaa5480e0357b7d3a67d"
+    },
+    "252": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "01abe9b3c6a84da5e27253d8426be8027837ce3e457c3d2ce490d591dd73017b"
+    },
+    "251": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2068d75dce47212cdfebf55782927ba666224558e1ce5e6b3b4dd8e03b9d59e3"
+    },
+    "250": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "fc497d9fa1bc52093b15ba6431a8be7723ff4d358d09eb4f29e2fdb940fe9fcb"
+    },
+    "241": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "02825c112b01dce0df212e7472b22d244b314e1225c357bdee6fcced16572fa8"
+    },
+    "240": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "03e3cda9905cf687695fdfef70d57f7a419ad8b1eb9b02691b19c0a10945be28"
+    },
+    "239": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4e0b25c92c4251a06e4073b644a74fee60f72bd355c7254cb366ab6b51cf916b"
+    },
+    "238": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "092ef4cd32532d2b6dcc44c0f5ccb1d85f6306996f07850c187285fc61d948d1"
+    },
+    "237": {
+      "body": "spirit",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9824163f857879c0c07b951413abc68ee5b16bd1ab77ab720d5f691171095d6b"
+    },
+    "236": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1fbf043f44a20f385f54d89202d1444405ab05c0934a74cb04bb019f4660fa45"
+    },
+    "235": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d89224e9abaec9a453a2111d23bf9637b52ff8102d05bff3bf08e974dc3b0071"
+    },
+    "234": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "67d86898e224ddbe0833cf881774134288ada7684dabb578a340c69b6b190ab9"
+    },
+    "233": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a077354a485393b9ec99f6ea7f2008fe1a349b398a11e55bb63678c8dcaba77c"
+    },
+    "222": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "88d945c02fd94e1223d57d7c3800ba183556b434b4264fc82433c6744d663a55"
+    },
+    "221": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d9407c3137e1bc639a96ccaea5bf06519446816350336d6d646a234e47f48640"
+    },
+    "220": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "888b01349dbaa544650ae78785c3249de7b53626221f9875307f9a7df57cbc24"
+    },
+    "219": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "530ddbacd7071268bb6142bd434cd50ac4e2182a494eb6c2112f340589d41232"
+    },
+    "215": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "55f29c90839f70d927989d30fb4f1a71bd93f1b31a31c4d3962312501b39ffc8"
+    },
+    "211": {
+      "body": "undead",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "10e5ab27b018b55c4cb46071488569d930c7e213664cefa5a726f79e9ba5463e"
+    },
+    "210": {
+      "body": "undead",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "9fc4755ac21c213ee3bd27c7abdb7373c35a83873b6151bd7736abcde51f7124"
+    },
+    "208": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2cf84bbb2a42b97a691849c0797177e8472d1b6bafbd9a3d87e8df8cf9f4cbb8"
+    },
+    "204": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5a04dd8f4de1a6cc7a90ae73d8e5cb6143ebf37e3db3c0b279b1a5d8ba0e12d9"
+    },
+    "203": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ab750c526d8e7b7098c843a4b24d1411c17a663db7aeeb1dd5ddd1944cfd8a9b"
+    },
+    "202": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f69a5fcb21e423fe1a8aee3e8c2f47e9b3506ac129c0d12a70a53c0d09383b37"
+    },
+    "201": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "4eb35e8f3bd4f9593619be2c5b89fdf6e8bb07937cd6d9d7d149806f36d862c5"
+    },
+    "200": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0fa091b2c2fcc08cb83707e5a0d7f38c0d41198fe3d61211464ace2bdbc328ea"
+    },
+    "199": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2ff8b6556c16bc9c592a04ad9263447c6f2c527050f1bb9263d78afca619ba7c"
+    },
+    "187": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "36234d873a8607f859d8b69cd90709b86e317ab846c9cbdb88598dec27ab07f5"
+    },
+    "186": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "da911316fe47c857977023ef7080380a86ab5a3236b55cf51b32e35f4ee2bc3c"
+    },
+    "185": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "75d00944d6f7fbb86212918000f13013a2bda8e4e6b890cf400566f180588511"
+    },
+    "184": {
+      "body": "undead",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b13621c9637d65d6c88cde50c77a6e30a01854d48564325af64b03596f2102e0"
+    },
+    "172": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a995c9734fc73115e3ac227004a98b36ee0f5e45c57979bd23e0e402c146a94f"
+    },
+    "171": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3bdb2b0f14dd88d269d66875f9184b850fa9dd2ba6f02a209a245d4c2cf529e1"
+    },
+    "170": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1b8b88e8f9a37a41afc0da597946c2150d844868e51fca4bc4165e56fd69f4d4"
+    },
+    "169": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6e7ae00407cabeca3608114119cffb63b4a1cf0b0b988f43194910be95f89c52"
+    },
+    "163": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c464acd030ebefc3d49dfadbc28fc4ee71d25f9c0c7bc5e975375aba9a798666"
+    },
+    "157": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "035cafab1fac2a94b3dec85d8291f5d5b88464a26bbecf1a1369ed8de8bc7afd"
+    },
+    "156": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b082b8bbbcc8c382a34d6cca2a3c66c74ee749fb3efe75c5ae35ce67012d7c6c"
+    },
+    "153": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "77226fd0009016b7ef1e068449b2a827d69033583dc286b2d66702be81ce10f2"
+    },
+    "152": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "55b867c46be862960b30b395c98868947b4ac0a40f0a09ce23b7fd4a0b07dcc4"
+    },
+    "151": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "25f4598af80abf265f12361a26a3a2bd294707e67bad9975f16610b5740e988c"
+    },
+    "150": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2f943bbc5474b626b1c0f151dc4214c01cfe62a094cfd7912022fca410c858f9"
+    },
+    "149": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2ba50995481f9e5bb13e137fd0f1b268efddf48ff2c5388f010518ce2ccc13e1"
+    },
+    "148": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1c5cb6d20c7ee07b022f1fe65fbc629f64a7e84fe31467e3514a2c34badb7655"
+    },
+    "129": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a49839886643ec58fa3a34d713b35a75195f1e1ed5547c24891b1a6756f794f8"
+    },
+    "128": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d60d3cf3221ced2661086c3f40e2f6d543d4642e410961a4d89c21a0c0d3390c"
+    },
+    "127": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "25848d8d61db9b9dfc02a8b1ad93d9f355325f2c74cf9987ed293aa28954a116"
+    },
+    "126": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "68d1dcaf41d0085a049077001a05acb95a302a206879318672bac4df62767712"
+    },
+    "124": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e11826f7496706f3130835882a1f10b02ccdafa510beeffbd854b6783af7a19d"
+    },
+    "121": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b5309679e10b864354fbe2e8dd98c1084ab8357aff28726c64e6b33f62d02781"
+    },
+    "120": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "59f2d00ecb33ba1b887ffc6824d1ec5b15feaf8799e96f373e5c612bb6932022"
+    },
+    "119": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "80f999b6f8ec8ce73bd7f669c4f5cfa6a1eca40569e0ca39249655375dd842fe"
+    },
+    "118": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "96497bdc9940ca2d3ad1ef917d524b5f942bf2e1ff5df3e0b12e264517b4486b"
+    },
+    "117": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "503bc1a4b5c61ec148e9a8f0ae7a54d41f3d2c653a737f25c8b65b15c49872ee"
+    },
+    "116": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "afbe58123a796a07899708044fb874d05a0f4277b8ef126fbde789a55f1578c9"
+    },
+    "115": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "79b65b149378f43869bab7042c8279f73424889a9f5df0d138de15c8e0d16761"
+    },
+    "108": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "13106b673c34fa8ca08c175cea5abebabcef0dbea078e92490c17ece287f1158"
+    },
+    "107": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d9abf7ebf73481fc32bda1630d22a92e7eac4415fdd68e731fd32d2b87f81069"
+    },
+    "106": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "cdbbd94ea4f1ed29b9fef440a9faf00e6eb4ff6b44d95e9a446bf9d319458ae8"
+    },
+    "105": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a5200e55d5eb1748469016f55850250987e0baeaa4d2922ae73f75c4c6eb1c0d"
+    },
+    "104": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "eb0e80e3a70fe9508d6e6ce608f23d934e13d71541775c157f0f3ea3d3418610"
+    },
+    "101": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "545b7678851bf1d0806834cea8ece1e23bd997db7bee944dcda882aa6b61c366"
+    },
+    "100": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6d3914f587a36396bd60868c695aa6b46a0435d462c7518bab7071086850eaa7"
+    },
+    "99": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "bccb74dec4311a9fc6ac84b1e7cbca343732a8bbf96de2cc76b49691399e7f84"
+    },
+    "97": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f64232808814f039bc3ebed4d1abf71b5ae07ff2122512428f96729a77719211"
+    },
+    "92": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6f750a5e9004bcf1ec0b441ee669e0b3a1094ee3ca6127c940e5608b84a59116"
+    },
+    "91": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b0693c06b2d5722a9f9943df5879c7ba6cfef53d0814804d81bb1b517f2716dc"
+    },
+    "90": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "478d976161c52f53c21650f37be1720caf8b019fcdcc1d84dffd987a3658a915"
+    },
+    "89": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d62be91525160d9193f06f1d09ec6dca25a987c89e0a0b9815d734bebbaa77b4"
+    },
+    "41": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "122f18d26c7a077af7bdb3845a53635fad30eb494d7208bd3579a4e753e4f300"
+    },
+    "40": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "32d50f6f6ecdb2efffccd4ee19147348f3b6199c22a6881a82d2ee2166410c40"
+    },
+    "39": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "45e4568e24f012aa6e6cd9147fdf462fd689d7109075610983315a1bfb4b22b1"
+    },
+    "38": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "247d742647c14a27f5e00eb2e341b1fdf93c51e6a16546657b3b261b677ff3f1"
+    },
+    "37": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "022b0e9191e5cd56966ca3c8cb2dc1d9a9517029ef96d6cedc9847ffbe4e5db9"
+    },
+    "36": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "11551b907dcbdafe80b009f89a063b135707e5fe7b05d54a4948235085acacd1"
+    },
+    "35": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "110bddb455520dc8fa4844692a18cb7745b28f0bbfc57adbe735c0b416b19d69"
+    },
+    "34": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "27a44300fb7b8320a85fa45227dd4dd06204453cf3c98c505e419bf69fce57a9"
+    },
+    "33": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "562c4a94e63e1ad91484221485bca7390262475b9bd377535ba11bed9e540e20"
+    },
+    "32": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "99ac033461f91f3c76975e020eb50f467980ce34b50d04bbb556d6033ccd6e98"
+    },
+    "31": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6c44523713f8ba289b4dfd187ae95f08e23b3d57e2c1f6a6a2cbce9490de9467"
+    },
+    "30": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6b8c1194b87538ac775d80253bb43fc24e7ab759832c42b3e9f2f496e9cc3086"
+    },
+    "29": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "98a0613af2ee64f4d6221fa89dcb11e9afd3308712e019b26ecc1d4a00c9d792"
+    },
+    "28": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6a7d9f6457b2ba52ff4306850a62e71b910a9fe6276b81aeef2ce55fac9b7379"
+    },
+    "27": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "457cb8e15542ce01f19f8582ae042a8703baa779181fe5f3435f11bb30bba174"
+    },
+    "26": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "03be64794349d0fbde42120e983844d3aff5524e57a66a3ff2cd85c6ddd3e5a8"
+    },
+    "25": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c5c845955c2930bef657945a9ca32aa675a220e1f6b849f1133d8116169c698a"
+    },
+    "24": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3b7eb09b242c3b649978375ad24626dd5880206c3ef7ab5521a4c572c99d4f51"
+    },
+    "23": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a285b447d84fcbd455e7590feb00ca6213f277078c91432c7c845e9cf7b9c0c3"
+    },
+    "22": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d4825409061452da441e90356d207484550e64608ef61f1a3528ab5c70eb4994"
+    },
+    "21": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "011a2c8ba3e2f59d99a96349b033002bb5cd805b7900443e7448842ad595d81d"
+    },
+    "20": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b1b020f6a5b0b2e2269006ba6a168944769d103f3ee3739ef6aaf058209370a6"
+    },
+    "19": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a42e21b0cb9993dd1169d187f8bd0c56c812173e940ce2340bb078f9597065b6"
+    },
+    "18": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6af62471d6007d9fe2ce184225c067b474c6e59f3a4c916368fcf0aedbcc5c0a"
+    },
+    "17": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b3a9fa52afd7fbc8cfb23c38c71b9389ead98dad385efeab4f3018cbf3cd7efa"
+    },
+    "378": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "dd21b5defc1fdbfc4266056a0f6748fa7b5ca7630c97ea7c452cfa16f18030ec"
+    },
+    "318": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "302ce5232f213a1ef106401f2d00b46273eb5a798ace4c1215120659eb196814"
+    },
+    "317": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "528db3e9afba64b509729ac2e28a413eaec6850d5bce7b580974482215189deb"
+    },
+    "316": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c363558b005346af9f5d49183f32ca9388fa0949d6e0e4877079db7b5857f196"
+    },
+    "315": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "751aca7060ca3a04f217715d9ab666e82dc1d9ce8bf378fec9ea90d6d1c78c24"
+    },
+    "314": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d0cd163dfa1bbc979223c15fc819542af87868a0c45ca24450219b6bc61a5c9a"
+    },
+    "313": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2d870008b39bdc08623cbbd9a4d248ad23cec9e4838bb0937ca6a5cc7e18a6a6"
+    },
+    "312": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e4d571587fead4eb9709dccdc387e1e47dc2dbdbc56483211731d5ef0ce80d32"
+    },
+    "311": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "615fef99755beaf9372f9efc48cf125393c06bf072bf4c758ba211da8d78fa7b"
+    },
+    "310": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6ddedf8c202b6e58d3dae6fa0352766ca6117b37f0903284c5739786b5bece6d"
+    },
+    "309": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "84aab769dc5b518a040f4a03e711b555e8bfa77b5e7a5b543023d12c36f84850"
+    },
+    "308": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "dc9db71e43bcfa7a0489121cc2232932c46e3c1f04b782de355b356609821bf3"
+    },
+    "307": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e355922800e8a0da24f4aad8225f0ac8e50c5ad84bb395412858563aae4c724a"
+    },
+    "306": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a22d31eb0cb896977ccaf52bc6ad34453a9584d053a576c33897a3923292ea49"
+    },
+    "305": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ae75f8a5d68bf10b9a695c5bd17edacf9113c0aa8054bd500889363dad0f02a4"
+    },
+    "304": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c0b4d1df43f4ad0b0daf4b99c3c1a479648921500d69a24e3dfec0e13b527322"
+    },
+    "303": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0858633a67bc9a295517fbb1749095e68e7ab1c6b171ea7e33cfa24e74e8de91"
+    },
+    "302": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "61de8771848aa543552d0d39cfe71cc62c0d17d18ad74c81f5f8e6a21169e780"
+    },
+    "301": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "1bca26aff2c219a9af6a8780c570929b826f9215daedd67f0be8b76fbd9db90c"
+    },
+    "223": {
+      "body": "golem",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "8ccce2c362b7d98ca4013ed0d4d8546703e7ad12a40de6bc1ab7c75969e1ebb0"
+    },
+    "207": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "02d1210665328d513a03f37835005cbca430f16b240efadbaaa63ba32089ceaa"
+    },
+    "206": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "185cfd873e090d4526f73971182f6df2a81212d4242091765d3b0fe3da59a21e"
+    },
+    "205": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "24a2ac718d00e7ec47b0c1542f2dc156dd7fd614efcf62dc44807a92a6012e29"
+    },
+    "60": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "94dab5863eef1bd94e03abea1ba6bfa07d8e0f3b94268f1505994dc7b182411f"
+    },
+    "59": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "508828f877c6410c8522346629ebdf5a47c17bc35999fb462d3e38eb6de9eb1a"
+    },
+    "58": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d5e4ec574bda1834decd88453d5ee449b7a8ec0caac1bbc201876004cd482e02"
+    },
+    "57": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "82d6758c9fe4c45467950746d7563f8ac505cdb4e8cbd28c85ec5b884cf13da6"
+    },
+    "56": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6f89c10e781122e69e26aaa0314b844e93f06e964e62b5b56a5ac13e513e457e"
+    },
+    "55": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6df5545f00f6d96eb5e20253619fa359b760b5473171b955f6f3db19ba6c202b"
+    },
+    "54": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d8494b40b059f239d2ddf414256503334bbd5bea4d6df15a96ea0fa08b4421f1"
+    },
+    "53": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "294e7de9e9ea0767461eec68434680373c32d36d754aad7a1399d815214001e0"
+    },
+    "52": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2caaaf93a7619c38c906a963e3355e74989079d28c2644a91cd18657086b9e11"
+    },
+    "51": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3bbc40d8fa97bda93971d09e569dbe932bfbd7d46b57c794dbf264c1b7a755c2"
+    },
+    "50": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ef26c874e591a853b77143ee1f1701dc506277042718a001b1f615a8fad193f5"
+    },
+    "49": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "97caff787367d038fd22f06dfbb370613ce08a7386f2e15d8579cfa812c1a88f"
+    },
+    "48": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "06c736a74b7e225d397963d0e3d08d30dc507142c3f3f558c7b9fb3a6eadb6e0"
+    },
+    "47": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c588fa077ad495acecba6180354ec4ddd7143b54ebf46eb6616df01373b70760"
+    },
+    "46": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "c8d588b42fb383acb87f6e0b9f01b25eb444bd26d9621a8ac8b11b43c31eab64"
+    },
+    "45": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6691037b4683da89db9e817a0e502ad3355171a893208764b37874e9905efcfc"
+    },
+    "44": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2a7ea6e34206317713cd28caae775ee9af1c75d8e98271e8251c7fcc3f4534a2"
+    },
+    "43": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "f455db220090ec390639a0777fb5339ff25c61f17c158d8018734f89a7513766"
+    },
+    "42": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "90d8246387c1d84d26d3be528f5deeaacb6ff4a4be0b0e2b5b39d0b557831d64"
+    },
+    "327": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "7711d17164b450e05a10f164564951e045831d8dd9c895d1aa5051451ce26199"
+    },
+    "326": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "799ce735e5c9e6feca114d09f398a0c0dcc3982cfdbc4184032b2684332068c6"
+    },
+    "325": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "17546016511f73c4ffa05ba856c1477e6078d19935d0b0090d5ac16efde7dbe5"
+    },
+    "324": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "795fe5b576b94c50b4d3865e64301c304eb59f1f8262009edba31d21ff746975"
+    },
+    "323": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ad41379fe7a7087efa3a5018e370517a68e1c40760929b115e4e6e7d6cfe57ff"
+    },
+    "322": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "617b912d6b6cf57b8757ca162e8bb5004a6c7f735fab82cb5023f4efa3dd3dd3"
+    },
+    "321": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "6451296a584de5a613a567d5612752275395393d99302f42417a18d0efb931e4"
+    },
+    "320": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "cc9e6d79a1d6eafc1d0b93839d105ba0f6071a97768d607dba432ba30e2d9d12"
+    },
+    "319": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5ccb53f40803f81c0d33977cb1cb1d8f31734dfb692e828e3a07aad6a59c0509"
+    },
+    "216": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "96d37608b32ecade5acd4d8b379d4da33c808a2e3c7cdc20b59ce833b76e49cf"
+    },
+    "188": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "709eb440c0b211cd8621135181d94e3e118bd06142ad89b4312bfe5a609bd366"
+    },
+    "162": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0a393c1b74271d6df923c0d0cb543a424d7031292ef48013addd7630a2add8b7"
+    },
+    "154": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "628693de1706e26ac5a09b80468239b03f37e23392fede6229485eced92c93c5"
+    },
+    "125": {
+      "body": "armored",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "35822eb9f5d60472a86c089b480e743363893f51f8f202c6c7b295d8a7b676f5"
+    },
+    "88": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "e3f8b0080098f82598e470e132f58b36c93145bc8d9bbc2b9edc1c814e498721"
+    },
+    "87": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "b74ec03be30b7fd20445914f63a1c19b6df36fca57ceebd677185a3a4a0a8f6e"
+    },
+    "86": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "38dde58d488376ff6b613624a6c02ab078936ae948b3d73a561075b9a59f6de9"
+    },
+    "85": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5e80c856147825d165fb514bc73c1b49f3ec88f5e4f6197406d66ffe28456de8"
+    },
+    "84": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "41f4a76e501739909de5a50e7e09a7bce97facd0119c5a4a63e5869f128b9631"
+    },
+    "83": {
+      "body": "beast",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "910c9923c4e93ae2dffdb311bdb73b868552a56d910f41c150b9a66025594673"
+    },
+    "82": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ef487196559f299f726ebfc618f93a79c89f599233886ea926959f7684f64b81"
+    },
+    "81": {
+      "body": "golem",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "08e5398cfe21be410c2171a8d30dfdc25912fe152101686fa89e203b77a8772f"
+    },
+    "80": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "a7e025e44a0a92ac7d624182e1b25b38f6aac3fa5a1e1fabee5899ed8ec813d4"
+    },
+    "79": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "131c14d88fc8c01c14fb6bcbafbd342b29957394149b4c7f734bc462b072d08d"
+    },
+    "78": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "0fd1abd01d4ce04b1117de63f7c502bb8c84723c2f4b66deacb9c343d2c2558b"
+    },
+    "77": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "d669b940b3395eeecc0e46ece8a32c0568349c839a24fe1ddab848f2da3178b2"
+    },
+    "76": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "88d37e8e5ec1a41709c8dfd684d9a174320b35f078774c654ece45ca4b3e16dd"
+    },
+    "75": {
+      "body": "special",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "99ea8bd3b10ae4e6153ee4573bd3c087f79a88461f72d637f104821c473c1930"
+    },
+    "74": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "abeae044dbd46b2102c583b0c425eb2d78497d0f0a46704a1453efca6ea9e2ec"
+    },
+    "73": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "2c210ee60c81080c190ce90b7723bf4941f92ebb5f960f38513e3837c09a8e1b"
+    },
+    "72": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "3717c4ba7ccc46ad93e57e872da0bb15bba45f678ef9cb643b7245445d5c8bb9"
+    },
+    "71": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ce7cf5189e8416e37cc98d0e48285ae75c65a3a12b8fee791bbb90ace5c72e2f"
+    },
+    "70": {
+      "body": "undead",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "5339e7dd19959c2296909aa901d374a5c74a939f6e4add04a0cb8ba60b622ab7"
+    },
+    "69": {
+      "body": "undead",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "edc69acd4d0f524fcd318b826ef5b527d74b0b49d2a8695b3a6c28248e70caf9"
+    },
+    "68": {
+      "body": "caster",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "ffeae1da1c44ca49ef29e2d0c1b56519f5e62b94e84094aa99e6a27c23f9b17c"
+    },
+    "67": {
+      "body": "flying",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "539b9b33996bbc401dae1696c9f5c1897f9b3b7b95cc7c070592af00e79aa2d0"
+    },
+    "66": {
+      "body": "archer",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "efffe8368174e9ee25d1e4c0e7ef2f3e7e0aab7bb783a876af0ceefa65a22e55"
+    },
+    "65": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "493c00974d98a8a74771fdfb97fc953deefdff77075ef0750148c652570c3d73"
+    },
+    "64": {
+      "body": "undead",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "7e38a111147ac920d1909f0b8595024f247c0d1c7884ea49ad38a026fb4e1a0d"
+    },
+    "63": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "bd5e9d0a8ab5245a53127f8a934a3d8ca2fed6312cfa2d610fe998898d7fdeb8"
+    },
+    "62": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "037c0429fef97f4b45e364512b594ef1d143f06c93926836c95a08bc6453172d"
+    },
+    "61": {
+      "body": "large",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "331600744fff8b75b412e920cd3df39024db7cf583c94e93c7c2a10fa71d55bd"
+    }
+  },
+  "monster_bodies": {
+    "angel": "flying",
+    "ant": "beast",
+    "ape": "large",
+    "bandit": "humanoid",
+    "bandit_archer": "archer",
+    "basilisk": "beast",
+    "bee": "flying",
+    "blue_harpy": "flying",
+    "bone_dragon": "flying",
+    "bugbear": "large",
+    "bull": "large",
+    "cerberus": "beast",
+    "chimera": "beast",
+    "cockatrice": "beast",
+    "commander": "armored",
+    "cougar": "beast",
+    "crab": "beast",
+    "crystal": "golem",
+    "cyclops": "large",
+    "dark_knight": "armored",
+    "demon": "large",
+    "dog": "beast",
+    "dragon": "flying",
+    "drake": "flying",
+    "dryad": "special",
+    "earth": "golem",
+    "elf_archer": "archer",
+    "ettin": "large",
+    "eye": "special",
+    "fire": "spirit",
+    "fire_egg": "special",
+    "fishman": "humanoid",
+    "flower": "special",
+    "frog": "beast",
+    "ghost": "spirit",
+    "ghoul": "undead",
+    "gnoll": "humanoid",
+    "goat_demon": "large",
+    "goblin": "humanoid",
+    "harpy": "flying",
+    "ice_man": "golem",
+    "imp": "flying",
+    "iron_golem": "golem",
+    "lamia": "special",
+    "lava_golem": "golem",
+    "lich": "caster",
+    "living_sword": "spirit",
+    "lizard": "humanoid",
+    "mage": "caster",
+    "medusa": "special",
+    "mimic": "special",
+    "minotaur": "large",
+    "mummy_king": "undead",
+    "orc": "large",
+    "orc_archer": "archer",
+    "orc_captain": "armored",
+    "orc_mage": "caster",
+    "phoenix": "flying",
+    "prince": "flying",
+    "queen": "flying",
+    "reaper": "humanoid",
+    "salamander": "beast",
+    "scorpion": "beast",
+    "seer": "special",
+    "skeleton": "undead",
+    "skeleton_archer": "archer",
+    "snowman": "large",
+    "soldier_ant": "beast",
+    "spider": "beast",
+    "spider_queen": "humanoid",
+    "stag": "beast",
+    "stone_golem": "golem",
+    "succubus": "flying",
+    "tentacle": "special",
+    "tiger": "beast",
+    "turtle": "beast",
+    "ugnu": "large",
+    "unicorn": "beast",
+    "valkyrie": "flying",
+    "vampire": "humanoid",
+    "watcher": "special",
+    "water": "spirit",
+    "wind": "spirit",
+    "winged_skeleton": "flying",
+    "wolf": "beast",
+    "worm": "special",
+    "yeti": "large",
+    "zombie": "undead",
+    "zombie_lord": "large"
+  },
+  "bosses": {
+    "monster:드레이크": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "f18a3d",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "heavy"
+    },
+    "monster:흑장로": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b390f0",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:이프리트": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "f18a3d",
+      "effect_scale": 0.7,
+      "death_animation": "dissolve",
+      "special_motion": "magic"
+    },
+    "monster:바포메트": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 0.9,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:커츠": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:테베 아누비스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:테베 호루스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:테베 오시리스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:샌드 웜": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:피닉스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "f18a3d",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "magic"
+    },
+    "monster:데스나이트": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:얼음 여왕": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "849bab",
+      "effect_scale": 0.7,
+      "death_animation": "dissolve",
+      "special_motion": "magic"
+    },
+    "monster:거대 드레이크": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "f18a3d",
+      "effect_scale": 0.7,
+      "death_animation": "dissolve",
+      "special_motion": "magic"
+    },
+    "monster:베레스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 0.9,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:네크로맨서": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b390f0",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:아크모": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "849bab",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:제로스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:그림 리퍼": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "ba91e5",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:말하는 섬의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:검은숲의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:글루디오 던전의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:개미굴의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "849bab",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:기란 평원의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:에바 왕국의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:용의 계곡의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:오만의 탑의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:화룡의 둥지의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "8daa7b",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:풍룡의 둥지의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "849bab",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:지룡의 둥지의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:수룡의 둥지의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:잊혀진 섬의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:라스타바드의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:테베라스의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "8daa7b",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:아틀란티스의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:마계의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:천상계의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:시간의 균열의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:종말의 성역의 지배자": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "849bab",
+      "effect_scale": 0.7,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:공포의 뱀파이어": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "cf6f88",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:교만의 왕자 데우스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "heavy"
+    },
+    "monster:그라디움": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "magic"
+    },
+    "monster:듀페리온": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "heavy"
+    },
+    "monster:분노의 주시자 라즈엘": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "849bab",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:불멸의 리치": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "ba91e5",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:불사의 머미 로드": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:불신의 시어": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:살라흐": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 0.9,
+      "effect_color": "ba91e5",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:알비노 데몬": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 0.9,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "heavy"
+    },
+    "monster:알비노 유니콘": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "thrust"
+    },
+    "monster:알비노 피닉스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "f18a3d",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "magic"
+    },
+    "monster:어둠의 나이트발드": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "heavy"
+    },
+    "monster:오만한 우그누스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "heavy"
+    },
+    "monster:왜곡의 제니스 퀸": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:욥니르": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 0.9,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:웨링": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "thrust"
+    },
+    "monster:잔혹한 아이리스": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "8daa7b",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "bow"
+    },
+    "monster:죽음의 좀비 로드": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 0.9,
+      "effect_color": "ba91e5",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "magic"
+    },
+    "monster:지옥의 쿠거": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "aa8aaf",
+      "effect_scale": 0.98,
+      "death_animation": "collapse",
+      "special_motion": "thrust"
+    },
+    "monster:질투의 공주 이자벨": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "c4aa64",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "bow"
+    },
+    "monster:탐욕의 여왕 벨리엘": {
+      "attack_animation": "attack",
+      "cast_animation": "cast",
+      "special_animation": "special",
+      "animation_speed": 1.0,
+      "effect_color": "b76d5a",
+      "effect_scale": 0.98,
+      "death_animation": "dissolve",
+      "special_motion": "magic"
+    }
+  },
+  "monster_sources": {
+    "res://assets/external_l1j/monsters/1024.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "2e77475b545a94ffb9ac39a97eed51957fbb9c666867fc5104c1ec8cb2e7d1dd"
+    },
+    "res://assets/external_l1j/monsters/10355.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "662f4d54d31dd49e6941ab78407cd1d2054349ea7c0b428dd16bd0b56d3e7440"
+    },
+    "res://assets/external_l1j/monsters/10358.png": {
+      "body": "golem",
+      "evidence": "installed_source_contact_review",
+      "sha256": "9cae4923ee519c31007de839e33fdb7ed9ca076f6b02d364502aa89faf7022ba"
+    },
+    "res://assets/external_l1j/monsters/1037.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "e6cb6e716de28890f461d47f273a6dab8065dad6a02bd67ce5a1dd0a5567bf77"
+    },
+    "res://assets/external_l1j/monsters/1041.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "d81568df1382f8b7b613dc88ff2c988db1f4ae954c09c6254ef76b42b182f38e"
+    },
+    "res://assets/external_l1j/monsters/1062.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "68be7b8af50ff6a89f7986416a5ec1e26461c8764a722bf0ccf7fa97b75c4ce1"
+    },
+    "res://assets/external_l1j/monsters/1112.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "3d17f669d7a47fbaf636b3c9a93d6b78e8e0abe244f80516b39b40b0b0667937"
+    },
+    "res://assets/external_l1j/monsters/11319.png": {
+      "body": "spirit",
+      "evidence": "installed_source_contact_review",
+      "sha256": "37b68430cb7bc5d2de057b49bc1d7098fceab34e2c98ee7ca363e8c06c190333"
+    },
+    "res://assets/external_l1j/monsters/1211.png": {
+      "body": "caster",
+      "evidence": "installed_source_contact_review",
+      "sha256": "04a09168d13bbade36971ba4e6a971bc17505abe7b08943a2ed5fe76ad55c0c4"
+    },
+    "res://assets/external_l1j/monsters/12983.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "0abf61fecce2cde49bc84721f2ff1f3a21955e1207a3cb40dcd9ea8b10d8a40c"
+    },
+    "res://assets/external_l1j/monsters/13081.png": {
+      "body": "armored",
+      "evidence": "installed_source_contact_review",
+      "sha256": "0b9a91b806f7cd0a25b9681fb9a9873ea12d2072a46b05f360451fa750c4cc10"
+    },
+    "res://assets/external_l1j/monsters/1318.png": {
+      "body": "spirit",
+      "evidence": "installed_source_contact_review",
+      "sha256": "51ac08e1f0f44588e6926fe9064361ad6a6aef4e857d008c36c30220e3265084"
+    },
+    "res://assets/external_l1j/monsters/13290.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "33377e9e39dc4a3f7c9443c36c80244ec170fc8083be6bde9ad2c9860af15f96"
+    },
+    "res://assets/external_l1j/monsters/13304.png": {
+      "body": "humanoid",
+      "evidence": "installed_source_contact_review",
+      "sha256": "10d00458ed7c67f3f0d50fe067551de62afe28f95afeeb489ace6ed06c2447f6"
+    },
+    "res://assets/external_l1j/monsters/14169.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "3408f66ca885a60fa8e1e7203ca679baf42bc33b679912a3266afeaecb864b94"
+    },
+    "res://assets/external_l1j/monsters/145.png": {
+      "body": "undead",
+      "evidence": "installed_source_contact_review",
+      "sha256": "4e33a88ab0310d8afc3910b245b1db42e74246325febfce560fa927ee5164ff7"
+    },
+    "res://assets/external_l1j/monsters/15554.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "c9392fff7ad517bdb9725cc1e750241e5ef0276ed21f3adc5fbbd4d9d1501b3a"
+    },
+    "res://assets/external_l1j/monsters/15561.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "db6a8edb128094b279c4539b04a8beeb6a24c80c4430f5fa5668762cf08b02f3"
+    },
+    "res://assets/external_l1j/monsters/15565.png": {
+      "body": "humanoid",
+      "evidence": "installed_source_contact_review",
+      "sha256": "151192763b4667ee5a1e255d9415d763fff22fd73a6a8c3dc847567a8bf38ff6"
+    },
+    "res://assets/external_l1j/monsters/15576.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "99a1f006c11b3b3e2fe18ff6025c9248568c45cd2f8d02a722aca680e47467f1"
+    },
+    "res://assets/external_l1j/monsters/15598.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "361e796dc6262104b38799d69dee73427084e8fcadcc3ec6336f4b9ef960b3d9"
+    },
+    "res://assets/external_l1j/monsters/15604.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "266e56d24b0e0da19639eced5ff576123596655c421d25c723e20723142a3f0b"
+    },
+    "res://assets/external_l1j/monsters/15612.png": {
+      "body": "archer",
+      "evidence": "installed_source_contact_review",
+      "sha256": "efada0cc3505b0672aa8b90ed778143db53923ea4f32b2d5b56f87ffb8e5605e"
+    },
+    "res://assets/external_l1j/monsters/15639.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "66aa04fa2f2bf2e898d4dad718ff2b0a51d398e1a0b9d826309dbb507d5b32be"
+    },
+    "res://assets/external_l1j/monsters/15641.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "23f87b6b59cdbf4f9980e950602b69ea251e7009fe039cc1db23a880fa080341"
+    },
+    "res://assets/external_l1j/monsters/15648.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "70678037163db132c48b7acae8aebbf0b385e48250c08ab8d1c1943e0403b50a"
+    },
+    "res://assets/external_l1j/monsters/15649.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "0ae9414be57c1724fb817e9aee8232c6d29430b1ffc4108a2d7cdcce95b475b9"
+    },
+    "res://assets/external_l1j/monsters/15663.png": {
+      "body": "golem",
+      "evidence": "installed_source_contact_review",
+      "sha256": "f302ffb3174094aefed5666f18bad067ede22e5e310f561b4938d7d9abb2bffb"
+    },
+    "res://assets/external_l1j/monsters/15664.png": {
+      "body": "golem",
+      "evidence": "installed_source_contact_review",
+      "sha256": "0ce59d33c4b214ae1e047da7e2160143389078497ee07669bfd15376957f7b50"
+    },
+    "res://assets/external_l1j/monsters/15665.png": {
+      "body": "golem",
+      "evidence": "installed_source_contact_review",
+      "sha256": "2ba615eafeff28e06ce56958eccb82cce1f682b47bb64aa5411a93d4dc2b545f"
+    },
+    "res://assets/external_l1j/monsters/15671.png": {
+      "body": "golem",
+      "evidence": "installed_source_contact_review",
+      "sha256": "1520a1dbc4d835bd4fe0e471472dd6f22e10625f4498b687c0261410f503b80a"
+    },
+    "res://assets/external_l1j/monsters/15714.png": {
+      "body": "humanoid",
+      "evidence": "installed_source_contact_review",
+      "sha256": "9b01e588e38c51d6af7fa9dbb735cdcaba29603d99f2bf0aa09b0893f6d20d3d"
+    },
+    "res://assets/external_l1j/monsters/15715.png": {
+      "body": "archer",
+      "evidence": "installed_source_contact_review",
+      "sha256": "f6a7cfbedd6de9572684642da9ff3e35a2d1706d53ab7bae2ba5c0101bfad966"
+    },
+    "res://assets/external_l1j/monsters/15722.png": {
+      "body": "undead",
+      "evidence": "installed_source_contact_review",
+      "sha256": "96650bfae8d190341ef77ed1d20de3f67bb2f4774536525f69db2160fdd94fac"
+    },
+    "res://assets/external_l1j/monsters/15723.png": {
+      "body": "undead",
+      "evidence": "installed_source_contact_review",
+      "sha256": "d1cc5835992562cc3594faa3d63aba599aaa80140e15748e5b2610a78fa2e46e"
+    },
+    "res://assets/external_l1j/monsters/15724.png": {
+      "body": "archer",
+      "evidence": "installed_source_contact_review",
+      "sha256": "7f5c4006a161099d8b2a90acfe4b850a0af59dac20cb0f919f6036f1733985fa"
+    },
+    "res://assets/external_l1j/monsters/15738.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "e9589630be6646a03c24031e33f2ca1ea18228f223a54c4eab23aef866a1a3bd"
+    },
+    "res://assets/external_l1j/monsters/1574.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "f099e7cd1c5027f2251bfae63e0e34a5c00495c5f134e5202f4a3bde7e30e8b2"
+    },
+    "res://assets/external_l1j/monsters/15742.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "52e2bdf6b03fc93247ca0989a8d7415edd69f17629fab4a748c991befb11d301"
+    },
+    "res://assets/external_l1j/monsters/15744.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "e8bdc5e6edc41d8b883302fc2482cf1a1880bfce316086607a25f2c97f188e38"
+    },
+    "res://assets/external_l1j/monsters/15749.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "e8ca6f4fb1397b932dc5252b7ff6b788402a5d43c090429b2a2fbba0ce4aa5be"
+    },
+    "res://assets/external_l1j/monsters/15751.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "21e60cede9a0fa5d4763607a6ffb0f1d1e272c63a51524fc6bcddf90254904eb"
+    },
+    "res://assets/external_l1j/monsters/15753.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "5cf0babe719dce09421b9a8cc2bab4d62739f5ae93aa258f2c8ddc0a8ff0d6c1"
+    },
+    "res://assets/external_l1j/monsters/15757.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "60a025d864e5b0180991e8bffb9c9dc00c7fc20eea18cdf944c31d5d0f75c1c4"
+    },
+    "res://assets/external_l1j/monsters/15758.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "c56c49dcfcbf4e6e81ae6ca306dff032643376728e7eb3acf1c21b8e1762ad84"
+    },
+    "res://assets/external_l1j/monsters/15759.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "13715ec2d076d72e9998f59b66326fdb47decf104cf8885e28432c57fbc322b6"
+    },
+    "res://assets/external_l1j/monsters/15772.png": {
+      "body": "undead",
+      "evidence": "installed_source_contact_review",
+      "sha256": "5fcd8d578b3a3f27bbe278c95b97902b42205e9ed769ca41ad9e2c3d3d4cefe2"
+    },
+    "res://assets/external_l1j/monsters/15793.png": {
+      "body": "armored",
+      "evidence": "installed_source_contact_review",
+      "sha256": "2eb097a9b8590da0730d76a1cbaad6c2c9df0c73e5e4ee0df915be125f471505"
+    },
+    "res://assets/external_l1j/monsters/15811.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "406f5a49281603d9a29b2788e9a15b8a740bda7d7e328b36046536011144a299"
+    },
+    "res://assets/external_l1j/monsters/1597.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "a5be6b3e38cbe5ed6fe645297ae34726531956be08d224aa42950fa4a00a816a"
+    },
+    "res://assets/external_l1j/monsters/1610.png": {
+      "body": "humanoid",
+      "evidence": "installed_source_contact_review",
+      "sha256": "5f63cc13b565672641661233f469930dfcb1bca6bb5b056c150227a40545b20e"
+    },
+    "res://assets/external_l1j/monsters/16145.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "c9694def871d2e233bb771f2e206817e5cb112a52d72867c1c6e7cc9d805abe8"
+    },
+    "res://assets/external_l1j/monsters/16150.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "4c1487c13cbdc8c189f39668151a2c8ce017250077314ec0d4d38da806e6c6ec"
+    },
+    "res://assets/external_l1j/monsters/16154.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "57cc6b1792dace21141d213df8b219bda6be86f07971fcecbc0fd57f1bc16aec"
+    },
+    "res://assets/external_l1j/monsters/16158.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "7c2f3b27db09c5b5296a3cd70a203847b8943a179ef2d1aafbc07e1ff91b557d"
+    },
+    "res://assets/external_l1j/monsters/16164.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "ca219d70d4bbda1461823975ace592256db8a35d3d03eccb1c934bbd102bcf62"
+    },
+    "res://assets/external_l1j/monsters/16834.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "d144207d52b5d69b6abf625c5ca8075626f64380b12ae37a0a00c8eebe5d9947"
+    },
+    "res://assets/external_l1j/monsters/16835.png": {
+      "body": "flying",
+      "evidence": "installed_source_contact_review",
+      "sha256": "366f2dedab8da7d450f442ab7dc21ff886f69fd88fb0e19356670fee5e41be85"
+    },
+    "res://assets/external_l1j/monsters/16842.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "7c2f3b27db09c5b5296a3cd70a203847b8943a179ef2d1aafbc07e1ff91b557d"
+    },
+    "res://assets/external_l1j/monsters/16843.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "4c1487c13cbdc8c189f39668151a2c8ce017250077314ec0d4d38da806e6c6ec"
+    },
+    "res://assets/external_l1j/monsters/1770.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "ca219d70d4bbda1461823975ace592256db8a35d3d03eccb1c934bbd102bcf62"
+    },
+    "res://assets/external_l1j/monsters/1820.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "104a6b7454c2ad2a704e4e3a8ec5fc6a6dd5fdec078ae255048d7c7cbec14263"
+    },
+    "res://assets/external_l1j/monsters/1832.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "cfcaecfe6bae6b1d33bfa1cc4d12e13b0f9e54ca2166007c92d59b00645d7014"
+    },
+    "res://assets/external_l1j/monsters/2147.png": {
+      "body": "golem",
+      "evidence": "installed_source_contact_review",
+      "sha256": "115f934971f919b6865bdf77afa7f58e0917eb98a4586a99d4d61c033cc2c658"
+    },
+    "res://assets/external_l1j/monsters/2158.png": {
+      "body": "golem",
+      "evidence": "installed_source_contact_review",
+      "sha256": "be45d9e49d80b710848d2895e041bf34b46dfb7d786161b72959c5cf394325b0"
+    },
+    "res://assets/external_l1j/monsters/2392.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "6aafe103cb611b804df3da493d38cd7d127475cdc1b948a7d59fc665c8730493"
+    },
+    "res://assets/external_l1j/monsters/2460.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "945a1dee934c6117d9c013782b5148ffaa0b4a49b2c3232ef40ee8bb693811cc"
+    },
+    "res://assets/external_l1j/monsters/2535.png": {
+      "body": "special",
+      "evidence": "installed_source_contact_review",
+      "sha256": "998160c7a2005ee993d43ce2d7b3ce33d86d488e4521a290dc4dee90273d8240"
+    },
+    "res://assets/external_l1j/monsters/4151.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "187a55905fc402e9f7c8d4cc91e5d29a402e247a6b0a03f4307ac142a8aebb41"
+    },
+    "res://assets/external_l1j/monsters/4820.png": {
+      "body": "humanoid",
+      "evidence": "installed_source_contact_review",
+      "sha256": "2e5a4e41492befef6ad9d487dc8417f94c4c65a18fc13abcc269ff85d98c2d39"
+    },
+    "res://assets/external_l1j/monsters/5110.png": {
+      "body": "undead",
+      "evidence": "installed_source_contact_review",
+      "sha256": "cec611c763c6b172f8c4e4f5ec8d2c05b451fbd033bdefa4ea171b96ea89ad9f"
+    },
+    "res://assets/external_l1j/monsters/5683.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "e3916722bef2a61f01320c89e162898637e39ef603e53cf8ed3634b13826c4ff"
+    },
+    "res://assets/external_l1j/monsters/6290.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "6d124b0bb7db733af844209badef2582efa54d6521d5ce47ee1a44059c53934e"
+    },
+    "res://assets/external_l1j/monsters/6302.png": {
+      "body": "beast",
+      "evidence": "installed_source_contact_review",
+      "sha256": "2df0c0c80b980516a8f739b55ae0d3b2921726bc0ee9ca6ff4fc289d6d32c770"
+    },
+    "res://assets/external_l1j/monsters/8470.png": {
+      "body": "caster",
+      "evidence": "installed_source_contact_review",
+      "sha256": "71072dd58df97c982a508ab06e72abba2f4a687a41ed0bbc62f9f6d3e0a8e97c"
+    },
+    "res://assets/l1j/verified/monsters/45161.png": {
+      "body": "undead",
+      "evidence": "installed_source_contact_review",
+      "sha256": "5767992d3411a79990fda67b1a3a0678a943edca7fb826880c95e5250ec9b4ce"
+    },
+    "res://assets/l1j/verified/monsters/45223.png": {
+      "body": "large",
+      "evidence": "installed_source_contact_review",
+      "sha256": "38c4e474ae6886f20003c4f1d7ca7f1959b02e2978c0bd5021e75c1fba5a4b9e"
+    },
+    "res://assets/l1j/verified/monsters/5030.png": {
+      "body": "humanoid",
+      "evidence": "installed_source_contact_review",
+      "sha256": "a817ed08eeffaf3a62c1b513a07b1d129c255428498cb84b7a22a1f6b26bb4e6"
+    }
+  }
+}

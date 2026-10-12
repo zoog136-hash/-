@@ -1,0 +1,24 @@
+{
+	"classes": {
+		"median_ms_per_256_actor_tick": 1.16596111111111,
+		"samples_ms": [
+			1.15678055555556,
+			1.16439444444444,
+			1.16596111111111,
+			1.17898888888889,
+			1.22002777777778
+		]
+	},
+	"engine": "4.7.2-stable (official)",
+	"monsters": {
+		"median_ms_per_256_actor_tick": 0.696477777777778,
+		"samples_ms": [
+			0.662538888888889,
+			0.668955555555556,
+			0.696477777777778,
+			0.6988,
+			0.744030555555556
+		]
+	},
+	"note": "CPU-only motion advance/apply; 256 actors, 5 warmed repetitions, 360 ticks each"
+}

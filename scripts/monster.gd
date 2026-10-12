@@ -6,6 +6,7 @@ const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd"
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
 const VISUAL = preload("res://scripts/monsters/monster_visual.gd")
 const AI_POLICY = preload("res://scripts/monsters/monster_ai_policy.gd")
+const BOSS_GEOMETRY = preload("res://scripts/monsters/boss_geometry.gd")
 var ai: Dictionary = {}
 var aggro_remaining: float = 0.0
 var life_id: int = 0
@@ -234,27 +235,31 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	navigation_agent.path_desired_distance = 8.0
 	navigation_agent.target_desired_distance = 42.0
 	_setup_animation(record)
-	if record.has("visual") and motion.frame_source==null:
-		sprite.material = MONSTER_ART.material_for(record.visual,sprite.texture)
+	if record.has("visual") or is_boss:
+		if record.has("visual") and motion.frame_source == null:
+			sprite.material = MONSTER_ART.material_for(record.visual,sprite.texture)
 		if not is_instance_valid(species_visual):
 			species_visual = VISUAL.new()
 			species_visual.actor = self
 			add_child(species_visual)
-		species_visual.visual = record.visual
+		species_visual.visual = record.get("visual", {})
 		species_visual.original_source = not preload("res://scripts/animation/visual_manifest.gd").monster_binding(record).is_empty()
 		species_visual.special = ai.get("special",{})
 		species_visual.warning_active = false
+		species_visual.reset_presentation()
 		species_visual.show()
 		species_visual.update_pose()
 	elif is_instance_valid(species_visual): species_visual.hide()
 
 func _physics_process(delta: float) -> void:
+	# Only bosses own warning/release lifetimes; normal actors have no such clock.
+	if is_boss and is_instance_valid(species_visual): species_visual.tick(delta)
 	if dead:
 		velocity = Vector2.ZERO
 		motion.advance(delta, Vector2.ZERO)
 		motion.apply(sprite, animation_base_scale)
 		animation_state = motion.state
-		if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.queue_redraw()
+		if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.update_pose()
 		if motion.death_clock >= 1.0:
 			if world_controller.has_method("recycle_monster") and world_controller.recycle_monster(self): return
 			queue_free()
@@ -430,12 +435,15 @@ func _begin_special() -> void:
 	var aim: Vector2 = target_player.global_position-global_position
 	special_cooldown = float(skill.get("cooldown",12.))*(.7 if hp*2<max_hp else 1.)
 	velocity = Vector2.ZERO
-	special_sequence = motion.begin_attack(float(skill.get("windup",1.15)),aim,"magic",.85)
+	special_sequence = motion.begin_attack(float(skill.get("windup",1.15)),aim,str(motion.profile.presentation.get("special_motion", "magic")),.85)
+	motion.action_role = "special"
+	motion.invalidate_pose()
 	if is_instance_valid(species_visual):
 		species_visual.warning_active = true
 		species_visual.warning_center = global_position
 		species_visual.warning_aim = aim.normalized()
 		species_visual.warning_progress = 0.
+		species_visual.prepare_warning()
 	if world_controller.has_method("show_combat_number"):
 		world_controller.show_combat_number(global_position+Vector2(0,-visual_height-30),str(skill.get("label","특수 공격")),Color(1,.55,.2),true)
 
@@ -448,12 +456,7 @@ func _resolve_special() -> void:
 	var aim: Vector2 = species_visual.warning_aim if is_instance_valid(species_visual) else motion.direction
 	var relative: Vector2 = target_player.global_position-center
 	var radius: float = float(skill.get("radius",200))
-	var hit: bool = relative.length()<=radius
-	if kind in ["beam","charge","cone"]:
-		var projection: float = relative.dot(aim)
-		var width: float = 55. if kind!="cone" else 95.
-		hit = projection>=0. and projection<=radius*2. and absf(relative.cross(aim))<=width
-		if kind=="cone": hit = relative.length()<=radius*2. and relative.normalized().dot(aim)>=cos(.55)
+	var hit: bool = BOSS_GEOMETRY.contains(kind, radius, relative, aim)
 	if kind=="charge":
 		var goal: Vector2 = center+aim*minf(radius*2.,relative.length())
 		if world_controller.field_map!=null and _patrol_allows(goal) and world_controller.field_map.walkable(goal) and world_controller.field_map.point_clear(goal) and world_controller.field_map.line_clear(center,goal):
@@ -465,7 +468,8 @@ func _resolve_special() -> void:
 		for i: int in range(3):
 			_launch_projectile(special_sequence,"ranged",float(i)*.14,.55)
 		hit = false
-	if world_controller.combat_vfx!=null:
+	if is_instance_valid(species_visual): species_visual.release_special()
+	elif world_controller.combat_vfx!=null:
 		world_controller.combat_vfx.ring(center,minf(radius,150.),Color(1,.34,.15))
 	if hit and world_controller._has_line_of_sight_world(center,target_player.global_position):
 		player_hit.emit(self,int(attack_power*float(skill.get("multiplier",1.6))),"magic" if kind not in ["charge","cone"] else "melee")
@@ -706,7 +710,7 @@ func take_damage(amount: int, critical: bool = false, damage_kind: String = "") 
 	_show_damage_number(amount, critical)
 	if is_instance_valid(world_controller) and world_controller.has_method("monster_combat_feedback"):
 		world_controller.monster_combat_feedback(self, critical, damage_kind)
-	motion.react(critical)
+	motion.react(critical, target_player.global_position.direction_to(global_position) if is_instance_valid(target_player) else Vector2.ZERO)
 	if hp <= 0:
 		dead = true
 		motion.die()

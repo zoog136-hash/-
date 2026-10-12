@@ -1,0 +1,53 @@
+{
+  "starting_main": "9fbcd1a02505a2d9685507411faff577c7e236f6",
+  "baseline": {
+    "total": 135,
+    "passed": 120,
+    "failed": [
+      "hunting_navigation_cache_test",
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test",
+      "monster_world_test",
+      "original_skill_catalog_runtime_test",
+      "original_skill_summon_test",
+      "original_turn_undead_rewards_test",
+      "renewed_map_spawn_test",
+      "skill_mechanism_smoke_test",
+      "world_regions_test",
+      "world_structure_test"
+    ],
+    "skipped": [
+      "original_map_catalog_test",
+      "original_world_runtime_test",
+      "source_first_map_test"
+    ],
+    "not_run": []
+  },
+  "changed": {
+    "total": 137,
+    "passed": 122,
+    "failed": [
+      "hunting_navigation_cache_test",
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test",
+      "monster_world_test",
+      "original_skill_catalog_runtime_test",
+      "original_skill_summon_test",
+      "original_turn_undead_rewards_test",
+      "renewed_map_spawn_test",
+      "skill_mechanism_smoke_test",
+      "world_regions_test",
+      "world_structure_test"
+    ],
+    "skipped": [
+      "original_map_catalog_test",
+      "original_world_runtime_test",
+      "source_first_map_test"
+    ],
+    "not_run": []
+  },
+  "new_failures": [],
+  "note": "Full suites ran during the implementation checkpoint. Final presentation-only refinements were subsequently validated by 12 focused tests, all-identity checks and renewed GL captures."
+}

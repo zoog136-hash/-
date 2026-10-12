@@ -26,6 +26,7 @@ func _draw() -> void:
 		var center: Vector2 = to_local(actor.combat_hit_position())
 		var fade: float = VISUALS.swing_envelope(phase, motion.attack_hit_ratio)
 		var kind: String = VISUALS.family(motion.attack_style)
+		if kind == "arrow" and motion.weapon_variant in ["총", "라이플", "핸드캐넌", "권총"]: kind = "bullet"
 		match kind:
 			"magic":
 				var charge: float = sin(phase * PI) * 0.18 + fade * 0.5
@@ -35,7 +36,8 @@ func _draw() -> void:
 				# A release glint only. The existing flight system owns the projectile.
 				visuals.beam(self, center + aim * 30.0, aim, 13.0 if kind == "arrow" else 20.0, 2.2, Color(1.0, .93, .73, fade * .65))
 			"thrust":
-				visuals.beam(self, center + aim * (22.0 + phase * 18.0), aim, 24.0, 1.8, Color(1.0, .94, .80, fade * .72))
+				var reach: float = 15.0 if motion.weapon_variant == "단검" else 30.0 if motion.weapon_variant in ["창", "체인소드"] else 24.0
+				visuals.beam(self, center + aim * (22.0 + phase * 18.0), aim, reach, 1.8, Color(1.0, .94, .80, fade * .72))
 			_:
 				var radius: float = 43.0 if kind == "heavy" else 35.0
 				var tip: Vector2 = center + aim * 22.0
@@ -44,9 +46,9 @@ func _draw() -> void:
 		return
 	if motion.move_ratio <= .10: return
 	# Preserve the existing movement dust and gait clock.
-	var stride: float = absf(sin(motion.gait * PI))
+	var stride: float = absf(sin(motion.stride_phase))
 	var motion_alpha: float = clampf(motion.move_ratio*.35,0.0,.48)*stride
-	var foot: Vector2 = Vector2(-7.0 if sin(motion.gait * PI)>0.0 else 7.0, 1.0)
+	var foot: Vector2 = Vector2(-7.0 if sin(motion.stride_phase)>0.0 else 7.0, 1.0)
 	for i: int in range(3):
 		var spread: float = float(i)*9.0
 		var drift: Vector2 = -motion.direction * (6.0+spread)
