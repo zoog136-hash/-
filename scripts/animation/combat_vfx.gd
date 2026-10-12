@@ -3,17 +3,22 @@ class_name TwilightCombatVFX
 
 ## One drawing node, bounded reusable records. No per-hit nodes, tweens or RNG.
 const CAPACITY: int = 160
+const VISUALS = preload("res://scripts/animation/impact_visuals.gd")
+@export_range(0.0, 1.0, 0.05) var impact_intensity: float = 0.85
 var active: Array[Dictionary] = []
 var available: Array[Dictionary] = []
 var high_water: int = 0
 var emitted: int = 0
+var detailed_draws: int = 0
 var font: Font
+var visuals = VISUALS.new()
 
 func _init() -> void:
 	for i: int in range(CAPACITY): available.append({})
 
 func _ready() -> void:
 	font = preload("res://assets/fonts/NotoSansKR.ttf")
+	visuals.prepare()
 	set_process(false)
 
 func _record(kind: String, point: Vector2, duration: float) -> Dictionary:
@@ -29,14 +34,20 @@ func _record(kind: String, point: Vector2, duration: float) -> Dictionary:
 
 func impact(point: Vector2, direction: Vector2, style: String, critical: bool = false) -> void:
 	var entry: Dictionary = _record("impact", point, 0.22 if not critical else 0.30)
-	entry.merge({"direction":direction.normalized(), "style":style, "critical":critical})
+	entry.merge({"direction":direction.normalized(), "style":style, "family":VISUALS.family(style), "critical":critical})
 
 func number(point: Vector2, value: String, color: Color, critical: bool = false) -> void:
+	var caption: bool = critical
+	# Rapid multi-hits keep every number, but do not stack identical headings.
+	for previous: Dictionary in active:
+		if caption and str(previous.kind) == "number" and bool(previous.get("caption", false)):
+			if float(previous.age) < 0.11 and (previous.point as Vector2).distance_squared_to(point) < 576.0:
+				caption = false
 	var entry: Dictionary = _record("number", point, 0.65 if not critical else 0.8)
-	var size: int = 23 if critical else 18
+	var size: int = 25 if critical else 18
 	var display: String = value.trim_prefix("CRIT ") if critical else value
 	var width: float = font.get_string_size(display, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x if font != null else 0.0
-	entry.merge({"text":value, "display":display, "color":color, "critical":critical, "width":width, "critical_width":font.get_string_size("CRITICAL",HORIZONTAL_ALIGNMENT_LEFT,-1,12).x if critical and font != null else 0.0})
+	entry.merge({"text":value, "display":display, "color":color, "critical":critical, "caption":caption, "width":width, "critical_width":font.get_string_size("Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x if critical and font != null else 0.0})
 
 func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset: Vector2, frames: SpriteFrames = null, animation: String = "") -> void:
 	var entry: Dictionary = _record("death", point, 0.8)
@@ -54,13 +65,14 @@ func clear() -> void:
 		entry.clear()
 		available.append(entry)
 	active.clear()
+	detailed_draws = 0
 	set_process(false)
 	queue_redraw()
 
 func _process(delta: float) -> void:
 	for i: int in range(active.size() - 1, -1, -1):
 		var entry: Dictionary = active[i]
-		entry.age += delta
+		entry.age += maxf(0.0, delta)
 		if float(entry.age) >= float(entry.duration):
 			active.remove_at(i)
 			entry.clear()
@@ -70,11 +82,14 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	if font == null: return
-	var view: Rect2 = get_viewport_rect().grow(100)
-	var canvas: Transform2D = get_canvas_transform()
+	detailed_draws = 0
+	var view: Rect2 = get_viewport_rect().grow(160)
+	var canvas: Transform2D = get_global_transform_with_canvas()
+	# Corpse/rings below impacts, all text above them; pool insertion order must
+	# not let a later impact obscure an earlier damage number.
 	for entry: Dictionary in active:
-		if not view.has_point(canvas * (entry.point as Vector2)): continue
 		var point: Vector2 = to_local(entry.point)
+		if not view.has_point(canvas * point): continue
 		var p: float = float(entry.age) / float(entry.duration)
 		var alpha: float = 1.0 - p
 		match str(entry.kind):
@@ -86,52 +101,55 @@ func _draw() -> void:
 					var animation: String = entry.animation
 					var count: int = frames.get_frame_count(animation)
 					texture = frames.get_frame_texture(animation, mini(count - 1, int(minf(1.0, p * 2.0) * count)))
-					lean = 0.0 # authored body fall must not be rotated a second time
+					lean = 0.0
 				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, entry.scale)
 				draw_texture(texture, -texture.get_size() * 0.5, Color(1.0, 0.7, 0.65, alpha))
 				draw_set_transform(Vector2.ZERO)
-			"number":
-				var critical: bool = entry.critical
-				var size: int = 23 if critical else 18
-				var text_value: String = entry.get("display",entry.text)
-				var width: float = entry.width
-				point += Vector2(-width * 0.5 + (int(entry.serial) % 3 - 1) * 7.0, -p * 35.0)
-				var color: Color = entry.color
-				color.a *= minf(1.0, alpha * 2.0)
-				draw_string_outline(font, point, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 4, Color(0.025, 0.025, 0.03, color.a))
-				draw_string(font, point, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
-				if critical:
-					var caption_point: Vector2 = point + Vector2((width-float(entry.get("critical_width",0)))*.5,-24)
-					draw_string_outline(font,caption_point,"CRITICAL",HORIZONTAL_ALIGNMENT_LEFT,-1,12,3,Color(0,0,0,color.a))
-					draw_string(font,caption_point,"CRITICAL",HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color(1,.80,.46,color.a))
 			"ring":
 				var color: Color = entry.color
 				color.a = alpha * 0.65
 				draw_arc(point, float(entry.radius) * (0.6 + p * 0.4), 0, TAU, 32, color, 1.8, true)
-			"impact":
-				_draw_impact(point, entry, p, alpha)
+	# Reserve detailed geometry for recent criticals first. Overflow retains a
+	# compact contact mark; damage, text, projectile arrival and RNG are untouched.
+	for priority: bool in [true, false]:
+		for i: int in range(active.size() - 1, -1, -1):
+			var entry: Dictionary = active[i]
+			if str(entry.kind) != "impact" or bool(entry.critical) != priority: continue
+			var point: Vector2 = to_local(entry.point)
+			if not view.has_point(canvas * point): continue
+			var detailed: bool = detailed_draws < VISUALS.DETAIL_LIMIT
+			if detailed: detailed_draws += 1
+			visuals.draw_impact(self, point, entry, detailed, impact_intensity)
+	for entry: Dictionary in active:
+		if str(entry.kind) != "number": continue
+		var point: Vector2 = to_local(entry.point)
+		if view.has_point(canvas * point): _draw_number(point, entry)
 
-func _draw_impact(point: Vector2, entry: Dictionary, p: float, alpha: float) -> void:
-	var style: String = entry.style
+func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	var critical: bool = entry.critical
-	var direction: Vector2 = entry.direction
-	if direction.length_squared() < 0.01: direction = Vector2.RIGHT
-	var color: Color = Color(1.0, 0.82, 0.47, alpha)
-	if style == "magic": color = Color(0.52, 0.78, 1.0, alpha)
-	elif style == "poison": color = Color(0.45, 0.9, 0.36, alpha)
-	elif style == "bleed": color = Color(1.0, 0.38, 0.3, alpha)
-	var radius: float = (21.0 if critical else 13.0) * (0.45 + p * 1.2)
-	var rays: int = 7 if critical else 4
-	for i: int in range(rays):
-		var ray: Vector2 = direction.rotated(TAU * float(i) / float(rays) + 0.35)
-		draw_line(point + ray * radius * 0.25, point + ray * radius, color, 2.0 if critical else 1.4, true)
-	if style in ["slash", "thrust", "melee"]:
-		var normal: Vector2 = direction.orthogonal()
-		draw_line(point - normal * radius, point + normal * radius, Color(1.0, 0.97, 0.83, alpha), 2.2, true)
-	elif style in ["heavy", "magic"]:
-		draw_arc(point, radius * 0.7, 0, TAU, 18, color, 2.0, true)
-	if critical:
-		var flash: float = maxf(0.0, 1.0 - p * 4.0)
-		draw_line(point - direction * radius * 1.35, point + direction * radius * 1.35, Color(1, 0.96, 0.72, flash), 3.0, true)
-		if style == "heavy": draw_arc(point, radius * 1.15, 0, TAU, 24, Color(1.0, 0.65, 0.3, alpha * 0.65), 1.5, true)
-	if p < 0.3: draw_circle(point, (4.0 if critical else 2.5) * (1.0 - p), Color(1, 1, 0.91, alpha))
+	var age: float = float(entry.age)
+	var p: float = age / float(entry.duration)
+	var size: int = 25 if critical else 18
+	var text_value: String = entry.get("display", entry.text)
+	var width: float = entry.width
+	var alpha: float = minf(1.0, (1.0 - p) * 2.0)
+	var color: Color = entry.color
+	color.a *= alpha
+	point += Vector2((int(entry.serial) % 3 - 1) * 8.0, -p * 35.0)
+	var scale_value: float = VISUALS.number_scale(age, critical)
+	draw_set_transform(point, 0.0, Vector2.ONE * scale_value)
+	var baseline: Vector2 = Vector2(-width * 0.5, 0.0)
+	draw_string_outline(font, baseline, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 4, Color(0.025, 0.025, 0.03, color.a))
+	draw_string(font, baseline, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
+	draw_set_transform(Vector2.ZERO)
+	if not bool(entry.get("caption", false)): return
+	var title_point: Vector2 = point + Vector2(0.0, -27.0)
+	var title_width: float = float(entry.critical_width)
+	visuals.halo(self, title_point + Vector2(0.0, -8.0), Vector2(title_width * 1.6, 34.0), Color(1.0, 0.42, 0.10, alpha * 0.30 * impact_intensity))
+	# Shear just the heading; normal numbers, MISS and healing keep their color.
+	draw_set_transform_matrix(Transform2D(Vector2(scale_value, 0.0), Vector2(-0.16 * scale_value, scale_value), title_point))
+	var title_base: Vector2 = Vector2(-title_width * 0.5, 0.0)
+	draw_string_outline(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 5, Color(0.18, 0.055, 0.01, alpha))
+	draw_string_outline(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 2, Color(1.0, 0.48, 0.10, alpha))
+	draw_string(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, Color(1.0, 0.91, 0.53, alpha))
+	draw_set_transform(Vector2.ZERO)
