@@ -1,0 +1,46 @@
+{
+  "engine": "4.7.2-stable (official)",
+  "fixture": "64 existing source PNGs, 300 visible + 300 offscreen, balanced presentation-only hero/legend/mythic/unique overrides",
+  "fps_cap": 60,
+  "platform": "Linux software GL; not Android/Windows device evidence",
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "rendering_method": "gl_compatibility",
+  "samples": [
+    {
+      "active_effects": 0,
+      "average_fps": 59.9148011527608,
+      "context": "list",
+      "cpu_ms_p50": 13.98,
+      "cpu_ms_p95": 28.368,
+      "draw_calls": 199.0,
+      "elapsed_ms": 4005.688,
+      "frame_ms_p50": 16.653,
+      "frame_ms_p95": 18.782,
+      "frame_ms_p99": 21.882,
+      "frames": 240,
+      "materials": 0,
+      "offscreen_icons": 300,
+      "registered_effects": 0,
+      "visible_icons": 300
+    },
+    {
+      "active_effects": 300,
+      "average_fps": 59.8556580805388,
+      "context": "slot",
+      "cpu_ms_p50": 19.253,
+      "cpu_ms_p95": 33.732,
+      "draw_calls": 300.0,
+      "elapsed_ms": 4009.646,
+      "frame_ms_p50": 16.669,
+      "frame_ms_p95": 21.592,
+      "frame_ms_p99": 25.284,
+      "frames": 240,
+      "materials": 30,
+      "offscreen_icons": 300,
+      "registered_effects": 600,
+      "visible_icons": 300
+    }
+  ],
+  "production_commit_sha": "1040dea65e8c9c2933b9b019c713b32526108327",
+  "measurement_note": "No other Godot process was running. Short fixed 240-frame sample per mode; not a sustained gameplay/device claim."
+}

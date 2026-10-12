@@ -34,7 +34,11 @@ func _run() -> void:
 		var icon: Texture2D = THEME.item_icon(item, str(item.get("name", "")), {})
 		var available: bool = FileAccess.file_exists(str(binding.inventory_texture))
 		if available:
-			check(icon != null and icon.resource_path == str(binding.inventory_texture), "catalog icon " + str(binding.game_name))
+			# The Lineage M sourceId's pinned PNG now takes precedence in UI.
+			# Keep independently checking the reviewed L1J pack and ground pair.
+			check(icon != null and icon.resource_path == str(item.image_path), "sourceId catalog icon " + str(binding.game_name))
+			var reviewed: Texture2D = ASSETS.item_icon(item,str(item.name))
+			check(reviewed != null and reviewed.resource_path == str(binding.inventory_texture), "reviewed L1J fallback remains loadable " + str(binding.game_name))
 			installed += 1
 		check(item == before, "icon lookup preserves record and grade")
 		var mismatched: Dictionary = item.duplicate(true)
