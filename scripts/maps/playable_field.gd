@@ -18,6 +18,70 @@ var blocker_buckets: Dictionary = {}
 var region_geometries: Array[Dictionary] = []
 var spawn_geometries: Dictionary = {}
 const BLOCKER_BUCKET: float = 1024.0
+const NAV_CACHE_VERSION: int = 1
+const NAV_CACHE_LIMIT: int = 8
+const NAVIGATION_CATALOG_PATH: String = "res://data/maps/navigation/catalog.json"
+static var navigation_files: Dictionary = {}
+static var navigation_snapshots: Dictionary = {}
+static var navigation_order: Array[String] = []
+var navigation_cache_hit: bool = false
+
+func geometry_signature() -> String:
+	# Art and metadata do not affect walking. Every input used by navigation,
+	# reachability and spawn filtering does; stale geometry always rebuilds.
+	return JSON.stringify([NAV_CACHE_VERSION,data.bounds,cell_size,clearance,
+		data.spawn_position,data.get("navigable_polygons",[]),data.collision,
+		data.get("regions",[]),data.get("monster_spawn",[])],"",true,true).sha256_text()
+
+func _read_navigation_snapshot(key: String) -> Dictionary:
+	if not bool(data.navigation.get("use_baked_cache",true)): return {}
+	if navigation_snapshots.has(key): return navigation_snapshots[key]
+	if navigation_files.is_empty() and FileAccess.file_exists(NAVIGATION_CATALOG_PATH):
+		var index: Variant=JSON.parse_string(FileAccess.get_file_as_string(NAVIGATION_CATALOG_PATH))
+		if index is Dictionary: navigation_files=index
+	var nav: Dictionary = navigation_files.get(str(data.map_id),{})
+	if str(nav.get("baked_signature","")) != key: return {}
+	var path: String = str(nav.get("baked_cache_path",""))
+	if path.is_empty() or not FileAccess.file_exists(path): return {}
+	var packed: PackedByteArray = FileAccess.get_file_as_bytes(path)
+	if FileAccess.get_sha256(path) != str(nav.get("baked_sha256","")): return {}
+	var unpacked: PackedByteArray = packed.decompress_dynamic(16*1024*1024,FileAccess.COMPRESSION_GZIP)
+	if unpacked.is_empty(): return {}
+	# bytes_to_var forbids objects. The file and precise source inputs are hashed.
+	var value: Variant = bytes_to_var(unpacked)
+	if not value is Dictionary: return {}
+	var snapshot: Dictionary = value
+	if snapshot.get("signature","") != key or snapshot.get("width",0) != width or snapshot.get("height",0) != height: return {}
+	if not snapshot.get("solid_runs") is PackedInt32Array or not snapshot.get("reachable") is PackedByteArray or not snapshot.get("spawn_cells") is Dictionary: return {}
+	if snapshot.reachable.size() != width*height or snapshot.solid_runs.size()%3 != 0: return {}
+	for i: int in range(0,snapshot.solid_runs.size(),3):
+		var row: int = snapshot.solid_runs[i]
+		var x: int = snapshot.solid_runs[i+1]
+		var count: int = snapshot.solid_runs[i+2]
+		if row<0 or row>=height or x<0 or count<=0 or x+count>width: return {}
+	return snapshot
+
+func navigation_snapshot() -> Dictionary:
+	var runs := PackedInt32Array()
+	for y: int in range(height):
+		var start: int = -1
+		for x: int in range(width+1):
+			var solid: bool = x<width and astar.is_point_solid(Vector2i(x,y))
+			if solid and start<0: start=x
+			if not solid and start>=0:
+				runs.append(y)
+				runs.append(start)
+				runs.append(x-start)
+				start=-1
+	return {"signature":geometry_signature(),"width":width,"height":height,
+		"solid_runs":runs,"reachable":reachable.duplicate(),"spawn_cells":spawn_cells.duplicate(true)}
+
+func _remember_navigation(key: String, snapshot: Dictionary) -> void:
+	if navigation_order.has(key): navigation_order.erase(key)
+	navigation_order.append(key)
+	navigation_snapshots[key]=snapshot
+	while navigation_order.size()>NAV_CACHE_LIMIT:
+		navigation_snapshots.erase(navigation_order.pop_front())
 
 func configure(definition: Dictionary) -> void:
 	data = definition
@@ -39,10 +103,18 @@ func configure(definition: Dictionary) -> void:
 	astar.default_compute_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar.default_estimate_heuristic = AStarGrid2D.HEURISTIC_OCTILE
 	astar.update()
+	var signature: String = geometry_signature()
+	var snapshot: Dictionary = _read_navigation_snapshot(signature)
+	navigation_cache_hit = not snapshot.is_empty()
+	if navigation_cache_hit:
+		for i: int in range(0,snapshot.solid_runs.size(),3):
+			astar.fill_solid_region(Rect2i(snapshot.solid_runs[i+1],snapshot.solid_runs[i],snapshot.solid_runs[i+2],1))
+		reachable = snapshot.reachable.duplicate()
+		spawn_cells = snapshot.spawn_cells.duplicate(true)
 	navigable_polygons.clear()
 	for raw: Array in data.get("navigable_polygons",[]):
 		navigable_polygons.append(REGION_GEOMETRY.polygon({"polygon":raw}))
-	if not navigable_polygons.is_empty():
+	if not navigation_cache_hit and not navigable_polygons.is_empty():
 		for y: int in range(height):
 			for x: int in range(width):
 				var cell := Vector2i(x,y)
@@ -78,6 +150,7 @@ func configure(definition: Dictionary) -> void:
 				var key := Vector2i(bx,by)
 				if not blocker_buckets.has(key): blocker_buckets[key] = []
 				blocker_buckets[key].append(shape)
+		if navigation_cache_hit: continue
 		var lo: Vector2i = world_to_cell(box.position - Vector2.ONE * clearance)
 		var hi: Vector2i = world_to_cell(box.end + Vector2.ONE * clearance)
 		for y: int in range(maxi(0, lo.y), mini(height - 1, hi.y) + 1):
@@ -85,6 +158,9 @@ func configure(definition: Dictionary) -> void:
 				var cell := Vector2i(x, y)
 				if _inside_shape(cell_to_world(cell), shape, clearance):
 					astar.set_point_solid(cell)
+	if navigation_cache_hit:
+		_remember_navigation(signature,snapshot)
+		return
 	_build_reachability()
 	spawn_cells.clear()
 	for region: Dictionary in data.get("monster_spawn", []):
@@ -100,6 +176,7 @@ func configure(definition: Dictionary) -> void:
 				if reachable[y * width + x] != 0 and not is_safe(point) and spawn_contains(region,point):
 					cells.append(cell)
 		spawn_cells[str(region["id"])] = cells
+	_remember_navigation(signature,navigation_snapshot())
 
 func _inside_shape(p: Vector2, shape: Dictionary, padding: float) -> bool:
 	if not (shape["box"] as Rect2).grow(padding).has_point(p):

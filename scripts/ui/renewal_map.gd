@@ -27,6 +27,7 @@ func _draw() -> void:
 	var font := get_theme_default_font()
 	draw_string(font,Vector2(14,26),"현재 지역 상세 지도",HORIZONTAL_ALIGNMENT_LEFT,size.x-28,17,UI.GOLD)
 	for surface: Dictionary in field.data.get("surfaces",[]):
+		if field.data.has("hunting_paths") and field.data.has("world_geometry") and not surface.has("polygon"): continue
 		if surface.has("polygon"):
 			draw_colored_polygon(_map_polygon(surface),Color("65625a"))
 			continue
@@ -42,6 +43,9 @@ func _draw() -> void:
 				draw_string(font,_point(COORD.array_vector(region.center))+Vector2(5,-3),str(region.name),HORIZONTAL_ALIGNMENT_LEFT,-1,11,UI.GOLD)
 			continue
 		var point := _point(COORD.array_vector(region["center"]))
+		if field.data.has("hunting_paths"):
+			_draw_hunting_region(region)
+			continue
 		var radius := float(region["radius"])/bounds.size.x*area.size.x
 		var color := Color(str(region["color"]),.25)
 		draw_circle(point,radius,color)
@@ -62,6 +66,7 @@ func _draw() -> void:
 	for monster: TwilightMonster in world.monsters_root.get_children():
 		if not monster.dead: draw_circle(_point(monster.global_position),2,Color("cf7967"))
 	_draw_boss_regions()
+	_draw_hunting_obstacles()
 	var player_point := _point(world.player.global_position)
 	draw_circle(player_point,8,Color("0a171b"))
 	draw_circle(player_point,4,Color("faf0bb"))

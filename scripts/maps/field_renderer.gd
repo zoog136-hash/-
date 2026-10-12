@@ -262,9 +262,15 @@ func _build_ground() -> void:
 		else:
 			var a: Array = surface["rect"]
 			points = _box_points(Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3])))
-		var poly: Polygon2D = _polygon(points,int(surface.get("material",2)))
-		if surface.has("tint"):
-			poly.modulate = Color(str(surface["tint"]))
+		var pieces: Array[PackedVector2Array] = [points]
+		if field.data.has("hunting_paths") and field.data.has("world_geometry"):
+			pieces.clear()
+			for floor: PackedVector2Array in field.navigable_polygons:
+				pieces.append_array(Geometry2D.intersect_polygons(points,floor))
+		for piece: PackedVector2Array in pieces:
+			var poly: Polygon2D = _polygon(piece,int(surface.get("material",2)))
+			if surface.has("tint"):
+				poly.modulate = Color(str(surface["tint"]))
 	_select_layer("Road")
 	# One coverage mesh per material joins every route, including intersections.
 	# Alpha is stored once per shared vertex instead of stacking road shoulders.
@@ -349,7 +355,7 @@ func _build_ground() -> void:
 				cap.modulate = Color(1.15,1.12,.98,1)
 	_select_layer("Wall")
 	for shape: Dictionary in field.data["collision"]:
-		if str(shape.kind) in ["dungeon_boundary","dungeon_pit"]:
+		if str(shape.kind) in ["dungeon_boundary","dungeon_pit","terrain_boundary"]:
 			_build_boundary_wall(shape)
 			continue
 		if str(shape["kind"]) not in ["dungeon_wall","fortress_wall"]:

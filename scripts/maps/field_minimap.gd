@@ -44,6 +44,7 @@ func _draw() -> void:
 	if field != null:
 		_draw_structure_geography()
 		for surface: Dictionary in field.data.get("surfaces",[]):
+			if field.data.has("hunting_paths") and field.data.has("world_geometry") and not surface.has("polygon"): continue
 			if surface.has("polygon"):
 				draw_colored_polygon(_map_polygon(surface),Color("56565b"))
 				continue
@@ -57,6 +58,9 @@ func _draw() -> void:
 				draw_colored_polygon(polygon,Color(str(region.color),.2))
 				continue
 			var p: Vector2 = _point(COORD.array_vector(region["center"]))
+			if field.data.has("hunting_paths"):
+				_draw_hunting_region(region)
+				continue
 			var r: float = float(region["radius"])/bounds.size.x*area.size.x
 			var color := Color(str(region["color"]),.3)
 			draw_circle(p,r,color)
@@ -79,6 +83,7 @@ func _draw() -> void:
 			if str(region["type"]) in ["safe","boss"]:
 				draw_circle(_point(COORD.array_vector(region["center"])),3.0,Color("e6c16f") if str(region["type"])=="safe" else Color("dd7762"))
 		_draw_boss_regions()
+		_draw_hunting_obstacles()
 	for monster: TwilightMonster in world.monsters_root.get_children():
 		if monster.global_position.distance_squared_to(world.player.global_position) < 1600000:
 			draw_circle(_point(monster.global_position),1.3,Color("d68b73"))
@@ -129,6 +134,33 @@ func _draw_boss_regions() -> void:
 			draw_circle(_point(field.cell_to_world(cells[i])),1.1,Color(.9,.35,.25,.45))
 		points.append(points[0])
 		draw_polyline(points,Color(.9,.35,.25,.7),1.0,true)
+
+func _draw_hunting_region(region: Dictionary) -> void:
+	if str(region.type)=="safe": return
+	for spawn: Dictionary in field.data.get("monster_spawn",[]):
+		if str(spawn.id)!=str(region.id): continue
+		var geometry: PackedVector2Array
+		if spawn.has("polygon"):
+			geometry=REGION_GEOMETRY.polygon(spawn)
+		else:
+			var a: Array=spawn.rect
+			geometry=PackedVector2Array([Vector2(a[0],a[1]),Vector2(a[0]+a[2],a[1]),Vector2(a[0]+a[2],a[1]+a[3]),Vector2(a[0],a[1]+a[3])])
+		for floor: PackedVector2Array in field.navigable_polygons:
+			for clipped: PackedVector2Array in Geometry2D.intersect_polygons(geometry,floor):
+				var outline := PackedVector2Array()
+				for p: Vector2 in clipped: outline.append(_point(p))
+				draw_colored_polygon(outline,Color(str(region.color),.16))
+
+func _draw_hunting_obstacles() -> void:
+	if not field.data.has("hunting_paths"): return
+	# Draw the same physical objects and boundary shapes used by walking.
+	for obstacle: Dictionary in field.data.collision:
+		if str(obstacle.get("placement_group",""))!="hunting_paths_v1": continue
+		if obstacle.shape=="polygon":
+			draw_colored_polygon(_map_polygon(obstacle,"points"),Color("30323b"))
+		elif obstacle.shape=="circle" and obstacle.has("hunting_lane"):
+			var radius: float=maxf(.55,float(obstacle.radius)/bounds.size.x*area.size.x)
+			draw_circle(_point(COORD.array_vector(obstacle.center)),radius,Color("30323b"))
 
 func _panel() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
