@@ -205,6 +205,8 @@ static func apply(definition: Dictionary, profiles: Dictionary, records: Diction
 			if str(spawn.get("mode", "normal")) == "dense" and filtered_weights.size() == allowed.size(): spawn["weights"] = filtered_weights
 		else:
 			spawn["max_count"] = 1
+			spawn["respawn_time"] = 28800 if id == "aden_world" else 86400
+			spawn["respawn_policy"] = "wall_clock"
 			if policy.has("boss_review_anchor"):
 				var anchor: Array = result.get("review_points", {}).get(str(policy.boss_review_anchor), [])
 				if anchor.size() != 2:
@@ -227,7 +229,7 @@ static func apply(definition: Dictionary, profiles: Dictionary, records: Diction
 		var center: Vector2 = box.position + box.size * _vector(boss.fraction)
 		var half: Vector2 = _vector(boss.half_size)
 		var spawn: Dictionary = {"id": boss.id, "mode": "boss", "monster_types": [boss.name], "max_count": 1,
-			"respawn_time": boss.respawn_time, "roaming_radius": 120, "min_spacing": 64, "boss_name": boss.name,
+			"respawn_time": (28800 if id == "aden_world" else 86400), "respawn_policy": "wall_clock", "roaming_radius": 120, "min_spacing": 64, "boss_name": boss.name,
 			"coordinate_evidence": "current_habitat_relative_local_pve_not_original_server"}
 		_set_box(spawn, Rect2(center - half, half * 2.0))
 		spawns.append(spawn)
