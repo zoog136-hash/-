@@ -8,6 +8,12 @@ var failures: Array[String] = []
 var checks: int = 0
 var report: Array[Dictionary] = []
 
+class OpenGround extends RefCounted:
+	func is_safe(_point: Vector2) -> bool: return false
+	func walkable(_point: Vector2) -> bool: return true
+	func point_clear(_point: Vector2) -> bool: return true
+	func line_clear(_a: Vector2, _b: Vector2) -> bool: return true
+
 class Population extends Node:
 	var summoned: int = 0
 	func summon_for(_mob: TwilightMonster) -> void: summoned += 1
@@ -71,6 +77,9 @@ func _run() -> void:
 		var special: Dictionary = mob.ai.get("special", {})
 		if not special.is_empty():
 			var kind: String = special.kind
+			if kind == "charge":
+				arena.field_map = OpenGround.new()
+				player.position = mob.position + Vector2(-140, 0)
 			var before_summons: int = arena.field_population.summoned
 			hits[0] = 0
 			mob._begin_special()
@@ -80,11 +89,16 @@ func _run() -> void:
 			var original_aim: Vector2 = rig.warning_aim
 			var release_time: float = mob.motion.attack_duration * mob.motion.attack_hit_ratio
 			mob.motion.advance(release_time - .001, Vector2.ZERO)
+			mob.motion.apply(mob.sprite, mob.animation_base_scale)
 			check(hits[0] == 0 and rig.effect_age < 0.0, "no damage/effect before marker " + record.name)
 			mob.motion.advance(.002, Vector2.ZERO)
 			check(not rig.warning_active and rig.effect_age == 0.0, "effect at marker " + record.name)
 			check(rig.effect_center == original_center and rig.effect_aim == original_aim, "warning/impact world anchor " + record.name)
 			check(rig.effect_outline == rig.warning_outline, "same warning and impact geometry " + record.name)
+			if kind == "charge":
+				check(mob.position == player.position, "existing charge moves on open ground " + record.name)
+				check(rig.effect_body.x.x < 0.0 and rig.effect_texture == mob.sprite.texture, "left-facing frozen charge trail " + record.name)
+				arena.field_map = null
 			arena.combat_flights._physics_process(.6)
 			var expected: int = 0 if kind == "summon" else 3 if kind == "volley" else 1
 			check(hits[0] == expected, "special hit count " + record.name)

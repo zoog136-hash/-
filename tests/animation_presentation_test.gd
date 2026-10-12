@@ -51,15 +51,16 @@ func _run() -> void:
 			actor.motion.cancel_attack()
 			actor.motion.dead = false
 			actor.motion.hit_clock = 0.0
-			if role == "hit": actor.motion.react(true, Vector2.RIGHT)
 			if role == "death": actor.motion.die()
 			for direction: int in range(8):
+				if role == "hit": actor.motion.react(true, Vector2.RIGHT)
 				actor.motion.face(Vector2.from_angle(direction * PI / 4.0))
 				var speed: float = 300.0 if role == "run" else 100.0 if role == "walk" else 0.0
 				actor.motion.advance(.025, actor.motion.direction * speed)
 				actor.motion.apply(sprite, scale_value)
 				check(sprite.sprite_frames.get_frame_texture(sprite.animation, sprite.frame) != null, key + " " + role)
 				check(sprite.transform.is_finite(), "finite pose " + key)
+				if role == "hit": check(actor.motion._resolved_role == "hit", "hit frames in every facing " + key)
 				if role == "idle": check(not sprite.flip_h or profile.layout == "still", "native facing not mirrored " + key)
 			roles[role] = actor.motion._resolved_role
 		actor.motion.dead = false
@@ -131,6 +132,9 @@ func _run() -> void:
 		mob.setup(record, actor, arena, ART.texture_for(record))
 		mob.set_physics_process(false)
 		check(mob.sprite.texture != null, "monster resource " + record.name)
+		var source: String = str(MANIFEST.monster_binding(record).get("path", ""))
+		var reviewed: Dictionary = preload("res://scripts/animation/presentation_catalog.gd").data.monster_sources.get(source, {})
+		if not reviewed.is_empty(): check(mob.motion.profile.body_kind == reviewed.body, "installed art body overrides fallback family " + record.name)
 		var foot: Vector2 = mob.position
 		var shape: Transform2D = mob.get_node("CollisionShape2D").transform
 		var count: Array[int] = [0]

@@ -21,6 +21,8 @@ var effect_center: Vector2
 var effect_aim: Vector2
 var effect_kind: String = ""
 var effect_radius: float = 0.0
+var effect_texture: Texture2D
+var effect_body: Transform2D
 var color := Color(1.0, 0.42, 0.18)
 var effect_scale: float = 1.0
 var impacts = IMPACT.new()
@@ -33,6 +35,7 @@ func reset_presentation() -> void:
 	warning_sequence = -1
 	warning_outline.clear()
 	effect_outline.clear()
+	effect_texture = null
 	var settings: Dictionary = actor.motion.profile.presentation
 	color = Color(str(settings.get("effect_color", visual.get("accent", "ed893e"))))
 	effect_scale = clampf(float(settings.get("effect_scale", 1.0)), 0.5, 1.6)
@@ -52,6 +55,9 @@ func release_special() -> void:
 	effect_kind = str(special.get("kind", "nova"))
 	effect_radius = float(special.get("radius", 200))
 	effect_outline = warning_outline
+	# Snapshot the facing and pose once; recovery must not animate the trail.
+	effect_texture = actor.sprite.texture
+	effect_body = actor.sprite.transform.scaled_local(Vector2(-1.0 if actor.sprite.flip_h else 1.0, -1.0 if actor.sprite.flip_v else 1.0))
 	queue_redraw()
 
 func tick(delta: float) -> void:
@@ -116,12 +122,13 @@ func _draw_release() -> void:
 				draw_line(center, center + effect_aim * length, Color(1.0, .96, .83, alpha), 3.0, true)
 			else:
 				# Frozen copies of the existing body form a short dash trail. No nodes.
-				var texture: Texture2D = actor.sprite.texture
-				if texture != null:
+				if effect_texture != null:
 					for i: int in range(3):
 						var point: Vector2 = effect_center.lerp(actor.global_position, float(i + 1) / 4.0)
-						draw_set_transform(to_local(point) + actor.motion.profile.sprite_offset, 0.0, actor.animation_base_scale)
-						draw_texture(texture, -texture.get_size() * .5, Color(color, alpha * .16))
+						var pose: Transform2D = effect_body
+						pose.origin += to_local(point)
+						draw_set_transform_matrix(pose)
+						draw_texture(effect_texture, -effect_texture.get_size() * .5, Color(color, alpha * .16))
 						draw_set_transform(Vector2.ZERO)
 		"cone":
 			var r: float = effect_radius * 2.0 * (.20 + .80 * p)

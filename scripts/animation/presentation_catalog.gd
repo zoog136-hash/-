@@ -4,6 +4,7 @@ class_name TwilightPresentationCatalog
 ## Body assignments describe inspected TWILIGHT art, not original-game taxonomy.
 ## Unknown/new records get a conservative shared rig without name heuristics.
 const PATH = "res://data/animation_presentation.json"
+const MANIFEST = preload("res://scripts/animation/visual_manifest.gd")
 static var data: Dictionary = {}
 
 static func configure(profile: TwilightAnimationProfile, kind: String, record: Dictionary) -> void:
@@ -13,6 +14,11 @@ static func configure(profile: TwilightAnimationProfile, kind: String, record: D
 		body = str(data.transforms.get(str(record.get("sourceId", "")), {}).get("body", "humanoid"))
 	elif kind == "monster":
 		body = str(data.monster_bodies.get(str(record.get("visual", {}).get("body", "")), "humanoid"))
+		# The installed source can differ from the fallback atlas family (a
+		# biped werewolf vs a quadruped wolf, for example). Prefer reviewed art.
+		var source: String = str(MANIFEST.monster_binding(record).get("path", ""))
+		if not source.is_empty() and ResourceLoader.exists(source):
+			body = str(data.get("monster_sources", {}).get(source, {}).get("body", body))
 	var override: Dictionary = record.get("animation_profile", {})
 	body = str(override.get("body_kind", body))
 	profile.body_kind = body

@@ -74,6 +74,9 @@ func _run() -> void:
 			film = Image.create(1280, 960, false, Image.FORMAT_RGB8)
 			film.fill(Color("202b30"))
 		var kind: String = str(mob.ai.get("special", {}).get("kind", "basic"))
+		if kind == "charge":
+			arena.field_map = QA.OpenGround.new()
+			player.position = Vector2(310,425)
 		for phase: int in range(3):
 			caption.text = "%s · %s · %s / production scenes, controlled arena" % [record.name, kind, ["준비", "타격/발동", "사망"][phase]]
 			if phase == 0:
@@ -101,6 +104,7 @@ func _run() -> void:
 		rows += 1
 		if rows == 4: flush()
 		mob.free()
+		arena.field_map = null
 		arena.combat_flights.clear()
 		arena.combat_vfx.clear()
 	flush()
