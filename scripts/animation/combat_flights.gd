@@ -82,7 +82,13 @@ func _draw() -> void:
 		direction = direction.normalized()
 		var color: Color = flight.get("color",Color(0.5, 0.75, 1.0) if flight.kind == "magic" else Color(1.0, 0.85, 0.5))
 		draw_line(tip - direction * 18.0, tip, color, 2.0, true)
-		if flight.kind == "magic": draw_circle(tip, 3.5, color)
+		var motif := str(flight.get("motif", ""))
+		if motif == "bullets":
+			draw_line(tip - direction * 26, tip, color, 3, true)
+		elif motif in ["ice", "rune", "earth"]:
+			var shard := PackedVector2Array([tip+direction*7,tip+direction.rotated(1.7)*6,tip-direction*8,tip+direction.rotated(-1.7)*6])
+			draw_colored_polygon(shard, color)
+		elif flight.kind == "magic": draw_circle(tip, 3.5, color)
 		else:
 			draw_line(tip, tip - direction.rotated(0.5) * 6.0, color, 1.5, true)
 			draw_line(tip, tip - direction.rotated(-0.5) * 6.0, color, 1.5, true)

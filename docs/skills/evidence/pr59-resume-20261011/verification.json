@@ -1,0 +1,209 @@
+{
+  "recorded_at_utc": "2026-10-10T15:47:12.974691+00:00",
+  "tested_parent": "2194242d18e68c19c82d4ffe6917c2197eb73059",
+  "main_compared": "88d1c68e2a497fb540461a3e1dfa6cba2e1d38f4",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "full": {
+    "total": 69,
+    "passed": 69,
+    "failed": [],
+    "checks": [
+      "import",
+      "boot",
+      "actor_motion_test",
+      "ainhasad_smoke_test",
+      "animation_catalog_test",
+      "animation_restore_test",
+      "authored_frames_test",
+      "authored_state_motion_test",
+      "catalog_effects_smoke_test",
+      "catalog_full_browser_smoke_test",
+      "combat_hud_test",
+      "combat_timing_test",
+      "combat_vfx_test",
+      "consumable_smoke_test",
+      "equipment_blessing_smoke_test",
+      "equipment_slot_smoke_test",
+      "field_world_test",
+      "flight_lifecycle_test",
+      "follower_motion_test",
+      "full_inven_catalog_smoke_test",
+      "ground_drop_smoke_test",
+      "ground_loot_system_test",
+      "hp_mp_unique_effects_smoke_test",
+      "input_routing_test",
+      "inventory_db_smoke_test",
+      "item_buff_description_smoke_test",
+      "item_db_slot_smoke_test",
+      "item_icon_art_smoke_test",
+      "item_options_runtime_smoke_test",
+      "item_weight_smoke_test",
+      "job_smoke_test",
+      "lineage_inventory_ui_smoke_test",
+      "lineage_side_ui_smoke_test",
+      "lineagem_ui_visual_smoke_test",
+      "loot_balance_smoke_test",
+      "mobile_scroll_smoke_test",
+      "monster_attack_profiles_test",
+      "monster_motion_test",
+      "monster_world_test",
+      "non_skill_options_smoke_test",
+      "option_finalize_smoke_test",
+      "original_counter_probability_test",
+      "original_lineagem_effects_smoke_test",
+      "original_skill_audio_test",
+      "original_skill_catalog_runtime_test",
+      "original_skill_provenance_test",
+      "original_skill_reduction_test",
+      "original_skill_summon_test",
+      "original_skill_system_test",
+      "original_skill_target_state_test",
+      "original_turn_undead_rewards_test",
+      "original_turn_undead_test",
+      "passive_skill_smoke_test",
+      "per_instance_enchantments_smoke_test",
+      "playtest_catalog_drag_test",
+      "quickslot_smoke_test",
+      "relic_motion_test",
+      "shield_rules_smoke_test",
+      "skill_element_integration_smoke_test",
+      "skill_mechanism_smoke_test",
+      "speed_option_smoke_test",
+      "stage5_save_compatibility_test",
+      "ui_fidelity_regression_test",
+      "ui_renewal_integration_test",
+      "ui_stage4_item_instance_test",
+      "volley_motion_test",
+      "weapon_rules_smoke_test",
+      "world_region_portals_test",
+      "world_regions_test"
+    ]
+  },
+  "focused": [
+    {
+      "name": "import",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "original_skill_reduction_test",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "original_skill_provenance_test",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "original_skill_target_state_test",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "original_turn_undead_test",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "original_turn_undead_rewards_test",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "original_skill_catalog_runtime_test",
+      "passed": true,
+      "exit_code": 0
+    },
+    {
+      "name": "quickslot_smoke_test",
+      "passed": true,
+      "exit_code": 0
+    }
+  ],
+  "new_assertions": {
+    "reduction": 35,
+    "provenance": 13
+  },
+  "pre_fix_failures": {
+    "reduction": [
+      "REDUCTION FAIL: normal hit consumes the flat modifier exactly once",
+      "REDUCTION FAIL: critical result consumes the flat modifier after critical scaling",
+      "REDUCTION FAIL: actual magic skill damage consumes the same modifier once",
+      "REDUCTION FAIL: equipment amplification does not multiply the flat debuff",
+      "REDUCTION FAIL: normal hit consumes the flat modifier exactly once",
+      "REDUCTION FAIL: critical result consumes the flat modifier after critical scaling",
+      "REDUCTION FAIL: actual magic skill damage consumes the same modifier once",
+      "REDUCTION FAIL: equipment amplification does not multiply the flat debuff"
+    ],
+    "provenance": [
+      "PROVENANCE FAIL: inferred grade and activation are labeled beside their values",
+      "PROVENANCE FAIL: custom learning level is not presented as original",
+      "PROVENANCE FAIL: custom book price is labeled inline",
+      "PROVENANCE FAIL: missing original acquisition is explicitly unknown",
+      "PROVENANCE FAIL: cost/cooldown values are identified as offline settings",
+      "PROVENANCE FAIL: verified grade and passive activation remain distinct from inferred values",
+      "PROVENANCE FAIL: verified passive does not imply a verified custom learning level",
+      "PROVENANCE FAIL: verified original acquisition is shown separately from local shop",
+      "PROVENANCE FAIL: verified original learning level retains its provenance",
+      "PROVENANCE FAIL: unknown fields show a fallback without asserting original certainty"
+    ]
+  },
+  "data": {
+    "runtime_effects_connected": 125,
+    "class_counts": {
+      "공용": 7,
+      "군주": 8,
+      "기사": 9,
+      "요정": 4,
+      "마법사": 22,
+      "다크엘프": 9,
+      "총사": 4,
+      "투사": 7,
+      "암흑기사": 7,
+      "광전사": 6,
+      "신성검사": 4,
+      "사신": 6,
+      "뇌신": 16,
+      "마검사": 16
+    },
+    "audit_assignments": 695,
+    "audit_states": {
+      "BLOCKED": 568,
+      "PARTIAL": 125,
+      "PVP_EXCLUDED": 2
+    },
+    "historical_completeness": "UNKNOWN",
+    "vfx_reference_validation": "UNKNOWN",
+    "errors": []
+  },
+  "render": {
+    "engine_exit_code": 0,
+    "inspected": [
+      "09-turn-undead-learning.png"
+    ],
+    "markers": [
+      "ORIGINAL_RENDER_OK driver=llvmpipe (LLVM 20.1.2, 256 bits) median_ms=34.761 p95_ms=47.9 active=18 available=2",
+      "ORIGINAL_GUARDIAN_RENDER_OK npc_hits=1 shield_events=1 mp_spent=60",
+      "ORIGINAL_TURN_UNDEAD_RENDER_OK hp=0 mp_spent=20 audio_phase=impact"
+    ],
+    "screenshots": {
+      "01-knight-catalog.png": "62a2727f4eb65c81fb56d1731794a1dac87c3f463548d01ca2d49492dabe4d1b",
+      "02-skill-preview.png": "bd487eef01d7a7d2b762de8e6e71952f65309ea8f800c3b1b318ac0b7f8c70ce",
+      "03-counter-aura.png": "653b5a0dcf1159eaf303d774d5f55ff7a65d110f6cbed1c45b253bffc667b252",
+      "04-effect-crowd.png": "27325d0c805ec91c142b369df71ff2aaf450d27eb82d874e7275733aac859d6b",
+      "05-guardian-summon.png": "4a2349f4a19ca0a5304205781f3d68379daebf3b40d9348737ec7eeb46e2c431",
+      "06-guardian-hit.png": "6ce356ebaadcdcc57eb5b625ba42488bb640ba79a7da9bc317f3fb247a1545ef",
+      "07-guardian-shield.png": "c02f85a74fbd0951052f5a09e5e3c1893a5f8e304259aef956b3c6b74f6b62aa",
+      "08-guardian-commands.png": "08ce375ab11804d6ffb26541e87218f5ddab7c2fa09cd0bd39a2edc6bb649779",
+      "09-turn-undead-learning.png": "24587791820f06f43fc586d0ea81cdb67bfdfa84dbf3495e5a93a7c4e1784913",
+      "10-turn-undead-projectile.png": "70c2b62dc02531747e2b18121f105b6dfaf0ba945a5c688590ef22fc768e9a54",
+      "11-turn-undead-ancient-impact.png": "3e8442c89c24590f94fc48fab67fa6e60f74bdf15b987e7629cfea547d5d8ff3"
+    },
+    "limits": "Linux llvmpipe and Dummy audio; not Windows GPU or listening validation."
+  },
+  "uncommitted_prior_pr59_files_recovered": false,
+  "stop_cause": "UNKNOWN",
+  "reference_archives_opened": 16,
+  "attachment_unavailable": "a2(1).zip; the four split ZIPs are accessible; full equivalence was not established."
+}

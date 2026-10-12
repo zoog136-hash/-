@@ -1,0 +1,343 @@
+{
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "platform": "Linux headless",
+  "date": "2026-10-10",
+  "full_run": {
+    "passed": 63,
+    "total": 63
+  },
+  "render": "PENDING_CI",
+  "followup": "Duplicate shield end-VFX call removed after full run; targeted summon-final test passed with no script errors. Fresh full CI/render pending. Subsequent data changes are provenance only.",
+  "files": [
+    {
+      "file": "actor_motion_test.txt",
+      "source_sha256": "4f998ea231973d6c7d1e92678a327fb09bb5fb81fbba6af34bfe89a3cfc8520a",
+      "preserved_sha256": "4f998ea231973d6c7d1e92678a327fb09bb5fb81fbba6af34bfe89a3cfc8520a"
+    },
+    {
+      "file": "ainhasad_smoke_test.txt",
+      "source_sha256": "bfe6116174b23b1803695e23d71d1732defb79cfc9429ac84473c35c8597a0eb",
+      "preserved_sha256": "bfe6116174b23b1803695e23d71d1732defb79cfc9429ac84473c35c8597a0eb"
+    },
+    {
+      "file": "animation_catalog_test.txt",
+      "source_sha256": "d62d43d1b87ab95f3b1287202568e5897a39bf761306c93ae155ad70e6da0a14",
+      "preserved_sha256": "d62d43d1b87ab95f3b1287202568e5897a39bf761306c93ae155ad70e6da0a14"
+    },
+    {
+      "file": "animation_restore_test.txt",
+      "source_sha256": "a398754954159f625dd1eed875afbc5e1a2f883a5c942105d2a06e90d0829bc4",
+      "preserved_sha256": "a398754954159f625dd1eed875afbc5e1a2f883a5c942105d2a06e90d0829bc4"
+    },
+    {
+      "file": "authored_frames_test.txt",
+      "source_sha256": "407ba23ae266cca9611ee0defab2d2fffcd1e204fe3a535a7d48954d35df6af9",
+      "preserved_sha256": "407ba23ae266cca9611ee0defab2d2fffcd1e204fe3a535a7d48954d35df6af9"
+    },
+    {
+      "file": "authored_state_motion_test.txt",
+      "source_sha256": "aaa298c77770f43bb16d0eb4159f830d24145c987e27641c8f1d60d49bb506c6",
+      "preserved_sha256": "aaa298c77770f43bb16d0eb4159f830d24145c987e27641c8f1d60d49bb506c6"
+    },
+    {
+      "file": "boot.txt",
+      "source_sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e",
+      "preserved_sha256": "6d1c065383a27c36804949b6ffa4b09714470b112e5dacc0bd5aeb7b9c147c4e"
+    },
+    {
+      "file": "catalog_effects_smoke_test.txt",
+      "source_sha256": "99a3ca2264a848d5adfbc60d7a6a8044f6a1b7c01583a1fde78d86545940f820",
+      "preserved_sha256": "99a3ca2264a848d5adfbc60d7a6a8044f6a1b7c01583a1fde78d86545940f820"
+    },
+    {
+      "file": "catalog_full_browser_smoke_test.txt",
+      "source_sha256": "09f5d66dfceb6622d23ad619a0fe69b1428b3c551098f1db78a09015c0c305c1",
+      "preserved_sha256": "09f5d66dfceb6622d23ad619a0fe69b1428b3c551098f1db78a09015c0c305c1"
+    },
+    {
+      "file": "combat_hud_test.txt",
+      "source_sha256": "78b41e5ba30784e7da0cb3572577aba506ad92dec75fb7ccc14a5861d39a74d1",
+      "preserved_sha256": "78b41e5ba30784e7da0cb3572577aba506ad92dec75fb7ccc14a5861d39a74d1"
+    },
+    {
+      "file": "combat_timing_test.txt",
+      "source_sha256": "261360c7a9ad2c672957da0b4c07a7ee773bb2f9972d73f67c0dfdc982b0335b",
+      "preserved_sha256": "261360c7a9ad2c672957da0b4c07a7ee773bb2f9972d73f67c0dfdc982b0335b"
+    },
+    {
+      "file": "combat_vfx_test.txt",
+      "source_sha256": "3fc26ad32314063b8dc39492551e298fde13c732ae6e6193b0b64c0146d79e66",
+      "preserved_sha256": "3fc26ad32314063b8dc39492551e298fde13c732ae6e6193b0b64c0146d79e66"
+    },
+    {
+      "file": "consumable_smoke_test.txt",
+      "source_sha256": "d7f683e996fdcbfbc9c5746f42237839e8fc1879a903541298db58273671cafb",
+      "preserved_sha256": "d7f683e996fdcbfbc9c5746f42237839e8fc1879a903541298db58273671cafb"
+    },
+    {
+      "file": "data-validation.json",
+      "source_sha256": "f8b11376e6999f3442cfa6bb0f2fa178e9372d97e201fbe5932d2287df16a1c5",
+      "preserved_sha256": "f8b11376e6999f3442cfa6bb0f2fa178e9372d97e201fbe5932d2287df16a1c5"
+    },
+    {
+      "file": "equipment_blessing_smoke_test.txt",
+      "source_sha256": "2ed4777d7e44d8b7b0a98116740a00a5f6358f7728d6872cbca7f05cdc962bc5",
+      "preserved_sha256": "2ed4777d7e44d8b7b0a98116740a00a5f6358f7728d6872cbca7f05cdc962bc5"
+    },
+    {
+      "file": "equipment_slot_smoke_test.txt",
+      "source_sha256": "d91cf2af5dcdee119160f13acf90cf66b90d95669b88da70020457358214325e",
+      "preserved_sha256": "d91cf2af5dcdee119160f13acf90cf66b90d95669b88da70020457358214325e"
+    },
+    {
+      "file": "field_world_test.txt",
+      "source_sha256": "9d97e6659cad0312e7aeb548ed7b042d2a242b8e96f1597cc8670ef8bf3ffd43",
+      "preserved_sha256": "9d97e6659cad0312e7aeb548ed7b042d2a242b8e96f1597cc8670ef8bf3ffd43"
+    },
+    {
+      "file": "flight_lifecycle_test.txt",
+      "source_sha256": "14e866f2966c01a2f1418352a5977a3e04c187bcc25ba6a8331a0329f5a886dd",
+      "preserved_sha256": "14e866f2966c01a2f1418352a5977a3e04c187bcc25ba6a8331a0329f5a886dd"
+    },
+    {
+      "file": "follower_motion_test.txt",
+      "source_sha256": "3a49f0e4c3f5dfe9d315cbaa2aaf5db9f758fb040e4c090e77bf2e96de92196d",
+      "preserved_sha256": "3a49f0e4c3f5dfe9d315cbaa2aaf5db9f758fb040e4c090e77bf2e96de92196d"
+    },
+    {
+      "file": "full_inven_catalog_smoke_test.txt",
+      "source_sha256": "8b93401636d31d954e8e0928ec3a5d606b4c882bc38418a12761764f6bf93da2",
+      "preserved_sha256": "8b93401636d31d954e8e0928ec3a5d606b4c882bc38418a12761764f6bf93da2"
+    },
+    {
+      "file": "ground_drop_smoke_test.txt",
+      "source_sha256": "caec76eea2bef376d02b9415d4a74ea8d6e54b23290e22abf29dc44895dc7f45",
+      "preserved_sha256": "caec76eea2bef376d02b9415d4a74ea8d6e54b23290e22abf29dc44895dc7f45"
+    },
+    {
+      "file": "ground_loot_system_test.txt",
+      "source_sha256": "18d9f13f0d5e5a674e3f07d8bea9b43599cf3414928875b92d41141b61bef2f9",
+      "preserved_sha256": "18d9f13f0d5e5a674e3f07d8bea9b43599cf3414928875b92d41141b61bef2f9"
+    },
+    {
+      "file": "hp_mp_unique_effects_smoke_test.txt",
+      "source_sha256": "dad5efc3a662023be5e8a11b0fd90335178026286e719a6945f3f0cb9fa9de3b",
+      "preserved_sha256": "dad5efc3a662023be5e8a11b0fd90335178026286e719a6945f3f0cb9fa9de3b"
+    },
+    {
+      "file": "import.txt",
+      "source_sha256": "18b830e220eb0d217959132aceda4b56cb37ed7f040fc80e8d8425e7e1356090",
+      "preserved_sha256": "499134fdfb89a7f622a1a1e40de933f7563519927841e6bbc2bcd155659076df"
+    },
+    {
+      "file": "input_routing_test.txt",
+      "source_sha256": "b986a874d55511626d9bca7a26372fcc0745f5e7d96ab61ca878e5d50aceb2d9",
+      "preserved_sha256": "b986a874d55511626d9bca7a26372fcc0745f5e7d96ab61ca878e5d50aceb2d9"
+    },
+    {
+      "file": "inventory_db_smoke_test.txt",
+      "source_sha256": "88188cd0026773caf6ba88a621f4ed32d76067ca40407a48095912c4d3ec9caf",
+      "preserved_sha256": "88188cd0026773caf6ba88a621f4ed32d76067ca40407a48095912c4d3ec9caf"
+    },
+    {
+      "file": "item_buff_description_smoke_test.txt",
+      "source_sha256": "054b36061058d3ecf9041bd2ef299ea01e48248b7a3d71b13d559b7805107332",
+      "preserved_sha256": "054b36061058d3ecf9041bd2ef299ea01e48248b7a3d71b13d559b7805107332"
+    },
+    {
+      "file": "item_db_slot_smoke_test.txt",
+      "source_sha256": "ffe0cb8f5689252d41149223dc707a382a6f881407f998bc5f4224e6953d0aed",
+      "preserved_sha256": "ffe0cb8f5689252d41149223dc707a382a6f881407f998bc5f4224e6953d0aed"
+    },
+    {
+      "file": "item_icon_art_smoke_test.txt",
+      "source_sha256": "d0d8f8f7f49e939df8cd5d6236c41f45c25c602ed7ca578c02a8958eed326907",
+      "preserved_sha256": "d0d8f8f7f49e939df8cd5d6236c41f45c25c602ed7ca578c02a8958eed326907"
+    },
+    {
+      "file": "item_options_runtime_smoke_test.txt",
+      "source_sha256": "a43017382c17acbd1b3bbfeba6b05516df27964fed45f331ddcea7aa7332ae51",
+      "preserved_sha256": "a43017382c17acbd1b3bbfeba6b05516df27964fed45f331ddcea7aa7332ae51"
+    },
+    {
+      "file": "item_weight_smoke_test.txt",
+      "source_sha256": "8ef8f48c64d12ddce405baff9e9c4217f539b9aed51781ed79ebd48155e57000",
+      "preserved_sha256": "8ef8f48c64d12ddce405baff9e9c4217f539b9aed51781ed79ebd48155e57000"
+    },
+    {
+      "file": "job_smoke_test.txt",
+      "source_sha256": "a914abc23c471763a12cc3bad4bd9b654d71d44a8ab6cff1ca4ce3ba264703cc",
+      "preserved_sha256": "a914abc23c471763a12cc3bad4bd9b654d71d44a8ab6cff1ca4ce3ba264703cc"
+    },
+    {
+      "file": "lineage_inventory_ui_smoke_test.txt",
+      "source_sha256": "a72c825a5ed76db7b1c16d6783f8f9be898422ee58fd837e80986b6a9f40eae5",
+      "preserved_sha256": "a72c825a5ed76db7b1c16d6783f8f9be898422ee58fd837e80986b6a9f40eae5"
+    },
+    {
+      "file": "lineage_side_ui_smoke_test.txt",
+      "source_sha256": "6c51e7533131003aca0ccc09a6b4c12dd6316dc8669a893adba56fe718db9f99",
+      "preserved_sha256": "6c51e7533131003aca0ccc09a6b4c12dd6316dc8669a893adba56fe718db9f99"
+    },
+    {
+      "file": "lineagem_ui_visual_smoke_test.txt",
+      "source_sha256": "cc8f0b724d0a38e0e967be0006b3b0de974131ba0a1da8922295f0fb428ede12",
+      "preserved_sha256": "cc8f0b724d0a38e0e967be0006b3b0de974131ba0a1da8922295f0fb428ede12"
+    },
+    {
+      "file": "loot_balance_smoke_test.txt",
+      "source_sha256": "599d0761599caaa1803175b56cc6655d5e59cda4bae98d8f0db8ce853e73ece2",
+      "preserved_sha256": "599d0761599caaa1803175b56cc6655d5e59cda4bae98d8f0db8ce853e73ece2"
+    },
+    {
+      "file": "mobile_scroll_smoke_test.txt",
+      "source_sha256": "05b45d43f451ef8d74ccacc3d4d5f95a87728d3c1fbb806404fd557b5da05f80",
+      "preserved_sha256": "05b45d43f451ef8d74ccacc3d4d5f95a87728d3c1fbb806404fd557b5da05f80"
+    },
+    {
+      "file": "monster_attack_profiles_test.txt",
+      "source_sha256": "fe65e23fb413dbd3d015c427854a57097b934e0b28e39218c6770d896fd050f5",
+      "preserved_sha256": "fe65e23fb413dbd3d015c427854a57097b934e0b28e39218c6770d896fd050f5"
+    },
+    {
+      "file": "monster_motion_test.txt",
+      "source_sha256": "962044fe3c69957b6a68e3bae42abccf50d3a859f4f56c729a21582a6d0d9862",
+      "preserved_sha256": "962044fe3c69957b6a68e3bae42abccf50d3a859f4f56c729a21582a6d0d9862"
+    },
+    {
+      "file": "monster_world_test.txt",
+      "source_sha256": "af8cc5aa834959b513a754c17864101babdedfce3965638c33789ebdf874f718",
+      "preserved_sha256": "af8cc5aa834959b513a754c17864101babdedfce3965638c33789ebdf874f718"
+    },
+    {
+      "file": "non_skill_options_smoke_test.txt",
+      "source_sha256": "e2caa143515fd3557175488a1a8782c0dfef94d5f22f394a1b0a6f61938474df",
+      "preserved_sha256": "e2caa143515fd3557175488a1a8782c0dfef94d5f22f394a1b0a6f61938474df"
+    },
+    {
+      "file": "option_finalize_smoke_test.txt",
+      "source_sha256": "b0466a596e6fed4a16452cdcde2c53bb2f9964771358026300c6fc6a63ffeeeb",
+      "preserved_sha256": "b0466a596e6fed4a16452cdcde2c53bb2f9964771358026300c6fc6a63ffeeeb"
+    },
+    {
+      "file": "original_counter_probability_test.txt",
+      "source_sha256": "dd038344c32c3619f99ef9e8a831f9b09348b5b33834864cb26c1afcd2841281",
+      "preserved_sha256": "dd038344c32c3619f99ef9e8a831f9b09348b5b33834864cb26c1afcd2841281"
+    },
+    {
+      "file": "original_lineagem_effects_smoke_test.txt",
+      "source_sha256": "f0d3946fa7b9db7f5835ffb67f18dddfb14ae01d36dc5eab85a5a8bb3a8f40e7",
+      "preserved_sha256": "f0d3946fa7b9db7f5835ffb67f18dddfb14ae01d36dc5eab85a5a8bb3a8f40e7"
+    },
+    {
+      "file": "original_skill_catalog_runtime_test.txt",
+      "source_sha256": "3701e38fd8d8839f60ee10bed86c6b72707f522f93cf38e3a2d636d6370c9bf8",
+      "preserved_sha256": "3701e38fd8d8839f60ee10bed86c6b72707f522f93cf38e3a2d636d6370c9bf8"
+    },
+    {
+      "file": "original_skill_summon_test.txt",
+      "source_sha256": "886111a84e386c334b63ee5295530fbfdb928398f405491a691eeadc5478c806",
+      "preserved_sha256": "886111a84e386c334b63ee5295530fbfdb928398f405491a691eeadc5478c806"
+    },
+    {
+      "file": "original_skill_system_test.txt",
+      "source_sha256": "fd3100e27a5d52c31d2201f789c17e6b4b9546b06dc9cc2021c84a076fba3446",
+      "preserved_sha256": "fd3100e27a5d52c31d2201f789c17e6b4b9546b06dc9cc2021c84a076fba3446"
+    },
+    {
+      "file": "passive_skill_smoke_test.txt",
+      "source_sha256": "ff5d6b3d0b348856c53286d4b5a3a54ea7b33e05e7dc2cca62fa1fcb2aa98013",
+      "preserved_sha256": "ff5d6b3d0b348856c53286d4b5a3a54ea7b33e05e7dc2cca62fa1fcb2aa98013"
+    },
+    {
+      "file": "per_instance_enchantments_smoke_test.txt",
+      "source_sha256": "585ae8333f2b1e087b7c0ef119bc13f1422d042e2addaf3996f5e0281ee59566",
+      "preserved_sha256": "585ae8333f2b1e087b7c0ef119bc13f1422d042e2addaf3996f5e0281ee59566"
+    },
+    {
+      "file": "playtest_catalog_drag_test.txt",
+      "source_sha256": "78f3e82ac86afc07c60d7cbcd399b9c6606ffe340a8de0396c4982c936e5f4db",
+      "preserved_sha256": "78f3e82ac86afc07c60d7cbcd399b9c6606ffe340a8de0396c4982c936e5f4db"
+    },
+    {
+      "file": "quickslot_smoke_test.txt",
+      "source_sha256": "fa061dc49d0bb17906a7e6df421315b550ed6e73b4864cc904322e22a86a8475",
+      "preserved_sha256": "fa061dc49d0bb17906a7e6df421315b550ed6e73b4864cc904322e22a86a8475"
+    },
+    {
+      "file": "relic_motion_test.txt",
+      "source_sha256": "0fb6a3d321e6bf8bc9f7ecfdea8019a9a2615780c94e569e8d4f349b8cdbd480",
+      "preserved_sha256": "0fb6a3d321e6bf8bc9f7ecfdea8019a9a2615780c94e569e8d4f349b8cdbd480"
+    },
+    {
+      "file": "shield_rules_smoke_test.txt",
+      "source_sha256": "877ca870cedd9f2c920b030b5e334d5a193e51469a4378d781c6e0249507cd77",
+      "preserved_sha256": "877ca870cedd9f2c920b030b5e334d5a193e51469a4378d781c6e0249507cd77"
+    },
+    {
+      "file": "skill_element_integration_smoke_test.txt",
+      "source_sha256": "9bebc537109fb370c30c491d72868346d94f42b6bea957edc26260896347f7ca",
+      "preserved_sha256": "9bebc537109fb370c30c491d72868346d94f42b6bea957edc26260896347f7ca"
+    },
+    {
+      "file": "skill_mechanism_smoke_test.txt",
+      "source_sha256": "ed66e692c2bce01c9f8590ad7b35bc6c4775b57f62cf55b9a1ef339143c05b68",
+      "preserved_sha256": "ed66e692c2bce01c9f8590ad7b35bc6c4775b57f62cf55b9a1ef339143c05b68"
+    },
+    {
+      "file": "speed_option_smoke_test.txt",
+      "source_sha256": "84cc163e7cc26abd3d68e7a459277580c7b70654774f99d4eee891e018d71e21",
+      "preserved_sha256": "84cc163e7cc26abd3d68e7a459277580c7b70654774f99d4eee891e018d71e21"
+    },
+    {
+      "file": "stage5_save_compatibility_test.txt",
+      "source_sha256": "c986193889a2ea44d5f1c5d06fd321313259807ad4873248d36baaf774e0107d",
+      "preserved_sha256": "c986193889a2ea44d5f1c5d06fd321313259807ad4873248d36baaf774e0107d"
+    },
+    {
+      "file": "summary.json",
+      "source_sha256": "b76f1b4fd228ef3203fde06a6b28d74d64d5bb8d453d33c894e9f18821018640",
+      "preserved_sha256": "b76f1b4fd228ef3203fde06a6b28d74d64d5bb8d453d33c894e9f18821018640"
+    },
+    {
+      "file": "ui_fidelity_regression_test.txt",
+      "source_sha256": "eacea007d89bc6e31ad79abaf5929962baf52108237526518325013bc3b4a176",
+      "preserved_sha256": "eacea007d89bc6e31ad79abaf5929962baf52108237526518325013bc3b4a176"
+    },
+    {
+      "file": "ui_renewal_integration_test.txt",
+      "source_sha256": "47946462c4f78789a679010981d62821978b84d7ca5731044484fc7f56fcc731",
+      "preserved_sha256": "47946462c4f78789a679010981d62821978b84d7ca5731044484fc7f56fcc731"
+    },
+    {
+      "file": "ui_stage4_item_instance_test.txt",
+      "source_sha256": "703e195da3aa375c9b0245816a8fcd557a5e9e3ce8cdfe7f43e72505ba349e09",
+      "preserved_sha256": "703e195da3aa375c9b0245816a8fcd557a5e9e3ce8cdfe7f43e72505ba349e09"
+    },
+    {
+      "file": "volley_motion_test.txt",
+      "source_sha256": "a0cc5bf5dbe28913a489fc672abe8fe83913b70f5c62417b5d64c20025cc35bd",
+      "preserved_sha256": "a0cc5bf5dbe28913a489fc672abe8fe83913b70f5c62417b5d64c20025cc35bd"
+    },
+    {
+      "file": "weapon_rules_smoke_test.txt",
+      "source_sha256": "779ff50465bbcd0485cb511dee60a287c8ae216893d98e43747cb3496f7a546c",
+      "preserved_sha256": "779ff50465bbcd0485cb511dee60a287c8ae216893d98e43747cb3496f7a546c"
+    },
+    {
+      "file": "world_region_portals_test.txt",
+      "source_sha256": "aae158713a6dfd997259e98f64a5a20a3ce5dc2338a9523770484c3c62a74512",
+      "preserved_sha256": "aae158713a6dfd997259e98f64a5a20a3ce5dc2338a9523770484c3c62a74512"
+    },
+    {
+      "file": "world_regions_test.txt",
+      "source_sha256": "b4338c92daba80b33aa2c8c088c01d2dde4de5a1eb548dcd582c0fd97f9bdf1e",
+      "preserved_sha256": "b4338c92daba80b33aa2c8c088c01d2dde4de5a1eb548dcd582c0fd97f9bdf1e"
+    },
+    {
+      "file": "summon-final.txt",
+      "source_sha256": "886111a84e386c334b63ee5295530fbfdb928398f405491a691eeadc5478c806",
+      "preserved_sha256": "886111a84e386c334b63ee5295530fbfdb928398f405491a691eeadc5478c806"
+    }
+  ]
+}
