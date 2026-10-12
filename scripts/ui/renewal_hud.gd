@@ -209,9 +209,12 @@ func _polish_hud_chrome() -> void:
 		mini_map.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.024,.024,.028,.87),UI.BRONZE,7))
 	if v20_target_panel != null:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
+		_place(v20_target_panel,468,86,812,136)
+		v20_target_panel.set_meta("renewal_base_position",v20_target_panel.position)
 	if v20_map_name != null:
 		v20_map_name.add_theme_color_override("font_color",UI.GOLD)
 		_place(v20_map_name.get_parent(),468,46,932,72)
+		v20_map_name.get_parent().set_meta("renewal_base_position",v20_map_name.get_parent().position)
 		v20_map_name.add_theme_font_size_override("font_size",11)
 		v20_map_name.clip_text = true
 

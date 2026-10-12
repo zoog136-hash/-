@@ -12,7 +12,7 @@ func _capture(label: String) -> void:
 	var path := folder+"/"+label+".png"
 	var result := pixels.save_png(path)
 	if result != OK: failed = true; push_error("Capture write failed: "+path)
-	captures.append({"name":label,"width":pixels.get_width(),"height":pixels.get_height(),"path":path,"error":result})
+	captures.append({"name":label,"width":pixels.get_width(),"height":pixels.get_height(),"path":path,"error":result,"map":world.active_map_id,"auto":world.player.auto_enabled,"hp":world.hp,"mp":world.mp,"position":[world.player.position.x,world.player.position.y],"target":str(world.selected_monster.monster_name) if is_instance_valid(world.selected_monster) else ""})
 	print("CAPTURE "+label)
 func _run() -> void:
 	folder = OS.get_environment("TWILIGHT_UI_CAPTURE_DIR")

@@ -252,6 +252,7 @@ func _run() -> void:
 			var rect := control.get_global_rect()
 			ok = ok and logical.encloses(rect)
 		check(ok,"16 HUD bounds "+str(extent))
+		check(not hud.v20_target_panel.get_global_rect().intersects(hud.v20_map_name.get_parent().get_global_rect()),"16 target and region titles do not overlap "+str(extent))
 		hud.open_settings_info()
 		await frames(5)
 		check(logical.encloses(hud.workspace.get_global_rect()),"16 menu bounds "+str(extent))
