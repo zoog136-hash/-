@@ -88,11 +88,23 @@ func _run() -> void:
 	world.set("selected_monster", dummy)
 	world.call("_tick_skill_cooldowns", 10.0)
 	before_mp = int(world.get("mp"))
+	# The class transformation now grants the cooldown reduction from PR #87.
+	# Check the effective duration, then test the actual recast boundary.
+	var stun_skill: Dictionary = world.call("_skill_record", "쇼크 스턴")
+	var expected_stun_cooldown: float = SKILL_RULES.cooldown_seconds(stun_skill) * float(world.call("_skill_cooldown_factor"))
 	_expect(bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun did not use dedicated status path")
 	preload("res://tests/combat_test_clock.gd").settle(world)
 	_expect(int(world.get("mp")) == before_mp - 10, "stun MP not consumed on attempt")
 	var cds: Dictionary = world.get("skill_cooldowns") as Dictionary
-	_expect(float(cds.get("쇼크 스턴", 0.0)) >= 9.0, "stun cooldown not started")
+	_expect(expected_stun_cooldown > 0.0 and is_equal_approx(float(cds.get("쇼크 스턴", 0.0)), expected_stun_cooldown), "stun effective cooldown not started")
+	world.call("_tick_skill_cooldowns", expected_stun_cooldown * 0.5)
+	before_mp = int(world.get("mp"))
+	_expect(not bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun recast before effective cooldown expired")
+	_expect(int(world.get("mp")) == before_mp, "cooldown-blocked stun consumed MP")
+	world.call("_tick_skill_cooldowns", expected_stun_cooldown * 0.5 + 0.01)
+	_expect(bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun did not recover after effective cooldown expired")
+	preload("res://tests/combat_test_clock.gd").settle(world)
+	_expect(int(world.get("mp")) == before_mp - 10, "recovered stun did not consume MP once")
 
 	world.call("_tick_skill_cooldowns", 15.0)
 	world.call("_on_quickslot_assignment_requested", 0, "skill_auto", "에너지 볼트")
