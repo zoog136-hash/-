@@ -1,0 +1,139 @@
+name: Apply and validate main debug fixes
+
+on:
+  push:
+    branches: ['fix/main-debug-input-load-crafting']
+    paths:
+      - '.github/workflows/main-debug-apply-49f5470.yml'
+      - 'tools/patches/main-debug-49f5470.patch'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: main-debug-apply-49f5470
+  cancel-in-progress: false
+
+jobs:
+  apply-and-validate:
+    if: github.repository == 'zoog136-hash/-' && github.ref == 'refs/heads/fix/main-debug-input-load-crafting'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      TARGET_BRANCH: fix/main-debug-input-load-crafting
+      BASE_SHA: 49f5470e6d9561183e0a8e8e56901da6d4d93f27
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Resource integrity preflight (before touching game source)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee main-debug-resource-before.log
+
+      - name: Verify exact base files and apply reviewed patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor "$BASE_SHA" HEAD
+          git diff --quiet
+          git diff --cached --quiet
+          python3 - <<'PY'
+          import hashlib
+          import subprocess
+          from pathlib import Path
+          expected = {
+              'project.godot': '4fa89c625e2bf7572dae83f120e81589763a386f',
+              'scripts/world.gd': '926ae9c629029af9cf5488be73cadef3561b7975',
+              'scripts/crafting/expanded_crafting.gd': '9a0076178d6537702c5c06bce36e267d939cf628',
+              'scripts/equipment_blessing.gd': '703d1a7d0e861d7bcb7d609caddb55b8495ee5c0',
+          }
+          for name, sha in expected.items():
+              blob = Path(name).read_bytes()
+              actual = hashlib.sha1(b'blob ' + str(len(blob)).encode() + b'\0' + blob).hexdigest()
+              if actual != sha:
+                  raise SystemExit('Refusing changed source: ' + name)
+          patch = Path('tools/patches/main-debug-49f5470.patch')
+          if hashlib.sha256(patch.read_bytes()).hexdigest() != '140ff2f44fbab47c629f17c32a8435b6d8a109387acd84a9a0f4abfa263d5fa8':
+              raise SystemExit('Reviewed patch checksum mismatch')
+          subprocess.run(['git', 'apply', '--check', str(patch)], check=True)
+          subprocess.run(['git', 'apply', '--index', str(patch)], check=True)
+          changed = set(subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines())
+          allowed = {
+              'project.godot', 'scripts/world.gd', 'scripts/crafting/expanded_crafting.gd',
+              'tests/main_debug_input_bindings_test.gd',
+              'tests/main_debug_failed_load_test.gd',
+              'tests/main_debug_crafting_blessing_test.gd',
+          }
+          if changed != allowed:
+              raise SystemExit('Unexpected staged paths: ' + repr(changed))
+          PY
+          git diff --cached --check
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee main-debug-resource-after.log
+
+      - name: Save the six changed files only to the dedicated branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_head="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | cut -f1)"
+          test "$remote_head" = "$GITHUB_SHA"
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'fix: align input bindings and preserve live combat and blessed crafting items'
+          git rev-parse HEAD | tee main-debug-source-sha.txt
+          git push origin "HEAD:refs/heads/$TARGET_BRANCH"
+          echo "Source commit: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Source saved on the fix branch only. No merge or auto-merge is performed.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install project-pinned Godot and software OpenGL
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgl1-mesa-dri libxkbcommon0 libxcursor1 libxinerama1 libxrandr2 libxi6 libasound2t64
+          curl -L --fail --retry 3 -o "$RUNNER_TEMP/godot.zip" https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot-main-debug"
+          chmod +x "$RUNNER_TEMP/godot-main-debug/Godot_v4.7.2-stable_linux.x86_64"
+          "$RUNNER_TEMP/godot-main-debug/Godot_v4.7.2-stable_linux.x86_64" --version | tee main-debug-godot-version.txt
+          grep -q '^4\.7\.2\.stable' main-debug-godot-version.txt
+
+      - name: Unmodified full test runner including all three regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          xvfb-run -a python3 tools/test_project.py --godot "$RUNNER_TEMP/godot-main-debug/Godot_v4.7.2-stable_linux.x86_64" --render-visual-tests --logs main-debug-test-results 2>&1 | tee main-debug-suite.log
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('main-debug-test-results')
+          summary = json.loads((root / 'summary.json').read_text())
+          required = {
+              'main_debug_input_bindings_test': 'MAIN_DEBUG_INPUT_BINDINGS_OK',
+              'main_debug_failed_load_test': 'MAIN_DEBUG_FAILED_LOAD_OK',
+              'main_debug_crafting_blessing_test': 'MAIN_DEBUG_CRAFTING_BLESSING_OK',
+          }
+          if summary['failed']:
+              raise SystemExit('Full suite failed: ' + repr(summary['failed']))
+          for name, marker in required.items():
+              if name not in summary['checks'] or name in summary['skipped']:
+                  raise SystemExit('Required regression was missing or skipped: ' + name)
+              if marker not in (root / (name + '.log')).read_text():
+                  raise SystemExit('Required regression has no success marker: ' + name)
+          print('MAIN_DEBUG_REQUIRED_REGRESSIONS_OK')
+          print('Other skipped tests remain explicitly recorded:', summary['skipped'])
+          PY
+
+      - name: Preserve exact source SHA and validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-debug-evidence-${{ github.run_id }}
+          path: |
+            main-debug-*.log
+            main-debug-source-sha.txt
+            main-debug-godot-version.txt
+            main-debug-test-results
+          if-no-files-found: warn
