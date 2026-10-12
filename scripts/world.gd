@@ -27,6 +27,7 @@ const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
+const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
@@ -715,6 +716,13 @@ func _catalog_stat_sum(key: String) -> int:
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
 	return result
+
+func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
+	var record_value: Variant = equipped_catalog.get("변신", {})
+	if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
+		return 0.0
+	var record: Dictionary = _verified_catalog_record("변신", record_value as Dictionary)
+	return TRANSFORM_SKILL.amount(record, job_class, skill_name, kind)
 
 func _skill_cooldown_factor() -> float:
 	return clampf(1.0 - float(_catalog_stat_sum("skillCooldownPct")) / 100.0, 0.1, 1.0)
@@ -1812,7 +1820,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 		_update_hud()
 		_update_target_hud()
 		return false
-	var stun_chance: float = _player_stun_chance(target)
+	var stun_chance: float = clampf(_player_stun_chance(target) + _transformation_skill_bonus(skill_name, "accuracy_pct") / 100.0, 0.05, 0.95)
 	var stunned: bool = rng.randf() < stun_chance
 	if stunned:
 		target.apply_stun(stun_duration)
@@ -4797,10 +4805,14 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if not targets.has(candidate):
 				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
+	var skill_name: String = str(skill.get("name", ""))
+	var transform_flat: int = int(round(_transformation_skill_bonus(skill_name, "damage_flat")))
+	var transform_multiplier: float = 1.0 + clampf(_transformation_skill_bonus(skill_name, "damage_pct"), 0.0, 200.0) / 100.0
+	var transform_accuracy: float = clampf(_transformation_skill_bonus(skill_name, "accuracy_pct") / 100.0, 0.0, 0.90)
 	var volley: Dictionary = skill.get("_volley_runtime", {})
 	var total_damage: int = int(volley.get("total_damage", 0))
 	if total_damage <= 0:
-		total_damage = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+		total_damage = maxi(1, int(round(float(power + stat_damage + transform_flat + rng.randi_range(-4, 6)) * transform_multiplier)))
 		volley["total_damage"] = total_damage
 	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
 	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
@@ -4813,6 +4825,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			victim_hit_chance = clampf(_melee_hit_chance(victim) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
 		else:
 			victim_hit_chance = _melee_hit_chance(victim)
+		victim_hit_chance = clampf(victim_hit_chance + transform_accuracy, 0.05, 0.95)
 		var first_hit: int = int(skill.get("_single_hit_index", 0))
 		var last_hit: int = first_hit + 1 if skill.has("_single_hit_index") else hits
 		for hit_index: int in range(first_hit, last_hit):
