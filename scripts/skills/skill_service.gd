@@ -569,16 +569,26 @@ func export_state() -> Dictionary:
 func import_state(data: Dictionary) -> void:
 	clear()
 	toggles = data.get("toggles", {}).duplicate(true)
-	for id: String in data.get("shields", {}):
-		if catalog.record_for(id).is_empty(): continue
-		var value: Dictionary = data.shields[id]
-		shields[id] = {"amount":clampi(int(value.get("amount", 0)), 0, world._effective_max_hp()),"remaining":clampf(float(value.get("remaining", 0)), 0, 60)}
-		var record := catalog.record_for(id)
-		if str(record.mode) == "summon" and catalog.enabled(record) and int(shields[id].amount) > 0 and float(shields[id].remaining) > 0:
-			var shield := catalog.resolve(record)
-			shield.duration = float(shields[id].remaining)
-			apply_buff(shield)
-			world.active_skill_buffs[str(record.name)]["summon_stage"] = "shield"
+	var saved_shields: Variant = data.get("shields", {})
+	if saved_shields is Dictionary:
+		for id: String in saved_shields:
+			var record: Dictionary = catalog.record_for(id)
+			# A persisted shield must still belong to a learned, currently usable
+			# ability. Never let a non-shield skill ID absorb damage after a load.
+			if record.is_empty() or not catalog.enabled(record): continue
+			var skill: Dictionary = catalog.resolve(record)
+			var mode := str(record.get("mode", ""))
+			if mode != "summon" and (mode != "heal" or not bool(skill.get("overflow_shield", false))): continue
+			var value: Variant = saved_shields[id]
+			if typeof(value) != TYPE_DICTIONARY: continue
+			var amount := clampi(int(value.get("amount", 0)), 0, world._effective_max_hp())
+			var remaining := clampf(float(value.get("remaining", 0)), 0, 60)
+			if amount <= 0 or remaining <= 0: continue
+			shields[id] = {"amount":amount, "remaining":remaining}
+			if mode == "summon":
+				skill.duration = remaining
+				apply_buff(skill)
+				world.active_skill_buffs[str(record.name)]["summon_stage"] = "shield"
 	summons.restore_state(data.get("summon",{}))
 	for name: String in world.active_skill_buffs.keys():
 		var buff: Dictionary = world.active_skill_buffs[name]
