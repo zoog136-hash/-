@@ -2,6 +2,7 @@ extends RefCounted
 # All recipes are original TWILIGHT local-economy recipes. No source DB
 # costs or Lineage crafting probabilities are implied.
 const DATA_PATH = "res://data/crafting/twilight_recipes.json"
+const BLESSING = preload("res://scripts/equipment_blessing.gd")
 const MAX_BATCH: int = 20
 var recipes: Dictionary = {}
 
@@ -37,7 +38,14 @@ static func _equipped(equipped: Dictionary,id: String) -> bool:
 	return false
 
 static func _pristine(record: Dictionary) -> bool:
-	return int(record.get("level",0)) == 0 and str(record.get("element","")) == "" and int(record.get("element_level",0)) == 0 and (record.get("record",{}) as Dictionary).is_empty()
+	# Blessing belongs to the physical instance, not just its base catalog row.
+	# Never silently select a blessed +0 item as a plain crafting ingredient.
+	var custom_record: Variant = record.get("record", {})
+	if not (custom_record is Dictionary):
+		return false
+	if not (custom_record as Dictionary).is_empty() or BLESSING.is_blessed(record, {}):
+		return false
+	return int(record.get("level",0)) == 0 and str(record.get("element","")) == "" and int(record.get("element_level",0)) == 0
 
 # Produces an independent, validated snapshot. The caller never supplies price,
 # item output or ingredient counts, only a recipe ID and batch size.
@@ -109,7 +117,7 @@ func quote(recipe_id: String, count: int, inventory: Dictionary, gold: int, item
 						ids.append(id)
 			ids.sort()
 			if ids.size() < required:
-				return _error(name + " 장착/강화/속성 장비는 제작 재료로 사용할 수 없습니다")
+				return _error(name + " 장착/강화/속성/축복 또는 개별 옵션 장비는 제작 재료로 사용할 수 없습니다")
 			var chosen: Array[String] = []
 			for index: int in range(required):
 				chosen.append(ids[index])
