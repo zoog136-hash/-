@@ -2,6 +2,7 @@ extends CanvasLayer
 class_name TwilightHUD
 
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+const CARD_OPTION_VISIBILITY = preload("res://scripts/card_option_visibility.gd")
 
 signal move_vector_changed(value: Vector2)
 signal attack_pressed
@@ -862,8 +863,8 @@ func _on_catalog_item_selected(index: int) -> void:
 		var option: String = str(value).replace("PVP", "PVE").replace("PvP", "PvE")
 		if option.contains("손상") or option.contains("저주"):
 			continue
-		var dormant: bool = option.begins_with("발동:") or option.begins_with("전용 스킬:") or option.begins_with("액티브 스킬:")
-		option_text += "• %s%s\n" % [option, " (고유효과 보류)" if dormant else ""]
+		var suffix: String = CARD_OPTION_VISIBILITY.suffix(catalog_category, option, selected_catalog_record)
+		option_text += "• %s%s\n" % [option, suffix]
 	if option_text.is_empty():
 		option_text = str(selected_catalog_record.get("desc", "옵션 없음"))
 	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\n원작 ID: %s · 원본 옵션 %d개\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "TWILIGHT")), options.size(), option_text]
