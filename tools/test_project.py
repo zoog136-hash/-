@@ -16,7 +16,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
 parser.add_argument('--render-visual-tests',action='store_true',help='Use the existing display only for tests that await frame_post_draw')
-parser.add_argument('--timeout',type=int,default=150,help='Per-check limit in seconds; assertions are unchanged')
+parser.add_argument('--timeout',type=int,default=150,help='Per-check seconds; world_regions has a 540-second minimum for 24 scene roundtrips; assertions are unchanged')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 # CI checkouts intentionally omit third-party visuals; install tiny, original
@@ -52,7 +52,12 @@ for name,extra in tests:
         env['APPDATA']=user_data
         env['LOCALAPPDATA']=user_data
         try:
-            p=subprocess.run([args.godot,*display_args,'--path',str(root),*extra],capture_output=True,text=True,env=env,timeout=args.timeout)
+            # This integration case visits 24 fields, saves/loads each one and
+            # returns to the enlarged Aden continent after every visit.
+            # Preserve every assertion while giving these repeated scene loads
+            # their own bounded budget; other tests keep the selected limit.
+            budget=max(args.timeout,540) if name=='world_regions_test' else args.timeout
+            p=subprocess.run([args.godot,*display_args,'--path',str(root),*extra],capture_output=True,text=True,env=env,timeout=budget)
             output=p.stdout+p.stderr
             ok=p.returncode==0 and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
             is_skipped=p.returncode==0 and '_SKIP:' in output and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)

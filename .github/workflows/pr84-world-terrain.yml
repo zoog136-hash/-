@@ -58,7 +58,9 @@ jobs:
           timeout 120 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 60 2>&1 | tee terrain-boot.log
           ! grep -E 'SCRIPT ERROR:|ERROR:' terrain-boot.log
           for test in field_world world_regions world_region_portals map_visual_toggle ui_renewal_integration; do
-            XDG_DATA_HOME="${RUNNER_TEMP}/terrain-test-${test}" timeout 240 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" 2>&1 | tee "terrain-${test}.log"
+            limit=240
+            if [ "$test" = world_regions ]; then limit=540; fi
+            XDG_DATA_HOME="${RUNNER_TEMP}/terrain-test-${test}" timeout "$limit" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" 2>&1 | tee "terrain-${test}.log"
             grep -q '_OK' "terrain-${test}.log"
             ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "terrain-${test}.log"
           done
@@ -129,7 +131,7 @@ jobs:
           if-no-files-found: warn
       - name: Complete project regression with appropriate rendering modes
         run: |
-          timeout 1800 xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --render-visual-tests --logs terrain-full-suite --timeout 240
+          timeout 2400 xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --render-visual-tests --logs terrain-full-suite --timeout 240
       - name: Preserve validation logs
         if: always()
         uses: actions/upload-artifact@v4

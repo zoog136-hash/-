@@ -14,6 +14,19 @@ func check(condition: bool, message: String) -> void:
 func _initialize() -> void:
 	call_deferred("_run")
 
+func combat_start(field: PlayableField, random: RandomNumberGenerator) -> Vector2:
+	# Scenery now occupies some former hard-coded combat offsets. Both actors
+	# must start on usable terrain; retain the real movement/kill/XP assertions.
+	var candidates: Array[Vector2] = []
+	for raw: Array in field.data.route_checks: candidates.append(COORD.array_vector(raw))
+	for region: Dictionary in field.data.monster_spawn:
+		for i: int in range(16): candidates.append(field.sample_spawn(str(region.id),random))
+	for start: Vector2 in candidates:
+		var target: Vector2 = start+Vector2(260,0)
+		if start.is_finite() and field.walkable(start) and field.walkable(target) and field.point_clear(start,field.clearance) and field.point_clear(target,field.clearance) and field.line_clear(start,target):
+			return start
+	return Vector2.INF
+
 func _run() -> void:
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
@@ -131,7 +144,9 @@ func _run() -> void:
 		if not families.has(family):
 			families[family]=true
 			world._clear_monsters()
-			var start: Vector2 = COORD.array_vector(world.field_map.data["route_checks"][0])
+			var start: Vector2 = combat_start(field,rng)
+			check(start.is_finite(),family+" combat actors have a connected clear lane")
+			if not start.is_finite(): continue
 			var monster: TwilightMonster = world.MONSTER_SCENE.instantiate()
 			world.monsters_root.add_child(monster)
 			monster.global_position=start+Vector2(260,0)
