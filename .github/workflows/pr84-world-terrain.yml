@@ -1,0 +1,165 @@
+name: PR84 world structure and gameplay validation
+on:
+  push:
+    branches: [feature/twilight-reference-expansion-20261011]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  godot-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      XDG_DATA_HOME: /tmp/twilight-terrain-default
+      XDG_CACHE_HOME: /tmp/twilight-terrain-cache
+      LIBGL_ALWAYS_SOFTWARE: '1'
+      MESA_GL_VERSION_OVERRIDE: '3.3'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - name: Resource integrity
+        run: |
+          python3 tools/check_resource_integrity.py --root .
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          for asset in json.loads(Path('assets/maps/reference_expansion_v2/asset_manifest.json').read_text())['assets']:
+              data = Path(asset['path']).read_bytes()
+              assert len(data) == asset['bytes']
+              assert hashlib.sha256(data).hexdigest() == asset['sha256']
+          print('AUTHORED_MAP_ATLASES_SHA_OK')
+          PY
+      - name: Godot 4.7.2 and evidence tools
+        run: |
+          curl -L --fail --retry 2 --max-time 120 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          command -v xvfb-run || { sudo apt-get update && sudo apt-get install -y xvfb; }
+          python3 -m venv /tmp/terrain-evidence-tools
+          /tmp/terrain-evidence-tools/bin/pip install --disable-pip-version-check Pillow
+      - name: Parse/import
+        run: |
+          set -o pipefail
+          timeout 240 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee terrain-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' terrain-import.log
+      - name: Terrain and road geometry on all map data
+        run: |
+          set -o pipefail
+          for test in road_surface_mesh terrain_surface_geometry terrain_variation_texture world_structure reference_object_placement hunting_navigation_cache hunting_paths; do
+            limit=120
+            if [ "$test" = hunting_paths ]; then limit=240; fi
+            timeout "$limit" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" 2>&1 | tee "terrain-${test}.log"
+            grep -q '_OK' "terrain-${test}.log"
+            ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "terrain-${test}.log"
+          done
+      - name: Boot, movement, collision, portals and UI regression
+        run: |
+          set -o pipefail
+          timeout 120 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --quit-after 60 2>&1 | tee terrain-boot.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' terrain-boot.log
+          for test in field_world world_regions world_region_portals map_visual_toggle ui_renewal_integration; do
+            limit=240
+            if [ "$test" = world_regions ]; then limit=540; fi
+            XDG_DATA_HOME="${RUNNER_TEMP}/terrain-test-${test}" timeout "$limit" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}_test.gd" 2>&1 | tee "terrain-${test}.log"
+            grep -q '_OK' "terrain-${test}.log"
+            ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "terrain-${test}.log"
+          done
+      - name: OpenGL terrain and road regression
+        run: |
+          set -o pipefail
+          for test in world_terrain_coverage road_surface_render aden_courtyard; do
+            XDG_DATA_HOME="${RUNNER_TEMP}/terrain-gl-${test}" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script "res://tests/${test}_test.gd" 2>&1 | tee "terrain-${test}.log"
+            ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "terrain-${test}.log"
+          done
+      - name: Whole-map structure before and after in all 25 maps
+        run: |
+          set -o pipefail
+          baseline=ba95f3797f42103c72211f87b242c795eddecb1d
+          git fetch --depth=1 origin "$baseline"
+          git worktree add --detach "${RUNNER_TEMP}/terrain-before" "$baseline"
+          cp tests/world_structure_capture_test.gd "${RUNNER_TEMP}/terrain-before/tests/world_structure_capture_test.gd"
+          timeout 240 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path "${RUNNER_TEMP}/terrain-before" --quit 2>&1 | tee terrain-before-import.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:' terrain-before-import.log
+          XDG_DATA_HOME="${RUNNER_TEMP}/terrain-before-save" timeout 420 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path "${RUNNER_TEMP}/terrain-before" --rendering-driver opengl3 --audio-driver Dummy --script res://tests/world_structure_capture_test.gd -- --phase=before 2>&1 | tee terrain-before.log
+          grep -q WORLD_STRUCTURE_CAPTURE_OK terrain-before.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' terrain-before.log
+          XDG_DATA_HOME="${RUNNER_TEMP}/terrain-after-save" timeout 420 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/world_structure_capture_test.gd -- --phase=after 2>&1 | tee terrain-after.log
+          grep -q WORLD_STRUCTURE_CAPTURE_OK terrain-after.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' terrain-after.log
+          cp -r "${RUNNER_TEMP}/terrain-before/docs/world-structure-20261011/evidence/before" docs/world-structure-20261011/evidence/
+          /tmp/terrain-evidence-tools/bin/python tools/build_world_structure_evidence.py
+      - name: Preserve before viewports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-structure-before
+          path: docs/world-structure-20261011/evidence/before
+          if-no-files-found: warn
+      - name: Existing object placement cameras and navigation
+        run: |
+          set -o pipefail
+          XDG_DATA_HOME="${RUNNER_TEMP}/object-placement-save" timeout 420 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/reference_object_capture_test.gd -- --phase=after 2>&1 | tee terrain-object-placement.log
+          grep -q REFERENCE_OBJECT_CAPTURE_OK terrain-object-placement.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' terrain-object-placement.log
+          /tmp/terrain-evidence-tools/bin/python tools/build_reference_object_evidence.py
+      - name: Preserve object placement evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-object-placement
+          path: docs/object-placement-20261011/evidence
+          if-no-files-found: warn
+      - name: All 25 hunting pathways in the real renderer
+        run: |
+          set -o pipefail
+          XDG_DATA_HOME="${RUNNER_TEMP}/hunting-pathways-save" timeout 420 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/hunting_world_capture_test.gd -- --phase=after 2>&1 | tee terrain-hunting-pathways.log
+          grep -q HUNTING_CAPTURE_OK terrain-hunting-pathways.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' terrain-hunting-pathways.log
+          XDG_DATA_HOME="${RUNNER_TEMP}/hunting-map-ui-save" timeout 180 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/capture_hunting_maps.gd 2>&1 | tee terrain-hunting-map-ui.log
+          grep -q HUNTING_MAP_UI_OK terrain-hunting-map-ui.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|FAIL' terrain-hunting-map-ui.log
+          git fetch --depth=1 origin bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91
+          /tmp/terrain-evidence-tools/bin/python tools/build_hunting_path_evidence.py
+      - name: Preserve hunting pathways and actual movement evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-hunting-pathways
+          path: docs/hunting-paths-20261012/evidence
+          if-no-files-found: warn
+      - name: Preserve after viewports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-structure-after
+          path: docs/world-structure-20261011/evidence/after
+          if-no-files-found: warn
+      - name: Preserve contact sheets and review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-structure-review
+          path: |
+            docs/world-structure-20261011/evidence/*-contact-sheet.jpg
+            docs/world-structure-20261011/evidence/*-before-after.jpg
+            docs/world-structure-20261011/evidence/*-floor-sheet.jpg
+            docs/world-structure-20261011/evidence/manifest.json
+            docs/world-structure-20261011/evidence/validation.json
+            data/maps/world_reference_catalog.json
+          if-no-files-found: warn
+      - name: Complete project regression with appropriate rendering modes
+        run: |
+          timeout 2400 xvfb-run -a -s '-screen 0 1280x720x24' python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --render-visual-tests --logs terrain-full-suite --timeout 240
+      - name: Preserve validation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr84-surface-validation
+          path: |
+            terrain-*.log
+            terrain-full-suite
+            docs/playable-maps-20261011/terrain-coverage-evidence/result.json
+          if-no-files-found: warn
+

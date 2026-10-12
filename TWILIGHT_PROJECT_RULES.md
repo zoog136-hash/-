@@ -33,3 +33,15 @@
 - Godot UI: `.github/workflows/ui-renewal-validate.yml`; 17화면 × 4해상도 = 68 OpenGL 캡처.
 - Android: `export_presets.cfg`, `project.godot`의 ETC2/ASTC, `.github/workflows/twilight-android-playtest-apk.yml`.
 - Android APK는 서명된 **디버그 테스트 APK**입니다. 배포용 최종 서명·Google Play 출시·실기기 성능 점검은 미완료입니다.
+
+
+## 원본 리소스 누락 금지 — 신규 Work 및 PR 필수(2026-10-11)
+
+이 조항은 기존 규칙에 추가되는 영구 규칙입니다. `docs/RESOURCE_INTEGRITY_POLICY.md`와 `data/resource_delivery_ledger.json`이 단일 상태 장부입니다.
+
+- 세션에 업로드된 원본 ZIP, 로컬에서 변환된 파일, Git에 추적된 파일, 다운로드가 가능한 배포 패키지, Godot에서 실제 렌더되는 리소스를 **서로 다른 완료 단계로 기록**합니다.
+- 코드 수정 및 PR 전 `python3 tools/check_resource_integrity.py --root .`을 실행합니다. 변환된 바이너리가 Git에 없거나 SHA-256이 다르면 완료 보고 금지.
+- 외부 원본을 사용해야 한다면 해당 Work 환경에서 `--source-dir <ZIP 경로>`로 원본 무결성과 접근을 증명합니다. 임시 경로만으로 새 Work/메인 저장소가 갖고 있다고 주장 금지.
+- 저작권 검토 없이 공개 저장소에 외부 원본을 올리지 않습니다. 적법하게 제공 가능한 별도 팩을 내보낼 때는 `--release-dir` 검증과 실제 다운로드 가능한 전달을 요구합니다.
+- GitHub 자동 검사에서 723개 WebP 시트/매핑/SHA가 통과해도 원본 아이템·몬스터·맵 전체가 포함되었다는 의미가 아닙니다. `original_*: not_delivered`를 임의로 완료로 바꾸지 않습니다.
+- 작업을 멈출 때 직전 저장 SHA, 누락 목록, 배포 상태, 재개 지점을 기록합니다. 폴백/합성 fixture를 원본 리소스 성공으로 계산하지 않습니다.

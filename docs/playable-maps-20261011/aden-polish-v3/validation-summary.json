@@ -1,0 +1,53 @@
+{
+  "base_commit": "28b997830387a18ff278eb7faf8470b14ca355dc",
+  "map": "aden_world",
+  "change": "continuous authored ground sampling without hard source-cell wrap lines",
+  "gameplay": {
+    "checks": 25,
+    "failures": [],
+    "original_restored": false,
+    "phase": "after",
+    "physical_devices_tested": false,
+    "platform": "Godot 4.7.2 Linux software OpenGL",
+    "seam_mean_rgb_delta": 0.00695465703029186
+  },
+  "gpu_continuity": {
+    "boundaries": [
+      {
+        "after": 0.000561683011862139,
+        "before": 0.00230800682523598,
+        "boundary": "primary_x"
+      },
+      {
+        "after": 0.000428921543061733,
+        "before": 0.0186785140928502,
+        "boundary": "primary_y"
+      },
+      {
+        "after": 2.04248353838921e-05,
+        "before": 0.130249187330871,
+        "boundary": "rotated_x"
+      },
+      {
+        "after": 0.000357434696828326,
+        "before": 0.0924938753790533,
+        "boundary": "rotated_y"
+      }
+    ],
+    "display": "X11",
+    "failures": [],
+    "metric": "mean absolute RGB difference at adjacent pixels straddling sampler wrap; 128x horizontal magnification"
+  },
+  "preserved_sha256": {
+    "data/maps/aden_field.json": "6a6c23764c2eb25141d450372f6006efaffc41b788f98acde2d1c4fde41f25b6",
+    "data/maps/reference_visual_profiles.json": "45b73ac5d30188dbe3d93063c9fd6cac3bcb708f0ad2e693dc2480d16b2c270f",
+    "data/maps/field_index.json": "449c87c882f7842974ec9c951cacee1699bb8f717788aad61a401a480c61dc2a",
+    "scripts/maps/playable_field.gd": "f15fca44b11e1b8373a23ba970ad8876741008c3616096fd2d693acbd896fe13",
+    "scripts/world.gd": "d51e627e1c5ffabc38f77fb47f562433babe80e9a305a5116c4c03a59f1dbed7",
+    "assets/maps/reference_expansion_v2/props.png": "edec31e6596f5bc036a0ee4eb5fe94ef7c1ff987dd0e20bfbe7a949d880e8199",
+    "assets/maps/reference_expansion_v2/terrain.png": "4a4fe796ec4304c264719d2af4457c76ac87979bc33c557a0c3bdb72d8ac03af"
+  },
+  "private_pack": "existing original_maps and recovered_maps reused; no ZIP scan or re-extraction",
+  "initial_probe_failure": "camera ignore_rotation default caused three incorrect measurements; corrected camera alignment, targeted rerun passed; both logs preserved",
+  "platform_limit": "No Windows or Android device run; no claim of original graphics restoration"
+}

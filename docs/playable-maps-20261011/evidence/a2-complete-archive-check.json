@@ -1,0 +1,136 @@
+{
+  "schema": 1,
+  "source": "a2(1).zip",
+  "bytes": 446375472,
+  "sha256": "cfea6e88864987454f63fe8d367e65a7133c0685685045ce40bb20942a6968bd",
+  "crc_and_sha_checked_files": 8033,
+  "matched_previous_sources": {
+    "14-a2003.zip": 948,
+    "13-a2001.zip": 63,
+    "16-immma2004.zip": 6959,
+    "15-a2002.zip": 63
+  },
+  "unmatched_files": [],
+  "ordered_member_hash_ledger_sha256": "f5c55f42061c332cfbfbb040d21c7e474783abe0fc089d517f0da5c0c983ee9e",
+  "nested_archives": [
+    {
+      "member": "appcenter/download/DefenderController.zip",
+      "sha256": "1b81ee382ce9aefc1389023d31f571c2f731e100f9150bb5f981a03218b1996c",
+      "same_source": [
+        "14-a2003.zip",
+        "download/DefenderController.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/download/Microsoft_redist.zip",
+      "sha256": "8449c9b653a645367c1a81907d72f8c4031cf3cb64281213caa8730b383e70e9",
+      "same_source": [
+        "14-a2003.zip",
+        "download/Microsoft_redist.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/download/VC_redist.x86.zip",
+      "sha256": "acf3685aeec646adf0640e11f087dcec7328c13fc7d8c81004ac7729a223765a",
+      "same_source": [
+        "14-a2003.zip",
+        "download/VC_redist.x86.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/download/memreduct.zip",
+      "sha256": "56eb69975bc531fab5399bd3e6017f9f9726e3e70afd1c7af060c15d2802e9a8",
+      "same_source": [
+        "14-a2003.zip",
+        "download/memreduct.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/download/vcredist_x86.zip",
+      "sha256": "836c60697975c8f945a55856b8edbc8a788dbf4e81c997d3fbcea2deaa433564",
+      "same_source": [
+        "14-a2003.zip",
+        "download/vcredist_x86.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/download/remote/LWSetup.zip",
+      "sha256": "3fdca314e303404d468d0d65800c2761427033301ec26285f8a268b1340fc23f",
+      "same_source": [
+        "14-a2003.zip",
+        "download/remote/LWSetup.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/download/local/LWSetup.zip",
+      "sha256": "db306cc4ddca8cdc68edcd05706a62d3092a51d3dd29425a0d762006606bf69d",
+      "same_source": [
+        "14-a2003.zip",
+        "download/local/LWSetup.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/connector/patch/patch_1.zip",
+      "sha256": "7ffef58d56fcbb162897dcf846633f1dd12b97851d0e0894ad7c510656fbc7d0",
+      "same_source": [
+        "15-a2002.zip",
+        "connector/patch/patch_1.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/connector/patch/patch_2.zip",
+      "sha256": "c0c63fadb491a27b5cce9bf535d4d4eb04f5f01e9ab6608bfa9e591857b063bc",
+      "same_source": [
+        "15-a2002.zip",
+        "connector/patch/patch_2.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/connector/patch/patch_english_lang.zip",
+      "sha256": "04f1ed5f9f08b83e274ec84c894dceae84490ce5ff0f6c7a6dd8cef53ede41f4",
+      "same_source": [
+        "15-a2002.zip",
+        "connector/patch/patch_english_lang.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/connector/patch/patch_korean_lang.zip",
+      "sha256": "cba3f76fa931aa7caf46afec96c3085718eacaa0d18272e0f01e9c256b8e683b",
+      "same_source": [
+        "15-a2002.zip",
+        "connector/patch/patch_korean_lang.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/connector/libcocos/libcocos2d.zip",
+      "sha256": "13659316b812692cedf8aab62546344e9a9691dc802dc07ff059d5fe0952af47",
+      "same_source": [
+        "15-a2002.zip",
+        "connector/libcocos/libcocos2d.zip"
+      ],
+      "reuse_prior_audit": true
+    },
+    {
+      "member": "appcenter/connector/libcocos/libcocos2d_2303081701.zip",
+      "sha256": "16f7269a26f7bee3f5de64dd0375b347565bbd83c7f9e7648e864da6c60bb688",
+      "same_source": [
+        "15-a2002.zip",
+        "connector/libcocos/libcocos2d_2303081701.zip"
+      ],
+      "reuse_prior_audit": true
+    }
+  ],
+  "new_original_tile_images": 0,
+  "result": "Every file SHA-256 matches the already examined split archives; reuse their nested-container results. This archive adds no tile imagery."
+}

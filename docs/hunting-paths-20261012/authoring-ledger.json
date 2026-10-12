@@ -1,0 +1,9258 @@
+{
+  "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+  "maps": [
+    {
+      "map_id": "aden_world",
+      "family": "aden",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 7020,
+      "after_props": 7770,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            6860,
+            5680,
+            12288,
+            96
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            8820,
+            20316,
+            12288,
+            96
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6860,
+            5776,
+            96,
+            8000
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            16292,
+            1696,
+            96,
+            8000
+          ],
+          "kind": "cliff"
+        }
+      ],
+      "lane_count": 22,
+      "navigation_authoring_check": {
+        "walkable_cells": 178753,
+        "reachable_cells": 177941,
+        "spawn_cells": {
+          "meadow": 300,
+          "forest": 291,
+          "riverbank": 442,
+          "ruins": 507,
+          "east": 417,
+          "desert": 601,
+          "bandits": 463,
+          "dragon_valley": 393,
+          "oren": 448,
+          "fire_land": 478,
+          "wind_land": 457,
+          "boss": 77,
+          "desert_boss": 89,
+          "fire_boss": 67,
+          "dragon_dense": 35
+        },
+        "protected_landmarks": 23,
+        "detour_probes": 17
+      },
+      "dense_capacity_correction_removed_only_this_pass": [
+        {
+          "center": [
+            14915.0,
+            2710.0
+          ],
+          "hunting_lane": "dragon_valley_lane_0",
+          "id": "aden_world_dragon_valley_lane_0_11",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15020.0,
+            2710.0
+          ],
+          "hunting_lane": "dragon_valley_lane_0",
+          "id": "aden_world_dragon_valley_lane_0_12",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15500.0,
+            2585.0
+          ],
+          "hunting_lane": "dragon_valley_lane_1",
+          "id": "aden_world_dragon_valley_lane_1_2",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15500.0,
+            2690.0
+          ],
+          "hunting_lane": "dragon_valley_lane_1",
+          "id": "aden_world_dragon_valley_lane_1_3",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15500.0,
+            2795.0
+          ],
+          "hunting_lane": "dragon_valley_lane_1",
+          "id": "aden_world_dragon_valley_lane_1_4",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15500.0,
+            2900.0
+          ],
+          "hunting_lane": "dragon_valley_lane_1",
+          "id": "aden_world_dragon_valley_lane_1_5",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15500.0,
+            3215.0
+          ],
+          "hunting_lane": "dragon_valley_lane_1",
+          "id": "aden_world_dragon_valley_lane_1_6",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15500.0,
+            3320.0
+          ],
+          "hunting_lane": "dragon_valley_lane_1",
+          "id": "aden_world_dragon_valley_lane_1_7",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        },
+        {
+          "center": [
+            15500.0,
+            3425.0
+          ],
+          "hunting_lane": "dragon_valley_lane_1",
+          "id": "aden_world_dragon_valley_lane_1_8",
+          "kind": "rocks",
+          "placement_group": "hunting_paths_v1",
+          "radius": 76.0,
+          "shape": "circle"
+        }
+      ]
+    },
+    {
+      "map_id": "oman_01",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 244,
+      "after_props": 534,
+      "replaced_boundary_colliders": [],
+      "lane_count": 14,
+      "navigation_authoring_check": {
+        "walkable_cells": 15504,
+        "reachable_cells": 15503,
+        "spawn_cells": {
+          "room_1": 1155,
+          "room_2": 1194,
+          "room_3": 975,
+          "room_4": 2383,
+          "room_5": 1618,
+          "room_6": 571,
+          "room_7": 1030,
+          "boss": 15323
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 13
+      }
+    },
+    {
+      "map_id": "oman_02",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 475,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            384,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            512,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1344,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1344,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1664,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1920,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1920,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            1088,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            1792,
+            1344,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3968,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            3968,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            1088,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            4736,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            3840,
+            1344,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4736,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4992,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5696,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5696,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            6016,
+            2944,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 12,
+      "navigation_authoring_check": {
+        "walkable_cells": 9406,
+        "reachable_cells": 9357,
+        "spawn_cells": {
+          "room_1": 338,
+          "room_2": 335,
+          "room_3": 457,
+          "room_4": 283,
+          "room_5": 457,
+          "room_6": 314,
+          "room_7": 338,
+          "boss": 344
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 7
+      }
+    },
+    {
+      "map_id": "oman_03",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 477,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            384,
+            5120,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            512,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            640,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            640,
+            896,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            1344,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1664,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1664,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1920,
+            1088,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1920,
+            1792,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1792,
+            1792,
+            896
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2560,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            1792,
+            1344,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2688,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3520,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2560,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3968,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4096,
+            3264,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            3840,
+            1344,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            3968,
+            1792,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4992,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            4992,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5696,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            5696,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            5248,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 12,
+      "navigation_authoring_check": {
+        "walkable_cells": 9153,
+        "reachable_cells": 9104,
+        "spawn_cells": {
+          "room_1": 409,
+          "room_2": 383,
+          "room_3": 302,
+          "room_4": 329,
+          "room_5": 441,
+          "room_6": 240,
+          "room_7": 314,
+          "boss": 344,
+          "dense_hotspot": 152
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 7
+      }
+    },
+    {
+      "map_id": "oman_04",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 479,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            512,
+            4992,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            640,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1344,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            1344,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1664,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1792,
+            3520,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            3264,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            2560,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2688,
+            2816,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3520,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3520,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            2560,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            3968,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4096,
+            1792,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            4096,
+            1344,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            1088,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3968,
+            1792,
+            896
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4736,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            4992,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            5696,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            4736,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            4864,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 13,
+      "navigation_authoring_check": {
+        "walkable_cells": 9125,
+        "reachable_cells": 9074,
+        "spawn_cells": {
+          "room_1": 383,
+          "room_2": 299,
+          "room_3": 356,
+          "room_4": 371,
+          "room_5": 341,
+          "room_6": 314,
+          "room_7": 356,
+          "boss": 344
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 8
+      }
+    },
+    {
+      "map_id": "oman_05",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 474,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            384,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            512,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1344,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1344,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1664,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1920,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1920,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            1088,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            1792,
+            1344,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3520,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            2816,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3968,
+            5440,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4736,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            3840,
+            1344,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4736,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4992,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5696,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5696,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            6016,
+            2944,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 12,
+      "navigation_authoring_check": {
+        "walkable_cells": 9148,
+        "reachable_cells": 9098,
+        "spawn_cells": {
+          "room_1": 299,
+          "room_2": 383,
+          "room_3": 314,
+          "room_4": 285,
+          "room_5": 441,
+          "room_6": 356,
+          "room_7": 348,
+          "boss": 344
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 8
+      }
+    },
+    {
+      "map_id": "oman_06",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 477,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            384,
+            5120,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            512,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            640,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            640,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1344,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1664,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1664,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1920,
+            1088,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1920,
+            1792,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1792,
+            1792,
+            896
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2560,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            1792,
+            1344,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2816,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3520,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2688,
+            768,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2560,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3968,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4096,
+            1088,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            4096,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            3840,
+            1344,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            3968,
+            1792,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            4992,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            5696,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            5248,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 12,
+      "navigation_authoring_check": {
+        "walkable_cells": 9161,
+        "reachable_cells": 9158,
+        "spawn_cells": {
+          "room_1": 383,
+          "room_2": 335,
+          "room_3": 289,
+          "room_4": 327,
+          "room_5": 457,
+          "room_6": 302,
+          "room_7": 356,
+          "boss": 344
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 9
+      }
+    },
+    {
+      "map_id": "oman_07",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 484,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            512,
+            4992,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            640,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1344,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            1344,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1664,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1792,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            1792,
+            1344,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1664,
+            1792,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            2560,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            1088,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3520,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            768,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            2816,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            2560,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            3968,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4096,
+            1792,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            4096,
+            1344,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3968,
+            3264,
+            896
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4736,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4992,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            4992,
+            896,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5696,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            4736,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            4864,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 14,
+      "navigation_authoring_check": {
+        "walkable_cells": 9092,
+        "reachable_cells": 9042,
+        "spawn_cells": {
+          "room_1": 335,
+          "room_2": 240,
+          "room_3": 314,
+          "room_4": 329,
+          "room_5": 369,
+          "room_6": 356,
+          "room_7": 409,
+          "boss": 344,
+          "dense_hotspot": 152
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 8
+      }
+    },
+    {
+      "map_id": "oman_08",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 481,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            384,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            512,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1344,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1344,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1920,
+            5440,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            1792,
+            1344,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2688,
+            2816,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2816,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3520,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3520,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3968,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            3968,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            1088,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            4736,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            3840,
+            1344,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4736,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4992,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5696,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            768,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            6016,
+            2944,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 13,
+      "navigation_authoring_check": {
+        "walkable_cells": 9047,
+        "reachable_cells": 8997,
+        "spawn_cells": {
+          "room_1": 289,
+          "room_2": 335,
+          "room_3": 356,
+          "room_4": 341,
+          "room_5": 457,
+          "room_6": 314,
+          "room_7": 289,
+          "boss": 344
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 8
+      }
+    },
+    {
+      "map_id": "oman_09",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 472,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            384,
+            5120,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            512,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            640,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            640,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1344,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            1344,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1664,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1664,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1920,
+            1088,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1920,
+            1792,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1792,
+            3520,
+            896
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2560,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            3072,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2688,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2816,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3520,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3520,
+            768,
+            448
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2560,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3968,
+            3392,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4096,
+            5440,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            3840,
+            1344,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            3520,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4992,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            4992,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5696,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            5696,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            5248,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 12,
+      "navigation_authoring_check": {
+        "walkable_cells": 9239,
+        "reachable_cells": 9237,
+        "spawn_cells": {
+          "room_1": 409,
+          "room_2": 383,
+          "room_3": 302,
+          "room_4": 315,
+          "room_5": 441,
+          "room_6": 289,
+          "room_7": 409,
+          "boss": 344
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 7
+      }
+    },
+    {
+      "map_id": "oman_10",
+      "family": "oman",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 176,
+      "after_props": 477,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            512,
+            4992,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            640,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1344,
+            1152,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            1344,
+            1024,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1664,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1792,
+            1792,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            1792,
+            1344,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            1664,
+            1792,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            2560,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            1088,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            2688,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            2688,
+            768,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3840,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            2560,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            3968,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4096,
+            1792,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            4096,
+            1344,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            1088,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1472,
+            3968,
+            1792,
+            896
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4736,
+            1216,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            4992,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            5696,
+            896,
+            320
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            4736,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            4864,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 12,
+      "navigation_authoring_check": {
+        "walkable_cells": 9244,
+        "reachable_cells": 9194,
+        "spawn_cells": {
+          "room_1": 383,
+          "room_2": 299,
+          "room_3": 457,
+          "room_4": 283,
+          "room_5": 390,
+          "room_6": 314,
+          "room_7": 356,
+          "boss": 344,
+          "dense_hotspot": 148
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 7
+      }
+    },
+    {
+      "map_id": "domination_summit",
+      "family": "domination",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 156,
+      "after_props": 379,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            8192,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            384,
+            6400
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            7808,
+            384,
+            384,
+            6400
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6784,
+            8192,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 8,
+      "navigation_authoring_check": {
+        "walkable_cells": 44026,
+        "reachable_cells": 44025,
+        "spawn_cells": {
+          "bastion_0": 498,
+          "bastion_1": 661,
+          "bastion_2": 644,
+          "bastion_3": 464,
+          "boss": 396
+        },
+        "protected_landmarks": 14,
+        "detour_probes": 5
+      }
+    },
+    {
+      "map_id": "escaros_01",
+      "family": "escaros",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 627,
+      "after_props": 1069,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            7040,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            9088,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        }
+      ],
+      "lane_count": 27,
+      "navigation_authoring_check": {
+        "walkable_cells": 41634,
+        "reachable_cells": 41629,
+        "spawn_cells": {
+          "field_0": 593,
+          "field_1": 486,
+          "field_2": 569,
+          "field_3": 449,
+          "boss": 400
+        },
+        "protected_landmarks": 14,
+        "detour_probes": 21
+      }
+    },
+    {
+      "map_id": "escaros_02",
+      "family": "escaros",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 627,
+      "after_props": 1073,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            7040,
+            0,
+            128,
+            9216
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            128,
+            9216
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            128,
+            0,
+            6912,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            128,
+            9088,
+            6912,
+            128
+          ],
+          "kind": "cliff"
+        }
+      ],
+      "lane_count": 27,
+      "navigation_authoring_check": {
+        "walkable_cells": 41351,
+        "reachable_cells": 41343,
+        "spawn_cells": {
+          "field_0": 593,
+          "field_1": 486,
+          "field_2": 569,
+          "field_3": 449,
+          "boss": 400
+        },
+        "protected_landmarks": 14,
+        "detour_probes": 21
+      }
+    },
+    {
+      "map_id": "escaros_03",
+      "family": "escaros",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 627,
+      "after_props": 1075,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            7040,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            9088,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        }
+      ],
+      "lane_count": 27,
+      "navigation_authoring_check": {
+        "walkable_cells": 42933,
+        "reachable_cells": 42927,
+        "spawn_cells": {
+          "field_0": 593,
+          "field_1": 478,
+          "field_2": 569,
+          "field_3": 449,
+          "boss": 400
+        },
+        "protected_landmarks": 14,
+        "detour_probes": 21
+      }
+    },
+    {
+      "map_id": "escaros_04",
+      "family": "escaros",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 627,
+      "after_props": 1065,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            7040,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            9088,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        }
+      ],
+      "lane_count": 26,
+      "navigation_authoring_check": {
+        "walkable_cells": 41721,
+        "reachable_cells": 41708,
+        "spawn_cells": {
+          "field_0": 662,
+          "field_1": 486,
+          "field_2": 551,
+          "field_3": 476,
+          "boss": 400
+        },
+        "protected_landmarks": 14,
+        "detour_probes": 20
+      }
+    },
+    {
+      "map_id": "escaros_05",
+      "family": "escaros",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 627,
+      "after_props": 1047,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            7040,
+            9216,
+            128
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            9088,
+            128,
+            128,
+            6912
+          ],
+          "kind": "cliff"
+        }
+      ],
+      "lane_count": 24,
+      "navigation_authoring_check": {
+        "walkable_cells": 40327,
+        "reachable_cells": 40318,
+        "spawn_cells": {
+          "field_0": 593,
+          "field_1": 486,
+          "field_2": 569,
+          "field_3": 456,
+          "boss": 400
+        },
+        "protected_landmarks": 14,
+        "detour_probes": 17
+      }
+    },
+    {
+      "map_id": "albino_01",
+      "family": "albino",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 321,
+      "after_props": 696,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            512,
+            3328,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3840,
+            512,
+            3328,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            640,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            640,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            2944,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            768,
+            768,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            896,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1664,
+            896,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            1024,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            768,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1024,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1024,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1408,
+            640,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            1472,
+            512,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            1152,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1536,
+            640,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1408,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1536,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1664,
+            768,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            1664,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1920,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3840,
+            1920,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3776,
+            2048,
+            1600,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            2048,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1920,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2048,
+            1344,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3776,
+            2176,
+            1664,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2304,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1664,
+            2304,
+            1728,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            2304,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            2176,
+            1344,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            2432,
+            832,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1600,
+            2432,
+            1216,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            2688,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            2688,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2432,
+            1216,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            2816,
+            384,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            2944,
+            640,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            2816,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4736,
+            3072,
+            256,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2944,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            3072,
+            512,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            3328,
+            384,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4736,
+            3200,
+            128,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            3200,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            3584,
+            256,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3328,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            3776,
+            512,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            3712,
+            384,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            3712,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            3840,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            4096,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            4096,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4224,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            4224,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3968,
+            4224,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            4224,
+            1344,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4352,
+            1792,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4352,
+            1344,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            4352,
+            1536,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4608,
+            1728,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            4608,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4736,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            4736,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4736,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            4736,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            4864,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5120,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5248,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            5120,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5248,
+            512,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            5248,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5696,
+            768,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            5632,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5760,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5760,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5760,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            6144,
+            1664,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            6144,
+            3456,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 13,
+      "navigation_authoring_check": {
+        "walkable_cells": 14727,
+        "reachable_cells": 14718,
+        "spawn_cells": {
+          "room_1": 358,
+          "room_2": 385,
+          "room_3": 463,
+          "room_4": 443,
+          "room_5": 474,
+          "room_6": 306,
+          "room_7": 381,
+          "boss": 384
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 10
+      }
+    },
+    {
+      "map_id": "albino_02",
+      "family": "albino",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 324,
+      "after_props": 721,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            5376,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            384,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            512,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            512,
+            3200,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            640,
+            2816,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            768,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3840,
+            768,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            896,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            896,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            1024,
+            640,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            1280,
+            512,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            896,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            1344,
+            512,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1024,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            1408,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            1408,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1728,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1536,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1792,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            1792,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1920,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1920,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1920,
+            2944,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            2048,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2048,
+            1344,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            2176,
+            1600,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3840,
+            2176,
+            3328,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2304,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2304,
+            1536,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            2432,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            2432,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2432,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            2432,
+            512,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            2816,
+            384,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            2560,
+            512,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            2560,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            2944,
+            384,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            3072,
+            256,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            3264,
+            256,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            2944,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            3328,
+            384,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4608,
+            3520,
+            384,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3328,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            3584,
+            512,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            3456,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            3584,
+            512,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3712,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3712,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            3840,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            3840,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            2688,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            3968,
+            960,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4224,
+            3328,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3840,
+            4224,
+            1600,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            3968,
+            1344,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4352,
+            5440,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4608,
+            5376,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            4608,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4736,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            4736,
+            3456,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4864,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            4736,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            4992,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5120,
+            768,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4992,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            5248,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            5376,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            5120,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5568,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5248,
+            512,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5632,
+            768,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5824,
+            768,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            5632,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5888,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5760,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5888,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            6144,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            6144,
+            3072,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            3200,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            6272,
+            3456,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6400,
+            7168,
+            256
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 14,
+      "navigation_authoring_check": {
+        "walkable_cells": 14337,
+        "reachable_cells": 14325,
+        "spawn_cells": {
+          "room_1": 351,
+          "room_2": 334,
+          "room_3": 359,
+          "room_4": 412,
+          "room_5": 403,
+          "room_6": 293,
+          "room_7": 415,
+          "boss": 384
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 11
+      }
+    },
+    {
+      "map_id": "albino_03",
+      "family": "albino",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 327,
+      "after_props": 712,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            512,
+            3200,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            512,
+            3456,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            640,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            640,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            768,
+            640,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            768,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1024,
+            512,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1024,
+            768,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            768,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            768,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            1472,
+            384,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1472,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1152,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            1152,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            1536,
+            512,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            1536,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1664,
+            640,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            1664,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            1664,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1920,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            1920,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2048,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2048,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            2048,
+            1728,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            2048,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2176,
+            3264,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            2176,
+            3520,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2304,
+            3200,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            2304,
+            3456,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2432,
+            2560,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            2432,
+            2816,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2688,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2688,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            2688,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            2688,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            2816,
+            384,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            2816,
+            640,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            3072,
+            512,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            2816,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            3072,
+            256,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            3200,
+            128,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            3520,
+            384,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3200,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            3200,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            3584,
+            512,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            3648,
+            256,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3712,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            3712,
+            384,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            3712,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            3712,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4096,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            4096,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            4096,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            4096,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            4224,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4224,
+            1728,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            4352,
+            1536,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4352,
+            1792,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4224,
+            1344,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            4224,
+            1344,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            4608,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4608,
+            1728,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4736,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1728,
+            4736,
+            1088,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            4736,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            4736,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            4864,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            4864,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5120,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5120,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            5248,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5248,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5248,
+            512,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            5248,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            5632,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5632,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5760,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5760,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5760,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            5760,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            6144,
+            3840,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            6144,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 12,
+      "navigation_authoring_check": {
+        "walkable_cells": 14328,
+        "reachable_cells": 14319,
+        "spawn_cells": {
+          "room_1": 308,
+          "room_2": 299,
+          "room_3": 381,
+          "room_4": 480,
+          "room_5": 470,
+          "room_6": 345,
+          "room_7": 437,
+          "boss": 384
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 9
+      }
+    },
+    {
+      "map_id": "albino_04",
+      "family": "albino",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 322,
+      "after_props": 722,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            3200,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            384,
+            3456,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            512,
+            2816,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            512,
+            3072,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            640,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            640,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            768,
+            640,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            768,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            768,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            768,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            896,
+            512,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            896,
+            768,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1152,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            1152,
+            384,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1152,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            1152,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2304,
+            1408,
+            512,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            1600,
+            768,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1664,
+            640,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            1664,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1792,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            1792,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            1664,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            1920,
+            1088,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            1920,
+            1344,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2048,
+            1472,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            2048,
+            1728,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            2048,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2048,
+            1216,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1600,
+            2176,
+            1664,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            2176,
+            1792,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2432,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1664,
+            2432,
+            1536,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            2432,
+            1728,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            2560,
+            1088,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5824,
+            2176,
+            1344,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            2688,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2560,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2560,
+            512,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            2944,
+            384,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            2816,
+            512,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2944,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2176,
+            3392,
+            256,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4480,
+            3200,
+            256,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            3200,
+            896,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3456,
+            384,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3456,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3712,
+            512,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1664,
+            3840,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            3712,
+            512,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            3712,
+            1024,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            4096,
+            896,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5760,
+            4096,
+            1408,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3968,
+            2560,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4352,
+            4224,
+            960,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4352,
+            3200,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4352,
+            1600,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4480,
+            3264,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3648,
+            4480,
+            1664,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5696,
+            4224,
+            1472,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4608,
+            3200,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4608,
+            1600,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4736,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            4736,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            4736,
+            1216,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            4736,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            4864,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5120,
+            768,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            4864,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5120,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5248,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            5568,
+            640,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5248,
+            512,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            5248,
+            768,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            5632,
+            768,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5696,
+            768,
+            64
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5760,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4096,
+            5760,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            5760,
+            640,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            5760,
+            896,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            6016,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            1024,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            6144,
+            3840,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            6144,
+            1280,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 13,
+      "navigation_authoring_check": {
+        "walkable_cells": 14402,
+        "reachable_cells": 14391,
+        "spawn_cells": {
+          "room_1": 343,
+          "room_2": 325,
+          "room_3": 350,
+          "room_4": 431,
+          "room_5": 432,
+          "room_6": 236,
+          "room_7": 403,
+          "boss": 384
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 13
+      }
+    },
+    {
+      "map_id": "faith_01",
+      "family": "faith",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 179,
+      "after_props": 498,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            384,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            896,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            512,
+            768,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            1664,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            1792,
+            1280,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            1920,
+            1664,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            1920,
+            1664,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            1024,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            2560,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            2560,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3584,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            2560,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            3584,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4096,
+            3200,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4096,
+            3456,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4736,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4736,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5760,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            4736,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5760,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 14,
+      "navigation_authoring_check": {
+        "walkable_cells": 11417,
+        "reachable_cells": 11417,
+        "spawn_cells": {
+          "room_1": 351,
+          "room_2": 253,
+          "room_3": 354,
+          "room_4": 350,
+          "room_5": 335,
+          "room_6": 354,
+          "room_7": 241,
+          "boss": 352
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 11
+      }
+    },
+    {
+      "map_id": "faith_02",
+      "family": "faith",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 179,
+      "after_props": 482,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            384,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            512,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            1408,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1408,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            1664,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            1920,
+            3840,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            1024,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            1792,
+            1280,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            2560,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            2560,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            2816,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3584,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            3584,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            3840,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            3840,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            4096,
+            3840,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            4736,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            3840,
+            1280,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4736,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4992,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5760,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5760,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            6016,
+            2944,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 14,
+      "navigation_authoring_check": {
+        "walkable_cells": 11144,
+        "reachable_cells": 11144,
+        "spawn_cells": {
+          "room_1": 302,
+          "room_2": 354,
+          "room_3": 428,
+          "room_4": 290,
+          "room_5": 428,
+          "room_6": 354,
+          "room_7": 276,
+          "boss": 352
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 8
+      }
+    },
+    {
+      "map_id": "faith_03",
+      "family": "faith",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 179,
+      "after_props": 497,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            384,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            384,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            512,
+            768,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            1408,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1920,
+            3200,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            1920,
+            1664,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            1792,
+            1280,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            2560,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            2560,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            2816,
+            896,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            2816,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2560,
+            512,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            2048,
+            3584,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            3840,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            4096,
+            1664,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4096,
+            1664,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4096,
+            1024,
+            768
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            4736,
+            1152,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            5888,
+            3840,
+            1280,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4736,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4992,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6144,
+            4992,
+            1024,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5760,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            768,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            6016,
+            2944,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 13,
+      "navigation_authoring_check": {
+        "walkable_cells": 11497,
+        "reachable_cells": 11497,
+        "spawn_cells": {
+          "room_1": 302,
+          "room_2": 354,
+          "room_3": 302,
+          "room_4": 301,
+          "room_5": 460,
+          "room_6": 253,
+          "room_7": 290,
+          "boss": 352
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 11
+      }
+    },
+    {
+      "map_id": "faith_04",
+      "family": "faith",
+      "baseline_sha": "bab7ba5aa1a074bc1d37c6b2500e2c0fcd11bc91",
+      "before_props": 179,
+      "after_props": 503,
+      "replaced_boundary_colliders": [
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            0,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            384,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            384,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            512,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            640,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            640,
+            896,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6272,
+            512,
+            896,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1408,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            1664,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            1792,
+            2944,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            1920,
+            1664,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            1920,
+            3456,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            1664,
+            1024,
+            1152
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1536,
+            2560,
+            1152,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            2560,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            2816,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            2816,
+            768,
+            1024
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1792,
+            3584,
+            896,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            2560,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            3584,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            3840,
+            2688,
+            256
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4096,
+            3200,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            3712,
+            4096,
+            3456,
+            640
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4736,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            4736,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            4864,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            4864,
+            640,
+            1280
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            1920,
+            5760,
+            768,
+            384
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            6400,
+            4736,
+            768,
+            1536
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            4224,
+            5760,
+            640,
+            512
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6144,
+            2688,
+            128
+          ],
+          "kind": "dungeon_wall"
+        },
+        {
+          "shape": "rect",
+          "rect": [
+            0,
+            6272,
+            7168,
+            384
+          ],
+          "kind": "dungeon_wall"
+        }
+      ],
+      "lane_count": 14,
+      "navigation_authoring_check": {
+        "walkable_cells": 11341,
+        "reachable_cells": 11341,
+        "spawn_cells": {
+          "room_1": 351,
+          "room_2": 253,
+          "room_3": 354,
+          "room_4": 350,
+          "room_5": 303,
+          "room_6": 280,
+          "room_7": 276,
+          "boss": 352
+        },
+        "protected_landmarks": 17,
+        "detour_probes": 13
+      }
+    }
+  ],
+  "hall_width_refinement": true,
+  "escaros_canyon_refinement": true
+}

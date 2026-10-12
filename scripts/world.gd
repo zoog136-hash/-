@@ -13,6 +13,10 @@ const FIELD_INDEX_PATH: String = "res://data/maps/field_index.json"
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
+const SOURCE_FIELD = preload("res://scripts/maps/source_field.gd")
+const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
+const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
+const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
 const MONSTER_CATALOG = preload("res://scripts/monsters/monster_catalog.gd")
 const MONSTER_ART = preload("res://scripts/monsters/monster_art.gd")
@@ -26,6 +30,7 @@ const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
+const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
@@ -73,6 +78,10 @@ var field_renderer: FieldRenderer = null
 var field_physics: StaticBody2D = null
 var field_population: FieldPopulation = null
 var field_minimap: FieldMinimap = null
+var original_maps: Array = []
+var legacy_population: FieldPopulation
+var original_population: OriginalSourcePopulation
+var source_save_blocked: bool = false
 var portal_cooldown: float = 2.0
 var auto_repath_timer: float = 0.0
 var auto_last_position: Vector2 = Vector2.ZERO
@@ -154,8 +163,6 @@ var mp_recovery_elapsed: float = 0.0
 const UNIQUE_RECOVERY_INTERVAL: float = 30.0
 const UNIQUE_RECOVERY_AMOUNT: int = 5
 var collision_debug: bool = false
-var quest_kills: int = 0
-const QUEST_GOAL: int = 9
 const JOB_CLASS_ORDER: Array[String] = [
 	"기사", "군주", "요정", "마법사", "다크엘프", "총사", "투사",
 	"암흑기사", "신성검사", "광전사", "사신", "뇌신", "마검사"
@@ -403,6 +410,9 @@ func _load_data() -> void:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
 			maps_by_id[str(map_data.get("id", ""))] = map_data
+	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
+		original_maps.append(record)
+		maps_by_id[str(record.id)] = record
 	var db_text: String = FileAccess.get_file_as_string(DB_PATH)
 	var db_value: Variant = JSON.parse_string(db_text)
 	if db_value is Dictionary:
@@ -716,6 +726,13 @@ func _catalog_stat_sum(key: String) -> int:
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
 	return result
+
+func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
+	var record_value: Variant = equipped_catalog.get("변신", {})
+	if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
+		return 0.0
+	var record: Dictionary = _verified_catalog_record("변신", record_value as Dictionary)
+	return TRANSFORM_SKILL.amount(record, job_class, skill_name, kind)
 
 func _skill_cooldown_factor() -> float:
 	return clampf(1.0 - float(_catalog_stat_sum("skillCooldownPct")) / 100.0, 0.1, 1.0)
@@ -1101,7 +1118,15 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			push_error("Invalid playable field: " + map_id)
 			return
 		requested_field = loaded_field as Dictionary
+	var requested_original: OriginalPlayableField = null
+	if requested_map.has("source_definition"):
+		requested_original = SOURCE_TRAVEL.load_field(requested_map)
+		if requested_original == null:
+			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
+			return
 	field_population.configure(self, null)
+	field_population = original_population if requested_original != null else legacy_population
+	if field_map is OriginalPlayableField: (field_map as OriginalPlayableField).close()
 	if is_instance_valid(return_gate):
 		remove_child(return_gate)
 		return_gate.queue_free()
@@ -1129,9 +1154,15 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	for shape: Node in map_collision.get_children():
 		map_collision.remove_child(shape)
 		shape.queue_free()
-	if not requested_field.is_empty():
-		field_map = FIELD_SCRIPT.new()
-		field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
+	if requested_original != null or not requested_field.is_empty():
+		if requested_original != null:
+			field_map = requested_original
+			world_size = field_map.bounds.size
+			player.camera.limit_right = int(world_size.x)
+			player.camera.limit_bottom = int(world_size.y)
+		else:
+			field_map = FIELD_SCRIPT.new()
+			field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
 		astar = field_map.astar
 		field_physics = field_map.build_physics(self)
 		map_background.texture = null
@@ -1167,7 +1198,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		field_renderer = FIELD_RENDERER.new()
+		field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
@@ -1265,6 +1296,7 @@ func _setup_collision_tileset() -> void:
 
 func _build_collision_debug_tiles() -> void:
 	collision_tiles.clear()
+	if field_map is OriginalPlayableField: return
 	if field_map != null:
 		if collision_debug:
 			for y: int in range(field_map.height):
@@ -1305,6 +1337,7 @@ func _world_to_cell(position_value: Vector2) -> Vector2i:
 	return Vector2i(int(floor(position_value.x / tile_size)), int(floor(position_value.y / tile_size)))
 
 func _is_walkable_world(position_value: Vector2) -> bool:
+	if field_map != null: return field_map.walkable(position_value)
 	if astar == null:
 		return false
 	var cell: Vector2i = _world_to_cell(position_value)
@@ -1328,6 +1361,7 @@ func find_world_path(from_position: Vector2, to_position: Vector2) -> PackedVect
 	return result
 
 func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
+	if field_map is OriginalPlayableField: return field_map.nearest_cell(field_map.cell_to_world(origin))
 	if astar != null and astar.is_in_boundsv(origin) and not astar.is_point_solid(origin):
 		return origin
 	for radius: int in range(1, 12):
@@ -1339,7 +1373,7 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	return origin
 
 func _npc_dialogue_state() -> Dictionary:
-	return {"level":level,"job_class":job_class,"quest_kills":quest_kills,"inventory":inventory.duplicate(true)}
+	return {"level":level,"job_class":job_class,"inventory":inventory.duplicate(true)}
 
 func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void:
 	# The UI cannot authorize an NPC service. Revalidate player proximity and
@@ -1362,7 +1396,6 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
 		"teleport": hud.call("open_npc_teleport")
-		"quest": hud.call("open_quest_info")
 		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
 
 func _set_click_destination(target: Vector2) -> void:
@@ -1381,6 +1414,8 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_crafting")
 				elif str(npc["role"]) == "buyback":
 					hud.call("open_item_sell")
+				elif field_map is OriginalPlayableField:
+					hud.show_message(str(npc.name)+" · 원본 대화 기능 미매핑")
 				elif str(npc["role"]) == "guide":
 					hud.call("open_npc_dialogue",str(npc.get("id","")))
 				else:
@@ -1432,6 +1467,7 @@ func _monster_texture(record: Dictionary) -> Texture2D:
 	return null
 
 func _random_walkable_position(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
+	if field_map is OriginalPlayableField: return (field_map as OriginalPlayableField).random_landing(rng,near,min_distance,max_distance)
 	var width: int = int(active_map.get("width", 1))
 	var height: int = int(active_map.get("height", 1))
 	var require_reachable: bool = near != Vector2.ZERO
@@ -1795,7 +1831,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 		_update_hud()
 		_update_target_hud()
 		return false
-	var stun_chance: float = _player_stun_chance(target)
+	var stun_chance: float = clampf(_player_stun_chance(target) + _transformation_skill_bonus(skill_name, "accuracy_pct") / 100.0, 0.05, 0.95)
 	var stunned: bool = rng.randf() < stun_chance
 	if stunned:
 		target.apply_stun(stun_duration)
@@ -2128,9 +2164,6 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	experience += gained_experience
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
-	quest_kills = mini(QUEST_GOAL, quest_kills + 1)
-	if hud.has_method("set_quest_progress"):
-		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward))
 	_check_level_up()
@@ -3579,8 +3612,6 @@ func _update_hud() -> void:
 	_update_ain_hud()
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
-	if hud.has_method("set_quest_progress"):
-		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
 	var character_state: Dictionary = _character_stats_snapshot()
 	character_state["class_index"] = class_index
 	character_state["job_class"] = job_class
@@ -3599,8 +3630,6 @@ func _update_hud() -> void:
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
-	character_state["quest_kills"] = quest_kills
-	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
@@ -3618,6 +3647,9 @@ func _refresh_combat_hud() -> void:
 	hud.update_player(level, hp, display_max_hp, mp, display_max_mp, experience, exp_need, gold)
 
 func _save_game(quiet: bool) -> void:
+	if source_save_blocked:
+		if not quiet: hud.show_message("원본 맵 팩이 없어 기존 저장을 보존합니다. 팩 설치 후 다시 불러오세요")
+		return
 	_sync_item_instances()
 	var data: Dictionary = {
 		"map_id": active_map_id,
@@ -3646,7 +3678,9 @@ func _save_game(quiet: bool) -> void:
 		"ground_drops": _ground_drops_snapshot(),
 		"warehouse": warehouse.snapshot(),
 		"crafting_log": crafting_log,
-		"monster_world": field_population.export_state(),
+		"monster_world": legacy_population.export_state(),
+		"original_monster_world": original_population.export_state(),
+		"original_position": SOURCE_TRAVEL.snapshot(self),
 		"class_index": class_index,
 		"job_class": job_class,
 		"quickslots": quickslots,
@@ -3664,8 +3698,7 @@ func _save_game(quiet: bool) -> void:
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
-		"next_item_instance_id":next_item_instance_id,
-		"quest_kills": quest_kills
+		"next_item_instance_id":next_item_instance_id
 	}
 	var result: Error = preload("res://scripts/skills/save_writer.gd").write(SAVE_PATH, data)
 	if result != OK:
@@ -3698,6 +3731,15 @@ func _load_game(quiet: bool) -> void:
 		hud.append_log("저장 데이터 JSON 해석 실패")
 		return
 	var data: Dictionary = value as Dictionary
+	var saved_map_id: String = str(data.get("map_id", ""))
+	if saved_map_id.begins_with("l1_"):
+		var saved_field: OriginalPlayableField = SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
+		if saved_field == null:
+			source_save_blocked = true
+			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
+			return
+		saved_field.close()
+	source_save_blocked = false
 	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(SAVE_PATH + ".pre-original-skills"):
 		var backup_error := DirAccess.copy_absolute(SAVE_PATH, SAVE_PATH + ".pre-original-skills")
 		if backup_error != OK:
@@ -3731,7 +3773,6 @@ func _load_game(quiet: bool) -> void:
 	cha_stat = int(data.get("cha", cha_stat))
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
 	gold = maxi(0, int(data.get("gold", gold)))
-	quest_kills = clampi(int(data.get("quest_kills", quest_kills)), 0, QUEST_GOAL)
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
 		inventory = inventory_value as Dictionary
@@ -3793,11 +3834,14 @@ func _load_game(quiet: bool) -> void:
 	# Capture outgoing actors before importing; otherwise map teardown could
 	# overwrite the loaded boss snapshot with the pre-load HP/cooldown.
 	field_population.configure(self,null)
-	field_population.import_state(data.get("monster_world",{}))
+	legacy_population.import_state(data.get("monster_world",{}))
+	original_population.import_state(data.get("original_monster_world",{}))
 	_set_map(map_id, false)
 	_restore_ground_drops(data.get("ground_drops", []))
 	var position_value: Variant = data.get("position", [])
 	var compatible_layout: bool = field_map == null or int(data.get("map_layout_revision",0)) == int(field_map.data.get("layout_revision",1))
+	if field_map is OriginalPlayableField:
+		position_value = SOURCE_TRAVEL.restore_position(self,data.get("original_position",{}))
 	if position_value is Array and compatible_layout:
 		var position_array: Array = position_value as Array
 		if position_array.size() >= 2:
@@ -4818,10 +4862,14 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if not targets.has(candidate):
 				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
+	var skill_name: String = str(skill.get("name", ""))
+	var transform_flat: int = int(round(_transformation_skill_bonus(skill_name, "damage_flat")))
+	var transform_multiplier: float = 1.0 + clampf(_transformation_skill_bonus(skill_name, "damage_pct"), 0.0, 200.0) / 100.0
+	var transform_accuracy: float = clampf(_transformation_skill_bonus(skill_name, "accuracy_pct") / 100.0, 0.0, 0.90)
 	var volley: Dictionary = skill.get("_volley_runtime", {})
 	var total_damage: int = int(volley.get("total_damage", 0))
 	if total_damage <= 0:
-		total_damage = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+		total_damage = maxi(1, int(round(float(power + stat_damage + transform_flat + rng.randi_range(-4, 6)) * transform_multiplier)))
 		volley["total_damage"] = total_damage
 	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
 	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
@@ -4834,6 +4882,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			victim_hit_chance = clampf(_melee_hit_chance(victim) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
 		else:
 			victim_hit_chance = _melee_hit_chance(victim)
+		victim_hit_chance = clampf(victim_hit_chance + transform_accuracy, 0.05, 0.95)
 		var first_hit: int = int(skill.get("_single_hit_index", 0))
 		var last_hit: int = first_hit + 1 if skill.has("_single_hit_index") else hits
 		for hit_index: int in range(first_hit, last_hit):
@@ -4928,6 +4977,9 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
+	if field_map is OriginalPlayableField and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
+		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
+		return false
 	for _attempt: int in range(100):
 		var candidate: Vector2 = player.global_position + Vector2(rng.randf_range(-700.0, 700.0), rng.randf_range(-500.0, 500.0))
 		var safe_only: bool = bool(skill.get("safe_zone_only", false))
@@ -6069,6 +6121,11 @@ func _setup_field_services() -> void:
 	field_population.name = "FieldPopulation"
 	add_child(field_population)
 	field_population.set_process(false)
+	legacy_population = field_population
+	original_population = SOURCE_POPULATION.new()
+	original_population.name = "OriginalSourcePopulation"
+	add_child(original_population)
+	original_population.set_process(false)
 	field_minimap = FIELD_MINIMAP.new()
 	field_minimap.name = "FieldMinimap"
 	hud.get_node("Root").add_child(field_minimap)
@@ -6103,6 +6160,9 @@ func use_field_portal(portal_id: String) -> bool:
 	for portal: Dictionary in field_map.data["portal"]:
 		if str(portal["id"]) != portal_id:
 			continue
+		if portal.has("target_source"):
+			if level < int(portal.get("min_level",0)) or (int(portal.get("max_level",0)) > 0 and level > int(portal.max_level)): return false
+			return SOURCE_TRAVEL.enter(self,str(portal.target_map),COORD.array_vector(portal.target_source))
 		var target_map: String = str(portal["target_map"])
 		if not maps_by_id.has(target_map):
 			return false
@@ -6267,3 +6327,11 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
 		_save_game(true)
+
+func constrain_original_motion(actor: CharacterBody2D) -> void:
+	if field_map is OriginalPlayableField and actor.velocity != Vector2.ZERO:
+		var target: Vector2 = actor.global_position + actor.velocity * actor.get_physics_process_delta_time()
+		if not field_map.line_clear(actor.global_position,target): actor.velocity = Vector2.ZERO
+
+func return_from_original_map() -> bool:
+	return SOURCE_TRAVEL.return_home(self)

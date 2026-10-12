@@ -1,0 +1,91 @@
+name: Restore verified PR80 original image binaries
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/restore-pr80-original-assets.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: twilight-original-resource-publish
+  cancel-in-progress: false
+
+jobs:
+  restore:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Recover the hash-verified transfer blob
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, os, pathlib, urllib.request, zipfile
+          request = urllib.request.Request(
+            'https://api.github.com/repos/zoog136-hash/-/git/blobs/cacc756b2af2984c0efe2bbc266304cf073ebd80',
+            headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'], 'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(request, timeout=120) as response:
+            blob = json.load(response)
+          raw = base64.b64decode(blob['content'])
+          assert hashlib.sha256(raw).hexdigest() == '1cd1aba243ff8baaf4793204935588182377b8c848b8912535b781c057791a4d'
+          path = pathlib.Path('/tmp/pr80-original-recovery.zip')
+          path.write_bytes(raw)
+          with zipfile.ZipFile(path) as archive:
+            assert archive.testzip() is None
+          print('PR80_TRANSFER_CRC_SHA256_OK', len(raw))
+          PY
+      - name: Install actual PNGs while preserving the 723 animation catalog
+        run: |
+          python3 tools/install_pr80_original_overlay.py --project . --archive /tmp/pr80-original-recovery.zip --dry-run
+          python3 tools/install_pr80_original_overlay.py --project . --archive /tmp/pr80-original-recovery.zip
+      - name: Import and check the real images with Godot 4.7.2
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          mkdir -p test-results/original-restore
+          export XDG_DATA_HOME="${RUNNER_TEMP}/pr80-original-check"
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --quit > test-results/original-restore/import.log 2>&1
+          for test in pr80_resource_assets_test pr80_original_resources_test full_visual_manifest_test; do
+            /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/${test}.gd" > "test-results/original-restore/${test}.log" 2>&1
+            cat "test-results/original-restore/${test}.log"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/original-restore/${test}.log"; then exit 1; fi
+            grep -q '_OK' "test-results/original-restore/${test}.log"
+          done
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/original-restore/import.log; then exit 1; fi
+      - name: Commit the image files into main
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess
+          audit = json.loads(pathlib.Path('data/visuals/pr80_original_asset_hashes.json').read_text())
+          paths = sorted(audit['files'])
+          for path in paths:
+            assert hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest() == audit['files'][path]
+          for start in range(0, len(paths), 70):
+            subprocess.run(['git','add','--',*paths[start:start+70]], check=True)
+          subprocess.run(['git','add','data/visuals/runtime_manifest.json'], check=True)
+          subprocess.run(['git','diff','--cached','--check'], check=True)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git diff --cached --quiet; then
+            echo 'PR80 original PNGs already present in main'
+          else
+            git commit -m "Restore 528 actual PR80 original monster and item image files"
+            git push origin HEAD:main
+          fi
+          git ls-tree -r --name-only HEAD -- assets/external_l1j assets/original_items assets/l1j/verified > test-results/original-restore/main-image-paths.txt
+          git rev-parse HEAD > test-results/original-restore/published-sha.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr80-original-image-restore-${{ github.run_id }}
+          path: test-results/original-restore/
+          if-no-files-found: warn

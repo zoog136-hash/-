@@ -17,7 +17,6 @@ var v20_hp_text: Label
 var v20_mp_text: Label
 var v20_stat_text: Label
 var v20_map_name: Label
-var v20_quest_text: RichTextLabel
 var v20_potion_count: Label
 var v20_leaf_count: Label
 var v20_leaf_button: Button
@@ -82,7 +81,6 @@ func _build_v20_gameplay_hud() -> void:
 	_build_v20_status()
 	_build_ain_window()
 	_build_v20_buffs()
-	_build_v20_quest()
 	_build_v20_top_menu()
 	_build_v20_target()
 	_build_v20_right_controls()
@@ -93,7 +91,6 @@ func _build_v20_gameplay_hud() -> void:
 
 	_update_v20_portrait(0)
 	set_quick_items({"HP 물약": 100, "강력 HP 물약": 14, "축복받은 HP 물약": 10, "초록 잎": 200})
-	set_quest_progress(0, 9)
 
 func _build_lineage_side_ui() -> void:
 	lineage_side_ui = LineageSideUI.new() as TwilightSideUI
@@ -162,8 +159,6 @@ func _on_lineage_side_action(action_id: String) -> void:
 			inventory_pressed.emit()
 		"skills":
 			open_skills()
-		"quest":
-			open_quest_info()
 		"character":
 			open_character()
 		"transform":
@@ -530,31 +525,6 @@ func _build_v20_buffs() -> void:
 		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		row.add_child(slot)
 
-func _build_v20_quest() -> void:
-	var panel: PanelContainer = PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", _panel_style(0.84, 4))
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel, 10.0, 174.0, 340.0, 288.0)
-	v20_layer.add_child(panel)
-	var box: VBoxContainer = VBoxContainer.new()
-	box.add_theme_constant_override("separation", 5)
-	panel.add_child(box)
-	var tabs: Label = Label.new()
-	tabs.text = "▣ 퀘스트        파티        선택 대상"
-	tabs.add_theme_font_size_override("font_size", 14)
-	tabs.add_theme_color_override("font_color", Color(0.88, 0.82, 0.70, 1.0))
-	box.add_child(tabs)
-	var line: HSeparator = HSeparator.new()
-	box.add_child(line)
-	v20_quest_text = RichTextLabel.new()
-	v20_quest_text.bbcode_enabled = true
-	v20_quest_text.fit_content = true
-	v20_quest_text.scroll_active = false
-	v20_quest_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	v20_quest_text.add_theme_font_size_override("normal_font_size", 15)
-	v20_quest_text.text = "[color=#d7b564][메인][/color] 몬스터의 세력 다툼\n몬스터 처치 (0/9)"
-	box.add_child(v20_quest_text)
-
 func _build_v20_top_menu() -> void:
 	var panel: PanelContainer = PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", _panel_style(0.89, 5))
@@ -573,9 +543,6 @@ func _build_v20_top_menu() -> void:
 	var skill: Button = _top_menu_button("res://assets/ui/skill.png", "스킬")
 	skill.pressed.connect(open_skills)
 	row.add_child(skill)
-	var quest: Button = _top_menu_button("res://assets/ui/quest.png", "퀘스트")
-	quest.pressed.connect(open_quest_info)
-	row.add_child(quest)
 	var menu: Button = _top_menu_button("res://assets/ui/menu.png", "메뉴")
 	menu.pressed.connect(func() -> void: menu_pressed.emit())
 	row.add_child(menu)
@@ -730,7 +697,6 @@ func _build_v20_bottom_bar() -> void:
 	sys_panel.add_child(sys)
 	for data: Array in [
 		["res://assets/ui/macro.png", "매크로"],
-		["res://assets/ui/chat.png", "채팅"],
 		["res://assets/ui/settings.png", "설정"]
 	]:
 		var button: Button = Button.new()
@@ -801,8 +767,6 @@ func _show_named_system_message(label_text: String) -> void:
 	match label_text:
 		"매크로":
 			open_macro_info()
-		"채팅":
-			open_chat_info()
 		"설정":
 			open_settings_info()
 		_:
@@ -978,8 +942,3 @@ func set_quick_items(inventory: Dictionary) -> void:
 		var button: Button = v20_quick_item_buttons[item_name] as Button
 		if button != null:
 			button.text = str(int(inventory.get(item_name, 0)))
-
-func set_quest_progress(current: int, goal: int) -> void:
-	if v20_quest_text == null:
-		return
-	v20_quest_text.text = "[color=#d7b564][메인][/color] 몬스터의 세력 다툼\n몬스터 처치 (%d/%d)" % [current, goal]

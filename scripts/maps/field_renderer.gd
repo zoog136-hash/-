@@ -4,9 +4,16 @@ class_name FieldRenderer
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
 const GROUND_SHADER = preload("res://assets/maps/aden/ground.gdshader")
 const WATER_SHADER = preload("res://assets/maps/aden/water.gdshader")
+const ADEN_RIVER_SHADER = preload("res://assets/maps/aden/river_depth.gdshader")
 const LANDMARK = preload("res://scripts/maps/field_landmark.gd")
 const LANDMARK_SHADER = preload("res://assets/maps/landmark_cache.gdshader")
 const VISUAL_STYLE = preload("res://scripts/maps/visual_style_policy.gd")
+const REFERENCE_VISUALS = preload("res://scripts/maps/reference_visuals.gd")
+const WORLD_TERRAIN_COVERAGE = preload("res://scripts/maps/world_terrain_coverage.gd")
+const TERRAIN_VARIATION = preload("res://scripts/maps/terrain_variation_texture.gd")
+const ROAD_SURFACE_MESH = preload("res://scripts/maps/road_surface_mesh.gd")
+const REGION_GEOMETRY = preload("res://scripts/maps/map_region_geometry.gd")
+var reference_profile: Dictionary = {}
 const LANDMARK_BAKE_SCALE: float = 1.5
 const LANDMARK_CELL: Vector2 = Vector2(256,256)
 const LANDMARK_ORIGIN: Vector2 = Vector2(128,224)
@@ -26,10 +33,15 @@ var field: PlayableField
 var player: Node2D
 var atlas: Texture2D
 var textures: Dictionary = {}
+var detail_textures: Dictionary = {}
+var aden_stone_cottage: Texture2D
 var landmark_textures: Dictionary = {}
 var landmark_cache: SubViewport
 var landmark_material: ShaderMaterial
 var ground_materials: Dictionary = {}
+var road_materials: Dictionary = {}
+var terrain_materials: Array[ShaderMaterial] = []
+var courtyard_materials: Array[ShaderMaterial] = []
 var terrain: Texture2D
 var buckets: Dictionary = {}
 var chunks: Dictionary = {}
@@ -48,12 +60,22 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	y_sort_enabled = true
 	atlas = load(str(field.data["foreground"]["prop_atlas"])) as Texture2D
 	terrain = load(str(field.data["background"]["material_atlas"])) as Texture2D
+	reference_profile = REFERENCE_VISUALS.profile(str(field.data.map_id))
+	if not reference_profile.is_empty():
+		terrain = load("res://assets/maps/reference_expansion_v2/terrain.png")
 	for kind: String in REGIONS:
 		var tex := AtlasTexture.new()
 		tex.atlas = atlas
 		tex.region = REGIONS[kind]
 		tex.filter_clip = true
 		textures[kind] = tex
+		detail_textures[kind] = tex
+	if not reference_profile.is_empty():
+		var expanded: Texture2D = load("res://assets/maps/reference_expansion_v2/props.png")
+		for kind: String in REFERENCE_VISUALS.PROP_CELLS:
+			textures[kind] = REFERENCE_VISUALS.cell(expanded,REFERENCE_VISUALS.prop_index(kind,str(reference_profile.family)))
+	if str(field.data.map_id) == "aden_world":
+		aden_stone_cottage = load("res://assets/maps/aden/stone_cottage_v1.png")
 	terrain_root = Node2D.new()
 	terrain_root.name = "Terrain"
 	terrain_root.z_index = -20
@@ -89,6 +111,12 @@ func _apply_visual_mode() -> void:
 		for raw: Variant in ground_materials.values():
 			if raw is ShaderMaterial:
 				_style_material(raw as ShaderMaterial)
+		for material: ShaderMaterial in courtyard_materials:
+			_style_material(material)
+		for material: ShaderMaterial in road_materials.values():
+			_style_material(material)
+		for material: ShaderMaterial in terrain_materials:
+			_style_material(material)
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_RESUMED,NOTIFICATION_WM_WINDOW_FOCUS_IN] and is_instance_valid(landmark_cache):
@@ -160,10 +188,26 @@ func _ground_material(index: int, alpha: float = 1.0, edge: bool = false) -> Sha
 	material.shader = GROUND_SHADER
 	material.set_shader_parameter("terrain", terrain)
 	material.set_shader_parameter("material_index", float(index))
+	if not reference_profile.is_empty():
+		material.set_shader_parameter("atlas_grid",4.0)
+		var slots: Array = reference_profile.materials
+		material.set_shader_parameter("material_slots",Vector4(slots[0],slots[1],slots[2],slots[3]))
 	material.set_shader_parameter("opacity", alpha)
 	material.set_shader_parameter("edge_fade",edge)
+	material.set_shader_parameter("continuous_ground",str(field.data.map_id)=="aden_world")
+	material.set_shader_parameter("terrain_variation",not reference_profile.is_empty())
+	material.set_shader_parameter("terrain_seed",float(absi(str(field.data.map_id).hash()) % 997))
+	if not reference_profile.is_empty():
+		material.set_shader_parameter("terrain_variation_map",TERRAIN_VARIATION.get_texture())
+		material.set_shader_parameter("terrain_bounds",Vector4(field.bounds.position.x,field.bounds.position.y,field.bounds.size.x,field.bounds.size.y))
 	_style_material(material)
 	ground_materials[key] = material
+	return material
+
+func _terrain_material(index: int) -> ShaderMaterial:
+	var material: ShaderMaterial = _ground_material(index).duplicate() as ShaderMaterial
+	material.set_shader_parameter("regional_mix",true)
+	terrain_materials.append(material)
 	return material
 
 func _polygon(points: PackedVector2Array, index: int, alpha: float = 1.0) -> Polygon2D:
@@ -173,42 +217,65 @@ func _polygon(points: PackedVector2Array, index: int, alpha: float = 1.0) -> Pol
 	ground.add_child(poly)
 	return poly
 
+func _road_material(index: int) -> ShaderMaterial:
+	if road_materials.has(index):
+		return road_materials[index] as ShaderMaterial
+	var material: ShaderMaterial = _ground_material(index).duplicate() as ShaderMaterial
+	material.set_shader_parameter("road_surface", true)
+	material.set_shader_parameter("continuous_ground", true)
+	var family: String = str(reference_profile.get("family", ""))
+	material.set_shader_parameter("road_strength", 2.5 if family in ["oman", "faith", "domination", "albino"] else 1.0)
+	road_materials[index] = material
+	return material
+
 func _box_points(box: Rect2) -> PackedVector2Array:
 	return PackedVector2Array([box.position,Vector2(box.end.x,box.position.y),box.end,Vector2(box.position.x,box.end.y)])
 
 func _road(points: Array, width: float, index: int, alpha: float) -> void:
-	var line := Line2D.new()
-	line.texture = terrain
-	line.texture_mode = Line2D.LINE_TEXTURE_STRETCH
-	for p: Array in points:
-		line.add_point(COORD.array_vector(p))
-	line.width = width
-	line.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	line.end_cap_mode = Line2D.LINE_CAP_ROUND
-	line.joint_mode = Line2D.LINE_JOINT_ROUND
-	line.round_precision = 12
-	line.material = _ground_material(index,alpha,true)
-	ground.add_child(line)
+	ground.add_child(ROAD_SURFACE_MESH.build(
+		[{"points": points, "width": width, "material": index,
+			"opacity": alpha / ROAD_SURFACE_MESH.CORE_OPACITY}],
+		field.bounds, Callable(self, "_road_material")))
 
 func _build_ground() -> void:
 	_select_layer("Ground")
-	_polygon(_box_points(field.bounds),int(field.data["background"].get("base_material",0)))
+	if field.data.has("world_geometry"):
+		_build_reference_ground()
+	else:
+		_polygon(_box_points(field.bounds),int(field.data["background"].get("base_material",0)))
+	# Map-bounds-wide regional ground mesh; existing surfaces/roads/walls
+	# still paint above it. No map, collision or navigation data is changed.
+	if not field.data.has("world_geometry"):
+		var coverage: Node2D = WORLD_TERRAIN_COVERAGE.build(
+			field.bounds, str(field.data.get("map_id","")),
+			str(field.data.get("family","")), Callable(self,"_terrain_material"))
+		ground.add_child(coverage)
 	for surface: Dictionary in field.data.get("surfaces", []):
 		# Same world-space material is already visible through the wall complement.
 		# Redrawing every overlapping room/corridor costs fill rate without changing
 		# a single pixel. Keep explicit surfaces for distinct materials/tints only.
 		if int(surface.get("material",2)) == int(field.data["background"].get("base_material",0)) and not surface.has("tint"):
 			continue
-		var a: Array = surface["rect"]
-		var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
-		var poly: Polygon2D = _polygon(_box_points(box),int(surface.get("material",2)))
-		if surface.has("tint"):
-			poly.modulate = Color(str(surface["tint"]))
+		var points: PackedVector2Array
+		if surface.has("polygon"):
+			points = REGION_GEOMETRY.polygon(surface)
+		else:
+			var a: Array = surface["rect"]
+			points = _box_points(Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3])))
+		var pieces: Array[PackedVector2Array] = [points]
+		if field.data.has("hunting_paths") and field.data.has("world_geometry"):
+			pieces.clear()
+			for floor: PackedVector2Array in field.navigable_polygons:
+				pieces.append_array(Geometry2D.intersect_polygons(points,floor))
+		for piece: PackedVector2Array in pieces:
+			var poly: Polygon2D = _polygon(piece,int(surface.get("material",2)))
+			if surface.has("tint"):
+				poly.modulate = Color(str(surface["tint"]))
 	_select_layer("Road")
-	# Soft multiple road shoulders blend earth into vegetation.
-	for road: Dictionary in field.data["roads"]:
-		for shoulder: int in [48,28,12,0]:
-			_road(road["points"],float(road["width"])+shoulder*2,int(road.get("material",1)),(.16 if shoulder>0 else .94)*float(road.get("opacity",1.0)))
+	# One coverage mesh per material joins every route, including intersections.
+	# Alpha is stored once per shared vertex instead of stacking road shoulders.
+	ground.add_child(ROAD_SURFACE_MESH.build(
+		field.data["roads"], field.bounds, Callable(self, "_road_material")))
 	# Courtyards and farming plots use separate material layers.
 	_select_layer("GroundDetail")
 	if int(field.data.get("schema_version",1)) == 1:
@@ -222,19 +289,33 @@ func _build_ground() -> void:
 		var points := PackedVector2Array()
 		for p: Array in water["polygon"]:
 			points.append(COORD.array_vector(p))
+		if str(field.data.map_id)=="aden_world":
+			var shoulder := Line2D.new()
+			shoulder.name = "BankShoulder"
+			shoulder.points = points
+			shoulder.closed = true
+			shoulder.width = 100
+			shoulder.texture = terrain
+			shoulder.texture_mode = Line2D.LINE_TEXTURE_STRETCH
+			shoulder.material = _ground_material(1,.48,true)
+			ground.add_child(shoulder)
 		var bank := Line2D.new()
+		bank.name = "RiverBank"
 		bank.points = points
 		bank.closed = true
 		bank.width = 55
 		bank.default_color = Color(.78,.83,.70,1)
 		bank.texture = terrain
 		bank.texture_mode = Line2D.LINE_TEXTURE_STRETCH
-		bank.material = _ground_material(1)
+		bank.material = _ground_material(1,1.0,str(field.data.map_id)=="aden_world")
 		ground.add_child(bank)
 		var poly := Polygon2D.new()
+		poly.name = "RiverWater"
 		poly.polygon = points
 		var material := ShaderMaterial.new()
 		material.shader = WATER_SHADER
+		if str(field.data.map_id)=="aden_world":
+			_configure_aden_river(poly,material,points)
 		if water.has("deep_color"):
 			material.set_shader_parameter("deep_color",Color(str(water["deep_color"])))
 			material.set_shader_parameter("shallow_color",Color(str(water["shallow_color"])))
@@ -274,6 +355,9 @@ func _build_ground() -> void:
 				cap.modulate = Color(1.15,1.12,.98,1)
 	_select_layer("Wall")
 	for shape: Dictionary in field.data["collision"]:
+		if str(shape.kind) in ["dungeon_boundary","dungeon_pit","terrain_boundary"]:
+			_build_boundary_wall(shape)
+			continue
 		if str(shape["kind"]) not in ["dungeon_wall","fortress_wall"]:
 			continue
 		var a: Array = shape["rect"]
@@ -293,6 +377,81 @@ func _build_ground() -> void:
 		shade.default_color = Color(0,0,0,.38)
 		ground.add_child(shade)
 
+func _build_reference_ground() -> void:
+	var structure: Dictionary = field.data.world_geometry
+	var outside := Polygon2D.new()
+	outside.name = "OutsideWorld"
+	outside.polygon = _box_points(field.bounds)
+	outside.color = Color(str(structure.void_color))
+	ground.add_child(outside)
+	var geography := Node2D.new()
+	geography.name = "ReferenceGeography"
+	ground.add_child(geography)
+	for raw: Array in field.data.navigable_polygons:
+		var points: PackedVector2Array = REGION_GEOMETRY.polygon({"polygon":raw})
+		var floor := Polygon2D.new()
+		floor.name = "PlayableFloor"
+		floor.polygon = points
+		floor.material = _ground_material(int(structure.floor_material))
+		geography.add_child(floor)
+		for zone: Dictionary in structure.terrain_zones:
+			for intersection: PackedVector2Array in Geometry2D.intersect_polygons(points,REGION_GEOMETRY.polygon(zone)):
+				var poly := Polygon2D.new()
+				poly.name = str(zone.id)
+				poly.polygon = intersection
+				poly.material = _ground_material(int(zone.material))
+				poly.modulate = Color(str(zone.tint)).lightened(.28)
+				geography.add_child(poly)
+
+func _build_boundary_wall(shape: Dictionary) -> void:
+	var points: PackedVector2Array = REGION_GEOMETRY.polygon(shape,"points")
+	var height: float = float(field.data.world_geometry.get("boundary_height",0))
+	if str(shape.kind)=="dungeon_pit":
+		var hole := Polygon2D.new()
+		hole.polygon = points
+		hole.color = Color("06080d")
+		ground.add_child(hole)
+		return
+	var top := PackedVector2Array()
+	for p: Vector2 in points: top.append(p-Vector2(0,height))
+	for i: int in range(points.size()):
+		var next: int = (i+1)%points.size()
+		var face: Polygon2D = _polygon(PackedVector2Array([points[i],points[next],top[next],top[i]]),2)
+		face.name = "BoundaryWallFace"
+		face.modulate = Color("555862") if points[next].x>points[i].x else Color("777982")
+	var cap: Polygon2D = _polygon(top,2)
+	cap.name = "BoundaryWallCap"
+	cap.modulate = Color("9b9d9e")
+
+func _configure_aden_river(poly: Polygon2D, material: ShaderMaterial, points: PackedVector2Array) -> void:
+	# Aden's existing three river polygons have paired bank samples. Use exact
+	# vertices and explicit strip triangles so depth never cuts across a bend.
+	var half: int = points.size()/2
+	if half<2 or points.size()%2!=0: return
+	var width: float = points[-1].x-points[0].x
+	if width<=0.0: return
+	for row: int in range(half):
+		var left: Vector2 = points[row]
+		var right: Vector2 = points[points.size()-1-row]
+		if absf(left.y-right.y)>.1 or absf(right.x-left.x-width)>.1: return
+	var uv := PackedVector2Array()
+	uv.resize(points.size())
+	var triangles: Array[PackedInt32Array] = []
+	for row: int in range(half):
+		var right: int = points.size()-1-row
+		var v: float = float(row)/float(half-1)*terrain.get_height()
+		uv[row] = Vector2(0,v)
+		uv[right] = Vector2(terrain.get_width(),v)
+		if row<half-1:
+			triangles.append(PackedInt32Array([row,row+1,right-1]))
+			triangles.append(PackedInt32Array([row,right-1,right]))
+	poly.texture = terrain
+	poly.uv = uv
+	poly.polygons = triangles
+	material.shader = ADEN_RIVER_SHADER
+	material.set_shader_parameter("terrain",terrain)
+	material.set_shader_parameter("river_width",width)
+
 func _style_material(material: ShaderMaterial) -> void:
 	var style: Dictionary = field.data.get("render_style",{})
 	material.set_shader_parameter("wild_ground",bool(style.get("wild_ground",true)))
@@ -301,6 +460,14 @@ func _style_material(material: ShaderMaterial) -> void:
 	material.set_shader_parameter("brightness_lift",float(style.get("brightness_lift",0.0)))
 
 func _courtyard(box: Rect2) -> void:
+	if str(field.data.map_id)=="aden_world":
+		# One continuous worn edge replaces three visibly nested opaque rings.
+		# These remain visual paving bounds, never navigation/collision geometry.
+		var material: ShaderMaterial = _ground_material(2,.84).duplicate() as ShaderMaterial
+		material.set_shader_parameter("courtyard_rect",Vector4(box.position.x,box.position.y,box.size.x,box.size.y))
+		ground.add_child(ROAD_SURFACE_MESH.plaza(box, material))
+		courtyard_materials.append(material)
+		return
 	for radius: float in [1.13,1.05,1.0]:
 		var points := PackedVector2Array()
 		for i: int in range(32):
@@ -418,6 +585,12 @@ func _load_chunk(key: Vector2i) -> void:
 			accent.offset = (LANDMARK_CELL*.5-LANDMARK_ORIGIN)*LANDMARK_BAKE_SCALE
 			var prop_scale: float = float(record.get("scale",1.0))
 			accent.scale = Vector2.ONE*prop_scale/LANDMARK_BAKE_SCALE
+			var replacement: Dictionary = {"crystal":11,"altar":13,"arch":15,"obelisk":8}
+			if not reference_profile.is_empty() and replacement.has(kind):
+				accent.texture = REFERENCE_VISUALS.cell(load("res://assets/maps/reference_expansion_v2/props.png"),int(replacement[kind]))
+				accent.material = null
+				accent.offset = Vector2(0,-accent.texture.get_height()*.40)
+				accent.scale = Vector2.ONE * 180.0 * prop_scale / accent.texture.get_height()
 			accent.set_meta("prop_kind",kind)
 			accent.set_meta("visual_size",LANDMARK.VISUAL_SIZES.get(kind,Vector2(110,160))*prop_scale)
 			if kind in ["crystal","obelisk","arch","banner"]:
@@ -429,8 +602,16 @@ func _load_chunk(key: Vector2i) -> void:
 			continue
 		var sprite := Sprite2D.new()
 		sprite.texture = textures[kind]
+		# Placement records may reuse either of the two already shipped atlases.
+		# Old records keep the existing reference-profile appearance.
+		if str(record.get("texture_style","reference")) == "aden_original":
+			sprite.texture = detail_textures[kind]
 		sprite.set_meta("prop_kind",kind)
 		sprite.position = COORD.array_vector(record["position"])
+		# One existing north-village house receives authored stone/slate art.
+		# Keep its map record, anchor, scale, collision and occlusion behavior.
+		if aden_stone_cottage != null and kind == "house" and (sprite.position == Vector2(1630,3610) or str(record.get("asset",""))=="aden_stone_cottage_v1"):
+			sprite.texture = aden_stone_cottage
 		var tex_size: Vector2 = sprite.texture.get_size()
 		sprite.offset = Vector2(0,-tex_size.y*.46)
 		var scale_value: float = float(HEIGHTS[kind])*float(record["scale"])/tex_size.y
@@ -466,12 +647,14 @@ func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
 	var volcanic: bool = field_id.contains("escaros")
 	var random := RandomNumberGenerator.new()
 	random.seed = absi(key.x*73856093 + key.y*19349663 + field_id.hash()) + 101
-	var count: int = 68 if wilderness else (49 if frozen else 58)
+	var count: int = (32 if wilderness else 18) if not reference_profile.is_empty() else (68 if wilderness else (49 if frozen else 58))
 	for index: int in range(count):
 		var position_value: Vector2 = origin + Vector2(random.randf_range(8.0,chunk_size-8.0),random.randf_range(8.0,chunk_size-8.0))
 		if not field.bounds.has_point(position_value) or not field.point_clear(position_value,4.0): continue
 		var decoration_kind: String = "grass" if wilderness and random.randf() < .72 else ("rock" if random.randf() > .45 else "rocks")
-		var source_texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		# Groundcover remains low, non-blocking debris. Do not shrink tall
+		# replacement rocks/stalagmites into apparent obstacles on clear paths.
+		var source_texture: Texture2D = detail_textures.get(decoration_kind) as Texture2D
 		if source_texture == null: continue
 		var marker := Sprite2D.new()
 		marker.name = "GroundCover"
@@ -479,6 +662,7 @@ func _scatter_chunk_groundcover(parent: Node2D, key: Vector2i) -> void:
 		marker.position = position_value
 		marker.offset = Vector2(0,-source_texture.get_height()*.34)
 		var target_height: float = random.randf_range(37.0,73.0) if wilderness else random.randf_range(34.0,63.0)
+		if not reference_profile.is_empty(): target_height = random.randf_range(12.0,27.0)
 		marker.scale = Vector2.ONE * target_height / maxf(1.0,source_texture.get_height())
 		marker.rotation = random.randf_range(-.20,.20)
 		marker.flip_h = random.randf() > .5
@@ -514,7 +698,7 @@ func _scatter_ambient_details(parent: Node2D, record: Dictionary, kind: String) 
 		if not field.bounds.has_point(position_value) or not field.point_clear(position_value, 5.0):
 			continue
 		var decoration_kind: String = "grass" if wilderness and random.randf() > 0.35 else ("rock" if wilderness else "rocks")
-		var texture: Texture2D = textures.get(decoration_kind) as Texture2D
+		var texture: Texture2D = detail_textures.get(decoration_kind) as Texture2D
 		if texture == null: continue
 		var little := Sprite2D.new()
 		little.name = "FoliageDetail"
@@ -533,3 +717,4 @@ func _select_layer(layer_name: String) -> void:
 	ground = Node2D.new()
 	ground.name = layer_name
 	terrain_root.add_child(ground)
+

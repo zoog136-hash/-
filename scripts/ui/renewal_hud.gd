@@ -26,7 +26,6 @@ const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
-const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
@@ -68,7 +67,6 @@ var catalog_icon_generation: int = 0
 var catalog_variant_counts: Dictionary = {}
 var skills_view: VBoxContainer
 var region_selection: ItemList
-var quest_view: Control
 var class_picker_initial: bool = false
 var class_picker_backdrop: ColorRect
 var minimap_mounted: bool = false
@@ -153,9 +151,6 @@ func _polish_hud_chrome() -> void:
 	var status: PanelContainer = v20_layer.get_node_or_null("StatusPanel") as PanelContainer
 	if status != null:
 		status.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.028,.029,.034,.89),UI.BRONZE,0))
-	var mini_map: PanelContainer = v20_layer.get_node_or_null("QuestTracker") as PanelContainer
-	if mini_map != null:
-		mini_map.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.024,.024,.028,.87),UI.BRONZE,7))
 	if v20_target_panel != null:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
 	if v20_map_name != null:
@@ -188,8 +183,6 @@ func _build_lineage_side_ui() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
-	if is_instance_valid(quest_view):
-		quest_view.call("refresh", value)
 	# hud_v20 already forwards this authoritative snapshot to both adapters.
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
@@ -203,28 +196,6 @@ func _build_v20_buffs() -> void:
 	buff_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_place(buff_row,12,102,430,146)
 	v20_layer.add_child(buff_row)
-
-func _build_v20_quest() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "QuestTracker"
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,12,157,298,267)
-	panel.add_theme_stylebox_override("panel",_panel_style(.86))
-	v20_layer.add_child(panel)
-	var v := VBoxContainer.new()
-	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(v)
-	var head := UI.button("퀘스트  ›",open_quest_info,Vector2(0,28))
-	head.flat = true
-	head.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	v.add_child(head)
-	v20_quest_text = UI.rich("")
-	v20_quest_text.fit_content = false
-	v20_quest_text.custom_minimum_size.y = 48
-	v20_quest_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	v20_quest_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	v20_quest_text.add_theme_font_size_override("normal_font_size",12)
-	v.add_child(v20_quest_text)
 
 func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
@@ -464,6 +435,10 @@ func _process(delta: float) -> void:
 	var actor: Node = world.get("player")
 	if actor != null and coordinates_readout != null:
 		coordinates_readout.text = "좌표  %d, %d" % [int(actor.global_position.x),int(actor.global_position.y)]
+		var current_field = get_parent().field_map
+		if current_field is OriginalPlayableField:
+			var source_cell: Vector2i = current_field.world_to_cell(actor.global_position) + current_field.coordinates.origin
+			coordinates_readout.text = "원본 좌표  %d, %d" % [source_cell.x,source_cell.y]
 	var cds: Dictionary = world.get("skill_cooldowns")
 	for index: int in range(quickslot_cooldown_labels.size()):
 		var remain: float = 0
@@ -620,12 +595,11 @@ func _navigate(section: String) -> void:
 		"character": open_character()
 		"skills": open_skills()
 		"shop": open_shop()
-		"quest": open_quest_info()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
 		"auto": open_macro_info()
-		"log": open_chat_info()
+		"log": open_combat_log()
 		"enhance": _open_enhance_chooser()
 		_: open_catalog(section)
 
@@ -660,16 +634,10 @@ func open_item_sell() -> void:
 	screen.configure(self)
 
 func open_npc_dialogue(npc_id: String) -> void:
-	_open_window("dialogue","NPC 대화","레벨 · 직업 · 퀘스트 · 아이템 보유 분기")
+	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
 	var screen := DialogueUI.new()
 	workspace.mount(screen)
 	screen.configure(self,npc_id)
-
-func open_quest_info() -> void:
-	_open_window("quest","퀘스트","기존 게임의 사냥 퀘스트 진행도")
-	quest_view = QuestUI.new()
-	workspace.mount(quest_view)
-	quest_view.call("configure",self)
 
 func open_settings_info() -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
@@ -725,7 +693,7 @@ func open_macro_info() -> void:
 		routes.add_child(route)
 		workspace.register_scroll_drag(scroll,route)
 
-func open_chat_info() -> void:
+func open_combat_log() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
 	var col: VBoxContainer = workspace.column()
 	col.add_child(UI.label("전투 / 시스템 로그",21,UI.GOLD))
@@ -781,7 +749,7 @@ func toggle_menu() -> void:
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,5))
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -810,7 +778,6 @@ func _open_utility_panel(title: String) -> void:
 	var section := "utility"
 	if title.contains("상점"): section="shop"
 	elif title.contains("스킬"): section="skills"
-	elif title.contains("퀘스트"): section="quest"
 	elif title.contains("강화"): section="enhance"
 	elif title.contains("설정"): section="settings"
 	elif title.contains("자동사냥"): section="auto"
@@ -1264,16 +1231,20 @@ func toggle_map() -> void:
 	var regions := VBoxContainer.new()
 	regions.custom_minimum_size.x=270
 	row.add_child(regions)
-	regions.add_child(UI.label("지역 선택  ·  %d개 지역" % map_records.size(),15))
+	var region_count: Label = UI.label("지역 선택  ·  %d개 지역" % map_records.size(),15)
+	region_count.name = "RegionCount"
+	regions.add_child(region_count)
 	region_selection=ItemList.new()
 	region_selection.name="RegionSelection"
 	region_selection.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	regions.add_child(region_selection)
 	for record: Dictionary in map_records:
-		region_selection.add_item(str(record.get("name",record.get("id",""))))
+		var index: int = region_selection.add_item(str(record.get("name",record.get("id",""))))
+		region_selection.set_item_metadata(index,str(record.id))
+	_add_original_map_controls(regions)
 	var enter := UI.button("선택 지역으로 이동",func() -> void:
 		var indices: PackedInt32Array=region_selection.get_selected_items()
-		if not indices.is_empty(): map_selected.emit(str(map_records[indices[0]].get("id",""))))
+		if not indices.is_empty(): map_selected.emit(str(region_selection.get_item_metadata(indices[0]))))
 	enter.name="EnterRegion"
 	regions.add_child(enter)
 	for index: int in range(map_records.size()):
@@ -1313,3 +1284,41 @@ func open_enhancement(scroll_name: String, candidates: Array) -> void:
 	var forge := ForgeUI.new()
 	workspace.mount(forge)
 	forge.configure_targets(self,scroll_name,candidates)
+
+func _add_original_map_controls(regions: VBoxContainer) -> void:
+	var original: Array = get_parent().original_maps
+	if original.is_empty(): return
+	var selector := OptionButton.new()
+	selector.name = "MapEdition"
+	selector.add_item("기존 TWILIGHT 지역")
+	selector.add_item("우선 지역 · 아덴 / 오만 / 지배")
+	selector.add_item("원본 통행 지역 · %d" % original.size())
+	regions.add_child(selector)
+	regions.move_child(selector,1)
+	var search := LineEdit.new()
+	search.name = "OriginalMapSearch"
+	search.placeholder_text = "지역 이름 또는 원본 ID"
+	regions.add_child(search)
+	regions.move_child(search,2)
+	var populate := func() -> void:
+		region_selection.clear()
+		var records: Array = map_records if selector.selected == 0 else original
+		for record: Dictionary in records:
+			var mid: int = int(record.get("source_map_id",-1))
+			if selector.selected == 1 and mid != 4 and not (mid >= 101 and mid <= 111) and not (mid >= 12852 and mid <= 12862): continue
+			var title: String = str(record.name)
+			if mid == 4: title = "아덴 월드 · 본토"
+			if mid >= 0: title += " [%d]" % mid
+			if not search.text.is_empty() and not title.contains(search.text): continue
+			var index: int = region_selection.add_item(title)
+			region_selection.set_item_metadata(index,str(record.id))
+			if str(record.id) == str(get_parent().active_map_id): region_selection.select(index)
+		if region_selection.get_selected_items().is_empty() and region_selection.item_count > 0: region_selection.select(0)
+		(regions.get_node("RegionCount") as Label).text = "지역 선택  ·  %d개 지역" % region_selection.item_count
+	selector.item_selected.connect(func(_index: int) -> void: populate.call())
+	search.text_changed.connect(func(_text: String) -> void: populate.call())
+	if get_parent().field_map is OriginalPlayableField:
+		selector.select(1)
+		populate.call()
+	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))
+	regions.add_child(UI.label("NPC 서비스·본토 보스: TWILIGHT 임시 연결",11,UI.MUTED))

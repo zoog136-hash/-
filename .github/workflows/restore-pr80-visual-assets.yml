@@ -1,0 +1,97 @@
+name: Restore PR80 generated visual resources
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/restore-pr80-visual-assets.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: twilight-pr80-visual-assets-main
+  cancel-in-progress: false
+
+jobs:
+  restore-pr80-atlases:
+    name: Generate, verify and commit 723 resource atlases
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: tools/build_catalog_motion.py
+      - name: Install PR80 generator dependencies
+        run: python -m pip install --disable-pip-version-check 'numpy>=1.26,<3' 'scipy>=1.13,<2' 'pillow>=10,<13'
+      - name: Recreate actual PR80 visual atlas files from checked-in TWILIGHT art
+        run: |
+          mkdir -p /tmp/pr80-catalog-recovery
+          python tools/build_catalog_motion.py --root . --reports /tmp/pr80-catalog-recovery
+      - name: Encode the same RGBA atlases as compact game-ready WebP
+        run: |
+          python tools/compact_catalog_atlases.py --root . --staging /tmp/pr80-encoded --reports /tmp/pr80-catalog-recovery
+      - name: Restore manifest links and validate every atlas
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,shutil
+          root=pathlib.Path('.')
+          info=json.loads((root/'data/visuals/runtime_manifest.json').read_text(encoding='utf8'))
+          c=info.get('catalog',{})
+          kinds={'transform':413,'doll':166,'relic':144}
+          for kind,count in kinds.items():
+              found=[v for k,v in c.items() if k.startswith(kind+':')]
+              assert len(found)==count,(kind,len(found),count)
+          assert len(c)==723,len(c)
+          frames=sum(sum(int(t['count']) for t in record['tracks']) for record in c.values())
+          assert frames==41442,frames
+          for key,record in c.items():
+              old=record['atlas']
+              assert old.startswith('res://assets/catalog_motion/') and old.endswith('.png'),(key,old)
+              rel=old[6:-4]+'.webp'
+              src=pathlib.Path('/tmp/pr80-encoded')/rel
+              assert src.is_file() and src.stat().st_size>0,(key,src)
+              record['atlas']='res://'+rel
+              record['atlas_sha256']=hashlib.sha256(src.read_bytes()).hexdigest()
+          art=root/'assets/catalog_motion'
+          for source in art.rglob('*.png'): source.unlink()
+          for source in (pathlib.Path('/tmp/pr80-encoded')/'assets/catalog_motion').rglob('*.webp'):
+              target=root/source.relative_to('/tmp/pr80-encoded')
+              target.parent.mkdir(parents=True,exist_ok=True)
+              shutil.move(str(source),str(target))
+          final=list(art.rglob('*.webp'))
+          assert len(final)==723,len(final)
+          (root/'data/visuals/runtime_manifest.json').write_text(
+            json.dumps(info,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf8')
+          print('PR80_ATLAS_RESTORED',len(final),'FRAMES',frames,'BYTES',sum(p.stat().st_size for p in final),flush=True)
+          PY
+      - name: Verify generated art can be found at every game manifest path
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib
+          m=json.loads(pathlib.Path('data/visuals/runtime_manifest.json').read_text())
+          for key,v in m['catalog'].items():
+              p=pathlib.Path(v['atlas'].removeprefix('res://'))
+              if not p.is_file(): raise SystemExit('missing '+key)
+              if hashlib.sha256(p.read_bytes()).hexdigest()!=v['atlas_sha256']:
+                  raise SystemExit('bad hash '+key)
+          print('PR80_723_ATLASES_LINKED_AND_HASH_VERIFIED')
+          PY
+      - name: Commit actual resource binaries to main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f assets/catalog_motion/ data/visuals/runtime_manifest.json
+          if git diff --cached --quiet; then
+            echo 'Resources are already committed; no update necessary'
+            exit 0
+          fi
+          git diff --cached --stat | tail -12
+          git commit -m "Restore PR80 generated character, doll and relic atlas assets"
+          git push origin HEAD:main
