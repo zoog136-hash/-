@@ -7,6 +7,7 @@ const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_reviewed_shops.gd")
 static var selected_vendor_id: String = ""
 var hud: Node
+var npc_mode: bool = false
 var wallet: Label
 var search_field: LineEdit
 var category_filter: OptionButton
@@ -29,11 +30,12 @@ var raw_touch_index: int = -1
 var raw_touch_start: Vector2 = Vector2.ZERO
 var raw_touch_travel: float = 0.0
 
-func configure(controller: Node) -> void:
+func configure(controller: Node, at_npc: bool = false) -> void:
 	hud = controller
+	npc_mode = at_npc
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(UI.section("ADEN  /  상점",16))
+	add_child(UI.section("구매" if npc_mode else "아데나 상점",16))
 	vendor_profiles = REVIEWED.profiles(hud.catalog_data.get("아이템", []))
 	vendor_filter = OptionButton.new()
 	vendor_filter.name = "ShopVendor"
@@ -49,6 +51,10 @@ func configure(controller: Node) -> void:
 	selected_vendor_id = str(vendor_filter.get_item_metadata(restored_index))
 	vendor_filter.item_selected.connect(_change_vendor)
 	add_child(vendor_filter)
+	vendor_filter.visible = npc_mode
+	if not npc_mode:
+		selected_vendor_id = ""
+		vendor_filter.select(0)
 	wallet = UI.label("",15,UI.GOLD)
 	add_child(wallet)
 	var filters := HBoxContainer.new()
@@ -70,14 +76,14 @@ func configure(controller: Node) -> void:
 	add_child(row)
 	listing = ItemList.new()
 	listing.name = "ShopItems"
-	listing.icon_mode = ItemList.ICON_MODE_TOP
-	listing.fixed_icon_size = Vector2i(48,48)
-	listing.max_columns = 3
-	listing.fixed_column_width = 142
+	listing.icon_mode = ItemList.ICON_MODE_LEFT if npc_mode else ItemList.ICON_MODE_TOP
+	listing.fixed_icon_size = Vector2i(42,42) if npc_mode else Vector2i(92,92)
+	listing.max_columns = 1 if npc_mode else 4
+	listing.fixed_column_width = 0 if npc_mode else 176
 	listing.same_column_width = true
 	listing.max_text_lines = 3
 	listing.add_theme_font_size_override("font_size",12)
-	listing.add_theme_constant_override("v_separation",10)
+	listing.add_theme_constant_override("v_separation",8 if npc_mode else 30)
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	listing.item_selected.connect(_select)
@@ -110,10 +116,14 @@ func configure(controller: Node) -> void:
 	purchase.name = "ShopBuy"
 	side.add_child(purchase)
 	side.add_child(UI.section("상품을 선택한 후 구매하세요.",11))
+	if npc_mode:
+		side.add_child(UI.button("판매 목록",func() -> void: hud.open_item_sell()))
 	row.configure(listing,side,278)
 	_refresh()
 
 func _refresh() -> void:
+	var selected_name: String = str(selected[0]) if not selected.is_empty() else ""
+	var old_scroll: float = listing.get_v_scroll_bar().value
 	filtered.clear()
 	listing.clear()
 	selected = []
@@ -126,13 +136,18 @@ func _refresh() -> void:
 		if query != "" and not name.to_lower().contains(query): continue
 		filtered.append(entry)
 		var count: int = int(hud.lineage_inventory_ui.inventory.get(name,0))
-		listing.add_item("%s\n%d 아데나\n보유 %d" % [name,int(entry[1]),count],UI.item_icon(hud.lineage_inventory_ui._find_item_record(name),name,hud.item_image_index.get("아이템",{})))
+		var caption: String = "%s    %d 아데나 · 보유 %d" % [name,int(entry[1]),count] if npc_mode else "%s\n%d 아데나\n보유 %d" % [name,int(entry[1]),count]
+		listing.add_item(caption,UI.item_icon(hud.lineage_inventory_ui._find_item_record(name),name,hud.item_image_index.get("아이템",{})))
 	if filtered.is_empty():
 		detail.text = "검색 조건에 맞는 상품이 없습니다."
 		purchase.disabled = true
 	else:
-		listing.select(0)
-		_select(0)
+		var index: int = 0
+		for i: int in range(filtered.size()):
+			if str(filtered[i][0]) == selected_name: index = i
+		listing.select(index)
+		_select(index)
+		listing.get_v_scroll_bar().set_deferred("value",old_scroll)
 
 func _change_vendor(index: int) -> void:
 	selected_vendor_id = str(vendor_filter.get_item_metadata(index))
@@ -253,14 +268,18 @@ func _refresh_selection() -> void:
 		detail.text += "\n\n기본 판매가 · 1개 · 강화 +0 · 세금 없음"
 	purchase.disabled = price <= 0 or available < total or (name == "드래곤의 용옥" and quantity != 1)
 	purchase.text = "구매 불가" if purchase.disabled else "%d개 구매 · %d 아데나" % [quantity,total]
+	purchase.tooltip_text = "아데나가 부족합니다" if available < total else ("한 번에 1개만 구매할 수 있습니다" if name == "드래곤의 용옥" and quantity != 1 else "구매 내용을 확인합니다")
 
 func _buy() -> void:
-	if selected.is_empty(): return
+	if selected.is_empty() or purchase.disabled: return
 	var name: String = str(selected[0])
 	var quantity: int = int(purchase_quantity.value)
+	var vendor: String = selected_vendor_id
+	var total: int = int(selected[1])*quantity
 	# Never send a payment amount from the UI. World rechecks the price, stock
 	# rules, wallet, weight and special consumable restrictions atomically.
-	if not selected_vendor_id.is_empty() and hud.has_signal("reviewed_shop_buy_requested"):
-		hud.emit_signal("reviewed_shop_buy_requested", selected_vendor_id, name, quantity)
-	elif hud.has_signal("shop_bulk_buy_requested"):
-		hud.emit_signal("shop_bulk_buy_requested", name, quantity)
+	hud.confirm_action("구매 확인","%s ×%d\n합계 %d 아데나" % [name,quantity,total],"구매",func(_count: int) -> void:
+		if not vendor.is_empty() and hud.has_signal("reviewed_shop_buy_requested"):
+			hud.emit_signal("reviewed_shop_buy_requested",vendor,name,quantity)
+		elif hud.has_signal("shop_bulk_buy_requested"):
+			hud.emit_signal("shop_bulk_buy_requested",name,quantity))

@@ -96,7 +96,7 @@ func gameplay() -> void:
 	var shop: Dictionary = field.data.npc_spawn.filter(func(n: Dictionary) -> bool: return str(n.role)=="shop")[0]
 	world.player.global_position = COORD.array_vector(shop.position)+Vector2(0,90)
 	world._set_click_destination(COORD.array_vector(shop.position))
-	check(world.hud.workspace.visible and world.hud.active_section=="shop","nearby NPC click opens real shop")
+	check(world.hud.workspace.visible and world.hud.active_section=="npc_shop","nearby NPC click opens distinct NPC shop")
 	world.hud._close_workspace()
 	check(world.field_minimap.field==field,"minimap field identity")
 	world._save_game(true)

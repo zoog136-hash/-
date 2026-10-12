@@ -125,9 +125,10 @@ func _physics_process(delta: float) -> void:
 		_move_on_map()
 		_update_visual(delta)
 		return
-	if Input.is_action_just_pressed("attack") and not is_feared():
+	var ui_blocks: bool = get_parent().get("hud") != null and get_parent().hud.has_method("blocks_keyboard_input") and get_parent().hud.blocks_keyboard_input()
+	if not ui_blocks and Input.is_action_just_pressed("attack") and not is_feared():
 		attack_requested.emit()
-	if Input.is_action_just_pressed("toggle_auto"):
+	if not ui_blocks and Input.is_action_just_pressed("toggle_auto"):
 		set_auto_enabled(not auto_enabled)
 
 	if is_held():
@@ -154,10 +155,10 @@ func _physics_process(delta: float) -> void:
 		_update_visual(delta)
 		return
 
-	var keyboard: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var keyboard: Vector2 = Vector2.ZERO if ui_blocks else Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var manual: Vector2 = keyboard
 	if manual.length_squared() < 0.01:
-		manual = touch_vector
+		manual = Vector2.ZERO if ui_blocks else touch_vector
 
 	if manual.length_squared() > 0.01:
 		cancel_attack()

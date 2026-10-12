@@ -66,7 +66,7 @@ func _run() -> void:
 	_check(str(inventory_ui.get("selected_item")) != "","native slot tap selects an item")
 	var side: Control=hud.lineage_side_ui
 	var stage: Control=side.get("equipment_stage")
-	_check(stage != null and (side.get("equipment_buttons") as Dictionary).size() == 12,"twelve equipment slots surround original class art")
+	_check(stage != null and (side.get("equipment_buttons") as Dictionary).size() == 24,"all twenty-four live equipment slots are reachable across two paperdoll pages")
 	for category: String in ["아이템","변신","마법인형","성물"]:
 		hud.open_catalog(category)
 		hud._on_catalog_item_selected(0)

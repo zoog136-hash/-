@@ -151,4 +151,9 @@ func _craft() -> void:
 	if current_id.is_empty():
 		return
 	if hud.has_signal("craft_requested"):
-		hud.emit_signal("craft_requested",current_id,int(amount.value))
+		var id: String = current_id
+		var count: int = int(amount.value)
+		var report: Dictionary = world._craft_quote(id,count)
+		if not bool(report.get("ok",false)): return
+		hud.confirm_action("제작 확인","선택한 제작식 ×%d\n표시된 재료와 아데나를 소모합니다." % count,"제작",func(_amount: int) -> void:
+			hud.emit_signal("craft_requested",id,count))

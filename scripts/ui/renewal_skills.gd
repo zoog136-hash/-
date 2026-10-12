@@ -75,13 +75,16 @@ func configure(controller: Node) -> void:
 	cards.name="SkillCards"
 	cards.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	cards.max_columns=4
-	cards.fixed_column_width=110
+	cards.fixed_column_width=76
 	cards.fixed_icon_size=Vector2i(54,54)
+	cards.add_theme_font_size_override("font_size",11)
+	cards.add_theme_constant_override("h_separation",6)
+	cards.add_theme_constant_override("v_separation",6)
 	cards.icon_mode=ItemList.ICON_MODE_TOP
 	cards.max_text_lines=2
 	cards.same_column_width=true
 	cards.item_selected.connect(select)
-	cards.gui_input.connect(_touch)
+	# Shared PointerTransfer handles native touch, scrolling and actual drops.
 	body.add_child(cards)
 	var side_scroll := ScrollContainer.new()
 	side_scroll.name = "OriginalSkillDetailsScroll"
@@ -167,9 +170,11 @@ func configure(controller: Node) -> void:
 	refresh()
 
 func refresh() -> void:
+	var scroll_position: float = cards.get_v_scroll_bar().value
 	cards.clear()
 	filtered.clear()
 	var job := str(hud.character_state.get("job_class","기사")) if class_filter.selected == 0 else class_filter.get_item_text(class_filter.selected)
+	var selected_id: String = str(selected.get("id",selected.get("name","")))
 	var query := search.text.to_lower().strip_edges()
 	for value: Variant in records:
 		if not value is Dictionary: continue
@@ -190,7 +195,7 @@ func refresh() -> void:
 		var passive := RULES.is_passive(record)
 		var learned: bool = hud.get_parent().original_skills.catalog.owned(record)
 		var icon: Texture2D = load(str(record.icon)) as Texture2D if record.has("icon") else hud._skill_icon(str(record.get("effect","")),str(record.get("type","")))
-		cards.add_item(("" if learned else "🔒 ") + str(record.get("name",""))+"\n"+("패시브" if passive else "MP %d" % int(record.get("mp",0))),icon)
+		cards.add_item(("" if learned else "미습득 ") + str(record.get("name",""))+"\n"+("패시브" if passive else "MP %d" % int(record.get("mp",0))),icon)
 		var color: Color=UI.grade(str(record.get("grade","일반")))
 		cards.set_item_custom_fg_color(index,color)
 		cards.set_item_custom_bg_color(index,Color(color,.07))
@@ -200,8 +205,12 @@ func refresh() -> void:
 		use_button.disabled=true
 		quick_button.disabled=true
 	else:
-		cards.select(0)
-		select(0)
+		var chosen: int = 0
+		for i: int in range(filtered.size()):
+			if str(filtered[i].get("id",filtered[i].get("name",""))) == selected_id: chosen = i
+		cards.select(chosen)
+		select(chosen)
+		cards.get_v_scroll_bar().set_deferred("value",scroll_position)
 
 func select(index: int) -> void:
 	if index<0 or index>=filtered.size(): return
@@ -235,51 +244,29 @@ func select_original() -> void:
 	var service: TwilightOriginalSkillService = world.original_skills
 	var catalog: TwilightOriginalSkillCatalog = service.catalog
 	var skill: Dictionary = catalog.resolve(selected)
-	var relation: Dictionary = catalog.relations.get(str(selected.id), {})
-	var passive: bool = RULES.is_passive(selected)
 	var learned: bool = catalog.owned(selected)
+	var passive: bool = RULES.is_passive(selected)
+	var base_cooldown: float = float(skill.get("cooldown",0))
+	var final_cooldown: float = base_cooldown*world._skill_cooldown_factor()
+	var weapons: String = "제한 없음" if skill.get("weapons",[]).is_empty() else " · ".join(skill.weapons)
+	detail.text = "[font_size=20][color=#%s]%s[/color][/font_size]\n%s · %s\n\n%s\n\nMP %d  /  HP %d\n기본 재사용 %.1f초\n보정 후 재사용 %.1f초\n지속시간 %.1f초\n사용 무기 %s\n\n%s" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name),str(selected.get("class","")),"패시브" if passive else "액티브",UI.safe(selected.desc),int(skill.get("mp",0)),int(skill.get("hp",0)),base_cooldown,final_cooldown,float(skill.get("duration",0)),weapons,"습득 완료" if learned else UI.safe(catalog.reason(selected))]
+	var fields: Dictionary = selected.get("fields",{})
+	var basic: Dictionary = fields.get("basic",{})
+	var learning: Dictionary = fields.get("learning",{})
+	var acquisition: Dictionary = learning.get("book_acquisition",{})
+	var acquisition_text: String = "" if acquisition.get("value") == null else str(acquisition.value)
+	detail.text += "\n\n%s · %s\n습득 %s\n스킬북 가격 %s\n원작 입수처: %s\n사용 수치: TWILIGHT 설정" % [original_field_text(str(selected.grade),basic.get("grade",{})),original_field_text("패시브" if passive else "액티브",basic.get("activation",{})),original_field_text("Lv.%d" % int(selected.minimum_level),learning.get("minimum_level",{})),original_field_text("%d 아데나" % int(selected.book_cost),learning.get("adena_cost",{})),original_field_text(acquisition_text,acquisition)]
+	if passive: detail.text = detail.text.replace("기본 재사용 %.1f초\n보정 후 재사용 %.1f초" % [base_cooldown,final_cooldown],"패시브 · 조건 충족 시 적용")
+	if passive: detail.text = detail.text.replace("지속시간 %.1f초" % float(skill.get("duration",0)),"상시 / 조건부 적용")
 	summon_controls.visible = str(selected.mode) == "summon" and learned
-	if summon_controls.visible:
-		var orders: Array[String] = ["guard","attack","follow","stay"]
-		summon_order.select(maxi(0,orders.find(service.summons.order)))
-	var base: Dictionary = catalog.record_for(str(relation.get("upgrades_from", "")))
-	var weapon_text := "제한 없음" if skill.get("weapons", []).is_empty() else " · ".join(skill.weapons)
-	var school_text := str({"general_magic":"일반 마법","class":"직업 기술","rune":"룬 마법","water":"물 정령","earth":"땅 정령","wind":"바람 정령","fire":"불 정령"}.get(str(selected.school), selected.school))
-	var fields: Dictionary = selected.get("fields", {})
-	var basic: Dictionary = fields.get("basic", {})
-	var learning: Dictionary = fields.get("learning", {})
-	var acquisition: Dictionary = learning.get("book_acquisition", {})
-	var acquisition_text := "" if acquisition.get("value") == null else str(acquisition.value)
-	var lines: Array[String] = [
-		"[font_size=22][color=#%s]%s[/color][/font_size]" % [UI.grade(str(selected.grade)).to_html(false),UI.safe(selected.name)],
-		"%s · %s · %s" % [UI.safe(selected.get("class", "")),original_field_text(str(selected.grade),basic.get("grade", {})),original_field_text("패시브" if passive else "액티브",basic.get("activation", {}))],
-		"%s / %s" % [UI.safe(school_text),original_field_text("단계 %d" % int(selected.stage),basic.get("stage", {}))],
-		"", UI.safe(selected.desc), "",
-		"사용 수치: TWILIGHT 설정",
-		"MP %d / HP %d / 재사용 %.1f초" % [int(skill.get("mp",0)),int(skill.get("hp",0)),float(skill.get("cooldown",0))],
-		"지속 %.1f초 · 무기 %s" % [float(skill.get("duration",0)),UI.safe(weapon_text)], "",
-		"습득 %s · %s" % [original_field_text("Lv.%d" % int(selected.minimum_level),learning.get("minimum_level", {})),original_field_text(str(selected.book_name),learning.get("book_name", {}))],
-		"습득 완료" if learned else UI.safe(catalog.reason(selected)),
-		"선행 조건: " + ("원작 미확인" if relation.get("requires_status", "UNKNOWN") == "UNKNOWN" else "없음"),
-		"강화 대상: " + UI.safe(base.get("name", "")) if not base.is_empty() else "",
-		"스킬북 가격 " + original_field_text("%d 아데나" % int(selected.book_cost),learning.get("adena_cost", {})),
-		"원작 입수처: " + original_field_text(acquisition_text,acquisition),
-		"시각 자료 대조: 진행 중"
-	]
-	detail.text = "\n".join(lines)
-	if passive:
-		detail.text = detail.text.replace("재사용 %.1f초" % float(skill.get("cooldown",0)), "패시브 · 수동 재사용 없음")
-	if skill.mode == "counter": detail.text += "\n반격 발동 %.0f%% · 피해 배율 %.2f" % [float(skill.counter_chance)*100,float(skill.counter_multiplier)]
-	var sources: Dictionary = catalog.read_json("sources.json")
-	for id: String in selected.source_ids:
-		var source: Dictionary = sources.get(id, {})
-		detail.text += "\n[url=%s]%s 원작 자료[/url]" % [str(source.get("url", "")),str(source.get("effective", ""))]
 	learn_button.disabled = not catalog.reason(selected).is_empty()
-	book_button.disabled = not catalog.reason(selected, true).is_empty() or int(world.gold) < int(selected.book_cost)
-	book_button.text = "스킬북 구입"
+	learn_button.tooltip_text = catalog.reason(selected)
+	book_button.disabled = not catalog.reason(selected,true).is_empty() or int(world.gold) < int(selected.book_cost)
+	book_button.tooltip_text = catalog.reason(selected,true) if not catalog.reason(selected,true).is_empty() else "%d 아데나" % int(selected.book_cost)
 	use_button.disabled = passive or not learned
-	use_button.text = "패시브 적용" if passive else "스킬 사용"
+	use_button.tooltip_text = "패시브는 직접 사용할 수 없습니다" if passive else "미습득 스킬입니다" if not learned else ""
 	quick_button.disabled = passive or not learned
+	quick_button.tooltip_text = use_button.tooltip_text
 	clock = 0
 
 func _process(delta: float) -> void:
@@ -289,7 +276,9 @@ func _process(delta: float) -> void:
 	var world: Node=hud.get_parent()
 	if selected.get("origin", "") == "LINEAGEM_20250617":
 		use_button.disabled = not world.original_skills.ready(selected)
-		quick_button.disabled = RULES.is_passive(selected) or not world.original_skills.catalog.owned(selected)
+		var registration_error: String = world._quickslot_registration_error("skill",str(selected.id))
+		quick_button.disabled = not registration_error.is_empty()
+		quick_button.tooltip_text = registration_error
 		var original_remain: float = float(world.skill_cooldowns.get(str(selected.name), 0))
 		cooldown.text = "패시브 적용" if RULES.is_passive(selected) and world.original_skills.catalog.owned(selected) else "재사용 %.1f초" % original_remain if original_remain > 0 else "준비됨" if world.original_skills.catalog.owned(selected) else "미습득"
 		if str(selected.mode) == "summon" and world.original_skills.summons.active(str(selected.id)): cooldown.text += " · 소환 %.0f초" % world.original_skills.summons.remaining

@@ -16,6 +16,13 @@
 
 | UI 리뉴얼 후속 | PR #50 기존 `eefaf37` 유지 + 최신 main `67d69efd` 통합 | [화면별 구현 및 검증 범위](docs/UI_RENEWAL_FIDELITY_20261009.md). main 미병합; 새 SHA CI로 검증 |
 
+## 2026-10-12 UI 재작업 — 별도 feature 브랜치
+
+- 기준 main `49f5470e6d9561183e0a8e8e56901da6d4d93f27`, `feature/twilight-ui-rebuild-20261012`에서 작업. main 미병합.
+- 공통 대형 창을 우측 4열 가방/스킬, 좌측 24부위 장비·기본 스탯, 별도 상세 스탯, 전체 카드 화면, 일반/NPC 상점으로 구분. 실제 마우스·터치 드래그, 50바인딩·독립 페이지·자동사용·직업별 저장, 양방향 창고 이동과 거래 확인 연결.
+- 입력 회귀 **49개 통과**, 기존 UI 회귀 **88개**, UI 통합 **62개** 통과. 34상태×3요청 해상도 OpenGL 캡처. 전체 128검사 첫 실행은 **104 통과·21 실패·3 건너뜀**이며 수정 후 재검사와 기존 기준 재현을 별도로 기록한다. 전체 성공으로 표시하지 않는다.
+- [변경 범위·재현 절차·화면별 상태](docs/ui-rebuild-20261012/README.md), [공식 참조와 차이](docs/ui-rebuild-20261012/REFERENCES.md), [검증·캡처·실패 기록](docs/ui-rebuild-20261012/VALIDATION.md). 기존 723시트 리소스 검증은 비공개 원본 팩 전달을 뜻하지 않는다.
+
 ## 검증 근거
 - [Stage 5 Integration CI](https://github.com/zoog136-hash/-/actions/runs/37872771613): 47/47.
 - [Playtest Godot Full CI](https://github.com/zoog136-hash/-/actions/runs/37879136512): 48/48.

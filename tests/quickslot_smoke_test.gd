@@ -29,8 +29,8 @@ func _run() -> void:
 		_fail("quickslots is not an Array")
 	else:
 		var quickslots: Array = quickslots_value as Array
-		if quickslots.size() != 8:
-			_fail("quickslots size must be 8")
+		if quickslots.size() != 50:
+			_fail("two independent five-page groups must preserve 50 bindings")
 		var has_skill: bool = false
 		var has_item: bool = false
 		for value: Variant in quickslots:
