@@ -34,7 +34,7 @@ func _run() -> void:
 		hud._close_workspace()
 		var suffix := "-%dx%d" % [extent.x,extent.y]
 		await _capture("hud"+suffix)
-		for section: String in ["menu","inventory","character","skills","quickslots","map","quest","chat","party","crafting","settings","teleport","shop","exchange","변신","마법인형","성물"]:
+		for section: String in ["menu","inventory","character","skills","quickslots","map","log","crafting","settings","teleport","shop","변신","마법인형","성물"]:
 			hud._navigate(section)
 			# Re-entry restores the previous detail view. Explicitly return to
 			# the list so each capture label describes what is actually visible.

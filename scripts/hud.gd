@@ -2,6 +2,7 @@ extends CanvasLayer
 class_name TwilightHUD
 
 const SKILL_RULES = preload("res://scripts/skill_rules.gd")
+const CARD_OPTION_VISIBILITY = preload("res://scripts/card_option_visibility.gd")
 
 signal move_vector_changed(value: Vector2)
 signal attack_pressed
@@ -862,8 +863,8 @@ func _on_catalog_item_selected(index: int) -> void:
 		var option: String = str(value).replace("PVP", "PVE").replace("PvP", "PvE")
 		if option.contains("손상") or option.contains("저주"):
 			continue
-		var dormant: bool = option.begins_with("발동:") or option.begins_with("전용 스킬:") or option.begins_with("액티브 스킬:")
-		option_text += "• %s%s\n" % [option, " (고유효과 보류)" if dormant else ""]
+		var suffix: String = CARD_OPTION_VISIBILITY.suffix(catalog_category, option, selected_catalog_record)
+		option_text += "• %s%s\n" % [option, suffix]
 	if option_text.is_empty():
 		option_text = str(selected_catalog_record.get("desc", "옵션 없음"))
 	catalog_detail.text = "[font_size=22][b]%s[/b][/font_size]\n등급: %s   종류: %s\n원작 ID: %s · 원본 옵션 %d개\n\n%s" % [title, grade, type_name, str(selected_catalog_record.get("sourceId", "TWILIGHT")), options.size(), option_text]
@@ -1173,20 +1174,14 @@ func open_skills() -> void:
 		row.add_child(quick_button)
 		utility_body.add_child(row)
 
-func open_quest_info() -> void:
-	_open_utility_panel("퀘스트")
-	var current: int = int(character_state.get("quest_kills", 0))
-	var goal: int = maxi(1, int(character_state.get("quest_goal", 9)))
-	_utility_add_text("[font_size=20][b]메인 퀘스트[/b][/font_size]\n몬스터의 세력 다툼\n\n몬스터 처치: [color=#f2c66d]%d / %d[/color]\n\n사냥으로 목표 수량을 채우면 진행도가 갱신됩니다." % [current, goal])
-
 func open_macro_info() -> void:
 	_open_utility_panel("매크로 / 자동사냥")
 	_utility_add_text("현재 로컬 자동사냥 기능을 제어합니다.\nAUTO를 켜면 도달 가능한 몬스터를 찾아 이동하고 공격합니다.")
 	_utility_add_action("AUTO 전환", func() -> void: auto_pressed.emit())
 
-func open_chat_info() -> void:
-	_open_utility_panel("채팅 / 기록")
-	_utility_add_text("이 프로젝트는 서버 없는 로컬 싱글플레이 게임입니다.\n외부 채팅 서버 대신 화면 전투 로그와 시스템 메시지를 사용합니다.")
+func open_combat_log() -> void:
+	_open_utility_panel("전투 기록")
+	_utility_add_text("최근 PvE 전투 및 게임 시스템 메시지는 화면의 전투 로그에서 확인할 수 있습니다.")
 
 func open_settings_info() -> void:
 	_open_utility_panel("설정 / 관리")

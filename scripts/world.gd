@@ -27,6 +27,7 @@ const PHYSICAL_RESOLUTION = preload("res://scripts/combat/physical_resolution.gd
 const INVEN_OPTIONS = preload("res://scripts/inven_option_adapter.gd")
 const ENCHANT = preload("res://scripts/original_enhancement.gd")
 const CATALOG_EFFECTS = preload("res://scripts/catalog_effects.gd")
+const TRANSFORM_SKILL = preload("res://scripts/transform_skill_options.gd")
 const CATALOG_GRADES = preload("res://scripts/catalog_grade_policy.gd")
 const LOOT_DROP = preload("res://scripts/loot_drop.gd")
 const GROUND_LOOT_MANAGER = preload("res://scripts/loot/ground_loot_manager.gd")
@@ -163,8 +164,6 @@ var mp_recovery_elapsed: float = 0.0
 const UNIQUE_RECOVERY_INTERVAL: float = 30.0
 const UNIQUE_RECOVERY_AMOUNT: int = 5
 var collision_debug: bool = false
-var quest_kills: int = 0
-const QUEST_GOAL: int = 9
 const JOB_CLASS_ORDER: Array[String] = [
 	"기사", "군주", "요정", "마법사", "다크엘프", "총사", "투사",
 	"암흑기사", "신성검사", "광전사", "사신", "뇌신", "마검사"
@@ -725,6 +724,13 @@ func _catalog_stat_sum(key: String) -> int:
 			var entry: Dictionary = _verified_catalog_record(category, record_value as Dictionary)
 			result += int(entry.get(key, 0))
 	return result
+
+func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
+	var record_value: Variant = equipped_catalog.get("변신", {})
+	if not (record_value is Dictionary) or (record_value as Dictionary).is_empty():
+		return 0.0
+	var record: Dictionary = _verified_catalog_record("변신", record_value as Dictionary)
+	return TRANSFORM_SKILL.amount(record, job_class, skill_name, kind)
 
 func _skill_cooldown_factor() -> float:
 	return clampf(1.0 - float(_catalog_stat_sum("skillCooldownPct")) / 100.0, 0.1, 1.0)
@@ -1368,7 +1374,7 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	return origin
 
 func _npc_dialogue_state() -> Dictionary:
-	return {"level":level,"job_class":job_class,"quest_kills":quest_kills,"inventory":inventory.duplicate(true)}
+	return {"level":level,"job_class":job_class,"inventory":inventory.duplicate(true)}
 
 func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void:
 	# The UI cannot authorize an NPC service. Revalidate player proximity and
@@ -1391,7 +1397,6 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
 		"teleport": hud.call("open_npc_teleport")
-		"quest": hud.call("open_quest_info")
 		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
 
 func _set_click_destination(target: Vector2) -> void:
@@ -1827,7 +1832,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 		_update_hud()
 		_update_target_hud()
 		return false
-	var stun_chance: float = _player_stun_chance(target)
+	var stun_chance: float = clampf(_player_stun_chance(target) + _transformation_skill_bonus(skill_name, "accuracy_pct") / 100.0, 0.05, 0.95)
 	var stunned: bool = rng.randf() < stun_chance
 	if stunned:
 		target.apply_stun(stun_duration)
@@ -2160,9 +2165,6 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	experience += gained_experience
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
-	quest_kills = mini(QUEST_GOAL, quest_kills + 1)
-	if hud.has_method("set_quest_progress"):
-		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward))
 	_check_level_up()
@@ -3633,8 +3635,6 @@ func _update_hud() -> void:
 	_update_ain_hud()
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
-	if hud.has_method("set_quest_progress"):
-		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
 	var character_state: Dictionary = _character_stats_snapshot()
 	character_state["class_index"] = class_index
 	character_state["job_class"] = job_class
@@ -3654,8 +3654,6 @@ func _update_hud() -> void:
 	character_state["item_instances"] = item_instances
 	character_state["item_locks"] = item_locks
 	character_state["gold"] = gold
-	character_state["quest_kills"] = quest_kills
-	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
@@ -3724,8 +3722,7 @@ func _save_game(quiet: bool) -> bool:
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
-		"next_item_instance_id":next_item_instance_id,
-		"quest_kills": quest_kills
+		"next_item_instance_id":next_item_instance_id
 	}
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:
@@ -3800,7 +3797,6 @@ func _load_game(quiet: bool) -> void:
 	cha_stat = int(data.get("cha", cha_stat))
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
 	gold = maxi(0, int(data.get("gold", gold)))
-	quest_kills = clampi(int(data.get("quest_kills", quest_kills)), 0, QUEST_GOAL)
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
 		inventory = inventory_value as Dictionary
@@ -4866,10 +4862,14 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			if not targets.has(candidate):
 				targets.append(candidate)
 	var power: int = maxi(1, int(skill.get("power", 20)))
+	var skill_name: String = str(skill.get("name", ""))
+	var transform_flat: int = int(round(_transformation_skill_bonus(skill_name, "damage_flat")))
+	var transform_multiplier: float = 1.0 + clampf(_transformation_skill_bonus(skill_name, "damage_pct"), 0.0, 200.0) / 100.0
+	var transform_accuracy: float = clampf(_transformation_skill_bonus(skill_name, "accuracy_pct") / 100.0, 0.0, 0.90)
 	var volley: Dictionary = skill.get("_volley_runtime", {})
 	var total_damage: int = int(volley.get("total_damage", 0))
 	if total_damage <= 0:
-		total_damage = maxi(1, power + stat_damage + rng.randi_range(-4, 6))
+		total_damage = maxi(1, int(round(float(power + stat_damage + transform_flat + rng.randi_range(-4, 6)) * transform_multiplier)))
 		volley["total_damage"] = total_damage
 	var element_name: String = ELEMENT_RULES.channel(str(skill.get("element", "physical")))
 	var style: String = "magic" if magic_style else ("ranged" if ranged_style else "melee")
@@ -4882,6 +4882,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			victim_hit_chance = clampf(_melee_hit_chance(victim) + float(_ranged_accuracy_stat() - _melee_accuracy_stat()) * 0.01, 0.10, 0.95)
 		else:
 			victim_hit_chance = _melee_hit_chance(victim)
+		victim_hit_chance = clampf(victim_hit_chance + transform_accuracy, 0.05, 0.95)
 		var first_hit: int = int(skill.get("_single_hit_index", 0))
 		var last_hit: int = first_hit + 1 if skill.has("_single_hit_index") else hits
 		for hit_index: int in range(first_hit, last_hit):

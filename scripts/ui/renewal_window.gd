@@ -28,8 +28,8 @@ var footer_separator: HSeparator
 
 # Gameplay tools share a right-hand drawer. Views that need a map or a
 # character stage use the wider workspace; neither carries a second menu rail.
-const DRAWER_SECTIONS := ["menu", "inventory", "skills", "quest", "buffs",
-	"party", "clan", "friends", "mail", "ranking", "events", "exchange",
+const DRAWER_SECTIONS := ["menu", "inventory", "skills", "buffs",
+	"friends", "mail", "ranking", "events",
 	"collection", "growth", "dialogue", "dungeon", "special_dungeon"]
 
 func is_drawer() -> bool:
@@ -207,7 +207,7 @@ func fit_viewport() -> void:
 	var preferred_height: float = 560.0
 	if drawer: preferred_width = 480.0
 	elif current_section == "character": preferred_width = 900.0
-	elif current_section in ["settings","auto","log","chat","controls","info"]: preferred_width = 800.0
+	elif current_section in ["settings","auto","log","controls","info"]: preferred_width = 800.0
 	elif current_section in ["map","class_select"]: preferred_width = 1160.0
 	# Keep HUD shortcuts above, and both quickslot banks below, the drawer.
 	var top: float = minf(82.0,viewport.y*.115)

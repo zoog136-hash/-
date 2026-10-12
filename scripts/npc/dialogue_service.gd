@@ -23,10 +23,6 @@ static func matches(requires: Variant, state: Dictionary) -> bool:
 		return false
 	if checks.has("level_max") and int(state.get("level",0)) > int(checks["level_max"]):
 		return false
-	if checks.has("quest_kills_min") and int(state.get("quest_kills",0)) < int(checks["quest_kills_min"]):
-		return false
-	if checks.has("quest_kills_max") and int(state.get("quest_kills",0)) > int(checks["quest_kills_max"]):
-		return false
 	if checks.has("job_class") and str(state.get("job_class","")) != str(checks["job_class"]):
 		return false
 	if checks.has("item_name"):
@@ -59,7 +55,7 @@ func resolve(npc_id: String,node_id: String,state: Dictionary) -> Dictionary:
 			continue
 		var next_id: String = str(choice.get("next",""))
 		var action: String = str(choice.get("action",""))
-		if not next_id.is_empty() and nodes.has(next_id) or action in ["shop","warehouse","craft","buyback","teleport","quest"]:
+		if not next_id.is_empty() and nodes.has(next_id) or action in ["shop","warehouse","craft","buyback","teleport"]:
 			options.append({"label":str(choice.get("label","계속")),"next":next_id,"action":action})
 	return {"ok":true,"npc_id":npc_id,"npc_name":str(npc.get("name",npc_id)),
 		"node_id":id,"text":text,"choices":options}

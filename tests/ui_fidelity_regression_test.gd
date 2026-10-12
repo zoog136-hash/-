@@ -122,8 +122,7 @@ func _run() -> void:
 	root.size=Vector2i(1280,720)
 	await process_frame
 	hud._close_workspace()
-	var tracker: Control = hud.v20_layer.get_node("QuestTracker")
-	_check(tracker.size.y <= 125,"quest tracker leaves the world visible below its two text lines")
+	_check(hud.v20_layer.get_node_or_null("QuestTracker") == null,"removed quest tracker no longer occupies world view")
 	var auto: Button=hud.get("v20_auto_button")
 	var original_auto: bool=world.player.auto_enabled
 	_touch(77,_point(auto),true); _touch(77,_point(auto),false)

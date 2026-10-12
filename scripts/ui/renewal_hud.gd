@@ -29,14 +29,9 @@ var window_backdrop: ColorRect
 var modal: Control
 var page_buttons: Array[Button] = []
 var menu_group: int = 0
-var tracker_party: bool = false
-var tracker_collapsed: bool = false
-var tracker_body: VBoxContainer
-var tracker_party_label: Label
 var buff_expanded: bool = true
 var buff_detail: RichTextLabel
 var move_readout: Label
-var chat_messages: Array[String] = []
 var quick_picker_kind: String = ""
 var quick_picker_id: String = ""
 var selected_quickslot: int = 0
@@ -55,7 +50,6 @@ const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
-const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
@@ -97,7 +91,6 @@ var catalog_icon_generation: int = 0
 var catalog_variant_counts: Dictionary = {}
 var skills_view: VBoxContainer
 var region_selection: ItemList
-var quest_view: Control
 var class_picker_initial: bool = false
 var class_picker_backdrop: ColorRect
 var minimap_mounted: bool = false
@@ -193,8 +186,6 @@ func _ready() -> void:
 	SettingsUI.apply_saved(self)
 	var preferences := ConfigFile.new()
 	if preferences.load(SettingsUI.SETTINGS_PATH) == OK:
-		tracker_collapsed = bool(preferences.get_value("interface", "tracker_collapsed", false))
-		_refresh_tracker()
 		buff_expanded = bool(preferences.get_value("interface", "buff_expanded", true))
 		buff_row.visible = buff_expanded
 	_build_integration_shortcuts()
@@ -205,9 +196,6 @@ func _polish_hud_chrome() -> void:
 	var status: PanelContainer = v20_layer.get_node_or_null("StatusPanel") as PanelContainer
 	if status != null:
 		status.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.028,.029,.034,.89),UI.BRONZE,0))
-	var mini_map: PanelContainer = v20_layer.get_node_or_null("QuestTracker") as PanelContainer
-	if mini_map != null:
-		mini_map.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.024,.024,.028,.87),UI.BRONZE,7))
 	if v20_target_panel != null:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
 		_place(v20_target_panel,468,86,812,136)
@@ -245,8 +233,6 @@ func _build_lineage_side_ui() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
-	if is_instance_valid(quest_view):
-		quest_view.call("refresh", value)
 	# hud_v20 already forwards this authoritative snapshot to both adapters.
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
@@ -260,51 +246,6 @@ func _build_v20_buffs() -> void:
 	buff_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_place(buff_row,12,102,430,146)
 	v20_layer.add_child(buff_row)
-
-func _build_v20_quest() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "QuestTracker"
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,12,171,298,291)
-	panel.add_theme_stylebox_override("panel",_panel_style(.82))
-	v20_layer.add_child(panel)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation",4)
-	panel.add_child(v)
-	var tabs := HBoxContainer.new()
-	v.add_child(tabs)
-	for pair: Array in [["퀘스트",false],["파티",true]]:
-		var party_tab: bool = pair[1]
-		var tab := UI.button(pair[0],func() -> void:
-			tracker_party = party_tab
-			_refresh_tracker(),Vector2(85,32))
-		tab.name = "TrackerParty" if party_tab else "TrackerQuest"
-		tabs.add_child(tab)
-	var collapse := UI.button("접기",func() -> void:
-		tracker_collapsed = not tracker_collapsed
-		_refresh_tracker()
-		_store_preference("tracker_collapsed", tracker_collapsed),Vector2(60,32))
-	collapse.name = "TrackerCollapse"
-	tabs.add_child(collapse)
-	tracker_body = VBoxContainer.new()
-	tracker_body.add_theme_constant_override("separation",4)
-	v.add_child(tracker_body)
-	var quest := UI.button("몬스터의 세력 다툼  ›",open_quest_info,Vector2(0,32))
-	quest.name = "TrackedQuest"
-	tracker_body.add_child(quest)
-	for button: Button in tabs.get_children()+[quest]:
-		button.add_theme_font_size_override("font_size",12)
-		for state: String in ["normal","hover","pressed","focus"]:
-			button.add_theme_stylebox_override(state,UI.box(Color("17171b"),UI.BRONZE,4))
-	v20_quest_text = UI.rich("")
-	v20_quest_text.fit_content = false
-	v20_quest_text.custom_minimum_size.y = 32
-	v20_quest_text.add_theme_font_size_override("normal_font_size",12)
-	v20_quest_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	tracker_body.add_child(v20_quest_text)
-	tracker_party_label = UI.label("로컬 플레이 · 파티 미지원",12,UI.MUTED)
-	tracker_body.add_child(tracker_party_label)
-	_refresh_tracker()
 
 func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
@@ -471,7 +412,7 @@ func _build_v20_bottom_bar() -> void:
 	var sys := HBoxContainer.new()
 	_place(sys,12,638,330,679)
 	v20_layer.add_child(sys)
-	for pair: Array in [["chat","채팅"],["quickslots","슬롯 설정"],["settings","설정"]]:
+	for pair: Array in [["log","기록"],["quickslots","슬롯 설정"],["settings","설정"]]:
 		var system_button := UI.button(str(pair[1]),_navigate.bind(str(pair[0])),Vector2(92,36))
 		system_button.icon = UI.icon(str(pair[0]))
 		system_button.add_theme_constant_override("icon_max_width",16)
@@ -556,7 +497,6 @@ func _fit_hud() -> void:
 		# The world input guard still rejects movement in this uncovered strip.
 		window_backdrop.offset_top = available.position.y+82*factor
 		window_backdrop.offset_bottom = -(get_viewport().get_visible_rect().end.y-available.end.y)-88*factor
-	_fit_tracker()
 	if workspace != null: workspace.fit_viewport()
 
 func _process(delta: float) -> void:
@@ -690,11 +630,9 @@ func append_log(value: String) -> void:
 	if log_history.size()>120:
 		log_history.pop_front()
 	super.append_log(value)
-	if active_section == "chat" and workspace != null and workspace.visible:
-		var channel: OptionButton = workspace.content.find_child("ChatChannel",true,false) as OptionButton
-		var history: RichTextLabel = workspace.content.find_child("ChatHistory",true,false) as RichTextLabel
-		if channel != null and history != null and channel.selected == 1:
-			history.text = "\n".join(log_history)
+	if active_section == "log" and workspace != null and workspace.visible:
+		var history: RichTextLabel = workspace.content.find_child("CombatLogHistory",true,false) as RichTextLabel
+		if history != null: history.text = "\n".join(log_history)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event is InputEventKey or not event.pressed or event.echo: return
@@ -710,7 +648,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	elif event.keycode == KEY_BRACKETRIGHT: _change_quick_page(1,1)
 	elif event.keycode == KEY_K: open_skills()
 	elif event.keycode == KEY_C: open_character()
-	elif event.keycode == KEY_ENTER: _open_chat()
+	elif event.keycode == KEY_ENTER: open_combat_log()
 	elif event.keycode == KEY_F: pickup_requested.emit()
 
 func _close_workspace() -> void:
@@ -779,6 +717,7 @@ func complete_class_selection() -> void:
 	_close_workspace()
 
 func _navigate(section: String) -> void:
+	if section in MENU.EXCLUDED_PVE_FEATURES: return
 	if class_picker_initial:
 		return
 	match section:
@@ -787,20 +726,18 @@ func _navigate(section: String) -> void:
 		"character": open_character()
 		"skills": open_skills()
 		"shop": open_shop()
-		"quest": open_quest_info()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
 		"auto": open_macro_info()
-		"log": open_chat_info()
-		"chat": _open_chat()
+		"log": open_combat_log()
 		"quickslots": _open_quickslot_settings()
 		"teleport": open_npc_teleport()
 		"crafting": open_crafting()
 		"warehouse": open_warehouse()
 		"sell": open_item_sell()
 		"dungeon", "special_dungeon": _open_dungeons(section)
-		"party", "clan", "friends", "mail", "ranking", "events", "exchange", "collection", "growth": _open_capability(section)
+		"friends", "mail", "ranking", "events", "collection", "growth": _open_capability(section)
 		"controls", "info": _open_information(section)
 		"buffs": _open_buffs()
 		"exit": _confirm_exit()
@@ -839,16 +776,10 @@ func open_item_sell() -> void:
 	screen.configure(self)
 
 func open_npc_dialogue(npc_id: String) -> void:
-	_open_window("dialogue","NPC 대화","레벨 · 직업 · 퀘스트 · 아이템 보유 분기")
+	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
 	var screen := DialogueUI.new()
 	workspace.mount(screen)
 	screen.configure(self,npc_id)
-
-func open_quest_info() -> void:
-	_open_window("quest","퀘스트","기존 게임의 사냥 퀘스트 진행도")
-	quest_view = QuestUI.new()
-	workspace.mount(quest_view)
-	quest_view.call("configure",self)
 
 func open_settings_info() -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
@@ -904,11 +835,14 @@ func open_macro_info() -> void:
 		routes.add_child(route)
 		workspace.register_scroll_drag(scroll,route)
 
-func open_chat_info() -> void:
+func open_combat_log() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
 	var col: VBoxContainer = workspace.column()
 	col.add_child(UI.label("전투 / 시스템 로그",21,UI.GOLD))
 	var history := UI.rich("")
+	history.name = "CombatLogHistory"
+	history.bbcode_enabled = false
+	history.scroll_following = true
 	history.fit_content = false
 	history.scroll_active = true
 	history.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -1002,7 +936,6 @@ func _open_utility_panel(title: String) -> void:
 	var section := "utility"
 	if title.contains("상점"): section="shop"
 	elif title.contains("스킬"): section="skills"
-	elif title.contains("퀘스트"): section="quest"
 	elif title.contains("강화"): section="enhance"
 	elif title.contains("설정"): section="settings"
 	elif title.contains("자동사냥"): section="auto"
@@ -1606,18 +1539,6 @@ func _store_preference(key: String, value: Variant) -> void:
 	cfg.set_value("interface",key,value)
 	if cfg.save(SettingsUI.SETTINGS_PATH) != OK: show_message("UI 설정 저장 실패")
 
-func _refresh_tracker() -> void:
-	if tracker_body == null: return
-	tracker_body.visible = not tracker_collapsed
-	tracker_body.get_node("TrackedQuest").visible = not tracker_party
-	v20_quest_text.visible = not tracker_party
-	tracker_party_label.visible = tracker_party
-	call_deferred("_fit_tracker")
-
-func _fit_tracker() -> void:
-	var tracker: Control = v20_layer.get_node_or_null("QuestTracker")
-	if tracker != null: tracker.size.y = 46 if tracker_collapsed else 120
-
 func _build_integration_shortcuts() -> void:
 	var services := HBoxContainer.new()
 	services.name = "ServiceShortcuts"
@@ -1742,53 +1663,7 @@ func _open_capability(section: String) -> void:
 	col.add_child(UI.section("TWILIGHT는 서버에 연결되지 않은 로컬 게임입니다.",13))
 	if section in ["collection","growth"]:
 		col.add_child(UI.button("아이템 도감",func() -> void: _navigate("아이템")))
-	elif section in ["party","clan","friends"]:
-		col.add_child(UI.button("채팅 · 로컬 기록",_open_chat))
-	elif section == "exchange":
-		col.add_child(UI.button("로컬 상점",open_shop))
-		col.add_child(UI.button("아이템 매입",open_item_sell))
 	col.add_child(UI.button("전체 메뉴",toggle_menu))
-
-func _open_chat() -> void:
-	_open_window("chat","채팅","로컬 기록 · 서버 채널 미연결")
-	var col: VBoxContainer = workspace.column()
-	var channels := OptionButton.new()
-	channels.name = "ChatChannel"
-	for channel: String in ["로컬 기록", "시스템", "일반 · 미연결", "월드 · 미연결", "파티 · 미연결", "혈맹 · 미연결"]:
-		channels.add_item(channel)
-	col.add_child(channels)
-	var history := UI.rich("")
-	history.name = "ChatHistory"
-	history.bbcode_enabled = false
-	history.fit_content = false
-	history.scroll_active = true
-	history.scroll_following = true
-	history.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	col.add_child(history)
-	var row := HBoxContainer.new()
-	col.add_child(row)
-	var input := LineEdit.new()
-	input.name = "ChatInput"
-	input.max_length = 240
-	input.placeholder_text = "이번 플레이의 로컬 기록"
-	input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(input)
-	var send := UI.button("기록",func() -> void: _submit_chat(input,history,channels))
-	send.name = "ChatSend"
-	row.add_child(send)
-	input.text_submitted.connect(func(_value: String) -> void: _submit_chat(input,history,channels))
-	channels.item_selected.connect(func(index: int) -> void:
-		input.editable = index == 0
-		send.disabled = index != 0
-		history.text = "\n".join(chat_messages) if index == 0 else ("\n".join(log_history) if index == 1 else "서버 채널이 연결되지 않았습니다. 메시지를 전송할 수 없습니다."))
-	channels.item_selected.emit(0)
-
-func _submit_chat(input: LineEdit, history: RichTextLabel, channel: OptionButton) -> void:
-	if channel.selected != 0 or input.text.strip_edges().is_empty(): return
-	chat_messages.append("[로컬] "+input.text.strip_edges())
-	if chat_messages.size() > 120: chat_messages.pop_front()
-	history.text = "\n".join(chat_messages)
-	input.clear()
 
 func _open_dungeons(section: String) -> void:
 	_open_window(section,"특수 던전" if section == "special_dungeon" else "던전","현재 월드 데이터의 지역 · 이동 안내")
@@ -1816,9 +1691,9 @@ func _open_information(section: String) -> void:
 	_open_window(section,"조작 · 단축키" if section == "controls" else "게임 정보","TWILIGHT")
 	var col: VBoxContainer = workspace.column()
 	if section == "controls":
-		col.add_child(UI.section("WASD / 방향키: 이동 · Space: 공격 · T: 자동사냥\nI: 인벤토리 · K: 스킬 · C: 캐릭터 · M: 메뉴 · Tab: 지도\n1–8: 퀵슬롯 · [ / ]: 좌우 그룹 · F: 줍기 · Enter: 채팅\nEsc / 모바일 뒤로가기: 이전 화면 · 창 바깥: 닫기\nF5: 저장 · F9: 불러오기\n슬롯 길게 누르기/우클릭: 편집 · 아래로 밀기: 자동사용",16))
+		col.add_child(UI.section("WASD / 방향키: 이동 · Space: 공격 · T: 자동사냥\nI: 인벤토리 · K: 스킬 · C: 캐릭터 · M: 메뉴 · Tab: 지도\n1–8: 퀵슬롯 · [ / ]: 좌우 그룹 · F: 줍기 · Enter: 전투 기록\nEsc / 모바일 뒤로가기: 이전 화면 · 창 바깥: 닫기\nF5: 저장 · F9: 불러오기\n슬롯 길게 누르기/우클릭: 편집 · 아래로 밀기: 자동사용",16))
 	else:
-		col.add_child(UI.section("TWILIGHT · 로컬 RPG\n현재 저장과 전투는 이 기기에서 처리됩니다.\n온라인 거래·파티·혈맹·우편 서비스는 연결되지 않았습니다.\n변신·인형·성물 도감의 적용은 기존 로컬 시험 기능입니다.",16))
+		col.add_child(UI.section("TWILIGHT · 로컬 RPG\n현재 저장과 전투는 이 기기에서 처리됩니다.\nPvE 전용 · 전투 및 시스템 기록을 제공합니다.\n변신·인형·성물 도감의 적용은 기존 로컬 시험 기능입니다.",16))
 	col.add_child(UI.button("환경 설정",open_settings_info))
 
 func _confirm_exit() -> void:
