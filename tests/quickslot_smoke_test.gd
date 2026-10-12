@@ -70,17 +70,25 @@ func _run() -> void:
 	world.set("auto_buff_check_timer", 0.0)
 	world.call("_run_auto_buff_quickslots", 1.0)
 	buffs = world.get("active_skill_buffs") as Dictionary
-	if not buffs.has("카운터 배리어"):
-		_fail("SELF OFF did not auto-cast registered buff")
+	if buffs.has("카운터 배리어") or int(world.get("mp")) != 999:
+		_fail("explicit AUTO OFF must not cast or spend MP")
+	world.call("_edit_quickslot", 0, "auto", -1)
+	world.set("auto_buff_check_timer", 0.0)
+	world.call("_run_auto_buff_quickslots", 1.0)
+	buffs = world.get("active_skill_buffs") as Dictionary
+	if not buffs.has("카운터 배리어") or int(world.get("mp")) != 999-int(counter.mp):
+		_fail("SELF OFF with AUTO ON must cast once and spend exact MP")
 
 	buffs.erase("카운터 배리어")
 	world.set("active_skill_buffs", buffs)
+	world.set("skill_cooldowns", {})
+	world.set("skill_global_cooldown", 0.0)
 	world.set("self_mode_enabled", true)
 	world.set("auto_buff_check_timer", 0.0)
 	world.call("_run_auto_buff_quickslots", 1.0)
 	buffs = world.get("active_skill_buffs") as Dictionary
-	if buffs.has("카운터 배리어"):
-		_fail("SELF ON should disable auto buff recast")
+	if buffs.has("카운터 배리어") or int(world.get("mp")) != 999-int(counter.mp):
+		_fail("SELF ON should disable auto buff recast even without cooldown")
 
 	world.queue_free()
 	await process_frame

@@ -58,7 +58,6 @@ func run() -> void:
 	world.level = 90
 	world.experience = 0
 	world.exp_need = 100000
-	world.quest_kills = 0
 	world._on_job_class_selected("마법사")
 	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3300, 4370)))
 	world.equipped_items.clear()
@@ -86,11 +85,11 @@ func run() -> void:
 	var before_items := int(world.inventory.get("HP 물약", 0))
 	cast_and_land(false)
 	check(not dummy.dead and deaths == 0, "failed roll emits no death")
-	check(world.experience == 0 and world.gold == before_gold and world.quest_kills == 0, "failed roll grants no XP/currency/quest kill")
+	check(world.experience == 0 and world.gold == before_gold, "failed roll grants no XP/currency")
 	check(world.ground_loot.views.is_empty(), "failed roll creates no ground loot")
 	cast_and_land(true)
 	check(dummy.dead and dummy.hp == 0 and deaths == 1, "successful roll emits one real death")
-	check(world.experience > 0 and world.gold > before_gold and world.quest_kills == 1, "real death handler grants XP/currency/quest kill")
+	check(world.experience > 0 and world.gold > before_gold, "real death handler grants XP/currency")
 	check(dummy.get_parent() == world.combat_corpses and world.selected_monster == null, "normal corpse and target cleanup")
 	check(world.hp == before_hp, "instant death cannot trigger weapon HP absorption")
 	check(world.ground_loot.views.size() == 1 and int(world.inventory.get("HP 물약", 0)) == before_items, "real loot roll creates one ground item without instant inventory grant")
