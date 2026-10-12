@@ -114,7 +114,7 @@ func _run() -> void:
 					check(not slot.monster.dead and slot.monster.hp==slot.monster.max_hp and slot.monster.motion.death_clock==0.,"pooled actor fully reset")
 			check(alive==int(region.max_count) and population.available.size()<=64,"continuous bounded dense respawn "+id)
 		await process_frame
-	check(map_count==25 and dense_count==4 and boss_count==27,"all maps/four dense/twenty-seven boss zones covered")
+	check(map_count==25 and dense_count==4 and boss_count==28,"all maps/four dense/twenty-eight unique boss zones covered")
 	world._set_map("oman_10",false)
 	pause_actors()
 	# Reproduce cleanup at the corpse-return boundary. A queued actor must never

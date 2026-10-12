@@ -5,11 +5,14 @@ on:
     branches: [feature/renewed-map-spawns-20261012]
   pull_request:
     paths:
+      - 'data/maps/**'
       - 'data/monsters/**'
+      - 'data/game_db_v17.json'
       - 'scripts/maps/**'
       - 'scripts/monsters/**'
-      - 'tools/rebalance_world_spawns.py'
+      - 'scripts/loot_drop.gd'
       - 'tests/*spawn*'
+      - 'tests/monster_world_test.gd'
       - '.github/workflows/renewed-map-spawns.yml'
   workflow_dispatch:
 
@@ -17,8 +20,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: renewed-map-spawns-${{ github.ref }}
+  group: renewed-map-spawns-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
+
+env:
+  GODOT: /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64
+  XDG_DATA_HOME: /tmp/spawn-validation/userdata
 
 jobs:
   validate:
@@ -28,46 +35,43 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Resource integrity preflight (before any layout generation)
-        run: python3 tools/check_resource_integrity.py --root .
-      - name: Prepare pinned Godot and reproducible tracked-source checkpoint
+      - name: Prepare evidence directory
         run: |
-          mkdir -p /tmp/spawn-validation
-          git rev-parse HEAD > /tmp/spawn-validation/source-sha.txt
-          git archive --format=tar.gz --output=/tmp/spawn-validation/tracked-source.tar.gz HEAD
+          mkdir -p /tmp/spawn-validation/test-results
+          git rev-parse HEAD > /tmp/spawn-validation/test-results/source-sha.txt
+      - name: Resource integrity preflight
+        run: python3 tools/check_resource_integrity.py --root . 2>&1 | tee /tmp/spawn-validation/test-results/resource-integrity.log
+      - name: Portable rule checks
+        run: python3 -m unittest discover -s tests -p 'test_renewed_map_spawn_rules.py' -v 2>&1 | tee /tmp/spawn-validation/test-results/rules.log
+      - name: Install project-pinned Godot
+        run: |
           curl -L --fail --retry 3 -o /tmp/spawn-validation/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
           unzip -q /tmp/spawn-validation/godot.zip -d /tmp/spawn-validation
-          chmod +x /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64
-          /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --version
-          cd /tmp/spawn-validation && sha256sum tracked-source.tar.gz godot.zip > SHA256SUMS
-      - name: Publish exact source and engine checkpoint
-        uses: actions/upload-artifact@v4
-        with:
-          name: renewed-map-spawn-source-${{ github.sha }}
-          path: |
-            /tmp/spawn-validation/tracked-source.tar.gz
-            /tmp/spawn-validation/godot.zip
-            /tmp/spawn-validation/source-sha.txt
-            /tmp/spawn-validation/SHA256SUMS
-          retention-days: 7
-          if-no-files-found: error
-      - name: Spawn layout checks
+          chmod +x "$GODOT"
+          "$GODOT" --version | tee /tmp/spawn-validation/test-results/godot-version.txt
+      - name: Import scripts and resources
+        run: timeout 420s "$GODOT" --headless --editor --path . --quit 2>&1 | tee /tmp/spawn-validation/test-results/import.log
+      - name: Validate all 25 current maps and export effective placements
         run: |
-          if test -f tools/rebalance_world_spawns.py; then
-            python3 tools/rebalance_world_spawns.py --check
-          fi
-          python3 -m unittest discover -s tests -p 'test_*spawn*.py' -v
-          if test -f tests/renewed_map_spawn_test.gd; then
-            /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit
-            /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/renewed_map_spawn_test.gd
-          fi
-      - name: Full project regression
-        run: python3 tools/test_project.py --godot /tmp/spawn-validation/Godot_v4.7.2-stable_linux.x86_64 --logs /tmp/spawn-validation/test-results
-      - name: Publish validation evidence
+          timeout 600s "$GODOT" --headless --path . --script res://tests/renewed_map_spawn_test.gd -- --output /tmp/spawn-validation/test-results/renewed-map-spawns.json 2>&1 | tee /tmp/spawn-validation/test-results/terrain.log
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('/tmp/spawn-validation/test-results')
+          result = json.loads((root / 'renewed-map-spawns.json').read_text())
+          assert len(result['maps']) == 25 and result['checks'] > 0
+          assert result['failures'] == [], result['failures']
+          for name in ['import.log', 'terrain.log']:
+              text = (root / name).read_text()
+              assert 'SCRIPT ERROR:' not in text and 'Parse Error:' not in text, name
+          PY
+      - name: Full project regression including boss persistence
+        run: python3 tools/test_project.py --godot "$GODOT" --logs /tmp/spawn-validation/test-results/project
+      - name: Publish validation evidence, not an untested game build
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: renewed-map-spawn-tests-${{ github.sha }}
           path: /tmp/spawn-validation/test-results
           retention-days: 14
-          if-no-files-found: warn
+          if-no-files-found: error
