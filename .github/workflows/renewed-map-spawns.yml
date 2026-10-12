@@ -49,6 +49,10 @@ jobs:
           unzip -q /tmp/spawn-validation/godot.zip -d /tmp/spawn-validation
           chmod +x "$GODOT"
           "$GODOT" --version | tee /tmp/spawn-validation/test-results/godot-version.txt
+      - name: Install software OpenGL for frame-dependent regressions
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
       - name: Import scripts and resources
         run: |
           set -o pipefail
