@@ -1,6 +1,6 @@
 # 현재 UI 통합본 검증
 
-실행 소스 `b8d6586eba882cc47480d0470e61ba26357402a9`, 기준 main `f759112bca672ef909cc695a98fa99b1b123e1d3`. Godot 4.7.2, Linux OpenGL llvmpipe. 물리 휴대폰/Windows GPU 테스트와 구별한다.
+최종 코드 `411effaf1b20a84fc910562817714712e5f52cb2`, 전체 실행/화면 기준 `b8d6586eba882cc47480d0470e61ba26357402a9`, 기준 main `f759112bca672ef909cc695a98fa99b1b123e1d3`. Godot 4.7.2, Linux OpenGL llvmpipe. 물리 휴대폰/Windows GPU 테스트와 구별한다.
 
 ## 처음 요청한 18개 시나리오
 
@@ -27,13 +27,18 @@
 
 ## 실제 실행 결과
 
-- 주요 UI OpenGL: **79 PASS / 1 BLOCKED**. [로그](evidence/skill-drawer-focused/integrated_ui_test.txt).
+- 주요 UI OpenGL: **79 PASS / 1 BLOCKED**. [최종 코드 재검사 로그](evidence/landing-fix-final/integrated_ui_test.txt).
 - 오른쪽 패널 OpenGL **46 PASS**, 제스처/팝업 **22 PASS**, 기존 UI fidelity **87 assertions PASS**. [원본 실행 로그](evidence/skill-drawer-focused/).
-- 스킬북 구매/습득/24번째 슬롯/시전/저장/직업별 복원 **22 PASS**, 저장 보호 **6 PASS**. [OpenGL 재실행 로그](evidence/skill-drawer-retest/), [소스 파일 SHA와 결과 연결](evidence/skill-source-snapshot.json).
+- 스킬북 구매/습득/24번째 슬롯/시전/저장/직업별 복원 **22 PASS**, 저장 보호 **6 PASS**. [최종 OpenGL 재실행 로그](evidence/landing-fix-final/), [소스 파일 SHA와 결과 연결](evidence/landing-fix-snapshot.json).
 - 첫 스킬 GUI 검사는 테스트의 `_load_game` 인자 누락으로 19개 통과 후 중단했다. 인자 수정 후 전체 22개를 OpenGL과 headless에서 다시 통과했다. 첫 실행기의 저장 보호 검사 경로 오기도 올바른 스크립트로 재실행해 6개를 통과했다. 최초 실패 로그는 보존했다.
 - 초기 SVG 일괄 import에서 Godot native malloc 오류가 한 번 발생했다. [최초 로그](evidence/skill-drawer-import.txt), [재시도 통과](evidence/skill-drawer-import-retry.txt). 이후 전체 실행기의 import도 통과했다. 초기 엔진 오류의 원인은 확정하지 않았다.
 - 화면 캡처: **73장**, 3해상도, [실행 로그](evidence/skill-capture-final.txt), [manifest](evidence/captures.json). 대표 PNG 12개는 변경 전 main 3장을 포함한다.
-- 전체 **132개** 검사 진행 중. 완료 전에는 전체 PASS로 집계하지 않는다. 이전 PvE 단계의 118개 결과는 [보존 기록](evidence/pve-regression/)이며 현재 코드 결과에 합산하지 않는다.
+- 전체 **132개** 원본 결과: **122 PASS / 7 FAIL / 3 SKIP**. [raw](evidence/skill-regression/raw.json), [전체 로그/원본 SHA](evidence/skill-regression/log-manifest.json).
+- 착지 범위 오류와 두 테스트 호환 문제 수정 후 영향 검사 **12/12 PASS**, 신규 착지 경계 **9 assertions PASS**. [실행 결과](evidence/landing-fix-final/summary.json), [소스 SHA](evidence/landing-fix-snapshot.json).
+- 원본 실패를 삭제하지 않고 수정 후 재검사를 반영한 최종 분류: **126 PASS / 0 FAIL / 6 BLOCKED**. [항목별 분류](evidence/skill-regression/classified.json). 추가 착지 테스트를 포함한 133개를 한 번의 전체 실행에서 통과했다고 주장하지 않는다.
+- 원래 FAIL 7개 중 원본 팩 누락 3개는 BLOCKED다. 소환·스킬 도감의 범위 밖 조회 2개는 코드 수정 후 PASS. 삭제된 퀘스트 카운터 테스트와 이미 켜진 AUTO를 끄던 테스트 2개는 검증 의도를 보존해 수정 후 PASS다. 원래 SKIP 3개도 원본 팩 누락 BLOCKED로 남긴다.
+- 큰 오류 로그 2개는 무손실 gzip으로 보존했고, 압축 전 SHA를 검사했다. 최신 main의 좌표 오류 [재현 로그](evidence/main-skill-catalog-repro.txt.gz), 보상 검사 시간초과 전에 확보한 [실제 원인](evidence/rewards-live-before-timeout.txt)을 별도 보존했다.
+- 이전 PvE 단계의 118개 결과는 [보존 기록](evidence/pve-regression/)이며 현재 코드 결과에 합산하지 않는다.
 
 원본 맵 타일·PNG·SPX 팩이 없으면 해당 검사는 BLOCKED로 기록하고 원래 FAIL/SKIP 로그도 보존한다. 검사 대상을 합성 데이터로 바꾸거나 실패 메시지를 제거하지 않는다.
 
@@ -44,6 +49,7 @@ python3 tools/check_resource_integrity.py --root .
 python3 tools/test_project.py --godot /path/to/Godot_v4.7.2-stable_linux.x86_64 --logs test-results --render-visual-tests --timeout 300
 XDG_DATA_HOME=/tmp/twilight-ui-test /path/to/godot --path . --audio-driver Dummy --script tests/integrated_ui_test.gd
 XDG_DATA_HOME=/tmp/twilight-drawer-test /path/to/godot --path . --audio-driver Dummy --script tests/gameplay_drawer_test.gd
+XDG_DATA_HOME=/tmp/twilight-landing-test /path/to/godot --path . --audio-driver Dummy --script tests/skill_landing_bounds_test.gd
 XDG_DATA_HOME=/tmp/twilight-skill-test /path/to/godot --path . --audio-driver Dummy --script tests/skill_drawer_learning_test.gd
 XDG_DATA_HOME=/tmp/twilight-guard-test /path/to/godot --path . --audio-driver Dummy --script tests/ui_source_save_guard_test.gd
 XDG_DATA_HOME=/tmp/twilight-captures TWILIGHT_UI_CAPTURE_DIR=/tmp/twilight-captures/png /path/to/godot --path . --audio-driver Dummy --script tests/capture_integrated_hud.gd

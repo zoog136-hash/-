@@ -1,0 +1,838 @@
+{
+  "runtime_commit": "b8d6586eba882cc47480d0470e61ba26357402a9",
+  "baseline_main": "f759112bca672ef909cc695a98fa99b1b123e1d3",
+  "total": 132,
+  "raw": {
+    "pass": 122,
+    "fail": 7,
+    "skip": 3
+  },
+  "classified": {
+    "PASS": 126,
+    "FAIL": 0,
+    "BLOCKED": 6,
+    "SKIP": 0
+  },
+  "checks": [
+    {
+      "check": "import",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "import.txt"
+    },
+    {
+      "check": "boot",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "boot.txt"
+    },
+    {
+      "check": "actor_motion_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "actor_motion_test.txt"
+    },
+    {
+      "check": "aden_building_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "aden_building_test.txt"
+    },
+    {
+      "check": "aden_courtyard_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "aden_courtyard_test.txt"
+    },
+    {
+      "check": "aden_ground_continuity_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "aden_ground_continuity_test.txt"
+    },
+    {
+      "check": "aden_shoreline_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "aden_shoreline_test.txt"
+    },
+    {
+      "check": "aden_terrain_polish_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "aden_terrain_polish_test.txt"
+    },
+    {
+      "check": "ainhasad_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "ainhasad_smoke_test.txt"
+    },
+    {
+      "check": "animation_catalog_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "animation_catalog_test.txt"
+    },
+    {
+      "check": "animation_restore_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "animation_restore_test.txt"
+    },
+    {
+      "check": "authored_frames_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "authored_frames_test.txt"
+    },
+    {
+      "check": "authored_state_motion_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "authored_state_motion_test.txt"
+    },
+    {
+      "check": "card_special_policy_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "card_special_policy_test.txt"
+    },
+    {
+      "check": "catalog_effects_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "catalog_effects_smoke_test.txt"
+    },
+    {
+      "check": "catalog_full_browser_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "catalog_full_browser_smoke_test.txt"
+    },
+    {
+      "check": "combat_hud_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "combat_hud_test.txt"
+    },
+    {
+      "check": "combat_resolution_equivalence_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "combat_resolution_equivalence_test.txt"
+    },
+    {
+      "check": "combat_timing_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "combat_timing_test.txt"
+    },
+    {
+      "check": "combat_vfx_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "combat_vfx_test.txt"
+    },
+    {
+      "check": "consumable_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "consumable_smoke_test.txt"
+    },
+    {
+      "check": "crafting_atomic_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "crafting_atomic_test.txt"
+    },
+    {
+      "check": "crafting_material_drop_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "crafting_material_drop_test.txt"
+    },
+    {
+      "check": "crafting_scroll_grade_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "crafting_scroll_grade_test.txt"
+    },
+    {
+      "check": "equipment_blessing_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "equipment_blessing_smoke_test.txt"
+    },
+    {
+      "check": "equipment_slot_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "equipment_slot_smoke_test.txt"
+    },
+    {
+      "check": "external_a2_bridge_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "external_a2_bridge_smoke_test.txt"
+    },
+    {
+      "check": "external_spx_actor_runtime_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "external_spx_actor_runtime_test.txt"
+    },
+    {
+      "check": "field_world_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "field_world_test.txt"
+    },
+    {
+      "check": "flight_lifecycle_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "flight_lifecycle_test.txt"
+    },
+    {
+      "check": "follower_motion_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "follower_motion_test.txt"
+    },
+    {
+      "check": "full_inven_catalog_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "full_inven_catalog_smoke_test.txt"
+    },
+    {
+      "check": "full_visual_manifest_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "full_visual_manifest_test.txt"
+    },
+    {
+      "check": "gameplay_drawer_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "gameplay_drawer_test.txt"
+    },
+    {
+      "check": "ground_drop_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "ground_drop_smoke_test.txt"
+    },
+    {
+      "check": "ground_loot_system_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "ground_loot_system_test.txt"
+    },
+    {
+      "check": "hp_mp_unique_effects_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "hp_mp_unique_effects_smoke_test.txt"
+    },
+    {
+      "check": "hunting_navigation_cache_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "hunting_navigation_cache_test.txt"
+    },
+    {
+      "check": "hunting_paths_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "hunting_paths_test.txt"
+    },
+    {
+      "check": "hunting_world_capture_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "hunting_world_capture_test.txt"
+    },
+    {
+      "check": "input_routing_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "input_routing_test.txt"
+    },
+    {
+      "check": "integrated_interaction_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "integrated_interaction_test.txt"
+    },
+    {
+      "check": "integrated_ui_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "integrated_ui_test.txt"
+    },
+    {
+      "check": "inventory_db_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "inventory_db_smoke_test.txt"
+    },
+    {
+      "check": "item_buff_description_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "item_buff_description_smoke_test.txt"
+    },
+    {
+      "check": "item_db_slot_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "item_db_slot_smoke_test.txt"
+    },
+    {
+      "check": "item_icon_art_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "item_icon_art_smoke_test.txt"
+    },
+    {
+      "check": "item_options_runtime_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "item_options_runtime_smoke_test.txt"
+    },
+    {
+      "check": "item_weight_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "item_weight_smoke_test.txt"
+    },
+    {
+      "check": "job_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "job_smoke_test.txt"
+    },
+    {
+      "check": "l1j_full_source_data_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_full_source_data_test.txt"
+    },
+    {
+      "check": "l1j_map_grid_test",
+      "raw_status": "FAIL",
+      "status": "BLOCKED",
+      "log": "l1j_map_grid_test.txt",
+      "reason": "Private original map grid is not installed.",
+      "missing_path": "data/l1j/maps/raw/4.bin"
+    },
+    {
+      "check": "l1j_map_recovery_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_map_recovery_test.txt"
+    },
+    {
+      "check": "l1j_optional_bridge_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_optional_bridge_test.txt"
+    },
+    {
+      "check": "l1j_packed_assets_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_packed_assets_test.txt"
+    },
+    {
+      "check": "l1j_png_load_test",
+      "raw_status": "FAIL",
+      "status": "BLOCKED",
+      "log": "l1j_png_load_test.txt",
+      "reason": "Private original PNG pack is not installed.",
+      "missing_path": "assets/l1j/preview/a2/items/34.png"
+    },
+    {
+      "check": "l1j_reviewed_shop_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_reviewed_shop_test.txt"
+    },
+    {
+      "check": "l1j_runtime_game_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_runtime_game_test.txt"
+    },
+    {
+      "check": "l1j_source_map_catalog_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_source_map_catalog_test.txt"
+    },
+    {
+      "check": "l1j_source_navigation_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_source_navigation_test.txt"
+    },
+    {
+      "check": "l1j_spx_frames_test",
+      "raw_status": "FAIL",
+      "status": "BLOCKED",
+      "log": "l1j_spx_frames_test.txt",
+      "reason": "Private original SPX pack is not installed.",
+      "missing_path": "assets/l1j/candidates/spx_converted/21624-0/SpriteFrames.tres"
+    },
+    {
+      "check": "l1j_visual_link_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "l1j_visual_link_test.txt"
+    },
+    {
+      "check": "lineage_inventory_ui_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "lineage_inventory_ui_smoke_test.txt"
+    },
+    {
+      "check": "lineage_side_ui_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "lineage_side_ui_smoke_test.txt"
+    },
+    {
+      "check": "lineagem_ui_visual_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "lineagem_ui_visual_smoke_test.txt"
+    },
+    {
+      "check": "local_crafting_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "local_crafting_test.txt"
+    },
+    {
+      "check": "loot_balance_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "loot_balance_smoke_test.txt"
+    },
+    {
+      "check": "map_visual_toggle_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "map_visual_toggle_test.txt"
+    },
+    {
+      "check": "mobile_scroll_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "mobile_scroll_smoke_test.txt"
+    },
+    {
+      "check": "monster_ai_leash_path_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "monster_ai_leash_path_test.txt"
+    },
+    {
+      "check": "monster_attack_profiles_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "monster_attack_profiles_test.txt"
+    },
+    {
+      "check": "monster_motion_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "monster_motion_test.txt"
+    },
+    {
+      "check": "monster_world_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "monster_world_test.txt"
+    },
+    {
+      "check": "non_skill_options_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "non_skill_options_smoke_test.txt"
+    },
+    {
+      "check": "npc_dialogue_branching_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "npc_dialogue_branching_test.txt"
+    },
+    {
+      "check": "npc_teleport_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "npc_teleport_test.txt"
+    },
+    {
+      "check": "option_finalize_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "option_finalize_smoke_test.txt"
+    },
+    {
+      "check": "original_counter_probability_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_counter_probability_test.txt"
+    },
+    {
+      "check": "original_lineagem_effects_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_lineagem_effects_smoke_test.txt"
+    },
+    {
+      "check": "original_map_catalog_test",
+      "raw_status": "SKIP",
+      "status": "BLOCKED",
+      "log": "original_map_catalog_test.txt",
+      "reason": "Private original map pack catalog is unavailable; original SKIP retained.",
+      "missing_path": null
+    },
+    {
+      "check": "original_skill_audio_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_audio_test.txt"
+    },
+    {
+      "check": "original_skill_catalog_runtime_test",
+      "raw_status": "FAIL",
+      "status": "PASS",
+      "log": "original_skill_catalog_runtime_test.txt.gz",
+      "retest_log": "../landing-fix-final/original_skill_catalog_runtime_test.txt",
+      "reason": "Original failed run retained; corrected runtime/test passed the focused rerun."
+    },
+    {
+      "check": "original_skill_learning_conditions_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_learning_conditions_test.txt"
+    },
+    {
+      "check": "original_skill_provenance_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_provenance_test.txt"
+    },
+    {
+      "check": "original_skill_reduction_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_reduction_test.txt"
+    },
+    {
+      "check": "original_skill_status_coexistence_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_status_coexistence_test.txt"
+    },
+    {
+      "check": "original_skill_summon_test",
+      "raw_status": "FAIL",
+      "status": "PASS",
+      "log": "original_skill_summon_test.txt.gz",
+      "retest_log": "../landing-fix-final/original_skill_summon_test.txt",
+      "reason": "Original failed run retained; corrected runtime/test passed the focused rerun."
+    },
+    {
+      "check": "original_skill_system_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_system_test.txt"
+    },
+    {
+      "check": "original_skill_target_state_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_target_state_test.txt"
+    },
+    {
+      "check": "original_skill_warehouse_migration_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_skill_warehouse_migration_test.txt"
+    },
+    {
+      "check": "original_turn_undead_rewards_test",
+      "raw_status": "FAIL",
+      "status": "PASS",
+      "log": "original_turn_undead_rewards_test.txt",
+      "retest_log": "../landing-fix-final/original_turn_undead_rewards_test.txt",
+      "reason": "Original failed run retained; corrected runtime/test passed the focused rerun."
+    },
+    {
+      "check": "original_turn_undead_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_turn_undead_test.txt"
+    },
+    {
+      "check": "original_world_coordinates_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "original_world_coordinates_test.txt"
+    },
+    {
+      "check": "original_world_runtime_test",
+      "raw_status": "SKIP",
+      "status": "BLOCKED",
+      "log": "original_world_runtime_test.txt",
+      "reason": "Private original map pack runtime is unavailable; original SKIP retained.",
+      "missing_path": null
+    },
+    {
+      "check": "passive_skill_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "passive_skill_smoke_test.txt"
+    },
+    {
+      "check": "per_instance_enchantments_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "per_instance_enchantments_smoke_test.txt"
+    },
+    {
+      "check": "playtest_catalog_drag_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "playtest_catalog_drag_test.txt"
+    },
+    {
+      "check": "pr80_original_resources_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "pr80_original_resources_test.txt"
+    },
+    {
+      "check": "pr80_resource_assets_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "pr80_resource_assets_test.txt"
+    },
+    {
+      "check": "quickslot_smoke_test",
+      "raw_status": "FAIL",
+      "status": "PASS",
+      "log": "quickslot_smoke_test.txt",
+      "retest_log": "../landing-fix-final/quickslot_smoke_test.txt",
+      "reason": "Original failed run retained; corrected runtime/test passed the focused rerun."
+    },
+    {
+      "check": "reference_expansion_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "reference_expansion_test.txt"
+    },
+    {
+      "check": "reference_object_capture_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "reference_object_capture_test.txt"
+    },
+    {
+      "check": "reference_object_placement_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "reference_object_placement_test.txt"
+    },
+    {
+      "check": "relic_motion_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "relic_motion_test.txt"
+    },
+    {
+      "check": "road_surface_mesh_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "road_surface_mesh_test.txt"
+    },
+    {
+      "check": "road_surface_render_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "road_surface_render_test.txt"
+    },
+    {
+      "check": "shield_rules_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "shield_rules_smoke_test.txt"
+    },
+    {
+      "check": "shop_authority_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "shop_authority_test.txt"
+    },
+    {
+      "check": "shop_buyback_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "shop_buyback_test.txt"
+    },
+    {
+      "check": "skill_drawer_learning_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "skill_drawer_learning_test.txt"
+    },
+    {
+      "check": "skill_element_integration_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "skill_element_integration_smoke_test.txt"
+    },
+    {
+      "check": "skill_mechanism_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "skill_mechanism_smoke_test.txt"
+    },
+    {
+      "check": "source_first_map_test",
+      "raw_status": "SKIP",
+      "status": "BLOCKED",
+      "log": "source_first_map_test.txt",
+      "reason": "Private original map pack is unavailable; original SKIP retained.",
+      "missing_path": null
+    },
+    {
+      "check": "source_pack_guard_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "source_pack_guard_test.txt"
+    },
+    {
+      "check": "speed_option_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "speed_option_smoke_test.txt"
+    },
+    {
+      "check": "stage5_save_compatibility_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "stage5_save_compatibility_test.txt"
+    },
+    {
+      "check": "terrain_surface_geometry_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "terrain_surface_geometry_test.txt"
+    },
+    {
+      "check": "terrain_surface_render_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "terrain_surface_render_test.txt"
+    },
+    {
+      "check": "terrain_variation_texture_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "terrain_variation_texture_test.txt"
+    },
+    {
+      "check": "ui_fidelity_regression_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "ui_fidelity_regression_test.txt"
+    },
+    {
+      "check": "ui_renewal_integration_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "ui_renewal_integration_test.txt"
+    },
+    {
+      "check": "ui_source_save_guard_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "ui_source_save_guard_test.txt"
+    },
+    {
+      "check": "ui_stage4_item_instance_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "ui_stage4_item_instance_test.txt"
+    },
+    {
+      "check": "visible_gameplay_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "visible_gameplay_smoke_test.txt"
+    },
+    {
+      "check": "volley_motion_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "volley_motion_test.txt"
+    },
+    {
+      "check": "warehouse_persistence_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "warehouse_persistence_test.txt"
+    },
+    {
+      "check": "weapon_rules_smoke_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "weapon_rules_smoke_test.txt"
+    },
+    {
+      "check": "world_region_portals_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "world_region_portals_test.txt"
+    },
+    {
+      "check": "world_regions_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "world_regions_test.txt"
+    },
+    {
+      "check": "world_structure_capture_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "world_structure_capture_test.txt"
+    },
+    {
+      "check": "world_structure_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "world_structure_test.txt"
+    },
+    {
+      "check": "world_terrain_coverage_test",
+      "raw_status": "PASS",
+      "status": "PASS",
+      "log": "world_terrain_coverage_test.txt"
+    }
+  ],
+  "post_fix_runtime_commit": "411effaf1b20a84fc910562817714712e5f52cb2",
+  "retest_source": "../landing-fix-final/summary.json",
+  "additional_check": {
+    "name": "skill_landing_bounds_test",
+    "status": "PASS",
+    "assertions": 9,
+    "log": "../landing-fix-final/skill_landing_bounds_test.txt"
+  }
+}

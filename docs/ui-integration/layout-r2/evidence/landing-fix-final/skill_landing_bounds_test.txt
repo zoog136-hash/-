@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+PASS enter world for landing regression
+PASS real map has more display tiles than navigation cells
+PASS 64 random landings stay inside the actual walkable grid
+PASS fallback landing uses the actual grid bounds
+PASS summon landing remains near its owner on the large continent
+PASS native quickslot teleport lands on a valid navigation cell
+PASS teleport slot spends real MP and starts cooldown
+PASS fallback honors a nonzero grid origin
+PASS random landing honors a nonzero grid origin
+SKILL_LANDING_BOUNDS_OK: 9 checks

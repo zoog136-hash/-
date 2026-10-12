@@ -1,6 +1,6 @@
 # TWILIGHT 화면 변경과 실제 검증 — 2026-10-12
 
-실행한 게임 코드: **`b8d6586eba882cc47480d0470e61ba26357402a9`**. 기준 main: **`f759112bca672ef909cc695a98fa99b1b123e1d3`**. 브랜치: `feature/twilight-integrated-hud-20261012`, [PR #86](https://github.com/zoog136-hash/-/pull/86).
+최종 게임 코드: **`411effaf1b20a84fc910562817714712e5f52cb2`**. 전체 회귀와 UI 화면의 기준 코드: `b8d6586`. 기준 main: **`f759112bca672ef909cc695a98fa99b1b123e1d3`**. 브랜치: `feature/twilight-integrated-hud-20261012`, [PR #86](https://github.com/zoog136-hash/-/pull/86).
 
 [실제 전후 비교](ui-integration/layout-r2/comparison.html) · [수정 메뉴](ui-integration/layout-r2/drawer-menu.png) · [가방 상세](ui-integration/layout-r2/drawer-inventory-detail.png) · [현재 필수 시나리오](ui-integration/layout-r2/VALIDATION.md)
 
@@ -51,7 +51,7 @@ PR #59의 스킬북 구매·습득·습득 레벨·안정 ID·원자적 저장�
 
 PR 전체의 게임 연결 변경: `project.godot`, `scripts/{world,player}.gd`, `scripts/crafting/expanded_crafting.gd`, `scripts/skills/skill_service.gd`의 공유 쿨타임 조회, `scripts/ui/{menu_registry,quickslot_controller,quickslot_button,safe_area,renewal_dialog,renewal_settings,renewal_teleport}.gd`와 위 후속 파일이다. 새 Autoload는 없으며, UI는 게임 데이터를 별도 소유하지 않는다.
 
-검증: `tests/{integrated_ui_test,integrated_interaction_test,gameplay_drawer_test,skill_drawer_learning_test,ui_source_save_guard_test,capture_integrated_hud,lineagem_ui_visual_smoke_test,quickslot_smoke_test,ui_renewal_integration_test,skill_mechanism_smoke_test,lineage_side_ui_smoke_test}.gd`, `.github/workflows/ui-renewal-validate.yml`. 문서 PNG를 게임 자산으로 import하지 않도록 `docs/ui-integration/.gdignore`를 두며 Git 전달은 유지한다.
+검증: `tests/{integrated_ui_test,integrated_interaction_test,gameplay_drawer_test,skill_drawer_learning_test,skill_landing_bounds_test,original_turn_undead_rewards_test,ui_source_save_guard_test,capture_integrated_hud,lineagem_ui_visual_smoke_test,quickslot_smoke_test,ui_renewal_integration_test,skill_mechanism_smoke_test,lineage_side_ui_smoke_test}.gd`, `.github/workflows/ui-renewal-validate.yml`. 문서 PNG를 게임 자산으로 import하지 않도록 `docs/ui-integration/.gdignore`를 두며 Git 전달은 유지한다.
 
 ## 실행과 결과
 
@@ -59,9 +59,11 @@ Godot **4.7.2.stable.official.ed1daf0bf**, 실제 Linux Compatibility/OpenGL Mes
 
 - 주요 HUD/게임 상태: **79 PASS / 1 BLOCKED**. BLOCKED는 실제 모바일 기기 부재이며 입력 주입과 구별한다.
 - 3해상도 오른쪽 패널과 원래 상세 복귀: **46 PASS**. 드래그/스와이프/롱프레스/모달/안전 영역: **22 PASS**. 공통 UI 회귀: **87 assertions PASS**.
-- 스킬북의 실제 아데나 차감 → 습득 → 24번째 슬롯 → 시전 → 원자적 저장/로드 → 직업별 슬롯 복원은 새 실행 검사로 확인한다. 스킬/재화/소유 값을 UI에서 조작해 성공시키지 않는다. 무기 제한 검증에 사용한 양손검만 기존 도감 테스트 지급 명령으로 획득했다.
-- 전체 **132개** Godot 검사 결과와 개별 OpenGL 로그는 [현재 검증 기록](ui-integration/layout-r2/VALIDATION.md)에 구분해 기록한다. 최초 실패나 실행기 경로 실수도 삭제하지 않고 수정 후 실행과 분리한다.
-- 실제 화면 캡처: `/workspace/evidence/skill-final-captures`. 최신 main의 원본 실행 비교는 `/workspace/evidence/before-f759112-captures`. 대표 PNG와 [파일별 SHA-256/게임 상태](ui-integration/layout-r2/evidence/captures.json)를 Git에 전달한다.
+- 스킬북의 실제 아데나 차감 → 습득 → 24번째 슬롯 → 시전 → 원자적 저장/로드 → 직업별 슬롯 복원은 최종 OpenGL에서 **22 PASS**다. 저장 보호는 **6 PASS**다. 스킬/재화/소유 값을 UI에서 조작해 성공시키지 않는다. 무기 제한 검증에 사용한 양손검만 기존 도감 테스트 지급 명령으로 획득했다.
+- 전체 **132개** 원본 실행은 **122 PASS / 7 FAIL / 3 SKIP**다. 착지 오류와 테스트 호환 문제를 수정한 뒤 영향 검사 **12개 모두 PASS**, 새 착지 경계 검사 **9 assertions PASS**를 확인했다. 재검사 반영 최종 분류는 **126 PASS / 0 FAIL / 6 BLOCKED**다. [원본 로그와 재검사 근거](ui-integration/layout-r2/evidence/skill-regression/), [18개 필수 시나리오](ui-integration/layout-r2/VALIDATION.md). 전체 133개를 한 번에 통과했다고 주장하지 않는다.
+- UI 구조의 실제 실행 화면 **73장**은 `b8d6586` 캡처다. 이후 `411effa`는 착지 좌표 처리와 테스트만 바꿨으며 UI 레이아웃 파일은 동일하다. 실제 화면 캡처: `/workspace/evidence/skill-final-captures`. 최신 main의 원본 실행 비교는 `/workspace/evidence/before-f759112-captures`. 대표 PNG와 [파일별 SHA-256/게임 상태](ui-integration/layout-r2/evidence/captures.json)를 Git에 전달한다.
+- 최신 main에서도 재현된 순간이동·소환의 범위 밖 격자 조회를 고쳤다. 표시 타일 수 대신 실제 `astar.region`과 요청 반경을 사용한다. 맵·지형·배치 데이터는 수정하지 않았다. 새 검사는 실제 슬롯 순간이동, 64개 임의 착지, 주인 근처 소환 위치, 비영점 격자 원점을 확인한다.
+- 스킬 보상 테스트의 제거된 퀘스트 카운터 참조를 없애고 실제 처치/경험치/아데나/바닥 드랍/저장 검증은 유지했다. 퀵슬롯 테스트는 등록 시 AUTO ON 상태를 다시 끄던 통합 오류를 바로잡아 OFF/ON/SELF를 각각 검증한다. [최종 12개 로그](ui-integration/layout-r2/evidence/landing-fix-final/), [검사 대상 코드 SHA](ui-integration/layout-r2/evidence/landing-fix-snapshot.json).
 - 원본 리소스 무결성: 723개 WebP 시트 / 41,442프레임 / 233,420,026바이트 확인. 미설치 개인 원본 맵·PNG·SPX 팩을 포함했다고 주장하지 않는다.
 - Windows GPU·실제 Android/iOS 기기 실행은 BLOCKED/미검증이다. Linux 입력 주입이나 CI 빌드를 실기기 실행으로 취급하지 않는다.
 
@@ -78,7 +80,9 @@ Godot **4.7.2.stable.official.ed1daf0bf**, 실제 Linux Compatibility/OpenGL Mes
 
 ## 전달과 다음 작업
 
-기능 커밋 `62d085f`(오른쪽 패널), `0ccf57b`(드래그 위치 보존), `d05aba0`(저장 보호 검사), `b215b20`(최신 main 통합), `fb102d1`(카드 쿨타임 검사 호환), `b8d6586`(최신 스킬 시스템과 24칸 연결)을 정상 push했다. 강제 초기화·강제 push·main 병합은 하지 않았다.
+기능 커밋 `62d085f`(오른쪽 패널), `0ccf57b`(드래그 위치 보존), `d05aba0`(저장 보호 검사), `b215b20`(최신 main 통합), `fb102d1`(카드 쿨타임 검사 호환), `b8d6586`(최신 스킬 시스템과 24칸 연결)은 정상 push했다. 최종 착지 수정 `411effa`와 검증 증거도 같은 feature 브랜치로 전달한다. 강제 초기화·강제 push·main 병합은 하지 않았다.
+
+전체 회귀가 생성한 맵 문서 파일 240개는 `/workspace/evidence/final-skill-map-generated`에 SHA와 함께 보존한 뒤 기존 Git 상태로 복원했다.
 
 다음 UI 우선순위는 설정 내부 분류, 자동사용 정책의 화면 안내, 미구현 소유/성장 모델의 실제 연결, 실기기 검증이다. 최신 한국 리니지M의 모든 메뉴 배치는 확인하지 못했으며 [공식 자료의 확인/추정 구분](ui-integration/REFERENCE_AND_FLOW.md)을 유지한다.
 

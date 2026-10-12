@@ -1,0 +1,121 @@
+{
+  "runtime_commit": "411effaf1b20a84fc910562817714712e5f52cb2",
+  "baseline_main": "f759112bca672ef909cc695a98fa99b1b123e1d3",
+  "whole_run_source": "b8d6586eba882cc47480d0470e61ba26357402a9",
+  "checks": [
+    {
+      "test": "original_skill_catalog_runtime_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "original_skill_summon_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "original_turn_undead_rewards_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "quickslot_smoke_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "consumable_smoke_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "monster_world_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "field_world_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "original_turn_undead_test",
+      "pass": true,
+      "exit": 0,
+      "render": "headless"
+    },
+    {
+      "test": "skill_drawer_learning_test",
+      "pass": true,
+      "exit": 0,
+      "render": "OpenGL"
+    },
+    {
+      "test": "skill_landing_bounds_test",
+      "pass": true,
+      "exit": 0,
+      "render": "OpenGL"
+    },
+    {
+      "test": "integrated_ui_test",
+      "pass": true,
+      "exit": 0,
+      "render": "OpenGL"
+    },
+    {
+      "test": "ui_source_save_guard_test",
+      "pass": true,
+      "exit": 0,
+      "render": "OpenGL"
+    }
+  ],
+  "files": {
+    ".github/workflows/ui-renewal-validate.yml": "e7ad67b9043b1096fde828c6d33af294837bab98922313a6aa4eca5411384439",
+    "project.godot": "edb3121cfd066eee8a58ffe0a00b71d49ad8b672c14ea4b25eeb0d851ae51b2f",
+    "scripts/crafting/expanded_crafting.gd": "5f52d73c9f81ae77620bc2591b0a9f68fcb706edb584c79ff8b1db640111bbc7",
+    "scripts/player.gd": "93322ab7a5ad807fddef01fca8a41239adc3572137cca9913bf0f8594eabf270",
+    "scripts/skills/skill_service.gd": "bc533ec9fb3c10c6aa3190589c3570f83ed3e6902035de8dd3e597509a33971b",
+    "scripts/ui/menu_registry.gd": "a5bf971df028f846d54e94519ec50994ee525947a29fb249538e4df910b1240f",
+    "scripts/ui/menu_router.gd": "88b0c583fb9cfc00af5938f27e2e85abdff3df76853fd78ce4932857c418165c",
+    "scripts/ui/quickslot_button.gd": "3da2d3e181c35af13b108b8d1cc6389e2dc9432a29b91cf9f0384f0114fa9e7c",
+    "scripts/ui/quickslot_controller.gd": "5245e9ae3ba356294be6ddf9d8423293f5fa455d1c7281c355c50d046df5b542",
+    "scripts/ui/renewal_browser.gd": "5449414e58eb420e3e016d8cc1ba3e4f71b0d59a59692b39bfa571406604c213",
+    "scripts/ui/renewal_dialog.gd": "39b5470bbe363ece681dbd5434007d843e41724a7116694b71a3747598d91bd3",
+    "scripts/ui/renewal_hud.gd": "9cc7048d4fd06231ea041de5d9abff140fc9fafb583c4daf9604f11695de0c58",
+    "scripts/ui/renewal_inventory.gd": "4c9c81e5ae5be0ea1a9d64d9c3469a687d72815732ffe91e8e9c6c6be93f333e",
+    "scripts/ui/renewal_settings.gd": "fc5a059327d0fb154c96d1df999fca5da10fdaceb9adea77e3d9962db6d7b2ed",
+    "scripts/ui/renewal_skills.gd": "3de2978580ea34edb4fe489f13e20b7ed658605edaf35f58187a0e1f90fb0606",
+    "scripts/ui/renewal_teleport.gd": "82dff2f18cb47bc278b5d2240aff315515f03d45c72a8fdf318df4db604cf614",
+    "scripts/ui/renewal_window.gd": "2520dba96e6d1e1649497797a254b3b34aaeb1cd730726a36076605fd39d843c",
+    "scripts/ui/safe_area.gd": "0b5ff6f402201d7efefb5baed0a2ecffd682e993425146d69cc50c2c103444bb",
+    "scripts/world.gd": "803ed0ccdfe0f1199bed82ff34747210823622f2687e21c60c47c62baf37c869",
+    "tests/capture_integrated_hud.gd": "a1135bbef51f8fe874be5d4ec244ffe1d0f1be694a5bda645529db86342608ed",
+    "tests/gameplay_drawer_test.gd": "222b1ee2ac4d418edb81c66826bd67debb70cf4da8212019735847c58efaa87f",
+    "tests/integrated_interaction_test.gd": "274303f58bbd90d892933d63cfe2a2400039f1478716b524aec5053ebf4a9cd0",
+    "tests/integrated_ui_test.gd": "5f5094539a94c8f7a6c4c3314a6d88b73280f25e3c68e60487da7c5ebc9c0b90",
+    "tests/lineage_side_ui_smoke_test.gd": "df0217045a72fca1bb54bdf0a19de45e6d120382b8a2ff2c0766556c51994138",
+    "tests/lineagem_ui_visual_smoke_test.gd": "0ab18a98c4c63648b1d339c474d8808e94468f6e5c03aecf594cf12f130cb201",
+    "tests/original_turn_undead_rewards_test.gd": "6164841d665b40e313fb08ed9b389fa46b77618dc307ac9722bca22c2ebc5459",
+    "tests/quickslot_smoke_test.gd": "6222d4d07bb3e2ed15963727a0e71508ff37e702a9d0035afee27547cf706748",
+    "tests/skill_drawer_learning_test.gd": "a2209e4cc17815a4148857d3663ee28ba5505429f457c65055f70ef0f1a4577a",
+    "tests/skill_landing_bounds_test.gd": "e46b29679ecb92c043bc735d73520b351683d1d929c8bb71a060826bb8af0d15",
+    "tests/skill_mechanism_smoke_test.gd": "b874d6f45f73ebf5317f5eb0d6a25bc6544636d8edfa9c8bfde43619ee3ae2ed",
+    "tests/ui_renewal_integration_test.gd": "89d6f34af4c74f88aaf2e640c9b0cd0f0d7db8b03f695924f64c28ca7d637edc",
+    "tests/ui_source_save_guard_test.gd": "d8452843537d16e3175fefb454dc39635f82c736a8636acd4aac95f592329367"
+  },
+  "map_data_modified": false,
+  "new_landing_assertions": 9,
+  "before_main_repro": {
+    "source": "f759112bca672ef909cc695a98fa99b1b123e1d3",
+    "raw_sha256": "1e25c269796704484f5d3dd14cf77e7aa7539a4838bd17c459cb4c582f854247",
+    "errors": 1062
+  },
+  "scope": "Only the two world landing helpers, two compatibility tests and a new landing regression changed after the complete 132-check run. UI layout scripts and captures still match b8d6586."
+}
