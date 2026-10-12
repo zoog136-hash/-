@@ -52,6 +52,10 @@ func _run() -> void:
 		view.type_filter.item_selected.emit(1)
 		await frames()
 		var browser: Node = view.cards.get_parent().get_parent()
+		for index: int in view.filtered.size():
+			if world._skill_owned_for_current_job(view.filtered[index]):
+				view.select(index)
+				break
 		var skill_name := str(view.selected.get("name",""))
 		await click(browser.tabs.get_child(1))
 		check(view.quick_button.is_visible_in_tree(),"skill detail exposes registration action "+str(extent))

@@ -53,8 +53,16 @@ func _run() -> void:
 	view.type_filter.select(1)
 	view.type_filter.item_selected.emit(1)
 	await frames()
-	var skill_name: String = str(view.filtered[0].get("name",""))
-	var source: Vector2 = view.cards.get_global_transform_with_canvas() * view.cards.get_item_rect(0).get_center()
+	var skill_index: int = -1
+	for index: int in view.filtered.size():
+		if world._skill_owned_for_current_job(view.filtered[index]): skill_index = index; break
+	check(skill_index >= 0,"starter has an owned active skill for drag registration")
+	if skill_index < 0: quit(1); return
+	view.select(skill_index)
+	view.cards.ensure_current_is_visible()
+	await frames()
+	var skill_name: String = str(view.filtered[skill_index].get("name",""))
+	var source: Vector2 = view.cards.get_global_transform_with_canvas() * view.cards.get_item_rect(skill_index).get_center()
 	var destination := point(hud.v20_quickslot_buttons[1])
 	mouse(source,true)
 	for step: int in range(1,5):

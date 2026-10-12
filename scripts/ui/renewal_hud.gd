@@ -603,27 +603,35 @@ func _render_quickslots(inventory: Dictionary,buffs: Dictionary) -> void:
 		if entry.is_empty(): continue
 		var id := str(entry.get("id",""))
 		var is_item: bool = entry.get("kind") == "item"
-		var skill: Dictionary = world._skill_record(id) if not is_item else {}
-		var remain: float = float(world.item_use_cooldowns.get(id,0)) if is_item else float(world.skill_cooldowns.get(id,0))
+		var skill: Dictionary = world._skill_record(str(entry.get("skill_id",id))) if not is_item else {}
+		var original: bool = skill.get("origin", "") == "LINEAGEM_20250617"
+		var resolved: Dictionary = world.original_skills.catalog.resolve(skill) if original else skill
+		var skill_name: String = str(skill.get("name",id))
+		var remain: float = float(world.item_use_cooldowns.get(id,0)) if is_item else float(world.skill_cooldowns.get(skill_name,0))
+		var learned_level: int = int(world.original_skills.catalog.learned.get(str(skill.get("id","")),0)) if original else 0
 		var unavailable := ""
 		if is_item:
 			quickslot_icons[visible_index].texture = UI.item_icon(lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}))
 			quickslot_captions[visible_index].text = id.left(3)+" ×%d" % int(inventory.get(id,0))
 			if int(inventory.get(id,0)) <= 0: unavailable = "없음"
 		elif not skill.is_empty():
-			quickslot_icons[visible_index].texture = _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
-			quickslot_captions[visible_index].text = id.left(6)
-			if int(character_state.get("mp",0)) < int(skill.get("mp",0)): unavailable = "MP 부족"
+			quickslot_icons[visible_index].texture = load(str(skill.icon)) as Texture2D if skill.has("icon") else _skill_icon(str(skill.get("effect","")),str(skill.get("type","")))
+			quickslot_captions[visible_index].text = skill_name.left(6)
+			if original: unavailable = world.original_skills.cost_reason(resolved)
+			elif int(character_state.get("mp",0)) < int(skill.get("mp",0)): unavailable = "MP 부족"
 			if not world._skill_owned_for_current_job(skill): unavailable = "사용 불가"
 		else: unavailable = "사용 불가"
-		quickslot_auto_badges[visible_index].text = "AUTO" if bool(entry.get("auto",false)) else ("효과" if buffs.has(id) else "")
+		quickslot_auto_badges[visible_index].text = "AUTO" if bool(entry.get("auto",false)) else ("효과" if buffs.has(skill_name) else "")
+		if learned_level > 0: quickslot_auto_badges[visible_index].text += " L%d" % learned_level
 		quickslot_cooldown_labels[visible_index].text = "%.1f" % remain if remain > 0 else unavailable
-		var duration: float = maxf(remain,1.0) if is_item else maxf(0.01,preload("res://scripts/skill_rules.gd").cooldown_seconds(skill))
+		var duration: float = maxf(remain,1.0) if is_item else maxf(0.01,world.original_skills.cooldown_seconds(resolved) if original else preload("res://scripts/skill_rules.gd").cooldown_seconds(skill))
 		cooldown_shades[visible_index].anchor_top = 0.0 if unavailable != "" else 1.0-clampf(remain/duration,0,1)
 		cooldown_shades[visible_index].offset_top = 0
 		cooldown_shades[visible_index].visible = remain > 0 or unavailable != ""
-		button.tooltip_text += "\n"+id+(" · 자동 ON" if bool(entry.get("auto",false)) else " · 자동 OFF")
-		if not skill.is_empty(): button.tooltip_text += " · MP %d · 스킬 레벨 데이터 없음" % int(skill.get("mp",0))
+		button.tooltip_text += "\n"+(id if is_item else skill_name)+(" · 자동 ON" if bool(entry.get("auto",false)) else " · 자동 OFF")
+		if not skill.is_empty():
+			button.tooltip_text += " · MP %d" % int(resolved.get("mp",0))
+			button.tooltip_text += " · Lv.%d" % learned_level if original else " · 스킬 레벨 데이터 없음"
 
 func append_log(value: String) -> void:
 	log_history.append(value)
@@ -1460,7 +1468,7 @@ func open_skills() -> void:
 
 func _emit_quickslot_assignment(slot_index: int,entry_kind: String,entry_id: String) -> void:
 	quickslot_assignment_requested.emit(slot_index,entry_kind,entry_id)
-	if slot_index < quickslot_entries.size() and str(quickslot_entries[slot_index].get("id","")) == entry_id:
+	if slot_index < quickslot_entries.size() and entry_id in [str(quickslot_entries[slot_index].get("id","")),str(quickslot_entries[slot_index].get("skill_id",""))]:
 		show_message(QuickController.label_for(slot_index)+" 등록 완료")
 		go_back()
 
@@ -1599,7 +1607,8 @@ func _open_quickslot_picker(entry_kind: String, entry_id: String, _display_name:
 func _open_quickslot_settings(registering: bool = false) -> void:
 	_open_window("quickslots","퀵슬롯", "좌우 4칸 · 각각 3그룹 · 길게 누르기/우클릭: 편집")
 	var col: VBoxContainer = workspace.column()
-	col.add_child(UI.section("등록할 위치: "+quick_picker_id if registering else "24칸 퀵슬롯 관리",16))
+	var picker_name: String = str(get_parent()._skill_record(quick_picker_id).get("name",quick_picker_id)) if quick_picker_kind in ["skill","skill_auto"] else quick_picker_id
+	col.add_child(UI.section("등록할 위치: "+picker_name if registering else "24칸 퀵슬롯 관리",16))
 	var scroll := ScrollContainer.new()
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	col.add_child(scroll)

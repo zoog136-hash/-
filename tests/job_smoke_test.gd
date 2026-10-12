@@ -66,6 +66,12 @@ func _run() -> void:
 		await process_frame
 		if str(world.get("job_class")) != job_name:
 			_fail("job change did not stick: " + job_name)
+		world.call("_refresh_combat_hud")
+		var hud: Node = world.get("hud")
+		if not str(hud.player_label.text).contains(job_name):
+			_fail("combat HP refresh changed the base HUD class name: " + job_name)
+		if str(hud.v20_status_name.text) != "황혼의 " + job_name:
+			_fail("combat HP refresh changed the visible HUD class name: " + job_name)
 		var quickbar_value: Variant = world.call("_quickbar_job_skills")
 		if not (quickbar_value is Array) or (quickbar_value as Array).is_empty():
 			_fail("%s quickbar is empty" % job_name)

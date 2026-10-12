@@ -125,7 +125,7 @@ func _run() -> void:
 	var skill_index: int = -1
 	for index: int in view.filtered.size():
 		var record: Dictionary = view.filtered[index]
-		if world._is_buff_skill(record) and int(record.get("mp",0)) > 0: skill_index = index; break
+		if world._is_buff_skill(record) and world._skill_owned_for_current_job(record) and int(record.get("mp",0)) > 0: skill_index = index; break
 	check(skill_index >= 0,"06 current job has implemented buff skill")
 	if skill_index >= 0:
 		view.select(skill_index)
