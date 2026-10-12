@@ -114,7 +114,7 @@ func _run() -> void:
 					check(not slot.monster.dead and slot.monster.hp==slot.monster.max_hp and slot.monster.motion.death_clock==0.,"pooled actor fully reset")
 			check(alive==int(region.max_count) and population.available.size()<=64,"continuous bounded dense respawn "+id)
 		await process_frame
-	check(map_count==25 and dense_count==4 and boss_count==27,"all maps/four dense/twenty-seven boss zones covered")
+	check(map_count==25 and dense_count==4 and boss_count==28,"all maps/four dense/twenty-eight unique boss zones covered")
 	world._set_map("oman_10",false)
 	pause_actors()
 	# Reproduce cleanup at the corpse-return boundary. A queued actor must never
@@ -195,8 +195,13 @@ func _run() -> void:
 		if str(slot.region.get("mode",""))=="boss": boss_slot = slot
 	check(not is_instance_valid(boss_slot.monster),"no boss clone on reload while cooldown")
 	check(world._ground_drops_snapshot().size()==saved_drops.size(),"ground loot survives boss-state restore")
-	world.field_population._process(float(boss_slot.region.respawn_time)-.1)
-	check(not is_instance_valid(boss_slot.monster),"boss cannot respawn early")
+	var director: TwilightBossDirector = world.field_population.boss_director
+	var wall_key: String = director.key("oman_10", boss_slot.region)
+	check(int(boss_slot.region.respawn_time)==86400, "non-Aden boss uses 24h wall-clock cooldown")
+	director.states[wall_key]["ready_at"] = Time.get_unix_time_from_system() + 60.0
+	world.field_population._process(.2)
+	check(not is_instance_valid(boss_slot.monster),"boss cannot respawn before wall-clock deadline")
+	director.states[wall_key]["ready_at"] = Time.get_unix_time_from_system() - 1.0
 	world.field_population._process(.2)
 	pause_actors()
 	check(is_instance_valid(boss_slot.monster) and boss_slot.monster.hp==boss_slot.monster.max_hp,"boss respawns once after game-time cooldown")
