@@ -3,8 +3,10 @@ class_name TwilightMonsterCatalog
 
 const CATALOG_PATH = "res://data/monsters/monster_world_catalog.json"
 const SPAWN_PATH = "res://data/monsters/world_spawn_profiles.json"
+const RELAYOUT = preload("res://scripts/monsters/renewed_map_spawns.gd")
 static var catalog: Dictionary = {}
 static var spawn_profiles: Dictionary = {}
+static var records_by_name: Dictionary = {}
 
 static func ensure_loaded() -> void:
 	if not catalog.is_empty(): return
@@ -28,10 +30,13 @@ static func expand(original: Array) -> Array:
 		# to reproduce original rewards. Loot rates remain in loot_drop.gd.
 		result.append(record)
 		by_name[str(record.name)] = record
+	records_by_name = {}
+	for record: Dictionary in result: records_by_name[str(record.name)] = record
 	return result
 
 static func apply_map(definition: Dictionary) -> Dictionary:
 	ensure_loaded()
+	if str(definition.get("spawn_layout_revision", "")) == RELAYOUT.revision(): return definition.duplicate(true)
 	var patch: Dictionary = spawn_profiles.maps.get(str(definition.map_id), {})
 	if patch.is_empty(): return definition
 	var result: Dictionary = definition.duplicate(true)
@@ -47,6 +52,11 @@ static func apply_map(definition: Dictionary) -> Dictionary:
 				found = true
 				break
 		if not found: result.regions.append(label.duplicate(true))
+	if records_by_name.is_empty():
+		var base: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json")) as Dictionary
+		expand(base.get("몬스터", []))
+	# Resolve against the current map, not the historical coordinate tables.
+	result = RELAYOUT.apply(result, spawn_profiles.maps, records_by_name)
 	for spawn: Dictionary in result.monster_spawn:
 		if str(spawn.get("mode", "normal")) == "dense":
 			var a: Array = spawn.rect

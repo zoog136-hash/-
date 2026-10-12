@@ -156,7 +156,7 @@ func release(monster: TwilightMonster) -> void:
 	if id<0 or id>=slots.size() or slots[id].monster!=monster: return
 	var slot: Dictionary = slots[id]
 	slot.monster = null
-	slot.remaining = float(slot.region.respawn_time)
+	slot.remaining = 0.0 if str(slot.region.get("mode","normal"))=="boss" else float(slot.region.respawn_time)
 	if str(slot.region.get("mode","normal"))=="boss":
 		boss_director.died(str(field.data.map_id),slot.region)
 		_clear_summons(monster.get_instance_id())

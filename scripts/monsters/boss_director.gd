@@ -1,8 +1,8 @@
 extends RefCounted
 class_name TwilightBossDirector
 
-## All keys include the map ID. Only elapsed game time advances cooldowns;
-## wall-clock changes and reloading cannot spawn another live copy.
+## Boss cooldown deadlines use the device's local wall clock (Unix timestamps).
+## Live boss identity and saved HP remain protected across map reloads.
 var game_seconds: float = 0.0
 var states: Dictionary = {}
 
@@ -15,12 +15,12 @@ func key(map_id: String, region: Dictionary) -> String:
 func state_for(map_id: String, region: Dictionary) -> Dictionary:
 	var id: String = key(map_id, region)
 	if not states.has(id):
-		states[id] = {"phase":"ready","ready_at":game_seconds+float(region.get("initial_delay",0)),"hp":-1,"position":[],"home":[]}
+		states[id] = {"phase":"ready","ready_at":Time.get_unix_time_from_system()+float(region.get("initial_delay",0)),"hp":-1,"position":[],"home":[]}
 	return states[id]
 
 func can_spawn(map_id: String, region: Dictionary) -> bool:
 	var state: Dictionary = state_for(map_id, region)
-	return game_seconds >= float(state.ready_at)
+	return Time.get_unix_time_from_system() >= float(state.ready_at)
 
 func capture(map_id: String, region: Dictionary, monster: TwilightMonster) -> void:
 	if not is_instance_valid(monster) or monster.dead: return
@@ -31,10 +31,10 @@ func capture(map_id: String, region: Dictionary, monster: TwilightMonster) -> vo
 func died(map_id: String, region: Dictionary) -> void:
 	var state: Dictionary = state_for(map_id, region)
 	state.merge({"phase":"cooldown","hp":-1,"position":[],"home":[],
-		"ready_at":game_seconds+maxf(1.0,float(region.get("respawn_time",900)))},true)
+		"ready_at":Time.get_unix_time_from_system()+maxf(1.0,float(region.get("respawn_time",86400)))},true)
 
 func export_state() -> Dictionary:
-	return {"version":1,"game_seconds":game_seconds,"bosses":states.duplicate(true)}
+	return {"version":2,"game_seconds":game_seconds,"bosses":states.duplicate(true)}
 
 func import_state(value: Variant) -> void:
 	states.clear()
@@ -42,7 +42,9 @@ func import_state(value: Variant) -> void:
 	if not value is Dictionary: return
 	var data: Dictionary = value as Dictionary
 	game_seconds = maxf(0.0,float(data.get("game_seconds",0)))
+	var version: int = int(data.get("version", 1))
 	var raw: Variant = data.get("bosses",{})
+	var now: float = Time.get_unix_time_from_system()
 	if not raw is Dictionary: return
 	for id: Variant in raw:
 		if not raw[id] is Dictionary: continue
@@ -51,6 +53,10 @@ func import_state(value: Variant) -> void:
 		if phase not in ["ready","alive","cooldown"]: phase = "ready"
 		var position: Variant = state.get("position",[])
 		var home: Variant = state.get("home",[])
-		states[str(id)] = {"phase":phase,"ready_at":maxf(0.0,float(state.get("ready_at",game_seconds))),
+		var deadline: float = maxf(0.0, float(state.get("ready_at", 0.0)))
+		if version < 2:
+			# Old saves stored game-time deadlines. Preserve remaining cooldown at upgrade.
+			deadline = now + maxf(0.0, deadline - game_seconds)
+		states[str(id)] = {"phase":phase,"ready_at":deadline,
 			"hp":maxi(-1,int(state.get("hp",-1))),"position":position if position is Array and position.size()==2 else [],
 			"home":home if home is Array and home.size()==2 else []}
