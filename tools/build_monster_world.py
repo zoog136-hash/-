@@ -315,6 +315,37 @@ for map_profile in maps.values():
     for zone in map_profile['monster_spawn']:
         levels=[int(records[n].get('lv',BY_NAME.get(n,{}).get('lv',1))) for n in zone['monster_types']]
         zone['level']=[min(levels),max(levels)]
+
+# The 2026-10-12 spatial review changed floor-1 contour density and Aden's
+# full-world polygons/boss encounter metadata. Keep those authored coordinates
+# as *inputs*, not edits to a generated output that the next build destroys.
+# Rosters, levels, timing and combat data remain generated from definitions.
+spatial_source = ROOT/'data/monsters/world_spawn_curated_overrides.json'
+curated_spawns = json.loads(spatial_source.read_text(encoding='utf-8'))
+if curated_spawns.get('schema_version') != 1:
+    raise ValueError('Unsupported spatial override schema')
+spatial_fields = {
+    'rect', 'polygon', 'spawn_radius', 'density', 'coordinate_evidence',
+    'map_id', 'floor_id', 'boss_name', 'spawn_coordinates',
+    'spawn_region', 'patrol_region', 'encounter_region',
+    'spawn_conditions', 'source_reference', 'verification_status',
+}
+for map_id, overlay in curated_spawns['maps'].items():
+    if map_id not in maps:
+        raise ValueError('Spatial override refers to missing map: '+map_id)
+    target_map = maps[map_id]
+    for key in ('coordinate_note', 'region_labels'):
+        if key in overlay:
+            target_map[key] = overlay[key]
+    target_zones = {zone['id']:zone for zone in target_map['monster_spawn']}
+    for zone_id, changes in overlay['zones'].items():
+        if zone_id not in target_zones:
+            raise ValueError('Spatial override refers to missing zone: '+map_id+'/'+zone_id)
+        unexpected = set(changes) - spatial_fields
+        if unexpected:
+            raise ValueError('Spatial override modifies generated combat fields: '+str(unexpected))
+        target_zones[zone_id].update(changes)
+
 addition_names=set(x['name'] for x in additions)
 document={'schema_version':1,'base_sha':'82dbbdb18ec3088fcf521ce887af61c0c48c5a28',
           'researched_on':'2026-10-09','sources':SOURCES,

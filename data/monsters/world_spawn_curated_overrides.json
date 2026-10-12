@@ -1,0 +1,640 @@
+{
+  "schema_version": 1,
+  "purpose": "Preserve hand-reviewed spatial polygons, density and local boss regions without replacing regenerated monster rosters.",
+  "maps": {
+    "oman_01": {
+      "coordinate_note": "참고 지도 전체 외곽 기반 로컬 다각형 구역. 정확한 M 서버 좌표·보스 리젠 구역·리젠 시간은 미확인.",
+      "zones": {
+        "room_1": {
+          "density": 10.17,
+          "coordinate_evidence": "reference_contour_sector_local_coordinates"
+        },
+        "room_2": {
+          "density": 10.17,
+          "coordinate_evidence": "reference_contour_sector_local_coordinates"
+        },
+        "room_3": {
+          "density": 10.17,
+          "coordinate_evidence": "reference_contour_sector_local_coordinates"
+        },
+        "room_4": {
+          "density": 10.17,
+          "coordinate_evidence": "reference_contour_sector_local_coordinates"
+        },
+        "room_5": {
+          "density": 10.17,
+          "coordinate_evidence": "reference_contour_sector_local_coordinates"
+        },
+        "room_6": {
+          "density": 10.17,
+          "coordinate_evidence": "reference_contour_sector_local_coordinates"
+        },
+        "room_7": {
+          "density": 10.17,
+          "coordinate_evidence": "reference_contour_sector_local_coordinates"
+        },
+        "boss": {
+          "density": 2.44,
+          "coordinate_evidence": "provisional_floor_wide_encounter_not_original_spawn_coordinates"
+        }
+      }
+    },
+    "aden_world": {
+      "region_labels": [],
+      "coordinate_note": "공개 아덴 지리 지도 기준 상대 배치. 절대 축척·M 서버 좌표·보스 리젠 구역은 미검증.",
+      "zones": {
+        "meadow": {
+          "rect": [
+            28200,
+            14600,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              28200,
+              14900.0
+            ],
+            [
+              30200,
+              14600
+            ],
+            [
+              30300.0,
+              16200.0
+            ],
+            [
+              28600.0,
+              16600
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "forest": {
+          "rect": [
+            5480,
+            6920,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              5480,
+              7220.0
+            ],
+            [
+              7480,
+              6920
+            ],
+            [
+              7580.0,
+              8520.0
+            ],
+            [
+              5880.0,
+              8920
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "riverbank": {
+          "rect": [
+            37640,
+            12040,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              37640,
+              12340.0
+            ],
+            [
+              39640,
+              12040
+            ],
+            [
+              39740.0,
+              13640.0
+            ],
+            [
+              38040.0,
+              14040
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "ruins": {
+          "rect": [
+            10400,
+            12800,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              10400,
+              13100.0
+            ],
+            [
+              12400,
+              12800
+            ],
+            [
+              12500.0,
+              14400.0
+            ],
+            [
+              10800.0,
+              14800
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "east": {
+          "rect": [
+            32600,
+            7120,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              32600,
+              7420.0
+            ],
+            [
+              34600,
+              7120
+            ],
+            [
+              34700.0,
+              8720.0
+            ],
+            [
+              33000.0,
+              9120
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "desert": {
+          "rect": [
+            18600,
+            16240,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              18600,
+              16540.0
+            ],
+            [
+              20600,
+              16240
+            ],
+            [
+              20700.0,
+              17840.0
+            ],
+            [
+              19000.0,
+              18240
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "bandits": {
+          "rect": [
+            13800,
+            10280,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              13800,
+              10580.0
+            ],
+            [
+              15800,
+              10280
+            ],
+            [
+              15900.0,
+              11880.0
+            ],
+            [
+              14200.0,
+              12280
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "dragon_valley": {
+          "rect": [
+            14000,
+            2120,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              14000,
+              2420.0
+            ],
+            [
+              16000,
+              2120
+            ],
+            [
+              16100.0,
+              3720.0
+            ],
+            [
+              14400.0,
+              4120
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "oren": {
+          "rect": [
+            28840,
+            200,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              28840,
+              500.0
+            ],
+            [
+              30840,
+              200
+            ],
+            [
+              30940.0,
+              1800.0
+            ],
+            [
+              29240.0,
+              2200
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "fire_land": {
+          "rect": [
+            21120,
+            2160,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              21120,
+              2460.0
+            ],
+            [
+              23120,
+              2160
+            ],
+            [
+              23220.0,
+              3760.0
+            ],
+            [
+              21520.0,
+              4160
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "wind_land": {
+          "rect": [
+            11760,
+            3080,
+            2100.0,
+            2000
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "polygon": [
+            [
+              11760,
+              3380.0
+            ],
+            [
+              13760,
+              3080
+            ],
+            [
+              13860.0,
+              4680.0
+            ],
+            [
+              12160.0,
+              5080
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        "boss": {
+          "rect": [
+            14200,
+            2800,
+            840.0,
+            800
+          ],
+          "polygon": [
+            [
+              14200,
+              2920.0
+            ],
+            [
+              15000,
+              2800
+            ],
+            [
+              15040.0,
+              3440.0
+            ],
+            [
+              14360.0,
+              3600
+            ]
+          ],
+          "spawn_radius": 0,
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "map_id": "aden_world",
+          "floor_id": null,
+          "boss_name": "드레이크",
+          "spawn_coordinates": [],
+          "spawn_region": "boss",
+          "patrol_region": {
+            "polygon": [
+              [
+                14200,
+                2920.0
+              ],
+              [
+                15000,
+                2800
+              ],
+              [
+                15040.0,
+                3440.0
+              ],
+              [
+                14360.0,
+                3600
+              ]
+            ]
+          },
+          "encounter_region": {
+            "polygon": [
+              [
+                14200,
+                2920.0
+              ],
+              [
+                15000,
+                2800
+              ],
+              [
+                15040.0,
+                3440.0
+              ],
+              [
+                14360.0,
+                3600
+              ]
+            ]
+          },
+          "spawn_conditions": {
+            "policy": "twilight_existing_local_encounter",
+            "original_conditions": null
+          },
+          "source_reference": [
+            "https://games.app-liv.jp/archives/397568"
+          ],
+          "verification_status": {
+            "exact_spawn_area": "unverified",
+            "coordinates": "local_only",
+            "respawn": "twilight_game_seconds"
+          }
+        },
+        "desert_boss": {
+          "rect": [
+            19880,
+            17160,
+            840.0,
+            800
+          ],
+          "polygon": [
+            [
+              19880,
+              17280.0
+            ],
+            [
+              20680,
+              17160
+            ],
+            [
+              20720.0,
+              17800.0
+            ],
+            [
+              20040.0,
+              17960
+            ]
+          ],
+          "spawn_radius": 0,
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "map_id": "aden_world",
+          "floor_id": null,
+          "boss_name": "샌드 웜",
+          "spawn_coordinates": [],
+          "spawn_region": "desert_boss",
+          "patrol_region": {
+            "polygon": [
+              [
+                19880,
+                17280.0
+              ],
+              [
+                20680,
+                17160
+              ],
+              [
+                20720.0,
+                17800.0
+              ],
+              [
+                20040.0,
+                17960
+              ]
+            ]
+          },
+          "encounter_region": {
+            "polygon": [
+              [
+                19880,
+                17280.0
+              ],
+              [
+                20680,
+                17160
+              ],
+              [
+                20720.0,
+                17800.0
+              ],
+              [
+                20040.0,
+                17960
+              ]
+            ]
+          },
+          "spawn_conditions": {
+            "policy": "twilight_existing_local_encounter",
+            "original_conditions": null
+          },
+          "source_reference": [
+            "https://games.app-liv.jp/archives/397568"
+          ],
+          "verification_status": {
+            "exact_spawn_area": "unverified",
+            "coordinates": "local_only",
+            "respawn": "twilight_game_seconds"
+          }
+        },
+        "fire_boss": {
+          "rect": [
+            21920,
+            2640,
+            840.0,
+            800
+          ],
+          "polygon": [
+            [
+              21920,
+              2760.0
+            ],
+            [
+              22720,
+              2640
+            ],
+            [
+              22760.0,
+              3280.0
+            ],
+            [
+              22080.0,
+              3440
+            ]
+          ],
+          "spawn_radius": 0,
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "map_id": "aden_world",
+          "floor_id": null,
+          "boss_name": "피닉스",
+          "spawn_coordinates": [],
+          "spawn_region": "fire_boss",
+          "patrol_region": {
+            "polygon": [
+              [
+                21920,
+                2760.0
+              ],
+              [
+                22720,
+                2640
+              ],
+              [
+                22760.0,
+                3280.0
+              ],
+              [
+                22080.0,
+                3440
+              ]
+            ]
+          },
+          "encounter_region": {
+            "polygon": [
+              [
+                21920,
+                2760.0
+              ],
+              [
+                22720,
+                2640
+              ],
+              [
+                22760.0,
+                3280.0
+              ],
+              [
+                22080.0,
+                3440
+              ]
+            ]
+          },
+          "spawn_conditions": {
+            "policy": "twilight_existing_local_encounter",
+            "original_conditions": null
+          },
+          "source_reference": [
+            "https://games.app-liv.jp/archives/397568"
+          ],
+          "verification_status": {
+            "exact_spawn_area": "unverified",
+            "coordinates": "local_only",
+            "respawn": "twilight_game_seconds"
+          }
+        },
+        "dragon_dense": {
+          "rect": [
+            15080,
+            2680,
+            672.0,
+            640
+          ],
+          "coordinate_evidence": "relative_geography_local_encounter_unverified_server_coordinates",
+          "spawn_radius": 0,
+          "polygon": [
+            [
+              15080,
+              2776.0
+            ],
+            [
+              15720,
+              2680
+            ],
+            [
+              15752.0,
+              3192.0
+            ],
+            [
+              15208.0,
+              3320
+            ]
+          ]
+        }
+      }
+    }
+  }
+}

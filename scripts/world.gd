@@ -3726,7 +3726,6 @@ func _save_game(quiet: bool) -> void:
 		hud.show_message("저장 완료")
 
 func _load_game(quiet: bool) -> void:
-	_clear_combat_actions()
 	if not FileAccess.file_exists(SAVE_PATH):
 		if not quiet:
 			hud.show_message("저장 데이터가 없습니다")
@@ -3756,13 +3755,16 @@ func _load_game(quiet: bool) -> void:
 			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
 			return
 		saved_field.close()
-	source_save_blocked = false
 	if original_skills != null and not data.has("original_skill_state") and not FileAccess.file_exists(SAVE_PATH + ".pre-original-skills"):
 		var backup_error := DirAccess.copy_absolute(SAVE_PATH, SAVE_PATH + ".pre-original-skills")
 		if backup_error != OK:
 			hud.append_log("스킬 저장 이전 중단 · 원본 백업 실패 · 오류 %d" % backup_error)
 			if not quiet: hud.show_message("저장 이전 백업 실패")
 			return
+	# Reject missing/corrupt saves and failed migration backups before retiring
+	# any live combat, summons or shields. Only an accepted load may reset them.
+	source_save_blocked = false
+	_clear_combat_actions()
 	warehouse.restore(data.get("warehouse", {}))
 	crafting_log.clear()
 	var old_log: Variant = data.get("crafting_log", [])
