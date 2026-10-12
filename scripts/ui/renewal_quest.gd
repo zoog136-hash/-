@@ -51,6 +51,7 @@ func configure(controller: Node) -> void:
 	stack.add_child(actions)
 	actions.add_child(UI.button("월드맵",func() -> void: hud._navigate("map"),Vector2(150,42)))
 	actions.add_child(UI.button("AUTO 전환",func() -> void: hud.auto_pressed.emit(),Vector2(150,42)))
+	stack.add_child(UI.section("현재 퀘스트는 처치 기록입니다. 별도 보상 수령과 목적지 추적은 아직 지원하지 않습니다.",12))
 	refresh(hud.character_state)
 
 func refresh(state: Dictionary) -> void:

@@ -50,6 +50,7 @@ func configure(controller: Node) -> void:
 	cards.same_column_width=true
 	cards.item_selected.connect(select)
 	cards.gui_input.connect(_touch)
+	cards.set_drag_forwarding(_drag_skill,Callable(),Callable())
 	body.add_child(cards)
 	var side := VBoxContainer.new()
 	side.custom_minimum_size.x=278
@@ -119,6 +120,7 @@ func select(index: int) -> void:
 	if passive:
 		detail.text+="\n"+("상시 적용" if RULES.passive_trigger(selected)=="always" else "조건부 발동: "+RULES.passive_trigger(selected))
 	if not supported: detail.text+="\n이 효과는 현재 게임 버전에서 미지원"
+	detail.text += "\n습득·스킬 레벨 데이터 미지원: 현재 직업의 구현된 스킬을 사용합니다."
 	use_button.disabled=passive or not owned or not supported
 	quick_button.disabled=passive or not owned or not supported
 	use_button.text="패시브 · 자동 적용" if passive else "스킬 사용"
@@ -150,3 +152,12 @@ func _touch(event: InputEvent) -> void:
 		if dragging:
 			cards.get_v_scroll_bar().value-=event.relative.y
 			cards.accept_event()
+
+func _drag_skill(position: Vector2) -> Variant:
+	var index: int = cards.get_item_at_position(position,true)
+	if index < 0: return null
+	select(index)
+	if quick_button.disabled: return null
+	var preview := UI.label(str(selected.get("name","")),14,UI.GOLD)
+	cards.set_drag_preview(preview)
+	return {"kind":"skill","id":str(selected.get("name",""))}

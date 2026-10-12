@@ -29,8 +29,8 @@ func _run() -> void:
 		_fail("quickslots is not an Array")
 	else:
 		var quickslots: Array = quickslots_value as Array
-		if quickslots.size() != 8:
-			_fail("quickslots size must be 8")
+		if quickslots.size() != 24:
+			_fail("quickslots size must be 24 (legacy first 8 preserved)")
 		var has_skill: bool = false
 		var has_item: bool = false
 		for value: Variant in quickslots:
@@ -51,6 +51,7 @@ func _run() -> void:
 	if str((assigned[1] as Dictionary).get("id", "")) != "HP 물약":
 		_fail("item assignment failed")
 
+	world.call("_edit_quickslot", 0, "auto", -1)
 	world.set("mp", 999)
 	world.set("self_mode_enabled", false)
 	var buffs: Dictionary = world.get("active_skill_buffs") as Dictionary

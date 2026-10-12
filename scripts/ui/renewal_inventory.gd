@@ -1,5 +1,8 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
 
+signal unequip_requested(reference: String)
+signal lock_requested(reference: String)
+
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 var sort_mode: int = 0
 var inventory_fingerprint: String = ""
@@ -19,9 +22,14 @@ var gesture_origin: Vector2 = Vector2.ZERO
 var gesture_last: Vector2 = Vector2.ZERO
 var gesture_horizontal: float = 0.0
 var gesture_equipping: bool = false
+var lock_button: Button
 
 func _ready() -> void:
 	super._ready()
+	lock_button = UI.button("잠금",func() -> void:
+		if selected_item != "": lock_requested.emit(selected_item))
+	lock_button.name = "InventoryLock"
+	detail_action.get_parent().add_child(lock_button)
 	theme = UI.make_theme()
 	inventory_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	inventory_panel.add_theme_stylebox_override("panel",UI.box(Color("0e1117"),UI.BRONZE,8))
@@ -84,6 +92,12 @@ func _gesture_start(event: InputEvent, reference: String, button: Control) -> vo
 		gesture_reference = reference
 		gesture_button = button
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		# Consumables use Godot's native drag/drop; do not consume the motion
+		# as an inventory scroll/equip gesture before GUI drag can start.
+		if str(_find_item_record(reference).get("slot","")) == "consumable":
+			gesture_mouse = false
+			gesture_dragged = false
+			return
 		gesture_mouse = true
 		gesture_origin = event.position
 		gesture_last = event.position
@@ -105,6 +119,12 @@ func _activate_dragged_equipment(reference: String) -> void:
 		item_activate_requested.emit(reference)
 
 func _input(event: InputEvent) -> void:
+	if get_viewport().gui_is_dragging():
+		gesture_mouse = false
+		gesture_index = -1
+		gesture_equipping = false
+		gesture_dragged = true
+		return
 	if not is_visible_in_tree() or not inventory_panel.visible:
 		gesture_index = -1
 		gesture_mouse = false
@@ -172,7 +192,6 @@ func _select_item(item_name: String) -> void:
 
 func show_inventory() -> void:
 	gesture_dragged = false
-	detail_active = false
 	super.show_inventory()
 	_reflow()
 
@@ -207,7 +226,7 @@ func set_inventory(value: Dictionary) -> void:
 	super.set_inventory(value)
 
 func set_character_state(value: Dictionary) -> void:
-	var fingerprint := JSON.stringify([value.get("gold",0),value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{})])
+	var fingerprint := JSON.stringify([value.get("gold",0),value.get("equipped_items",{}),value.get("enhancement_levels",{}),value.get("item_instances",{}),value.get("item_locks",{})])
 	character_state = value.duplicate(true)
 	_refresh_weight()
 	if fingerprint == inventory_fingerprint:
@@ -246,7 +265,14 @@ func _refresh_inventory_grid() -> void:
 		button.text = ""
 		button.custom_minimum_size = Vector2(72,82)
 		button.gui_input.connect(_gesture_start.bind(reference,button))
-		button.tooltip_text += " · 아이콘을 오른쪽으로 끌면 장착/사용"
+		if str(record.get("slot","")) == "consumable":
+			button.set_drag_forwarding(_drag_item.bind(item_name,button),Callable(),Callable())
+		button.gui_input.connect(func(event: InputEvent) -> void:
+			if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+				gesture_dragged = false
+				_select_item(reference)
+				button.accept_event())
+		button.tooltip_text += " · 퀵슬롯으로 끌어 등록" if str(record.get("slot","")) == "consumable" else " · 오른쪽으로 끌면 장착"
 		var icon := TextureRect.new()
 		icon.texture = texture
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -305,6 +331,23 @@ func _refresh_detail(item_reference: String) -> void:
 	if selected_id != "":
 		detail_text.text += "\n[color=#d8b878]선택한 장비 ID: %s[/color]" % UI.safe(selected_id)
 	if _is_item_equipped(item_reference):
-		detail_action.tooltip_text = "선택된 장비 개체가 장착 중입니다. 현재 게임은 일반 장비 해제를 제공하지 않습니다."
+		detail_action.text = "장착 해제"
+		detail_action.disabled = false
+		detail_action.tooltip_text = "선택한 장비 개체만 해제합니다"
 	else:
 		detail_action.tooltip_text = ""
+	if lock_button != null:
+		var locked: bool = bool(character_state.get("item_locks",{}).get(item_name,false)) or bool(character_state.get("item_instances",{}).get(selected_id,{}).get("locked",false))
+		lock_button.text = "잠금 해제" if locked else "아이템 잠금"
+		lock_button.disabled = int(inventory.get(item_name,0)) <= 0
+		if locked: detail_text.text += "\n잠금: 판매·강화·제작 재료 사용이 차단됩니다."
+
+func _activate_selected() -> void:
+	if _is_item_equipped(selected_item): unequip_requested.emit(selected_item)
+	else: super._activate_selected()
+
+func _drag_item(_position: Vector2, item_name: String, button: Control) -> Variant:
+	var preview := UI.label(item_name,14,UI.GOLD)
+	button.set_drag_preview(preview)
+	gesture_dragged = true
+	return {"kind":"item","id":item_name}

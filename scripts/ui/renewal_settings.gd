@@ -152,8 +152,4 @@ func _mute_changed(value: bool) -> void:
 	_store("audio","muted",value)
 
 func _confirm_load() -> void:
-	var dialog := Dialog.new()
-	dialog.title_text = "저장된 게임 불러오기"
-	dialog.message_text = "현재 미저장 진행도가 사라질 수 있습니다. 저장본을 불러올까요?"
-	hud.get_node("Root").add_child(dialog)
-	dialog.confirmed.connect(func() -> void: hud.load_pressed.emit())
+	hud.confirm_action("저장된 게임 불러오기", "현재 미저장 진행도가 사라질 수 있습니다. 저장본을 불러올까요?", func() -> void: hud.load_pressed.emit())

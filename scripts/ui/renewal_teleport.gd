@@ -8,7 +8,7 @@ var travel: Button
 var destinations: Array[Dictionary] = []
 var selected_index: int = -1
 
-func configure(controller: Node) -> void:
+func configure(controller: Node, preferred_id: String = "") -> void:
 	hud = controller
 	world = hud.get_parent()
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -31,6 +31,12 @@ func configure(controller: Node) -> void:
 	travel.pressed.connect(_travel)
 	add_child(travel)
 	_refresh()
+	if preferred_id != "":
+		for index: int in destinations.size():
+			if destinations[index]["id"] == preferred_id:
+				listing.select(index)
+				_select(index)
+				listing.ensure_current_is_visible()
 
 func _refresh() -> void:
 	listing.clear()

@@ -37,7 +37,7 @@ static func _equipped(equipped: Dictionary,id: String) -> bool:
 	return false
 
 static func _pristine(record: Dictionary) -> bool:
-	return int(record.get("level",0)) == 0 and str(record.get("element","")) == "" and int(record.get("element_level",0)) == 0 and (record.get("record",{}) as Dictionary).is_empty()
+	return not bool(record.get("locked",false)) and int(record.get("level",0)) == 0 and str(record.get("element","")) == "" and int(record.get("element_level",0)) == 0 and (record.get("record",{}) as Dictionary).is_empty()
 
 # Produces an independent, validated snapshot. The caller never supplies price,
 # item output or ingredient counts, only a recipe ID and batch size.

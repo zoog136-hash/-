@@ -2,8 +2,10 @@ extends PanelContainer
 
 signal navigate(section: String)
 signal closed
+signal back_requested
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
+const SafeArea = preload("res://scripts/ui/safe_area.gd")
 var heading: Label
 var subtitle: Label
 var footer: Label
@@ -43,6 +45,9 @@ func _ready() -> void:
 	title_row.custom_minimum_size.y = 44
 	title_row.add_theme_constant_override("separation",8)
 	layout.add_child(title_row)
+	var back := UI.button("‹ 이전",func() -> void: back_requested.emit(),Vector2(68,40))
+	back.name = "BackWindow"
+	title_row.add_child(back)
 	header_crest = UI.label("✧",31,UI.GOLD)
 	header_crest.name = "HeaderCrest"
 	header_crest.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -215,36 +220,37 @@ func _scroll_by_drag(scroll: ScrollContainer, delta_y: float) -> void:
 func fit_viewport() -> void:
 	var stretch: float = maxf(.01,get_viewport().get_final_transform().get_scale().x)
 	scale = Vector2.ONE/maxf(.01,minf(1.0,stretch))
-	var viewport := get_viewport_rect().size/scale
+	var available: Rect2 = SafeArea.available(get_viewport())
+	var viewport := available.size/scale
 	footer.visible = viewport.y >= 500
 	subtitle.visible = viewport.y >= 450
 	(get_child(0) as VBoxContainer).add_theme_constant_override("separation",5 if viewport.y < 500 else 8)
 	var preferred_width: float = 1080.0
-	var preferred_height: float = 634.0
+	var preferred_height: float = 560.0
 	if current_section == "menu": preferred_width = 790.0
 	elif current_section in ["inventory","character","skills","shop","enhance"]: preferred_width = 1010.0
 	elif current_section in ["settings","auto","quest","log"]: preferred_width = 960.0
 	elif current_section in ["map","class_select"]: preferred_width = 1160.0
 	if current_section == "menu": preferred_height = 470.0
-	var extent := Vector2(maxf(200.0,minf(preferred_width,viewport.x-24.0)),maxf(140.0,minf(preferred_height,viewport.y-24.0)))
+	var extent := Vector2(maxf(200.0,minf(preferred_width,viewport.x-24.0)),maxf(140.0,minf(preferred_height,viewport.y-116.0)))
 	var compact: bool = viewport.x < 840.0
 	navigation_scroll.visible = not compact
 	navigation_separator.visible = not compact
 	navigation_scroll.custom_minimum_size.x = 132.0 if not compact else 0.0
-	compact_menu_button.visible = compact
+	compact_menu_button.visible = true
 	header_crest.visible = not compact
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	size = extent
 	if not viewport_fitted or not title_dragged:
-		position = (Vector2(viewport.x-extent.x-12.0,(viewport.y-extent.y)*.5) if current_section in ["inventory","menu","skills","shop"] and not compact else (viewport-extent)*.5)*scale
+		position = available.position+(Vector2(viewport.x-extent.x-12.0,(viewport.y-100.0-extent.y)*.5) if current_section in ["inventory","menu","skills","shop"] and not compact else (viewport-Vector2(0,100)-extent)*.5)*scale
 	else:
 		_keep_title_visible()
 	viewport_fitted = true
 
 func _keep_title_visible() -> void:
-	var view: Vector2 = get_viewport_rect().size
-	position.x = clampf(position.x, minf(0.0,(140.0-size.x)*scale.x),maxf(0.0,view.x-140.0*scale.x))
-	position.y = clampf(position.y, 0.0,maxf(0.0,view.y-64.0*scale.y))
+	var view: Rect2 = SafeArea.available(get_viewport())
+	position.x = clampf(position.x, view.position.x,maxf(view.position.x,view.end.x-size.x*scale.x))
+	position.y = clampf(position.y, view.position.y,maxf(view.position.y,view.end.y-size.y*scale.y))
 
 func _on_title_drag_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:

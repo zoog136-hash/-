@@ -6,7 +6,12 @@ on:
   pull_request:
     branches: [main, 'integration/twilight-complete-20261009']
     paths:
-      - 'scripts/ui/renewal_*.gd'
+      - 'scripts/ui/*.gd'
+      - 'scripts/world.gd'
+      - 'scripts/player.gd'
+      - 'project.godot'
+      - 'tests/integrated_*test.gd'
+      - 'tests/capture_integrated_hud.gd'
       - 'scripts/ui/item_icon_art.gd'
       - 'scripts/animation/combat_vfx.gd'
       - '.github/workflows/ui-renewal-validate.yml'
@@ -54,6 +59,24 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_icon_art_smoke_test.gd 2>&1 | tee item-art-test.log
           ! grep -E "SCRIPT ERROR:|ERROR:|ITEM_ICON_FAIL" item-art-test.log
           grep -q "ITEM_ICON_ART_OK" item-art-test.log
+      - name: Integrated HUD with native mouse and touch input
+        run: |
+          set -o pipefail
+          for check in integrated_ui_test integrated_interaction_test; do
+            export XDG_DATA_HOME="$PWD/$check-data"
+            ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script "res://tests/$check.gd" 2>&1 | tee "$check.log"
+            ! grep -E "SCRIPT ERROR:|ERROR:|FAIL:" "$check.log"
+            grep -q "_OK" "$check.log"
+          done
+      - name: Capture integrated HUD at 1280, 1920 and ultrawide 2400
+        run: |
+          set -o pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME="$PWD/integrated-render-data"
+          export TWILIGHT_UI_CAPTURE_DIR="$PWD/integrated-captures"
+          xvfb-run -a -s "-screen 0 2560x1440x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_integrated_hud.gd 2>&1 | tee integrated-capture.log
+          ! grep -E "SCRIPT ERROR:|ERROR:" integrated-capture.log
+          grep -q "INTEGRATED_CAPTURE_OK" integrated-capture.log
       - name: Capture 72 OpenGL screen states including class selection
         run: |
           set -o pipefail
@@ -82,6 +105,12 @@ jobs:
             ui-capture.log
             ui-fidelity-test.log
             item-art-test.log
+            integrated_ui_test.log
+            integrated_interaction_test.log
+            integrated-capture.log
+            integrated-captures/**
+            integrated_ui_test-data/**/integrated-ui-results.json
+            integrated_interaction_test-data/**/integrated-interaction-results.json
             ui-fidelity-capture.log
             ui-render-data/**/ui-renewal-review/*.json
             ui-render-data/**/ui-renewal-review/*.png
