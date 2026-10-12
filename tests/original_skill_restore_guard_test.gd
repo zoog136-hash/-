@@ -68,6 +68,7 @@ func run() -> void:
 
 	catalog.learned[guardian_id] = 1
 	world._on_job_class_selected("기사")
+	catalog.learned[guardian_id] = 1 # Still owned, but not permitted by this job.
 	service.import_state({"shields": {guardian_id: valid_shield}})
 	check(service.shields.is_empty(), "wrong-class guardian shield cannot absorb damage")
 
