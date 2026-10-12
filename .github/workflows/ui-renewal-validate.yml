@@ -54,7 +54,7 @@ jobs:
           ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/item_icon_art_smoke_test.gd 2>&1 | tee item-art-test.log
           ! grep -E "SCRIPT ERROR:|ERROR:|ITEM_ICON_FAIL" item-art-test.log
           grep -q "ITEM_ICON_ART_OK" item-art-test.log
-      - name: Capture 72 OpenGL screen states including class selection
+      - name: Capture 68 OpenGL screen states including class selection
         run: |
           set -o pipefail
           export LIBGL_ALWAYS_SOFTWARE=1
@@ -62,7 +62,7 @@ jobs:
           xvfb-run -a -s "-screen 0 2560x1440x24" ./Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ui_renewal.gd 2>&1 | tee ui-capture.log
           ! grep -E "SCRIPT ERROR:|ERROR:" ui-capture.log
           grep -q "UI_RENEWAL_CAPTURE_OK" ui-capture.log
-      - name: Capture 156 list-detail states on small PC and Android-size surfaces
+      - name: Capture 150 list-detail states on small PC and Android-size surfaces
         run: |
           set -o pipefail
           export LIBGL_ALWAYS_SOFTWARE=1

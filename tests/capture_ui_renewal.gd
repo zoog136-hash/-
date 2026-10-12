@@ -71,8 +71,8 @@ func _run() -> void:
 		await _capture("auto-%dx%d" % [extent.x,extent.y])
 		world.hud.open_combat_log()
 		await _capture("log-%dx%d" % [extent.x,extent.y])
-	if results.size() != 72:
-		push_error("UI review expected 72 captures; got %d" % results.size())
+	if results.size() != 68:
+		push_error("UI review expected 68 captures; got %d" % results.size())
 		quit(1)
 		return
 	var file := FileAccess.open(directory+"/render-results.json",FileAccess.WRITE)

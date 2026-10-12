@@ -101,7 +101,7 @@ func _run() -> void:
 	var report := FileAccess.open(folder+"/render-results.json",FileAccess.WRITE)
 	report.store_string(JSON.stringify({"engine":Engine.get_version_info().string,"renderer":RenderingServer.get_video_adapter_name(),"stretch_aspect":ProjectSettings.get_setting("display/window/stretch/aspect"),"note":"File suffix is requested window size; width/height are the unedited active game texture. Keep aspect letterboxes square/ultrawide windows.","fixture":"isolated source-record equipment granted through existing world logic","captures":captures},"\t"))
 	report.close()
-	if captures.size() != 156: failed=true; push_error("Expected 156 fidelity captures; got %d" % captures.size())
+	if captures.size() != 150: failed=true; push_error("Expected 150 fidelity captures; got %d" % captures.size())
 	world.queue_free()
 	await process_frame
 	print("UI_FIDELITY_CAPTURE_OK " if not failed else "UI_FIDELITY_CAPTURE_FAILED ",captures.size()," ",folder)

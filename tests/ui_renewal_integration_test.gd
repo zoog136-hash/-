@@ -125,6 +125,7 @@ func _run() -> void:
 			_check(str(hud.get("active_section")) == "menu","sidebar swipe does not activate menu button")
 	var menu_scroll: ScrollContainer = workspace.find_child("MenuContentScroll",true,false) as ScrollContainer
 	_check(menu_scroll != null,"main menu uses a vertical ScrollContainer")
+	_check(workspace.find_child("MenuTile_quest",true,false) == null,"no quest entry in main menu")
 	if menu_scroll != null:
 		# Force a genuinely scrollable content height even if the default
 		# four-row menu fits on the current CI virtual viewport.
