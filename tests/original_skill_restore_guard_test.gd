@@ -53,6 +53,8 @@ func run() -> void:
 	check(service.shields.is_empty(), "non-dictionary shield collection is ignored")
 
 	catalog.learned[guardian_id] = 1
+	service.import_state({"shields": {guardian_id: "invalid"}})
+	check(service.shields.is_empty(), "malformed value for eligible guardian is ignored")
 	service.import_state({"shields": {guardian_id: valid_shield}})
 	check(int(service.shields.get(guardian_id, {}).get("amount", -1)) == 80, "valid learned guardian shield retains capacity")
 	check(str(world.active_skill_buffs.get(str(guardian.name), {}).get("summon_stage", "")) == "shield", "valid guardian restores shield aura")
