@@ -1477,15 +1477,22 @@ func _monster_texture(record: Dictionary) -> Texture2D:
 
 func _random_walkable_position(near: Vector2, min_distance: float, max_distance: float) -> Vector2:
 	if field_map is OriginalPlayableField: return (field_map as OriginalPlayableField).random_landing(rng,near,min_distance,max_distance)
-	var width: int = int(active_map.get("width", 1))
-	var height: int = int(active_map.get("height", 1))
+	# Display tiles and navigation cells can have different dimensions.
+	if astar == null or not astar.region.has_area(): return _spawn_position_fallback()
+	var region: Rect2i = astar.region
 	var require_reachable: bool = near != Vector2.ZERO
 	var origin_cell: Vector2i = Vector2i.ZERO
 	if require_reachable:
 		origin_cell = _nearest_walkable_cell(_world_to_cell(near))
+		if not astar.is_in_boundsv(origin_cell) or astar.is_point_solid(origin_cell): return _spawn_position_fallback()
+		if is_finite(max_distance):
+			var first: Vector2i = _world_to_cell(near-Vector2.ONE*max_distance)
+			var last: Vector2i = _world_to_cell(near+Vector2.ONE*max_distance)
+			region = region.intersection(Rect2i(first,last-first+Vector2i.ONE))
+			if not region.has_area(): return _cell_to_world(origin_cell)
 	for _attempt: int in range(700):
-		var cell: Vector2i = Vector2i(rng.randi_range(0, maxi(0, width - 1)), rng.randi_range(0, maxi(0, height - 1)))
-		if astar != null and not astar.is_point_solid(cell):
+		var cell := Vector2i(rng.randi_range(region.position.x,region.end.x-1),rng.randi_range(region.position.y,region.end.y-1))
+		if not astar.is_point_solid(cell):
 			var position_value: Vector2 = _cell_to_world(cell)
 			if not require_reachable:
 				return position_value
@@ -1495,16 +1502,15 @@ func _random_walkable_position(near: Vector2, min_distance: float, max_distance:
 			if astar.get_id_path(origin_cell, cell).is_empty():
 				continue
 			return position_value
-	return _spawn_position_fallback()
+	return _cell_to_world(origin_cell) if require_reachable else _spawn_position_fallback()
 
 func _spawn_position_fallback() -> Vector2:
-	var width: int = int(active_map.get("width", 1))
-	var height: int = int(active_map.get("height", 1))
-	for row: int in range(height):
-		for column: int in range(width):
-			var cell: Vector2i = Vector2i(column, row)
-			if astar != null and not astar.is_point_solid(cell):
-				return _cell_to_world(cell)
+	if astar != null:
+		var region: Rect2i = astar.region
+		for row: int in range(region.position.y,region.end.y):
+			for column: int in range(region.position.x,region.end.x):
+				var cell := Vector2i(column,row)
+				if not astar.is_point_solid(cell): return _cell_to_world(cell)
 	return Vector2(tile_size * 2, tile_size * 2)
 
 func _clear_monsters() -> void:
