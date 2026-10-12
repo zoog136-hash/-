@@ -16,7 +16,7 @@ import sys
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
-parser.add_argument('--render-visual-tests',action='store_true',help='Use the existing display only for tests that await frame_post_draw')
+parser.add_argument('--render-visual-tests',action='store_true',help='Compatibility flag: frame-dependent tests always use a real renderer')
 parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; world_regions has a 540-second minimum for 24 scene roundtrips')
 parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
 args=parser.parse_args()
@@ -50,7 +50,7 @@ for name,extra in tests:
     needs_draw=source.is_file() and 'RenderingServer.frame_post_draw' in source.read_text(encoding='utf-8')
     # A headless RenderingServer never emits frame_post_draw. Historically
     # these tests silently ran for 150 seconds each before timing out.
-    visual=needs_draw and (args.render_visual_tests or os.environ.get('GITHUB_ACTIONS','').lower()=='true')
+    visual=needs_draw # Never block awaiting draw events under the headless renderer.
     display_args=['--rendering-driver','opengl3','--audio-driver','Dummy'] if visual else ['--headless']
     with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
         env=os.environ.copy()
@@ -67,7 +67,7 @@ for name,extra in tests:
             # their own bounded budget; other tests keep the selected limit.
             budget=max(args.timeout,args.import_timeout) if name=='import' else max(args.timeout,540) if name=='world_regions_test' else args.timeout
             command=[args.godot,*display_args,'--path',str(root),*extra]
-            if visual and not env.get('DISPLAY'):
+            if visual and sys.platform.startswith('linux') and not env.get('DISPLAY'):
                 if not shutil.which('xvfb-run'):
                     raise RuntimeError('Visual test requires xvfb-run (or DISPLAY); never wait for frame_post_draw in headless mode')
                 command=['xvfb-run','-a','-s','-screen 0 1280x720x24',*command]
