@@ -46,7 +46,6 @@ const MENU_ITEMS: Array = [
 	["shop", "상점", "◈"],
 	["inventory", "인벤토리", "▣"],
 	["skills", "스킬", "✦"],
-	["quest", "퀘스트", "◆"],
 	["character", "캐릭터", "♙"],
 	["transform", "변신", "♜"],
 	["doll", "마법인형", "♟"],

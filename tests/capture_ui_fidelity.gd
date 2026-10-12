@@ -81,8 +81,6 @@ func _run() -> void:
 			await _capture("catalog-detail-"+category+suffix)
 		hud.open_shop()
 		await _capture("shop"+suffix)
-		hud.open_quest_info()
-		await _capture("quest"+suffix)
 		hud._open_enhance_chooser()
 		await _capture("forge"+suffix)
 		hud.open_enhancement("무기 마법 주문서 (각인)",world._enhancement_candidates("weapon","normal"))
@@ -98,7 +96,7 @@ func _run() -> void:
 		await _capture("confirmation"+suffix)
 		dialog.queue_free()
 		await process_frame
-		hud.open_chat_info()
+		hud.open_combat_log()
 		await _capture("log"+suffix)
 	var report := FileAccess.open(folder+"/render-results.json",FileAccess.WRITE)
 	report.store_string(JSON.stringify({"engine":Engine.get_version_info().string,"renderer":RenderingServer.get_video_adapter_name(),"stretch_aspect":ProjectSettings.get_setting("display/window/stretch/aspect"),"note":"File suffix is requested window size; width/height are the unedited active game texture. Keep aspect letterboxes square/ultrawide windows.","fixture":"isolated source-record equipment granted through existing world logic","captures":captures},"\t"))

@@ -151,8 +151,6 @@ var mp_recovery_elapsed: float = 0.0
 const UNIQUE_RECOVERY_INTERVAL: float = 30.0
 const UNIQUE_RECOVERY_AMOUNT: int = 5
 var collision_debug: bool = false
-var quest_kills: int = 0
-const QUEST_GOAL: int = 9
 const JOB_CLASS_ORDER: Array[String] = [
 	"기사", "군주", "요정", "마법사", "다크엘프", "총사", "투사",
 	"암흑기사", "신성검사", "광전사", "사신", "뇌신", "마검사"
@@ -1328,7 +1326,7 @@ func _nearest_walkable_cell(origin: Vector2i) -> Vector2i:
 	return origin
 
 func _npc_dialogue_state() -> Dictionary:
-	return {"level":level,"job_class":job_class,"quest_kills":quest_kills,"inventory":inventory.duplicate(true)}
+	return {"level":level,"job_class":job_class,"inventory":inventory.duplicate(true)}
 
 func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void:
 	# The UI cannot authorize an NPC service. Revalidate player proximity and
@@ -1351,7 +1349,6 @@ func _npc_dialogue_action(npc_id: String,node_id: String,action: String) -> void
 		"craft": hud.call("open_crafting")
 		"buyback": hud.call("open_item_sell")
 		"teleport": hud.call("open_npc_teleport")
-		"quest": hud.call("open_quest_info")
 		_: hud.show_message("이 대화에서는 이용할 수 없는 기능입니다")
 
 func _set_click_destination(target: Vector2) -> void:
@@ -2117,9 +2114,6 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	experience += gained_experience
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
-	quest_kills = mini(QUEST_GOAL, quest_kills + 1)
-	if hud.has_method("set_quest_progress"):
-		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
 	_roll_drop(monster, can_drop_equipment)
 	ain_service.consume_for_kill(int(monster.exp_reward))
 	_check_level_up()
@@ -3561,8 +3555,6 @@ func _update_hud() -> void:
 	_update_ain_hud()
 	if hud.has_method("set_quick_items"):
 		hud.call("set_quick_items", inventory)
-	if hud.has_method("set_quest_progress"):
-		hud.call("set_quest_progress", quest_kills, QUEST_GOAL)
 	var character_state: Dictionary = _character_stats_snapshot()
 	character_state["class_index"] = class_index
 	character_state["job_class"] = job_class
@@ -3581,8 +3573,6 @@ func _update_hud() -> void:
 	character_state["enhancement_levels"] = enhancement_levels
 	character_state["item_instances"] = item_instances
 	character_state["gold"] = gold
-	character_state["quest_kills"] = quest_kills
-	character_state["quest_goal"] = QUEST_GOAL
 	hud.set_character_state(character_state)
 	if hud.inventory_panel.visible:
 		hud.refresh_inventory(inventory)
@@ -3644,8 +3634,7 @@ func _save_game(quiet: bool) -> void:
 		"equipped_items": equipped_items,
 		"enhancement_levels": enhancement_levels,
 		"item_instances": item_instances,
-		"next_item_instance_id":next_item_instance_id,
-		"quest_kills": quest_kills
+		"next_item_instance_id":next_item_instance_id
 	}
 	var file: FileAccess = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:
@@ -3708,7 +3697,6 @@ func _load_game(quiet: bool) -> void:
 	cha_stat = int(data.get("cha", cha_stat))
 	stat_points = maxi(0, int(data.get("stat_points", stat_points)))
 	gold = maxi(0, int(data.get("gold", gold)))
-	quest_kills = clampi(int(data.get("quest_kills", quest_kills)), 0, QUEST_GOAL)
 	var inventory_value: Variant = data.get("inventory", inventory)
 	if inventory_value is Dictionary:
 		inventory = inventory_value as Dictionary

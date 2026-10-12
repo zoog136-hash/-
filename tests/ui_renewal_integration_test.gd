@@ -153,16 +153,7 @@ func _run() -> void:
 	await process_frame
 	var enhance: Button = workspace.find_child("EnhanceAction",true,false) as Button
 	_check(enhance != null and enhance.disabled,"no target prevents enhancement")
-	hud.call("open_quest_info")
-	await process_frame
-	var quest: ProgressBar = workspace.find_child("QuestProgress",true,false) as ProgressBar
-	_check(quest != null,"quest progress exists")
-	if quest != null:
-		var state: Dictionary = (hud.get("character_state") as Dictionary).duplicate(true)
-		state["quest_goal"] = 9
-		state["quest_kills"] = 4
-		hud.call("set_character_state",state)
-		_check(is_equal_approx(quest.value,4.0),"quest reflects refreshed character state")
+	_check(hud.v20_layer.get_node_or_null("QuestTracker") == null,"quest tracker removed")
 	hud.call("open_settings_info")
 	await process_frame
 	var audio: HSlider = workspace.find_child("MasterVolume",true,false) as HSlider
@@ -172,7 +163,7 @@ func _run() -> void:
 		log_toggle.button_pressed = false
 		_check(not (hud.get("log_label") as Control).visible,"log visibility updates")
 		log_toggle.button_pressed = true
-	for section: String in ["open_macro_info","open_chat_info","open_skills","open_character"]:
+	for section: String in ["open_macro_info","open_combat_log","open_skills","open_character"]:
 		hud.call(section)
 		await process_frame
 		_check(workspace.visible,"window visible "+section)

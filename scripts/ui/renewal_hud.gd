@@ -26,7 +26,6 @@ const TeleportUI = preload("res://scripts/ui/renewal_teleport.gd")
 const CraftUI = preload("res://scripts/ui/renewal_crafting.gd")
 const SellUI = preload("res://scripts/ui/renewal_sell.gd")
 const ForgeUI = preload("res://scripts/ui/renewal_forge.gd")
-const QuestUI = preload("res://scripts/ui/renewal_quest.gd")
 const SettingsUI = preload("res://scripts/ui/renewal_settings.gd")
 const RegionMapUI = preload("res://scripts/ui/renewal_map.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
@@ -68,7 +67,6 @@ var catalog_icon_generation: int = 0
 var catalog_variant_counts: Dictionary = {}
 var skills_view: VBoxContainer
 var region_selection: ItemList
-var quest_view: Control
 var class_picker_initial: bool = false
 var class_picker_backdrop: ColorRect
 var minimap_mounted: bool = false
@@ -153,9 +151,6 @@ func _polish_hud_chrome() -> void:
 	var status: PanelContainer = v20_layer.get_node_or_null("StatusPanel") as PanelContainer
 	if status != null:
 		status.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.028,.029,.034,.89),UI.BRONZE,0))
-	var mini_map: PanelContainer = v20_layer.get_node_or_null("QuestTracker") as PanelContainer
-	if mini_map != null:
-		mini_map.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.024,.024,.028,.87),UI.BRONZE,7))
 	if v20_target_panel != null:
 		v20_target_panel.add_theme_stylebox_override("panel",UI.chrome_panel(Color(.045,.024,.025,.88),Color("9d6751"),5))
 	if v20_map_name != null:
@@ -188,8 +183,6 @@ func _build_lineage_side_ui() -> void:
 
 func set_character_state(value: Dictionary) -> void:
 	super.set_character_state(value)
-	if is_instance_valid(quest_view):
-		quest_view.call("refresh", value)
 	# hud_v20 already forwards this authoritative snapshot to both adapters.
 
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
@@ -203,28 +196,6 @@ func _build_v20_buffs() -> void:
 	buff_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_place(buff_row,12,102,430,146)
 	v20_layer.add_child(buff_row)
-
-func _build_v20_quest() -> void:
-	var panel := PanelContainer.new()
-	panel.name = "QuestTracker"
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_place(panel,12,157,298,267)
-	panel.add_theme_stylebox_override("panel",_panel_style(.86))
-	v20_layer.add_child(panel)
-	var v := VBoxContainer.new()
-	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	panel.add_child(v)
-	var head := UI.button("퀘스트  ›",open_quest_info,Vector2(0,28))
-	head.flat = true
-	head.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	v.add_child(head)
-	v20_quest_text = UI.rich("")
-	v20_quest_text.fit_content = false
-	v20_quest_text.custom_minimum_size.y = 48
-	v20_quest_text.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	v20_quest_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	v20_quest_text.add_theme_font_size_override("normal_font_size",12)
-	v.add_child(v20_quest_text)
 
 func _build_v20_top_menu() -> void:
 	var panel := PanelContainer.new()
@@ -620,12 +591,11 @@ func _navigate(section: String) -> void:
 		"character": open_character()
 		"skills": open_skills()
 		"shop": open_shop()
-		"quest": open_quest_info()
 		"map": toggle_map()
 		"menu": toggle_menu()
 		"settings": open_settings_info()
 		"auto": open_macro_info()
-		"log": open_chat_info()
+		"log": open_combat_log()
 		"enhance": _open_enhance_chooser()
 		_: open_catalog(section)
 
@@ -660,16 +630,10 @@ func open_item_sell() -> void:
 	screen.configure(self)
 
 func open_npc_dialogue(npc_id: String) -> void:
-	_open_window("dialogue","NPC 대화","레벨 · 직업 · 퀘스트 · 아이템 보유 분기")
+	_open_window("dialogue","NPC 대화","레벨 · 직업 · 아이템 보유 조건")
 	var screen := DialogueUI.new()
 	workspace.mount(screen)
 	screen.configure(self,npc_id)
-
-func open_quest_info() -> void:
-	_open_window("quest","퀘스트","기존 게임의 사냥 퀘스트 진행도")
-	quest_view = QuestUI.new()
-	workspace.mount(quest_view)
-	quest_view.call("configure",self)
 
 func open_settings_info() -> void:
 	_open_window("settings","설정","오디오 · HUD · 로컬 저장 및 불러오기")
@@ -725,7 +689,7 @@ func open_macro_info() -> void:
 		routes.add_child(route)
 		workspace.register_scroll_drag(scroll,route)
 
-func open_chat_info() -> void:
+func open_combat_log() -> void:
 	_open_window("log","전투 기록","오프라인 시스템 · 최근 120건")
 	var col: VBoxContainer = workspace.column()
 	col.add_child(UI.label("전투 / 시스템 로그",21,UI.GOLD))
@@ -781,7 +745,7 @@ func toggle_menu() -> void:
 	grid.mouse_filter = Control.MOUSE_FILTER_PASS
 	menu_scroll.add_child(grid)
 	menu_scroll.resized.connect(func() -> void: grid.columns = clampi(floori(menu_scroll.size.x/99.0),2,5))
-	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["quest","퀘스트"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"],["log","전투 기록"]]:
+	for pair: Array in [["character","캐릭터·장비"],["class_select","클래스 선택"],["inventory","인벤토리"],["skills","스킬"],["변신","변신"],["마법인형","마법인형"],["성물","성물"],["아이템","아이템 도감"],["map","월드맵"],["shop","잡화 상점"],["enhance","장비 강화"],["auto","자동사냥"],["settings","설정"],["log","전투 기록"]]:
 		var section_id: String = str(pair[0])
 		var button: Button = UI.button("",func() -> void:
 			if not workspace.was_scroll_dragged(menu_scroll):
@@ -810,7 +774,6 @@ func _open_utility_panel(title: String) -> void:
 	var section := "utility"
 	if title.contains("상점"): section="shop"
 	elif title.contains("스킬"): section="skills"
-	elif title.contains("퀘스트"): section="quest"
 	elif title.contains("강화"): section="enhance"
 	elif title.contains("설정"): section="settings"
 	elif title.contains("자동사냥"): section="auto"

@@ -61,8 +61,6 @@ func _run() -> void:
 		await _capture("item-catalog-%dx%d" % [extent.x,extent.y])
 		world.hud.open_shop()
 		await _capture("shop-%dx%d" % [extent.x,extent.y])
-		world.hud.open_quest_info()
-		await _capture("quest-%dx%d" % [extent.x,extent.y])
 		world.hud.call("_open_enhance_chooser")
 		await _capture("forge-%dx%d" % [extent.x,extent.y])
 		world.hud.open_enhancement("무기 마법 주문서 (각인)",world._enhancement_candidates("weapon","normal"))
@@ -71,7 +69,7 @@ func _run() -> void:
 		await _capture("settings-%dx%d" % [extent.x,extent.y])
 		world.hud.open_macro_info()
 		await _capture("auto-%dx%d" % [extent.x,extent.y])
-		world.hud.open_chat_info()
+		world.hud.open_combat_log()
 		await _capture("log-%dx%d" % [extent.x,extent.y])
 	if results.size() != 72:
 		push_error("UI review expected 72 captures; got %d" % results.size())
