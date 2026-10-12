@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: renewed-map-spawns-${{ github.head_ref || github.ref_name }}
+  group: renewed-map-spawns-refs/heads/${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 env:
