@@ -5,6 +5,7 @@ signal back_requested
 signal closed
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Ornament = preload("res://scripts/ui/renewal_ornament.gd")
+const SafeArea = preload("res://scripts/ui/safe_area.gd")
 var heading: Label
 var subtitle: Label
 var footer: Label
@@ -21,6 +22,7 @@ var viewport_fitted: bool = false
 var navigation_scroll: ScrollContainer
 var navigation_separator: VSeparator
 var compact_menu_button: Button
+var teleport_button: Button
 var back_button: Button
 var header_crest: Label
 var scroll_gestures: Dictionary = {}
@@ -55,6 +57,15 @@ func _ready() -> void:
 	back_button.tooltip_text = "이전 화면 · Esc"
 	back_button.hide()
 	title_row.add_child(back_button)
+	compact_menu_button = UI.button("메뉴",func() -> void: navigate.emit("menu"),Vector2(54,32))
+	compact_menu_button.name = "CompactMenuButton"
+	compact_menu_button.hide()
+	title_row.add_child(compact_menu_button)
+	teleport_button = UI.button("지역 이동",func() -> void: navigate.emit("teleport"),Vector2(82,32))
+	teleport_button.name = "MenuTeleportShortcut"
+	teleport_button.tooltip_text = "기존 텔레포트 안내 · 비용과 이동 제한 유지"
+	teleport_button.hide()
+	title_row.add_child(teleport_button)
 	var close := UI.button("",func() -> void: closed.emit(),Vector2(32,32))
 	close.icon = UI.icon("close")
 	close.tooltip_text = "닫기 · Esc"
@@ -120,6 +131,7 @@ func _scroll_gesture_motion(delta_y: float) -> void:
 	scroll_gestures[key] = gesture
 
 func _input(event: InputEvent) -> void:
+	if not is_visible_in_tree(): return
 	# Keep title/window and button-originated scroll drags captured after the
 	# pointer leaves the original Control. Android drag events aren't guaranteed
 	# to remain over the originating button.
@@ -163,7 +175,8 @@ func _scroll_by_drag(scroll: ScrollContainer, delta_y: float) -> void:
 func fit_viewport() -> void:
 	var stretch: float = maxf(.01,get_viewport().get_final_transform().get_scale().x)
 	scale = Vector2.ONE/maxf(.01,minf(1.0,stretch))
-	var viewport: Vector2 = get_viewport_rect().size/scale
+	var available: Rect2 = SafeArea.available(get_viewport())
+	var viewport: Vector2 = available.size/scale
 	var shelf: bool = current_section in ["inventory","skills","menu","quickbind"]
 	var left: bool = current_section in ["character","stats","warehouse","sell"]
 	var fullscreen: bool = current_section in ["변신","마법인형","성물","shop","map","class_select","아이템"]
@@ -178,21 +191,31 @@ func fit_viewport() -> void:
 	elif not shelf and not left: height = minf(568,viewport.y-100)
 	if current_section in ["character","stats"]: height = minf(610,viewport.y-100)
 	if current_section == "detailed_status": height = minf(508,viewport.y-110)
-	width = minf(width,viewport.x-12 if not fullscreen else viewport.x)
-	height = maxf(220,height)
+	width = maxf(1,minf(width,viewport.x-12 if not fullscreen else viewport.x))
+	height = minf(viewport.y,maxf(220,height))
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	size = Vector2(width,height)
-	# Section changes restore their reference anchor; resizing keeps every drop target visible.
+	# Keep PR91 reference widths; translate anchors into the usable viewport.
 	if shelf: position = Vector2(viewport.x-width-12, minf(82,maxf(0,viewport.y-height-110)))*scale
 	elif left: position = Vector2(12,minf(82,maxf(0,viewport.y-height-12)))*scale
 	elif fullscreen: position = Vector2.ZERO
 	else: position = Vector2((viewport.x-width)*.5,maxf(0,(viewport.y-height-80)*.5))*scale
 	if current_section == "detailed_status": position = Vector2(minf(402,viewport.x-width-12),82)*scale
+	position += available.position
+	_clamp_to_safe_area(available)
 	subtitle.hide()
 	footer.hide()
 	viewport_fitted = true
 
+func _clamp_to_safe_area(available: Rect2) -> void:
+	position.x = clampf(position.x,available.position.x,maxf(available.position.x,available.end.x-size.x*scale.x))
+	position.y = clampf(position.y,available.position.y,maxf(available.position.y,available.end.y-size.y*scale.y))
+
 func _keep_title_visible() -> void:
+	var available: Rect2 = SafeArea.available(get_viewport())
+	if available != get_viewport_rect():
+		_clamp_to_safe_area(available)
+		return
 	var view: Vector2 = get_viewport_rect().size
 	position.x = clampf(position.x, minf(0.0,(140.0-size.x)*scale.x),maxf(0.0,view.x-140.0*scale.x))
 	position.y = clampf(position.y, 0.0,maxf(0.0,view.y-64.0*scale.y))
@@ -234,6 +257,9 @@ func open(section: String, title: String, description: String) -> void:
 	title_dragged = false
 	heading.text = title
 	subtitle.text = description
+	var can_navigate: bool = not navigate.get_connections().is_empty()
+	compact_menu_button.visible = can_navigate and section not in ["menu","class_select"]
+	teleport_button.visible = can_navigate and section == "menu"
 	for key: String in navigation:
 		(navigation[key] as Button).button_pressed = key == section
 	show()
@@ -244,6 +270,13 @@ func set_back_available(enabled: bool) -> void:
 		back_button.visible = enabled
 
 func clear() -> void:
+	active_scroll = null
+	active_scroll_touch = -1
+	active_scroll_mouse = false
+	title_dragging = false
+	title_drag_touch = -1
+	title_drag_mouse = false
+	scroll_gestures.clear()
 	for child: Node in content.get_children():
 		content.remove_child(child)
 		child.queue_free()
