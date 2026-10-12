@@ -39,6 +39,10 @@ func reset_presentation() -> void:
 	var settings: Dictionary = actor.motion.profile.presentation
 	color = Color(str(settings.get("effect_color", visual.get("accent", "ed893e"))))
 	effect_scale = clampf(float(settings.get("effect_scale", 1.0)), 0.5, 1.6)
+	var material := actor.sprite.material as ShaderMaterial
+	if material != null and material.shader == preload("res://scripts/monsters/monster_body.gdshader"):
+		# Body kind is fixed for this pooled life, unlike gait/strike/facing.
+		material.set_shader_parameter("body_mode", 1.0 if actor.motion.profile.body_kind == "beast" else (2.0 if actor.motion.profile.body_kind in ["flying", "spirit", "special"] else 0.0))
 	impacts.prepare()
 
 func prepare_warning() -> void:
@@ -79,7 +83,6 @@ func update_pose() -> void:
 		material.set_shader_parameter("move_amount", minf(1.0, actor.motion.locomotion_weight) if not actor.motion.active and not actor.dead else 0.0)
 		material.set_shader_parameter("strike", IMPACT.swing_envelope(actor.motion.visual_progress, actor.motion.attack_hit_ratio) if actor.motion.active else 0.0)
 		material.set_shader_parameter("facing", float(actor.motion.facing8))
-		material.set_shader_parameter("body_mode", 1.0 if actor.motion.profile.body_kind == "beast" else (2.0 if actor.motion.profile.body_kind in ["flying", "spirit", "special"] else 0.0))
 		# Native directions are selected by ActorMotion, never warped into fake views.
 		var facing_scale: float = .94 if actor.motion.facing8 in [2,6] else (.97 if actor.motion.facing8 % 2 == 1 else 1.0)
 		actor.sprite.scale.x *= facing_scale * float(visual.get("width",1.0))
@@ -154,6 +157,9 @@ func _draw_release() -> void:
 
 func _draw() -> void:
 	if not is_instance_valid(actor): return
+	# Ordinary source/native actors draw their body directly. Only bosses
+	# need this node's extra warnings/criticals/death, so skip all draw setup.
+	if not actor.is_boss and (original_source or actor.motion.frame_source != null): return
 	var bounds: Rect2 = get_viewport_rect().grow(maxf(actor.visual_height, float(special.get("radius", 0)) * 2.0 + 32.0))
 	var canvas: Transform2D = get_global_transform_with_canvas()
 	if not bounds.has_point(canvas.origin) and (effect_age < 0.0 or not bounds.has_point(canvas * to_local(effect_center))): return

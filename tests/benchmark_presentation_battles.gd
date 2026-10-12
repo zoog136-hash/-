@@ -55,16 +55,17 @@ func _run() -> void:
 		var hits: Array[int] = [0]
 		var normal_records: Array = world.monster_db.filter(func(r: Dictionary) -> bool: return not preload("res://scripts/loot_drop.gd").is_boss_record(r))
 		for index: int in range(population):
-			# Same first 38 original DB species exist in the baseline checkout.
+			# Use the same active DB order in the baseline and changed checkout.
 			# Controlled HP/stats keep the population fixed; appearance and attack
 			# cadence/rigs are the actual runtime catalog, not placeholder art.
+			var boss_slot: bool = mode == "boss" and index == 0
 			var record: Dictionary = (normal_records[index % normal_records.size()] as Dictionary).duplicate(true)
-			if mode == "boss" and index == 0:
+			if boss_slot:
 				for candidate: Dictionary in world.monster_db:
 					if str(candidate.name) == "드레이크": record = candidate.duplicate(true); break
-			record.merge({"hp":999999,"atk":3,"lv":1,"ac":0,
-				"attack_type":["melee","ranged","magic"][index%3]},true)
-			if record.has("ai") and not (mode == "boss" and index == 0):
+			record.merge({"hp":999999,"atk":3,"lv":1,"ac":0},true)
+			if not boss_slot: record.attack_type = ["melee","ranged","magic"][index%3]
+			if record.has("ai") and not boss_slot:
 				record.ai = {"aggressive":true,"aggro_radius":600,"leash_distance":900}
 			var mob: TwilightMonster = load("res://scenes/Monster.tscn").instantiate()
 			world.monsters_root.add_child(mob)
@@ -73,7 +74,7 @@ func _run() -> void:
 			# Synthetic alternating combat modes intentionally use matching visual
 			# weapons for crowd QA while retaining each species body and intervals.
 			var rig: Node = mob.get("species_visual")
-			if is_instance_valid(rig):
+			if is_instance_valid(rig) and not boss_slot:
 				rig.visual = rig.visual.duplicate(true)
 				rig.visual.weapon = ["sword","bow","staff"][index%3]
 			var angle: float = TAU * float(index) / float(population)

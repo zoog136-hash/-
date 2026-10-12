@@ -167,9 +167,13 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	if not is_instance_valid(sprite): return
 	var source: SpriteFrames = (sprite as AnimatedSprite2D).sprite_frames if sprite is AnimatedSprite2D else frame_source
-	if source != null: _resolve_frames(source)
+	# Uniform class sheets already use the legacy clock below. Once identified,
+	# avoid a second authored-track resolution for every actor/tick.
+	var legacy_class: bool = source != null and source == _track_source and _resolved_profile == profile and _legacy_frames and profile.layout == "class5"
+	if source != null and not legacy_class: _resolve_frames(source)
 	var stride_frames: int = 6
-	if source != null and source.has_animation(_resolved_key): stride_frames = maxi(2, source.get_frame_count(_resolved_key))
+	if legacy_class: stride_frames = maxi(2, source.get_frame_count(CLASS_DIRECTIONS[facing4]))
+	elif source != null and source.has_animation(_resolved_key): stride_frames = maxi(2, source.get_frame_count(_resolved_key))
 	stride_phase = gait * TAU / float(stride_frames)
 	# Local atlas/native limb motion already supplies the stride and swing.
 	# Only a small root accent is needed; avoid double bouncing/rotating art.
@@ -187,22 +191,30 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 			offset.y = 9.0 * fall
 			stretch = Vector2(1.0, 1.0 - fall * 0.2)
 	else:
-		bob = sin(idle_clock * 2.5) * (maxf(1.2, profile.idle_amplitude) if profile.floating else profile.idle_amplitude) * weight
-		stretch.y = 1.0 + sin(idle_clock * 2.5) * 0.003 * weight
+		var breath: float = sin(idle_clock * 2.5)
+		bob = breath * (maxf(1.2, profile.idle_amplitude) if profile.floating else profile.idle_amplitude) * weight
+		stretch.y = 1.0 + breath * 0.003 * weight
 		if locomotion_weight > 0.001 and not active:
-			var footfall: float = absf(sin(stride_phase))
+			var stride: float = sin(stride_phase)
+			var footfall: float = absf(stride)
 			var running: bool = state == "run"
 			bob -= footfall * profile.stride_bob * (1.45 if running else 1.0) * locomotion_weight * weight
-			lean = sin(stride_phase) * profile.stride_lean * locomotion_weight * weight
+			lean = stride * profile.stride_lean * locomotion_weight * weight
 			if running and not profile.floating:
 				stretch = Vector2(1.0 + footfall * .012 * weight, 1.0 - footfall * .016 * weight)
 		if active:
 			var p: float = visual_progress
-			var windup: float = smoothstep(0.0, attack_hit_ratio * 0.72, p)
-			var release: float = smoothstep(attack_hit_ratio * 0.72, attack_hit_ratio, p)
-			var recover: float = 1.0 - smoothstep(attack_hit_ratio, 1.0, p)
-			var impact: float = release * recover
-			var anticipation: float = windup * (1.0 - release)
+			# The three non-overlapping envelopes need only one smoothstep.
+			var anticipation: float = 0.0
+			var impact: float = 0.0
+			var release_start: float = attack_hit_ratio * 0.72
+			if p < release_start:
+				anticipation = smoothstep(0.0, release_start, p)
+			elif p < attack_hit_ratio:
+				impact = smoothstep(release_start, attack_hit_ratio, p)
+				anticipation = 1.0 - impact
+			else:
+				impact = 1.0 - smoothstep(attack_hit_ratio, 1.0, p)
 			match attack_style:
 				"bow":
 					offset = direction * (-3.0 * anticipation + 2.0 * impact)
@@ -218,13 +230,14 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 					lean = (-anticipation * .04 + impact * .055) * signf(direction.x if absf(direction.x) > 0.1 else 1.0)
 			offset *= weight * profile.attack_recoil
 			lean *= weight * profile.attack_recoil
-			match weapon_variant:
-				"단검": offset *= .65; lean *= .7
-				"창", "체인소드": offset *= 1.2; lean *= .5
-				"도끼": lean *= 1.25
-				"둔기": offset *= .8; bob += impact * 1.5 * weight
-				"양손검", "그레이트소드": lean *= 1.1
-				"총", "라이플", "핸드캐넌", "권총": offset = -direction * impact * 3.0 * weight
+			if not weapon_variant.is_empty():
+				match weapon_variant:
+					"단검": offset *= .65; lean *= .7
+					"창", "체인소드": offset *= 1.2; lean *= .5
+					"도끼": lean *= 1.25
+					"둔기": offset *= .8; bob += impact * 1.5 * weight
+					"양손검", "그레이트소드": lean *= 1.1
+					"총", "라이플", "핸드캐넌", "권총": offset = -direction * impact * 3.0 * weight
 		if hit_clock > 0.0:
 			var recoil: float = sin((hit_clock / hit_duration) * PI * 0.5) * profile.hit_recoil * hit_strength
 			offset += hit_direction * recoil
