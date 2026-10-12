@@ -1,4 +1,4 @@
-name: PR59 Safe Merge Diagnostic
+name: PR59 Safe Merge Resolution
 on:
   push:
     branches:
@@ -6,62 +6,91 @@ on:
 permissions:
   contents: write
 jobs:
-  diagnose:
-    if: "!contains(github.event.head_commit.message, '[pr59 diagnostic]')"
+  resolve:
+    if: "!contains(github.event.head_commit.message, '[pr59 resolved]') && !contains(github.event.head_commit.message, '[pr59 diagnostic]')"
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
-      - name: Check the actual merge, preserving both histories
+      - name: Merge main with guarded two-file conflict resolution
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin main
-          main_sha=$(git rev-parse origin/main)
-          head_sha=$(git rev-parse HEAD)
-          set +e
-          git merge --no-commit --no-ff origin/main > /tmp/pr59-merge-output.txt 2>&1
-          status=$?
-          set -e
-          if [[ "$status" == 0 ]]; then
-            git commit -m "Merge latest main into PR59 after clean 3-way merge"
-            git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
-            exit 0
-          fi
-          mkdir -p docs/skills
-          {
-            echo "# PR59 actual merge diagnostics"
-            echo
-            echo "- Source PR59 head before attempt: \`$head_sha\`"
-            echo "- Target main: \`$main_sha\`"
-            echo "- Automatic merge exit code: $status"
-            echo
-            echo "## Git merge output"
-            echo '~~~text'
-            cat /tmp/pr59-merge-output.txt
-            echo '~~~'
-            echo
-            echo "## Unmerged paths"
-            echo '~~~text'
-            git diff --name-only --diff-filter=U
-            echo '~~~'
-            echo
-            echo "## Conflict hunk text (first 300 lines per file)"
-            while IFS= read -r file; do
-              [[ -f "$file" ]] || continue
-              echo
-              echo "### \`$file\`"
-              echo '~~~text'
-              awk 'BEGIN{inside=0;n=0} /^<<<<<<< /{inside=1} inside {if (n++ < 300) print} /^>>>>>>> /{inside=0}' "$file"
-              echo '~~~'
-            done < <(git diff --name-only --diff-filter=U)
-          } > docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
-          git merge --abort || git reset --merge
-          git add docs/skills/PR59_MERGE_DIAGNOSTIC_20261012.md
-          git commit -m "[pr59 diagnostic] Record actual conflict hunks without changing game code"
+          git merge --no-commit --no-ff origin/main || true
+          python3 - <<'PY'
+          import pathlib, re, subprocess
+          get = lambda cmd: subprocess.check_output(cmd, text=True).strip()
+          unmerged = set(get(["git","diff","--name-only","--diff-filter=U"]).splitlines())
+          expected = {"README.md", "scripts/world.gd"}
+          assert unmerged == expected, f"Unexpected merge conflicts: {unmerged!r}"
+          pattern = re.compile(r"(?ms)^<<<<<<< HEAD\n(.*?)^=======\n(.*?)^>>>>>>> origin/main\n")
+          readme_path = pathlib.Path("README.md")
+          readme = readme_path.read_text()
+          readme_hunks = list(pattern.finditer(readme))
+          assert len(readme_hunks) == 1, f"README conflict count {len(readme_hunks)}"
+          ours, theirs = readme_hunks[0].group(1, 2)
+          assert "원작 스킬 이행" in ours and "리소스 누락 방지" in theirs
+          readme = pattern.sub(lambda m: m.group(1).rstrip() + "\n\n" + m.group(2), readme)
+          readme_path.write_text(readme)
+          world_path = pathlib.Path("scripts/world.gd")
+          world = world_path.read_text()
+          world_hunks = list(pattern.finditer(world))
+          assert len(world_hunks) == 2, f"world conflict count {len(world_hunks)}"
+          first, second = world_hunks
+          assert first.group(1).strip() == ""
+          assert "file.store_string(JSON.stringify(data" in first.group(2) and "file.close()" in first.group(2)
+          assert "pre-original-skills" in second.group(1)
+          assert "saved_map_id" in second.group(2) and "source_save_blocked = false" in second.group(2)
+          # Keep the skill feature's atomic save writer, not the obsolete direct file writer.
+          # Validate the saved map before making the one-time legacy skill save backup.
+          world = pattern.sub(lambda m: "" if "file.store_string(JSON.stringify(data" in m.group(2) else m.group(2) + m.group(1), world)
+          # PR85 removed quests. Do not resurrect any of the pre-PR85 quest runtime.
+          world = world.replace("\tvar quest_kills: int = 0\n", "").replace("var quest_kills: int = 0\n", "")
+          world = world.replace("const QUEST_GOAL: int = 9\n", "")
+          world = world.replace(',"quest_kills":quest_kills', "")
+          world = world.replace('\t\t"quest": hud.call("open_quest_info")\n', "")
+          world = world.replace('\tquest_kills = mini(QUEST_GOAL, quest_kills + 1)\n\tif hud.has_method("set_quest_progress"):\n\t\thud.call("set_quest_progress", quest_kills, QUEST_GOAL)\n', "")
+          world = world.replace('\tif hud.has_method("set_quest_progress"):\n\t\thud.call("set_quest_progress", quest_kills, QUEST_GOAL)\n', "")
+          world = world.replace('\tcharacter_state["quest_kills"] = quest_kills\n', "")
+          world = world.replace('\tcharacter_state["quest_goal"] = QUEST_GOAL\n', "")
+          world = world.replace('\t\t"quest_kills": quest_kills\n', "")
+          world = world.replace('\tquest_kills = clampi(int(data.get("quest_kills", quest_kills)), 0, QUEST_GOAL)\n', "")
+          world = world.replace('\t\t"next_item_instance_id":next_item_instance_id,\n\t}', '\t\t"next_item_instance_id":next_item_instance_id\n\t}')
+          assert not re.search(r"quest_kills|quest_goal|QUEST_GOAL|open_quest_info|set_quest_progress", world), "Quest feature resurfaced in world.gd"
+          save_body = world.split("func _save_game(quiet: bool) -> void:",1)[1].split("func _load_game(quiet: bool) -> void:",1)[0]
+          load_body = world.split("func _load_game(quiet: bool) -> void:",1)[1]
+          assert "scripts/skills/save_writer.gd" in save_body, "PR59 atomic save writer missing"
+          assert "file.store_string(" not in save_body, "Main direct-save block added beside atomic writer"
+          assert "source_save_blocked" in save_body, "Main source save protection lost"
+          assert "source_save_blocked = false" in load_body and "saved_map_id" in load_body, "Source pack load protection lost"
+          assert "pre-original-skills" in load_body, "PR59 old-save backup lost"
+          assert '"original_skill_state"' in save_body, "PR59 skill save state lost"
+          assert '"original_monster_world"' in save_body and '"original_position"' in save_body, "Main original map data loss"
+          assert "TRANSFORM_SKILL" in world, "PR87 transformation skill behavior lost"
+          world_path.write_text(world)
+          hud_path = pathlib.Path("scripts/hud.gd")
+          hud = hud_path.read_text()
+          hud = re.sub(r"(?ms)^func open_quest_info\(\) -> void:\n.*?(?=^func |\Z)", "", hud)
+          assert not re.search(r"quest_kills|quest_goal|open_quest_info", hud)
+          hud_path.write_text(hud)
+          v20_path = pathlib.Path("scripts/hud_v20.gd")
+          v20 = v20_path.read_text()
+          v20 = v20.replace('\t\t"quest":\n\t\t\topen_quest_info()\n', "")
+          v20 = re.sub(r'(?m)^\tvar quest: Button = _top_menu_button\("res://assets/ui/quest\.png", "퀘스트"\)\n\tquest\.pressed\.connect\(open_quest_info\)\n\trow\.add_child\(quest\)\n', "", v20)
+          assert "open_quest_info" not in v20 and '"quest":' not in v20
+          v20_path.write_text(v20)
+          for f in (readme_path,world_path,hud_path,v20_path):
+              assert "<<<<<<<" not in f.read_text(), f"Conflict markers persist in {f}"
+          print("Resolved exactly README.md and scripts/world.gd; preserved original skill save + source-map checks; checked PvE quest exclusions")
+          PY
+          git add README.md scripts/world.gd scripts/hud.gd scripts/hud_v20.gd
+          test -z "$(git diff --name-only --diff-filter=U)"
+          git diff --cached --check
+          git commit -m "[pr59 resolved] Merge latest main, reconcile skill saves and preserve PvE exclusions"
           git push origin "HEAD:feature/original-lineagem-skill-complete-20261010"
