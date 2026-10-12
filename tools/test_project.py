@@ -12,6 +12,7 @@ import tempfile
 import re
 import json
 import sys
+from test_project_support import classify_result, run_isolated
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -71,22 +72,13 @@ for name,extra in tests:
                 if not shutil.which('xvfb-run'):
                     raise RuntimeError('Visual test requires xvfb-run (or DISPLAY); never wait for frame_post_draw in headless mode')
                 command=['xvfb-run','-a','-s','-screen 0 1280x720x24',*command]
-            p=subprocess.run(command,capture_output=True,text=True,env=env,timeout=budget)
+            p=run_isolated(command,env=env,timeout=budget,cwd=str(root))
             output=p.stdout+p.stderr
-            ok=p.returncode==0 and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
-            is_skipped=p.returncode==0 and '_SKIP:' in output and not re.search(r'SCRIPT ERROR:|ERROR:|FAIL:',output)
+            ok,is_skipped=classify_result(name,p.returncode,output)
             if is_skipped:
                 skipped.append(name)
-                ok=True
-            elif name not in ('import','boot'):
-                reports=[]
-                for line in output.splitlines():
-                    match=re.search(r'\b[A-Z_]+_RESULT (\{.*\})$',line)
-                    if match:
-                        try: reports.append(json.loads(match.group(1)))
-                        except json.JSONDecodeError: pass
-                result_ok=bool(reports) and all(report.get('failures')==[] for report in reports)
-                ok=ok and ('_OK' in output or result_ok)
+        except OSError as exc:
+            output='PROCESS_START_FAILED '+str(exc);ok=False
         except RuntimeError as exc:
             output='VISUAL_SETUP_FAILED '+str(exc);ok=False
         except subprocess.TimeoutExpired as exc:
