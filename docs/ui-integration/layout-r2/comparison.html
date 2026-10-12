@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TWILIGHT 실제 실행 화면 · 변경 전후</title>
+<style>
+body{margin:0;background:#121417;color:#eee8dd;font:16px/1.65 system-ui,sans-serif}main{max-width:1800px;margin:auto;padding:24px}h1{font-size:25px;margin:0}p{color:#ccc4b5}nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:20px 0}button,select{background:#25272d;border:1px solid #766546;color:#eee8dd;padding:10px 16px;font:inherit;border-radius:4px;cursor:pointer}button[aria-pressed=true]{background:#55452b;border-color:#d9bb79}.pair{display:grid;grid-template-columns:1fr 1fr;gap:18px}figure{margin:0;min-width:0}figcaption{margin:8px 0;color:#d9bb79}img{display:block;width:100%;height:auto;border:1px solid #4b4436}a{color:#dfc48d}.facts{display:flex;gap:12px;flex-wrap:wrap}.facts span{border:1px solid #4b4436;padding:8px 12px}small{color:#bbb3a4}@media(max-width:960px){.pair{grid-template-columns:1fr}main{padding:14px}}
+</style>
+<main>
+<h1>TWILIGHT · 실제 게임 화면의 변경 전후</h1>
+<p>처음 PR은 기존의 큰 창과 왼쪽 메뉴 목록을 유지했습니다. 후속 수정에서는 메뉴·가방·스킬을 오른쪽 패널로 옮기고, 목록 → 상세 → 퀵슬롯 등록 → 상세 복귀를 연결했습니다.</p>
+<nav aria-label="비교할 화면">
+<button data-view="menu" aria-pressed="true">전체 메뉴</button>
+<button data-view="inventory" aria-pressed="false">가방</button>
+<button data-view="skills" aria-pressed="false">스킬</button>
+<label>변경 전 <select id="baseline"><option value="main">main · 2f5ae10</option><option value="pr">이전 PR · 281001d</option></select></label>
+</nav>
+<div class="facts"><span>메뉴 폭 790 → 480px</span><span>가방·스킬 폭 1010 → 480px</span><span>중앙 플레이 화면 확보</span><span>상단 단축 버튼 · 하단 퀵슬롯 접근 유지</span></div>
+<div class="pair">
+<figure><figcaption id="before-caption">변경 전 main · 2f5ae10</figcaption><a id="before-link" href="main-menu.png"><img id="before" src="main-menu.png" alt="기존 main 전체 메뉴"></a></figure>
+<figure><figcaption>후속 수정 · 62d085f · 오른쪽 패널</figcaption><a id="after-link" href="drawer-menu.png"><img id="after" src="drawer-menu.png" alt="수정한 오른쪽 전체 메뉴"></a></figure>
+</div>
+<p><a href="drawer-inventory-detail.png">아이템 상세</a> · <a href="drawer-skills-detail.png">스킬 상세·퀵슬롯 등록</a> · <a href="../../UI_DRAWER_CORRECTION_20261012.md">실제 변경·검증 범위</a> · <a href="https://github.com/zoog136-hash/-/pull/86">PR #86</a></p>
+<small>1280×720, Godot 4.7.2, 실제 Main.tscn 실행 캡처. 전후의 HP·MP·버프는 각 실행 시점의 게임 상태이며 배치 비교에 사용했습니다. 이 코드는 feature/twilight-integrated-hud-20261012에 있으며 main/기존 배포 파일은 변경하지 않았습니다. 전체 리니지M UI 완성 또는 온라인 기능 제공을 뜻하지 않습니다.</small>
+</main>
+<script>
+let view='menu';
+const labels={menu:'전체 메뉴',inventory:'가방',skills:'스킬'};
+function render(){const baseline=document.getElementById('baseline').value;const before=baseline==='main'?`main-${view}.png`:`../screenshots/${view}-1280x720.png`;const after=`drawer-${view}.png`;document.getElementById('before').src=before;document.getElementById('after').src=after;document.getElementById('before-link').href=before;document.getElementById('after-link').href=after;document.getElementById('before').alt=`변경 전 ${labels[view]}`;document.getElementById('after').alt=`수정 후 ${labels[view]}`;document.getElementById('before-caption').textContent=baseline==='main'?'변경 전 main · 2f5ae10':'이전 PR · 281001d · 큰 창 유지';for(const button of document.querySelectorAll('[data-view]'))button.setAttribute('aria-pressed',String(button.dataset.view===view));}
+for(const button of document.querySelectorAll('[data-view]'))button.onclick=()=>{view=button.dataset.view;render();};
+document.getElementById('baseline').onchange=render;
+</script>
+</html>

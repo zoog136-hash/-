@@ -1,5 +1,7 @@
 # 통합 UI 검증 결과
 
+> 이 문서는 첫 통합 코드 `cfb51e7`의 검증 이력이다. 오른쪽 패널 후속 코드 `62d085f`의 변경·검증은 [후속 실행 기록](../UI_DRAWER_CORRECTION_20261012.md)에 별도로 보존한다.
+
 Godot 4.7.2 공식 Linux 바이너리로 실제 `Main.tscn`을 실행했다. 렌더 검증은 Xorg dummy display + Compatibility / Mesa llvmpipe이며, 단순 파싱 검사를 실기동으로 계산하지 않았다. 테스트마다 분리된 XDG 사용자 디렉터리를 사용하여 플레이어 저장을 건드리지 않았다. 장비/피해/퀘스트 이벤트 fixture는 테스트 스크립트 안에서만 사용한다.
 
 실행 코드: `cfb51e749feb386fa399cd7cebe8ba872e7e3cec`. 런타임 파일별 SHA-256은 [snapshot.json](evidence/snapshot.json). 캡처 스크립트에는 자동 레벨업 장비창을 닫고 AUTO HUD를 촬영하는 후속 절차 보완이 있다. 게임의 레벨업/자동사냥 정책은 바꾸지 않았다.
