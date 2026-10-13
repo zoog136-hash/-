@@ -4,14 +4,22 @@ const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 
 # Exact GL screenshots and frame timings of real gameplay, not concept art.
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
-const DETAIL_KINDS: Dictionary = {"oman_01":"tomb", "domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
+const DETAIL_KINDS: Dictionary = {"domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
+# Oman 1F now uses authored ReferenceGeography, not the removed tomb prop.
+# Photograph its current boss landmark anchor; retain all 37 required views.
+const DETAIL_ANCHORS: Dictionary = {"oman_01":"boss"}
 var capture_count: int = 0
+var captured_files: Dictionary = {}
 var failed: bool = false
 
 func _initialize() -> void:
 	call_deferred("_run")
 
 func _save_view(directory: String, filename: String) -> void:
+	if captured_files.has(filename):
+		push_error("Duplicate gameplay capture: " + filename)
+		failed = true
+		return
 	await RenderingServer.frame_post_draw
 	var screenshot: Image = root.get_texture().get_image()
 	if screenshot == null or screenshot.is_empty():
@@ -24,6 +32,7 @@ func _save_view(directory: String, filename: String) -> void:
 		push_error("Cannot save gameplay capture: "+filename)
 		failed = true
 	else:
+		captured_files[filename] = true
 		capture_count += 1
 
 func _aim(world: TwilightWorld, point: Vector2) -> void:
@@ -161,7 +170,18 @@ func _run() -> void:
 					await RenderingServer.frame_post_draw
 					_validate_cache(world.field_renderer)
 			print("REGION_CAPTURE ",id," ",review," calls=",Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)," props=",world.field_renderer.visible_props)
-		if DETAIL_KINDS.has(id):
+		if DETAIL_ANCHORS.has(id):
+			var anchor: Variant = world.field_map.data.get("review_points", {}).get(str(DETAIL_ANCHORS[id]))
+			var geography: Node = world.field_renderer.terrain_root.get_node_or_null("Ground/ReferenceGeography")
+			if not anchor is Array or anchor.size() != 2 or geography == null:
+				push_error("Missing authored landmark anchor or geometry: " + id + "/" + str(DETAIL_ANCHORS[id]))
+				failed = true
+			else:
+				_aim(world,COORD.array_vector(anchor))
+				for i: int in range(25): await process_frame
+				await _save_view(directory,id+"-landmark")
+		elif DETAIL_KINDS.has(id):
+			var found: bool = false
 			for record: Dictionary in world.field_map.data["props"]:
 				if str(record["kind"]) != str(DETAIL_KINDS[id]):
 					continue
@@ -169,7 +189,11 @@ func _run() -> void:
 				for i: int in range(25):
 					await process_frame
 				await _save_view(directory,id+"-landmark")
+				found = true
 				break
+			if not found:
+				push_error("Missing gameplay landmark prop: " + id + "/" + str(DETAIL_KINDS[id]))
+				failed = true
 	timing.sort()
 	print("REGION_RENDER median_ms=",timing[timing.size()/2]," p95_ms=",timing[int(timing.size()*.95)])
 	var report: Dictionary = {"adapter":RenderingServer.get_video_adapter_name(), "os":OS.get_name(), "frame_cap":Engine.max_fps,

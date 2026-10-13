@@ -18,6 +18,21 @@ ERROR = re.compile(
 REPORT = re.compile(r'\b[A-Z][A-Z0-9_]*_RESULT\s+(.+)$')
 SUCCESS = re.compile(r'\b[A-Z][A-Z0-9_]*_OK\b')
 SKIP = re.compile(r'\b[A-Z][A-Z0-9_]*_SKIP:')
+# This existing producer writes a counted summary rather than an _OK marker.
+# Accept only its exact, positive-check, zero-failure report, for that test only.
+RENEWED_SPAWN_SUMMARY = re.compile(
+    r'^RENEWED MAP SPAWN TEST: ([1-9][0-9]*) checks, ([0-9]+) failures$',
+    re.MULTILINE,
+)
+
+
+def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
+    """Keep exhaustive real-save audits bounded without dropping assertions."""
+    if name == 'import':
+        return max(requested, import_timeout)
+    if name in ('world_regions_test', 'original_skill_learning_conditions_test'):
+        return max(requested, 540)
+    return requested
 
 
 def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool]:
@@ -35,9 +50,15 @@ def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool
             if not isinstance(report, dict) or report.get('failures') != []:
                 return False, False
             reports.append(report)
-    # Import/boot must actually run; a synthetic SKIP cannot authorize the suite.
+    spawn_summaries = RENEWED_SPAWN_SUMMARY.findall(output)
+    if name == 'renewed_map_spawn_test':
+        # Missing, contradictory, duplicate, or nonzero summaries fail closed.
+        if SKIP.search(output) or len(spawn_summaries) != 1 or spawn_summaries[0][1] != '0':
+            return False, False
+        return True, False
+    # Import/boot/cache preparation must actually run; SKIP cannot authorize them.
     if SKIP.search(output):
-        return (False, False) if name in ('import', 'boot') else (True, True)
+        return (False, False) if name in ('import', 'boot', 'bake_navigation') else (True, True)
     return name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output)), False
 
 
