@@ -18,6 +18,7 @@
 		160
 	],
 	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
 	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
 	"source_directions": [
 		"E",
@@ -31,32 +32,52 @@
 	],
 	"tracks": {
 		"attack": {
+			"atlas_size": [
+				1024,
+				460
+			],
 			"loop_type": "play_once",
-			"sha256": "4001da1e7d61aef56fc98f676c1593ce3d5d0dc323a213594f7a40913d0eee3a",
+			"sha256": "19490e49c9e0ca563149a4886f4194564d68a8f737163fb9f82fd1f21acc2219",
 			"source_duration_seconds": 0.4,
 			"unique_frames_per_direction": 4
 		},
 		"death": {
+			"atlas_size": [
+				1024,
+				508
+			],
 			"loop_type": "play_once",
-			"sha256": "4301152dde20fd6e6fb4a782e9ceeb9b5a0916f9f9bb9aa95ea50ad28e6f1851",
+			"sha256": "077d0a3e50c6b41688702e6ebc930db49672d80608df3d6b7f423265ac388cf5",
 			"source_duration_seconds": 0.8,
 			"unique_frames_per_direction": 6
 		},
 		"hit": {
+			"atlas_size": [
+				1024,
+				216
+			],
 			"loop_type": "back_forth",
-			"sha256": "88b168a47186d4d2d7d318a25c3e8e7c1e560e984f62a13624be6db10e63e818",
+			"sha256": "ca761ed2938b6fe062fdd47c05cbe61a5a1a80e90594a8f17b97fab9aae4a928",
 			"source_duration_seconds": 0.133,
 			"unique_frames_per_direction": 2
 		},
 		"idle": {
+			"atlas_size": [
+				1024,
+				420
+			],
 			"loop_type": "back_forth",
-			"sha256": "745cc8f72a938b7bfa6523b3fe03bc9c64a9e772247245775b0a8759ac3c864a",
+			"sha256": "c2e275ee4cbeb522a68a59320ec3dbc1d1803120b73b58a99a043f7462e2dce8",
 			"source_duration_seconds": 0.533,
 			"unique_frames_per_direction": 4
 		},
 		"walk": {
+			"atlas_size": [
+				1024,
+				640
+			],
 			"loop_type": "looped",
-			"sha256": "338b12eba864e9775239d927a0a53762b9637d71776a13774f883c06ce0a4658",
+			"sha256": "98fdefa7c73a4d02af04710e54620336bc10eda5a5f131839a1a7bd45d0e1951",
 			"source_duration_seconds": 0.533,
 			"unique_frames_per_direction": 8
 		}

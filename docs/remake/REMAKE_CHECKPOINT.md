@@ -35,6 +35,9 @@
 
 ## 최신 main 반영
 - 작업 도중 PR #96/#97/#98이 main `80076490518942647ad538ae440a91a3d3605c7e`에 병합됨. 새 작업 브랜치에 merge하여 기존 작업을 보존. 이번 PR은 #100 (draft).
+- merge commit `5a4a48ef19c67ca781cced2ed3433ac64357162f`: 최신 main 기능 보존 및 애니메이션 1,314 assertions / 타격 lifecycle 158 checks PASS. 최종 Main 영상 23.7초, 711프레임 PASS.
+- 5단계: 알파 여백을 제거해 10장 아틀라스 원시 RGBA 합계 96MiB → 15.516MiB (83.84% 감소). 384프레임의 알파/가시 픽셀 차이 0. 원래 256×256 발 캔버스는 AtlasTexture.margin으로 복원. 실제 프로세스 메모리 피크와는 구분.
+- 새 PNG 재임포트 후 1,314 assertions 재통과. 전달용 clean clone 및 마지막 화면 검증 진행 중.
 - 아래는 이전 PR #98 체크포인트 원문 보존 기록이며, 이번 8방향 검증 상태는 위 기록을 따름.
 
 <details><summary>이전 PR #98 기록</summary>

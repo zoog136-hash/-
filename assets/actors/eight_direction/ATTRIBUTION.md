@@ -11,7 +11,10 @@ These adapted atlases are distributed under the same license; see
 Changes: selected stance/run/swing/hit/die frames, combined the seven knight equipment
 layers using upstream direction-specific drawing order, retained the source
 foot offsets, uniformly reduced pixels to 50%, packed onto transparent 256px
-cells and mapped source directions to Godot screen coordinates. No synthesized
+virtual cells and mapped source directions to Godot screen coordinates. Transparent
+padding is trimmed during packing; AtlasTexture margins restore each full foot
+canvas. All 384 action/frame slots preserve their alpha and visible pixels exactly.
+No synthesized
 view, mirrored weapon, repeated image presented as a new pose, or new 3D render.
 The upstream PNGs were originally rendered assets; this project consumes only
 the already published **2D sprites**. No model / 3D scene is used or delivered.

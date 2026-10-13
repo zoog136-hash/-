@@ -65,13 +65,16 @@ func build(actor: String, layers: Dictionary, order: Dictionary) -> void:
 	var sub_id := 0
 	var metadata := {"source":"Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
 		"motion":"actual sequential frames", "directions":GAME_DIRECTIONS,
-		"source_directions":SOURCE_DIRECTIONS, "cell":[CELL,CELL], "foot":[128,160], "tracks":{}}
+		"source_directions":SOURCE_DIRECTIONS, "cell":[CELL,CELL], "foot":[128,160],
+		"packing":"trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas", "tracks":{}}
 	for role: String in ROLES:
 		var source_role: String = ROLES[role]
 		var track: Dictionary = layers.values()[0].tracks[source_role]
 		var count := int(track.frames)
 		var duration := float(str(track.duration).trim_suffix("ms")) / 1000.0
-		var sheet := Image.create(CELL * count, CELL * 8, false, Image.FORMAT_RGBA8)
+		var packed: Array[Dictionary] = []
+		var cursor := Vector2i(2,2)
+		var row_height := 0
 		var ext_id := role
 		ext += "[ext_resource type=\"Texture2D\" path=\"%s/%s.png\" id=\"%s\"]\n" % [folder, role, ext_id]
 		metadata.tracks[role] = {"unique_frames_per_direction":count, "source_duration_seconds":duration,
@@ -92,19 +95,31 @@ func build(actor: String, layers: Dictionary, order: Dictionary) -> void:
 						failures.append("clipped %s %s %s %d" % [actor, role, compass, index])
 					frame.blend_rect(data.image, Rect2i(rect[0],rect[1],rect[2],rect[3]), pos)
 				frame.resize(CELL, CELL, Image.INTERPOLATE_LANCZOS)
-				sheet.blit_rect(frame, Rect2i(0,0,CELL,CELL), Vector2i(index * CELL, game_dir * CELL))
+				var crop := frame.get_used_rect().grow(1).intersection(Rect2i(0,0,CELL,CELL))
+				if cursor.x + crop.size.x + 2 > 1024:
+					cursor = Vector2i(2,cursor.y + row_height + 2)
+					row_height = 0
+				var rect := Rect2i(cursor,crop.size)
+				packed.append({"image":frame.get_region(crop),"position":cursor})
+				cursor.x += crop.size.x + 2
+				row_height = maxi(row_height,crop.size.y)
 				sub_id += 1
 				ids.append(sub_id)
-				sub += "[sub_resource type=\"AtlasTexture\" id=\"Frame_%d\"]\natlas = ExtResource(\"%s\")\nregion = Rect2(%d, %d, %d, %d)\nfilter_clip = true\n\n" % [sub_id,ext_id,index*CELL,game_dir*CELL,CELL,CELL]
+				sub += "[sub_resource type=\"AtlasTexture\" id=\"Frame_%d\"]\natlas = ExtResource(\"%s\")\nregion = Rect2(%d, %d, %d, %d)\nmargin = Rect2(%d, %d, %d, %d)\nfilter_clip = true\n\n" % [sub_id,ext_id,rect.position.x,rect.position.y,rect.size.x,rect.size.y,crop.position.x,crop.position.y,CELL-crop.size.x,CELL-crop.size.y]
 			var sequence := ids.duplicate()
 			if role == "idle" and str(track.type) == "back_forth":
 				for index: int in range(count - 2, 0, -1): sequence.append(ids[index])
 			var entries: Array[String] = []
 			for id: int in sequence: entries.append('{"duration":1.0,"texture":SubResource("Frame_%d")}' % id)
 			animations.append('{"frames":[%s],"loop":%s,"name":&"%s_%d","speed":%s}' % [",".join(entries),"true" if role in ["idle","walk"] else "false",role,game_dir,float(count)/duration])
+		var sheet := Image.create(1024,ceili(float(cursor.y + row_height + 2)/4.0)*4,false,Image.FORMAT_RGBA8)
+		for cell: Dictionary in packed:
+			var image_value: Image = cell.image
+			sheet.blit_rect(image_value,Rect2i(Vector2i.ZERO,image_value.get_size()),cell.position)
 		var output := folder.path_join(role + ".png")
 		if sheet.save_png(output) != OK: failures.append("write " + output)
 		metadata.tracks[role].sha256 = FileAccess.get_sha256(output)
+		metadata.tracks[role].atlas_size = [sheet.get_width(),sheet.get_height()]
 	header = header.replace("load_steps=1", "load_steps=" + str(sub_id + ROLES.size() + 1))
 	FileAccess.open(folder.path_join("SpriteFrames.tres"), FileAccess.WRITE).store_string(header + ext + "\n" + sub + "[resource]\nanimations = [" + ",\n".join(animations) + "]\n")
 	FileAccess.open(folder.path_join("provenance.json"), FileAccess.WRITE).store_string(JSON.stringify(metadata, "\t") + "\n")
