@@ -219,6 +219,7 @@ func face_target(position_value: Vector2) -> void:
 	facing = motion.facing4
 
 func start_combat_attack(aim: Vector2, duration: float, style: String, marker: float = -1.0) -> int:
+	if motion.dead or is_stunned() or is_feared(): return -1
 	attack_visual_duration = duration
 	attack_clock = duration
 	return motion.begin_attack(duration, aim - global_position, style, marker)
@@ -484,6 +485,7 @@ func is_feared() -> bool:
 func apply_fear(duration: float, source_position: Vector2) -> void:
 	fear_remaining = maxf(fear_remaining, maxf(0.0, duration))
 	fear_source_position = source_position
+	if is_feared(): cancel_attack()
 	touch_vector = Vector2.ZERO
 	clear_click_path()
 	show_status_text("FEAR")
@@ -515,6 +517,7 @@ func is_silenced() -> bool:
 
 func apply_silence(duration: float) -> void:
 	silence_remaining = maxf(silence_remaining, maxf(0.0, duration))
+	if is_silenced() and motion.active and motion.attack_style == "magic": cancel_attack()
 	show_status_text("SILENCE")
 
 func _tick_stun(delta: float) -> void:
@@ -525,6 +528,7 @@ func is_stunned() -> bool:
 
 func apply_stun(duration: float) -> void:
 	stun_remaining = maxf(stun_remaining, maxf(0.0, duration))
+	if is_stunned(): cancel_attack()
 	velocity = Vector2.ZERO
 	touch_vector = Vector2.ZERO
 	clear_click_path()

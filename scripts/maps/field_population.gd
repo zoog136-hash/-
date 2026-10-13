@@ -70,8 +70,19 @@ func _spawn_point(region: Dictionary) -> Vector2:
 	return Vector2.INF
 
 func _spawn_slot(slot: Dictionary) -> void:
+	# A repeated wake/spawn request must not orphan a live actor when the slot
+	# is reassigned. Dead or freed actors may still be replaced normally.
+	var occupant: Variant = slot.get("monster")
+	if is_instance_valid(occupant) and not occupant.dead: return
 	var region: Dictionary = slot.region
 	var boss: bool = str(region.get("mode","normal")) == "boss"
+	if boss:
+		var identity: String = boss_director.key(str(field.data.map_id),region)
+		for other: Dictionary in slots:
+			if str(other.region.get("mode","normal")) != "boss": continue
+			var live: Variant = other.get("monster")
+			if is_instance_valid(live) and not live.dead and boss_director.key(str(field.data.map_id),other.region) == identity:
+				return
 	if boss and not boss_director.can_spawn(str(field.data.map_id),region): return
 	var p: Vector2 = _spawn_point(region)
 	if not p.is_finite(): return

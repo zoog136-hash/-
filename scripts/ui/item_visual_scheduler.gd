@@ -3,17 +3,25 @@ extends Node
 var clients: Array[WeakRef] = []
 var elapsed: float = 0.0
 var active_count: int = 0
+var motion_enabled: bool = true
 
 func register(client: Node) -> void:
 	for entry: WeakRef in clients:
 		if entry.get_ref() == client: return
 	clients.append(weakref(client))
-	set_process(true)
+	set_process(motion_enabled)
 
 func unregister(client: Node) -> void:
 	for i: int in range(clients.size()-1,-1,-1):
 		if clients[i].get_ref() == null or clients[i].get_ref() == client: clients.remove_at(i)
-	set_process(not clients.is_empty())
+	set_process(motion_enabled and not clients.is_empty())
+
+func refresh_all() -> void:
+	active_count = 0
+	for entry: WeakRef in clients:
+		var client: Node = entry.get_ref()
+		if is_instance_valid(client) and client.refresh_visibility(): active_count += 1
+	set_process(motion_enabled and not clients.is_empty())
 
 static func visible_area(target: Control) -> bool:
 	if not target.is_visible_in_tree() or target.size.x <= 0 or target.size.y <= 0: return false
@@ -37,4 +45,4 @@ func _process(delta: float) -> void:
 			clients.remove_at(i)
 			continue
 		if client.refresh_visibility(): active_count += 1
-	set_process(not clients.is_empty())
+	set_process(motion_enabled and not clients.is_empty())

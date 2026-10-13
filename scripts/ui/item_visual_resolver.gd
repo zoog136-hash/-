@@ -6,6 +6,14 @@ const REVIEWED = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const A2 = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd")
 const MAX_CACHE: int = 256
+# These are TWILIGHT's local healing items, without publisher source IDs.
+# Preserve their bundled game icon without allowing unrelated indexed items
+# (for example the old ruby placeholder) to borrow the same potion artwork.
+const LOCAL_ITEM_ICONS: Dictionary = {
+	"HP 물약":"res://assets/ui/potionRed.png",
+	"강력 HP 물약":"res://assets/ui/potionRed.png",
+	"축복받은 HP 물약":"res://assets/ui/potionRed.png"
+}
 static var _loaded: bool = false
 static var _ids: Dictionary = {}
 static var _names: Dictionary = {}
@@ -72,6 +80,12 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 		var proof: Dictionary = _evidence.get(id, {})
 		if proof.get("path", "") == pinned and proof.get("identity", "") == "source_id_name_image_bytes_verified":
 			result.status = "original_linked"
+		return result
+	var local_path: String = str(LOCAL_ITEM_ICONS.get(name_value,""))
+	if not has_id and id.is_empty() and not ambiguous and _valid(local_path):
+		result.path = local_path
+		result.route = "twilight_local_item"
+		result.status = "bundled_ui_art"
 		return result
 	# A known ID paired with the wrong name is rejected all the way to fallback.
 	if not source.is_empty() and not ambiguous:

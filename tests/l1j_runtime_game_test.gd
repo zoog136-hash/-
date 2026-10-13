@@ -34,11 +34,19 @@ func _run() -> void:
 		var icon: Texture2D = THEME.item_icon(item, str(item.get("name", "")), {})
 		var available: bool = FileAccess.file_exists(str(binding.inventory_texture))
 		if available:
-			# The Lineage M sourceId's pinned PNG now takes precedence in UI.
-			# Keep independently checking the reviewed L1J pack and ground pair.
-			check(icon != null and icon.resource_path == str(item.image_path), "sourceId catalog icon " + str(binding.game_name))
-			var reviewed: Texture2D = ASSETS.item_icon(item,str(item.name))
-			check(reviewed != null and reviewed.resource_path == str(binding.inventory_texture), "reviewed L1J fallback remains loadable " + str(binding.game_name))
+			# PR97 keeps a catalog record's own source-ID image on inventory/UI
+			# surfaces. Reviewed PC/L1J inventory and ground pairs remain valid
+			# independent bridge bindings; they do not replace a pinned catalog PNG.
+			var reviewed_binding: Dictionary = ASSETS.item_binding(item, str(item.name))
+			check(str(reviewed_binding.get("game_source_id","")) == str(item.sourceId)
+				and str(reviewed_binding.get("game_name","")) == str(item.name), "reviewed binding preserves source ID and name " + str(item.name))
+			var reviewed_icon: Texture2D = ASSETS.item_icon(item, str(item.name))
+			check(reviewed_icon != null and reviewed_icon.resource_path == str(binding.inventory_texture), "reviewed inventory icon " + str(binding.game_name))
+			var reviewed_ground: Texture2D = ASSETS.ground_icon(item, str(item.name))
+			check(reviewed_ground != null and reviewed_ground.resource_path == str(binding.ground_texture), "reviewed ground pair " + str(binding.game_name))
+			var pinned_path: String = str(item.get("image_path",""))
+			var expected_ui: String = pinned_path if ResourceLoader.exists(pinned_path) else str(binding.inventory_texture)
+			check(icon != null and icon.resource_path == expected_ui, "catalog UI respects pinned source image " + str(binding.game_name))
 			installed += 1
 		check(item == before, "icon lookup preserves record and grade")
 		var mismatched: Dictionary = item.duplicate(true)

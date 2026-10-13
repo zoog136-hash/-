@@ -112,6 +112,7 @@ func _input(event: InputEvent) -> void:
 		elapsed = 0
 		pressed_at = Time.get_ticks_msec()
 		mode = "pending"
+		set_process(true)
 		suppress_click = false
 		if pointer >= 0:
 			handled_touch_at = Time.get_ticks_msec()
@@ -265,6 +266,7 @@ func _drop() -> void:
 	# All other releases are cancellations, including a drop onto the world.
 
 func cancel() -> void:
+	set_process(false)
 	pointer = -2
 	source.clear()
 	mode = ""

@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "harness_commit": "f627f57a55f536eed0186f99df018d9ce2ef9aa4",
+  "harness_sha256": "6f87223d51de6c538d461cfaacd88c213a965ded49efc531d9121c774c878f49",
+  "runs": {
+    "baseline": {
+      "production_commit": "434b904d957fd2146b6d2e73325693a402028035",
+      "execution_exit_code": 0,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "nb_frames": "601"
+          }
+        ],
+        "format": {
+          "duration": "20.033333",
+          "size": "23404551"
+        }
+      },
+      "assertions": 34,
+      "failures": [],
+      "manual_cycles": 3,
+      "auto_cycles": 9,
+      "drops": [
+        {
+          "name": "강력 HP 물약",
+          "quantity": 1
+        },
+        {
+          "name": "동 광석",
+          "quantity": 1
+        }
+      ],
+      "files": [
+        {
+          "path": "baseline/production-play.mp4",
+          "bytes": 23404551,
+          "sha256": "6a6ce6bff3e897d71e4e616bbc1eb66e565b745840a6a788e4545acffe31f025"
+        },
+        {
+          "path": "baseline/frames/play-evidence.json",
+          "bytes": 10227,
+          "sha256": "f2cf8e68edf3503d76aed1745e3e7a55db4fc62034c98354f3f5c260baafe291"
+        },
+        {
+          "path": "baseline/frames/00-encounter.png",
+          "bytes": 2110796,
+          "sha256": "59e0652b647c444c9b5099e9a357d6af319781310b8de47362c80a47328f1013"
+        },
+        {
+          "path": "baseline/frames/01-eight-direction-movement.png",
+          "bytes": 2115962,
+          "sha256": "bb4613411fdae024d2b67824b17637b86657ada3af41c051b64ceb9ec99b9e11"
+        },
+        {
+          "path": "baseline/frames/02-boss-telegraph.png",
+          "bytes": 2112454,
+          "sha256": "10a967b64bf182788abf363534805f45afb8f46a27489ead2a036ef69ecfcc5c"
+        },
+        {
+          "path": "baseline/frames/03-player-hit.png",
+          "bytes": 2111256,
+          "sha256": "b216125fb9d930875ed497a7bf1bd069676c515b2aedd7fea64d748ff64bff89"
+        },
+        {
+          "path": "baseline/frames/04-manual-attack.png",
+          "bytes": 2115117,
+          "sha256": "f857370db36520f55180f08417464374541bedc27b71455e91e4dd80027141c9"
+        },
+        {
+          "path": "baseline/frames/05-auto-combat.png",
+          "bytes": 2118703,
+          "sha256": "2d945e93a46da854477ee75129664d05be9c5d47065fb0246b275ee1e5600907"
+        },
+        {
+          "path": "baseline/frames/06-boss-death-and-drops.png",
+          "bytes": 1709379,
+          "sha256": "ff68e45aeb916efb50fd427501480a7a6ed3473c3481cd4c4e6278d39573c1a5"
+        },
+        {
+          "path": "baseline/frames/07-floor-loot-before-pickup.png",
+          "bytes": 1697332,
+          "sha256": "de0ff22f1da41fc046cff2faf6f6f0dd2c7d88cc30ad75dd2596723e26a5b860"
+        },
+        {
+          "path": "baseline/frames/08-manual-pickup-selected.png",
+          "bytes": 1697230,
+          "sha256": "7b08bc16a48374d9970def33a044c18231b6fdde4ea50623dc776eb0cf6fe5b2"
+        },
+        {
+          "path": "baseline/frames/09-pickup-complete.png",
+          "bytes": 1715337,
+          "sha256": "2c5a17fdb0ffb16e619ee7eb48d4df4eebfa1b3c09bcdbe9fc129f0f1545d187"
+        },
+        {
+          "path": "baseline/frames/10-real-inventory-after-pickup.png",
+          "bytes": 1898087,
+          "sha256": "adeee5e1d0faff710ba95e970d1b966f9aa605c82c13e0b458b6e4216e3c70b1"
+        }
+      ]
+    },
+    "feature": {
+      "production_commit": "b81c8f16e77fd747fd2ec8f5e5a664f587c1a1d6",
+      "execution_exit_code": 0,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "30/1",
+            "nb_frames": "601"
+          }
+        ],
+        "format": {
+          "duration": "20.033333",
+          "size": "23429638"
+        }
+      },
+      "assertions": 34,
+      "failures": [],
+      "manual_cycles": 3,
+      "auto_cycles": 9,
+      "drops": [
+        {
+          "name": "강력 HP 물약",
+          "quantity": 1
+        },
+        {
+          "name": "동 광석",
+          "quantity": 1
+        }
+      ],
+      "files": [
+        {
+          "path": "feature/production-play.mp4",
+          "bytes": 23429638,
+          "sha256": "4450db414d057e112e6d15986c0a491fc3129f4242c2f6ea918d18421ec80584"
+        },
+        {
+          "path": "feature/frames/play-evidence.json",
+          "bytes": 10228,
+          "sha256": "d4dff42461eb74cfd902e9bee4ae3decd38fec6bc1a648b7145abe027c8e31bf"
+        },
+        {
+          "path": "feature/frames/00-encounter.png",
+          "bytes": 2106833,
+          "sha256": "a9dac6d41e661076f15081924d1d539f749ddb2953c51860f84031446a499eaf"
+        },
+        {
+          "path": "feature/frames/01-eight-direction-movement.png",
+          "bytes": 2109710,
+          "sha256": "2820c737f611596c0f54d25420bc5b5b5533ba4ccabc4eea33715b5d63130d5b"
+        },
+        {
+          "path": "feature/frames/02-boss-telegraph.png",
+          "bytes": 2107525,
+          "sha256": "834752928847103d5b4081d69a3e83dfd94b98bdb3bf5f49cf02066021d5120d"
+        },
+        {
+          "path": "feature/frames/03-player-hit.png",
+          "bytes": 2106907,
+          "sha256": "424c6bb588c457e0ea5a3a40bd2902f4c88eee834c2e7223779a976da29ca8db"
+        },
+        {
+          "path": "feature/frames/04-manual-attack.png",
+          "bytes": 2112777,
+          "sha256": "416fd6c3ce05b3840d26f1f5a3d4f2ee1678204216e2d656e3eff7a4e9c97c2f"
+        },
+        {
+          "path": "feature/frames/05-auto-combat.png",
+          "bytes": 2115261,
+          "sha256": "4a68cb23c5a7709be3d0e48ade870f5e05530ef59e06b9bdd3e7845935657cab"
+        },
+        {
+          "path": "feature/frames/06-boss-death-and-drops.png",
+          "bytes": 1705364,
+          "sha256": "28e51ef99e78f09aa505ad968d7aea1fa404f780b87111dd0da54207d1cdada4"
+        },
+        {
+          "path": "feature/frames/07-floor-loot-before-pickup.png",
+          "bytes": 1693685,
+          "sha256": "e8926f38fa0a640876d15359096eb9e3fcc9dc04dcd4e1e42774bab53149bd3a"
+        },
+        {
+          "path": "feature/frames/08-manual-pickup-selected.png",
+          "bytes": 1693599,
+          "sha256": "7b9739d50d981e4832b0fc03d4b64b9c52c3b7f3467699c4684038b62806b203"
+        },
+        {
+          "path": "feature/frames/09-pickup-complete.png",
+          "bytes": 1710710,
+          "sha256": "ec7db7a1fe020016d1dee5e67cd936ee132629b07a4c4dea3d46e86d3e5eea4e"
+        },
+        {
+          "path": "feature/frames/10-real-inventory-after-pickup.png",
+          "bytes": 1847228,
+          "sha256": "0e0fd61d738a6a345b1b9a0e6bf675bb0ad9d81dddcbcd007455fbca7255f3c9"
+        }
+      ]
+    }
+  },
+  "normalized_gameplay_trace_matches": false,
+  "scope": "Real production Main scene, actual existing Drake boss slot, live boss AI, player input/path, damage/death/reward/drop/pickup callbacks. No fake HUD or manual damage.",
+  "qa_controls": [
+    "Fresh isolated XDG profile; real class confirmation chooses knight.",
+    "RNG seed 20261013 and reset of capture-only boss persistence before normal aden_world map loading.",
+    "Player relocated once to existing clear ground beside the unchanged boss slot.",
+    "136 unrelated actors and population wake processing paused for readable deterministic capture; target boss AI/world/HUD/loot remain live.",
+    "No player or boss stat overrides; current default knight includes attack speed multiplier2.7.",
+    "Boss stays at existing map spawn; actor HP, damage, defense, loot probabilities and item quantities are unchanged."
+  ],
+  "observations": [
+    "Natural boss opening overlaps the last walking directions. It was not reordered into isolated pose blocks.",
+    "Boss reward naturally levels the knight35 to36 and opens the production character panel; this overlaps part of the pickup panel.",
+    "Field named boss_hp_before_callback in raw events is read by a strike observer connected after the production world subscriber; interpret it as current HP at observer time, after earlier release callbacks.",
+    "Eight-direction locomotion validates actual input/facing; it does not claim native eight-view original art.",
+    "Fixed-fps Movie Maker plus concurrent software rendering means video30FPS and recorder timings are not performance measurements.",
+    "Feature item icons visibly use identity placeholders where baseline used generic art; recorded as an unresolved visual difference for root review.",
+    "All damage, attack-cycle, death, manual-pickup and AUTO-pickup trace events match. The only trace difference is warning observation3.417s baseline versus3.383s feature, with0.25px X/0.01px Y center variation."
+  ],
+  "prior_attempt": {
+    "status": "failed harness layout check before play",
+    "reason": "0.60-second walking segments did not fit existing collision geometry; final version uses validated0.35-second input segments and real release pauses.",
+    "folders": [
+      "attempt-01-route-baseline",
+      "attempt-01-route-feature"
+    ]
+  },
+  "damage_and_reward_trace_matches": true,
+  "trace_differences": [
+    {
+      "event_index": 1,
+      "baseline": {
+        "aim": [
+          0.59,
+          0.81
+        ],
+        "center": [
+          14910.72,
+          3139.92
+        ],
+        "event": "boss_warning",
+        "kind": "cone",
+        "phase": "movement",
+        "seconds": 3.417,
+        "sequence": 3
+      },
+      "feature": {
+        "aim": [
+          0.59,
+          0.81
+        ],
+        "center": [
+          14910.47,
+          3139.93
+        ],
+        "event": "boss_warning",
+        "kind": "cone",
+        "phase": "movement",
+        "seconds": 3.383,
+        "sequence": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,349 @@
+{
+	"actors": {
+		"21624": {
+			"animation_count": 384,
+			"checked_frame_references": 3176,
+			"loaded_atlases": [
+				{
+					"height": 1988,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21624/atlas_00.png",
+					"width": 2048
+				},
+				{
+					"height": 2016,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21624/atlas_01.png",
+					"width": 2048
+				},
+				{
+					"height": 2032,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21624/atlas_02.png",
+					"width": 2048
+				},
+				{
+					"height": 1982,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21624/atlas_03.png",
+					"width": 2048
+				},
+				{
+					"height": 1992,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21624/atlas_04.png",
+					"width": 2048
+				},
+				{
+					"height": 989,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21624/atlas_05.png",
+					"width": 2048
+				}
+			],
+			"marker_runs": [
+				{
+					"duration_seconds": 0.291666666666667,
+					"marker_seconds": 0.0833333333333333,
+					"observed_frame": 2,
+					"signal_count_at_marker": 1,
+					"source_direction": 4
+				},
+				{
+					"duration_seconds": 0.583333333333333,
+					"marker_seconds": 0.166666666666667,
+					"observed_frame": 2,
+					"signal_count_at_marker": 1,
+					"source_direction": 4
+				},
+				{
+					"duration_seconds": 1.16666666666667,
+					"marker_seconds": 0.333333333333333,
+					"observed_frame": 2,
+					"signal_count_at_marker": 1,
+					"source_direction": 4
+				}
+			],
+			"offset_samples": [
+				{
+					"margin": "[P: (211.0, 122.0), S: (439.0, 243.0)]",
+					"region": "[P: (690.0, 270.0), S: (77.0, 121.0)]",
+					"source_direction": 0,
+					"source_xy_offset": [
+						0.0,
+						-89.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				},
+				{
+					"margin": "[P: (186.0, 118.0), S: (422.0, 238.0)]",
+					"region": "[P: (1519.0, 270.0), S: (94.0, 126.0)]",
+					"source_direction": 1,
+					"source_xy_offset": [
+						-25.0,
+						-93.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				},
+				{
+					"margin": "[P: (203.0, 116.0), S: (440.0, 236.0)]",
+					"region": "[P: (270.0, 449.0), S: (76.0, 128.0)]",
+					"source_direction": 2,
+					"source_xy_offset": [
+						-8.0,
+						-95.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				},
+				{
+					"margin": "[P: (224.0, 109.0), S: (453.0, 233.0)]",
+					"region": "[P: (1019.0, 449.0), S: (63.0, 131.0)]",
+					"source_direction": 3,
+					"source_xy_offset": [
+						13.0,
+						-102.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				},
+				{
+					"margin": "[P: (228.0, 118.0), S: (439.0, 240.0)]",
+					"region": "[P: (1840.0, 449.0), S: (77.0, 124.0)]",
+					"source_direction": 4,
+					"source_xy_offset": [
+						17.0,
+						-93.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				},
+				{
+					"margin": "[P: (236.0, 122.0), S: (423.0, 238.0)]",
+					"region": "[P: (637.0, 631.0), S: (93.0, 126.0)]",
+					"source_direction": 5,
+					"source_xy_offset": [
+						25.0,
+						-89.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				},
+				{
+					"margin": "[P: (237.0, 121.0), S: (440.0, 238.0)]",
+					"region": "[P: (1393.0, 631.0), S: (76.0, 126.0)]",
+					"source_direction": 6,
+					"source_xy_offset": [
+						26.0,
+						-90.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				},
+				{
+					"margin": "[P: (229.0, 124.0), S: (454.0, 245.0)]",
+					"region": "[P: (93.0, 782.0), S: (62.0, 119.0)]",
+					"source_direction": 7,
+					"source_xy_offset": [
+						18.0,
+						-87.0
+					],
+					"texture_size": "(516.0, 364.0)"
+				}
+			],
+			"playback_midpoints_checked": 64,
+			"source_attack": {
+				"action_id": "5",
+				"diagnostic_marker_ratio": 0.285714285714286,
+				"duration_ticks": [
+					2.0,
+					2.0,
+					1.0,
+					1.0,
+					3.0,
+					2.0,
+					2.0,
+					1.0
+				],
+				"interpretation": "Frame-start convention selected for diagnostic; exact game event semantics remain unverified. .tres has no hit-marker metadata; this mapping comes from manifest JSON.",
+				"marker_frame_start_tick": 4.0,
+				"marker_frame_zero_based": 2,
+				"total_ticks": 14.0
+			},
+			"source_origin_offset": "(47.0, -29.0)"
+		},
+		"21653": {
+			"animation_count": 384,
+			"checked_frame_references": 3216,
+			"loaded_atlases": [
+				{
+					"height": 1964,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21653/atlas_00.png",
+					"width": 2048
+				},
+				{
+					"height": 1967,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21653/atlas_01.png",
+					"width": 2048
+				},
+				{
+					"height": 1976,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21653/atlas_02.png",
+					"width": 2048
+				},
+				{
+					"height": 1931,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21653/atlas_03.png",
+					"width": 2048
+				},
+				{
+					"height": 588,
+					"loaded_by": "Image.load_from_file + ImageTexture.take_over_path",
+					"path": "res://actors/21653/atlas_04.png",
+					"width": 2048
+				}
+			],
+			"marker_runs": [
+				{
+					"duration_seconds": 0.291666666666667,
+					"marker_seconds": 0.125,
+					"observed_frame": 3,
+					"signal_count_at_marker": 1,
+					"source_direction": 4
+				},
+				{
+					"duration_seconds": 0.583333333333333,
+					"marker_seconds": 0.25,
+					"observed_frame": 3,
+					"signal_count_at_marker": 1,
+					"source_direction": 4
+				},
+				{
+					"duration_seconds": 1.16666666666667,
+					"marker_seconds": 0.5,
+					"observed_frame": 3,
+					"signal_count_at_marker": 1,
+					"source_direction": 4
+				}
+			],
+			"offset_samples": [
+				{
+					"margin": "[P: (172.0, 96.0), S: (318.0, 189.0)]",
+					"region": "[P: (1009.0, 1840.0), S: (90.0, 111.0)]",
+					"source_direction": 0,
+					"source_xy_offset": [
+						17.0,
+						-77.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				},
+				{
+					"margin": "[P: (182.0, 95.0), S: (341.0, 186.0)]",
+					"region": "[P: (1699.0, 1840.0), S: (67.0, 114.0)]",
+					"source_direction": 1,
+					"source_xy_offset": [
+						27.0,
+						-78.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				},
+				{
+					"margin": "[P: (182.0, 95.0), S: (366.0, 186.0)]",
+					"region": "[P: (270.0, 1.0), S: (42.0, 114.0)]",
+					"source_direction": 2,
+					"source_xy_offset": [
+						27.0,
+						-78.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				},
+				{
+					"margin": "[P: (166.0, 95.0), S: (341.0, 192.0)]",
+					"region": "[P: (778.0, 1.0), S: (67.0, 108.0)]",
+					"source_direction": 3,
+					"source_xy_offset": [
+						11.0,
+						-78.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				},
+				{
+					"margin": "[P: (145.0, 93.0), S: (318.0, 186.0)]",
+					"region": "[P: (1424.0, 1.0), S: (90.0, 114.0)]",
+					"source_direction": 4,
+					"source_xy_offset": [
+						-10.0,
+						-80.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				},
+				{
+					"margin": "[P: (158.0, 91.0), S: (340.0, 179.0)]",
+					"region": "[P: (65.0, 178.0), S: (68.0, 121.0)]",
+					"source_direction": 5,
+					"source_xy_offset": [
+						3.0,
+						-82.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				},
+				{
+					"margin": "[P: (184.0, 92.0), S: (366.0, 183.0)]",
+					"region": "[P: (621.0, 178.0), S: (42.0, 117.0)]",
+					"source_direction": 6,
+					"source_xy_offset": [
+						29.0,
+						-81.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				},
+				{
+					"margin": "[P: (175.0, 94.0), S: (342.0, 192.0)]",
+					"region": "[P: (1131.0, 178.0), S: (66.0, 108.0)]",
+					"source_direction": 7,
+					"source_xy_offset": [
+						20.0,
+						-79.0
+					],
+					"texture_size": "(408.0, 300.0)"
+				}
+			],
+			"playback_midpoints_checked": 56,
+			"source_attack": {
+				"action_id": "5",
+				"diagnostic_marker_ratio": 0.428571428571429,
+				"duration_ticks": [
+					2.0,
+					3.0,
+					1.0,
+					1.0,
+					1.0,
+					3.0,
+					3.0
+				],
+				"interpretation": "Frame-start convention selected for diagnostic; exact game event semantics remain unverified. .tres has no hit-marker metadata; this mapping comes from manifest JSON.",
+				"marker_frame_start_tick": 6.0,
+				"marker_frame_zero_based": 3,
+				"total_ticks": 14.0
+			},
+			"source_origin_offset": "(49.0, -23.0)"
+		}
+	},
+	"checks": 41346,
+	"direction_mapping": "Diagnostic identity mapping from source indices 0..7 only; no compass claim",
+	"elapsed_seconds": 1.639126,
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [],
+	"scope": "Headless resource/cache loading and shared production script diagnostic; no importer, renderer, packaged build, game identity or compass verification",
+	"source_clock_verified": false,
+	"timing_note": "Concurrent workstation activity; elapsed time is not a performance benchmark"
+}

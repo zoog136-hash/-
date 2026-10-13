@@ -1,0 +1,516 @@
+{
+	"adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+	"assertions": {
+		"AUTO collected remaining earned drops": true,
+		"AUTO released attack cycles": true,
+		"actual boss AI telegraph": true,
+		"actual combat killed boss": true,
+		"actual player HP damage": true,
+		"boss earned actual ground loot": true,
+		"eight-direction route on existing collision map": true,
+		"existing Drake boss slot spawned": true,
+		"floor drop not instantly granted 강력 HP 물약": true,
+		"floor drop not instantly granted 동 광석": true,
+		"manual UI pickup grants only earned quantity": true,
+		"manual attack commands released cycles": true,
+		"production class confirmation": true,
+		"real movement direction 0": true,
+		"real movement direction 1": true,
+		"real movement direction 2": true,
+		"real movement direction 3": true,
+		"real movement direction 4": true,
+		"real movement direction 5": true,
+		"real movement direction 6": true,
+		"real movement direction 7": true,
+		"real path reached melee range": true,
+		"screenshot 00-encounter": true,
+		"screenshot 01-eight-direction-movement": true,
+		"screenshot 02-boss-telegraph": true,
+		"screenshot 03-player-hit": true,
+		"screenshot 04-manual-attack": true,
+		"screenshot 05-auto-combat": true,
+		"screenshot 06-boss-death-and-drops": true,
+		"screenshot 07-floor-loot-before-pickup": true,
+		"screenshot 08-manual-pickup-selected": true,
+		"screenshot 09-pickup-complete": true,
+		"screenshot 10-real-inventory-after-pickup": true,
+		"unchanged Drake HP and attack": true
+	},
+	"auto_strikes": 9,
+	"damage_requests": [
+		{
+			"amount_before_player_defense": 42,
+			"kind": "magic",
+			"player_hp_after_resolution": 1793,
+			"seconds": 3.1
+		},
+		{
+			"amount_before_player_defense": 67,
+			"kind": "melee",
+			"player_hp_after_resolution": 1793,
+			"seconds": 4.1
+		},
+		{
+			"amount_before_player_defense": 42,
+			"kind": "magic",
+			"player_hp_after_resolution": 1793,
+			"seconds": 4.817
+		},
+		{
+			"amount_before_player_defense": 42,
+			"kind": "magic",
+			"player_hp_after_resolution": 1754,
+			"seconds": 6.417
+		},
+		{
+			"amount_before_player_defense": 42,
+			"kind": "magic",
+			"player_hp_after_resolution": 1715,
+			"seconds": 7.783
+		},
+		{
+			"amount_before_player_defense": 42,
+			"kind": "magic",
+			"player_hp_after_resolution": 1715,
+			"seconds": 9.15
+		},
+		{
+			"amount_before_player_defense": 42,
+			"kind": "magic",
+			"player_hp_after_resolution": 1715,
+			"seconds": 10.517
+		},
+		{
+			"amount_before_player_defense": 42,
+			"kind": "magic",
+			"player_hp_after_resolution": 1715,
+			"seconds": 11.883
+		}
+	],
+	"events": [
+		{
+			"attack_speed_multiplier": 2.7,
+			"background_actors_paused": 136,
+			"boss_ac": -48,
+			"boss_attack": 42,
+			"boss_existing_spawn": [
+				14816.0,
+				3104.0
+			],
+			"boss_home": [
+				14816.0,
+				3104.0
+			],
+			"boss_hp": 520,
+			"boss_record_overrides": {},
+			"effective_melee_damage": 46,
+			"event": "encounter_ready",
+			"job_class": "기사",
+			"map": "aden_world",
+			"normal_attack_interval": 0.266666666666667,
+			"performance_measurement": false,
+			"phase": "setup",
+			"player_attack": 42,
+			"player_hp": 1832,
+			"player_level": 35,
+			"player_max_hp": 1832,
+			"player_relocated_once": [
+				15067.4,
+				3147.63
+			],
+			"player_stat_overrides": {},
+			"population_wake_paused": true,
+			"save_scope": "isolated capture XDG profile; automatic saving disabled",
+			"seconds": 0.0,
+			"seed": 20261013
+		},
+		{
+			"after": 1793,
+			"before": 1832,
+			"event": "player_damage",
+			"phase": "movement",
+			"seconds": 3.117
+		},
+		{
+			"aim": [
+				0.59,
+				0.81
+			],
+			"center": [
+				14910.72,
+				3139.92
+			],
+			"event": "boss_warning",
+			"kind": "cone",
+			"phase": "movement",
+			"progress": 0.272804774083546,
+			"seconds": 3.417,
+			"sequence": 3
+		},
+		{
+			"boss_hp_before_callback": 477,
+			"cycle": 1,
+			"event": "player_strike",
+			"phase": "manual",
+			"seconds": 5.3
+		},
+		{
+			"after": 1754,
+			"before": 1793,
+			"event": "player_damage",
+			"phase": "manual",
+			"seconds": 6.433
+		},
+		{
+			"boss_hp_before_callback": 477,
+			"cycle": 2,
+			"event": "player_strike",
+			"phase": "manual",
+			"seconds": 6.933
+		},
+		{
+			"after": 1715,
+			"before": 1754,
+			"event": "player_damage",
+			"phase": "manual",
+			"seconds": 7.8
+		},
+		{
+			"boss_hp_before_callback": 433,
+			"cycle": 3,
+			"event": "player_strike",
+			"phase": "manual",
+			"seconds": 8.567
+		},
+		{
+			"boss_hp_before_callback": 384,
+			"cycle": 4,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 10.233
+		},
+		{
+			"boss_hp_before_callback": 341,
+			"cycle": 5,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 10.533
+		},
+		{
+			"boss_hp_before_callback": 288,
+			"cycle": 6,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 10.833
+		},
+		{
+			"boss_hp_before_callback": 244,
+			"cycle": 7,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 11.133
+		},
+		{
+			"boss_hp_before_callback": 198,
+			"cycle": 8,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 11.433
+		},
+		{
+			"boss_hp_before_callback": 147,
+			"cycle": 9,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 11.733
+		},
+		{
+			"boss_hp_before_callback": 95,
+			"cycle": 10,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 12.033
+		},
+		{
+			"boss_hp_before_callback": 45,
+			"cycle": 11,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 12.333
+		},
+		{
+			"damage_hit_count": 11,
+			"event": "boss_death",
+			"ground_count": 2,
+			"hp": 0,
+			"life_id": 1,
+			"max_hp": 520,
+			"phase": "auto",
+			"seconds": 12.633
+		},
+		{
+			"boss_hp_before_callback": 0,
+			"cycle": 12,
+			"event": "player_strike",
+			"phase": "auto",
+			"seconds": 12.633
+		},
+		{
+			"event": "manual_pickup",
+			"inventory_after": 15,
+			"inventory_before": 14,
+			"item": "강력 HP 물약",
+			"phase": "manual_pickup",
+			"quantity": 1,
+			"seconds": 15.75
+		},
+		{
+			"drops": [
+				{
+					"created_at": 1791854973.52825,
+					"expires_at": 1791855573.52825,
+					"grade": "일반",
+					"hunt_batch": "ce59b6f86a96bc43c76a6f0fb28167e4",
+					"id": "de54e07b349b2791ecb327aa3c107460",
+					"item_name": "동 광석",
+					"map_id": "aden_world",
+					"position": [
+						14893.8984375,
+						3131.46484375
+					],
+					"quantity": 1,
+					"state": "ground"
+				}
+			],
+			"event": "auto_pickup",
+			"phase": "auto_pickup",
+			"seconds": 15.783
+		}
+	],
+	"failures": [],
+	"floor_drops": [
+		{
+			"created_at": 1791854973.52778,
+			"expires_at": 1791855573.52778,
+			"grade": "고급",
+			"hunt_batch": "ce59b6f86a96bc43c76a6f0fb28167e4",
+			"id": "b0fa8f5593d420a7881932f788b9c0c1",
+			"item_name": "강력 HP 물약",
+			"map_id": "aden_world",
+			"position": [
+				14855.8984375,
+				3131.46484375
+			],
+			"quantity": 1,
+			"state": "ground"
+		},
+		{
+			"created_at": 1791854973.52825,
+			"expires_at": 1791855573.52825,
+			"grade": "일반",
+			"hunt_batch": "ce59b6f86a96bc43c76a6f0fb28167e4",
+			"id": "de54e07b349b2791ecb327aa3c107460",
+			"item_name": "동 광석",
+			"map_id": "aden_world",
+			"position": [
+				14893.8984375,
+				3131.46484375
+			],
+			"quantity": 1,
+			"state": "ground"
+		}
+	],
+	"headless_probe": false,
+	"inventory_while_on_ground": {
+		"강력 HP 물약": 14,
+		"동 광석": 0
+	},
+	"manual_strikes": 3,
+	"movement": [
+		{
+			"direction": 0,
+			"distance": 76.9921875,
+			"end": [
+				15144.39,
+				3147.63
+			],
+			"facing8": 0,
+			"start": [
+				15067.4,
+				3147.63
+			]
+		},
+		{
+			"direction": 1,
+			"distance": 80.8551406860352,
+			"end": [
+				15201.57,
+				3204.8
+			],
+			"facing8": 1,
+			"start": [
+				15144.39,
+				3147.63
+			]
+		},
+		{
+			"direction": 2,
+			"distance": 80.85205078125,
+			"end": [
+				15201.57,
+				3285.65
+			],
+			"facing8": 2,
+			"start": [
+				15201.57,
+				3204.8
+			]
+		},
+		{
+			"direction": 3,
+			"distance": 80.8551406860352,
+			"end": [
+				15144.39,
+				3342.83
+			],
+			"facing8": 3,
+			"start": [
+				15201.57,
+				3285.65
+			]
+		},
+		{
+			"direction": 4,
+			"distance": 80.841796875,
+			"end": [
+				15063.55,
+				3342.83
+			],
+			"facing8": 4,
+			"start": [
+				15144.39,
+				3342.83
+			]
+		},
+		{
+			"direction": 5,
+			"distance": 80.8551406860352,
+			"end": [
+				15006.38,
+				3285.65
+			],
+			"facing8": 5,
+			"start": [
+				15063.55,
+				3342.83
+			]
+		},
+		{
+			"direction": 6,
+			"distance": 80.85205078125,
+			"end": [
+				15006.38,
+				3204.8
+			],
+			"facing8": 6,
+			"start": [
+				15006.38,
+				3285.65
+			]
+		},
+		{
+			"direction": 7,
+			"distance": 80.8551406860352,
+			"end": [
+				15063.55,
+				3147.63
+			],
+			"facing8": 7,
+			"start": [
+				15006.38,
+				3204.8
+			]
+		}
+	],
+	"qa_setup": {
+		"attack_speed_multiplier": 2.7,
+		"background_actors_paused": 136,
+		"boss_ac": -48,
+		"boss_attack": 42,
+		"boss_existing_spawn": [
+			14816.0,
+			3104.0
+		],
+		"boss_home": [
+			14816.0,
+			3104.0
+		],
+		"boss_hp": 520,
+		"boss_record_overrides": {},
+		"effective_melee_damage": 46,
+		"job_class": "기사",
+		"map": "aden_world",
+		"normal_attack_interval": 0.266666666666667,
+		"performance_measurement": false,
+		"player_attack": 42,
+		"player_hp": 1832,
+		"player_level": 35,
+		"player_max_hp": 1832,
+		"player_relocated_once": [
+			15067.4,
+			3147.63
+		],
+		"player_stat_overrides": {},
+		"population_wake_paused": true,
+		"save_scope": "isolated capture XDG profile; automatic saving disabled",
+		"seed": 20261013
+	},
+	"renderer": "gl_compatibility",
+	"screenshots": [
+		{
+			"file": "00-encounter.png",
+			"seconds": 0.0
+		},
+		{
+			"file": "01-eight-direction-movement.png",
+			"seconds": 2.167
+		},
+		{
+			"file": "03-player-hit.png",
+			"seconds": 3.133
+		},
+		{
+			"file": "02-boss-telegraph.png",
+			"seconds": 3.433
+		},
+		{
+			"file": "04-manual-attack.png",
+			"seconds": 5.3
+		},
+		{
+			"file": "05-auto-combat.png",
+			"seconds": 10.233
+		},
+		{
+			"file": "06-boss-death-and-drops.png",
+			"seconds": 12.633
+		},
+		{
+			"file": "07-floor-loot-before-pickup.png",
+			"seconds": 14.667
+		},
+		{
+			"file": "08-manual-pickup-selected.png",
+			"seconds": 15.467
+		},
+		{
+			"file": "09-pickup-complete.png",
+			"seconds": 15.8
+		},
+		{
+			"file": "10-real-inventory-after-pickup.png",
+			"seconds": 16.567
+		}
+	],
+	"simulation_seconds": 20.0000000000001
+}

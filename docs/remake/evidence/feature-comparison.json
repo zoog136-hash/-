@@ -1,0 +1,75 @@
+{
+  "baseline": {
+    "pass": 122,
+    "fail": 14,
+    "skip": 3,
+    "not_run": 0
+  },
+  "feature": {
+    "pass": 130,
+    "fail": 14,
+    "skip": 3,
+    "not_run": 0
+  },
+  "new_failing_tests": [
+    "l1j_runtime_game_test",
+    "remake_ui_presentation_test"
+  ],
+  "resolved_failing_tests": [
+    "original_turn_undead_rewards_test",
+    "ui_pointer_transfer_test"
+  ],
+  "still_failing_tests": [
+    "ground_loot_system_test",
+    "hunting_navigation_cache_test",
+    "l1j_map_grid_test",
+    "l1j_png_load_test",
+    "l1j_spx_frames_test",
+    "lineagem_ui_visual_smoke_test",
+    "monster_world_test",
+    "original_skill_learning_conditions_test",
+    "renewed_map_spawn_test",
+    "skill_mechanism_smoke_test",
+    "world_regions_test",
+    "world_structure_test"
+  ],
+  "new_tests": [
+    {
+      "name": "combat_timeline_lifecycle_test",
+      "status": "pass"
+    },
+    {
+      "name": "item_rarity_render_test",
+      "status": "pass"
+    },
+    {
+      "name": "item_visual_test",
+      "status": "pass"
+    },
+    {
+      "name": "remake_map_inventory_test",
+      "status": "pass"
+    },
+    {
+      "name": "remake_map_population_test",
+      "status": "pass"
+    },
+    {
+      "name": "remake_map_readability_test",
+      "status": "pass"
+    },
+    {
+      "name": "remake_ui_presentation_test",
+      "status": "fail"
+    },
+    {
+      "name": "remake_world_lifecycle_test",
+      "status": "pass"
+    }
+  ],
+  "limits": [
+    "Feature world_regions timed out540s after18maps; baseline completed24maps with57existing assertion failures.",
+    "Concurrent CPU load and changing checkout limit whole-suite timing and exact-SHA claims.",
+    "Private source skips/prerequisite failures do not mean complete delivery."
+  ]
+}

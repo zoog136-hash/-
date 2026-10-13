@@ -8,12 +8,20 @@ const GRADES: Array[String] = ["일반","고급","희귀","영웅","전설","신
 const COLORS: Array[Color] = [Color("ddd6c5"),Color("79bf83"),Color("73b4ee"),Color("e97772"),Color("bc89e3"),Color("e5be60"),Color("66dfc2")]
 static var materials: Dictionary = {}
 static var scheduler_ref: WeakRef
+static var reduced_motion: bool = false
 var target: TextureRect
 var rank: int = 0
 var phase_group: int = 0
 var context: String = "slot"
 var scheduler: Node
 var substitute_mark: Label
+
+static func set_reduced_motion(enabled: bool) -> void:
+	reduced_motion = enabled
+	var active_scheduler: Node = scheduler_ref.get_ref() if scheduler_ref != null else null
+	if is_instance_valid(active_scheduler):
+		active_scheduler.motion_enabled = not enabled
+		active_scheduler.refresh_all()
 
 static func apply(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, usage: String = "slot") -> void:
 	var effect: Node = view.get_node_or_null("ItemVisual")
@@ -77,6 +85,7 @@ func _register() -> void:
 		if scheduler == null:
 			scheduler = SCHEDULER.new()
 			scheduler.name = "ItemVisualScheduler"
+			scheduler.motion_enabled = not reduced_motion
 			scheduler_ref = weakref(scheduler)
 			get_tree().root.add_child.call_deferred(scheduler)
 	if rank >= 3 and context not in ["quickslot","list","drag","ground"]:
@@ -86,7 +95,7 @@ func _register() -> void:
 
 func refresh_visibility() -> bool:
 	if target == null or not is_instance_valid(target): return false
-	var animate: bool = rank >= 3 and context not in ["quickslot","list","drag","ground"] and target.is_inside_tree() and SCHEDULER.visible_area(target)
+	var animate: bool = not reduced_motion and rank >= 3 and context not in ["quickslot","list","drag","ground"] and target.is_inside_tree() and SCHEDULER.visible_area(target)
 	target.material = shared_material(rank,phase_group) if animate else null
 	return animate
 

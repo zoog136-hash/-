@@ -193,3 +193,6 @@ static func apply_item_visual(view: TextureRect, record: Dictionary, item_name: 
 
 static func clear_item_visual(view: TextureRect) -> void:
 	preload("res://scripts/ui/item_visual.gd").clear(view)
+
+static func set_reduced_motion(enabled: bool) -> void:
+	preload("res://scripts/ui/item_visual.gd").set_reduced_motion(enabled)

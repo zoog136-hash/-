@@ -1,0 +1,114 @@
+{
+  "engine": "Godot4.7.2",
+  "renderer": "Compatibility / Linux llvmpipe",
+  "steps": [
+    {
+      "name": "benchmark-baseline-final",
+      "command": [
+        "python3",
+        "/workspace/evidence/baseline/run_gl.py",
+        "--root",
+        "/workspace/twilight-baseline",
+        "--script",
+        "res://tests/benchmark_remake_runtime.gd",
+        "--name",
+        "benchmark-baseline-final",
+        "--timeout",
+        "240"
+      ],
+      "cwd": "/workspace/twilight-baseline",
+      "returncode": 0,
+      "seconds": 40.58658171500065,
+      "errors": [],
+      "log": "/workspace/evidence/remaining-validation/benchmark-baseline-final.log"
+    },
+    {
+      "name": "benchmark-feature-final",
+      "command": [
+        "python3",
+        "/workspace/evidence/baseline/run_gl.py",
+        "--root",
+        "/workspace/twilight",
+        "--script",
+        "res://tests/benchmark_remake_runtime.gd",
+        "--name",
+        "benchmark-feature-final",
+        "--timeout",
+        "240"
+      ],
+      "cwd": "/workspace/twilight",
+      "returncode": 0,
+      "seconds": 38.12483760499981,
+      "errors": [],
+      "log": "/workspace/evidence/remaining-validation/benchmark-feature-final.log"
+    },
+    {
+      "name": "final-potion-hud",
+      "command": [
+        "python3",
+        "/workspace/evidence/baseline/run_gl.py",
+        "--root",
+        "/workspace/twilight",
+        "--script",
+        "res://tests/remake_ui_local_item_icons_test.gd",
+        "--name",
+        "final-potion-hud",
+        "--timeout",
+        "90"
+      ],
+      "cwd": "/workspace/twilight",
+      "returncode": 0,
+      "seconds": 25.215586844000427,
+      "errors": [],
+      "log": "/workspace/evidence/remaining-validation/final-potion-hud.log"
+    },
+    {
+      "name": "clean-import",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-clean",
+        "--import"
+      ],
+      "cwd": "/workspace/twilight-clean",
+      "returncode": 0,
+      "seconds": 208.02476132500033,
+      "errors": [],
+      "log": "/workspace/evidence/remaining-validation/clean-import.log"
+    },
+    {
+      "name": "clean-boot",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-clean",
+        "--quit-after",
+        "60"
+      ],
+      "cwd": "/workspace/twilight-clean",
+      "returncode": 0,
+      "seconds": 15.098039801000596,
+      "errors": [],
+      "log": "/workspace/evidence/remaining-validation/clean-boot.log"
+    },
+    {
+      "name": "clean-world-lifecycle",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-clean",
+        "--script",
+        "res://tests/remake_world_lifecycle_test.gd"
+      ],
+      "cwd": "/workspace/twilight-clean",
+      "returncode": 0,
+      "seconds": 11.394141197999488,
+      "errors": [],
+      "log": "/workspace/evidence/remaining-validation/clean-world-lifecycle.log"
+    }
+  ],
+  "completed": true
+}
