@@ -24,6 +24,7 @@ class_name TwilightAnimationProfile
 ## Zero keeps the existing automatic sizing of portraits / legacy sheets.
 @export var pixel_scale: float = 0.0
 @export var embedded_shadow: bool = false
+@export var death_duration: float = 0.35
 @export var animation_names: Dictionary = {}
 ## Presentation amplitudes; never used by attack clocks or damage calculations.
 @export var body_kind: String = "humanoid"

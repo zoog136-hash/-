@@ -260,7 +260,7 @@ func _physics_process(delta: float) -> void:
 		motion.apply(sprite, animation_base_scale)
 		animation_state = motion.state
 		if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.update_pose()
-		if motion.death_clock >= 1.0:
+		if motion.death_clock >= maxf(1.0, motion.profile.death_duration + .45):
 			if world_controller.has_method("recycle_monster") and world_controller.recycle_monster(self): return
 			queue_free()
 		return

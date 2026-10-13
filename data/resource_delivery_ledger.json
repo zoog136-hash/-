@@ -89,20 +89,26 @@
     "unique_frames_per_direction": {
       "idle": 4,
       "walk": 8,
-      "attack": 4
+      "attack": 4,
+      "hit": 2,
+      "death": 6
     },
     "status": {
       "files": true,
       "converted": true,
       "godot_import": true,
       "production_binding": true,
-      "screen_validation": false,
+      "screen_validation": true,
       "permanent_delivery": false
     },
     "limitations": [
-      "hit/death not connected yet",
       "other IDs keep current art; no full-coverage claim",
-      "new TWILIGHT adaptation, not exact restoration of earlier illustration"
-    ]
+      "new TWILIGHT adaptation, not exact restoration of earlier illustration",
+      "player uses existing immediate respawn and offscreen corpse presentation; on-screen death inspection pending",
+      "final hit/death gameplay capture pending",
+      "Android and full population visual review unverified"
+    ],
+    "distinct_pixel_frames_across_actions": 352,
+    "action_direction_frame_entries": 384
   }
 }

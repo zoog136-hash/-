@@ -48,7 +48,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	PRESENTATION.configure(result, kind, record)
 	# Explicit sequential-art settings outrank the generic portrait rig. Native
 	# poses already contain limb motion; moving/rotating the root adds foot slip.
-	for property: String in ["pixel_scale", "embedded_shadow", "authored_motion_weight", "hit_recoil"]:
+	for property: String in ["pixel_scale", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration"]:
 		if settings.has(property): result.set(property, settings[property])
 	return result
 

@@ -11,7 +11,7 @@ const SOURCE_DIRECTIONS := ["E", "NE", "N", "NW", "W", "SW", "S", "SE"]
 const GAME_DIRECTIONS := ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]
 const LAYERS := {"feet":"plate_boots", "legs":"plate_greaves", "chest":"plate_cuirass",
 	"hands":"plate_gauntlets", "head":"plate_helm", "main":"longsword", "off":"shield"}
-const ROLES := {"idle":"stance", "walk":"run", "attack":"swing"}
+const ROLES := {"idle":"stance", "walk":"run", "attack":"swing", "hit":"hit", "death":"die"}
 var source: String
 var failures: Array[String] = []
 
@@ -97,7 +97,7 @@ func build(actor: String, layers: Dictionary, order: Dictionary) -> void:
 				ids.append(sub_id)
 				sub += "[sub_resource type=\"AtlasTexture\" id=\"Frame_%d\"]\natlas = ExtResource(\"%s\")\nregion = Rect2(%d, %d, %d, %d)\nfilter_clip = true\n\n" % [sub_id,ext_id,index*CELL,game_dir*CELL,CELL,CELL]
 			var sequence := ids.duplicate()
-			if str(track.type) == "back_forth":
+			if role == "idle" and str(track.type) == "back_forth":
 				for index: int in range(count - 2, 0, -1): sequence.append(ids[index])
 			var entries: Array[String] = []
 			for id: int in sequence: entries.append('{"duration":1.0,"texture":SubResource("Frame_%d")}' % id)

@@ -25,5 +25,10 @@
 - 원본 2D 오프셋, 방향별 장비 레이어 순서 보존. 방향 대응은 8시점 이미지로 확인. 기존 공통 재생기를 사용하며 이 대상에만 root 흔들기/회전/셰이더 가짜 방향을 제거.
 - 최초 import는 편집기 XDG_CONFIG_HOME 미설정 오류 발생. 쓰기 가능한 환경변수와 동일 main의 texture `.import` 메타데이터까지 복원한 수정 명령으로 종료 코드 0, ERROR 없음. 로그: `/workspace/evidence/animation-20261013/import-fixed.log`.
 - `eight_direction_animation_test.gd`: 930 assertions / 0 failures. `actor_motion_test.gd`, `authored_state_motion_test.gd`, `monster_motion_test.gd`: PASS. 로그: `/workspace/evidence/animation-20261013/`.
-- 실제 Main 캡처 실행 중: `TWILIGHT_CAPTURE_DIR=/workspace/evidence/animation-20261013/gameplay python3 /workspace/evidence/baseline/run_gl.py --root /workspace/twilight-animation --script res://tests/capture_eight_direction_play.gd --name animation-native-first --timeout 200 --movie`.
-- 피격/사망, 전체 확장, Android, 사용자 시각 승인 모두 미완료/미검증.
+- 첫 Main 캡처는 선택한 좁은 지역에 누적 8각 이동 경로가 들어가지 않아 FAIL. 실제 스폰 후보들을 확인하고 왕복 8방향 통행 경로로 검사 동선을 수정. 게임 맵/충돌은 수정하지 않음.
+- 수정된 Main 캡처 PASS (`animation-native-spokes`): 23.53초, 706프레임, 8방향 키 입력, 실제 AI 추적/피격, 기사 9타격, 몬스터 사망, 바닥 드랍 2개 및 수동 습득, 변신 교체/복귀. 실제 PNG 화면 검토 완료. 이것은 사용자 시각 승인이 아님.
+- 이후 피격 2 / 사망 6프레임 추가. 본체별 실제 서로 다른 픽셀 프레임 176개, 합계 352개. 동작/방향별 프레임 슬롯은 384개(피격과 사망 일부 공유); 두 수치를 구분.
+- 사망은 해당 profile의 0.8초 연속 동작 후 fade. 기존 비대상 사망 시간, 판정/드랍/제거 중복 방지 유지. 플레이어는 기존 즉시 부활 + corpse VFX 경로를 그대로 사용함; 부활 전 카메라 정지 연출은 추가하지 않음.
+- 추가 리소스 import를 기다리지 않고 실행한 검사에서 미임포트 PNG 오류가 발생한 기록은 실패로 보존. 120초 import timeout 이후 300초 예산으로 완결. 완결 로그 `import-complete.log` 및 이후 `*-verified.log`의 1,314 assertions / 0 failures, 기존 모션 3종 PASS 확인.
+- `animation_restore_test`, `animation_catalog_test` PASS. 카탈로그 시험은 1방향이라는 과거 가정 대신 실제 새 8방향 5동작 전부를 검증하도록 확장.
+- 현재 전후 동일 장면을 새 카메라 위치로 촬영 중. 전체 외형 확장, Android, 사용자 시각 승인 미완료/미검증.

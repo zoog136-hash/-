@@ -33,6 +33,12 @@ func _run() -> void:
 		check(not actor.class_sprite.visible, "old class still visible " + id)
 		var frames: SpriteFrames = actor.transform_sprite.sprite_frames
 		var generated: Dictionary = preload("res://scripts/animation/visual_manifest.gd").record(id)
+		if profile.layout == "directional8" and not profile.frames_path.is_empty():
+			for direction: int in range(8):
+				for role: String in ["idle", "walk", "attack", "hit", "death"]:
+					var key := role + "_" + str(direction)
+					check(frames.has_animation(key) and frames.get_frame_count(key) >= 2, "native eight-view action " + id + key)
+			continue
 		if art.has(id):
 			directional_count += 1
 			if generated.is_empty():

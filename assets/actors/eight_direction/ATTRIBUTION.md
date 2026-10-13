@@ -8,7 +8,7 @@ These adapted atlases are distributed under the same license; see
 `LICENSE-CC-BY-SA-3.0.txt`, `UPSTREAM-CREDITS.txt`, and
 [upstream per-file credits](https://github.com/flareteam/flare-game/wiki/Credits).
 
-Changes: selected stance/run/swing frames, combined the seven knight equipment
+Changes: selected stance/run/swing/hit/die frames, combined the seven knight equipment
 layers using upstream direction-specific drawing order, retained the source
 foot offsets, uniformly reduced pixels to 50%, packed onto transparent 256px
 cells and mapped source directions to Godot screen coordinates. No synthesized

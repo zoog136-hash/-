@@ -1,8 +1,10 @@
-[gd_resource type="SpriteFrames" load_steps=132 format=3]
+[gd_resource type="SpriteFrames" load_steps=198 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/skeleton_guard/idle.png" id="idle"]
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/skeleton_guard/walk.png" id="walk"]
 [ext_resource type="Texture2D" path="res://assets/actors/eight_direction/skeleton_guard/attack.png" id="attack"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/skeleton_guard/hit.png" id="hit"]
+[ext_resource type="Texture2D" path="res://assets/actors/eight_direction/skeleton_guard/death.png" id="death"]
 
 [sub_resource type="AtlasTexture" id="Frame_1"]
 atlas = ExtResource("idle")
@@ -644,6 +646,326 @@ atlas = ExtResource("attack")
 region = Rect2(768, 1792, 256, 256)
 filter_clip = true
 
+[sub_resource type="AtlasTexture" id="Frame_129"]
+atlas = ExtResource("hit")
+region = Rect2(0, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_130"]
+atlas = ExtResource("hit")
+region = Rect2(256, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_131"]
+atlas = ExtResource("hit")
+region = Rect2(0, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_132"]
+atlas = ExtResource("hit")
+region = Rect2(256, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_133"]
+atlas = ExtResource("hit")
+region = Rect2(0, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_134"]
+atlas = ExtResource("hit")
+region = Rect2(256, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_135"]
+atlas = ExtResource("hit")
+region = Rect2(0, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_136"]
+atlas = ExtResource("hit")
+region = Rect2(256, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_137"]
+atlas = ExtResource("hit")
+region = Rect2(0, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_138"]
+atlas = ExtResource("hit")
+region = Rect2(256, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_139"]
+atlas = ExtResource("hit")
+region = Rect2(0, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_140"]
+atlas = ExtResource("hit")
+region = Rect2(256, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_141"]
+atlas = ExtResource("hit")
+region = Rect2(0, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_142"]
+atlas = ExtResource("hit")
+region = Rect2(256, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_143"]
+atlas = ExtResource("hit")
+region = Rect2(0, 1792, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_144"]
+atlas = ExtResource("hit")
+region = Rect2(256, 1792, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_145"]
+atlas = ExtResource("death")
+region = Rect2(0, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_146"]
+atlas = ExtResource("death")
+region = Rect2(256, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_147"]
+atlas = ExtResource("death")
+region = Rect2(512, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_148"]
+atlas = ExtResource("death")
+region = Rect2(768, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_149"]
+atlas = ExtResource("death")
+region = Rect2(1024, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_150"]
+atlas = ExtResource("death")
+region = Rect2(1280, 0, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_151"]
+atlas = ExtResource("death")
+region = Rect2(0, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_152"]
+atlas = ExtResource("death")
+region = Rect2(256, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_153"]
+atlas = ExtResource("death")
+region = Rect2(512, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_154"]
+atlas = ExtResource("death")
+region = Rect2(768, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_155"]
+atlas = ExtResource("death")
+region = Rect2(1024, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_156"]
+atlas = ExtResource("death")
+region = Rect2(1280, 256, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_157"]
+atlas = ExtResource("death")
+region = Rect2(0, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_158"]
+atlas = ExtResource("death")
+region = Rect2(256, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_159"]
+atlas = ExtResource("death")
+region = Rect2(512, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_160"]
+atlas = ExtResource("death")
+region = Rect2(768, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_161"]
+atlas = ExtResource("death")
+region = Rect2(1024, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_162"]
+atlas = ExtResource("death")
+region = Rect2(1280, 512, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_163"]
+atlas = ExtResource("death")
+region = Rect2(0, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_164"]
+atlas = ExtResource("death")
+region = Rect2(256, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_165"]
+atlas = ExtResource("death")
+region = Rect2(512, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_166"]
+atlas = ExtResource("death")
+region = Rect2(768, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_167"]
+atlas = ExtResource("death")
+region = Rect2(1024, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_168"]
+atlas = ExtResource("death")
+region = Rect2(1280, 768, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_169"]
+atlas = ExtResource("death")
+region = Rect2(0, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_170"]
+atlas = ExtResource("death")
+region = Rect2(256, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_171"]
+atlas = ExtResource("death")
+region = Rect2(512, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_172"]
+atlas = ExtResource("death")
+region = Rect2(768, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_173"]
+atlas = ExtResource("death")
+region = Rect2(1024, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_174"]
+atlas = ExtResource("death")
+region = Rect2(1280, 1024, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_175"]
+atlas = ExtResource("death")
+region = Rect2(0, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_176"]
+atlas = ExtResource("death")
+region = Rect2(256, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_177"]
+atlas = ExtResource("death")
+region = Rect2(512, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_178"]
+atlas = ExtResource("death")
+region = Rect2(768, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_179"]
+atlas = ExtResource("death")
+region = Rect2(1024, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_180"]
+atlas = ExtResource("death")
+region = Rect2(1280, 1280, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_181"]
+atlas = ExtResource("death")
+region = Rect2(0, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_182"]
+atlas = ExtResource("death")
+region = Rect2(256, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_183"]
+atlas = ExtResource("death")
+region = Rect2(512, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_184"]
+atlas = ExtResource("death")
+region = Rect2(768, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_185"]
+atlas = ExtResource("death")
+region = Rect2(1024, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_186"]
+atlas = ExtResource("death")
+region = Rect2(1280, 1536, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_187"]
+atlas = ExtResource("death")
+region = Rect2(0, 1792, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_188"]
+atlas = ExtResource("death")
+region = Rect2(256, 1792, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_189"]
+atlas = ExtResource("death")
+region = Rect2(512, 1792, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_190"]
+atlas = ExtResource("death")
+region = Rect2(768, 1792, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_191"]
+atlas = ExtResource("death")
+region = Rect2(1024, 1792, 256, 256)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="Frame_192"]
+atlas = ExtResource("death")
+region = Rect2(1280, 1792, 256, 256)
+filter_clip = true
+
 [resource]
 animations = [{"frames":[{"duration":1.0,"texture":SubResource("Frame_1")},{"duration":1.0,"texture":SubResource("Frame_2")},{"duration":1.0,"texture":SubResource("Frame_3")},{"duration":1.0,"texture":SubResource("Frame_4")},{"duration":1.0,"texture":SubResource("Frame_3")},{"duration":1.0,"texture":SubResource("Frame_2")}],"loop":true,"name":&"idle_0","speed":7.5046904315197},
 {"frames":[{"duration":1.0,"texture":SubResource("Frame_5")},{"duration":1.0,"texture":SubResource("Frame_6")},{"duration":1.0,"texture":SubResource("Frame_7")},{"duration":1.0,"texture":SubResource("Frame_8")},{"duration":1.0,"texture":SubResource("Frame_7")},{"duration":1.0,"texture":SubResource("Frame_6")}],"loop":true,"name":&"idle_1","speed":7.5046904315197},
@@ -668,4 +990,20 @@ animations = [{"frames":[{"duration":1.0,"texture":SubResource("Frame_1")},{"dur
 {"frames":[{"duration":1.0,"texture":SubResource("Frame_113")},{"duration":1.0,"texture":SubResource("Frame_114")},{"duration":1.0,"texture":SubResource("Frame_115")},{"duration":1.0,"texture":SubResource("Frame_116")}],"loop":false,"name":&"attack_4","speed":10.0},
 {"frames":[{"duration":1.0,"texture":SubResource("Frame_117")},{"duration":1.0,"texture":SubResource("Frame_118")},{"duration":1.0,"texture":SubResource("Frame_119")},{"duration":1.0,"texture":SubResource("Frame_120")}],"loop":false,"name":&"attack_5","speed":10.0},
 {"frames":[{"duration":1.0,"texture":SubResource("Frame_121")},{"duration":1.0,"texture":SubResource("Frame_122")},{"duration":1.0,"texture":SubResource("Frame_123")},{"duration":1.0,"texture":SubResource("Frame_124")}],"loop":false,"name":&"attack_6","speed":10.0},
-{"frames":[{"duration":1.0,"texture":SubResource("Frame_125")},{"duration":1.0,"texture":SubResource("Frame_126")},{"duration":1.0,"texture":SubResource("Frame_127")},{"duration":1.0,"texture":SubResource("Frame_128")}],"loop":false,"name":&"attack_7","speed":10.0}]
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_125")},{"duration":1.0,"texture":SubResource("Frame_126")},{"duration":1.0,"texture":SubResource("Frame_127")},{"duration":1.0,"texture":SubResource("Frame_128")}],"loop":false,"name":&"attack_7","speed":10.0},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_129")},{"duration":1.0,"texture":SubResource("Frame_130")}],"loop":false,"name":&"hit_0","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_131")},{"duration":1.0,"texture":SubResource("Frame_132")}],"loop":false,"name":&"hit_1","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_133")},{"duration":1.0,"texture":SubResource("Frame_134")}],"loop":false,"name":&"hit_2","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_135")},{"duration":1.0,"texture":SubResource("Frame_136")}],"loop":false,"name":&"hit_3","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_137")},{"duration":1.0,"texture":SubResource("Frame_138")}],"loop":false,"name":&"hit_4","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_139")},{"duration":1.0,"texture":SubResource("Frame_140")}],"loop":false,"name":&"hit_5","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_141")},{"duration":1.0,"texture":SubResource("Frame_142")}],"loop":false,"name":&"hit_6","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_143")},{"duration":1.0,"texture":SubResource("Frame_144")}],"loop":false,"name":&"hit_7","speed":15.0375939849624},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_145")},{"duration":1.0,"texture":SubResource("Frame_146")},{"duration":1.0,"texture":SubResource("Frame_147")},{"duration":1.0,"texture":SubResource("Frame_148")},{"duration":1.0,"texture":SubResource("Frame_149")},{"duration":1.0,"texture":SubResource("Frame_150")}],"loop":false,"name":&"death_0","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_151")},{"duration":1.0,"texture":SubResource("Frame_152")},{"duration":1.0,"texture":SubResource("Frame_153")},{"duration":1.0,"texture":SubResource("Frame_154")},{"duration":1.0,"texture":SubResource("Frame_155")},{"duration":1.0,"texture":SubResource("Frame_156")}],"loop":false,"name":&"death_1","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_157")},{"duration":1.0,"texture":SubResource("Frame_158")},{"duration":1.0,"texture":SubResource("Frame_159")},{"duration":1.0,"texture":SubResource("Frame_160")},{"duration":1.0,"texture":SubResource("Frame_161")},{"duration":1.0,"texture":SubResource("Frame_162")}],"loop":false,"name":&"death_2","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_163")},{"duration":1.0,"texture":SubResource("Frame_164")},{"duration":1.0,"texture":SubResource("Frame_165")},{"duration":1.0,"texture":SubResource("Frame_166")},{"duration":1.0,"texture":SubResource("Frame_167")},{"duration":1.0,"texture":SubResource("Frame_168")}],"loop":false,"name":&"death_3","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_169")},{"duration":1.0,"texture":SubResource("Frame_170")},{"duration":1.0,"texture":SubResource("Frame_171")},{"duration":1.0,"texture":SubResource("Frame_172")},{"duration":1.0,"texture":SubResource("Frame_173")},{"duration":1.0,"texture":SubResource("Frame_174")}],"loop":false,"name":&"death_4","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_175")},{"duration":1.0,"texture":SubResource("Frame_176")},{"duration":1.0,"texture":SubResource("Frame_177")},{"duration":1.0,"texture":SubResource("Frame_178")},{"duration":1.0,"texture":SubResource("Frame_179")},{"duration":1.0,"texture":SubResource("Frame_180")}],"loop":false,"name":&"death_5","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_181")},{"duration":1.0,"texture":SubResource("Frame_182")},{"duration":1.0,"texture":SubResource("Frame_183")},{"duration":1.0,"texture":SubResource("Frame_184")},{"duration":1.0,"texture":SubResource("Frame_185")},{"duration":1.0,"texture":SubResource("Frame_186")}],"loop":false,"name":&"death_6","speed":7.5},
+{"frames":[{"duration":1.0,"texture":SubResource("Frame_187")},{"duration":1.0,"texture":SubResource("Frame_188")},{"duration":1.0,"texture":SubResource("Frame_189")},{"duration":1.0,"texture":SubResource("Frame_190")},{"duration":1.0,"texture":SubResource("Frame_191")},{"duration":1.0,"texture":SubResource("Frame_192")}],"loop":false,"name":&"death_7","speed":7.5}]

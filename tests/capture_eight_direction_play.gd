@@ -43,15 +43,16 @@ func press(action: String) -> void:
 
 func landing() -> Vector2:
 	var stride := world.player.move_speed * world.player.equipment_move_speed_multiplier * world.player.skill_speed_multiplier * .45
-	for radius: float in [300.,400.,500.,220.]:
+	for radius: float in [180.,240.,320.,400.]:
 		for angle: int in range(16):
 			var start := enemy.position + Vector2.from_angle(angle*TAU/16.0)*radius
 			var current := start
-			var valid := world.field_map.point_clear(start) and not world.field_map.is_safe(start) and world.field_map.line_clear(start,enemy.position)
+			var valid := world.field_map.walkable(start) and world.field_map.point_clear(start) and not world.field_map.is_safe(start) and world.field_map.line_clear(start,enemy.position)
 			for direction: int in range(8):
 				var next := current + Vector2.from_angle(direction*PI/4.0)*stride
 				if not world.field_map.point_clear(next) or world.field_map.is_safe(next) or not world.field_map.line_clear(current,next): valid=false; break
-				current=next
+				# Test eight spokes, returning through actual movement each time.
+				# A cumulative octagon unnecessarily requires a much larger clearing.
 			if valid: return start
 	return Vector2.INF
 
@@ -68,11 +69,15 @@ func run() -> void:
 	for record: Dictionary in world.catalog_db["변신"]:
 		if str(record.get("sourceId",""))=="46": world._equip_catalog("변신",record); break
 	check(world.player.motion.profile.profile_id=="transform:46","actual black knight ID")
+	var start := Vector2.INF
 	for slot: Dictionary in world.field_population.slots:
-		if is_instance_valid(slot.monster) and slot.monster.monster_name=="해골 근위병": enemy=slot.monster;break
+		if is_instance_valid(slot.monster) and slot.monster.monster_name=="해골 근위병":
+			enemy=slot.monster
+			start=landing()
+			if start.is_finite(): break
 	check(is_instance_valid(enemy),"existing normal skeleton spawn")
 	if not is_instance_valid(enemy): finish(); return
-	var start := landing()
+	event("route_setup",{"enemy_position":str(enemy.position),"stride":world.player.move_speed*world.player.equipment_move_speed_multiplier*world.player.skill_speed_multiplier*.45,"landing":str(start)})
 	check(start.is_finite(),"existing field has a clear eight-direction route")
 	if not start.is_finite(): finish();return
 	world.field_population.set_process(false)
@@ -80,6 +85,7 @@ func run() -> void:
 	for mob: Node in world.monsters_root.get_children(): mob.set_physics_process(false);paused+=1
 	world.player.position=start
 	world.player.camera.zoom=Vector2(1.8,1.8) # actual game camera, makes foot/weapon inspection readable
+	world.player.camera.position=Vector2(0,-32)
 	world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
 	world.player.set_auto_enabled(false)
 	initial_hp=world.hp;inventory_before=world.inventory.duplicate(true)
@@ -99,6 +105,10 @@ func run() -> void:
 		check(moved.length()>12 and moved.normalized().dot(Vector2.from_angle(direction*PI/4.0))>.85,"movement "+str(direction))
 		report.movement.append({"direction":direction,"distance":moved.length(),"facing":world.player.facing8})
 		await shot("walk-"+str(direction));await seconds(.22)
+		for action: String in ACTIONS[(direction+4)%8]: Input.action_press(action)
+		await seconds(.45)
+		for action: String in ACTIONS[(direction+4)%8]: Input.action_release(action)
+		await seconds(.12)
 	event("eight_directions_done")
 	enemy.set_physics_process(true)
 	world._select_monster(enemy)

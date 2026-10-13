@@ -16,7 +16,7 @@ func run() -> void:
 	for identity: Dictionary in [{"kind":"transform","sourceId":"46"}, {"kind":"monster","name":"해골 근위병"}]:
 		var profile = CATALOG.for_record(str(identity.kind), identity)
 		var frames = CATALOG.frames_for_profile(profile, "")
-		check(frames != null and frames.get_animation_names().size() == 24, "24 native tracks " + profile.profile_id)
+		check(frames != null and frames.get_animation_names().size() == 40, "40 native tracks " + profile.profile_id)
 		if frames == null: continue
 		var sprite := AnimatedSprite2D.new()
 		sprite.sprite_frames = frames
@@ -26,7 +26,7 @@ func run() -> void:
 			var motion = MOTION.new()
 			motion.profile = profile
 			motion.face(aim)
-			for role: String in ["idle", "walk", "attack"]:
+			for role: String in ["idle", "walk", "attack", "hit", "death"]:
 				var key := "%s_%d" % [role,direction]
 				check(frames.has_animation(key), profile.profile_id + " " + key)
 				var unique: Dictionary = {}
@@ -37,7 +37,7 @@ func run() -> void:
 						var pixels := texture.get_image()
 						check(not pixels.is_invisible(), "nonempty " + key)
 						unique[pixels.get_data().hex_encode().sha256_text()] = true
-				check(unique.size() == (8 if role == "walk" else 4), "actual distinct poses " + key)
+				check(unique.size() == int({"idle":4,"walk":8,"attack":4,"hit":2,"death":6}[role]), "actual distinct poses " + key)
 			motion.advance(.25, aim * profile.reference_speed)
 			motion.apply(sprite,Vector2.ONE * profile.pixel_scale)
 			check(sprite.animation == "walk_" + str(direction), "8-way velocity to artwork")
@@ -70,6 +70,18 @@ func run() -> void:
 			motion.advance(.2,Vector2.ZERO)
 			motion.apply(sprite,Vector2.ONE * profile.pixel_scale)
 			check(sprite.animation == "idle_"+str(direction), "cancel settles without stale swing")
+			motion.react()
+			motion.advance(.045,Vector2.ZERO)
+			motion.apply(sprite,Vector2.ONE*profile.pixel_scale)
+			check(sprite.animation == "hit_"+str(direction) and sprite.frame == 1,"real directional hit")
+			motion.die()
+			motion.advance(.4,Vector2.ZERO)
+			motion.apply(sprite,Vector2.ONE*profile.pixel_scale)
+			check(sprite.animation == "death_"+str(direction) and sprite.frame == 3,"source-duration death halfway")
+			check(is_zero_approx(sprite.rotation) and sprite.position.is_equal_approx(profile.sprite_offset),"native fall has no second root rotation")
+			motion.advance(.42,Vector2.ZERO)
+			motion.apply(sprite,Vector2.ONE*profile.pixel_scale)
+			check(sprite.frame == 5 and motion.state == "corpse" and sprite.modulate.a>.8,"corpse holds final pose before fade")
 		sprite.free()
 	print("EIGHT_DIRECTION_RESULT " + JSON.stringify({"assertions":assertions,"failures":failures}))
 	quit(0 if failures.is_empty() else 1)

@@ -128,7 +128,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 	visual_hold = maxf(0.0, visual_hold - delta)
 	if dead:
 		death_clock += delta
-		_set_state("death" if death_clock < 0.35 else "corpse", delta)
+		_set_state("death" if death_clock < profile.death_duration else "corpse", delta)
 		return
 	move_ratio = real_velocity.length() / maxf(1.0, profile.reference_speed)
 	locomotion_weight = move_toward(locomotion_weight, minf(move_ratio, 1.5) if not active else 0.0, delta * 12.0)
@@ -247,7 +247,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	sprite.rotation = lean
 	sprite.position = (anchor * stretch).rotated(lean) + offset + Vector2(0, bob)
 	var tint: Color = Color(1.45, 0.8, 0.7) if hit_clock > 0.0 else Color.WHITE
-	if dead: tint.a = 1.0 - clampf((death_clock - 0.55) / 0.45, 0.0, 1.0)
+	if dead: tint.a = 1.0 - clampf((death_clock - maxf(0.55, profile.death_duration)) / 0.45, 0.0, 1.0)
 	sprite.modulate = tint
 	if sprite is AnimatedSprite2D:
 		apply_frames(sprite)
@@ -358,7 +358,7 @@ func apply_frames(sprite: Node2D) -> void:
 		var start: float = maxf(0.7, attack_hit_ratio)
 		frame_value = _weighted_frame(track, (attack_elapsed / attack_duration - start) / (1.0 - start))
 	elif dead and _resolved_role == "death":
-		frame_value = _weighted_frame(track, death_clock / 0.35)
+		frame_value = _weighted_frame(track, death_clock / maxf(.01, profile.death_duration))
 	elif _resolved_role == "hit":
 		frame_value = _weighted_frame(track, 1.0 - hit_clock / hit_duration)
 	elif move_ratio > 0.01 and not active and _resolved_role in ["walk", "run", "legacy"]:
