@@ -1,9 +1,8 @@
 {
   "version": 1,
   "source_index": "res://data/catalog_image_index_v19.json",
-  "description": "원본 아이콘을 유지하면서 게임 안에서 동적으로 보정하는 이미지 프로필 DB. 원본 PNG, 아이템 ID 및 능력치는 변경하지 않는다.",
-  "canvas_size": 96,
-  "source_size": 78,
+  "description": "기존 색상 참고값. 원본 픽셀과 해상도를 그대로 로딩하며 테두리와 등급 효과는 공통 ItemVisual 컴포넌트가 별도로 표시한다.",
+  "resolution": "preserve_native",
   "color_grades": {
     "일반": {
       "accent": "a8a59b",
@@ -45,8 +44,8 @@
   },
   "fidelity": {
     "keep_original_asset": true,
-    "key_off_dark_background": true,
-    "enable_color_restoration": true,
+    "key_off_dark_background": false,
+    "enable_color_restoration": false,
     "no_item_substitution": true,
     "preserve_item_name_id_and_stats": true
   }
