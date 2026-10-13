@@ -122,7 +122,14 @@ func _run() -> void:
 			"vfx_high_water":world.combat_vfx.high_water, "orphans":int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))}
 		if metered: sample["hud_work"] = world.call("hud_counts")
 		_clear(world)
-		await process_frame
+		# An active impact/number/death pose may still have its normal lifetime.
+		# Give the real VFX process loop bounded frames to release the pool;
+		# do not forcibly clear it or mask a genuine lifecycle leak.
+		var vfx_settle_frames: int = 0
+		while not world.combat_vfx.active.is_empty() and vfx_settle_frames < 120:
+			await process_frame
+			vfx_settle_frames += 1
+		sample["vfx_settle_frames"] = vfx_settle_frames
 		sample["vfx_returned"] = world.combat_vfx.active.is_empty() and world.combat_vfx.available.size() == world.combat_vfx.CAPACITY
 		sample["flights_returned"] = world.combat_flights.flights.is_empty() and world.combat_flights.available.size() <= world.combat_flights.MAX_POOL
 		if not sample.vfx_returned or not sample.flights_returned: failed = true
