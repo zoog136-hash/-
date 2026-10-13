@@ -33,6 +33,8 @@ func _initialize() -> void:
 			continue
 		if expected.get_animation_names() != actual.get_animation_names():
 			failures.append("Animation names differ " + str(row.source))
+		if expected.get_meta("twilight_canvas_size", Vector2.ZERO) != actual.get_meta("twilight_canvas_size", Vector2.ZERO):
+			failures.append("Original-based canvas metadata differs " + str(row.source))
 		var poses: Array[Dictionary] = []
 		for animation: StringName in expected.get_animation_names():
 			animations += 1

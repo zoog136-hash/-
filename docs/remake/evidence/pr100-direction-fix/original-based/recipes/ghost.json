@@ -1,0 +1,56 @@
+{
+  "key": "monster:고스트",
+  "prompt": "{\"first_sheet\":\"Use this original ghost sprite as the EXACT character reference. Keep its thin pale blue-gray translucent face and arms, torn flowing robe and curling wispy lower tail, same small hand-painted isometric 2D RPG style. No redesign, no red eyes, no extra cape or equipment. No new glow halos or particles. Retain original pale blue face. Transparent background with CLEAN FULLY TRANSPARENT GUTTERS around every full-body pose. FULL GAME SPRITE SHEET: EXACTLY 8 COLUMNS. Every column stays the same compass direction throughout: E right profile, SE front-right, S full front, SW front-left, W left profile, NW back-left, N full back with no face visible, NE back-right. Each sprite uses at most half of cell width and half height, with lots of empty transparent space. Consistent model scale. Never let tail or arms cross cell boundaries, never crop the sprite or touch sheet edges. Each row is a real new articulated animation pose, never duplicate or simply translate a still. No text or outlines or grid. Square sheet, EXACTLY EIGHT ROWS from top to bottom: 1 neutral idle; 2 distinct breathing/floating idle; 3 hover locomotion tail streaming left; 4 hover passing neutral curl; 5 hover locomotion tail streaming right; 6 attack windup arm drawn back; 7 attack contact with thin spectral claw fully reaching OUT in the column facing direction; 8 attack recovery with arm drawn back to neutral. It has no legs; express motion through robe, arms and tail. Leave a large transparent margin outside the whole 8x8 array. Exactly 64 complete separated poses.\",\"second_sheet\":\"Create the matching hit and death animation sheet for the EXACT ghost in the first attached sprite sheet; the second attached image is its original character reference. Preserve precisely the original pale blue hooded ghost, thin clawed arms, torn translucent robe and curling wisp tail. Do NOT change the head to a bald human, do not add new details. Match the first sheet's exact character scale, painting, eight viewing directions and clean alpha cutout. Output TRANSPARENT RGBA (no colored background, no fog, no scenery). Exactly 8 columns x 5 rows, 40 separate full-body poses on a landscape sheet, large transparent outer margin and wide transparent gutters. Columns exactly as first sheet: E,SE,S,SW,W,NW,N,NE. Maintain these directions while articulating the character. Row 1 hit recoil backwards, row 2 recovery from hit, row 3 death folds down, row 4 death falls almost flat, row 5 final flat collapsed corpse with crumpled cloak and tail. Show distinct poses in each row; final corpse stays visible and recognizable, not random particles. Each pose occupies only 55 percent of cell width and height, entirely within its cell. No particles/halos crossing between cells. For the north column show only the back, never the face. No labels, no grid lines.\"}",
+  "prompt_record_kind": "exact_prompts_for_two_sheets",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ghost/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ghost/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared with assets/external_l1j/monsters/1318.png and between both sheets: pale blue-gray hooded ghost, narrow face, clawed hands, torn robe and curled spectral tail retained. South shows face, north shows robe back; east/right and west/left reaches follow corresponding views. Three hover poses articulate robe and tail; contact extends arms, recoil and three collapse poses are distinct. 64+40 separated alpha bodies. Different sheet resolutions retain source pixels and use proportional canvas metadata. Earlier opaque-background hit/death sheet is rejected. In-game size, origin, AI, damage, death and loot still require validation."
+  }
+}

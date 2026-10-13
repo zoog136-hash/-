@@ -15,18 +15,18 @@ Godot의 화면 좌표 계산은 정상이다. `+Y`는 아래이고 게임 방�
 
 ## 연결 수 및 미완료 외형
 
-| 분류 | 실제 8방향 연속 프레임 연결 | 전체 | 적합한 원본 부족 |
+| 분류 | 실제 8방향 연속 프레임 연결 | 전체 | 미완료 |
 |---|---:|---:|---:|
 | 영웅 이상 변신 | 126 | 180 | 54 |
-| 일반 몬스터 | 119 | 258 | 139 |
+| 일반 몬스터 | 121 | 258 | 137 |
 | 보스 | 31 | 60 | 29 |
 | 기본 외형 | 4 | 4 | 0 |
 
-기존 34개 확장 공용 외형과 기사·해골 표본 2개를 재사용했다. 이번에는 `class:1/2/3`을 기존 지팡이·활·단검 외형에 추가 연결했다. 새 이미지나 중복 atlas를 생성하지 않았다. 직업과 기본 외형의 독립 선택, 변신의 기존 정체성·장비 표현을 보존한다.
+기존 34개 확장 공용 외형과 기사·해골 표본 2개를 보존했다. `class:1/2/3`은 기존 지팡이·활·단검 외형에 연결한다. 후속 제작으로 **늑대인간과 고스트 2개 외형**을 각자의 기존 이미지에서 새로 그려 추가했다. 각각 실제 104자세(8방향 × 대기 2·이동 3·공격 3·피격 2·사망 3)이며, 총 38개 리소스를 사용한다. 원본 파일과 기존 모션을 덮어쓰지 않는다.
 
-고정된 공개 소스의 377개 애니메이션 정의와 현재 로컬 자료를 확인했지만, 나머지 외형에 맞는 날개·마물·동물·특수 의상·창·총·이도류·클로·체인소드·낫 등의 8방향 원본은 확보하지 못했다. 서로 다른 몸체를 무리하게 대체하지 않았다. **남은 54/139/29종은 미완료**다. [정확한 ID·사유·원본 목록](evidence/pr100-direction-fix/coverage/missing-native-sources.json).
+고정된 공개 소스의 377개 애니메이션 정의와 현재 로컬 자료를 확인했지만, 나머지 외형에 맞는 날개·마물·동물·특수 의상·창·총·이도류·클로·체인소드·낫 등의 8방향 원본은 확보하지 못했다. 서로 다른 몸체를 무리하게 대체하지 않았다. **남은 54/137/29종, 총 220종은 미완료**다. [현재 ID·사유 목록](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 기존 54/139/29종 조사표는 이전 검증 증거로 보존했다.
 
-전체 413개 변신, 318개 몬스터/보스, 4개 기본 외형의 **735개 ID × 8방향 = 5,880행** [검증표](evidence/pr100-direction-fix/coverage/all-identities-eight-directions.csv)를 자동 생성했다. 실제 RGBA 고유 프레임과 재생 슬롯 수를 구분한다. `source_metadata_only`, `actual_gameplay=not_run`은 전수 화면 승인이 아니라는 뜻이다. 실제 플레이한 표본은 별도 [Main 실행 기록](evidence/pr100-direction-fix/gameplay.json)으로 제공한다.
+전체 413개 변신, 318개 몬스터/보스, 4개 기본 외형의 **735개 ID × 8방향 = 5,880행** [검증표](evidence/pr100-direction-fix/original-based/coverage/all-identities-eight-directions.csv)를 자동 생성했다. 실제 RGBA 고유 프레임과 재생 슬롯 수를 구분한다. `source_metadata_only`, `actual_gameplay=not_run`은 전수 화면 승인이 아니라는 뜻이다. 실제 플레이한 표본은 별도 [Main 실행 기록](evidence/pr100-direction-fix/gameplay.json)으로 제공한다.
 
 ## 실제 TWILIGHT 검증
 
@@ -62,9 +62,21 @@ APK 크기는 771,837,680 bytes, SHA-256은 `7192fb894c02e286656da514a959d82bc93
 
 드랍 검사는 실제 직업 선택을 거친 뒤 실행하고, 맵 재로딩으로 다시 생성된 주변 몬스터를 고정 위치 GUI 검사 전에 정리한다. 해당 구간에만 플레이어 물리를 정지하며 실제 걷기·보스 처치·AUTO 습득 구간에는 물리를 사용한다. 기존 단언은 모두 유지했다. 실제 전달 파일이 headless **167개 / 33.8초**, OpenGL **167개 / 48.1초**로 통과했다. 게임 런타임 변경은 없으며 엔진 결함이 확인됐다고 주장하지 않는다. [검사 범위와 전후 증거](evidence/pr100-direction-fix/ground-ci-fix/fixture-isolation.json).
 
-## 다음 제작 범위
+## 원본 기반 제작 진행 상황
 
-사용자 후속 지시에 따라 남은 222종은 각 대상의 현재 원본 이미지를 베이스로 자체 제작한다. 원본의 실루엣·팔레트·얼굴·장비·무기 특징을 유지하고, 원본 파일을 덮어쓰지 않는 별도 모션 리소스로 연결한다. 원본 경로·SHA-256과 새 리소스의 대응을 남긴다. 이 단계는 위 연결 수치에 아직 포함하지 않는다.
+사용자 후속 지시에 따라 처음 미완료였던 222종의 입력 이미지를 [대응표](../../data/animation_authoring_sources.json)로 고정했다. 153개 서로 다른 파일/atlas 영역이며, 54개 카탈로그 이미지, 87개 기존 등록 몬스터 이미지, 81개 기존 프로젝트 atlas 연결이다. **프로젝트 atlas를 검증된 외부 원작 이미지라고 표시하지 않는다.** 각 대상의 실루엣·팔레트·얼굴·장비·무기를 확인하고 원본 바이트를 그대로 유지한다. 이 입력 목록은 완료 목록이 아니다.
+
+늑대인간은 `assets/l1j/verified/monsters/5030.png`, 고스트는 기존 같은 종 연결 이미지 `assets/external_l1j/monsters/1318.png`를 바탕으로 제작했다. 별도 PNG 3개(4,686,902 bytes), 실제 208자세를 추가했고 반복 정지 프레임을 새 동작으로 세지 않았다. 원본 기반 새 그림이며 회수된 원작 애니메이션이 아니다. 방향 순서는 이 새 시트 자체의 `E,SE,S,SW,W,NW,N,NE` 메타데이터를 사용한다.
+
+서로 다른 해상도로 제작된 고스트 동작은 AtlasTexture의 비례 캔버스와 `actor_motion.gd`의 명시적 메타데이터 처리로 발 위치와 표시 크기를 유지한다. 원본/새 시트 픽셀을 재샘플링하지 않는다. 기존 리소스는 이 메타데이터가 없어 기존 크기를 유지한다. Sprite2D와 AnimatedSprite2D의 8방향·상태 전환·반복 적용 **640개 검사**와 기존 native 확장 **35,742개 검사**가 통과했다.
+
+실제 Main에서 늑대인간 headless **942개**, OpenGL 녹화 실행 **951개**, 고스트 headless **1,083개**, OpenGL **1,196개** 검사를 통과했다. 8방향 실제 추적/공격, 피격, 사망, 기존 확률 드랍, 수동 습득을 확인했다. 고스트의 기존 HP는 50으로 기본 캐릭터의 첫 공격에 죽으므로, 피격 모션 확인에는 실제 `take_damage(1)` 경로의 비치명 피해를 먼저 발생시킨다. 그 뒤 실제 무기로 처치하며 전투 능력치와 드랍 표는 바꾸지 않는다. 프레임별 수동 표본 검토는 AI 전투 증거와 별도로 기록한다.
+
+[실제 Main 늑대인간 영상](evidence/pr100-direction-fix/original-based/werewolf-main.mp4), [범위·원본 보존·산출물 해시](evidence/pr100-direction-fix/original-based/preservation-and-scope.json), [고스트 실제 Main 기록](evidence/pr100-direction-fix/original-based/original_based_ghost_gameplay_test-opengl.json)을 보존했다. 제작 중 발견한 프레임 겹침, 불투명 배경, 중복 낫 초안은 적용 수치에서 제외했다. 사신 변신과 나머지 220종은 제작 완료가 아니다.
+
+새 2개 외형을 포함한 APK도 빌드 및 독립 검사에 통과했다. 38개 compiled SpriteFrames, 1,944개 트랙, 10,528개 재생 슬롯, 236개 PNG 임포트와 캔버스 메타데이터가 일치한다. APK는 774,993,177 bytes, SHA-256 `b582568218bcf9083f592e43de52a3635e7fbdb2d926a91bc6fede3502ea4e52`다. [검사 결과](evidence/pr100-direction-fix/original-based/android/android.json). 실제 Android 기기 실행은 여전히 미검증이다. 빌드 후 adb의 읽기 전용 홈 디렉터리 오류를 빌드 실패나 기기 실행 성공과 혼동하지 않는다.
+
+`e66e861`의 CI는 실제 종료 기준 **28 workflow 성공, 1 취소**다. 취소된 Windows 회귀는 마지막 검사들에 도달한 뒤 35분 작업 제한에 걸렸으며, 현재 변경에서 45분으로 늘렸다. 개별 검사 제한과 모든 단언은 유지한다. [실제 종료 결과](evidence/pr100-direction-fix/original-based/e66-ci-summary.json). 이 후속 변경의 CI는 푸시한 정확한 HEAD에서 다시 종료까지 확인해야 한다.
 
 ```sh
 python3 tools/check_resource_integrity.py --root .

@@ -1,0 +1,53 @@
+{
+  "basis_commit": "e66e861a318c2f6f42d1ce33519ae527e12be59c",
+  "source_targets": 222,
+  "unique_image_or_regions": 153,
+  "source_hashes_match": true,
+  "previously_tracked_asset_files_changed": [],
+  "authored_actors": {
+    "werewolf": {
+      "assets/actors/eight_direction/original_based/werewolf/SpriteFrames.tres": {
+        "bytes": 25247,
+        "sha256": "ceedb48fe1aa55a40858ee3d016a4d6826cc92b5396a5449771a8f2bc0743011"
+      },
+      "assets/actors/eight_direction/original_based/werewolf/poses.png": {
+        "bytes": 2116396,
+        "sha256": "58854c0f6502d5b67de78d9be47f8ea765431a6380e1f89ac92db520ef6a6d7d"
+      },
+      "assets/actors/eight_direction/original_based/werewolf/provenance.json": {
+        "bytes": 43259,
+        "sha256": "9a4c6296680341f838ec2195603b7e8d0053a97b4a532610dd3154348c477149"
+      }
+    },
+    "ghost": {
+      "assets/actors/eight_direction/original_based/ghost/SpriteFrames.tres": {
+        "bytes": 25519,
+        "sha256": "10ba0b53c6a5c54402f07834a9ea7a1b2cab81170c1d8e0a6315bef530d3aef3"
+      },
+      "assets/actors/eight_direction/original_based/ghost/poses-0.png": {
+        "bytes": 1321043,
+        "sha256": "652675cb62ee2ac9375f91021a795160706973d82211863f07ea2a69084fe34a"
+      },
+      "assets/actors/eight_direction/original_based/ghost/poses-1.png": {
+        "bytes": 1249463,
+        "sha256": "67737f986ce3edbd6ee64973329105227ab5a6d863a57ffd8779c39ad2bdefbf"
+      },
+      "assets/actors/eight_direction/original_based/ghost/provenance.json": {
+        "bytes": 48395,
+        "sha256": "e2777aa5e93b8e0d4321eaa9cf22d18d416a0c24a0fa62c4e94913450a6cc2b9"
+      }
+    }
+  },
+  "remaining": {
+    "hero_plus": 54,
+    "normal_monster": 137,
+    "boss": 29
+  },
+  "not_completed": [
+    "All remaining 220 identities",
+    "Original-based reaper: rejected duplicate-scythe death draft; no production binding",
+    "Actual Android device execution",
+    "CI at next commit: must wait for terminal results"
+  ],
+  "test_scope": "Production Main AI/contact/lifecycle plus explicitly labelled per-frame pose sampling. Ghost has 50 HP; a bounded production take_damage(1) event verifies non-lethal recoil before the real weapon kill. No combat stats or drop tables changed."
+}

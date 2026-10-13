@@ -13,6 +13,9 @@ on:
       - 'assets/actors/eight_direction/**'
       - 'tools/build_animation_expansion.py'
       - 'tools/build_open_sprite_sample.gd'
+      - 'tools/*original_based_motion*'
+      - 'data/animation_authoring_sources.json'
+      - 'tests/original_based*'
       - 'tests/*animation*'
       - 'tests/*presentation*'
       - '.github/workflows/animation-presentation-validate.yml'
@@ -47,10 +50,11 @@ jobs:
           "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then exit 1; fi
           python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
-          python3 -m pip install 'Pillow==11.3.0'
+          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
           python3 tests/eight_direction_coverage_audit_test.py
+          python3 tests/original_based_motion_import_test.py
           python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
-          for name in eight_direction_animation_test native_animation_expansion_test; do
+          for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "test-results/${name}.txt"; then exit 1; fi
           done
@@ -65,6 +69,11 @@ jobs:
           "$ENGINE" --headless --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-direction-gameplay.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-direction-gameplay.txt; then exit 1; fi
           grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-direction-gameplay.txt
+          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test; do
+            XDG_DATA_HOME="${RUNNER_TEMP}/${name}" "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${name}.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${name}.txt"
+          done
       - name: All boss poses and real gameplay renders
         shell: bash
         run: |
@@ -80,6 +89,11 @@ jobs:
           XDG_DATA_HOME="${RUNNER_TEMP}/pr100-main-user" timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-main-render.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-main-render.txt; then exit 1; fi
           grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-main-render.txt
+          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test; do
+            TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/${name}-render" TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/${name}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${name}-render-user" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}-render.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${name}-render.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${name}-render.txt"
+          done
       - name: Preserve runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -95,4 +109,6 @@ jobs:
             ${{ runner.temp }}/presentation/**/presentation-benchmark/
             ${{ runner.temp }}/aden-boss-special/**/aden-boss-special-results.json
             ${{ runner.temp }}/pr100-main-directions/
+            ${{ runner.temp }}/original_based_monster_gameplay_test-render/
+            ${{ runner.temp }}/original_based_ghost_gameplay_test-render/
           if-no-files-found: error

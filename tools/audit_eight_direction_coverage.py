@@ -9,6 +9,7 @@ import argparse
 import csv
 import hashlib
 import json
+import os
 import re
 import subprocess
 from collections import Counter
@@ -54,7 +55,9 @@ def read_spriteframes(path):
     block = text.split("animations = ", 1)[1]
     block = re.sub(r'SubResource\("([^"]+)"\)', r'"\1"', block)
     block = block.replace('&"', '"')
-    animations = json.loads(block)
+    # Resource metadata may follow the animations array (e.g. an explicit
+    # normalized canvas for original-based sheets of different resolutions).
+    animations, _end = json.JSONDecoder().raw_decode(block.lstrip())
     return external, subresources, {track["name"]: track for track in animations}
 
 
@@ -185,6 +188,9 @@ def main():
     parser.add_argument("--source-tree", type=Path, help="Optional pinned Flare animation descriptor inventory from GitHub (JSON lines path/sha records)")
     args = parser.parse_args()
     result, rows = audit(args.root.resolve())
+    evidence = args.root.resolve() / "docs/remake/evidence/pr100-direction-fix"
+    result["supplementary_evidence"] = [Path(os.path.relpath(evidence / name, args.output_dir.resolve())).as_posix()
+                                         for name in ("resource-mapping-audit.json", "DIRECTION_CAUSE.md", "gameplay.json")]
     args.output_dir.mkdir(parents=True, exist_ok=True)
     (args.output_dir / "coverage.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     missing = [value for value in result["identities"] if value["group"] in ("hero_plus", "normal_monster", "boss") and not value["native_connected"]]

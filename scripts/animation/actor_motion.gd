@@ -290,6 +290,15 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	elif sprite is Sprite2D:
 		if frame_source != null: apply_frames(sprite)
 		else: (sprite as Sprite2D).flip_h = direction.x < -0.1
+	# Some newly authored actions have different source pixel resolutions. Their
+	# proportional virtual canvases retain the same world-space foot and size,
+	# without resampling or overwriting either original sheet. Existing packs
+	# have no such metadata and keep their exact previous scale.
+	if source != null and source.has_meta("twilight_canvas_size") and (sprite is Sprite2D or sprite is AnimatedSprite2D):
+		var reference_canvas: Vector2 = source.get_meta("twilight_canvas_size")
+		var pose: Texture2D = (sprite as Sprite2D).texture if sprite is Sprite2D else source.get_frame_texture((sprite as AnimatedSprite2D).animation, (sprite as AnimatedSprite2D).frame)
+		if pose != null and reference_canvas.x > 0. and reference_canvas.y > 0. and pose.get_width() > 0 and pose.get_height() > 0:
+			sprite.scale *= reference_canvas / pose.get_size()
 	impact_pose_pending = false
 
 func _resolve_frames(frames: SpriteFrames) -> void:

@@ -35,7 +35,10 @@ jobs:
             artifact: win64.exe
             executable: Godot_v4.7.2-stable_win64_console.exe
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 35
+    # The Windows suite reached world_structure_capture after 34m48s, then
+    # the old 35m job cap cancelled the final checks. Retain every assertion
+    # and each existing per-test deadline, with room for the full suite.
+    timeout-minutes: 45
     env:
       PYTHONUTF8: '1'
     steps:
