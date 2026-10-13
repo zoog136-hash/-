@@ -6329,7 +6329,7 @@
             1,
             7
           ],
-          "max_count": 12,
+          "max_count": 27,
           "density": 8.3,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6373,7 +6373,7 @@
             4,
             12
           ],
-          "max_count": 12,
+          "max_count": 30,
           "density": 3.48,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6418,7 +6418,7 @@
             30,
             30
           ],
-          "max_count": 12,
+          "max_count": 27,
           "density": 8.57,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6462,7 +6462,7 @@
             15,
             19
           ],
-          "max_count": 12,
+          "max_count": 30,
           "density": 5.71,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6506,7 +6506,7 @@
             4,
             12
           ],
-          "max_count": 12,
+          "max_count": 27,
           "density": 4.08,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6551,7 +6551,7 @@
             22,
             42
           ],
-          "max_count": 12,
+          "max_count": 33,
           "density": 15.33,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6595,7 +6595,7 @@
             42,
             42
           ],
-          "max_count": 12,
+          "max_count": 30,
           "density": 10.86,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6641,7 +6641,7 @@
             14,
             55
           ],
-          "max_count": 12,
+          "max_count": 33,
           "density": 4.6,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6688,7 +6688,7 @@
             58,
             58
           ],
-          "max_count": 12,
+          "max_count": 30,
           "density": 6.23,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6734,7 +6734,7 @@
             8,
             65
           ],
-          "max_count": 12,
+          "max_count": 33,
           "density": 10.26,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6781,7 +6781,7 @@
             65,
             65
           ],
-          "max_count": 12,
+          "max_count": 30,
           "density": 6.44,
           "respawn_time": 24,
           "roaming_radius": 120,
@@ -6804,6 +6804,54 @@
             [
               12160.0,
               5080
+            ]
+          ],
+          "spawn_radius": 0
+        },
+        {
+          "id": "western_approach",
+          "rect": [
+            3072,
+            3380,
+            2016,
+            2100
+          ],
+          "monster_types": [
+            "말하는 섬 들개",
+            "말하는 섬 고블린",
+            "오크"
+          ],
+          "level": [
+            1,
+            7
+          ],
+          "max_count": 24,
+          "density": 12.5,
+          "respawn_time": 24,
+          "roaming_radius": 110,
+          "mode": "normal",
+          "roster_evidence": "twilight_early_game_local_roster",
+          "coordinate_evidence": "current_aden_western_playable_corridor_local_not_original_server_coordinates",
+          "polygon": [
+            [
+              3072,
+              3580
+            ],
+            [
+              4800,
+              3380
+            ],
+            [
+              5088,
+              4930
+            ],
+            [
+              4630,
+              5480
+            ],
+            [
+              3150,
+              5370
             ]
           ],
           "spawn_radius": 0

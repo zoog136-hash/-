@@ -124,6 +124,29 @@ func _run() -> void:
 				check(not boss_names.has(str(spawn.monster_types[0])), "no duplicated boss encounter " + str(spawn.monster_types[0]))
 				boss_names[str(spawn.monster_types[0])] = id
 				check(spawn.has("patrol_region"), "boss patrol is bounded " + id)
+		if id == "aden_world":
+			var regional_caps: Dictionary = {"meadow":27,"forest":30,"riverbank":27,"ruins":30,"east":27,"desert":33,"bandits":30,"dragon_valley":33,"oren":30,"fire_land":33,"wind_land":30,"western_approach":24}
+			var seen: Dictionary = {}
+			for spawn: Dictionary in definition.monster_spawn:
+				if str(spawn.get("mode", "normal")) != "normal": continue
+				var region_id: String = str(spawn.id)
+				check(regional_caps.has(region_id), "Aden region is explicitly zoned " + region_id)
+				if regional_caps.has(region_id):
+					check(int(spawn.max_count) == int(regional_caps[region_id]), "Aden per-region population " + region_id)
+				check(not seen.has(region_id), "unique Aden hunting region " + region_id)
+				seen[region_id] = true
+			check(seen.size() == 12 and _count(definition, "normal") == 354, "Aden has 12 habitat zones / 354 normal monsters")
+			check(_count(definition, "dense") == 24 and _count(definition, "boss") == 5, "Aden dense and five boss encounters unchanged")
+			var entry_zone: Dictionary = {}
+			for spawn: Dictionary in definition.monster_spawn:
+				if str(spawn.id) == "western_approach": entry_zone = spawn; break
+			# Relayout deterministically sorts the local habitat roster by threat.
+			# Compare identities, not incidental ordering; missing/extra species fail.
+			var actual_starters: Array = (entry_zone.get("monster_types", []) as Array).duplicate()
+			var expected_starters: Array = ["말하는 섬 들개", "말하는 섬 고블린", "오크"]
+			actual_starters.sort()
+			expected_starters.sort()
+			check(actual_starters == expected_starters, "starter road has early-game species only")
 		if id == "albino_04": check(_count(definition, "boss") == 0, "Albino four no longer duplicates the demon")
 		if id == "oman_01":
 			for spawn: Dictionary in definition.monster_spawn:
@@ -142,7 +165,7 @@ func _run() -> void:
 		report.maps[id] = {"normal": _count(definition, "normal"), "dense": _count(definition, "dense"), "boss": _count(definition, "boss"), "spawns": definition.monster_spawn}
 		print("RENEWED MAP CHECKED: " + id)
 	check(paths.size() == 25, "all 25 current authored maps covered")
-	check(total_normal == 1072 and total_dense == 96 and total_bosses == 28, "global population budgets 1072/96/28")
+	check(total_normal == 1294 and total_dense == 96 and total_bosses == 28, "global population budgets 1294/96/28")
 	check(boss_names.get("흑장로", "") == "aden_world" and boss_names.get("데스나이트", "") == "aden_world", "dedicated field bosses present")
 	check(JSON.stringify(CATALOG.records_by_name) == records_before, "monster stats/AI/drop records not mutated")
 	check(JSON.stringify(CATALOG.spawn_profiles) == profiles_before, "historical base profiles not mutated")
