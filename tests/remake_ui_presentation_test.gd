@@ -139,5 +139,6 @@ func _run() -> void:
 		DirAccess.remove_absolute(Settings.SETTINGS_PATH)
 	world.queue_free()
 	await frames()
-	print("REMAKE_UI checks=",checks," failures=",failures.size())
+	print("REMAKE_UI_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
+	if failures.is_empty(): print("REMAKE_UI_OK")
 	quit(0 if failures.is_empty() else 1)

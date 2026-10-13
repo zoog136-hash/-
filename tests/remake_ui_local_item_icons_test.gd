@@ -49,5 +49,6 @@ func _run() -> void:
 		check(root.get_texture().get_image().save_png(capture_path) == OK,"focused production HUD capture")
 	world.queue_free()
 	await process_frame
-	print("LOCAL_ITEM_ICON_RESULT checks=",checks," failures=",failures.size())
+	print("LOCAL_ITEM_ICON_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
+	if failures.is_empty(): print("LOCAL_ITEM_ICON_OK")
 	quit(0 if failures.is_empty() else 1)
