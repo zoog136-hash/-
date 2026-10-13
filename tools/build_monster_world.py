@@ -277,15 +277,34 @@ field_specs=[
  ('fire_land','화룡 지역',[9700,4250,1500,780],['사라만다','파이어 에그','불타는 궁수','라바 골렘','혼 켈베로스'],65),
  ('wind_land','풍룡 지역',[900,6600,1900,980],['놀','하피','블루 하피','유니 드래곤','테라 드래곤','독침 킬러비'],65),
 ]
+# This is the authoritative generator budget. Keep generated data and the
+# runtime relocation rules in sync, instead of hand-editing generated JSON.
+ADEN_REGIONAL_NORMAL_CAPS = {
+    'meadow':27, 'forest':30, 'riverbank':27, 'ruins':30,
+    'east':27, 'desert':33, 'bandits':30, 'dragon_valley':33,
+    'oren':30, 'fire_land':33, 'wind_land':30, 'western_approach':24,
+}
 spawns=[];names=[]
 for rid,label,rect,roster,lv in field_specs:
     for n in roster:
         if n not in records:register(n,lv,'field_2022' if rid in {'riverbank','bandits','dragon_valley','oren','fire_land','wind_land'} else 'elf_quest' if rid=='east' else 'field_reference')
     levels=[records[n].get('lv',BY_NAME.get(n,{}).get('lv',lv)) for n in roster]
-    spawns.append(dict(id=rid,rect=rect,monster_types=roster,level=[min(levels),max(levels)],max_count=12,
+    spawns.append(dict(id=rid,rect=rect,monster_types=roster,level=[min(levels),max(levels)],max_count=ADEN_REGIONAL_NORMAL_CAPS[rid],
                        density=round(12*1000000/(rect[2]*rect[3]),2),respawn_time=24,roaming_radius=120,mode='normal',
                        roster_evidence='field_2022' if rid in {'riverbank','bandits','dragon_valley','oren','fire_land','wind_land'} else 'elf_quest' if rid=='east' else 'legacy_or_inferred_field_biome',coordinate_evidence='local_world_pixels'))
     names.append(dict(id=rid,name=label,type='combat',center=[rect[0]+rect[2]/2,rect[1]+rect[3]/2],radius=max(rect[2:])*.52,color='8caa78'))
+# New early-game pocket on the local western road. All coordinates are
+# TWILIGHT-authored approximations; this is not an original server spawn.
+# Append before boss zones to retain stable per-region output ordering.
+spawns.append(dict(
+    id='western_approach',rect=[3072,3380,2016,2100],
+    monster_types=['말하는 섬 들개','말하는 섬 고블린','오크'],
+    level=[1,7],max_count=ADEN_REGIONAL_NORMAL_CAPS['western_approach'],
+    density=12.5,respawn_time=24,roaming_radius=110,mode='normal',
+    roster_evidence='twilight_early_game_local_roster',
+    coordinate_evidence='current_aden_western_playable_corridor_local_not_original_server_coordinates',
+    polygon=[[3072,3580],[4800,3380],[5088,4930],[4630,5480],[3150,5370]],
+    spawn_radius=0))
 for boss,rid,rect,special in [('드레이크','boss',[10200,1330,520,510],'cone'),('샌드 웜','desert_boss',[4200,640,500,500],'nova'),
                               ('피닉스','fire_boss',[10600,5200,500,500],'nova')]:
     register(boss,BY_NAME.get(boss,{}).get('lv',75),'legacy',True,special=special)
