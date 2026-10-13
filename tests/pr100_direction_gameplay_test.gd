@@ -471,6 +471,9 @@ func run() -> void:
 		# Same production scene and boss AI as the full regression, for short
 		# real-game skill recordings without rerunning weapon/corpse sequences.
 		report.scope = "boss_only"
+		world.player.position = center
+		world.player.camera.reset_smoothing()
+		world.player.camera.force_update_scroll()
 		await boss_case()
 		await finish()
 		return

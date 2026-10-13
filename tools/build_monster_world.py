@@ -299,6 +299,18 @@ spawns.append(dict(dragon_group,id='dragon_dense',rect=[9310,2960,448,448],mode=
 maps['aden_world']={'monster_spawn':spawns,'region_labels':names,
     'coordinate_note':'아덴의 12288×8192 자체 지형에 생물군계를 대응. 글루디오 던전/개미굴은 독립 맵이 없어 지상 대체 구역. 실제 오렌/화룡/풍룡 좌표·지형은 원작과 다름.'}
 
+# The current-map relayout adds dedicated encounters for these existing species.
+# Append their approved local patterns after all roster registrations, preserving
+# their original combat values, body profile and drop pools rather than running
+# register(..., boss=True), which would also change their visual/AI parameters.
+for name, special in [('흑장로', 'beam'), ('데스나이트', 'cone')]:
+    records[name]['ai']['special'] = {
+        'kind':special, 'cooldown':13, 'windup':1.15, 'radius':200,
+        'multiplier':1.6, 'element':records[name]['attack_element'],
+        'label':{'beam':'직선 마법', 'cone':'부채꼴 강타'}[special],
+        'evidence':'local_adaptation_not_verified_original_skill',
+    }
+
 # Set observed aggression explicitly instead of treating every creature alike.
 for name,entry in records.items():
     if name.startswith('죽음의 '):entry['ai']['aggressive']=('근위병' in name or '돌격병' in name)

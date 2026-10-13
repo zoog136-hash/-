@@ -1,5 +1,7 @@
 extends SceneTree
 
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+
 var world: TwilightWorld
 var failures: Array[String] = []
 var checks: int = 0
@@ -59,6 +61,7 @@ func _run() -> void:
 	root.add_child(world)
 	await process_frame
 	await process_frame
+	check(CLASS_QA.enter_game(world), "actual class selection enters gameplay")
 	world.set_process(false)
 	world.save_timer = -10000
 	world.field_population.set_process(false)
@@ -248,6 +251,10 @@ func _run() -> void:
 	clear()
 	world.player.global_position = origin
 
+	# Reloads repopulate ambient actors. Keep the GUI hit-test fixture stationary;
+	# real player physics is exercised by the walking and combat sections.
+	world._clear_monsters()
+	world.player.set_physics_process(false)
 	# Native mouse/touch through viewport GUI dispatch at different camera zooms.
 	for viewport_size: Vector2i in [Vector2i(1280,720), Vector2i(960,540), Vector2i(1920,1080)]:
 		root.size = viewport_size
@@ -277,6 +284,7 @@ func _run() -> void:
 				clear()
 	root.size = Vector2i(1280,720)
 	world.player.camera.zoom = Vector2.ONE
+	world.player.set_physics_process(true)
 
 	# Deterministic original-rate boss roll: discovered seed yields exactly
 	# up to three equipment rolls and one separate potion; fixed seed is not a guarantee of three successes.

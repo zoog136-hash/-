@@ -1,0 +1,79 @@
+PR #100 actual TWILIGHT gameplay regression / reproduction
+
+Scene: the existing res://Main.tscn (Godot 4.7.2), existing Aden field.
+Script: res://tests/pr100_direction_gameplay_test.gd
+No replacement game, renderer, HTML preview, 3D simulator, or alternate damage formula.
+Use a fresh XDG_DATA_HOME per invocation to keep the player's saves untouched.
+
+Full headless run:
+  XDG_DATA_HOME=/tmp/twilight-pr100-headless \
+  TWILIGHT_PR100_REPORT=/tmp/pr100-gameplay-headless.json \
+  /path/to/Godot_v4.7.2-stable_linux.x86_64 --headless --path /path/to/TWILIGHT \
+  --script res://tests/pr100_direction_gameplay_test.gd
+Expected full-scope completion marker: PR100_DIRECTION_GAMEPLAY_OK.
+The JSON must have scope=full, failures=[], player=48 rows, staff_normal=16 rows,
+monster=8 rows, boss=8 rows, and lifecycle.manual_pickup=true.
+
+Actual OpenGL viewport captures (Xvfb or a real DISPLAY is required):
+  DISPLAY=:99 LIBGL_ALWAYS_SOFTWARE=1 XDG_DATA_HOME=/tmp/twilight-pr100-render \
+  TWILIGHT_PR100_REPORT=/tmp/pr100-gameplay-render.json \
+  TWILIGHT_PR100_CAPTURE_DIR=/tmp/pr100-gameplay-screenshots \
+  /path/to/Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility \
+  --rendering-driver opengl3 --audio-driver Dummy --resolution 1280x720 \
+  --path /path/to/TWILIGHT --script res://tests/pr100_direction_gameplay_test.gd
+This renders the same Main scene. Inputs are released before snapshot waits.
+Movement duration counts actual physics ticks, independently of rendering FPS.
+The screenshot directory contains attack and idle snapshots for each weapon/form/direction,
+plus eight existing-monster and eight boss-skill snapshots.
+
+Short actual boss-only movie, using the same scene and AI as the full test:
+  DISPLAY=:99 LIBGL_ALWAYS_SOFTWARE=1 XDG_DATA_HOME=/tmp/twilight-pr100-boss-movie \
+  TWILIGHT_PR100_SECTION=boss TWILIGHT_PR100_REPORT=/tmp/pr100-boss-movie.json \
+  /path/to/Godot_v4.7.2-stable_linux.x86_64 --rendering-method gl_compatibility \
+  --audio-driver Dummy --resolution 1280x720 --write-movie /tmp/pr100-boss.avi \
+  --fixed-fps 30 --path /path/to/TWILIGHT --script res://tests/pr100_direction_gameplay_test.gd
+  ffmpeg -i /tmp/pr100-boss.avi -vf fps=20 -c:v libx264 -crf 30 -preset veryfast -an /tmp/pr100-boss.mp4
+Boss-only evidence has scope=boss_only, eight boss rows, and PR100_BOSS_GAMEPLAY_OK.
+It is a skill recording, not a substitute for the full regression result.
+
+Validation scope and QA conditions:
+- Normal job selection uses the real class picker. Appearance selection uses the existing,
+  separate HUD class_selected signal: warrior=0, archer=2, mage=1.
+- Equipment uses the real DB/equipment handler: training one-handed sword, bow, staff.
+- Native weapon-compatible transformations: 131 (sword), 135 (bow), 137 (staff).
+  Direction-specific authored attack_, ranged_attack_, and cast_ tracks are checked.
+  Staff also receives sixteen real normal melee attack checks, besides the magic casts.
+- Each weapon/form uses real movement input in E/SE/S/SW/W/NW/N/NE.
+  Expected vectors are literal screen-coordinate vectors: N has negative Y, S positive Y.
+- Actual command/windup, native contact frame, one strike marker, one real hit, upright
+  original pixels, and same-facing idle recovery are checked. Arrows/magic use the existing
+  CombatFlights service; launch anchors and every physics tick are observed.
+- The existing Aden population skeleton uses unchanged pursuit/attack AI. QA positions
+  its home and the player on clear ground to exercise all eight directions.
+- Player attack targets are QA-spawned production Monster scenes with the exact expanded
+  DeathKnight DB record and production field collision configuration. Their HP/stats are
+  unchanged. They are not extra invented monsters or completion-count evidence.
+- The boss is the existing Gradiumm DB record and production Monster scene. Its existing
+  beam/warning/strike/effect/geometry code runs in all eight directions. QA resets cooldown
+  and positions actors to reach each direction quickly; it does not rewrite boss patterns.
+- Background population processing is paused to isolate each production actor. This test
+  is a functional direction/combat regression, not a frame-rate benchmark.
+- The existing skeleton is killed by real equipped-weapon attacks. Native hit/death, one
+  reward event, visible ground drop before inventory award, real manual pickup UI, and
+  corpse termination/dormant pooling are checked.
+- Transform removal/restoration goes through the existing equipment path; motion profile
+  and real attack interval must be preserved.
+- These representative gameplay cases do not claim all catalog identities have new art,
+  all cross-weapon transformations have dedicated authored poses, or Android device success.
+  The catalog/asset direction table and Android build/device report are separate evidence.
+
+Local evidence paths for this session:
+  /workspace/pr100-validation/gameplay-headless.log
+  /workspace/pr100-validation/gameplay-headless.json
+  /workspace/pr100-validation/gameplay-rendered.log
+  /workspace/pr100-validation/gameplay-rendered.json
+  /workspace/pr100-artifacts/direction-gameplay-screenshots/
+  /workspace/pr100-artifacts/boss.mp4
+Earlier incomplete harness attempts are retained under pr100-validation/attempts and are
+not the final completion evidence. A valid result requires its completion marker and empty
+failure list; a running test is not a successful result.

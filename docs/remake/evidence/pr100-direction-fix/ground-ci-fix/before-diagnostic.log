@@ -1,0 +1,105 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+GROUND_LOOT_PROGRESS: 1 spawn creates an authoritative world record
+GROUND_LOOT_PROGRESS: 2 spawn never grants inventory
+GROUND_LOOT_PROGRESS: 3 minimum visual lifetime prevents instant collection
+GROUND_LOOT_PROGRESS: 4 first click selects ID
+GROUND_LOOT_PROGRESS: 5 selection shows name and grade without grant
+GROUND_LOOT_PROGRESS: 6 pickup button grants nearby item
+GROUND_LOOT_PROGRESS: 7 collection removes sprite and effects synchronously
+GROUND_LOOT_PROGRESS: 8 stale ID cannot grant twice
+GROUND_LOOT_PROGRESS: 9 available equipment grade 일반
+GROUND_LOOT_PROGRESS: 10 grade uses drop catalog 일반
+GROUND_LOOT_PROGRESS: 11 correct beam threshold 일반
+GROUND_LOOT_PROGRESS: 12 uses actual image or fallback 일반
+GROUND_LOOT_PROGRESS: 13 drop is on walkable terrain 일반
+GROUND_LOOT_PROGRESS: 14 available equipment grade 고급
+GROUND_LOOT_PROGRESS: 15 grade uses drop catalog 고급
+GROUND_LOOT_PROGRESS: 16 correct beam threshold 고급
+GROUND_LOOT_PROGRESS: 17 uses actual image or fallback 고급
+GROUND_LOOT_PROGRESS: 18 drop is on walkable terrain 고급
+GROUND_LOOT_PROGRESS: 19 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 20 available equipment grade 희귀
+GROUND_LOOT_PROGRESS: 21 grade uses drop catalog 희귀
+GROUND_LOOT_PROGRESS: 22 correct beam threshold 희귀
+GROUND_LOOT_PROGRESS: 23 uses actual image or fallback 희귀
+GROUND_LOOT_PROGRESS: 24 drop is on walkable terrain 희귀
+GROUND_LOOT_PROGRESS: 25 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 26 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 27 available equipment grade 영웅
+GROUND_LOOT_PROGRESS: 28 grade uses drop catalog 영웅
+GROUND_LOOT_PROGRESS: 29 correct beam threshold 영웅
+GROUND_LOOT_PROGRESS: 30 uses actual image or fallback 영웅
+GROUND_LOOT_PROGRESS: 31 drop is on walkable terrain 영웅
+GROUND_LOOT_PROGRESS: 32 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 33 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 34 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 35 available equipment grade 전설
+GROUND_LOOT_PROGRESS: 36 grade uses drop catalog 전설
+GROUND_LOOT_PROGRESS: 37 correct beam threshold 전설
+GROUND_LOOT_PROGRESS: 38 uses actual image or fallback 전설
+GROUND_LOOT_PROGRESS: 39 drop is on walkable terrain 전설
+GROUND_LOOT_PROGRESS: 40 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 41 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 42 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 43 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 44 available equipment grade 신화
+GROUND_LOOT_PROGRESS: 45 grade uses drop catalog 신화
+GROUND_LOOT_PROGRESS: 46 correct beam threshold 신화
+GROUND_LOOT_PROGRESS: 47 uses actual image or fallback 신화
+GROUND_LOOT_PROGRESS: 48 drop is on walkable terrain 신화
+GROUND_LOOT_PROGRESS: 49 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 50 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 51 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 52 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 53 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 54 available equipment grade 유일
+GROUND_LOOT_PROGRESS: 55 grade uses drop catalog 유일
+GROUND_LOOT_PROGRESS: 56 correct beam threshold 유일
+GROUND_LOOT_PROGRESS: 57 uses actual image or fallback 유일
+GROUND_LOOT_PROGRESS: 58 drop is on walkable terrain 유일
+GROUND_LOOT_PROGRESS: 59 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 60 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 61 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 62 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 63 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 64 simultaneous drops spread without overlapping
+GROUND_LOOT_PROGRESS: 65 Rare blue
+GROUND_LOOT_PROGRESS: 66 Hero red
+GROUND_LOOT_PROGRESS: 67 Legendary purple
+GROUND_LOOT_PROGRESS: 68 Mythic gold
+GROUND_LOOT_PROGRESS: 69 Unique emerald
+GROUND_LOOT_PROGRESS: 70 reclick starts manual path
+GROUND_LOOT_PROGRESS: 71 distant reclick cannot bypass radius
+GROUND_LOOT_PROGRESS: 72 manual pickup physically walks
+GROUND_LOOT_PROGRESS: 73 quantity granted after real manual walk
+GROUND_LOOT_PROGRESS: 74 manual path finishes cleanly
+GROUND_LOOT_PROGRESS: 75 AUTO starts collection
+GROUND_LOOT_PROGRESS: 76 current kill batch takes precedence
+GROUND_LOOT_PROGRESS: 77 AUTO OFF immediately clears pickup path
+GROUND_LOOT_PROGRESS: 78 AUTO acquires first distant drop
+GROUND_LOOT_PROGRESS: 79 nearest item first without kill batch
+GROUND_LOOT_PROGRESS: 80 AUTO sequentially collects all three
+GROUND_LOOT_PROGRESS: 81 three drops produce exactly three inventory grants
+GROUND_LOOT_PROGRESS: 82 AUTO walks using existing physics
+GROUND_LOOT_PROGRESS: 83 AUTO remains on for combat resumption
+GROUND_LOOT_PROGRESS: 84 scan frequency is bounded during movement
+GROUND_LOOT_PROGRESS: 85 stuck target does not hold AUTO forever
+GROUND_LOOT_PROGRESS: 86 stuck ID receives a retry cooldown
+GROUND_LOOT_PROGRESS: 87 skipping unreachable loot leaves it on the ground
+GROUND_LOOT_PROGRESS: 88 manual move cancels automatic pickup
+GROUND_LOOT_PROGRESS: 89 unknown ID cannot grant inventory
+GROUND_LOOT_PROGRESS: 90 expired selection cancels and hides pickup panel
+GROUND_LOOT_PROGRESS: 91 inaccessible endpoint is skipped
+GROUND_LOOT_PROGRESS: 92 inaccessible ID is throttled
+GROUND_LOOT_PROGRESS: 93 same-distance priority favors higher grade
+GROUND_LOOT_PROGRESS: 94 map change hides old loot while retaining record
+GROUND_LOOT_PROGRESS: 95 snapshot covers two maps
+GROUND_LOOT_PROGRESS: 96 real save file restores two maps without grant
+GROUND_LOOT_PROGRESS: 97 returning to region restores same ID
+GROUND_LOOT_PROGRESS: 98 travel/load do not reset expiry
+GROUND_LOOT_PROGRESS: 99 restored item can be picked up once
+GROUND_LOOT_PROGRESS: 100 collected item does not resurrect after save/load
+GROUND_LOOT_PROGRESS: 101 restore ignores collected and expired entries
+GROUND_LOOT_PROGRESS: 102 duplicate persisted IDs deduplicate
+GROUND_LOOT_PROGRESS: 103 10-minute expiry removes item and effects

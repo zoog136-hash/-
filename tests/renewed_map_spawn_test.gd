@@ -187,4 +187,5 @@ func _run() -> void:
 	var file: FileAccess = FileAccess.open(output, FileAccess.WRITE)
 	if file != null: file.store_string(JSON.stringify(report, "\t")); file.close()
 	print("RENEWED MAP SPAWN TEST: %d checks, %d failures" % [checks, failures.size()])
+	if failures.is_empty(): print("RENEWED_MAP_SPAWN_OK")
 	quit(0 if failures.is_empty() else 1)

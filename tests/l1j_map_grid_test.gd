@@ -32,6 +32,13 @@ func _run() -> void:
     var actual_size := Vector2i(4, 3)
     var first_byte: int = 0
     var last_byte: int = 11
+    if not FileAccess.file_exists("res://data/l1j/maps/raw/4.bin") and not FileAccess.file_exists("res://data/l1j/maps/source_maps.json"):
+        if not errors.is_empty():
+            quit(1)
+            return
+        print("L1J_MAP_GRID_SKIP: coordinate checks passed; optional original map and explicit CI fixture are absent")
+        quit(0)
+        return
     if FileAccess.file_exists("res://data/l1j/maps/source_maps.json"):
         var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/l1j/maps/source_maps.json"))
         for row: Dictionary in source.get("maps", []):

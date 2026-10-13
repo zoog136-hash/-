@@ -4,15 +4,19 @@ const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 
 # Exact GL screenshots and frame timings of real gameplay, not concept art.
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
-const DETAIL_KINDS: Dictionary = {"oman_01":"tomb", "domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
+const DETAIL_KINDS: Dictionary = {"oman_01":"stairs", "domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
 var capture_count: int = 0
 var failed: bool = false
 
 func _initialize() -> void:
 	call_deferred("_run")
 
-func _save_view(directory: String, filename: String) -> void:
+func _save_view(directory: String, filename: String, world: TwilightWorld, expected_map: String) -> void:
 	await RenderingServer.frame_post_draw
+	if world.active_map_id != expected_map:
+		push_error("Gameplay capture left "+expected_map+": "+filename+" is in "+world.active_map_id)
+		failed = true
+		return
 	var screenshot: Image = root.get_texture().get_image()
 	if screenshot == null or screenshot.is_empty():
 		push_error("Empty gameplay capture: "+filename)
@@ -89,7 +93,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 					awake += 1
 			active_monsters = maxi(active_monsters,awake)
 		previous = world.player.global_position
-	await _save_view(directory,map_id+"-active-play")
+	await _save_view(directory,map_id+"-active-play",world,map_id)
 	if active_monsters == 0 or world.active_map_id != map_id:
 		push_error("Active-play probe did not remain active in "+map_id)
 		failed = true
@@ -137,6 +141,9 @@ func _run() -> void:
 	for id: String in ["oman_01","oman_10","domination_summit","escaros_01","escaros_02","escaros_03","escaros_04","escaros_05","albino_01","albino_02","albino_03","albino_04","faith_01","faith_04"]:
 		world.rng.seed = 20261008
 		world._set_map(id,false)
+		# Review points can overlap travel markers. Keep static shots on this
+		# map; active-play probes below restore normal travel via _set_map.
+		world.portal_cooldown = 10000
 		if world.field_renderer.landmark_cache != null:
 			print("LANDMARK_CACHE ",id," cells=",world.field_renderer.landmark_textures.size()," size=",world.field_renderer.landmark_cache.size)
 		world.field_population.set_process(false)
@@ -150,7 +157,7 @@ func _run() -> void:
 				await process_frame
 				if i>6:
 					timing.append(float(Time.get_ticks_usec()-start)/1000.0)
-			await _save_view(directory,id+"-"+review)
+			await _save_view(directory,id+"-"+review,world,id)
 			if review == "entrance":
 				_validate_cache(world.field_renderer)
 				if id == "oman_01":
@@ -162,14 +169,19 @@ func _run() -> void:
 					_validate_cache(world.field_renderer)
 			print("REGION_CAPTURE ",id," ",review," calls=",Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)," props=",world.field_renderer.visible_props)
 		if DETAIL_KINDS.has(id):
+			var landmark_found: bool = false
 			for record: Dictionary in world.field_map.data["props"]:
 				if str(record["kind"]) != str(DETAIL_KINDS[id]):
 					continue
+				landmark_found = true
 				_aim(world,COORD.array_vector(record["position"])+Vector2(0,35))
 				for i: int in range(25):
 					await process_frame
-				await _save_view(directory,id+"-landmark")
+				await _save_view(directory,id+"-landmark",world,id)
 				break
+			if not landmark_found:
+				push_error("Missing gameplay landmark in "+id+": "+str(DETAIL_KINDS[id]))
+				failed = true
 	timing.sort()
 	print("REGION_RENDER median_ms=",timing[timing.size()/2]," p95_ms=",timing[int(timing.size()*.95)])
 	var report: Dictionary = {"adapter":RenderingServer.get_video_adapter_name(), "os":OS.get_name(), "frame_cap":Engine.max_fps,

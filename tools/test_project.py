@@ -18,7 +18,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
 parser.add_argument('--render-visual-tests',action='store_true',help='Compatibility flag: frame-dependent tests always use a real renderer')
-parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; world_regions has a 540-second minimum for 24 scene roundtrips')
+parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; world_regions and original_skill_learning_conditions have a 540-second minimum for scene and learning transactions')
 parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
@@ -66,7 +66,16 @@ for name,extra in tests:
             # returns to the enlarged Aden continent after every visit.
             # Preserve every assertion while giving these repeated scene loads
             # their own bounded budget; other tests keep the selected limit.
-            budget=max(args.timeout,args.import_timeout) if name=='import' else max(args.timeout,540) if name=='world_regions_test' else args.timeout
+            if name == 'import':
+                budget = max(args.timeout, args.import_timeout)
+            elif name == 'world_regions_test':
+                budget = max(args.timeout, 540)
+            elif name == 'original_skill_learning_conditions_test':
+                # 125 real purchases/learning/save transactions completed all
+                # 1,689 assertions in 195s; preserve them with a bounded budget.
+                budget = max(args.timeout, 540)
+            else:
+                budget = args.timeout
             command=[args.godot,*display_args,'--path',str(root),*extra]
             if visual and sys.platform.startswith('linux') and not env.get('DISPLAY'):
                 if not shutil.which('xvfb-run'):

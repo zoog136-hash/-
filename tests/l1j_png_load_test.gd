@@ -13,6 +13,13 @@ func _check(ok: bool, name: String) -> void:
         print("L1J_PNG_LOAD_FAIL: " + name)
 
 func _run() -> void:
+    var registry_present: bool = FileAccess.file_exists("res://data/l1j/registry/a2_visuals_normalized.json")
+    var item_present: bool = FileAccess.file_exists("res://assets/l1j/preview/a2/items/34.png")
+    var monster_present: bool = FileAccess.file_exists("res://assets/l1j/preview/a2/monsters/ms852.png")
+    if not registry_present and not item_present and not monster_present:
+        print("L1J_PNG_LOAD_SKIP: optional original PNG pack and explicit CI fixture are absent; original art remains unavailable")
+        quit(0)
+        return
     var bridge: RefCounted = BRIDGE.new()
     _check(bool(bridge.call("set_feature_enabled", "item_icon", true)), "item flag")
     _check(bool(bridge.call("set_feature_enabled", "ground_icon", true)), "ground flag")
