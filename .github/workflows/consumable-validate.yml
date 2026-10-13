@@ -6,25 +6,39 @@ on:
       - 'scripts/consumable_rules.gd'
       - 'scripts/consumable_service.gd'
       - 'scripts/consumable_auto_policy.gd'
+      - 'scripts/equipment_blessing.gd'
       - 'scripts/world.gd'
+      - 'scripts/hud.gd'
       - 'scripts/ui/consumable_auto_settings.gd'
       - 'scripts/ui/renewal_settings.gd'
       - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/ui/lineage_inventory_ui.gd'
+      - 'scripts/ui/renewal_inventory.gd'
       - 'tests/consumable_smoke_test.gd'
       - 'tests/consumable_auto_safety_test.gd'
+      - 'tests/per_instance_enchantments_smoke_test.gd'
+      - 'tests/equipment_blessing_smoke_test.gd'
       - '.github/workflows/consumable-validate.yml'
   pull_request:
+    branches: [main]
     paths:
       - 'scripts/consumable_rules.gd'
       - 'scripts/consumable_service.gd'
       - 'scripts/consumable_auto_policy.gd'
+      - 'scripts/equipment_blessing.gd'
       - 'scripts/world.gd'
+      - 'scripts/hud.gd'
       - 'scripts/ui/consumable_auto_settings.gd'
       - 'scripts/ui/renewal_settings.gd'
       - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/ui/lineage_inventory_ui.gd'
+      - 'scripts/ui/renewal_inventory.gd'
       - 'tests/consumable_smoke_test.gd'
       - 'tests/consumable_auto_safety_test.gd'
+      - 'tests/per_instance_enchantments_smoke_test.gd'
+      - 'tests/equipment_blessing_smoke_test.gd'
       - '.github/workflows/consumable-validate.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -36,15 +50,15 @@ concurrency:
 jobs:
   consumables:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 24
     steps:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Resource integrity
+      - name: Resource integrity before tests
         run: |
           set -euo pipefail
-          python3 tools/check_resource_integrity.py --root . 2>&1 | tee consumable-integrity.log
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee consumable-integrity-before.log
       - name: Install Godot
         run: |
           set -euo pipefail
@@ -72,6 +86,25 @@ jobs:
           timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/consumable_smoke_test.gd 2>&1 | tee consumable-smoke.log
           ! grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE FAIL|CONSUMABLE_SMOKE_FAILED' consumable-smoke.log
           grep -q 'CONSUMABLE_SMOKE_OK' consumable-smoke.log
+      - name: Per-instance enchantment regression
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$RUNNER_TEMP/consumable-instance-enchants-user-data"
+          timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/per_instance_enchantments_smoke_test.gd 2>&1 | tee consumable-per-instance.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|PER_INSTANCE_FAIL:|PER_INSTANCE_ENCHANTMENTS_FAILED' consumable-per-instance.log
+          grep -q 'PER_INSTANCE_ENCHANTMENTS_OK' consumable-per-instance.log
+      - name: Equipment blessing regression
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$RUNNER_TEMP/consumable-equipment-blessing-user-data"
+          timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/equipment_blessing_smoke_test.gd 2>&1 | tee consumable-blessing.log
+          ! grep -E 'SCRIPT ERROR:|ERROR:|BLESSING FAIL:|EQUIPMENT_BLESSING_SMOKE_FAILED' consumable-blessing.log
+          grep -q 'EQUIPMENT_BLESSING_SMOKE_OK' consumable-blessing.log
+      - name: Resource integrity after tests
+        run: |
+          set -euo pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee consumable-integrity-after.log
+          git diff --exit-code
       - name: Preserve validation evidence
         if: always()
         uses: actions/upload-artifact@v4
