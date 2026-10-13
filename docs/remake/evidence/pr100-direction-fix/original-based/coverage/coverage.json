@@ -25,11 +25,11 @@
   ],
   "counts": {
     "hero_plus:registered": 180,
-    "hero_plus:native_connected": 126,
+    "hero_plus:native_connected": 127,
     "other_transform:registered": 233,
     "other_transform:native_connected": 1,
     "normal_monster:registered": 258,
-    "normal_monster:native_connected": 121,
+    "normal_monster:native_connected": 126,
     "boss:registered": 60,
     "boss:native_connected": 31,
     "class:registered": 4,
@@ -70,11 +70,11 @@
       "key": "transform:412",
       "name": "신화-사신(여)",
       "group": "hero_plus",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No compatible published sequential weapon frames: 사이드",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "transform:411",
@@ -273,7 +273,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -293,7 +293,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/expanded/female_leather_head_long_longbow/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -333,7 +333,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -4173,7 +4173,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/original_based/ghost/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -4213,18 +4213,18 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/original_based/werewolf/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:오우거",
       "name": "오우거",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for bugbear",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:킹버그베어",
@@ -4503,7 +4503,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/skeleton_guard/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -4730,11 +4730,11 @@
       "key": "monster:글루디오 던전 유령",
       "name": "글루디오 던전 유령",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for ghost",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/ghost/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:글루디오 던전 데스 블레이드",
@@ -4820,11 +4820,11 @@
       "key": "monster:기란 평원 오우거",
       "name": "기란 평원 오우거",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for bugbear",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:기란 평원 코카트리스",
@@ -5200,11 +5200,11 @@
       "key": "monster:잊혀진 섬 고대오우거",
       "name": "잊혀진 섬 고대오우거",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for bugbear",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:잊혀진 섬 고대코카트리스",
@@ -5933,7 +5933,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -7040,11 +7040,11 @@
       "key": "monster:지옥의 고스트",
       "name": "지옥의 고스트",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for ghost",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/ghost/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:지옥의 네크로맨서",
@@ -7353,7 +7353,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/knight/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -7363,7 +7363,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -7373,7 +7373,7 @@
       "native_connected": true,
       "frames_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
       "missing_source": "",
-      "actual_gameplay": "not_run",
+      "actual_gameplay": "recorded_Main_8_directions",
       "compass_semantics": "source_metadata_only"
     },
     {
@@ -7658,6 +7658,238 @@
         "SW"
       ],
       "resource_sha256": "0f856a69aed009fd66d97d2e3757888c14b2d32e4ffaa6f20dac89c730ece18f",
+      "pixel_integrity": "verified"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "37d0a8ab104a241a589e463708e1a448a1f17252940ab1858e718b67fc2989f3",
       "pixel_integrity": "verified"
     },
     {
@@ -12010,6 +12242,238 @@
         "NE"
       ],
       "resource_sha256": "ceedb48fe1aa55a40858ee3d016a4d6826cc92b5396a5449771a8f2bc0743011",
+      "pixel_integrity": "verified"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "545882b03696e0a0bb3dd18e81652d93c022f234fdf287f2a851af194b3dbf37",
       "pixel_integrity": "verified"
     },
     {
@@ -18329,8 +18793,8 @@
   "missing_categories": {
     "No matching licensed eight-view body: flying": 4,
     "Distinctive horned or demonic body is not supplied by human equipment layers": 5,
-    "No compatible published sequential weapon frames: 사이드": 2,
     "No compatible published sequential weapon frames: 체인소드": 2,
+    "No compatible published sequential weapon frames: 사이드": 1,
     "No compatible published sequential weapon frames: 총": 3,
     "No compatible published sequential weapon frames: 이도류": 2,
     "Distinctive costume is not supplied by the licensed equipment layers": 10,
@@ -18343,7 +18807,7 @@
     "No compatible published sequential weapon frames: 랜서": 1,
     "No compatible published sequential weapon frames: 랜스": 2,
     "Existing legacy art retained; no native sequential8 profile": 232,
-    "No identity-compatible licensed source for bugbear": 5,
+    "No identity-compatible licensed source for bugbear": 2,
     "No identity-compatible licensed source for lava_golem": 2,
     "No identity-compatible licensed source for succubus": 7,
     "No identity-compatible licensed source for fire": 5,
@@ -18362,7 +18826,6 @@
     "No identity-compatible licensed source for spider": 4,
     "No identity-compatible licensed source for earth": 2,
     "No identity-compatible licensed source for ghoul": 3,
-    "No identity-compatible licensed source for ghost": 5,
     "No identity-compatible licensed source for lizard": 6,
     "No identity-compatible licensed source for basilisk": 1,
     "No identity-compatible licensed source for water": 3,
@@ -18377,6 +18840,7 @@
     "No identity-compatible licensed source for vampire": 1,
     "No identity-compatible licensed source for cerberus": 5,
     "No identity-compatible licensed source for fire_egg": 2,
+    "No identity-compatible licensed source for ghost": 3,
     "No identity-compatible licensed source for prince": 2,
     "No identity-compatible licensed source for gnoll": 1,
     "No identity-compatible licensed source for snowman": 1,
@@ -18416,5 +18880,61 @@
     "No identity-compatible licensed source for winged_skeleton": 1,
     "No identity-compatible licensed source for zombie": 1,
     "No identity-compatible licensed source for tentacle": 1
-  }
+  },
+  "recorded_main_evidence": [
+    {
+      "path": "../../gameplay.json",
+      "sha256": "9a5fb8333c81d139dc7988fd9bdc195fe1afc0f4f106ad6fe870adb590de9da2",
+      "scope": "full",
+      "direction_rows": 64
+    },
+    {
+      "path": "../original_based_monster_gameplay_test-opengl.json",
+      "sha256": "f814da3f58ae7ca2f74651c54fd5c4fb61274fc3dc74b2bbb56c6b37071549d9",
+      "scope": "original-based werewolf, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_gameplay_test-opengl.json",
+      "sha256": "9f2a57cdb110bc60a1bee9c604e3d87f9a78f42794a15863bae6d8bb31643bdc",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_reaper_gameplay_test-opengl.json",
+      "sha256": "0f417de7533f020fa4db3e38fb366dadcacf7f9b43924102a16065cfd1bd68f6",
+      "scope": "original-based female reaper, actual Main/equipment/input/scythe/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_gameplay_test-opengl.json",
+      "sha256": "5f1b3b12fcc155eb99b11204792bc6f00cb51868e29f50935cab4ffb9263ce57",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_gludio-opengl.json",
+      "sha256": "62eecd380ec074765fc322886b131ba57022956adacde3233e55a24716f5b7af",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_hell-opengl.json",
+      "sha256": "9971643afe0c5e77724b085b06b16e62d530d96c9ddf0107fffabcb9b9f0c4f5",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_giran-opengl.json",
+      "sha256": "8b6bb6d8e9c720e5122d2eaad89ddb28741a32921e6a14cd6db2a78c88685069",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_ancient-opengl.json",
+      "sha256": "0de1b61f09f502ca52823b0fbee48a398a558f2a14e99635825d3e5cb21d6d6f",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    }
+  ]
 }

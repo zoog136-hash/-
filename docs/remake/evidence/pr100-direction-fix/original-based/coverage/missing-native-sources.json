@@ -2,15 +2,15 @@
   "schema": 1,
   "scope": "Remaining target identities; compatible source motion unavailable, legacy art preserved",
   "missing_counts": {
-    "hero_plus": 54,
-    "normal_monster": 137,
+    "hero_plus": 53,
+    "normal_monster": 132,
     "boss": 29
   },
   "categories": {
     "No matching licensed eight-view body: flying": 4,
     "Distinctive horned or demonic body is not supplied by human equipment layers": 5,
-    "No compatible published sequential weapon frames: 사이드": 2,
     "No compatible published sequential weapon frames: 체인소드": 2,
+    "No compatible published sequential weapon frames: 사이드": 1,
     "No compatible published sequential weapon frames: 총": 3,
     "No compatible published sequential weapon frames: 이도류": 2,
     "Distinctive costume is not supplied by the licensed equipment layers": 10,
@@ -22,7 +22,7 @@
     "No matching licensed eight-view body: golem": 1,
     "No compatible published sequential weapon frames: 랜서": 1,
     "No compatible published sequential weapon frames: 랜스": 2,
-    "No identity-compatible licensed source for bugbear": 5,
+    "No identity-compatible licensed source for bugbear": 2,
     "No identity-compatible licensed source for lava_golem": 2,
     "No identity-compatible licensed source for succubus": 7,
     "No identity-compatible licensed source for fire": 5,
@@ -41,7 +41,6 @@
     "No identity-compatible licensed source for spider": 4,
     "No identity-compatible licensed source for earth": 2,
     "No identity-compatible licensed source for ghoul": 3,
-    "No identity-compatible licensed source for ghost": 5,
     "No identity-compatible licensed source for lizard": 6,
     "No identity-compatible licensed source for basilisk": 1,
     "No identity-compatible licensed source for water": 3,
@@ -56,6 +55,7 @@
     "No identity-compatible licensed source for vampire": 1,
     "No identity-compatible licensed source for cerberus": 5,
     "No identity-compatible licensed source for fire_egg": 2,
+    "No identity-compatible licensed source for ghost": 3,
     "No identity-compatible licensed source for prince": 2,
     "No identity-compatible licensed source for gnoll": 1,
     "No identity-compatible licensed source for snowman": 1,
@@ -108,12 +108,6 @@
       "name": "지배자 기르타스",
       "group": "hero_plus",
       "missing_source": "Distinctive horned or demonic body is not supplied by human equipment layers"
-    },
-    {
-      "key": "transform:412",
-      "name": "신화-사신(여)",
-      "group": "hero_plus",
-      "missing_source": "No compatible published sequential weapon frames: 사이드"
     },
     {
       "key": "transform:411",
@@ -434,12 +428,6 @@
       "missing_source": "No identity-compatible licensed source for lava_golem"
     },
     {
-      "key": "monster:오우거",
-      "name": "오우거",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for bugbear"
-    },
-    {
       "key": "monster:킹버그베어",
       "name": "킹버그베어",
       "group": "normal_monster",
@@ -596,22 +584,10 @@
       "missing_source": "No identity-compatible licensed source for ghoul"
     },
     {
-      "key": "monster:글루디오 던전 유령",
-      "name": "글루디오 던전 유령",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for ghost"
-    },
-    {
       "key": "monster:기란 평원 도마뱀전사",
       "name": "기란 평원 도마뱀전사",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for lizard"
-    },
-    {
-      "key": "monster:기란 평원 오우거",
-      "name": "기란 평원 오우거",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for bugbear"
     },
     {
       "key": "monster:기란 평원 코카트리스",
@@ -726,12 +702,6 @@
       "name": "수룡의 둥지 파도수호자",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for water"
-    },
-    {
-      "key": "monster:잊혀진 섬 고대오우거",
-      "name": "잊혀진 섬 고대오우거",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for bugbear"
     },
     {
       "key": "monster:잊혀진 섬 고대코카트리스",
@@ -1302,12 +1272,6 @@
       "name": "잔혹한 혼 켈베로스",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for cerberus"
-    },
-    {
-      "key": "monster:지옥의 고스트",
-      "name": "지옥의 고스트",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for ghost"
     },
     {
       "key": "monster:지옥의 본 드래곤",

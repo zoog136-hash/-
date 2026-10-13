@@ -382,6 +382,8 @@ func boss_case() -> void:
 	boss.queue_free()
 	await tick(2)
 
+func lifecycle_attempt_limit() -> int: return 30
+
 func lifecycle_case() -> void:
 	world._clear_drops()
 	world.player.position = center
@@ -396,7 +398,9 @@ func lifecycle_case() -> void:
 	var life_ticks := 0
 	var hit_seen := false
 	var inventory_before: Dictionary = world.inventory.duplicate(true)
-	while is_instance_valid(normal) and not normal.dead and attempts < 30 and life_ticks < 2400:
+	var attempt_limit := lifecycle_attempt_limit()
+	var tick_limit: int = attempt_limit * maxi(80, ceili(world._normal_attack_interval() * 60.) + 5)
+	while is_instance_valid(normal) and not normal.dead and attempts < attempt_limit and life_ticks < tick_limit:
 		if world.auto_attack_timer <= 0. and world.pending_attack.is_empty():
 			world.rng.seed = 1 + attempts
 			world.hud.attack_pressed.emit()
@@ -434,7 +438,7 @@ func lifecycle_case() -> void:
 		check(picked and not world.ground_loot.records.has(str(drop.id)),"actual UI manual pickup awards once")
 	await tick(90)
 	check(not is_instance_valid(normal) or not normal.is_physics_processing(),"corpse lifecycle terminates or enters dormant pool")
-	report.lifecycle = {"hp_start":hp_start,"weapon_attempts":attempts,"hit_pose":hit_seen,"death_callbacks":deaths.size(),
+	report.lifecycle = {"hp_start":hp_start,"hp_end":normal.hp if is_instance_valid(normal) else 0,"weapon_attempts":attempts,"attempt_limit":attempt_limit,"hit_pose":hit_seen,"death_callbacks":deaths.size(),
 		"death_track":death_track,"ground_drops":drops,"manual_pickup":picked,"player_hp":world.hp}
 
 func run() -> void:

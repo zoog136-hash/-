@@ -11,8 +11,14 @@ func subject_name() -> String: return "늑대인간"
 func subject_folder() -> String: return "werewolf"
 func subject_job() -> String: return "기사"
 func prepare_lifecycle() -> void: pass
+func lifecycle_attempt_limit() -> int:
+	# High-level regional actors have 1680/2325 HP. Let the real equipped
+	# weapon finish the fight; retain their original HP, armor and hit chance.
+	return 200 if is_instance_valid(normal) and normal.max_hp > 1000 else 30
 
 func run() -> void:
+	var subject := OS.get_environment("TWILIGHT_ORIGINAL_SUBJECT")
+	if subject.is_empty(): subject = subject_name()
 	out = OS.get_environment("TWILIGHT_PR100_REPORT")
 	if out.is_empty(): out = "user://original-based-monster-gameplay.json"
 	captures = OS.get_environment("TWILIGHT_PR100_CAPTURE_DIR")
@@ -39,13 +45,16 @@ func run() -> void:
 	world.player.camera.reset_smoothing()
 	world.player.camera.force_update_scroll()
 	await tick(16)
-	normal = db_actor(subject_name())
+	normal = db_actor(subject)
 	check(normal != null, "original-based target exists in production DB")
 	if normal == null: await finish(); return
 	check(normal.motion.profile.frames_path == "res://assets/actors/eight_direction/original_based/" + subject_folder() + "/SpriteFrames.tres", "production profile resolves original-based resource")
 	check(normal.motion.frame_source != null, "production Sprite2D uses authored SpriteFrames")
+	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/actors/eight_direction/original_based/" + subject_folder() + "/provenance.json"))
+	check((proof.target_keys as Array).has("monster:" + subject), "subject is an explicitly reviewed original-image binding")
+	check(world._monster_texture(record_for(subject)).resource_path == str(proof.reference.path), "production portrait lookup retains this exact original source")
 	report.scope = "original-based " + subject_folder() + ", actual Main and production AI/combat/lifecycle"
-	report.setup = {"scene":"Main.tscn", "map":"aden_world", "normal":subject_name(), "qa_positioning":true,
+	report.setup = {"scene":"Main.tscn", "map":"aden_world", "normal":subject, "qa_positioning":true,
 		"job":subject_job(), "stats_overridden":false, "background_spawn_slots_paused":true, "normal_is_existing_population_actor":false}
 	await monster_case()
 	# Snapshot the real production texture regions at all role/frame/direction

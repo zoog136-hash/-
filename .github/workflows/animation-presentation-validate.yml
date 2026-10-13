@@ -28,7 +28,7 @@ concurrency:
 jobs:
   presentation:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger
@@ -69,7 +69,7 @@ jobs:
           "$ENGINE" --headless --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-direction-gameplay.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-direction-gameplay.txt; then exit 1; fi
           grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-direction-gameplay.txt
-          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test; do
+          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test original_based_ogre_gameplay_test original_based_reaper_gameplay_test; do
             XDG_DATA_HOME="${RUNNER_TEMP}/${name}" "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${name}.txt"; then exit 1; fi
             grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${name}.txt"
@@ -89,11 +89,29 @@ jobs:
           XDG_DATA_HOME="${RUNNER_TEMP}/pr100-main-user" timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-main-render.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-main-render.txt; then exit 1; fi
           grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-main-render.txt
-          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test; do
+          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test original_based_ogre_gameplay_test original_based_reaper_gameplay_test; do
             TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/${name}-render" TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/${name}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${name}-render-user" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}-render.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${name}-render.txt"; then exit 1; fi
             grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${name}-render.txt"
           done
+      - name: Existing original-image regional aliases in Main
+        shell: bash
+        run: |
+          set -euo pipefail
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          while read -r label script subject; do
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout 300 "$ENGINE" --headless --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-headless.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-headless.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-headless.txt"
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE=0 TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/original-based-aliases/${label}" TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/original-based-aliases/${label}/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" LIBGL_ALWAYS_SOFTWARE=1 timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-render.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-render.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-render.txt"
+          done <<'CASES'
+          ghost-gludio original_based_ghost_gameplay_test 글루디오 던전 유령
+          ghost-hell original_based_ghost_gameplay_test 지옥의 고스트
+          ogre-giran original_based_ogre_gameplay_test 기란 평원 오우거
+          ogre-ancient original_based_ogre_gameplay_test 잊혀진 섬 고대오우거
+          CASES
       - name: Preserve runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -111,4 +129,7 @@ jobs:
             ${{ runner.temp }}/pr100-main-directions/
             ${{ runner.temp }}/original_based_monster_gameplay_test-render/
             ${{ runner.temp }}/original_based_ghost_gameplay_test-render/
+            ${{ runner.temp }}/original_based_ogre_gameplay_test-render/
+            ${{ runner.temp }}/original_based_reaper_gameplay_test-render/
+            ${{ runner.temp }}/original-based-aliases/
           if-no-files-found: error

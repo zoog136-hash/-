@@ -33,21 +33,53 @@
         "sha256": "67737f986ce3edbd6ee64973329105227ab5a6d863a57ffd8779c39ad2bdefbf"
       },
       "assets/actors/eight_direction/original_based/ghost/provenance.json": {
-        "bytes": 48395,
-        "sha256": "e2777aa5e93b8e0d4321eaa9cf22d18d416a0c24a0fa62c4e94913450a6cc2b9"
+        "bytes": 50006,
+        "sha256": "f1fd23b72e7ad5a74e678bb71ebdb433b1227399663db31c537d729c367e015e"
+      }
+    },
+    "reaper_female": {
+      "assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres": {
+        "bytes": 25536,
+        "sha256": "37d0a8ab104a241a589e463708e1a448a1f17252940ab1858e718b67fc2989f3"
+      },
+      "assets/actors/eight_direction/original_based/reaper_female/poses-0.png": {
+        "bytes": 2121182,
+        "sha256": "6e24057fb07dfd0a09a64e23af379d1546fffa1905760a09b32da143e284263c"
+      },
+      "assets/actors/eight_direction/original_based/reaper_female/poses-1.png": {
+        "bytes": 1561375,
+        "sha256": "2e39e48610f3bb67428244b13f3596ddbab28ed2cc42522efad803af85b0fc8c"
+      },
+      "assets/actors/eight_direction/original_based/reaper_female/provenance.json": {
+        "bytes": 50684,
+        "sha256": "fd8e208d443639abdd89ae76204e14cf69560e54e3347eb8a344adbf1e33acb1"
+      }
+    },
+    "ogre": {
+      "assets/actors/eight_direction/original_based/ogre/SpriteFrames.tres": {
+        "bytes": 25177,
+        "sha256": "545882b03696e0a0bb3dd18e81652d93c022f234fdf287f2a851af194b3dbf37"
+      },
+      "assets/actors/eight_direction/original_based/ogre/poses.png": {
+        "bytes": 1218260,
+        "sha256": "98c34178e5f05b119f57c14d2b252b224e0b8a83b8574f5951be570e9a032651"
+      },
+      "assets/actors/eight_direction/original_based/ogre/provenance.json": {
+        "bytes": 48443,
+        "sha256": "0975e65ef8b7d402b5c1bd3aa4ba72ac5374725ddf9fedb17a52680ae290a922"
       }
     }
   },
   "remaining": {
-    "hero_plus": 54,
-    "normal_monster": 137,
+    "hero_plus": 53,
+    "normal_monster": 132,
     "boss": 29
   },
   "not_completed": [
-    "All remaining 220 identities",
-    "Original-based reaper: rejected duplicate-scythe death draft; no production binding",
+    "All remaining 214 identities",
+    "Spear guard captain: rejected crowded/wrong-row candidate; no production binding",
     "Actual Android device execution",
-    "CI at next commit: must wait for terminal results"
+    "Exact final-commit CI still needs terminal confirmation"
   ],
-  "test_scope": "Production Main AI/contact/lifecycle plus explicitly labelled per-frame pose sampling. Ghost has 50 HP; a bounded production take_damage(1) event verifies non-lethal recoil before the real weapon kill. No combat stats or drop tables changed."
+  "test_scope": "Production Main and real equipment/input/AI/contact/death/drop/pickup. Each regional alias tested independently. Explicit pose sampling is distinct from real input/AI. Ghost nonlethal recoil uses take_damage(1); reaper incoming/death use controlled production hit/poison callbacks. Level-105 ogre uses the existing catalog execution sword via normal equipment handler, retaining full monster HP/armor/evasion. No combat formulas or drop tables changed."
 }

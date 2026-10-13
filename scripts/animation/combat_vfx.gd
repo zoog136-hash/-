@@ -57,6 +57,15 @@ func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset
 	if frames != null and not animation.is_empty() and frames.has_animation(animation):
 		entry["frames"] = frames
 		entry["animation"] = animation
+		if frames.has_meta("twilight_canvas_size"):
+			# The live actor already normalizes sheets of different resolutions.
+			# Preserve that displayed canvas when its death uses another sheet.
+			entry["canvas_size"] = texture.get_size() * scale_value
+
+static func _death_draw_scale(entry: Dictionary, texture: Texture2D) -> Vector2:
+	if entry.has("canvas_size"):
+		return (entry.canvas_size as Vector2) / texture.get_size()
+	return entry.scale
 
 func ring(point: Vector2, radius: float, color: Color) -> void:
 	var entry: Dictionary = _record("ring", point, 0.3)
@@ -103,7 +112,7 @@ func _draw() -> void:
 					var animation: String = entry.animation
 					texture = frames.get_frame_texture(animation, _death_frame(frames, animation, minf(1.0, p * 2.0)))
 					lean = 0.0
-				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, entry.scale)
+				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, _death_draw_scale(entry, texture))
 				draw_texture(texture, -texture.get_size() * 0.5, Color(1.0, 0.7, 0.65, alpha))
 				draw_set_transform(Vector2.ZERO)
 			"ring":

@@ -14,6 +14,24 @@ import audit_eight_direction_coverage as audit
 
 
 class CoverageAuditTest(unittest.TestCase):
+    def test_recorded_main_does_not_promote_untested_aliases_or_pose_samples(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "main.json"
+            report = {"failures":[], "checks":10, "setup":{"scene":"Main.tscn"},
+                      "monster":[{"name":"one", "compass":"N", "facing":6, "walk":True, "attack":True, "contacts":1}],
+                      "pose_samples":[{"track":"attack_2", "frame":1}]}
+            path.write_text(json.dumps(report))
+            result = {"identities":[{"key":"monster:one"}, {"key":"monster:alias"}]}
+            rows = [{"id":key, "direction":direction, "actual_gameplay":"not_run"} for key in ("monster:one", "monster:alias") for direction in audit.DIRECTIONS]
+            audit.attach_gameplay_evidence(result, rows, [path], root)
+            self.assertEqual(sum(row["actual_gameplay"] == "recorded_Main_sample" for row in rows), 1)
+            self.assertEqual(result["identities"][1]["actual_gameplay"], "not_run")
+            report["failures"] = ["attack failed"]
+            path.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, "Not a successful"):
+                audit.attach_gameplay_evidence(result, rows, [path], root)
+
     def build_pack(self, root, repeated=False):
         folder = root / "assets/actors/eight_direction/test"
         folder.mkdir(parents=True)

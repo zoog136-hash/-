@@ -22,7 +22,9 @@
     ]
   },
   "target_keys": [
-    "monster:고스트"
+    "monster:고스트",
+    "monster:글루디오 던전 유령",
+    "monster:지옥의 고스트"
   ],
   "presentation_to_preserve": {
     "visual": {
@@ -43,6 +45,66 @@
     "attack_type": "melee",
     "visual_height": 86
   },
+  "target_presentations": {
+    "monster:고스트": {
+      "visual": {
+        "atlas": 0,
+        "cell": 8,
+        "body": "ghost",
+        "variant": 11,
+        "width": 0.92,
+        "weapon": "sword",
+        "crest": 1,
+        "accent": "b76d5a"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": true
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    },
+    "monster:글루디오 던전 유령": {
+      "visual": {
+        "atlas": 0,
+        "cell": 8,
+        "body": "ghost",
+        "variant": 6,
+        "width": 0.92,
+        "weapon": "sword",
+        "crest": 1,
+        "accent": "b76d5a"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": true
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    },
+    "monster:지옥의 고스트": {
+      "visual": {
+        "atlas": 0,
+        "cell": 8,
+        "body": "ghost",
+        "variant": 2,
+        "width": 0.998,
+        "weapon": "sword",
+        "crest": 1,
+        "accent": "b76d5a"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": true
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original reference and rendered presentation. Existing external portrait family aliases omit only unused fallback ornaments; project atlases remain strict.",
   "authoring_instructions": "{\"first_sheet\":\"Use this original ghost sprite as the EXACT character reference. Keep its thin pale blue-gray translucent face and arms, torn flowing robe and curling wispy lower tail, same small hand-painted isometric 2D RPG style. No redesign, no red eyes, no extra cape or equipment. No new glow halos or particles. Retain original pale blue face. Transparent background with CLEAN FULLY TRANSPARENT GUTTERS around every full-body pose. FULL GAME SPRITE SHEET: EXACTLY 8 COLUMNS. Every column stays the same compass direction throughout: E right profile, SE front-right, S full front, SW front-left, W left profile, NW back-left, N full back with no face visible, NE back-right. Each sprite uses at most half of cell width and half height, with lots of empty transparent space. Consistent model scale. Never let tail or arms cross cell boundaries, never crop the sprite or touch sheet edges. Each row is a real new articulated animation pose, never duplicate or simply translate a still. No text or outlines or grid. Square sheet, EXACTLY EIGHT ROWS from top to bottom: 1 neutral idle; 2 distinct breathing/floating idle; 3 hover locomotion tail streaming left; 4 hover passing neutral curl; 5 hover locomotion tail streaming right; 6 attack windup arm drawn back; 7 attack contact with thin spectral claw fully reaching OUT in the column facing direction; 8 attack recovery with arm drawn back to neutral. It has no legs; express motion through robe, arms and tail. Leave a large transparent margin outside the whole 8x8 array. Exactly 64 complete separated poses.\",\"second_sheet\":\"Create the matching hit and death animation sheet for the EXACT ghost in the first attached sprite sheet; the second attached image is its original character reference. Preserve precisely the original pale blue hooded ghost, thin clawed arms, torn translucent robe and curling wisp tail. Do NOT change the head to a bald human, do not add new details. Match the first sheet's exact character scale, painting, eight viewing directions and clean alpha cutout. Output TRANSPARENT RGBA (no colored background, no fog, no scenery). Exactly 8 columns x 5 rows, 40 separate full-body poses on a landscape sheet, large transparent outer margin and wide transparent gutters. Columns exactly as first sheet: E,SE,S,SW,W,NW,N,NE. Maintain these directions while articulating the character. Row 1 hit recoil backwards, row 2 recovery from hit, row 3 death folds down, row 4 death falls almost flat, row 5 final flat collapsed corpse with crumpled cloak and tail. Show distinct poses in each row; final corpse stays visible and recognizable, not random particles. Each pose occupies only 55 percent of cell width and height, entirely within its cell. No particles/halos crossing between cells. For the north column show only the back, never the face. No labels, no grid lines.\"}",
   "instruction_record_kind": "exact_prompts_for_two_sheets",
   "visual_review": {

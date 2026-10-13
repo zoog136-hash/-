@@ -36,6 +36,24 @@ def candidate_image(root, value):
     return path if path.is_absolute() else root / path
 
 
+def sharing_identity(target):
+    """Ignore only fallback ornament data that production does not render.
+
+    MonsterArt.material_for returns no shader for external_l1j portraits, and
+    MonsterVisual omits fallback weapons/crests for these existing family
+    bindings. Their exact reference, body category, height, attack style and
+    animation profile must still agree. Project atlas artwork stays strict.
+    """
+    presentation = json.loads(json.dumps(target["presentation_to_preserve"]))
+    reference = target["reference"]
+    if (target["group"] == "normal_monster" and reference["kind"] == "existing_family_portrait"
+            and reference["path"].startswith("res://assets/external_l1j/monsters/")):
+        visual = presentation.get("visual", {})
+        presentation["visual"] = {key: value for key, value in visual.items()
+                                  if key not in {"atlas", "cell", "variant", "width", "weapon", "crest", "accent"}}
+    return reference, presentation
+
+
 def analyze(path, rows_count=13, reference_rows=None, reference_height=None):
     """Reject wrong pose counts, clipping, overlaps, and repeated stills."""
     with Image.open(path) as source:
@@ -131,8 +149,8 @@ def import_sheet(root, candidate, actor, keys, apply):
     targets = {row["key"]: row for row in plan["targets"]}
     bindings = [targets[key] for key in keys]
     first = bindings[0]
-    identity = (first["reference"], first["presentation_to_preserve"])
-    if any((row["reference"], row["presentation_to_preserve"]) != identity for row in bindings):
+    identity = sharing_identity(first)
+    if any(sharing_identity(row) != identity for row in bindings):
         raise ValueError("Cannot share an authored sheet across different original images/presentations")
     reference = first["reference"]
     original = root / reference["path"].removeprefix("res://")
@@ -182,6 +200,8 @@ def import_sheet(root, candidate, actor, keys, apply):
     (folder / "SpriteFrames.tres").write_text(spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames))
     proof = {"schema": 1, "source": "Newly authored from the existing target image; not recovered original animation",
              "reference": reference, "target_keys": keys, "presentation_to_preserve": first["presentation_to_preserve"],
+             "target_presentations": {row["key"]: row["presentation_to_preserve"] for row in bindings},
+             "sharing_rule": "Exact original reference and rendered presentation. Existing external portrait family aliases omit only unused fallback ornaments; project atlases remain strict.",
              "authoring_instructions": candidate["prompt"], "instruction_record_kind": candidate.get("prompt_record_kind", "exact_prompt"), "visual_review": review,
              "directions": DIRECTIONS, "source_directions": DIRECTIONS, "source_direction_indices": list(range(8)),
              "cell": [256, 256], "foot": [128, 160], "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",

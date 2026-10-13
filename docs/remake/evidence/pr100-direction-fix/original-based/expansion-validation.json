@@ -1,0 +1,540 @@
+[
+  {
+    "case": "original_based_reaper_gameplay_test",
+    "headless": {
+      "checks_in_report": 1515,
+      "seconds": 32.904300438000064,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {},
+      "incoming": [
+        {
+          "compass": "E",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "S",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "W",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "N",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        }
+      ]
+    },
+    "opengl": {
+      "checks_in_report": 1534,
+      "seconds": 134.8604491040005,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {},
+      "incoming": [
+        {
+          "compass": "E",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "S",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "W",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "N",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        }
+      ]
+    }
+  },
+  {
+    "case": "original_based_ogre_gameplay_test",
+    "headless": {
+      "checks_in_report": 1201,
+      "seconds": 37.80005427699871,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791891655.37034,
+            "expires_at": 1791892255.37034,
+            "grade": "고급",
+            "hunt_batch": "3e33e1f14d29b312440cec179762e67a",
+            "id": "863f2d4ff8081ffda614b238e4e49351",
+            "item_name": "강력 HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_start": 260,
+        "manual_pickup": true,
+        "player_hp": 1658,
+        "weapon_attempts": 6
+      },
+      "incoming": []
+    },
+    "opengl": {
+      "checks_in_report": 1316,
+      "seconds": 124.73957988899929,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791891946.51207,
+            "expires_at": 1791892546.51207,
+            "grade": "고급",
+            "hunt_batch": "b756125b8b013e76cfce9a025c331306",
+            "id": "63c5260decd212a76b88116e72551865",
+            "item_name": "강력 HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_start": 260,
+        "manual_pickup": true,
+        "player_hp": 1658,
+        "weapon_attempts": 6
+      },
+      "incoming": []
+    }
+  },
+  {
+    "case": "original_based_ghost_gludio",
+    "headless": {
+      "checks_in_report": 1004,
+      "seconds": 49.52308099500078,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791891864.3236,
+            "expires_at": 1791892464.3236,
+            "grade": "일반",
+            "hunt_batch": "38de9c05ac22232298e1cae24d6566cf",
+            "id": "184318e617e3729ee7377debd529592b",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_start": 322,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 8
+      },
+      "incoming": []
+    },
+    "opengl": {
+      "checks_in_report": 1029,
+      "seconds": 46.86034871799893,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 30,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791892055.55299,
+            "expires_at": 1791892655.55299,
+            "grade": "일반",
+            "hunt_batch": "9c5e0d86e56f1276433acf3128b82a5e",
+            "id": "cad0ec64cc27c2a56f8a6d8346404a50",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 322,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 8
+      },
+      "incoming": []
+    }
+  },
+  {
+    "case": "original_based_ghost_hell",
+    "headless": {
+      "checks_in_report": 1004,
+      "seconds": 58.19862795800145,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791892061.54164,
+            "expires_at": 1791892661.54164,
+            "grade": "일반",
+            "hunt_batch": "fe63905296cb9d72adf18692b439b19c",
+            "id": "64799d4b0282327f52e822cd0ac06797",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1679,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 87
+      },
+      "incoming": []
+    },
+    "opengl": {
+      "checks_in_report": 1013,
+      "seconds": 95.07274044100086,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791892259.52266,
+            "expires_at": 1791892859.52266,
+            "grade": "일반",
+            "hunt_batch": "580990090755ddcea76b928ed349b28d",
+            "id": "138ec71ba0fb05c1b496e12f723493aa",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1679,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 87
+      },
+      "incoming": []
+    }
+  },
+  {
+    "case": "original_based_ogre_giran",
+    "headless": {
+      "checks_in_report": 1043,
+      "seconds": 54.60053189499922,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791891869.02195,
+            "expires_at": 1791892469.02195,
+            "grade": "일반",
+            "hunt_batch": "491964448c1d9093ccec70ab87684ba1",
+            "id": "5d8ef0db539bbae88d60e1f57027119a",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_start": 553,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 18
+      },
+      "incoming": []
+    },
+    "opengl": {
+      "checks_in_report": 1068,
+      "seconds": 78.76836594300039,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 30,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791892454.82253,
+            "expires_at": 1791893054.82253,
+            "grade": "일반",
+            "hunt_batch": "04037f6cce6795cd06b8c8885fd5f3f2",
+            "id": "2953e06bc0d8b4dee920f997482148f0",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 553,
+        "manual_pickup": true,
+        "player_hp": 1877,
+        "weapon_attempts": 18
+      },
+      "incoming": []
+    }
+  },
+  {
+    "case": "original_based_ogre_ancient",
+    "headless": {
+      "checks_in_report": 1125,
+      "seconds": 55.83714090099966,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791892283.05044,
+            "expires_at": 1791892883.05044,
+            "grade": "일반",
+            "hunt_batch": "a6f07880a57f0008d3f1bf61409e442d",
+            "id": "c7a11e5e22da1b049a28fc0fd6dc481e",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 2325,
+        "manual_pickup": true,
+        "player_hp": 2012,
+        "weapon_attempts": 76
+      },
+      "incoming": []
+    },
+    "opengl": {
+      "checks_in_report": 1134,
+      "seconds": 77.57280944299964,
+      "actual_direction_cases": 8,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791892577.9609,
+            "expires_at": 1791893177.9609,
+            "grade": "일반",
+            "hunt_batch": "7a675a62ccd4046ccc2efa08bf7c48b3",
+            "id": "885d4ef8d5bea5e628c494cf4307fa93",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 2325,
+        "manual_pickup": true,
+        "player_hp": 2012,
+        "weapon_attempts": 76
+      },
+      "incoming": []
+    }
+  }
+]

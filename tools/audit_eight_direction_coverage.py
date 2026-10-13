@@ -181,13 +181,57 @@ def audit(root):
             "missing_categories": dict(Counter(value["missing_source"] for value in records if value["missing_source"]))}, rows
 
 
+def attach_gameplay_evidence(result, rows, paths, output_dir):
+    """Link only explicitly exercised identities/directions, never shared aliases.
+
+    A recorded Main run is separate from current PNG integrity. Pose sampling
+    alone is not an input/AI combat case and cannot promote a direction row.
+    """
+    indexed = {(row["id"], row["direction"]): row for row in rows}
+    for row in rows:
+        row["gameplay_evidence"] = ""
+    result["recorded_main_evidence"] = []
+    for path in paths:
+        report = load(path)
+        if report.get("failures") != [] or report.get("setup", {}).get("scene") != "Main.tscn" or report.get("checks", 0) < 1:
+            raise ValueError("Not a successful production Main report: " + str(path))
+        reference = Path(os.path.relpath(path.resolve(), output_dir.resolve())).as_posix()
+        matched = set()
+        for kind in ("player", "monster", "boss"):
+            for case in report.get(kind, []):
+                key = case.get("form", "") if kind == "player" else "monster:" + case.get("name", "")
+                compass = case.get("compass", "")
+                if compass not in DIRECTIONS or case.get("facing") != DIRECTIONS.index(compass):
+                    raise ValueError("Recorded facing differs from compass: " + str(path))
+                exercised = (case.get("attack_visible") is True and case.get("hit_count", 0) > 0 and case.get("hp_after", 0) < case.get("hp_before", 0)) if kind == "player" else (
+                    case.get("walk") is True and case.get("attack") is True and case.get("contacts", 0) > 0) if kind == "monster" else (
+                    case.get("warning") is True and case.get("effect") is True and case.get("contacts", 0) > 0)
+                if not exercised:
+                    raise ValueError("Incomplete recorded gameplay case: " + str(path))
+                row = indexed.get((key, compass))
+                if row is None:
+                    raise ValueError("Recorded identity is not registered: " + key)
+                row["actual_gameplay"] = "recorded_Main_sample"
+                existing = row["gameplay_evidence"].split(";") if row["gameplay_evidence"] else []
+                if reference not in existing: existing.append(reference)
+                row["gameplay_evidence"] = ";".join(existing)
+                matched.add((key, compass))
+        result["recorded_main_evidence"].append({"path":reference, "sha256":hashlib.sha256(path.read_bytes()).hexdigest(),
+                                                "scope":report.get("scope", "full"), "direction_rows":len(matched)})
+    for identity in result["identities"]:
+        count = sum(row["actual_gameplay"] == "recorded_Main_sample" for row in rows if row["id"] == identity["key"])
+        identity["actual_gameplay"] = f"recorded_Main_{count}_directions" if count else "not_run"
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("."))
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--source-tree", type=Path, help="Optional pinned Flare animation descriptor inventory from GitHub (JSON lines path/sha records)")
+    parser.add_argument("--gameplay-report", type=Path, action="append", default=[], help="Successful actual Main JSON; repeat for each exercised identity. Shared art does not imply another identity was played.")
     args = parser.parse_args()
     result, rows = audit(args.root.resolve())
+    attach_gameplay_evidence(result, rows, args.gameplay_report, args.output_dir)
     evidence = args.root.resolve() / "docs/remake/evidence/pr100-direction-fix"
     result["supplementary_evidence"] = [Path(os.path.relpath(evidence / name, args.output_dir.resolve())).as_posix()
                                          for name in ("resource-mapping-audit.json", "DIRECTION_CAUSE.md", "gameplay.json")]

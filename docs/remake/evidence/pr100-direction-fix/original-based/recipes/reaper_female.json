@@ -1,0 +1,56 @@
+{
+  "key": "transform:412",
+  "prompt": "{\"main_sheet\":\"Animate the EXACT female reaper shown in the attached original RPG sprite. Preserve her pale face, very tall pointed ornate gold crown, long black/dark-teal robes with gold trim, leg/robe proportions and the same very long gold-handled SCYTHE with luminous pale cyan crescent blade. Not a redesign. Keep the small painted isometric 2D sprite camera from the original. Make a transparent cutout sprite atlas, square, exactly EIGHT COLUMNS and EIGHT ROWS (64 poses). No background, no halo, no particles, no text or grid. Leave wide empty gutters and outer margin: every WHOLE figure AND WHOLE SCYTHE must occupy at most HALF its cell's width and height. Keep the same body scale across poses. COLUMN DIRECTIONS: E=full right profile (nose points right), SE=front-right, S=full front facing viewer, SW=front-left, W=full left profile, NW=back-left, N=full back (NO face/chest visible), NE=back-right. These exact column orientations remain the same throughout the sheet. ROW1 idle stance. ROW2 breathing stance. ROW3 walking left foot leading. ROW4 walk passing. ROW5 right foot leading. ROW6 scythe attack windup held behind facing direction. ROW7 scythe attack CONTACT: sweep blade fully OUT IN FRONT OF the body toward the column's direction, arms extended; this must visibly differ from overhead windup. ROW8 attack recovery returning scythe to idle. Keep the long scythe consistently gripped and attached, no second weapon, no weapon changes. Complete separated articulated poses, never duplicate stills. Critical: S faces down/front and N shows the back; E and W really show opposite full side profiles.\",\"hit_death_initial\":\"Create the matching hit and death sprite sheet for the EXACT FEMALE REAPER from the first attached sprite sheet, based on the second original reference image. Preserve her gold crown, pale face, black/dark-teal long robes with gold narrow ornament and the same long gold-handled cyan curved scythe. Match exact character design, proportions and small painted isometric 2D style of the first sheet. REAL transparent background, no halo/scenery/fog/text. Exactly EIGHT COLUMNS by FIVE ROWS, 40 whole separated articulated poses, landscape atlas. Large outer transparent margin and gutters. Every complete pose including whole weapon within HALF its cell width and height, never crop heads/scythes. SAME directions as first sheet: E right side profile, SE front-right, S full front, SW front-left, W left side profile, NW back-left, N full rear with NO face/chest, NE back-right. Row 1 hit recoil leaning back and weapon pulled toward body; row 2 recovering to standing; row 3 death drops to knees, head droops; row 4 falls sideways toward ground; row 5 fully fallen flat corpse with crown and scythe lying next to body. Scythe stays the same exact weapon in every pose, held through hit and knee-fall then beside fallen body. Preserve orientation in every row. No body redesign, no duplicate still frames. No clothes change or weapon change.\",\"hit_death_weapon_correction\":\"Edit the FIRST attached 8-column x 5-row sprite sheet to correct a weapon error, using the SECOND attachment as the authoritative original character. IMPORTANT: the original female reaper owns ONE SINGLE SCYTHE with ONE CYAN CRESCENT BLADE. The sheet incorrectly added a SECOND cyan crescent blade behind her shoulder in many cells. REMOVE that extra back/shoulder crescent from every affected pose. Keep only the ONE long-handled scythe whose blade is near the ground/in front of the figure, or lying beside the fallen corpse. Any area exposed by removing the duplicate weapon should show only her black/dark-teal and gold robe, hair, or transparent background as appropriate. No cyan back ornament, no double-ended scythe, no second scythe. Preserve her exact original face, tall gold crown, robes and the one original weapon. Keep the existing 40 poses and exact layout: 8 directions E,SE,S,SW,W,NW,N,NE across; hit recoil, hit recovery, kneel/collapse, falling, flat corpse down the 5 rows. Keep north-facing figures showing only their back. Preserve transparent background and generous separation, without adding backgrounds, text, lines or new decorative effects. Correct the extra weapons without redesigning the character or changing the number of rows/columns.\",\"hit_death_spacing_correction\":\"Repack this existing transparent sprite atlas into an 8-column by 5-row transparent atlas with MUCH WIDER CLEAN TRANSPARENT GUTTERS and a transparent border. Keep all forty existing female reaper poses, their directions, exact character design, single scythe, and row order unchanged. Only give every pose more space. In particular, the flat corpses in bottom-row columns 3 and 4 must be separated by at least twenty fully transparent pixels; presently they almost touch. Keep each WHOLE sprite, crown and weapon comfortably within its cell with no edge clipping. All poses should have consistent body scale within this new sheet. No additional scythes, no body redesign, no added effects or new poses, no removed poses, no background, labels or grid. Preserve alpha transparency. Exactly 8 columns and 5 rows.\"}",
+  "prompt_record_kind": "exact_prompts_for_two_sheets_and_review_corrections",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/reaper_female/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/reaper_female/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared with the original catalog portrait e090d7a50d6f7a23fe55576c.png: female pale face, long silver hair, gold pointed crown and trim, dark teal/black long robe, one long gold scythe with cyan blade retained. Eight views include face-on south, face-hidden north, and the corresponding side/back obliques. 64 idle/walk/slash poses and 40 hit/collapse poses have separated bodies, clean alpha gutters and different articulated poses. Rejected earlier duplicated-scythe and touching-corpse candidates. The final second sheet preserves a single weapon in each pose. Separate sheet resolutions use virtual canvases without resampling source pixels. Actual Main motion, size, contact, transform roundtrip and hit/death playback must still be validated before increasing coverage."
+  }
+}
