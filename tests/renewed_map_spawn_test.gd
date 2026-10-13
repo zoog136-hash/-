@@ -140,7 +140,13 @@ func _run() -> void:
 			var entry_zone: Dictionary = {}
 			for spawn: Dictionary in definition.monster_spawn:
 				if str(spawn.id) == "western_approach": entry_zone = spawn; break
-			check(not entry_zone.is_empty() and entry_zone.monster_types == ["말하는 섬 들개", "말하는 섬 고블린", "오크"], "starter road has early-game species only")
+			# Relayout deterministically sorts the local habitat roster by threat.
+			# Compare identities, not incidental ordering; missing/extra species fail.
+			var actual_starters: Array = (entry_zone.get("monster_types", []) as Array).duplicate()
+			var expected_starters: Array = ["말하는 섬 들개", "말하는 섬 고블린", "오크"]
+			actual_starters.sort()
+			expected_starters.sort()
+			check(actual_starters == expected_starters, "starter road has early-game species only")
 		if id == "albino_04": check(_count(definition, "boss") == 0, "Albino four no longer duplicates the demon")
 		if id == "oman_01":
 			for spawn: Dictionary in definition.monster_spawn:

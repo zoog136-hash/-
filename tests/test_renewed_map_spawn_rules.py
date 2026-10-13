@@ -30,11 +30,18 @@ class RenewedMapSpawnRulesTest(unittest.TestCase):
         self.assertLess(self.rules['progression_weights'][0], self.rules['progression_weights'][1])
         self.assertGreater(self.rules['progression_weights'][0], 0)
 
-    def test_aden_normal_budget_stays_132(self):
+    def test_aden_regional_normal_budget_is_354(self):
         counts = self.rules['maps']['aden_world']['normal_counts']
-        self.assertEqual(len(counts), 11)
-        self.assertEqual(sum(counts.values()), 132)
-        self.assertTrue(all(0 < count <= 14 for count in counts.values()))
+        expected = {
+            'meadow': 27, 'forest': 30, 'riverbank': 27, 'ruins': 30,
+            'east': 27, 'desert': 33, 'bandits': 30, 'dragon_valley': 33,
+            'oren': 30, 'fire_land': 33, 'wind_land': 30,
+            'western_approach': 24,
+        }
+        self.assertEqual(counts, expected)
+        self.assertEqual(len(counts), 12)
+        self.assertEqual(sum(counts.values()), 354)
+        self.assertTrue(all(0 < count <= 33 for count in counts.values()))
 
     def test_only_existing_named_field_bosses_are_added(self):
         bosses = self.rules['maps']['aden_world']['additional_bosses']
