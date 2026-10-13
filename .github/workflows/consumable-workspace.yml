@@ -3,37 +3,74 @@ name: Consumable Workspace
 on:
   push:
     branches: ['feature/consumables-stepwise-20261013']
-    paths: ['.github/workflows/consumable-workspace.yml', 'tools/consumable_changes.patch']
+    paths:
+      - '.github/workflows/consumable-workspace.yml'
+      - 'tools/apply_consumable_improvements.py'
+      - 'scripts/consumable_auto_policy.gd'
+      - 'scripts/ui/consumable_auto_settings.gd'
+      - 'tests/consumable_auto_safety_test.gd'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   workspace:
     if: github.ref == 'refs/heads/feature/consumables-stepwise-20261013'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Resource integrity preflight
+      - name: Resource integrity before source migration
         run: |
           set -o pipefail
           python3 tools/check_resource_integrity.py --root . 2>&1 | tee /tmp/consumable-integrity.log
-      - name: Export tracked source for focused development
+      - name: Apply reviewed source migration on isolated branch
         run: |
-          git archive --format=zip -o /tmp/consumable-source.zip HEAD scripts data scenes tests tools docs .github AGENTS.md TWILIGHT_PROJECT_RULES.md TWILIGHT_VERSION_HISTORY.md README.md project.godot Main.tscn
-          git rev-parse HEAD > /tmp/consumable-source-sha.txt
-          sha256sum /tmp/consumable-source.zip >> /tmp/consumable-source-sha.txt
-      - name: Upload source and preflight evidence
+          python3 -m py_compile tools/apply_consumable_improvements.py
+          python3 tools/apply_consumable_improvements.py
+          git diff --check
+          git diff -- scripts/world.gd scripts/consumable_rules.gd scripts/ui/renewal_hud.gd scripts/ui/renewal_settings.gd > /tmp/consumable-applied.patch
+          git add -- scripts/world.gd scripts/consumable_rules.gd scripts/ui/renewal_hud.gd scripts/ui/renewal_settings.gd
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: apply safe consumable automation and all-class cooking'
+          git rev-parse HEAD | tee /tmp/consumable-tested-sha.txt
+      - name: Install Godot 4.7.2
+        run: |
+          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp/consumable-godot
+          chmod +x /tmp/consumable-godot/Godot_v4.7.2-stable_linux.x86_64
+      - name: Parse real project
+        run: |
+          set -o pipefail
+          timeout 420 /tmp/consumable-godot/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee /tmp/consumable-parse.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' /tmp/consumable-parse.log; then exit 1; fi
+      - name: Focused automation and cooking regression
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/consumable-safety"
+          timeout 240 /tmp/consumable-godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/consumable_auto_safety_test.gd 2>&1 | tee /tmp/consumable-safety.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE_AUTO_FAIL|CONSUMABLE_AUTO_SAFETY_FAILED' /tmp/consumable-safety.log; then exit 1; fi
+          grep -q 'CONSUMABLE_AUTO_SAFETY_OK:' /tmp/consumable-safety.log
+      - name: Existing consumable regression
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/consumable-original"
+          timeout 240 /tmp/consumable-godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/consumable_smoke_test.gd 2>&1 | tee /tmp/consumable-original.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE FAIL:|CONSUMABLE_SMOKE_FAILED' /tmp/consumable-original.log; then exit 1; fi
+          grep -q 'CONSUMABLE_SMOKE_OK' /tmp/consumable-original.log
+      - name: Deliver validated commit to this feature branch only
+        run: |
+          test "$GITHUB_REF" = 'refs/heads/feature/consumables-stepwise-20261013'
+          git push origin HEAD:refs/heads/feature/consumables-stepwise-20261013
+      - name: Preserve focused evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: consumable-workspace-${{ github.sha }}
+          name: consumable-safety-${{ github.sha }}
           path: |
-            /tmp/consumable-source.zip
-            /tmp/consumable-source-sha.txt
-            /tmp/consumable-integrity.log
-          if-no-files-found: error
-          retention-days: 7
+            /tmp/consumable-*.log
+            /tmp/consumable-applied.patch
+            /tmp/consumable-tested-sha.txt
+          if-no-files-found: warn
+          retention-days: 14
