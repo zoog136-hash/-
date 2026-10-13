@@ -20,7 +20,9 @@ func state_for(map_id: String, region: Dictionary) -> Dictionary:
 
 func can_spawn(map_id: String, region: Dictionary) -> bool:
 	var state: Dictionary = state_for(map_id, region)
-	return Time.get_unix_time_from_system() >= float(state.ready_at)
+	# Alive is a persisted life to restore, not a fresh spawn deadline. Wall-clock
+	# rollback must not hide it; runtime population slots prevent duplicates.
+	return str(state.phase) == "alive" or Time.get_unix_time_from_system() >= float(state.ready_at)
 
 func capture(map_id: String, region: Dictionary, monster: TwilightMonster) -> void:
 	if not is_instance_valid(monster) or monster.dead: return

@@ -12,6 +12,9 @@ var aggro_remaining: float = 0.0
 var life_id: int = 0
 var species_visual: TwilightMonsterVisual
 var special_sequence: int = -1
+var special_attack: Dictionary = {} # authoritative warning geometry for this action
+var released_sequence: int = -1
+var committed_attack_type: String = "melee"
 var special_cooldown: float = 3.0
 var blink_cooldown: float = 0.0
 var returning_home: bool = false
@@ -133,6 +136,7 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	aggro_remaining = 0.; returning_home = false
 	enraged = false; social_alert_cooldown = 0.0
 	decision_elapsed = 0.; sight_clock = 0.; sight_cached = false
+	special_attack.clear(); released_sequence = -1; committed_attack_type = "melee"
 	special_sequence = -1; special_cooldown = 3.; blink_cooldown = 0.; roam_clock = 0.
 	ai = (record.get("ai",{}) as Dictionary).duplicate(true)
 	status_immunities = (record.get("status_immunities", []) as Array).duplicate()
@@ -220,6 +224,8 @@ func setup(record: Dictionary, player_ref: TwilightPlayer, world_ref: Node, text
 	slow_multiplier = 1.0
 	target_player = player_ref
 	world_controller = world_ref
+	if world_controller is TwilightWorld:
+		motion.reduced_motion = bool(world_controller.presentation_settings.get("reduced_motion", false))
 	sprite.texture = texture
 	sprite.material = null
 	if texture != null:
@@ -275,6 +281,8 @@ func _physics_process(delta: float) -> void:
 		_move_on_map()
 	if is_stunned() or is_feared(): motion.cancel_attack()
 	motion.advance(delta, (global_position - previous) / maxf(delta, 0.001))
+	if is_instance_valid(species_visual) and species_visual.warning_active:
+		species_visual.warning_progress = clampf(motion.attack_elapsed / maxf(.01, motion.attack_duration * motion.attack_hit_ratio), 0.0, 1.0)
 	if get_viewport_rect().grow(160).has_point(get_global_transform_with_canvas().origin):
 		motion.apply(sprite, animation_base_scale)
 		if is_instance_valid(species_visual): species_visual.update_pose()
@@ -361,8 +369,6 @@ func _tick_ai(delta: float) -> void:
 			repath_cooldown = 0.
 		else:
 			velocity = Vector2.ZERO
-			if is_instance_valid(species_visual) and species_visual.warning_active:
-				species_visual.warning_progress = clampf(motion.attack_elapsed/maxf(.01,motion.attack_duration*motion.attack_hit_ratio),0.,1.)
 			return
 	if sight_clock<=0.:
 		sight_clock = .12+float(get_instance_id()%5)*.008
@@ -390,6 +396,7 @@ func _tick_ai(delta: float) -> void:
 			attack_cooldown = AI_POLICY.attack_interval(attack_interval, enraged)
 			var style: String = motion.profile.motion_style if kind=="melee" else ("magic" if kind=="magic" else "bow")
 			motion.begin_attack(minf(.68,attack_interval*.75),target_player.global_position-global_position,style,motion.profile.marker_for(style))
+			committed_attack_type = kind
 		return
 	if is_held():
 		velocity = Vector2.ZERO
@@ -431,29 +438,37 @@ func _move_toward(goal: Vector2, delta: float, speed_ratio: float = 1.) -> void:
 		path_index = 0
 
 func _begin_special() -> void:
-	var skill: Dictionary = ai.special
-	var aim: Vector2 = target_player.global_position-global_position
+	if dead or is_stunned() or is_feared() or is_silenced() or not _target_attackable() or not ai.has("special"): return
+	var skill: Dictionary = (ai.special as Dictionary).duplicate(true)
+	var aim: Vector2 = BOSS_GEOMETRY.direction(target_player.global_position-global_position, motion.direction)
 	special_cooldown = float(skill.get("cooldown",12.))*(.7 if hp*2<max_hp else 1.)
 	velocity = Vector2.ZERO
 	special_sequence = motion.begin_attack(float(skill.get("windup",1.15)),aim,str(motion.profile.presentation.get("special_motion", "magic")),.85)
+	if special_sequence < 0: return
+	special_attack = {"skill":skill, "center":global_position, "aim":aim}
 	motion.action_role = "special"
 	motion.invalidate_pose()
 	if is_instance_valid(species_visual):
 		species_visual.warning_active = true
-		species_visual.warning_center = global_position
-		species_visual.warning_aim = aim.normalized()
+		species_visual.special = skill.duplicate(true)
+		species_visual.warning_center = special_attack.center
+		species_visual.warning_aim = aim
 		species_visual.warning_progress = 0.
 		species_visual.prepare_warning()
 	if world_controller.has_method("show_combat_number"):
 		world_controller.show_combat_number(global_position+Vector2(0,-visual_height-30),str(skill.get("label","특수 공격")),Color(1,.55,.2),true)
 
 func _resolve_special() -> void:
+	if special_attack.is_empty() or not motion.released or released_sequence != special_sequence: return
+	# Consume before callbacks (damage/death/map changes can re-enter combat).
+	var action: Dictionary = special_attack
+	special_attack = {}
 	if is_instance_valid(species_visual): species_visual.warning_active = false; species_visual.queue_redraw()
 	if dead or is_stunned() or is_feared() or is_silenced() or not _target_attackable(): return
-	var skill: Dictionary = ai.special
+	var skill: Dictionary = action.skill
 	var kind: String = str(skill.get("kind","nova"))
-	var center: Vector2 = species_visual.warning_center if is_instance_valid(species_visual) else global_position
-	var aim: Vector2 = species_visual.warning_aim if is_instance_valid(species_visual) else motion.direction
+	var center: Vector2 = action.center
+	var aim: Vector2 = action.aim
 	var relative: Vector2 = target_player.global_position-center
 	var radius: float = float(skill.get("radius",200))
 	var hit: bool = BOSS_GEOMETRY.contains(kind, radius, relative, aim)
@@ -468,12 +483,19 @@ func _resolve_special() -> void:
 		for i: int in range(3):
 			_launch_projectile(special_sequence,"ranged",float(i)*.14,.55)
 		hit = false
-	if is_instance_valid(species_visual): species_visual.release_special()
+	if is_instance_valid(species_visual):
+		# Both the warning and release renderer consume the same combat snapshot.
+		species_visual.special = skill.duplicate(true)
+		species_visual.warning_center = center
+		species_visual.warning_aim = aim
+		species_visual.prepare_warning()
+		species_visual.release_special()
 	elif world_controller.combat_vfx!=null:
 		world_controller.combat_vfx.ring(center,minf(radius,150.),Color(1,.34,.15))
 	if hit and world_controller._has_line_of_sight_world(center,target_player.global_position):
+		var resolving_life: int = life_id
 		player_hit.emit(self,int(attack_power*float(skill.get("multiplier",1.6))),"magic" if kind not in ["charge","cone"] else "melee")
-		if kind=="drain": hp = mini(max_hp,hp+attack_power*2); hp_bar.value = hp
+		if kind=="drain" and not dead and life_id == resolving_life: hp = mini(max_hp,hp+attack_power*2); hp_bar.value = hp
 
 func _stop_chasing_concealed_player() -> void:
 	velocity = Vector2.ZERO
@@ -589,6 +611,7 @@ func apply_fear(duration: float, source_position: Vector2) -> void:
 		return
 	fear_remaining = maxf(fear_remaining, maxf(0.0, duration))
 	fear_source_position = source_position
+	if is_feared(): motion.cancel_attack()
 	velocity = Vector2.ZERO
 	path = PackedVector2Array()
 	path_index = 0
@@ -630,6 +653,8 @@ func apply_silence(duration: float) -> void:
 	if dead:
 		return
 	silence_remaining = maxf(silence_remaining, maxf(0.0, duration))
+	if is_silenced() and motion.active and (motion.attack_style == "magic" or special_sequence == motion.sequence):
+		motion.cancel_attack()
 	show_status_text("SILENCE")
 
 func _tick_stun(delta: float) -> void:
@@ -642,6 +667,7 @@ func apply_stun(duration: float) -> void:
 	if dead:
 		return
 	stun_remaining = maxf(stun_remaining, maxf(0.0, duration))
+	if is_stunned(): motion.cancel_attack()
 	velocity = Vector2.ZERO
 	path = PackedVector2Array()
 	path_index = 0
@@ -815,6 +841,7 @@ func _setup_animation(record: Dictionary) -> void:
 	hp_bar.position.y = -visual_height - 4.0
 	if not motion_connected:
 		motion.strike.connect(_release_attack)
+		motion.cancelled.connect(_cancel_attack)
 		motion_connected = true
 	if not has_node("GroundShadow"):
 		var shadow: Node2D = preload("res://scripts/animation/actor_shadow.gd").new()
@@ -831,8 +858,18 @@ func current_attack_range() -> float:
 func combat_hit_position() -> Vector2:
 	return global_position + motion.profile.hit_position
 
+func _cancel_attack(id: int) -> void:
+	if id != special_sequence: return
+	special_attack.clear()
+	special_sequence = -1
+	if is_instance_valid(species_visual):
+		species_visual.warning_active = false
+		species_visual.queue_redraw()
+
 func _release_attack(id: int) -> void:
-	if dead or id != motion.sequence or not is_instance_valid(target_player): return
+	if dead or id != motion.sequence or id == released_sequence or not motion.active or not motion.released: return
+	released_sequence = id
+	if not is_instance_valid(target_player): return
 	if is_stunned() or is_feared(): return
 	if id==special_sequence:
 		_resolve_special()
@@ -841,7 +878,8 @@ func _release_attack(id: int) -> void:
 	if not world_controller._has_line_of_sight_world(global_position, target_player.global_position): return
 	if world_controller.is_player_concealed(): return
 	if world_controller.field_map != null and world_controller.field_map.is_safe(target_player.global_position): return
-	var kind: String = current_attack_type()
+	var kind: String = committed_attack_type
+	if kind == "magic" and is_silenced(): return
 	if kind in ["ranged", "magic"] and world_controller.combat_flights != null:
 		_launch_projectile(id,kind)
 	else:
