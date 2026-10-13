@@ -3,7 +3,7 @@
   "scope": "Remaining target identities; compatible source motion unavailable, legacy art preserved",
   "missing_counts": {
     "hero_plus": 52,
-    "normal_monster": 124,
+    "normal_monster": 113,
     "boss": 29
   },
   "categories": {
@@ -23,18 +23,17 @@
     "No compatible published sequential weapon frames: 랜스": 2,
     "No compatible published sequential weapon frames: 창": 3,
     "No identity-compatible licensed source for bugbear": 2,
-    "No identity-compatible licensed source for succubus": 7,
     "No identity-compatible licensed source for fire": 5,
     "No identity-compatible licensed source for goat_demon": 4,
     "No identity-compatible licensed source for dark_knight": 16,
     "No identity-compatible licensed source for worm": 1,
     "No identity-compatible licensed source for phoenix": 2,
     "No identity-compatible licensed source for queen": 2,
-    "No identity-compatible licensed source for wolf": 3,
     "No identity-compatible licensed source for ettin": 1,
     "No identity-compatible licensed source for demon": 10,
     "No identity-compatible licensed source for reaper": 2,
     "No identity-compatible licensed source for dog": 1,
+    "No identity-compatible licensed source for wolf": 1,
     "No identity-compatible licensed source for spider": 4,
     "No identity-compatible licensed source for earth": 2,
     "No identity-compatible licensed source for ghoul": 3,
@@ -45,7 +44,6 @@
     "No identity-compatible licensed source for fishman": 3,
     "No identity-compatible licensed source for bone_dragon": 3,
     "No identity-compatible licensed source for wind": 2,
-    "No identity-compatible licensed source for harpy": 2,
     "No identity-compatible licensed source for angel": 2,
     "No identity-compatible licensed source for skeleton_archer": 1,
     "No identity-compatible licensed source for iron_golem": 3,
@@ -418,12 +416,6 @@
       "missing_source": "No identity-compatible licensed source for bugbear"
     },
     {
-      "key": "monster:서큐버스",
-      "name": "서큐버스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for succubus"
-    },
-    {
       "key": "monster:이프리트",
       "name": "이프리트",
       "group": "boss",
@@ -454,12 +446,6 @@
       "missing_source": "No identity-compatible licensed source for dark_knight"
     },
     {
-      "key": "monster:지룡의 서큐버스 퀸",
-      "name": "지룡의 서큐버스 퀸",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for succubus"
-    },
-    {
       "key": "monster:공포의 아그니",
       "name": "공포의 아그니",
       "group": "normal_monster",
@@ -482,12 +468,6 @@
       "name": "얼음 여왕",
       "group": "boss",
       "missing_source": "No identity-compatible licensed source for queen"
-    },
-    {
-      "key": "monster:라이칸스로프",
-      "name": "라이칸스로프",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for wolf"
     },
     {
       "key": "monster:에틴",
@@ -592,12 +572,6 @@
       "missing_source": "No identity-compatible licensed source for fishman"
     },
     {
-      "key": "monster:용의 계곡 서큐버스",
-      "name": "용의 계곡 서큐버스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for succubus"
-    },
-    {
       "key": "monster:용의 계곡 본 드래곤",
       "name": "용의 계곡 본 드래곤",
       "group": "normal_monster",
@@ -628,22 +602,10 @@
       "missing_source": "No identity-compatible licensed source for wind"
     },
     {
-      "key": "monster:풍룡의 둥지 하피",
-      "name": "풍룡의 둥지 하피",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for harpy"
-    },
-    {
       "key": "monster:풍룡의 둥지 태풍수호자",
       "name": "풍룡의 둥지 태풍수호자",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for wind"
-    },
-    {
-      "key": "monster:지룡의 둥지 지룡서큐버스",
-      "name": "지룡의 둥지 지룡서큐버스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for succubus"
     },
     {
       "key": "monster:지룡의 둥지 대지수호자",
@@ -898,12 +860,6 @@
       "missing_source": "No identity-compatible licensed source for eye"
     },
     {
-      "key": "monster:불신의 서큐버스",
-      "name": "불신의 서큐버스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for succubus"
-    },
-    {
       "key": "monster:불신의 시어",
       "name": "불신의 시어",
       "group": "boss",
@@ -1078,12 +1034,6 @@
       "missing_source": "No identity-compatible licensed source for fishman"
     },
     {
-      "key": "monster:암흑의 서큐버스 퀸",
-      "name": "암흑의 서큐버스 퀸",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for succubus"
-    },
-    {
       "key": "monster:에스카로스 치프",
       "name": "에스카로스 치프",
       "group": "normal_monster",
@@ -1100,12 +1050,6 @@
       "name": "오만한 레비아탄",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for dark_knight"
-    },
-    {
-      "key": "monster:오만한 서큐버스 퀸",
-      "name": "오만한 서큐버스 퀸",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for succubus"
     },
     {
       "key": "monster:오만한 아스모데우스",
@@ -1184,12 +1128,6 @@
       "name": "웨링",
       "group": "boss",
       "missing_source": "No identity-compatible licensed source for cougar"
-    },
-    {
-      "key": "monster:잔혹한 라이칸스로프",
-      "name": "잔혹한 라이칸스로프",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for wolf"
     },
     {
       "key": "monster:잔혹한 샤벨타이거",
@@ -1310,12 +1248,6 @@
       "name": "파이어 에그",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for fire_egg"
-    },
-    {
-      "key": "monster:하피",
-      "name": "하피",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for harpy"
     },
     {
       "key": "monster:혼 켈베로스",

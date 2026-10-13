@@ -283,15 +283,21 @@ func staff_normal_attack(target: TwilightMonster, spec: Dictionary, transformed:
 	report.staff_normal.append({"form":form,"compass":COMPASS[direction],"track":"attack_"+str(direction),"visible":seen,
 		"hp_before":hp_before,"hp_after":target.hp,"hits":target.damage_hit_count-hits_before})
 
+func monster_start_distance() -> float: return 140.
+func prepare_monster_direction(_direction: int) -> bool: return true
+
 func monster_case() -> void:
 	check(is_instance_valid(normal),"existing field skeleton actor")
 	if not is_instance_valid(normal): return
 	normal.player_hit.connect(func(actor: TwilightMonster, damage: int, kind: String) -> void:
 		monster_strikes.append({"name":actor.monster_name,"damage":damage,"kind":kind,"facing":actor.motion.facing8}))
 	for direction: int in range(8):
+		if not prepare_monster_direction(direction):
+			check(false, "real map approach for monster direction " + COMPASS[direction])
+			continue
 		world.player.position = center
 		world.player.clear_click_path()
-		normal.position = center-screen_direction(direction)*140.
+		normal.position = center-screen_direction(direction)*monster_start_distance()
 		normal.home_position = normal.position
 		normal.motion.cancel_attack()
 		normal.returning_home = false

@@ -133,6 +133,23 @@ jobs:
               cockatrice-ancient|original_based_cockatrice_gameplay_test|잊혀진 섬 고대코카트리스|directions
               cockatrice-distorted|original_based_cockatrice_gameplay_test|왜곡의 코카트리스|directions
               spear-captain|original_based_spear_captain_gameplay_test||poses
+          - group: harpy-lycanthrope
+            cases: |
+              harpy|original_based_harpy_gameplay_test||poses
+              harpy-nest|original_based_harpy_gameplay_test|풍룡의 둥지 하피|directions
+              lycanthrope|original_based_lycanthrope_gameplay_test||poses
+              lycanthrope-cruel|original_based_lycanthrope_gameplay_test|잔혹한 라이칸스로프|directions
+          - group: succubus-field
+            cases: |
+              succubus|original_based_succubus_gameplay_test||poses
+              succubus-earth-queen|original_based_succubus_gameplay_test|지룡의 서큐버스 퀸|directions
+              succubus-valley|original_based_succubus_gameplay_test|용의 계곡 서큐버스|directions
+          - group: succubus-regional
+            cases: |
+              succubus-nest|original_based_succubus_gameplay_test|지룡의 둥지 지룡서큐버스|directions
+              succubus-disbelief|original_based_succubus_gameplay_test|불신의 서큐버스|directions
+              succubus-dark-queen|original_based_succubus_gameplay_test|암흑의 서큐버스 퀸|directions
+              succubus-arrogant-queen|original_based_succubus_gameplay_test|오만한 서큐버스 퀸|directions
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

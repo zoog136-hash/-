@@ -146,18 +146,60 @@
         "bytes": 50706,
         "sha256": "9f87ae78b09a70f728b7f269555d041fb5f9a8bbc9d7f3eb0c073b51a9d00523"
       }
+    },
+    "harpy": {
+      "assets/actors/eight_direction/original_based/harpy/SpriteFrames.tres": {
+        "bytes": 25243,
+        "sha256": "74b907887e4e2f20d4d862adb07c54ea2c337dcc359a80703ca95e0a90517219"
+      },
+      "assets/actors/eight_direction/original_based/harpy/poses.png": {
+        "bytes": 2022775,
+        "sha256": "28c5a87ccf3b0bd9da0650c8e8892df37e85f7688acbfb43a2197965b348c4ce"
+      },
+      "assets/actors/eight_direction/original_based/harpy/provenance.json": {
+        "bytes": 46998,
+        "sha256": "6c049f2fd27035b4b043a291f9c51ae656c03ec1612112a7e4a5345e700ffd7b"
+      }
+    },
+    "lycanthrope": {
+      "assets/actors/eight_direction/original_based/lycanthrope/SpriteFrames.tres": {
+        "bytes": 25264,
+        "sha256": "67d12924c6c5ddbb8476e4c056a91c9a74e3c8aab3897f6ce8863ca01a15ba06"
+      },
+      "assets/actors/eight_direction/original_based/lycanthrope/poses.png": {
+        "bytes": 1799656,
+        "sha256": "26b3f9c2c4f570f82e8d1e2ea48160ec3787a57ccbf623377f780b2379d51b35"
+      },
+      "assets/actors/eight_direction/original_based/lycanthrope/provenance.json": {
+        "bytes": 47022,
+        "sha256": "0967e0827eaeb5c12262c7d37d338b2a6b5318270f153261f1b12719b1a965e1"
+      }
+    },
+    "succubus": {
+      "assets/actors/eight_direction/original_based/succubus/SpriteFrames.tres": {
+        "bytes": 25240,
+        "sha256": "e19fd266154de15122ae1439e7a76c648dc88b319051a4043be6a59011fd15b8"
+      },
+      "assets/actors/eight_direction/original_based/succubus/poses.png": {
+        "bytes": 1508283,
+        "sha256": "169216bd3385df4b20bdb34172d7ed9105daaef8e7ecf6ec1c8d4c95831c2f91"
+      },
+      "assets/actors/eight_direction/original_based/succubus/provenance.json": {
+        "bytes": 49485,
+        "sha256": "379d1d9e879bf837eeb4f86c8aa960dbb659ede88963031cfb91f463c7808770"
+      }
     }
   },
   "remaining": {
     "hero_plus": 52,
-    "normal_monster": 124,
+    "normal_monster": 113,
     "boss": 29
   },
   "not_completed": [
-    "All remaining 205 identities",
+    "Remaining 194 identities",
     "Actual Android device execution",
     "Exact pushed-commit CI requires terminal confirmation"
   ],
   "test_scope": "Production Main and real equipment/input/AI/contact/death/drop/pickup. Each regional alias tested independently. Explicit pose sampling is distinct from real input/AI. Ghost nonlethal recoil uses take_damage(1); reaper incoming/death use controlled production hit/poison callbacks. Level-105 ogre uses the existing catalog execution sword via normal equipment handler, retaining full monster HP/armor/evasion. No combat formulas or drop tables changed.",
-  "latest_batch": "batch3: 5 original-based designs, 9 identities, independently exercised in real Main"
+  "latest_batch": "batch4: three original-based designs, eleven identities independently exercised in real Main"
 }

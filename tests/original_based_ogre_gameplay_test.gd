@@ -8,9 +8,9 @@ func subject_name() -> String: return "오우거"
 func subject_folder() -> String: return "ogre"
 
 func prepare_lifecycle() -> void:
-	if normal.monster_level < 100: return
-	# High-level regional targets (including the level-105 ogre) have much
-	# higher evasion. Equip a real high-accuracy DB weapon through the inventory
+	if normal.monster_level < 100 and normal.max_hp < 1500: return
+	# High-level or high-HP regional targets outlast the starter weapon's
+	# bounded fight. Equip a real high-accuracy DB weapon through the inventory
 	# handler; do not lower monster HP/armor or force successful damage rolls.
 	var weapon: Dictionary = world._find_catalog_item_record("진명황의 집행검")
 	check(not weapon.is_empty(), "existing endgame sword for high-level target")

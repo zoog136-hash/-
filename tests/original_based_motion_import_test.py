@@ -41,6 +41,7 @@ class OriginalBasedImportTest(unittest.TestCase):
 
     def test_actual_imports_have_separated_distinct_articulated_poses(self):
         for actor, specs in {"werewolf": [("poses.png", 13)], "ogre": [("poses.png", 13)],
+                             "succubus": [("poses.png", 13)], "harpy": [("poses.png", 13)], "lycanthrope": [("poses.png", 13)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
@@ -57,7 +58,7 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
             self.assertEqual(len(frames), 104)

@@ -67,17 +67,24 @@ func beam(canvas: Node2D, point: Vector2, direction: Vector2, length: float, wid
 	canvas.draw_set_transform(Vector2.ZERO)
 
 func crescent(canvas: Node2D, point: Vector2, aim: Vector2, radius: float, progress: float, color: Color) -> void:
+	# Triangulate near the origin: thin world-space polygons lose precision at
+	# distant Aden coordinates (for example 29704, 14648). Translation belongs
+	# in the canvas transform, preserving the exact shape and contact location.
+	canvas.draw_set_transform(point - aim * radius * 0.65)
+	canvas.draw_colored_polygon(crescent_points(aim, radius, progress), color)
+	canvas.draw_set_transform(Vector2.ZERO)
+
+static func crescent_points(aim: Vector2, radius: float, progress: float) -> PackedVector2Array:
 	var points: PackedVector2Array = PackedVector2Array()
-	var center: Vector2 = point - aim * radius * 0.65
 	var start: float = aim.angle() - 1.12 + progress * 0.32
 	for i: int in range(13):
 		var t: float = float(i) / 12.0
-		points.append(center + Vector2.from_angle(start + t * 2.05) * radius)
+		points.append(Vector2.from_angle(start + t * 2.05) * radius)
 	for i: int in range(11, 0, -1):
 		var t: float = float(i) / 12.0
 		var thickness: float = sin(t * PI) * radius * 0.22
-		points.append(center + Vector2.from_angle(start + t * 2.05) * (radius - thickness))
-	canvas.draw_colored_polygon(points, color)
+		points.append(Vector2.from_angle(start + t * 2.05) * (radius - thickness))
+	return points
 
 func draw_impact(canvas: Node2D, point: Vector2, entry: Dictionary, detailed: bool, strength: float) -> void:
 	if strength <= 0.0: return
