@@ -63,6 +63,12 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 	world.rng.seed = 20261008
 	world._set_map(map_id,false)
 	world.hp = world._effective_max_hp()
+	# Static screenshot preparation explicitly disables monster physics and
+	# the population controller. Restore both for the real active-play phase;
+	# reloading the map alone does not reactivate pooled physics nodes.
+	world.field_population.set_process(true)
+	for monster: TwilightMonster in world.monsters_root.get_children():
+		if not monster.dead: monster.set_physics_process(true)
 	# Keep population, AI, physics, combat, HUD and chunk streaming active here.
 	# The static screenshot phase above intentionally freezes monster AI.
 	var point: Vector2 = Vector2(3550,4300) if map_id == "aden_world" else COORD.array_vector(world.field_map.data["review_points"]["central"])
@@ -100,7 +106,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 		previous = world.player.global_position
 	await _save_view(directory,map_id+"-active-play")
 	if active_monsters == 0 or world.active_map_id != map_id:
-		push_error("Active-play probe did not remain active in "+map_id)
+		push_error("Active-play probe did not remain active in "+map_id+" current_map="+world.active_map_id+" live_physics="+str(active_monsters)+" population_processing="+str(world.field_population.is_processing()))
 		failed = true
 	world.player.set_auto_enabled(false)
 	world.player.clear_click_path()

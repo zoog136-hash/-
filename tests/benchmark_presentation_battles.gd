@@ -27,25 +27,27 @@ func _clear(world: TwilightWorld) -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
-	var world: TwilightWorld = load("res://Main.tscn").instantiate()
-	# Old comparison checkouts do not have the test-only metering script.
-	var metered: bool = ResourceLoader.exists("res://tests/qa_combat_hud_world.gd")
-	if metered: world.set_script(load("res://tests/qa_combat_hud_world.gd"))
-	root.add_child(world)
-	if not CLASS_QA.enter_game(world):
-		push_error("Rendered gameplay class confirmation failed")
-		quit(1)
-		return
-	world.save_timer = -10000
-	world.rng.seed = 20261009
-	world._set_map("aden_world", false)
-	world.field_population.set_process(false)
-	var point: Vector2 = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
+	# Every population starts in a fresh playable world. Previous samples
+	# must not deplete ammunition, retain pickup/skill state, or deactivate AUTO
+	# for the next measurement. Actual combat mechanics and hit checks remain.
 	var report: Dictionary = {"adapter":RenderingServer.get_video_adapter_name(), "samples":[],
 		"note":"32/96/192 controlled-HP actors, hunt vs one existing cone boss with adds; 60 warmup + 180 sampled frames. Real AI/AUTO/flight callbacks. Software GL, no device FPS guarantee."}
 	var capture_enabled: bool = DisplayServer.get_name() != "headless"
 	report["rendered"] = capture_enabled
 	for scenario: int in range(6):
+		var world: TwilightWorld = load("res://Main.tscn").instantiate()
+		var metered: bool = ResourceLoader.exists("res://tests/qa_combat_hud_world.gd")
+		if metered: world.set_script(load("res://tests/qa_combat_hud_world.gd"))
+		root.add_child(world)
+		if not CLASS_QA.enter_game(world):
+			push_error("Rendered gameplay class confirmation failed")
+			quit(1)
+			return
+		world.save_timer = -10000
+		world.rng.seed = 20261009
+		world._set_map("aden_world", false)
+		world.field_population.set_process(false)
+		var point: Vector2 = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
 		var population: int = [32, 96, 192][scenario % 3]
 		var mode: String = "hunt" if scenario < 3 else "boss"
 		_clear(world)
@@ -54,6 +56,8 @@ func _run() -> void:
 		# Each measured population starts with a fresh player combat state.
 		# Stun/fear carried from the previous crowd would suppress real AUTO.
 		world.player.clear_status_effects()
+		world.player.set_touch_vector(Vector2.ZERO)
+		world.player.velocity = Vector2.ZERO
 		world.player.cancel_attack()
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
@@ -61,6 +65,17 @@ func _run() -> void:
 		world.hp = 999999
 		world.mp = 999999
 		var hits: Array[int] = [0]
+		var auto_drops: Array[Dictionary] = []
+		world.player.auto_toggled.connect(func(enabled: bool) -> void:
+			if not enabled:
+				auto_drops.append({
+					"ammo": world._current_ammo_name(),
+					"ammo_remaining": int(world.inventory.get(world._current_ammo_name(), 0)),
+					"manual_input": world.player.touch_vector,
+					"keyboard_input": Input.get_vector("move_left", "move_right", "move_up", "move_down"),
+					"position": world.player.global_position
+				})
+		)
 		var anchor: TwilightMonster = null
 		var anchor_index: int = 1 if mode == "boss" else 0
 		var normal_records: Array = world.monster_db.filter(func(r: Dictionary) -> bool: return not preload("res://scripts/loot_drop.gd").is_boss_record(r))
@@ -129,6 +144,11 @@ func _run() -> void:
 			if image == null or image.is_empty() or image.save_png(OUTPUT + "/" + mode + "-" + str(population) + ".png") != OK:
 				failed = true
 				push_error("Crowd capture failed " + str(population))
+		# Unexpected AUTO cancellation is a real test failure, not a reason to
+		# repeatedly force AUTO on and manufacture a pass.
+		if not world.player.auto_enabled:
+			failed = true
+			print("CROWD_AUTO_OFF ",JSON.stringify({"mode":mode,"population":population,"events":auto_drops}))
 		var damage_hits: int = 0
 		for mob: TwilightMonster in world.monsters_root.get_children(): damage_hits += mob.damage_hit_count
 		if hits[0] == 0 or damage_hits == 0:
@@ -150,10 +170,10 @@ func _run() -> void:
 		if not sample.vfx_returned or not sample.flights_returned: failed = true
 		report.samples.append(sample)
 		print("CROWD_SAMPLE ", JSON.stringify(sample))
+		world.queue_free()
+		await process_frame
 	var file: FileAccess = FileAccess.open(OUTPUT + "/performance.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t"))
 	file.close()
-	world.queue_free()
-	await process_frame
 	print(("PRESENTATION_BENCHMARK_RENDER_OK" if capture_enabled else "PRESENTATION_BENCHMARK_SIMULATION_OK") if not failed else "PRESENTATION_BENCHMARK_FAILED")
 	quit(1 if failed else 0)

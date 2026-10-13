@@ -27,31 +27,34 @@ func _clear(world: TwilightWorld) -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
-	var world: TwilightWorld = load("res://Main.tscn").instantiate()
-	# Old comparison checkouts do not have the test-only metering script.
-	var metered: bool = ResourceLoader.exists("res://tests/qa_combat_hud_world.gd")
-	if metered: world.set_script(load("res://tests/qa_combat_hud_world.gd"))
-	root.add_child(world)
-	if not CLASS_QA.enter_game(world):
-		push_error("Rendered gameplay class confirmation failed")
-		quit(1)
-		return
-	world.save_timer = -10000
-	world.rng.seed = 20261009
-	world._set_map("aden_world", false)
-	world.field_population.set_process(false)
-	var point: Vector2 = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
+	# Independent playable world per crowd: prevent earlier long AI loads
+	# from changing ammo, AUTO, buffs or combat state for later populations.
 	var report: Dictionary = {"adapter":RenderingServer.get_video_adapter_name(), "samples":[],
 		"note":"32/96/192 controlled-HP monsters, real combat; software GL runner, not a PC GPU FPS guarantee"}
 	var capture_enabled: bool = DisplayServer.get_name() != "headless"
 	report["rendered"] = capture_enabled
 	for population: int in [32, 96, 192]:
+		var world: TwilightWorld = load("res://Main.tscn").instantiate()
+		var metered: bool = ResourceLoader.exists("res://tests/qa_combat_hud_world.gd")
+		if metered: world.set_script(load("res://tests/qa_combat_hud_world.gd"))
+		root.add_child(world)
+		if not CLASS_QA.enter_game(world):
+			push_error("Rendered gameplay class confirmation failed")
+			quit(1)
+			return
+		world.save_timer = -10000
+		world.rng.seed = 20261009
+		world._set_map("aden_world", false)
+		world.field_population.set_process(false)
+		var point: Vector2 = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
 		_clear(world)
 		await process_frame
 		world.player.global_position = point
 		# Each measured population starts with a fresh player combat state.
 		# Stun/fear carried from the previous crowd would suppress real AUTO.
 		world.player.clear_status_effects()
+		world.player.set_touch_vector(Vector2.ZERO)
+		world.player.velocity = Vector2.ZERO
 		world.player.cancel_attack()
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
@@ -142,10 +145,10 @@ func _run() -> void:
 		if not sample.vfx_returned or not sample.flights_returned: failed = true
 		report.samples.append(sample)
 		print("CROWD_SAMPLE ", JSON.stringify(sample))
+		world.queue_free()
+		await process_frame
 	var file: FileAccess = FileAccess.open(OUTPUT + "/performance.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t"))
 	file.close()
-	world.queue_free()
-	await process_frame
 	print(("COMBAT_CROWD_RENDER_OK" if capture_enabled else "COMBAT_CROWD_SIMULATION_OK") if not failed else "COMBAT_CROWD_FAILED")
 	quit(1 if failed else 0)
