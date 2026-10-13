@@ -197,6 +197,7 @@ func _refresh_character() -> void:
 		var badge: Label = gear_badges[key]
 		badge.text = ""
 		if record.is_empty():
+			UI.clear_item_visual(icon)
 			icon.texture = UI.icon("attack" if key == "weapon" else "character")
 			icon.modulate = Color(1,1,1,.18)
 			button.tooltip_text = str(spec[1])+" · 미장착"
@@ -205,7 +206,7 @@ func _refresh_character() -> void:
 		filled += 1
 		var grade: String = str(record.get("grade","일반"))
 		var level: int = int(record.get("enhance_level",0))
-		icon.texture = UI.item_icon(record,str(record.get("name","")),{})
+		UI.apply_item_visual(icon,record,str(record.get("name","")),{},"equipment")
 		icon.modulate = Color.WHITE
 		badge.text = "+%d" % level if level > 0 else ""
 		button.add_theme_stylebox_override("normal",UI.item_frame(grade))

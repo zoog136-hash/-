@@ -18,7 +18,9 @@ var effect_detail: OptionButton
 
 static func apply_saved(controller: Node) -> void:
 	var saved := ConfigFile.new()
-	if saved.load(SETTINGS_PATH) != OK: return
+	var load_error: Error = saved.load(SETTINGS_PATH)
+	UI.set_reduced_motion(bool(saved.get_value("visual","reduced_motion",false)))
+	if load_error != OK: return
 	if controller.log_label != null:
 		controller.log_label.visible = bool(saved.get_value("interface","combat_log",true))
 	if controller.coordinates_readout != null:
@@ -189,6 +191,7 @@ func _store(section: String,key: String,value: Variant) -> void:
 	if error != OK: push_warning("Could not save UI preferences: %d" % error)
 
 func _apply_presentation() -> void:
+	UI.set_reduced_motion(reduced_motion.button_pressed)
 	var world: Node = hud.get_parent()
 	if world != null and world.has_method("apply_presentation_settings"):
 		world.call("apply_presentation_settings",{

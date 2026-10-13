@@ -2,6 +2,7 @@ extends SceneTree
 
 const QA = preload("res://tests/qa_class_selection.gd")
 const Settings = preload("res://scripts/ui/renewal_settings.gd")
+const UI = preload("res://scripts/ui/renewal_theme.gd")
 var failures: Array[String] = []
 var checks: int = 0
 
@@ -71,6 +72,25 @@ func _run() -> void:
 	check(world.combat_vfx.reduced_motion and world.player.motion.reduced_motion,"motion checkbox immediately updates world visuals")
 	check(world.combat_vfx.detail_limit == 6 and world.combat_flights.visual_limit == 24,"detail selector immediately applies effect budgets")
 	check(world.quickslots == original_quickslots and world.inventory == original_inventory,"presentation changes preserve gameplay items and bindings")
+	var rare_record: Dictionary = {}
+	for record: Dictionary in world.catalog_db.get("아이템",[]):
+		if str(record.get("grade","")) == "영웅":
+			rare_record = record
+			break
+	check(not rare_record.is_empty(),"rarity preference check uses an actual catalog item")
+	var icon := TextureRect.new()
+	icon.size = Vector2(56,56)
+	icon.position = Vector2(600,300)
+	hud.get_node("Root").add_child(icon)
+	UI.apply_item_visual(icon,rare_record,str(rare_record.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
+	await frames()
+	var item_visual: Node = icon.get_node("ItemVisual")
+	check(icon.material == null and not item_visual.scheduler.is_processing(),"motion reduction removes rarity animation and suspends scheduler")
+	settings.reduced_motion.button_pressed = false
+	check(icon.material != null and item_visual.scheduler.is_processing(),"motion preference restores visible rarity animation immediately")
+	settings.reduced_motion.button_pressed = true
+	check(icon.material == null and not item_visual.scheduler.is_processing(),"motion preference stops existing rarity animation immediately")
+	icon.queue_free()
 	hud._close_workspace()
 	await frames()
 	hud._navigate("settings")
