@@ -137,7 +137,7 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 		if not optional.is_empty():
 			result.path = str(optional.get("path", ""))
 			result.route = "optional_exact_name_icon"
-			result.status = "candidate_private_icon"
+			result.status = "original_review_pending"
 			return result
 	# The pre-rework exact-name index also contains deliberate stock UI links.
 	# Restore those links instead of replacing them with an unrelated family
