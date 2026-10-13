@@ -61,6 +61,13 @@ func _run() -> void:
 		world.field_renderer.refresh_visible()
 		world.hp = 999999
 		world.mp = 999999
+		# These long, multi-population stress samples test sustained combat.
+		# Supply finite, test-only ammunition per independent scenario; the
+		# production ammo-consumption / AUTO-off behavior remains unchanged.
+		world.inventory["화살"] = 10000
+		world.inventory["총알"] = 10000
+		var tested_ammo: String = world._current_ammo_name()
+		var ammo_before: int = int(world.inventory.get(tested_ammo, 0)) if not tested_ammo.is_empty() else 0
 		var hits: Array[int] = [0]
 		var anchor: TwilightMonster = null
 		var anchor_index: int = 1 if false else 0
@@ -124,6 +131,10 @@ func _run() -> void:
 			if image == null or image.is_empty() or image.save_png(OUTPUT + "/crowd-" + str(population) + ".png") != OK:
 				failed = true
 				push_error("Crowd capture failed " + str(population))
+		var ammo_after: int = int(world.inventory.get(tested_ammo, 0)) if not tested_ammo.is_empty() else 0
+		if not tested_ammo.is_empty() and (ammo_after < 0 or ammo_after > ammo_before):
+			failed = true
+			push_error("Crowd ammo accounting invalid: " + tested_ammo + " before=" + str(ammo_before) + " after=" + str(ammo_after))
 		var damage_hits: int = 0
 		for mob: TwilightMonster in world.monsters_root.get_children(): damage_hits += mob.damage_hit_count
 		if hits[0] == 0 or damage_hits == 0:
@@ -135,7 +146,7 @@ func _run() -> void:
 		var sample: Dictionary = {"population":population, "frames":times.size(), "median_ms":times[times.size() / 2],
 			"p95_ms":times[int(times.size() * 0.95)], "process_p95_ms":process_times[int(process_times.size() * 0.95)],
 			"physics_p95_ms":physics_times[int(physics_times.size() * 0.95)], "peak_nodes":peak_nodes,
-			"monster_released_hits":hits[0], "player_landed_hits":damage_hits, "peak_flights":peak_flights,
+			"monster_released_hits":hits[0], "player_landed_hits":damage_hits, "ammo_name":tested_ammo, "ammo_before":ammo_before, "ammo_after":ammo_after, "ammo_spent":ammo_before-ammo_after, "peak_flights":peak_flights,
 			"vfx_high_water":world.combat_vfx.high_water, "orphans":int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))}
 		if metered: sample["hud_work"] = world.call("hud_counts")
 		_clear(world)
