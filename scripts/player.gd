@@ -196,6 +196,7 @@ func _update_facing(motion_vector: Vector2) -> void:
 func _update_visual(delta: float) -> void:
 	var show_spx: bool = not transform_active and spx_sprite != null and not spx_actor_id.is_empty()
 	motion.profile = transform_profile if transform_active else (spx_profile if show_spx else class_profile)
+	$GroundShadow.visible = not motion.profile.embedded_shadow
 	motion.advance(delta, get_position_delta() / maxf(delta, 0.001))
 	facing = motion.facing4
 	attack_clock = maxf(0.0, motion.attack_duration - motion.attack_elapsed) if motion.active else 0.0
@@ -237,18 +238,20 @@ func combat_projectile_origin() -> Vector2:
 
 func set_class_index(value: int) -> void:
 	class_index = clampi(value, 0, CLASS_SHEETS.size() - 1)
-	class_profile.profile_id = "class:" + str(class_index)
-	class_profile.layout = "class5"
-	class_profile.dedicated_attack = true
-	class_profile.sprite_offset = Vector2(0, -46)
+	class_profile = ANIMATION_CATALOG.for_record("class", {"sourceId":str(class_index)}, CLASS_SHEETS[class_index])
+	if class_profile.frames_path.is_empty():
+		class_profile.layout = "class5"
+		class_profile.reference_speed = 210.0
+		class_profile.dedicated_attack = true
+		class_profile.sprite_offset = Vector2(0, -46)
 	motion.profile = transform_profile if transform_active else class_profile
 	_build_class_frames(CLASS_SHEETS[class_index])
 	if not transform_active:
 		class_sprite.visible = true
 
 func _build_class_frames(path: String) -> void:
-	class_sprite.sprite_frames = ANIMATION_CATALOG.frames(path, "class5")
-	class_sprite.set_meta("base_scale", Vector2.ONE)
+	class_sprite.sprite_frames = ANIMATION_CATALOG.frames_for_profile(class_profile, path)
+	class_sprite.set_meta("base_scale", Vector2.ONE * (class_profile.pixel_scale if class_profile.pixel_scale > 0.0 else 1.0))
 	class_sprite.pause()
 
 func set_transform_visual(path: String, _speed_multiplier: float, profile_value: TwilightAnimationProfile = null) -> void:
@@ -263,7 +266,7 @@ func set_transform_visual(path: String, _speed_multiplier: float, profile_value:
 	transform_sprite.stop()
 	transform_sprite.sprite_frames = frames
 	transform_sprite.animation = names[0]
-	var scale_value: float = 120.0 / maxf(1.0, texture.get_height())
+	var scale_value: float = transform_profile.pixel_scale if transform_profile.pixel_scale > 0.0 else 120.0 / maxf(1.0, texture.get_height())
 	transform_sprite.set_meta("base_scale", Vector2.ONE * scale_value)
 	transform_active = true
 	motion.profile = transform_profile

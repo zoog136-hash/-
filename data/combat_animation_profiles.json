@@ -1,4 +1,5 @@
 {"schema":1,"profiles":{
+"class:0":{"name":"기본 기사 외형","frames_path":"res://assets/actors/eight_direction/knight/SpriteFrames.tres","layout":"directional8","motion_style":"slash","movement_fps":15.009380863039398,"reference_speed":210,"attack_hit_frame":2,"sprite_offset":[0,-33.6],"pixel_scale":1.05,"embedded_shadow":true,"authored_motion_weight":0.0,"hit_recoil":0.0},
 "transform:393":{"name":"해방된 할파스","layout":"directional4","motion_style":"slash","floating":true},
 "transform:267":{"name":"지배자 기르타스","layout":"directional4","motion_style":"slash","floating":false},
 "transform:413":{"name":"신화-뇌신(여)","layout":"directional4","motion_style":"slash","floating":false},
@@ -365,7 +366,7 @@
 "transform:49":{"name":"흑장로","layout":"still","motion_style":"slash","floating":false},
 "transform:48":{"name":"올딘","layout":"still","motion_style":"slash","floating":false},
 "transform:47":{"name":"다크엘프","layout":"still","motion_style":"slash","floating":false},
-"transform:46":{"name":"흑기사","layout":"still","motion_style":"slash","floating":false},
+"transform:46":{"name":"흑기사","layout":"directional8","motion_style":"slash","floating":false,"frames_path":"res://assets/actors/eight_direction/knight/SpriteFrames.tres","movement_fps":15.009380863039398,"reference_speed":210,"attack_hit_frame":2,"sprite_offset":[0,-33.6],"pixel_scale":1.05,"embedded_shadow":true,"authored_motion_weight":0.0,"hit_recoil":0.0},
 "transform:45":{"name":"난쟁이","layout":"still","motion_style":"slash","floating":false},
 "transform:44":{"name":"랜스 마스터","layout":"still","motion_style":"slash","floating":false},
 "transform:43":{"name":"데스나이트","layout":"directional4","motion_style":"slash","floating":false},
@@ -1200,7 +1201,7 @@
 "monster:\uac70\ub300 \uac1c\ubbf8":{"name":"거대 개미","layout":"still","motion_style":"crawl","floating":false},
 "monster:\ub77c\uc774\uce78\uc2a4\ub85c\ud504":{"name":"라이칸스로프","layout":"still","motion_style":"slash","floating":false},
 "monster:\ud574\uace8 \uad81\uc218":{"name":"해골 궁수","layout":"still","motion_style":"slash","floating":false},
-"monster:\ud574\uace8 \uadfc\uc704\ubcd1":{"name":"해골 근위병","layout":"still","motion_style":"slash","floating":false},
+"monster:해골 근위병":{"name":"해골 근위병","layout":"directional8","motion_style":"slash","floating":false,"frames_path":"res://assets/actors/eight_direction/skeleton_guard/SpriteFrames.tres","movement_fps":15.009380863039398,"reference_speed":60,"attack_hit_frame":2,"sprite_offset":[0,-26.24],"pixel_scale":0.82,"embedded_shadow":true,"authored_motion_weight":0.0,"hit_recoil":0.0},
 "monster:\uc0ac\uc774\ud074\ub86d\uc2a4":{"name":"사이클롭스","layout":"still","motion_style":"slash","floating":false},
 "monster:\uc5d0\ud2f4":{"name":"에틴","layout":"still","motion_style":"slash","floating":false},
 "monster:\ucf54\uce74\ud2b8\ub9ac\uc2a4":{"name":"코카트리스","layout":"still","motion_style":"slash","floating":false},

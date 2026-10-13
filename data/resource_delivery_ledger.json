@@ -72,5 +72,37 @@
         "availability": "conversation_session_only"
       }
     ]
+  },
+  "sequential_actor_art": {
+    "source": "other: Flare Game, not Lineage/LineageM originals",
+    "motion": "actual sequential 2D frames",
+    "license": "CC-BY-SA-3.0 (skeleton sword concept Misha CC-BY-3.0)",
+    "source_revision": "af6eee6d339ac98011864bfe89da837fe7769c28",
+    "source_receipt": "res://assets/actors/eight_direction/source_receipt.json",
+    "bindings": {
+      "class:0": "knight",
+      "transform:46": "knight",
+      "monster:해골 근위병": "skeleton_guard"
+    },
+    "distinct_bodies": 2,
+    "directions_per_body": 8,
+    "unique_frames_per_direction": {
+      "idle": 4,
+      "walk": 8,
+      "attack": 4
+    },
+    "status": {
+      "files": true,
+      "converted": true,
+      "godot_import": true,
+      "production_binding": true,
+      "screen_validation": false,
+      "permanent_delivery": false
+    },
+    "limitations": [
+      "hit/death not connected yet",
+      "other IDs keep current art; no full-coverage claim",
+      "new TWILIGHT adaptation, not exact restoration of earlier illustration"
+    ]
   }
 }

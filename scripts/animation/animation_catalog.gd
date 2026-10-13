@@ -46,6 +46,10 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 		var anchor: Array = authored.get("sprite_offset", [0, result.sprite_offset.y])
 		result.sprite_offset = Vector2(float(anchor[0]), float(anchor[1]))
 	PRESENTATION.configure(result, kind, record)
+	# Explicit sequential-art settings outrank the generic portrait rig. Native
+	# poses already contain limb motion; moving/rotating the root adds foot slip.
+	for property: String in ["pixel_scale", "embedded_shadow", "authored_motion_weight", "hit_recoil"]:
+		if settings.has(property): result.set(property, settings[property])
 	return result
 
 static func frames(path: String, layout: String) -> SpriteFrames:

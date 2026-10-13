@@ -1,0 +1,52 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_directions": [
+		"E",
+		"NE",
+		"N",
+		"NW",
+		"W",
+		"SW",
+		"S",
+		"SE"
+	],
+	"tracks": {
+		"attack": {
+			"loop_type": "play_once",
+			"sha256": "4001da1e7d61aef56fc98f676c1593ce3d5d0dc323a213594f7a40913d0eee3a",
+			"source_duration_seconds": 0.4,
+			"unique_frames_per_direction": 4
+		},
+		"idle": {
+			"loop_type": "back_forth",
+			"sha256": "745cc8f72a938b7bfa6523b3fe03bc9c64a9e772247245775b0a8759ac3c864a",
+			"source_duration_seconds": 0.533,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"loop_type": "looped",
+			"sha256": "338b12eba864e9775239d927a0a53762b9637d71776a13774f883c06ce0a4658",
+			"source_duration_seconds": 0.533,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

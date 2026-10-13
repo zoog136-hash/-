@@ -785,6 +785,7 @@ func _setup_animation(record: Dictionary) -> void:
 		if first != null:
 			motion.frame_source = frames
 			sprite.texture = first
+			sprite.material = null # pooled portrait shaders must not warp native views
 	motion.profile.reference_speed = maxf(1.0, base_move_speed)
 	visual_height = float(record.get("visual_height", 92.0 if is_boss else (62.0 if motion.profile.motion_style == "crawl" else 72.0)))
 	if sprite.texture != null:
@@ -795,6 +796,8 @@ func _setup_animation(record: Dictionary) -> void:
 			visual_height = sprite.texture.get_height()*scale_value
 	else:
 		animation_base_scale = Vector2.ONE
+	if motion.profile.pixel_scale > 0.0:
+		animation_base_scale = Vector2.ONE * motion.profile.pixel_scale
 	# Foot anchor and hit point depend on visible body size, not one fixed offset.
 	motion.profile.sprite_offset = Vector2(0, -visual_height * 0.46)
 	motion.profile.hit_position = Vector2(0, -visual_height * 0.42)
@@ -821,6 +824,7 @@ func _setup_animation(record: Dictionary) -> void:
 		shadow.name = "GroundShadow"
 		shadow.radius = motion.profile.shadow_size
 		add_child(shadow)
+	$GroundShadow.visible = not motion.profile.embedded_shadow
 	motion.apply(sprite, animation_base_scale)
 
 func current_attack_range() -> float:

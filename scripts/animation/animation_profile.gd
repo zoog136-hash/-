@@ -20,6 +20,10 @@ class_name TwilightAnimationProfile
 @export var shadow_size: Vector2 = Vector2(19, 6)
 @export var floating: bool = false
 @export var dedicated_attack: bool = false
+## Optional explicit scale for padded, foot-anchored native sprite frames.
+## Zero keeps the existing automatic sizing of portraits / legacy sheets.
+@export var pixel_scale: float = 0.0
+@export var embedded_shadow: bool = false
 @export var animation_names: Dictionary = {}
 ## Presentation amplitudes; never used by attack clocks or damage calculations.
 @export var body_kind: String = "humanoid"
