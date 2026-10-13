@@ -42,6 +42,15 @@ class CIResultRegressionTests(unittest.TestCase):
         self.assertEqual(classify_result('ordinary_test', 0, 'PROBE_RESULT {"failures":[]}\n'), (True, False))
         self.assertEqual(classify_result('ordinary_test', 0, 'PROBE_RESULT invalid\n'), (False, False))
 
+    def test_full_ground_loot_suite_remains_fail_closed(self):
+        # Extra time must not turn nonzero exits, emitted errors or missing
+        # completion markers into success.
+        name = 'ground_loot_system_test'
+        self.assertEqual(classify_result(name, 0, 'GROUND_LOOT_SYSTEM_OK: movement, GUI input, effects, IDs, AUTO, save and maps\n'), (True, False))
+        self.assertEqual(classify_result(name, 1, 'GROUND_LOOT_SYSTEM_OK\n'), (False, False))
+        self.assertEqual(classify_result(name, 0, 'GROUND_LOOT FAIL: collected twice\nGROUND_LOOT_SYSTEM_OK\n'), (False, False))
+        self.assertEqual(classify_result(name, 0, 'GROUND_LOOT_SYSTEM checks=166\n'), (False, False))
+
     def test_setup_cannot_skip(self):
         for name in ('import', 'boot', 'bake_navigation'):
             with self.subTest(name=name):
@@ -55,6 +64,9 @@ class CIResultRegressionTests(unittest.TestCase):
             with self.subTest(name=name):
                 self.assertEqual(timeout_budget(name, 150, 900), 540)
                 self.assertEqual(timeout_budget(name, 600, 900), 600)
+        self.assertEqual(timeout_budget('ground_loot_system_test', 150, 900), 300)
+        self.assertEqual(timeout_budget('ground_loot_system_test', 250, 900), 300)
+        self.assertEqual(timeout_budget('ground_loot_system_test', 450, 900), 450)
         self.assertEqual(timeout_budget('ordinary_test', 150, 900), 150)
         self.assertEqual(timeout_budget('bake_navigation', 150, 900), 150)
 

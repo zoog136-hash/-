@@ -32,6 +32,12 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         return max(requested, import_timeout)
     if name in ('world_regions_test', 'original_skill_learning_conditions_test'):
         return max(requested, 540)
+    if name == 'ground_loot_system_test':
+        # The unchanged 166-check full GUI/physics/save/loot suite completed
+        # in ~112 seconds in its dedicated workflow, but exceeded the generic
+        # 150-second subprocess cap in the concurrently loaded integration job.
+        # Give only this exhaustive real-play suite bounded CI headroom.
+        return max(requested, 300)
     return requested
 
 
