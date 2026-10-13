@@ -76,7 +76,12 @@ func _run() -> void:
 			var node: Node2D = world.player.transform_sprite if kind == "transform" else (world.companion_sprite if kind == "doll" else world.relic_sprite)
 			var motion: TwilightActorMotion = world.player.motion if kind == "transform" else (world.doll_motion.motion if kind == "doll" else world.relic_motion.motion)
 			var frames: SpriteFrames = (node as AnimatedSprite2D).sprite_frames if node is AnimatedSprite2D else motion.frame_source
-			if frames == null or str(frames.get_meta("twilight_visual_key", "")) != key or not node.visible:
+			var correct_identity: bool = frames != null and str(frames.get_meta("twilight_visual_key", "")) == key
+			# Native SpriteFrames can be shared by approved identities and have no
+			# legacy atlas key. Verify both the equipped ID and its exact resource.
+			if frames != null and motion.profile.frames_path.begins_with("res://assets/actors/eight_direction/"):
+				correct_identity = motion.profile.profile_id == key and frames.resource_path == motion.profile.frames_path
+			if not correct_identity or not node.visible:
 				failures.append("wrong or missing equipped atlas " + key)
 				continue
 			motion.cancel_attack()
@@ -85,7 +90,8 @@ func _run() -> void:
 			var hashes: Array[String] = []
 			var frame_values: Array[int] = []
 			for phase: int in range(2):
-				motion.gait = 2.0 * phase
+				# Adjacent poses also distinguish a genuine two-frame walk.
+				motion.gait = float(phase)
 				motion.state_clock = .28 * phase
 				if kind == "relic":
 					motion.state = "float"

@@ -73,7 +73,9 @@ func _run() -> void:
 			actor.motion.gait = 0.0
 			actor.motion.apply(actor.transform_sprite, actor.transform_sprite.get_meta("base_scale"))
 			var first: int = actor.transform_sprite.frame
-			actor.motion.gait = 2.0
+			# One authored frame must advance even when walking has two frames;
+			# jumping by two samples the start of the same loop again.
+			actor.motion.gait = 1.0
 			actor.motion.apply_frames(actor.transform_sprite)
 			check(actor.transform_sprite.frame != first, "walking frame advances " + key)
 			check(str(actor.transform_sprite.animation).begins_with("walk"), "walk selects track " + key)

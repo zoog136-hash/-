@@ -1,0 +1,17 @@
+{
+  "observed_at_utc": "2026-10-13T22:23:24.084691+00:00",
+  "source": "User-provided screenshot of last remote turn failure",
+  "screenshot_sha256": "860250c6c6a6172d098abd58fa6da31c662ea5215e8e5d4a3f0ff9a276d2c206",
+  "error": {
+    "outer_type": "error",
+    "type": "invalid_request_error",
+    "code": "invalid_value",
+    "message": "Error while downloading file. Upstream status code: 503.",
+    "param": "url",
+    "status": 400
+  },
+  "interpretation": "The remote turn failed while its file-fetch stage requested a URL and an upstream server responded 503. The wrapper reports 400/invalid_value. The screenshot contains no requested URL or filename, so the particular host/file and exact upstream cause cannot be determined. This is separate from the logged GitHub Godot HTTP 500 CI download.",
+  "retry": "Retryable after upstream recovery or with a refreshed download URL if required. No repeat of the unidentified request is needed to resume this project, because all required art/engine/reports survived locally and were verified.",
+  "safe_resume_commit": "67a45d4eb3c85dce454346326e6be9b364cec4e3",
+  "image_publication": "User phone screenshot preserved locally only; error text can be reported in PR without publishing the whole screenshot."
+}

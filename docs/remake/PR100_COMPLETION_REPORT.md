@@ -149,7 +149,9 @@ Godot 전체 임포트와 실제 Main 기동이 통과했다. `fdffcd9`의 APK�
 
 원격 턴 중단 후 `/workspace/TWILIGHT`의 기존 브랜치와 PR #100의 HEAD가 모두 `fdffcd9c5cd572ea7cc79ea5548c337a6d50377e`임을 확인했다. 미커밋 19개 파일, binary patch, 제작 recipe를 별도 보관하고 백업 안의 바이트와 SHA를 검증했다. 강제 초기화·브랜치 변경·미커밋 삭제·원본 덮어쓰기는 하지 않았다. [복구 결과](evidence/pr100-direction-fix/original-based/batch5/recovery-result.json), [보존 파일 해시](evidence/pr100-direction-fix/original-based/batch5/recovery-backup-manifest.json). 백업 자체의 `/workspace` 경로는 해당 Work 환경의 로컬 경로이며 외부 배포 링크로 표시하지 않는다.
 
-사용자가 보고한 HTTP 503의 정확한 요청 기록은 남아 있는 로그에서 확인하지 못했다. 별도로 확인된 GitHub Godot release 다운로드 HTTP 500은 게임 검사 전 발생했고, [동일 CI의 두 번째 실행](https://github.com/zoog136-hash/-/actions/runs/38410431010)은 2026-10-13 14:39:16 UTC에 성공했다. `fdffcd9`의 **29 workflow / 39 job 모두 성공**으로 종료했다. [확인한 실제 종료 상태](evidence/pr100-direction-fix/original-based/batch5/previous-commit-ci.json). 두 HTTP 오류를 같은 원인으로 단정하지 않는다. 복구된 이미지·엔진·검증 로그가 온전하여 입력 파일을 다시 다운로드하지 않고 미완료 단계부터 재개했다.
+사용자가 제공한 오류 화면에서 원격 턴의 파일 URL 다운로드가 upstream HTTP 503으로 실패하고, 바깥 응답이 `400 / invalid_request_error / invalid_value / param=url`임을 확인했다. 화면에는 요청 URL과 파일명이 없어 특정 서버·파일·장애 원인을 확정할 수 없다. 서비스 복구나 만료 URL 갱신 후 재시도할 수 있지만, 식별되지 않은 요청을 실제 재시도했다고 보고하지 않는다. [오류 문구와 복구 판단](evidence/pr100-direction-fix/original-based/batch5/recovery-regression/download-diagnosis.json). 휴대전화 화면 전체는 로컬에만 보존했다.
+
+별도로 확인된 GitHub Godot release 다운로드 HTTP 500은 게임 검사 전 발생했고, [동일 CI의 두 번째 실행](https://github.com/zoog136-hash/-/actions/runs/38410431010)은 2026-10-13 14:39:16 UTC에 성공했다. `fdffcd9`의 **29 workflow / 39 job 모두 성공**으로 종료했다. [확인한 실제 종료 상태](evidence/pr100-direction-fix/original-based/batch5/previous-commit-ci.json). 두 HTTP 오류를 같은 원인으로 단정하지 않는다. 복구된 이미지·엔진·검증 로그가 온전하여 입력 파일을 다시 다운로드하지 않고 미완료 단계부터 재개했다.
 
 버그베어는 기존 `45223.png`의 몸체·빨간 허리옷·가시 곤봉, 남성 사신은 변신 258의 `0c6685aea67140a668a2e435.png`에 있는 검은 금장 갑옷·청록 장식·낫을 바탕으로 제작했다. 샌드 웜은 현재 게임의 `assets/monsters/original/atlas_3.png` 15번 영역에 있는 마디진 몸통·붉은 이빨 입·모래 받침을 유지했다. **샌드 웜의 프로젝트 원본을 검증된 외부 원작 이미지라고 표시하지 않는다.** 원본과 영역을 실제 production portrait 경로에서도 대조했다.
 
@@ -168,6 +170,14 @@ Godot 전체 임포트와 실제 Main 기동이 통과했다. `fdffcd9`의 APK�
 원본 참조 222건의 SHA, 기존 에셋, 35,742개 native 검사와 640개 캔버스 검사, Python 11개 검사, Godot 임포트가 통과했다. 735개 ID × 8방향 검증표를 새 3종의 실제 Main 기록으로 갱신하고, 원본 기반 31종의 CI를 8개 작업으로 연결했다. 현재 **변신 129/180·일반 몬스터 146/258·보스 32/60**, 나머지 **191종의 제작·연결·검증은 미완료**다. 이 변경을 푸시한 정확한 HEAD의 CI 종료 상태는 PR #100 본문과 Checks에서 별도로 확인한다.
 
 새 3종을 포함한 APK는 **798,517,984 bytes**, SHA-256 **`3045017f67a1e51ae1a687b6624fb30396fd9e43abea2c10700e4ea1f5ad506d`**다. compiled SpriteFrames **51개**, 트랙 **2,464개**, 재생 슬롯 **11,872개**, PNG 임포트 **255개**, ARM64·v2/v3 서명·16KB 정렬·ZIP CRC·원본 SHA·캔버스가 통과했다. [실제 APK 검사 결과](evidence/pr100-direction-fix/original-based/batch5/android/android.json). **Android 실제 기기 실행은 미검증**이다. 원래 미커밋 파일 19개는 복구 백업과 여전히 byte 일치하며, [별도 보존 확인](evidence/pr100-direction-fix/original-based/batch5/recovered-files-preserved.json)을 남겼다.
+
+## 복구 후 전체 카탈로그 검사 보정
+
+복구 파일 19개는 `67a45d4eb3c85dce454346326e6be9b364cec4e3`으로 기존 PR 브랜치에 저장했다. 이후 전체 회귀 검사에서 남성 사신의 2프레임 걷기를 0번과 2번 시점으로 비교해 같은 프레임을 다시 읽는 검사 오류를 발견했다. `full_visual_manifest_test.gd`, `capture_all_catalog_motion.gd`, `capture_full_catalog.gd`에서 인접한 실제 자세를 비교하도록 수정했다. Main 캡처는 기존 atlas의 `twilight_visual_key` 외에 native SpriteFrames의 **장착된 profile ID와 실제 리소스 경로가 모두 일치**하는지도 확인한다. 게임 동작이나 PNG를 바꾸거나 중복 프레임을 추가하지 않았다.
+
+수정 후 전체 manifest 검사와 실제 Main의 정상 장착 경로를 통한 **변신 413·인형 166·성물 144, 총 723개 외형 / 실패 0건**을 확인했다. 각 외형의 서로 다른 두 실제 프레임과 OpenGL 픽셀 해시를 검사했다. 별도의 기존 production renderer 검사도 723개 모두 통과했다. 이 검사는 두 자세의 연결·표시 증거이며, 723종 모두의 8방향 전 동작 완성이나 수동 아트 승인을 의미하지 않는다. 기존 Main 보고서의 `views_available`는 옛 atlas 메타데이터이므로 native 방향 수로 사용하지 않는다. [검사 전후 로그·실행 결과·원본 보존](evidence/pr100-direction-fix/original-based/batch5/recovery-regression/summary.json).
+
+`67a45d4`의 [Android CI](https://github.com/zoog136-hash/-/actions/runs/38477049871)는 성공했다. [APK 산출물](https://github.com/zoog136-hash/-/actions/runs/38477049871/artifacts/11857060267)은 798,517,984 bytes, SHA-256 `80b00268d2b829e72329acf25af6ba64a8213657cfb62e3695bbd811d7d5d94a`이며 51개 compiled SpriteFrames / 2,464트랙 / 11,872재생 슬롯을 포함한다. CI 서명본과 앞의 로컬 서명본은 해시가 다르다. 실제 기기 실행은 미검증이다. 전체 로컬 회귀와 수정 후 정확한 HEAD의 CI 종료 결과는 PR 본문에서 별도로 확인한다.
 
 ```sh
 python3 tools/check_resource_integrity.py --root .
