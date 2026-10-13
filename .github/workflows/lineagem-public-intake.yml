@@ -1,4 +1,4 @@
-name: Lineage M Public Motion and Map Intake
+name: Lineage M Exact Official Map References
 on:
   push:
     branches: ['research/lineagem-public-intake-20261013']
@@ -8,109 +8,51 @@ permissions:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 3
     steps:
-      - name: Install image reader
-        run: python -m pip install --disable-pip-version-check Pillow
-      - name: Collect public linked maps and motion previews
-        shell: bash
+      - run: python -m pip install --disable-pip-version-check Pillow
+      - name: Download exact publicly linked official map images
         run: |
-          python - <<'PYCODE'
-          from __future__ import annotations
-          import hashlib,html,io,json,re,time
+          python - <<'PY'
+          import hashlib,json,io,time
           from pathlib import Path
-          from urllib.parse import urljoin,urlparse,unquote
-          from urllib.request import Request,build_opener,HTTPRedirectHandler
-          from html.parser import HTMLParser
+          from urllib.request import build_opener,Request,HTTPRedirectHandler
+          from urllib.parse import urlparse
           from PIL import Image
-          ROOT=Path('lineagem_maps_motion');ROOT.mkdir(exist_ok=True);(ROOT/'media').mkdir(exist_ok=True)
-          records=[];refs=[];done=set();total=0;start=time.monotonic()
-          def allowed(url):
-           p=urlparse(url);h=p.hostname or ''
-           return p.scheme=='https' and any(h==d or h.endswith('.'+d) for d in ('lineagem-jp.com','ncjapan.co.jp','plaync.com','playnccdn.com','beanfun.com'))
-          class SafeRedirect(HTTPRedirectHandler):
+          root=Path('lineagem_exact_maps');root.mkdir(exist_ok=True)
+          base='https://st.ncjapan.co.jp/'
+          rows=[
+           ('eodin_chapel_regions.png','ncjapan/bip/data/image/20251212154257_f7c68.png','https://lineagem-jp.com/guide/dungeon_eodin'),
+           ('forgotten_island_title.jpg','ncjapan/ncsoft/lm/official/guide/dungeon_forgottenIsland/title.jpg','https://lineagem-jp.com/guide/dungeon_forgottenIsland'),
+           ('forgotten_island_golem_lab_01.png','ncjapan/bip/data/image/20210802144147_ab468.png','https://lineagem-jp.com/guide/dungeon_forgottenIsland'),
+           ('forgotten_island_golem_lab_02.png','ncjapan/bip/data/image/20210802152959_b5cee.png','https://lineagem-jp.com/guide/dungeon_forgottenIsland'),
+           ('pirate_island_title.jpg','ncjapan/ncsoft/lm/official/guide/dungeon_pirateIsland/title.jpg','https://lineagem-jp.com/guide/dungeon_pirateIsland'),
+           ('classic_dream_island.png','ncjapan/bip/data/image/20221223175504_5e69e.png','https://lineagem-jp.com/news_detail?seqNo=22657'),
+           ('escaros_overview.png','ncjapan/bip/data/image/20240315104615_13177.png','https://lineagem-jp.com/guide/Ezkaroze'),
+           ('escaros_touchdown_regions.png','ncjapan/bip/data/image/20240315111019_b2899.png','https://lineagem-jp.com/guide/Ezkaroze'),
+           ('tower_of_insolence_01.jpg','ncjapan/ncsoft/lm/official/guide/dungeon_arroganceTower/go001_001.jpg','https://lineagem-jp.com/guide/dungeon_TowerofInsolence'),
+           ('tower_of_insolence_entry.jpg','ncjapan/ncsoft/lm/official/guide/dungeon_arroganceTower/go001_041_v2.jpg?2=','https://lineagem-jp.com/guide/dungeon_TowerofInsolence')]
+          class Redirect(HTTPRedirectHandler):
            def redirect_request(self,req,fp,code,msg,headers,newurl):
-            if not allowed(newurl):raise ValueError('redirect outside publisher domains')
+            p=urlparse(newurl)
+            if p.scheme!='https' or p.hostname!='st.ncjapan.co.jp':raise ValueError('outside publisher host')
             return super().redirect_request(req,fp,code,msg,headers,newurl)
-          opener=build_opener(SafeRedirect())
-          def save(): (ROOT/'manifest.json').write_text(json.dumps({'records':records,'discovered_links':refs,'native_map_packs_verified':0,'native_8way_sets_verified':0},ensure_ascii=False,indent=2),encoding='utf-8')
-          def get(url,kind,source=None):
-           global total
-           if url in done or not allowed(url) or time.monotonic()-start>330:return None
-           done.add(url);r={'url':url,'kind':kind,'source':source,'status':'failed'}
+          opener=build_opener(Redirect());manifest=[]
+          for name,path,page in rows:
+           r={'file':name,'url':base+path,'source_page':page,'native_tilemap':False,'status':'failed'}
            try:
-            cap=70*1024*1024 if kind=='media' else 5*1024*1024
-            if total>=240*1024*1024:raise ValueError('budget reached')
-            with opener.open(Request(url,headers={'User-Agent':'TWILIGHT-Public-Reference-Audit/1.0'}),timeout=12) as f:
-             b=f.read(min(cap,240*1024*1024-total)+1);r['content_type']=f.headers.get('Content-Type','');r['http_status']=f.status
-            if len(b)>cap or total+len(b)>240*1024*1024:raise ValueError('byte budget exceeded')
-            if kind=='media' and ('text/html' in r['content_type'] or b.lstrip().lower().startswith((b'<html',b'<!doctype html'))):raise ValueError('HTML not media')
-            total+=len(b);r.update(status='downloaded' if kind=='media' else 'inspected',bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
-            if kind=='media':
-             name=re.sub('[^a-zA-Z0-9._-]+','_',unquote(urlparse(url).path.split('/')[-1]))[:100] or 'file'
-             rel='media/'+hashlib.sha256(url.encode()).hexdigest()[:12]+'_'+name;(ROOT/rel).write_bytes(b);r['path']=rel
-             try:
-              with Image.open(io.BytesIO(b)) as im:r.update(format=im.format,width=im.width,height=im.height,frames=getattr(im,'n_frames',1));im.load()
-             except Exception:pass
-            records.append(r);save();print('OK',kind,len(b),url,flush=True);return b
-           except Exception as e:r['error']=str(e)[:250];records.append(r);save();print('FAIL',url,r['error'],flush=True);return None
-          class Parser(HTMLParser):
-           def __init__(self):super().__init__();self.links=[]
-           def handle_starttag(self,tag,attrs):
-            for k,v in attrs:
-             if v and (k in ('src','href','data-src','poster','data-video') or k.startswith('data-')):self.links.append((tag,k,v))
-          candidates={};scripts=[]
-          def inspect(url,b,kind):
-           text=b.decode('utf-8','replace');p=Parser();p.feed(text)
-           vals=[(t,k,v) for t,k,v in p.links]
-           vals += [('literal','literal',v) for v in re.findall(r'[\"\']((?:https?:)?//[^\s\"\'<>]+|[^\s\"\'<>]+\.(?:gif|webm|mp4|png|jpe?g|webp)(?:\?[^\s\"\'<>]*)?)[\"\']',text)]
-           vals += [('css','url',v.strip('\"\'')) for v in re.findall(r'url\(([^)]+)\)',text)]
-           for tag,attr,raw in vals:
-            u=urljoin(url,html.unescape(raw.replace('\\/','/'))).split('#')[0]
-            if not allowed(u):continue
-            refs.append({'source':url,'tag':tag,'attribute':attr,'url':u})
-            path=urlparse(u).path.lower()
-            if re.search(r'\.(gif|webm|mp4|png|jpg|jpeg|webp)$',path):
-             if not any(v in path for v in ('/common/','/sns/','logo','btn_','btn-','icon_','icon-','ogp.','favicon','nav_','nav-')):candidates.setdefault(u,url)
-            elif kind=='page' and tag in ('script','link') and (path.endswith('.js') or path.endswith('.css')):
-             if any(v in path for v in ('/p2020/','/p2019/','/p2018/','/e20221123/','trinity','191029','180912','180515')) and u not in scripts:scripts.append(u)
-           return p
-          # Guide URLs are discovered from the publisher index rather than guessed.
-          index='https://lineagem-jp.com/guide/index';b=get(index,'page');maps=[]
-          if b:
-           p=Parser();p.feed(b.decode('utf-8','replace'))
-           for tag,attr,v in p.links:
-            u=urljoin(index,v);path=urlparse(u).path
-            if '/guide/' in path and any(k in path.lower() for k in ('field','dungeon','island','tower','escaros','atlantis','lastavard','castle','village','eodin','rasutabad','thebes','tikal')) and u not in maps:maps.append(u)
-          pages=[
-           'https://lineagem.plaync.com/event/p2020/trinity/index',
-           'https://lineagem.plaync.com/event/p2019/191029_update/index',
-           'https://lineagem.plaync.com/event/p2018/180912_update/index',
-           'https://lineagem.plaync.com/event/p2018/180515_update/index',
-           'https://tw.hicdn.beanfun.com/beanfun/promo/LineageM/E20221123/index.html',
-           'https://lineagem-jp.com/guide/class_deathsizer',
-           'https://lineagem-jp.com/news_detail?seqNo=22657']+maps[:16]
-          for u in pages:
-           b=get(u,'page')
-           if b:inspect(u,b,'page')
-          for u in scripts[:18]:
-           b=get(u,'linked_css_or_js')
-           if b:inspect(u,b,'linked_css_or_js')
-          def priority(u):
-           p=urlparse(u).path.lower()
-           if p.endswith(('.gif','.webm','.mp4')):return 0
-           if 'map' in p or 'bip/data/image' in p:return 1
-           return 2
-          for u in sorted(candidates,key=priority)[:85]:get(u,'media',candidates[u])
-          (ROOT/'README_KO.md').write_text('# 리니지M 공식 맵·동작 공개 자료\n\n공식 웹페이지 및 실제 연결된 CSS/JS가 참조하는 공개 미디어입니다.\n지도 이미지와 웹 영상은 클라이언트 타일 데이터나 8방향 동작 원본과 구분해야 합니다.\n모든 리소스의 게임 내 재사용 권한은 별도 확인 대상입니다.\n로그인, 인증 우회, 암호 해제, 게임 실행 파일 실행은 하지 않았습니다.\n',encoding='utf-8')
-          save();print('SUMMARY',len(records),sum(r['status']=='downloaded' for r in records),total,flush=True)
-          PYCODE
-      - name: Preserve public references
+            with opener.open(Request(r['url'],headers={'User-Agent':'TWILIGHT-Public-Reference-Audit/1.0'}),timeout=10) as f:b=f.read(8*1024*1024+1)
+            if len(b)>8*1024*1024:raise ValueError('size limit')
+            with Image.open(io.BytesIO(b)) as im:im.load();r.update(width=im.width,height=im.height,format=im.format,frames=getattr(im,'n_frames',1))
+            (root/name).write_bytes(b);r.update(status='downloaded',bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
+           except Exception as e:r['error']=str(e)[:300]
+           manifest.append(r);print(r,flush=True)
+           (root/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
         if: always()
-        uses: actions/upload-artifact@v4
         with:
-          name: lineagem-maps-motion-20261013
-          path: lineagem_maps_motion/
-          if-no-files-found: error
+          name: lineagem-exact-map-references-20261013
+          path: lineagem_exact_maps/
           retention-days: 1
-          compression-level: 6
+          if-no-files-found: error
