@@ -141,3 +141,18 @@ git log -3 --oneline
 - 비사용 임시 생성 2개 폴더는 삭제하지 않고 `/workspace/research/unbound-animation-output`으로 보존, 게임 import/export 영역에서 제외.
 - 부족: 영웅 이상 54, 일반 139, 보스 29는 기존 유효 외형 유지. 정적 전수 검증과 실제 화면 표본 3 플레이어 + Drake를 구분. Android·전체 ID의 시각 검증·새 GPU 성능 측정 미완료.
 - 추가 공개 2D 생물 스프라이트(늑대/촉수)의 출처·라이선스와 원본 PNG/동작표를 조사 중. 3D 생성/모델 실행 없음. 아직 게임 적용이나 완료로 집계하지 않음.
+
+
+## 2026-10-13 확장 전달 / 최신 main 보존
+
+- 작업 브랜치 `feature/twilight-animation-20261013`, 기존 draft PR #100 유지. 확장 runtime `3d0447618e68d4a386ef0c4ce407e80d2cecd97e` push 확인. 이후 최신 main `02842fdd123bf14db46bed91a3cb68c36fa8b9b1`의 아이템 icon 변경을 충돌 없이 merge했다.
+- 새 runtime 리소스 291파일은 로컬·Git blob·provenance SHA-256 일치. 실제 Main 검/활/지팡이 영상 3개를 지정 Drive 폴더에 업로드하고 전체 파일 재다운로드 해시 일치 확인. `evidence/animation-expansion/video-delivery.json`에 링크/크기/해시 및 검증 범위.
+- CI `38359754605`: 새 native actor를 이전 정적 이미지와 비교하던 2개 조건 실패. static bridge 검사 유지 + 선언한 native SpriteFrames와 실제 pose 표시 검증으로 수정. `38359754626`: stun cooldown 실패는 `/workspace/evidence/baseline/full-suite/skill_mechanism_smoke_test.log`에도 존재. 전투 계산/쿨타임을 이번 범위에서 수정하지 않았다.
+- 남은 입력: Hero+ 54, 일반 몬스터 139, 보스 29의 대응 연속 프레임. 모든 미연결 ID와 구체적인 이유는 단일 resource ledger의 `sequential_actor_art.missing_native_motion`. 전수 시각/Android/GPU 성능/전체 보스 고유 모션은 미완료.
+- 후속 후보 연구만 존재: OGA Danimal Wolf archive SHA-256 `b2aa63b7627c8b52e1f68c2a8bfda7b23c6cf9dd1ade66407ae1dd040fb22e4d`, tentacle PNG `b7d166c16f860d49a0094368cdf50baf8d0b38c733eb918d93789d056f43dc2c`. `/workspace/research/open-sprite-expansion` 외부 보관. 아직 변환/게임 연결/영구 전달 아님. wolf 그리드 메타데이터 지원과 compass/정체성 검증이 먼저다. 늑대인간에 사족 늑대를 매핑하지 않는다.
+- 다음 명령: `git status --short; git log -4 --oneline`으로 이 기록 이후의 전달 커밋 확인, `python3 tests/animation_expansion_plan_test.py`, `python3 tools/check_resource_integrity.py --root .`. 완료한 34외형을 재생성하지 않는다.
+
+- GitHub의 `3d04476`을 `/workspace/twilight-animation-expanded-delivery`에 새로 clone. 캐시 없이 import 204.941초, boot 16.141초, native 15.445초, restore 22.683초, runtime registry 27.294초 모두 오류 없이 통과. 새 리소스 291파일 SHA 확인, 연구파일 복원 없이 실행. 명령/결과/로그 `evidence/animation-expansion/clean-delivery/`.
+- 첫 native pose 비교 수정 검사는 최초 프레임(attack)을 기대했으나 setup이 즉시 해당 방향 idle을 적용하므로 2건 실패했다. 실제 상태가 요구하는 `idle_<facing8>`의 첫 프레임을 엄격히 비교하도록 수정했다. 실패 로그 보존.
+
+- 최신 main 보존 merge **`dec79a632bb1cbb33f9de4d1d9073ac28dbb75de`**, 기존 static bridge와 새 native actor의 상태 검증/CI 확대 **`b516f38f32af2c82f23005a5df6526f9b7418cce`**. 로컬 L1J 실제 교전 101 checks 및 최신 main의 item icon 193 checks 통과. 최신 명령/로그 `latest-main-validation-reviewed.json`. 최종 전달 문서 커밋은 이후 `git log` 확인.

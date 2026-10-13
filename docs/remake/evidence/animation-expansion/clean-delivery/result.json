@@ -1,0 +1,85 @@
+{
+  "commit": "3d0447618e68d4a386ef0c4ce407e80d2cecd97e",
+  "clone_source": "https://github.com/zoog136-hash/-.git",
+  "cold_import": true,
+  "runtime_binary_files_sha256_verified": 291,
+  "research_files_restored": false,
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "checks": [
+    {
+      "name": "import",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-animation-expanded-delivery",
+        "--editor",
+        "--import"
+      ],
+      "exit": 0,
+      "seconds": 204.941,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "name": "boot",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-animation-expanded-delivery",
+        "--quit-after",
+        "60"
+      ],
+      "exit": 0,
+      "seconds": 16.141,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "name": "native-animation",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-animation-expanded-delivery",
+        "--script",
+        "res://tests/native_animation_expansion_test.gd"
+      ],
+      "exit": 0,
+      "seconds": 15.445,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "name": "restore",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-animation-expanded-delivery",
+        "--script",
+        "res://tests/animation_restore_test.gd"
+      ],
+      "exit": 0,
+      "seconds": 22.683,
+      "errors": [],
+      "pass": true
+    },
+    {
+      "name": "runtime-registry",
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-animation-expanded-delivery",
+        "--script",
+        "res://tests/remake_resource_export.gd"
+      ],
+      "exit": 0,
+      "seconds": 27.294,
+      "errors": [],
+      "pass": true
+    }
+  ]
+}
