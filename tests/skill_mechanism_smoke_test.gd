@@ -93,7 +93,13 @@ func _run() -> void:
 	preload("res://tests/combat_test_clock.gd").settle(world)
 	_expect(int(world.get("mp")) == before_mp - 10, "stun MP not consumed on attempt")
 	var cds: Dictionary = world.get("skill_cooldowns") as Dictionary
-	_expect(float(cds.get("쇼크 스턴", 0.0)) >= 9.0, "stun cooldown not started")
+	var stun_record: Dictionary = world.call("_skill_record", "쇼크 스턴") as Dictionary
+	var expected_stun_cooldown: float = SKILL_RULES.cooldown_seconds(stun_record) * float(world.call("_skill_cooldown_factor"))
+	var actual_stun_cooldown: float = float(cds.get("쇼크 스턴", 0.0))
+	_expect(expected_stun_cooldown > 0.0 and is_equal_approx(actual_stun_cooldown, expected_stun_cooldown), "stun cooldown must match the active skill-speed policy")
+	var mp_after_stun: int = int(world.get("mp"))
+	_expect(not bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun recast ignored its cooldown")
+	_expect(int(world.get("mp")) == mp_after_stun, "stun recast failure consumed MP")
 
 	world.call("_tick_skill_cooldowns", 15.0)
 	world.call("_on_quickslot_assignment_requested", 0, "skill_auto", "에너지 볼트")
