@@ -16,6 +16,10 @@ func _clear(world: TwilightWorld) -> void:
 	world.player.clear_click_path()
 	world._clear_combat_actions()
 	world.selected_monster = null
+	world.auto_target = null
+	world.auto_stuck_time = 0.0
+	world.auto_repath_timer = 0.0
+	world.auto_attack_timer = 0.0
 	for mob: TwilightMonster in world.monsters_root.get_children():
 		world.field_population.release(mob)
 		world.monsters_root.remove_child(mob)
@@ -45,12 +49,18 @@ func _run() -> void:
 		_clear(world)
 		await process_frame
 		world.player.global_position = point
+		# Each measured population starts with a fresh player combat state.
+		# Stun/fear carried from the previous crowd would suppress real AUTO.
+		world.player.clear_status_effects()
+		world.player.cancel_attack()
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
 		world.field_renderer.refresh_visible()
 		world.hp = 999999
 		world.mp = 999999
 		var hits: Array[int] = [0]
+		var anchor: TwilightMonster = null
+		var anchor_index: int = 1 if false else 0
 		for index: int in range(population):
 			# Same first 38 original DB species exist in the baseline checkout.
 			# Controlled HP/stats keep the population fixed; appearance and attack
@@ -71,13 +81,25 @@ func _run() -> void:
 				rig.visual = rig.visual.duplicate(true)
 				rig.visual.weapon = ["sword","bow","staff"][index%3]
 			var angle: float = TAU * float(index) / float(population)
-			mob.global_position = point + Vector2.from_angle(angle) * (45.0 + float(index % 6) * 38.0)
+			# Retain a visible, reachable real combat target near the player
+			# while the remaining 31/95/191 actual AI actors load the scene.
+			# Separating their initial positions avoids a collision pile-up
+			# that previously starved player strikes at the 192-actor sample.
+			if index == anchor_index:
+				mob.global_position = point + Vector2(45.0, 0.0)
+				anchor = mob
+			else:
+				mob.global_position = point + Vector2.from_angle(angle) * (185.0 + float(index % 6) * 38.0)
 			mob.home_position = mob.global_position
 			mob.died.connect(world._on_monster_died)
 			mob.player_hit.connect(world._on_player_hit)
 			mob.player_hit.connect(func(_mob: TwilightMonster, _damage: int, _kind: String) -> void: hits[0] += 1)
 			mob.selected.connect(world._select_monster)
 		world.player.set_auto_enabled(true)
+		world.auto_target = anchor
+		world.selected_monster = anchor
+		# This is the real AUTO attack path, not synthetic damage or fake hits.
+		# Report any remaining failure with enough state to diagnose it.
 		var times: Array[float] = []
 		var process_times: Array[float] = []
 		var physics_times: Array[float] = []
@@ -103,7 +125,7 @@ func _run() -> void:
 		for mob: TwilightMonster in world.monsters_root.get_children(): damage_hits += mob.damage_hit_count
 		if hits[0] == 0 or damage_hits == 0:
 			failed = true
-			push_error("Crowd had no real combat " + str(population))
+			push_error("Crowd had no real combat " + str(population) + " auto=" + str(world.player.auto_enabled) + " stunned=" + str(world.player.is_stunned()) + " feared=" + str(world.player.is_feared()) + " anchor_valid=" + str(is_instance_valid(anchor)) + " hits=" + str(hits[0]) + "/" + str(damage_hits))
 		times.sort()
 		process_times.sort()
 		physics_times.sort()

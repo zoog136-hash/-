@@ -467,8 +467,14 @@ func _load_data() -> void:
 	# Use owned Twilight art as fallbacks instead of blank inventory icons.
 	var image_records: Dictionary = catalog_image_index.get("아이템", {}) as Dictionary
 	for name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드", "드래곤의 성수", "드래곤의 용옥"]:
+		if name == "드래곤의 루비":
+			# Previous placeholder made a ruby look like the local red HP potion.
+			# Let the identity-aware resolver choose reviewed art or its gem symbol.
+			if str(image_records.get(name, "")) == "res://assets/ui/potionRed.png":
+				image_records.erase(name)
+			continue
 		if not image_records.has(name):
-			image_records[name] = "res://assets/ui/potionRed.png" if name == "드래곤의 루비" else "res://assets/ui/rune.png"
+			image_records[name] = "res://assets/ui/rune.png"
 	catalog_image_index["아이템"] = image_records
 	_build_job_classes()
 

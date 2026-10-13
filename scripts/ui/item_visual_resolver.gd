@@ -51,6 +51,19 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	if matches.size() == 1: return _ids[matches[0]]
 	return record
 
+# Even a catalog/legacy candidate must not give the bundled red HP potion art
+# to a different item. Keep genuine distinct source-ID-linked images untouched.
+static func _finalize_description(record: Dictionary, result: Dictionary) -> Dictionary:
+	var path: String = str(result.get("path", ""))
+	var name_value: String = str(result.get("name", ""))
+	if path == "res://assets/ui/potionRed.png" and not LOCAL_ITEM_ICONS.has(name_value):
+		result["path"] = ""
+		result["family"] = FALLBACK.family(record, name_value)
+		result["status"] = "self_authored_substitute"
+		result["route"] = "twilight_family_symbol"
+		result["reason"] = "unrelated_bundled_potion"
+	return result
+
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
 	var name_value: String = str(record.get("name", fallback_name))
 	var source: Dictionary = _source(record, name_value)
@@ -66,13 +79,13 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 			result.path = str(REVIEWED.item_binding(source, name_value).get("ground_texture", ""))
 			result.route = "reviewed_ground"
 			result.status = "original_linked"
-			return result
+			return _finalize_description(record, result)
 		var ground_binding: Dictionary = VISUALS.item_binding(source,name_value)
 		var ground_path: String = str(ground_binding.get("ground_path",""))
 		if ground_path != str(ground_binding.get("path","")) and _valid(ground_path):
 			result.path = ground_path
 			result.route = "l1j_dedicated_ground_candidate"
-			return result
+			return _finalize_description(record, result)
 	var pinned: String = str(source.get("image_path", ""))
 	if not ambiguous and _valid(pinned):
 		result.path = pinned
@@ -80,13 +93,13 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 		var proof: Dictionary = _evidence.get(id, {})
 		if proof.get("path", "") == pinned and proof.get("identity", "") == "source_id_name_image_bytes_verified":
 			result.status = "original_linked"
-		return result
+		return _finalize_description(record, result)
 	var local_path: String = str(LOCAL_ITEM_ICONS.get(name_value,""))
 	if not has_id and id.is_empty() and not ambiguous and _valid(local_path):
 		result.path = local_path
 		result.route = "twilight_local_item"
 		result.status = "bundled_ui_art"
-		return result
+		return _finalize_description(record, result)
 	# A known ID paired with the wrong name is rejected all the way to fallback.
 	if not source.is_empty() and not ambiguous:
 		var reviewed: Dictionary = REVIEWED.item_binding(source, name_value)
@@ -94,31 +107,31 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 			result.path = str(reviewed.get("inventory_texture", ""))
 			result.route = "reviewed_l1j"
 			result.status = "original_linked"
-			return result
+			return _finalize_description(record, result)
 		var mapped: Dictionary = VISUALS.item_binding(source, name_value)
 		var path: String = str(mapped.get("ground_path" if ground else "path", ""))
 		if _valid(path):
 			result.path = path
 			result.route = "l1j_candidate"
-			return result
+			return _finalize_description(record, result)
 		# A2's ID check rejects name-only candidates for source-identified records.
 		var bridge: Texture2D = A2.item_icon(source, name_value)
 		if bridge != null:
 			result.path = bridge.resource_path
 			result.route = "a2_candidate"
-			return result
+			return _finalize_description(record, result)
 		var indexed: String = str(images.get(name_value, ""))
 		# Old stock UI placeholders (e.g. a red potion for a ruby) are not
 		# original item art. Prefer the explicit item-family symbol below.
 		if not has_id and _valid(indexed) and not indexed.begins_with("res://assets/ui/"):
 			result.path = indexed
 			result.route = "legacy_exact_name_index"
-			return result
+			return _finalize_description(record, result)
 	result.family = FALLBACK.family(record, name_value)
 	result.route = "twilight_family_symbol"
 	result.status = "self_authored_substitute"
 	result["reason"] = "ambiguous_name" if ambiguous else "no_verified_source_path"
-	return result
+	return _finalize_description(record, result)
 
 static func texture(record: Dictionary, name_value: String = "", images: Dictionary = {}, ground: bool = false) -> Texture2D:
 	var info: Dictionary = describe(record, name_value, images, ground)
