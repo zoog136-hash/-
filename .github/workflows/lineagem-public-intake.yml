@@ -1,4 +1,4 @@
-name: Lineage M Public Reference Intake
+name: Lineage M Public Motion and Map Intake
 on:
   push:
     branches: ['research/lineagem-public-intake-20261013']
@@ -8,132 +8,109 @@ permissions:
 jobs:
   collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
-      - name: Install image metadata reader
+      - name: Install image reader
         run: python -m pip install --disable-pip-version-check Pillow
-      - name: Collect publisher-linked public media only
+      - name: Collect public linked maps and motion previews
         shell: bash
         run: |
           python - <<'PYCODE'
-          """Bounded, read-only collection of publisher-linked public Lineage M media.
-          No login, cookies, client execution, decryption or guessed CDN paths.
-          Files are research references, NOT automatically reusable game assets.
-          """
           from __future__ import annotations
-          import hashlib, html, io, json, re, time, zipfile
-          from html.parser import HTMLParser
+          import hashlib,html,io,json,re,time
           from pathlib import Path
-          from urllib.parse import urljoin, urlparse, unquote
-          from urllib.request import Request, build_opener, HTTPRedirectHandler
+          from urllib.parse import urljoin,urlparse,unquote
+          from urllib.request import Request,build_opener,HTTPRedirectHandler
+          from html.parser import HTMLParser
           from PIL import Image
-          ROOT=Path('lineagem_public_intake'); ROOT.mkdir(exist_ok=True)
-          for d in ('media','pages','fansite_members'): (ROOT/d).mkdir(exist_ok=True)
-          HOSTS={'lineagem-jp.com','st.ncjapan.co.jp','about.ncsoft.com','blogfiles.ncsoft.net','fizz-download.playnccdn.com','tw.hicdn.beanfun.com'}
-          MAX_BYTES=32*1024*1024; TOTAL_LIMIT=350*1024*1024
-          records=[]; links=[]; seen=set(); total=0; started=time.monotonic()
-          def checkpoint():
-           (ROOT/'checkpoint.json').write_text(json.dumps({'records':records,'embedded_media_links':links},ensure_ascii=False,indent=2),encoding='utf-8')
+          ROOT=Path('lineagem_maps_motion');ROOT.mkdir(exist_ok=True);(ROOT/'media').mkdir(exist_ok=True)
+          records=[];refs=[];done=set();total=0;start=time.monotonic()
+          def allowed(url):
+           p=urlparse(url);h=p.hostname or ''
+           return p.scheme=='https' and any(h==d or h.endswith('.'+d) for d in ('lineagem-jp.com','ncjapan.co.jp','plaync.com','playnccdn.com','beanfun.com'))
           class SafeRedirect(HTTPRedirectHandler):
            def redirect_request(self,req,fp,code,msg,headers,newurl):
-            if urlparse(newurl).scheme!='https' or urlparse(newurl).hostname not in HOSTS: raise ValueError('redirect outside publisher allowlist')
+            if not allowed(newurl):raise ValueError('redirect outside publisher domains')
             return super().redirect_request(req,fp,code,msg,headers,newurl)
           opener=build_opener(SafeRedirect())
-          class Links(HTMLParser):
-           def __init__(self): super().__init__(); self.items=[]
+          def save(): (ROOT/'manifest.json').write_text(json.dumps({'records':records,'discovered_links':refs,'native_map_packs_verified':0,'native_8way_sets_verified':0},ensure_ascii=False,indent=2),encoding='utf-8')
+          def get(url,kind,source=None):
+           global total
+           if url in done or not allowed(url) or time.monotonic()-start>330:return None
+           done.add(url);r={'url':url,'kind':kind,'source':source,'status':'failed'}
+           try:
+            cap=70*1024*1024 if kind=='media' else 5*1024*1024
+            if total>=240*1024*1024:raise ValueError('budget reached')
+            with opener.open(Request(url,headers={'User-Agent':'TWILIGHT-Public-Reference-Audit/1.0'}),timeout=12) as f:
+             b=f.read(min(cap,240*1024*1024-total)+1);r['content_type']=f.headers.get('Content-Type','');r['http_status']=f.status
+            if len(b)>cap or total+len(b)>240*1024*1024:raise ValueError('byte budget exceeded')
+            if kind=='media' and ('text/html' in r['content_type'] or b.lstrip().lower().startswith((b'<html',b'<!doctype html'))):raise ValueError('HTML not media')
+            total+=len(b);r.update(status='downloaded' if kind=='media' else 'inspected',bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
+            if kind=='media':
+             name=re.sub('[^a-zA-Z0-9._-]+','_',unquote(urlparse(url).path.split('/')[-1]))[:100] or 'file'
+             rel='media/'+hashlib.sha256(url.encode()).hexdigest()[:12]+'_'+name;(ROOT/rel).write_bytes(b);r['path']=rel
+             try:
+              with Image.open(io.BytesIO(b)) as im:r.update(format=im.format,width=im.width,height=im.height,frames=getattr(im,'n_frames',1));im.load()
+             except Exception:pass
+            records.append(r);save();print('OK',kind,len(b),url,flush=True);return b
+           except Exception as e:r['error']=str(e)[:250];records.append(r);save();print('FAIL',url,r['error'],flush=True);return None
+          class Parser(HTMLParser):
+           def __init__(self):super().__init__();self.links=[]
            def handle_starttag(self,tag,attrs):
             for k,v in attrs:
-             if k in ('src','href','data-src','poster') and v: self.items.append((tag,k,v))
-          def fetch(url,category,parent=None):
-           global total
-           if url in seen or time.monotonic()-started>420: return None
-           seen.add(url)
-           r={'url':url,'source_page':parent,'category':category,'status':'failed','native_game_resource_verified':False}
-           try:
-            u=urlparse(url)
-            if u.scheme!='https' or u.hostname not in HOSTS: raise ValueError('outside publisher allowlist')
-            if total>=TOTAL_LIMIT: raise ValueError('total byte budget reached')
-            with opener.open(Request(url,headers={'User-Agent':'TWILIGHT-Public-Reference-Audit/1.0'}),timeout=18) as f:
-             b=f.read(min(MAX_BYTES,TOTAL_LIMIT-total)+1); r['http_status']=f.status; r['content_type']=f.headers.get('Content-Type','')
-            if len(b)>MAX_BYTES or total+len(b)>TOTAL_LIMIT: raise ValueError('byte budget exceeded')
-            if not b: raise ValueError('empty response')
-            is_page=category=='source_page'
-            if not is_page and (b.lstrip().lower().startswith((b'<!doctype html',b'<html')) or 'text/html' in r['content_type']): raise ValueError('HTML instead of media')
-            name=re.sub(r'[^A-Za-z0-9._-]+','_',unquote(u.path.rsplit('/',1)[-1]))[:100] or 'resource'
-            if is_page and not name.endswith('.html'): name+='.html'
-            rel=Path('pages' if is_page else 'media')/(hashlib.sha256(url.encode()).hexdigest()[:12]+'_'+name)
-            total+=len(b)
-            r.update(status='page_fetched' if is_page else 'downloaded',bytes=len(b),sha256=hashlib.sha256(b).hexdigest())
-            if not is_page:
-             (ROOT/rel).write_bytes(b);r['path']=str(rel)
-            else:
-             r['note']='Page read for provenance and linked media; full article text is not redistributed.'
-            if not is_page:
-             try:
-              with Image.open(io.BytesIO(b)) as im:
-               r.update(format=im.format,width=im.width,height=im.height,frames=getattr(im,'n_frames',1))
-               im.verify()
-             except Exception: pass
-             if zipfile.is_zipfile(io.BytesIO(b)):
-              r['zip_members']=[]
-              with zipfile.ZipFile(io.BytesIO(b)) as z:
-               extracted_total=0
-               for info in z.infolist():
-                mr={'path':info.filename,'bytes':info.file_size};r['zip_members'].append(mr)
-                if info.is_dir() or info.file_size>MAX_BYTES or info.flag_bits&1: continue
-                if extracted_total+info.file_size>128*1024*1024: mr['skip']='expanded byte budget';continue
-                if Path(info.filename).suffix.lower() not in ('.png','.gif','.jpg','.jpeg','.webp','.txt','.md'): continue
-                raw=z.read(info);extracted_total+=len(raw);mr['sha256']=hashlib.sha256(raw).hexdigest()
-                safe=Path('fansite_members')/(r['sha256'][:12]+'_'+hashlib.sha256(info.filename.encode()).hexdigest()[:10]+Path(info.filename).suffix.lower())
-                (ROOT/safe).write_bytes(raw);mr['extracted_path']=str(safe)
-                try:
-                 with Image.open(io.BytesIO(raw)) as im: mr.update(format=im.format,width=im.width,height=im.height,frames=getattr(im,'n_frames',1)); im.verify()
-                except Exception: pass
-            records.append(r);checkpoint();print('OK',len(b),url,flush=True);time.sleep(.1);return b
-           except Exception as e:
-            r['error']=str(e)[:400];records.append(r);checkpoint();print('FAIL',url,r['error'],flush=True);return None
-          direct=[
-           'https://st.ncjapan.co.jp/ncjapan/ncsoft/lm/official/treasure/fansitekit202002.zip',
-           'https://st.ncjapan.co.jp/ncjapan/ncsoft/lm/official/treasure/fansitekit.zip',
-           'https://fizz-download.playnccdn.com/lg/file/LineageM/download/197c8d6e172-02c4675f-28de-47f5-9af6-3a06edf3e224',
-           'https://tw.hicdn.beanfun.com/beanfun/promo/LineageM/E20221123/assets/island-map%402x.6632aef2.png']
-          for u in direct: fetch(u,'official_public_distribution_or_reference')
+             if v and (k in ('src','href','data-src','poster','data-video') or k.startswith('data-')):self.links.append((tag,k,v))
+          candidates={};scripts=[]
+          def inspect(url,b,kind):
+           text=b.decode('utf-8','replace');p=Parser();p.feed(text)
+           vals=[(t,k,v) for t,k,v in p.links]
+           vals += [('literal','literal',v) for v in re.findall(r'[\"\']((?:https?:)?//[^\s\"\'<>]+|[^\s\"\'<>]+\.(?:gif|webm|mp4|png|jpe?g|webp)(?:\?[^\s\"\'<>]*)?)[\"\']',text)]
+           vals += [('css','url',v.strip('\"\'')) for v in re.findall(r'url\(([^)]+)\)',text)]
+           for tag,attr,raw in vals:
+            u=urljoin(url,html.unescape(raw.replace('\\/','/'))).split('#')[0]
+            if not allowed(u):continue
+            refs.append({'source':url,'tag':tag,'attribute':attr,'url':u})
+            path=urlparse(u).path.lower()
+            if re.search(r'\.(gif|webm|mp4|png|jpg|jpeg|webp)$',path):
+             if not any(v in path for v in ('/common/','/sns/','logo','btn_','btn-','icon_','icon-','ogp.','favicon','nav_','nav-')):candidates.setdefault(u,url)
+            elif kind=='page' and tag in ('script','link') and (path.endswith('.js') or path.endswith('.css')):
+             if any(v in path for v in ('/p2020/','/p2019/','/p2018/','/e20221123/','trinity','191029','180912','180515')) and u not in scripts:scripts.append(u)
+           return p
+          # Guide URLs are discovered from the publisher index rather than guessed.
+          index='https://lineagem-jp.com/guide/index';b=get(index,'page');maps=[]
+          if b:
+           p=Parser();p.feed(b.decode('utf-8','replace'))
+           for tag,attr,v in p.links:
+            u=urljoin(index,v);path=urlparse(u).path
+            if '/guide/' in path and any(k in path.lower() for k in ('field','dungeon','island','tower','escaros','atlantis','lastavard','castle','village','eodin','rasutabad','thebes','tikal')) and u not in maps:maps.append(u)
           pages=[
-           'https://lineagem-jp.com/treasure/sitekit',
-           'https://about.ncsoft.com/news/article/lineagem-reaper',
-           'https://lineagem-jp.com/guide/index',
-           'https://lineagem-jp.com/guide/beginner_field',
-           'https://lineagem-jp.com/guide/beginner_dungeon',
-           'https://lineagem-jp.com/guide/card_system',
+           'https://lineagem.plaync.com/event/p2020/trinity/index',
+           'https://lineagem.plaync.com/event/p2019/191029_update/index',
+           'https://lineagem.plaync.com/event/p2018/180912_update/index',
+           'https://lineagem.plaync.com/event/p2018/180515_update/index',
+           'https://tw.hicdn.beanfun.com/beanfun/promo/LineageM/E20221123/index.html',
            'https://lineagem-jp.com/guide/class_deathsizer',
-           'https://lineagem-jp.com/news_detail?seqNo=22657']
-          media_count=0
-          for page in pages:
-           if len([r for r in records if r['category']=='source_page'])>=24:break
-           b=fetch(page,'source_page')
-           if b is None:continue
-           text=b.decode('utf-8','replace');p=Links();p.feed(text)
-           for tag,attr,raw in p.items:
-            u=urljoin(page,html.unescape(raw)).split('#')[0];up=urlparse(u)
-            if tag in ('iframe','video','source'):links.append({'source_page':page,'tag':tag,'url':u})
-            if page=='https://lineagem-jp.com/guide/index' and up.hostname=='lineagem-jp.com' and up.path.startswith('/guide/') and any(t in up.path for t in ('class_','dungeon','island','tower','escaros','atlantis','lastavard','castle')):
-             if u not in pages:pages.append(u)
-            if up.hostname not in HOSTS or up.scheme!='https':continue
-            if not re.search(r'\.(png|jpe?g|gif|webp)(?:$|\?)',u,re.I):continue
-            if any(t in u.lower() for t in ('/common/','/sns/','logo','gnb_','gnb-','btn_','btn-','icon_','icon-','ogimage','ogp.')):continue
-            if media_count>=220:continue
-            if u not in seen: media_count+=1;fetch(u,'official_web_media_reference',page)
-          summary={'downloaded_files':sum(r['status']=='downloaded' for r in records),'failed_requests':sum(r['status']=='failed' for r in records),'http_bytes_including_source_pages':total,'downloaded_media_bytes':sum(r.get('bytes',0) for r in records if r['status']=='downloaded'),'animated_web_files':sum(r.get('frames',1)>1 for r in records),'animated_fansite_members':sum(m.get('frames',1)>1 for r in records for m in r.get('zip_members',[])),'native_lineagem_map_packs_verified':0,'native_lineagem_8way_animation_sets_verified':0}
-          (ROOT/'manifest.json').write_text(json.dumps({'summary':summary,'records':records,'embedded_media_links':links},ensure_ascii=False,indent=2),encoding='utf-8')
-          (ROOT/'README_KO.md').write_text('# 리니지M 공식 공개 자료 수집\n\n공식 공개 페이지에 실제 연결된 파일만 HTTP GET으로 수집했습니다.\n지도 이미지/원화/아이콘/웹 시연은 게임 클라이언트의 타일맵이나 8방향 동작 원본과 다릅니다.\n이 폴더는 연구용 분리 보관 자료입니다. 원작 권리는 NC/배포자에게 있습니다. 팬사이트 키트의 사용 조건은 https://lineagem-jp.com/treasure/sitekit 공식 배포 페이지를 확인하십시오. 배포 가능 여부는 별도 검토해야 합니다.\n\n'+json.dumps(summary,ensure_ascii=False,indent=2),encoding='utf-8')
-          print(json.dumps(summary,ensure_ascii=False),flush=True)
+           'https://lineagem-jp.com/news_detail?seqNo=22657']+maps[:16]
+          for u in pages:
+           b=get(u,'page')
+           if b:inspect(u,b,'page')
+          for u in scripts[:18]:
+           b=get(u,'linked_css_or_js')
+           if b:inspect(u,b,'linked_css_or_js')
+          def priority(u):
+           p=urlparse(u).path.lower()
+           if p.endswith(('.gif','.webm','.mp4')):return 0
+           if 'map' in p or 'bip/data/image' in p:return 1
+           return 2
+          for u in sorted(candidates,key=priority)[:85]:get(u,'media',candidates[u])
+          (ROOT/'README_KO.md').write_text('# 리니지M 공식 맵·동작 공개 자료\n\n공식 웹페이지 및 실제 연결된 CSS/JS가 참조하는 공개 미디어입니다.\n지도 이미지와 웹 영상은 클라이언트 타일 데이터나 8방향 동작 원본과 구분해야 합니다.\n모든 리소스의 게임 내 재사용 권한은 별도 확인 대상입니다.\n로그인, 인증 우회, 암호 해제, 게임 실행 파일 실행은 하지 않았습니다.\n',encoding='utf-8')
+          save();print('SUMMARY',len(records),sum(r['status']=='downloaded' for r in records),total,flush=True)
           PYCODE
-      - name: Preserve research output
+      - name: Preserve public references
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lineagem-public-intake-20261013
-          path: lineagem_public_intake/
+          name: lineagem-maps-motion-20261013
+          path: lineagem_maps_motion/
           if-no-files-found: error
           retention-days: 1
           compression-level: 6
