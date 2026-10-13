@@ -107,6 +107,14 @@ func _spawn_slot(slot: Dictionary) -> void:
 		record["lv"] = int(variant.get("level",record.get("lv",1)))
 		record["hp"] = int(float(record.get("hp",100))*ratio)
 		record["atk"] = int(float(record.get("atk",10))*sqrt(ratio))
+	# The authored regional level range is for this spawn instance only. Never
+	# mutate a species' shared DB record or silently rescale its base HP/drops.
+	var level_range: Array = region.get("level", [])
+	if level_range.size() == 2:
+		var local_level: int = clampi(int(record.get("lv", 1)), int(level_range[0]), int(level_range[1]))
+		if local_level != int(record.get("lv", 1)):
+			record = record.duplicate(true)
+			record["lv"] = local_level
 	# A node queued by combat/map cleanup can still receive its last physics
 	# callback before deletion. Never cast a stale pool entry to a live actor.
 	var monster: TwilightMonster = null
