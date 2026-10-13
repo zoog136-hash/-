@@ -1,0 +1,106 @@
+{
+  "baseline_commit": "434b904d957fd2146b6d2e73325693a402028035",
+  "suite_counts_independently_audited": {
+    "pass": 122,
+    "fail": 14,
+    "skip": 3,
+    "not_run": 0
+  },
+  "failure_groups": {
+    "private_source_pack_missing": [
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test"
+    ],
+    "deadline_without_script_or_assertion_error": [
+      "ground_loot_system_test",
+      "original_skill_learning_conditions_test"
+    ],
+    "script_or_stale_test_contract": [
+      "original_turn_undead_rewards_test",
+      "ui_pointer_transfer_test",
+      "world_structure_test"
+    ],
+    "assertion_failures": [
+      "hunting_navigation_cache_test",
+      "lineagem_ui_visual_smoke_test",
+      "monster_world_test",
+      "renewed_map_spawn_test",
+      "skill_mechanism_smoke_test",
+      "world_regions_test"
+    ],
+    "other_failures": []
+  },
+  "skipped_checks": [
+    "original_map_catalog_test",
+    "original_world_runtime_test",
+    "source_first_map_test"
+  ],
+  "import_attempts": [
+    {
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-baseline",
+        "--import"
+      ],
+      "pid": 1785,
+      "returncode": 0,
+      "elapsed_seconds": 387.65882054499997
+    },
+    {
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-baseline",
+        "--import"
+      ],
+      "pid": 7956,
+      "returncode": 0,
+      "elapsed_seconds": 13.331216500000096
+    }
+  ],
+  "boot_processes": [
+    {
+      "command": [
+        "/workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64",
+        "--headless",
+        "--path",
+        "/workspace/twilight-baseline",
+        "--quit-after",
+        "60"
+      ],
+      "pid": 8256,
+      "returncode": 0,
+      "elapsed_seconds": 17.36823016099993
+    }
+  ],
+  "timing_limits": "Cold import took 387.659 seconds and exited 0 but reported sandbox config/cache/socket errors. Corrected warm import passed. Boot timing covers process start through 60 headless frames, not isolated first-draw time. Runs shared CPU with other validation; no hardware FPS claim.",
+  "capture_evidence": {
+    "unaltered_png_count": 15,
+    "screenshots": "/workspace/evidence/baseline/screenshots",
+    "image_manifest": "/workspace/evidence/baseline/capture-manifest.json",
+    "video": "/workspace/evidence/baseline/combat-movie/capture.mp4",
+    "video_manifest": "/workspace/evidence/baseline/combat-movie/video-manifest.json",
+    "video_source": "Production Main.tscn with unmodified existing capture_combat.gd; diagnostic poses and live AUTO movement. XP delta 0, therefore not kill/reward proof.",
+    "renderer": "OpenGL 4.5; Mesa 25.0.7; llvmpipe LLVM 19.1.7"
+  },
+  "resource_integrity": {
+    "tracked_sheets": 723,
+    "frames": 41442,
+    "bytes": 233420026,
+    "original_private_pack": "not installed; not delivered; no synthetic full-source fixture installed"
+  },
+  "android_environment": "/workspace/evidence/baseline/android-environment.json",
+  "raw_suite_logs": "/workspace/evidence/baseline/full-suite",
+  "initial_environment_failed_attempt": "/workspace/evidence/baseline/cold-import-attempt",
+  "audited_log_details": "/workspace/evidence/baseline/audited-summary.json",
+  "generated_test_docs": {
+    "manifest": "/workspace/evidence/baseline/test-generated-docs/manifest.json",
+    "files": 239,
+    "bytes": 104842143,
+    "working_tree_policy": "Preserved unchanged; no reset or deletion. Root capture_remake_play.gd retained."
+  }
+}

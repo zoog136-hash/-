@@ -1,0 +1,1587 @@
+{
+  "git_sha": "434b904d957fd2146b6d2e73325693a402028035",
+  "total": 139,
+  "counts": {
+    "pass": 122,
+    "fail": 14,
+    "skip": 3,
+    "not_run": 0
+  },
+  "runner_summary": {
+    "total": 139,
+    "passed": 122,
+    "failed": [
+      "ground_loot_system_test",
+      "hunting_navigation_cache_test",
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test",
+      "lineagem_ui_visual_smoke_test",
+      "monster_world_test",
+      "original_skill_learning_conditions_test",
+      "original_turn_undead_rewards_test",
+      "renewed_map_spawn_test",
+      "skill_mechanism_smoke_test",
+      "ui_pointer_transfer_test",
+      "world_regions_test",
+      "world_structure_test"
+    ],
+    "skipped": [
+      "original_map_catalog_test",
+      "original_world_runtime_test",
+      "source_first_map_test"
+    ],
+    "not_run": [],
+    "checks": [
+      "import",
+      "boot",
+      "actor_motion_test",
+      "aden_building_test",
+      "aden_courtyard_test",
+      "aden_ground_continuity_test",
+      "aden_shoreline_test",
+      "aden_terrain_polish_test",
+      "ainhasad_smoke_test",
+      "animation_catalog_test",
+      "animation_presentation_test",
+      "animation_restore_test",
+      "authored_frames_test",
+      "authored_state_motion_test",
+      "boss_presentation_test",
+      "card_special_policy_test",
+      "catalog_effects_smoke_test",
+      "catalog_full_browser_smoke_test",
+      "combat_hud_test",
+      "combat_resolution_equivalence_test",
+      "combat_timing_test",
+      "combat_vfx_test",
+      "consumable_smoke_test",
+      "crafting_atomic_test",
+      "crafting_material_drop_test",
+      "crafting_scroll_grade_test",
+      "equipment_blessing_smoke_test",
+      "equipment_slot_smoke_test",
+      "external_a2_bridge_smoke_test",
+      "external_spx_actor_runtime_test",
+      "field_world_test",
+      "flight_lifecycle_test",
+      "follower_motion_test",
+      "full_inven_catalog_smoke_test",
+      "full_visual_manifest_test",
+      "ground_drop_smoke_test",
+      "ground_loot_system_test",
+      "hit_feedback_render_test",
+      "hit_feedback_test",
+      "hp_mp_unique_effects_smoke_test",
+      "hunting_navigation_cache_test",
+      "hunting_paths_test",
+      "hunting_world_capture_test",
+      "input_routing_test",
+      "inventory_db_smoke_test",
+      "item_buff_description_smoke_test",
+      "item_db_slot_smoke_test",
+      "item_icon_art_smoke_test",
+      "item_options_runtime_smoke_test",
+      "item_weight_smoke_test",
+      "job_smoke_test",
+      "l1j_full_source_data_test",
+      "l1j_map_grid_test",
+      "l1j_map_recovery_test",
+      "l1j_optional_bridge_test",
+      "l1j_packed_assets_test",
+      "l1j_png_load_test",
+      "l1j_reviewed_shop_test",
+      "l1j_runtime_game_test",
+      "l1j_source_map_catalog_test",
+      "l1j_source_navigation_test",
+      "l1j_spx_frames_test",
+      "l1j_visual_link_test",
+      "lineage_inventory_ui_smoke_test",
+      "lineage_side_ui_smoke_test",
+      "lineagem_ui_visual_smoke_test",
+      "local_crafting_test",
+      "loot_balance_smoke_test",
+      "main_debug_crafting_blessing_test",
+      "main_debug_failed_load_test",
+      "main_debug_input_bindings_test",
+      "map_visual_toggle_test",
+      "mobile_scroll_smoke_test",
+      "monster_ai_leash_path_test",
+      "monster_attack_profiles_test",
+      "monster_motion_test",
+      "monster_world_test",
+      "non_skill_options_smoke_test",
+      "npc_dialogue_branching_test",
+      "npc_teleport_test",
+      "option_finalize_smoke_test",
+      "original_counter_probability_test",
+      "original_lineagem_effects_smoke_test",
+      "original_map_catalog_test",
+      "original_skill_audio_test",
+      "original_skill_catalog_runtime_test",
+      "original_skill_learning_conditions_test",
+      "original_skill_provenance_test",
+      "original_skill_reduction_test",
+      "original_skill_restore_guard_test",
+      "original_skill_status_coexistence_test",
+      "original_skill_summon_test",
+      "original_skill_system_test",
+      "original_skill_target_state_test",
+      "original_skill_warehouse_migration_test",
+      "original_turn_undead_rewards_test",
+      "original_turn_undead_test",
+      "original_world_coordinates_test",
+      "original_world_runtime_test",
+      "passive_skill_smoke_test",
+      "per_instance_enchantments_smoke_test",
+      "playtest_catalog_drag_test",
+      "pr80_original_resources_test",
+      "pr80_resource_assets_test",
+      "pr93_landing_bounds_test",
+      "quickslot_smoke_test",
+      "reference_expansion_test",
+      "reference_object_capture_test",
+      "reference_object_placement_test",
+      "relic_motion_test",
+      "renewed_map_spawn_test",
+      "road_surface_mesh_test",
+      "road_surface_render_test",
+      "shield_rules_smoke_test",
+      "shop_authority_test",
+      "shop_buyback_test",
+      "skill_element_integration_smoke_test",
+      "skill_mechanism_smoke_test",
+      "source_first_map_test",
+      "source_pack_guard_test",
+      "speed_option_smoke_test",
+      "stage5_save_compatibility_test",
+      "terrain_surface_geometry_test",
+      "terrain_surface_render_test",
+      "terrain_variation_texture_test",
+      "ui_fidelity_regression_test",
+      "ui_navigation_preservation_test",
+      "ui_pointer_transfer_test",
+      "ui_renewal_integration_test",
+      "ui_stage4_item_instance_test",
+      "visible_gameplay_smoke_test",
+      "volley_motion_test",
+      "warehouse_persistence_test",
+      "weapon_rules_smoke_test",
+      "world_region_portals_test",
+      "world_regions_test",
+      "world_structure_capture_test",
+      "world_structure_test",
+      "world_terrain_coverage_test"
+    ]
+  },
+  "checks": [
+    {
+      "name": "import",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/import.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "boot",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/boot.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "actor_motion_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/actor_motion_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "aden_building_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/aden_building_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "aden_courtyard_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/aden_courtyard_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "aden_ground_continuity_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/aden_ground_continuity_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "aden_shoreline_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/aden_shoreline_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "aden_terrain_polish_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/aden_terrain_polish_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "ainhasad_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/ainhasad_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "animation_catalog_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/animation_catalog_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "animation_presentation_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/animation_presentation_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "animation_restore_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/animation_restore_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "authored_frames_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/authored_frames_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "authored_state_motion_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/authored_state_motion_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "boss_presentation_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/boss_presentation_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "card_special_policy_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/card_special_policy_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "catalog_effects_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/catalog_effects_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "catalog_full_browser_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/catalog_full_browser_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "combat_hud_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/combat_hud_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "combat_resolution_equivalence_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/combat_resolution_equivalence_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "combat_timing_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/combat_timing_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "combat_vfx_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/combat_vfx_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "consumable_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/consumable_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "crafting_atomic_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/crafting_atomic_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "crafting_material_drop_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/crafting_material_drop_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "crafting_scroll_grade_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/crafting_scroll_grade_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "equipment_blessing_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/equipment_blessing_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "equipment_slot_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/equipment_slot_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "external_a2_bridge_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/external_a2_bridge_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "external_spx_actor_runtime_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/external_spx_actor_runtime_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "field_world_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/field_world_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "flight_lifecycle_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/flight_lifecycle_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "follower_motion_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/follower_motion_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "full_inven_catalog_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/full_inven_catalog_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "full_visual_manifest_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/full_visual_manifest_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "ground_drop_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/ground_drop_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "ground_loot_system_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/ground_loot_system_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "TIMEOUT Command '['/workspace/evidence/baseline/godot_timed.py', '--headless', '--path', '/workspace/twilight-baseline', '--script', 'res://tests/ground_loot_system_test.gd']' timed out after 150 seconds"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "hit_feedback_render_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/hit_feedback_render_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "hit_feedback_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/hit_feedback_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "hp_mp_unique_effects_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/hp_mp_unique_effects_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "hunting_navigation_cache_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/hunting_navigation_cache_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "HUNTING_NAV_CACHE_FAILED 225 failures=25",
+        "HUNTING_CACHE_FAIL aden_world checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_01 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_02 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_03 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_04 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_05 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_06 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_07 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_08 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_09 checked source cache loads",
+        "HUNTING_CACHE_FAIL oman_10 checked source cache loads",
+        "HUNTING_CACHE_FAIL domination_summit checked source cache loads",
+        "HUNTING_CACHE_FAIL escaros_01 checked source cache loads",
+        "HUNTING_CACHE_FAIL escaros_02 checked source cache loads",
+        "HUNTING_CACHE_FAIL escaros_03 checked source cache loads",
+        "HUNTING_CACHE_FAIL escaros_04 checked source cache loads",
+        "HUNTING_CACHE_FAIL escaros_05 checked source cache loads",
+        "HUNTING_CACHE_FAIL albino_01 checked source cache loads",
+        "HUNTING_CACHE_FAIL albino_02 checked source cache loads",
+        "HUNTING_CACHE_FAIL albino_03 checked source cache loads",
+        "HUNTING_CACHE_FAIL albino_04 checked source cache loads",
+        "HUNTING_CACHE_FAIL faith_01 checked source cache loads",
+        "HUNTING_CACHE_FAIL faith_02 checked source cache loads",
+        "HUNTING_CACHE_FAIL faith_03 checked source cache loads",
+        "HUNTING_CACHE_FAIL faith_04 checked source cache loads"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "hunting_paths_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/hunting_paths_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "hunting_world_capture_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/hunting_world_capture_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "input_routing_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/input_routing_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "inventory_db_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/inventory_db_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "item_buff_description_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/item_buff_description_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "item_db_slot_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/item_db_slot_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "item_icon_art_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/item_icon_art_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "item_options_runtime_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/item_options_runtime_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "item_weight_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/item_weight_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "job_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/job_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_full_source_data_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_full_source_data_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_map_grid_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_map_grid_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "L1J_MAP_GRID_FAIL: installed source tile bytes missing",
+        "L1J_MAP_GRID_FAIL: first byte mismatch",
+        "L1J_MAP_GRID_FAIL: last byte mismatch"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_map_recovery_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_map_recovery_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_optional_bridge_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_optional_bridge_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_packed_assets_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_packed_assets_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_png_load_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_png_load_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "L1J_PNG_LOAD_FAIL: actual PNG item missing",
+        "L1J_PNG_LOAD_FAIL: actual PNG monster missing",
+        "L1J_PNG_LOAD_FAIL: bind external item",
+        "L1J_PNG_LOAD_FAIL: item UI texture unchanged",
+        "L1J_PNG_LOAD_FAIL: missing rollback",
+        "L1J_PNG_LOAD_FAIL: standalone scene did not display PNG"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_reviewed_shop_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_reviewed_shop_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_runtime_game_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_runtime_game_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_source_map_catalog_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_source_map_catalog_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_source_navigation_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_source_navigation_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_spx_frames_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_spx_frames_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "L1J_SPX_FRAMES_FAIL: valid SpriteFrames .tres was not imported",
+        "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "l1j_visual_link_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/l1j_visual_link_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "lineage_inventory_ui_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/lineage_inventory_ui_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "lineage_side_ui_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/lineage_side_ui_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "lineagem_ui_visual_smoke_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/lineagem_ui_visual_smoke_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "LINEAGEM_UI_VISUAL_FAILED: 1",
+        "LINEAGEM_UI_FAIL: navigation belongs to actual game menu"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "local_crafting_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/local_crafting_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "loot_balance_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/loot_balance_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "main_debug_crafting_blessing_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/main_debug_crafting_blessing_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "main_debug_failed_load_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/main_debug_failed_load_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "main_debug_input_bindings_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/main_debug_input_bindings_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "map_visual_toggle_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/map_visual_toggle_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "mobile_scroll_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/mobile_scroll_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "monster_ai_leash_path_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/monster_ai_leash_path_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "monster_attack_profiles_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/monster_attack_profiles_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "monster_motion_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/monster_motion_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "monster_world_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/monster_world_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "MONSTER WORLD FAIL: boss has a separate skill aden_world",
+        "MONSTER WORLD FAIL: boss has a separate skill aden_world",
+        "MONSTER WORLD FAIL: dense zone fills independent cap oman_03",
+        "MONSTER WORLD FAIL: continuous bounded dense respawn oman_03",
+        "MONSTER WORLD FAIL: dense zone fills independent cap oman_07",
+        "MONSTER WORLD FAIL: continuous bounded dense respawn oman_07",
+        "MONSTER_WORLD_FAILED"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "non_skill_options_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/non_skill_options_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "npc_dialogue_branching_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/npc_dialogue_branching_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "npc_teleport_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/npc_teleport_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "option_finalize_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/option_finalize_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_counter_probability_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_counter_probability_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_lineagem_effects_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_lineagem_effects_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_map_catalog_test",
+      "status": "skip",
+      "log": "/workspace/evidence/baseline/full-suite/original_map_catalog_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_audio_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_audio_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_catalog_runtime_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_catalog_runtime_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_learning_conditions_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_learning_conditions_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "TIMEOUT Command '['/workspace/evidence/baseline/godot_timed.py', '--headless', '--path', '/workspace/twilight-baseline', '--script', 'res://tests/original_skill_learning_conditions_test.gd']' timed out after 150 seconds"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_provenance_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_provenance_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_reduction_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_reduction_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_restore_guard_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_restore_guard_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_status_coexistence_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_status_coexistence_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_summon_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_summon_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_system_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_system_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_target_state_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_target_state_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_skill_warehouse_migration_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_skill_warehouse_migration_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_turn_undead_rewards_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/original_turn_undead_rewards_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "TIMEOUT Command '['/workspace/evidence/baseline/godot_timed.py', '--headless', '--path', '/workspace/twilight-baseline', '--script', 'res://tests/original_turn_undead_rewards_test.gd']' timed out after 150 seconds",
+        "SCRIPT ERROR: Invalid assignment of property or key 'quest_kills' with value of type 'int' on a base object of type 'Node2D (TwilightWorld)'."
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "original_turn_undead_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_turn_undead_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_world_coordinates_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/original_world_coordinates_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "original_world_runtime_test",
+      "status": "skip",
+      "log": "/workspace/evidence/baseline/full-suite/original_world_runtime_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "passive_skill_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/passive_skill_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "per_instance_enchantments_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/per_instance_enchantments_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "playtest_catalog_drag_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/playtest_catalog_drag_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "pr80_original_resources_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/pr80_original_resources_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "pr80_resource_assets_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/pr80_resource_assets_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "pr93_landing_bounds_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/pr93_landing_bounds_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "quickslot_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/quickslot_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "reference_expansion_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/reference_expansion_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "reference_object_capture_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/reference_object_capture_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "reference_object_placement_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/reference_object_placement_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "relic_motion_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/relic_motion_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "renewed_map_spawn_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/renewed_map_spawn_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "RENEWED SPAWN FAIL: respawn unchanged aden_world/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged aden_world/desert_boss",
+        "RENEWED SPAWN FAIL: respawn unchanged aden_world/fire_boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_01/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_02/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_03/boss",
+        "RENEWED SPAWN FAIL: full capacity seed 20261012 oman_03/dense_hotspot (23/24)",
+        "RENEWED SPAWN FAIL: full capacity seed 20261013 oman_03/dense_hotspot (23/24)",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_04/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_05/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_06/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_07/boss",
+        "RENEWED SPAWN FAIL: full capacity seed 20261012 oman_07/dense_hotspot (23/24)",
+        "RENEWED SPAWN FAIL: full capacity seed 20261013 oman_07/dense_hotspot (23/24)",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_08/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_09/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged oman_10/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged domination_summit/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged escaros_01/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged escaros_02/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged escaros_03/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged escaros_04/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged escaros_05/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged albino_01/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged albino_02/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged albino_03/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged faith_01/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged faith_02/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged faith_03/boss",
+        "RENEWED SPAWN FAIL: respawn unchanged faith_04/boss"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "road_surface_mesh_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/road_surface_mesh_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "road_surface_render_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/road_surface_render_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "shield_rules_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/shield_rules_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "shop_authority_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/shop_authority_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "shop_buyback_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/shop_buyback_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "skill_element_integration_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/skill_element_integration_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "skill_mechanism_smoke_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/skill_mechanism_smoke_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "SKILL MECHANISM FAIL: stun cooldown not started",
+        "SKILL_MECHANISM_SMOKE_FAILED: 1 failure(s)"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "source_first_map_test",
+      "status": "skip",
+      "log": "/workspace/evidence/baseline/full-suite/source_first_map_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "source_pack_guard_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/source_pack_guard_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "speed_option_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/speed_option_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "stage5_save_compatibility_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/stage5_save_compatibility_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "terrain_surface_geometry_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/terrain_surface_geometry_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "terrain_surface_render_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/terrain_surface_render_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "terrain_variation_texture_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/terrain_variation_texture_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "ui_fidelity_regression_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/ui_fidelity_regression_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "ui_navigation_preservation_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/ui_navigation_preservation_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "ui_pointer_transfer_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/ui_pointer_transfer_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "SCRIPT ERROR: Invalid access to property or key '\ub0a1\uc740 \uc7a5\uac80@@@1' on a base object of type 'Dictionary'."
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "ui_renewal_integration_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/ui_renewal_integration_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "ui_stage4_item_instance_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/ui_stage4_item_instance_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "visible_gameplay_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/visible_gameplay_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "volley_motion_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/volley_motion_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "warehouse_persistence_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/warehouse_persistence_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "weapon_rules_smoke_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/weapon_rules_smoke_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "world_region_portals_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/world_region_portals_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "world_regions_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/world_regions_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "REGION FAIL: oman_03 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_03 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_03 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_03 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_06 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_06 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_06 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_07 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_07 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_08 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_09 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_09 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_09 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_10 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_10 authored regional levels applied without DB mutation",
+        "REGION FAIL: oman_10 authored regional levels applied without DB mutation",
+        "REGION FAIL: domination_summit authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_01 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_01 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_01 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_01 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_02 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_03 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_03 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: albino_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_01 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_02 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_02 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_02 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_02 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_04 authored regional levels applied without DB mutation",
+        "REGION FAIL: faith_04 authored regional levels applied without DB mutation",
+        "WORLD_REGIONS_FAILED: 57"
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "world_structure_capture_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/world_structure_capture_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    },
+    {
+      "name": "world_structure_test",
+      "status": "fail",
+      "log": "/workspace/evidence/baseline/full-suite/world_structure_test.log",
+      "initial_runner_failed": true,
+      "environment_rerun": false,
+      "markers": [
+        "TIMEOUT Command '['/workspace/evidence/baseline/godot_timed.py', '--headless', '--path', '/workspace/twilight-baseline', '--script', 'res://tests/world_structure_test.gd']' timed out after 150 seconds",
+        "SCRIPT ERROR: Invalid access to property or key 'map_id' on a base object of type 'Dictionary'."
+      ],
+      "json_failures": []
+    },
+    {
+      "name": "world_terrain_coverage_test",
+      "status": "pass",
+      "log": "/workspace/evidence/baseline/full-suite/world_terrain_coverage_test.log",
+      "initial_runner_failed": false,
+      "environment_rerun": false,
+      "markers": [],
+      "json_failures": []
+    }
+  ]
+}

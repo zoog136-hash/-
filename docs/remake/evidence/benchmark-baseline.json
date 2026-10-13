@@ -1,0 +1,486 @@
+{
+	"adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+	"boot": {
+		"engine_start_to_playable_draw_ms": 26454.767,
+		"geometry_signature": "82ecb90601bae99c6477e2abc6a9088a54f359e1566e332c174c8bdd98283a34",
+		"main_load_and_ready_ms": 10589.577,
+		"main_load_to_playable_draw_ms": 14531.12,
+		"memory": {
+			"godot_static_bytes": 329844133,
+			"godot_static_peak_bytes": 385688421,
+			"render_video_bytes": 126475023
+		},
+		"navigation_cache_hit": false
+	},
+	"cache_scope": "Imported assets required; first-use/repeat refers to new-process frame caches, not cold disk/driver caches. Runner must match its external cache policy.",
+	"combat": {
+		"draw_calls": {
+			"max": 688.0,
+			"mean": 635.375,
+			"median": 634.0,
+			"p95": 671.0
+		},
+		"elapsed_ms": 6689.342,
+		"frame_interval_ms": {
+			"max": 143.277,
+			"mean": 55.7445166666667,
+			"median": 51.797,
+			"p95": 81.246
+		},
+		"memory": {
+			"godot_static_bytes": 265540705,
+			"godot_static_peak_bytes": 385688421,
+			"render_video_bytes": 150239119
+		},
+		"monster_released_attacks": 192,
+		"peaks": {
+			"chunks": 4,
+			"flights": 0,
+			"nodes": 1889,
+			"props": 106
+		},
+		"physics_cpu_ms": {
+			"max": 23.519,
+			"mean": 14.7920166666667,
+			"median": 14.223,
+			"p95": 23.519
+		},
+		"player_landed_hits": 18,
+		"player_released_attacks": 37,
+		"process_cpu_ms": {
+			"max": 131.467,
+			"mean": 84.0378833333334,
+			"median": 77.598,
+			"p95": 131.467
+		},
+		"raw_frame_ms": [
+			58.288,
+			49.198,
+			62.124,
+			57.878,
+			65.631,
+			86.621,
+			69.559,
+			86.872,
+			63.408,
+			64.006,
+			39.476,
+			48.413,
+			46.672,
+			51.4,
+			54.896,
+			56.166,
+			44.314,
+			69.966,
+			67.528,
+			46.269,
+			59.66,
+			101.051,
+			47.494,
+			51.688,
+			51.868,
+			54.905,
+			65.94,
+			52.213,
+			43.206,
+			50.923,
+			65.944,
+			55.418,
+			54.876,
+			48.083,
+			92.981,
+			74.816,
+			59.061,
+			42.125,
+			49.213,
+			58.037,
+			45.785,
+			44.239,
+			56.39,
+			64.584,
+			143.277,
+			72.999,
+			51.54,
+			55.736,
+			43.989,
+			56.63,
+			51.726,
+			63.435,
+			102.636,
+			61.476,
+			76.506,
+			81.246,
+			60.901,
+			43.921,
+			50.902,
+			47.335,
+			48.297,
+			42.391,
+			64.59,
+			49.595,
+			64.482,
+			38.705,
+			69.99,
+			42.132,
+			54.651,
+			53.4,
+			63.509,
+			75.228,
+			57.926,
+			46.123,
+			47.758,
+			68.588,
+			49.739,
+			50.568,
+			46.685,
+			36.892,
+			47.491,
+			49.168,
+			46.454,
+			49.711,
+			44.267,
+			34.506,
+			57.428,
+			63.166,
+			43.474,
+			39.737,
+			45.448,
+			46.49,
+			46.959,
+			52.292,
+			53.53,
+			44.555,
+			43.216,
+			41.813,
+			59.587,
+			42.03,
+			49.339,
+			49.914,
+			55.95,
+			62.32,
+			70.968,
+			40.165,
+			52.047,
+			51.31,
+			41.282,
+			42.43,
+			52.972,
+			57.7,
+			58.596,
+			48.251,
+			42.14,
+			67.715,
+			41.909,
+			50.864,
+			49.982,
+			37.477
+		],
+		"sample_frames": 120,
+		"warmup_frames": 60
+	},
+	"data_sha256": {
+		"res://data/catalog_v19.json": "437a74a978b7984f84f853e814240140094126b1ace70b37a18d331d5e483c14",
+		"res://data/game_db_v17.json": "82b3f45e5dda82b871d7019e239ada80a27e45fb6cda4eb20b9a88d12cc4b65f",
+		"res://data/maps/aden_field.json": "b4924ae78265799a963f620e6db7871db8afc01d61a67ceea46f53aeb41dbc88",
+		"res://data/maps/field_index.json": "8a85de278654994fb78bc33517767ca626192b004ef80f5504178a4f60342e06",
+		"res://data/monsters/monster_world_catalog.json": "9536dfc28bcc6ca6a0d3577881f7e72213a15b6490a4e5e368ac75fdd69872c6",
+		"res://data/visuals/runtime_manifest.json": "78334593bab56591d59ecc5ae0b62a4919ecfe68b09293c40b7efe0c65777642"
+	},
+	"engine": "4.7.2-stable (official)",
+	"failures": [],
+	"fps_cap": 0,
+	"fresh_user_dir": true,
+	"physics_hz": 60,
+	"rendering_method": "gl_compatibility",
+	"revision_label": "434b904d957fd2146b6d2e73325693a402028035",
+	"runner_cache_policy": "existing imported textures; OS cache prewarmed by full suite; fresh process and save; Mesa disk shader cache disabled",
+	"scenario": {
+		"anchor": [
+			2064.0,
+			2224.0
+		],
+		"controls": {
+			"asset_or_attack_type_overrides": false,
+			"monster_atk": 1,
+			"monster_hp": 999999,
+			"native_respawn_disabled": true,
+			"player_base_hp": 999999,
+			"population": 24,
+			"quickslots": []
+		},
+		"map": "oman_01",
+		"monsters": [
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 웅골리언트",
+				"position": [
+					2064.0,
+					2160.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 키메라",
+				"position": [
+					2000.0,
+					2224.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 타란툴라",
+				"position": [
+					2032.0,
+					2160.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 라미아",
+				"position": [
+					2000.0,
+					2192.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 코카트리스",
+				"position": [
+					2096.0,
+					2160.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 메두사",
+				"position": [
+					2000.0,
+					2256.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 웅골리언트",
+				"position": [
+					2128.0,
+					2224.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 키메라",
+				"position": [
+					2064.0,
+					2288.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 타란툴라",
+				"position": [
+					2128.0,
+					2192.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 라미아",
+				"position": [
+					2032.0,
+					2288.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 코카트리스",
+				"position": [
+					2000.0,
+					2160.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 메두사",
+				"position": [
+					2128.0,
+					2256.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 웅골리언트",
+				"position": [
+					2096.0,
+					2288.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 키메라",
+				"position": [
+					2064.0,
+					2128.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 타란툴라",
+				"position": [
+					1968.0,
+					2224.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 라미아",
+				"position": [
+					2032.0,
+					2128.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 코카트리스",
+				"position": [
+					2128.0,
+					2160.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 메두사",
+				"position": [
+					1968.0,
+					2192.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 웅골리언트",
+				"position": [
+					2000.0,
+					2288.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 키메라",
+				"position": [
+					2096.0,
+					2128.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 타란툴라",
+				"position": [
+					1968.0,
+					2256.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 라미아",
+				"position": [
+					2128.0,
+					2288.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 코카트리스",
+				"position": [
+					2000.0,
+					2128.0
+				]
+			},
+			{
+				"attack_type": "melee",
+				"name": "왜곡의 메두사",
+				"position": [
+					1968.0,
+					2160.0
+				]
+			}
+		]
+	},
+	"scenario_sha256": "dedfcd53e09e9a0e2b12f024e8ae4d97489b942193f8577880dc277a8e220a62",
+	"scope": "Linux software OpenGL diagnostic, controlled 24-actor workload; not Windows/Android device FPS or game balance evidence.",
+	"script_sha256": "f60331e8136e83262e362e27fca0c5c4b818e40ab6935ca69b1758fca726369b",
+	"seed": 20261013,
+	"source_note": "Existing repository art and map geometry only; no original Lineage terrain or animation delivery is claimed.",
+	"time_scale": 1.0,
+	"transforms": [
+		{
+			"equip_call_ms": 223.061,
+			"equip_to_draw_ms": 272.594,
+			"label": "first_use_0",
+			"manifest_frames_cached_before": false,
+			"memory": {
+				"godot_static_bytes": 265298079,
+				"godot_static_peak_bytes": 385688421,
+				"render_video_bytes": 129050517
+			},
+			"name": "해방된 할파스",
+			"source_id": "393"
+		},
+		{
+			"equip_call_ms": 185.902,
+			"equip_to_draw_ms": 231.65,
+			"label": "first_use_1",
+			"manifest_frames_cached_before": false,
+			"memory": {
+				"godot_static_bytes": 265416803,
+				"godot_static_peak_bytes": 385688421,
+				"render_video_bytes": 146717569
+			},
+			"name": "지배자 기르타스",
+			"source_id": "267"
+		},
+		{
+			"equip_call_ms": 75.385,
+			"equip_to_draw_ms": 115.268,
+			"label": "repeat_0",
+			"manifest_frames_cached_before": true,
+			"memory": {
+				"godot_static_bytes": 265426519,
+				"godot_static_peak_bytes": 385688421,
+				"render_video_bytes": 146717569
+			},
+			"name": "해방된 할파스",
+			"source_id": "393"
+		},
+		{
+			"equip_call_ms": 61.807,
+			"equip_to_draw_ms": 124.009,
+			"label": "repeat_1",
+			"manifest_frames_cached_before": true,
+			"memory": {
+				"godot_static_bytes": 265440219,
+				"godot_static_peak_bytes": 385688421,
+				"render_video_bytes": 146717569
+			},
+			"name": "지배자 기르타스",
+			"source_id": "267"
+		}
+	],
+	"transition": {
+		"call_ms": 387.942,
+		"from": "aden_world",
+		"geometry_signature": "8f4bf890d90c8eb33535fe4607fa701ad2e2d31bebd405df146bd8b3c2bbb700",
+		"memory": {
+			"godot_static_bytes": 265174823,
+			"godot_static_peak_bytes": 385688421,
+			"render_video_bytes": 111409569
+		},
+		"navigation_cache_hit": false,
+		"portal": "oman_gate",
+		"to": "oman_01",
+		"to_draw_ms": 1369.343
+	},
+	"viewport": [
+		1280.0,
+		720.0
+	],
+	"vsync_mode": 0
+}

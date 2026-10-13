@@ -1,0 +1,20 @@
+{
+  "checked_paths": {
+    "/opt/android-sdk": false,
+    "/opt/android": false,
+    "/usr/lib/android-sdk": false,
+    "/home/agent/Android/Sdk": false,
+    "/home/agent/.local/share/godot/export_templates": false,
+    "/workspace/tools/godot-4.7.2": true
+  },
+  "commands": {
+    "java": "/usr/bin/java",
+    "adb": null,
+    "sdkmanager": null,
+    "apksigner": null,
+    "aapt": null,
+    "keytool": "/usr/bin/keytool"
+  },
+  "java": "openjdk version \"21.0.12.1\" 2026-08-18\nOpenJDK Runtime Environment (build 21.0.12.1+1-1-deb13u1-Debian)\nOpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-deb13u1-Debian, mixed mode, sharing)\n",
+  "note": "No Android SDK, emulator/device bridge, or Godot export templates detected in these standard locations; no large dependencies installed."
+}

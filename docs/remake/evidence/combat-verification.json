@@ -1,0 +1,36 @@
+{
+  "commit": "79f8d0d5d043c06938ac9b801cf3034f152b09da",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "tests": [
+    {
+      "script": "tests/combat_timeline_lifecycle_test.gd",
+      "result": "pass",
+      "checks": 158,
+      "log": "combat_timeline_lifecycle_test.log"
+    },
+    {
+      "script": "tests/actor_motion_test.gd",
+      "result": "pass",
+      "log": "actor_motion_test.log"
+    },
+    {
+      "script": "tests/boss_presentation_test.gd",
+      "result": "pass",
+      "checks": 693,
+      "bosses": 60,
+      "log": "boss_presentation_test.log"
+    },
+    {
+      "script": "tests/monster_attack_profiles_test.gd",
+      "result": "pass",
+      "checks": 49,
+      "log": "monster_attack_profiles_test.log"
+    }
+  ],
+  "resource_integrity": "pass; 723 tracked atlases, 41442 frames, 233420026 bytes; original resources not delivered in public repository",
+  "limits": [
+    "Headless functional timing tests; full rendered low-FPS/physical-device validation belongs to integration run.",
+    "Initial missing-import frame/material failures were resolved by using completed baseline imports and rerunning clean.",
+    "No binary art or balance/drop/save ID schema changes in this commit."
+  ]
+}

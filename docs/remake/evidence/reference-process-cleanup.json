@@ -1,0 +1,15 @@
+{
+  "timestamp_utc": "2026-10-13T01:28:44.425029+00:00",
+  "before": {
+    "8457": "8457       1 S    Tue Oct 13 01:15:19 2026       13:23 /bin/bash -lc /workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --single-threaded-scene --path /workspace/research/godot_kit_validation --script res://validate.gd > /workspace/research/godot_kit_validation/godot_validation.log 2>&1",
+    "8460": "8460    8457 Sl   Tue Oct 13 01:15:19 2026       13:23 /workspace/tools/godot-4.7.2/Godot_v4.7.2-stable_linux.x86_64 --headless --single-threaded-scene --path /workspace/research/godot_kit_validation --script res://validate.gd"
+  },
+  "action": "SIGTERM sent ONLY to verified stale diagnostic child PID 8460; parent 8457 exited after child",
+  "after": {
+    "8457": "8457       1 Z    Tue Oct 13 01:15:19 2026       13:24 [bash] <defunct>",
+    "8460": ""
+  },
+  "source_diagnostic_rerun": false,
+  "remaining_godot_diagnostic_processes": [],
+  "parent_note": "PID 8457 is a defunct shell awaiting PID 1 reap; it is not executing and cannot be killed further."
+}
