@@ -1,0 +1,39 @@
+name: Consumable Workspace
+
+on:
+  push:
+    branches: ['feature/consumables-stepwise-20261013']
+    paths: ['.github/workflows/consumable-workspace.yml', 'tools/consumable_changes.patch']
+
+permissions:
+  contents: read
+
+jobs:
+  workspace:
+    if: github.ref == 'refs/heads/feature/consumables-stepwise-20261013'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Resource integrity preflight
+        run: |
+          set -o pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee /tmp/consumable-integrity.log
+      - name: Export tracked source for focused development
+        run: |
+          git archive --format=zip -o /tmp/consumable-source.zip HEAD scripts data scenes tests tools docs .github AGENTS.md TWILIGHT_PROJECT_RULES.md TWILIGHT_VERSION_HISTORY.md README.md project.godot Main.tscn
+          git rev-parse HEAD > /tmp/consumable-source-sha.txt
+          sha256sum /tmp/consumable-source.zip >> /tmp/consumable-source-sha.txt
+      - name: Upload source and preflight evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: consumable-workspace-${{ github.sha }}
+          path: |
+            /tmp/consumable-source.zip
+            /tmp/consumable-source-sha.txt
+            /tmp/consumable-integrity.log
+          if-no-files-found: error
+          retention-days: 7
