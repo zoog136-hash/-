@@ -1,5 +1,13 @@
 # TWILIGHT 8방향 애니메이션 재구축
 
+## 이동과 반대 방향을 바라보는 오류 — 후속 수정
+- 사용자 피드백으로 이전 방향 시각 검증의 오류 확인. 실제 source 방향은 `W,SW,S,SE,E,NE,N,NW`이며 기존 해석은 180도 반대였음.
+- 기준 작업 SHA `d52e296a4e7408eb1acbf8a25f98ca1871366ed8`, main 재확인 `80076490518942647ad538ae440a91a3d3605c7e`. PR #100에서 계속 작업.
+- 기존 두 본체만 방향별 원본 프레임/장비 layer 순서로 다시 합성. 게임 이동 벡터·판정·공통 재생 코드는 수정하지 않음. 신규 전체 리소스 제작/원본 ZIP 재추출 없음.
+- 수정 전 방향 픽셀 검사 40건 실패 재현. 수정 후 기사 8시점 reference 포함 **1,362 assertions PASS**, 타격 lifecycle 158 / catalog / restore PASS.
+- 최초 import의 sandbox 로컬 TCP 생성 오류를 기록. 네트워크 권한이 제공된 같은 명령에서 import 완료 / ERROR 없음. Daybreak 사용 없음.
+- 실제 Main에서 이동 변위 화살표와 원본 방향 번호를 표시하는 선택적 QA 가이드를 추가. 최종 실제 화면 녹화/검토는 진행 중이며 완료로 간주하지 않음.
+
 ## 기준 / 작업 보존
 - 기준 main: `434b904d957fd2146b6d2e73325693a402028035` (2026-10-13 원격 재확인).
 - 작업: `feature/twilight-animation-20261013`, `/workspace/twilight-animation`.

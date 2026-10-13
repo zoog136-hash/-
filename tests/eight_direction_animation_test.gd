@@ -2,6 +2,7 @@ extends SceneTree
 
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
+const DIRECTION_REFERENCE = "res://tests/fixtures/skeleton_direction_reference.json"
 var failures: Array[String] = []
 var assertions := 0
 
@@ -13,6 +14,7 @@ func check(ok: bool, label: String) -> void:
 		print("EIGHT_DIRECTION_FAIL: " + label)
 
 func run() -> void:
+	var direction_reference: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(DIRECTION_REFERENCE))
 	for identity: Dictionary in [{"kind":"transform","sourceId":"46"}, {"kind":"monster","name":"해골 근위병"}]:
 		var profile = CATALOG.for_record(str(identity.kind), identity)
 		var frames = CATALOG.frames_for_profile(profile, "")
@@ -37,6 +39,15 @@ func run() -> void:
 						var pixels := texture.get_image()
 						check(not pixels.is_invisible(), "nonempty " + key)
 						unique[pixels.get_data().hex_encode().sha256_text()] = true
+						if f == 0 and (profile.profile_id == "monster:해골 근위병" or role == "idle"):
+							# Track names alone cannot detect opposite-facing artwork.
+							# Reviewed pixel references verify compass orientation
+							# independently of the resource's animation names.
+							var hash := HashingContext.new()
+							hash.start(HashingContext.HASH_SHA256)
+							hash.update(pixels.get_data())
+							var reference: Dictionary = direction_reference.views if profile.profile_id == "monster:해골 근위병" else direction_reference.knight_idle_views
+							check(hash.finish().hex_encode() == reference[key], "reviewed compass artwork " + profile.profile_id + " " + key)
 				check(unique.size() == int({"idle":4,"walk":8,"attack":4,"hit":2,"death":6}[role]), "actual distinct poses " + key)
 			motion.advance(.25, aim * profile.reference_speed)
 			motion.apply(sprite,Vector2.ONE * profile.pixel_scale)

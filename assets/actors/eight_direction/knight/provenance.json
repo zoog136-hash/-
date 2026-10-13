@@ -20,24 +20,34 @@
 	"motion": "actual sequential frames",
 	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
 	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		3,
+		2,
+		1,
+		0,
+		7,
+		6,
+		5
+	],
 	"source_directions": [
-		"E",
-		"NE",
-		"N",
-		"NW",
 		"W",
 		"SW",
 		"S",
-		"SE"
+		"SE",
+		"E",
+		"NE",
+		"N",
+		"NW"
 	],
 	"tracks": {
 		"attack": {
 			"atlas_size": [
 				1024,
-				344
+				348
 			],
 			"loop_type": "play_once",
-			"sha256": "2cb839a68b3de9be563e8e816a8e2c729a56d3b930cdd69c4e43ab014341ec93",
+			"sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7",
 			"source_duration_seconds": 0.4,
 			"unique_frames_per_direction": 4
 		},
@@ -47,37 +57,37 @@
 				344
 			],
 			"loop_type": "play_once",
-			"sha256": "f17fa121310c78b8cce4f78e5911985f7f71db6b850a22b8abbd26b3f76cbfe2",
+			"sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b",
 			"source_duration_seconds": 0.8,
 			"unique_frames_per_direction": 6
 		},
 		"hit": {
 			"atlas_size": [
 				1024,
-				180
+				176
 			],
 			"loop_type": "play_once",
-			"sha256": "3f125136559227e44af475a858c4138c129544bab4b2d39d5385636a5ff6aefc",
+			"sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca",
 			"source_duration_seconds": 0.133,
 			"unique_frames_per_direction": 2
 		},
 		"idle": {
 			"atlas_size": [
 				1024,
-				276
+				268
 			],
 			"loop_type": "back_forth",
-			"sha256": "ef433c47824cbe15185cc844beffa2855cef3319f7006f45d0cba18aedf338f7",
+			"sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99",
 			"source_duration_seconds": 0.8,
 			"unique_frames_per_direction": 4
 		},
 		"walk": {
 			"atlas_size": [
 				1024,
-				584
+				572
 			],
 			"loop_type": "looped",
-			"sha256": "9fc6ca3e626e7f7d4b66d7e531d3aede9b55fa978ce45c365372880ff35d59a8",
+			"sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7",
 			"source_duration_seconds": 0.533,
 			"unique_frames_per_direction": 8
 		}

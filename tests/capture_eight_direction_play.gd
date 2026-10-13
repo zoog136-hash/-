@@ -5,8 +5,34 @@ extends SceneTree
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 const ACTIONS = [["move_right"],["move_right","move_down"],["move_down"],["move_left","move_down"],
 	["move_left"],["move_left","move_up"],["move_up"],["move_right","move_up"]]
+const COMPASS = ["E","SE","S","SW","W","NW","N","NE"]
+const SOURCE_VIEW = [4,3,2,1,0,7,6,5]
+
+class DirectionGuide extends Node2D:
+	var vector := Vector2.ZERO
+	var tint := Color(0.3,1.0,1.0)
+	var caption := Label.new()
+	func _ready() -> void:
+		z_index=100
+		caption.position=Vector2(-72,12)
+		caption.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		caption.add_theme_font_size_override("font_size",11)
+		caption.add_theme_color_override("font_color",tint)
+		caption.add_theme_color_override("font_outline_color",Color.BLACK)
+		caption.add_theme_constant_override("outline_size",3)
+		add_child(caption)
+	func _draw() -> void:
+		if vector.length_squared()<.001: return
+		var tip := vector.normalized()*40.0
+		draw_line(Vector2.ZERO,tip,tint,1.5)
+		draw_line(tip,tip-vector.normalized().rotated(.5)*10.0,tint,1.5)
+		draw_line(tip,tip-vector.normalized().rotated(-.5)*10.0,tint,1.5)
+
 var world: TwilightWorld
 var enemy: TwilightMonster
+var player_guide: DirectionGuide
+var enemy_guide: DirectionGuide
+var previous_enemy_position := Vector2.ZERO
 var out: String
 var elapsed := 0.0
 var failures: Array[String] = []
@@ -29,8 +55,17 @@ func tick() -> void:
 	elapsed += 1.0/60.0
 	var sprite := world.player.transform_sprite if world.player.transform_active else world.player.class_sprite
 	report.player_poses[str(sprite.animation)+":"+str(sprite.frame)] = true
+	if player_guide != null:
+		player_guide.vector=world.player.get_position_delta()
+		player_guide.caption.text="%s | %s | src %d" % [COMPASS[world.player.facing8],sprite.animation,SOURCE_VIEW[world.player.facing8]]
+		player_guide.queue_redraw()
 	if is_instance_valid(enemy):
 		report.monster_poses[enemy.motion.state+":"+str(enemy.motion.facing8)+":"+str(enemy.sprite.texture)] = true
+		if enemy_guide != null:
+			enemy_guide.vector=enemy.position-previous_enemy_position
+			enemy_guide.caption.text="%s | %s | src %d" % [COMPASS[enemy.motion.facing8],enemy.motion.state,SOURCE_VIEW[enemy.motion.facing8]]
+			enemy_guide.queue_redraw()
+		previous_enemy_position=enemy.position
 func seconds(value: float) -> void:
 	for i: int in range(ceili(value*60.0)): await tick()
 func shot(name_value: String) -> void:
@@ -87,6 +122,11 @@ func run() -> void:
 	world.player.camera.zoom=Vector2(1.8,1.8) # actual game camera, makes foot/weapon inspection readable
 	world.player.camera.position=Vector2(0,-32)
 	world.player.camera.reset_smoothing();world.player.camera.force_update_scroll()
+	if OS.get_environment("TWILIGHT_DIRECTION_GUIDE")=="1":
+		player_guide=DirectionGuide.new();world.player.add_child(player_guide)
+		enemy_guide=DirectionGuide.new();enemy_guide.tint=Color(1.0,.85,.3);enemy.add_child(enemy_guide)
+		previous_enemy_position=enemy.position
+		report.direction_guides="QA only: arrows show actual position changes; captions identify selected runtime track and reviewed source index"
 	world.player.set_auto_enabled(false)
 	initial_hp=world.hp;inventory_before=world.inventory.duplicate(true)
 	world.player.attack_strike.connect(func(id: int) -> void:
@@ -99,11 +139,13 @@ func run() -> void:
 	for direction: int in range(8):
 		var before := world.player.position
 		for action: String in ACTIONS[direction]: Input.action_press(action)
-		await seconds(.45)
+		await seconds(.25)
+		if player_guide != null: await shot("moving-"+str(direction))
+		await seconds(.20)
 		for action: String in ACTIONS[direction]: Input.action_release(action)
 		var moved := world.player.position-before
 		check(moved.length()>12 and moved.normalized().dot(Vector2.from_angle(direction*PI/4.0))>.85,"movement "+str(direction))
-		report.movement.append({"direction":direction,"distance":moved.length(),"facing":world.player.facing8})
+		report.movement.append({"direction":direction,"compass":COMPASS[direction],"distance":moved.length(),"facing":world.player.facing8,"source_view":SOURCE_VIEW[world.player.facing8]})
 		await shot("walk-"+str(direction));await seconds(.22)
 		for action: String in ACTIONS[(direction+4)%8]: Input.action_press(action)
 		await seconds(.45)

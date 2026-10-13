@@ -20,15 +20,25 @@
 	"motion": "actual sequential frames",
 	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
 	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		3,
+		2,
+		1,
+		0,
+		7,
+		6,
+		5
+	],
 	"source_directions": [
-		"E",
-		"NE",
-		"N",
-		"NW",
 		"W",
 		"SW",
 		"S",
-		"SE"
+		"SE",
+		"E",
+		"NE",
+		"N",
+		"NW"
 	],
 	"tracks": {
 		"attack": {
@@ -37,7 +47,7 @@
 				460
 			],
 			"loop_type": "play_once",
-			"sha256": "19490e49c9e0ca563149a4886f4194564d68a8f737163fb9f82fd1f21acc2219",
+			"sha256": "83ba829d7650f4e2ae3b80e624a2f85db0d66022065ec67c56a49d7113508903",
 			"source_duration_seconds": 0.4,
 			"unique_frames_per_direction": 4
 		},
@@ -47,7 +57,7 @@
 				508
 			],
 			"loop_type": "play_once",
-			"sha256": "077d0a3e50c6b41688702e6ebc930db49672d80608df3d6b7f423265ac388cf5",
+			"sha256": "ade1f4f7b94cdbd86b26019889ee150071f79efd8fd2ba2e2eb0a05087413f82",
 			"source_duration_seconds": 0.8,
 			"unique_frames_per_direction": 6
 		},
@@ -57,17 +67,17 @@
 				216
 			],
 			"loop_type": "back_forth",
-			"sha256": "ca761ed2938b6fe062fdd47c05cbe61a5a1a80e90594a8f17b97fab9aae4a928",
+			"sha256": "3636380c1db1a4ca6f5b5f7b20a8cd1cd1669db0c492968160f7bc7416d06c91",
 			"source_duration_seconds": 0.133,
 			"unique_frames_per_direction": 2
 		},
 		"idle": {
 			"atlas_size": [
 				1024,
-				420
+				404
 			],
 			"loop_type": "back_forth",
-			"sha256": "c2e275ee4cbeb522a68a59320ec3dbc1d1803120b73b58a99a043f7462e2dce8",
+			"sha256": "4693739f6394840cc86c2925835294fdc85776f601d023ae8303d90f2e3470dc",
 			"source_duration_seconds": 0.533,
 			"unique_frames_per_direction": 4
 		},
@@ -77,7 +87,7 @@
 				640
 			],
 			"loop_type": "looped",
-			"sha256": "98fdefa7c73a4d02af04710e54620336bc10eda5a5f131839a1a7bd45d0e1951",
+			"sha256": "f8265882b9faa71297684f993d04a629224db577e90a3ab49c35b6fe421ada6e",
 			"source_duration_seconds": 0.533,
 			"unique_frames_per_direction": 8
 		}

@@ -5,9 +5,10 @@ extends SceneTree
 ## Godot --headless --path . --script res://tools/build_open_sprite_sample.gd -- SOURCE_DIR
 const CELL := 256
 const PIVOT := Vector2i(256, 320) # native pixels before uniform 1/2 reduction
-# Verified against the actual eight source views (front=6, back=2), not the
-# unrelated ordering of entries in hero_layers.txt.
-const SOURCE_DIRECTIONS := ["E", "NE", "N", "NW", "W", "SW", "S", "SE"]
+# Source 0 faces screen-left, 2 faces the viewer and 6 shows the back.
+# The previous labels inverted all views by 180 degrees. Keep this source
+# convention separate from clockwise Godot screen coordinates (positive Y down).
+const SOURCE_DIRECTIONS := ["W", "SW", "S", "SE", "E", "NE", "N", "NW"]
 const GAME_DIRECTIONS := ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]
 const LAYERS := {"feet":"plate_boots", "legs":"plate_greaves", "chest":"plate_cuirass",
 	"hands":"plate_gauntlets", "head":"plate_helm", "main":"longsword", "off":"shield"}
@@ -66,6 +67,7 @@ func build(actor: String, layers: Dictionary, order: Dictionary) -> void:
 	var metadata := {"source":"Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
 		"motion":"actual sequential frames", "directions":GAME_DIRECTIONS,
 		"source_directions":SOURCE_DIRECTIONS, "cell":[CELL,CELL], "foot":[128,160],
+		"source_direction_indices":GAME_DIRECTIONS.map(func(compass: String) -> int: return SOURCE_DIRECTIONS.find(compass)),
 		"packing":"trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas", "tracks":{}}
 	for role: String in ROLES:
 		var source_role: String = ROLES[role]
