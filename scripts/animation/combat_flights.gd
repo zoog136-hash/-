@@ -19,6 +19,7 @@ func launch(origin: Vector2, target: Node2D, kind: String, impact: Callable, spe
 	record.merge({"position":origin, "previous":origin, "target":weakref(target), "kind":kind,
 		"callback":impact, "speed":speed, "age":-maxf(0.0, delay)})
 	record.merge(options,true)
+	if target is TwilightMonster: record["target_life_id"] = target.life_id
 	flights.append(record)
 	set_physics_process(true)
 
@@ -43,10 +44,11 @@ func _physics_process(delta: float) -> void:
 		if i >= flights.size(): continue
 		var flight: Dictionary = flights[i]
 		var target: Node2D = flight.target.get_ref() as Node2D
-		if not is_instance_valid(target) or not target.is_inside_tree() or (target is TwilightMonster and target.dead):
+		if not is_instance_valid(target) or not target.is_inside_tree() or (target is TwilightMonster and (target.dead or target.life_id != int(flight.get("target_life_id", target.life_id)))):
 			_retire(i)
 			continue
-		flight.age += delta
+		var previous_age: float = flight.age
+		flight.age += maxf(0.0, delta)
 		if flight.age < 0.0: continue
 		if flight.kind == "timed":
 			var timed_callback: Callable = _retire(i)
@@ -58,7 +60,10 @@ func _physics_process(delta: float) -> void:
 		var end: Vector2 = target.combat_hit_position() if target.has_method("combat_hit_position") else target.global_position + Vector2(0, -24)
 		if flight.has("aim"): end = flight.aim
 		flight.previous = flight.position
-		flight.position = (flight.position as Vector2).move_toward(end, float(flight.speed) * delta)
+		# A delayed volley only travels the portion of this tick after release.
+		# Using the whole delta makes low-FPS shots arrive before their own trail.
+		var travel_delta: float = maxf(0.0, float(flight.age) - maxf(0.0, previous_age))
+		flight.position = (flight.position as Vector2).move_toward(end, float(flight.speed) * travel_delta)
 		var obstruction: Callable = flight.get("obstruction",Callable())
 		if obstruction.is_valid() and not obstruction.call(flight.previous,flight.position):
 			_retire(i)
@@ -74,10 +79,16 @@ func _physics_process(delta: float) -> void:
 	if flights.is_empty(): set_physics_process(false)
 
 func _draw() -> void:
-	for i: int in range(mini(visual_limit, flights.size())):
+	var drawn: int = 0
+	var view: Rect2 = get_viewport_rect().grow(32)
+	var canvas: Transform2D = get_global_transform_with_canvas()
+	for i: int in range(flights.size()):
 		var flight: Dictionary = flights[i]
 		if flight.age < 0.0 or flight.kind == "timed": continue
 		var tip: Vector2 = to_local(flight.position)
+		if not view.has_point(canvas * tip): continue
+		if drawn >= visual_limit: break
+		drawn += 1
 		var direction: Vector2 = (flight.position as Vector2) - (flight.previous as Vector2)
 		direction = direction.normalized()
 		var color: Color = flight.get("color",Color(0.5, 0.75, 1.0) if flight.kind == "magic" else Color(1.0, 0.85, 0.5))

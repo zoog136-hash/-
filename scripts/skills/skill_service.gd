@@ -158,7 +158,7 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 	elif not catalog.enabled(skill): reason = "속성 계열 또는 사용 무기 제한"
 	elif str(skill.mode) == "summon" and (summons.active() or world.active_skill_buffs.has(str(skill.name))): reason = "가디언 또는 보호막 유지 중"
 	elif not world.pending_attack.is_empty(): reason = "시전 중"
-	elif world.hp <= 0: reason = "사망 상태"
+	elif world.hp <= 0 or world.player.motion.dead: reason = "사망 상태"
 	elif not bool(skill.get("cast_while_disabled", false)) and (world.player.is_stunned() or world.player.is_feared() or world.player.is_silenced()): reason = "상태이상으로 사용 불가"
 	elif world.skill_global_cooldown > 0 or float(world.skill_cooldowns.get(str(skill.name), 0)) > 0: reason = "재사용 대기 중"
 	else: reason = cost_reason(catalog.resolve(skill))
@@ -168,7 +168,9 @@ func ready(skill: Dictionary, announce: bool = false) -> bool:
 func cast(record: Dictionary) -> bool:
 	if not ready(record, true): return false
 	var skill := catalog.resolve(record)
-	skill["cast_time"] = float(skill.get("cast_time", .42)) / clampf(1 + stat("castSpeed") / 100.0, 1, 4)
+	# Cast-speed options reduce cooldown through the world's shared policy;
+	# they must not also accelerate the contact/presentation timeline.
+	skill["cast_time"] = float(skill.get("cast_time", .42))
 	var mode := str(skill.mode)
 	var target: TwilightMonster = null
 	if mode in ["attack", "status", "turn_undead"] and str(skill.get("shape", "single")) != "self_circle":
@@ -192,13 +194,11 @@ func cast(record: Dictionary) -> bool:
 	match mode:
 		"attack", "status", "turn_undead":
 			if str(skill.get("shape", "single")) == "self_circle":
-				world.player.pulse_attack()
-				# A timer carries the same map generation as queued target attacks.
-				world.get_tree().create_timer(float(skill.cast_time) * .48).timeout.connect(area_marker.bind(skill, world.combat_generation))
+				if not world._queue_player_area_attack(skill): return false
 			else:
 				var kind := str(skill.get("attack_type", "magic"))
 				if kind not in ["magic", "ranged", "melee"]: kind = "melee"
-				world._queue_player_attack(target, kind, impact.bind(skill, target), float(skill.cast_time), false, float(skill.range))
+				if not world._queue_player_attack(target, kind, impact.bind(skill, target), float(skill.cast_time), false, float(skill.range)): return false
 				world.pending_attack["original_skill"] = skill
 				world.pending_attack["original_target_life_id"] = target.life_id
 		"buff", "counter", "stealth": apply_buff(skill)
