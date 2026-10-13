@@ -38,10 +38,10 @@ func _run() -> void:
 		check(RESOLVER.describe({"name":item_name,"sourceId":"unknown-publisher-id"},item_name).path == "","explicit unknown source cannot borrow local art: "+item_name)
 	check(observed.size() == LOCAL_POTIONS.size(),"all three real starter potion slots were inspected")
 	var ruby: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전"},"드래곤의 루비",{"드래곤의 루비":POTION_PATH})
-	check(ruby.path != POTION_PATH and (ruby.path.is_empty() or ResourceLoader.exists(str(ruby.path))),"unrelated ruby cannot borrow the local potion icon; a distinct resolved image must exist")
+	check(ruby.path == POTION_PATH and ruby.route == "legacy_exact_name_index" and ruby.status == "bundled_ui_art","pre-rework ruby link restored without claiming original source art")
 	check(not str(ruby.path).is_empty() or ruby.family == "gem","unlinked ruby uses an explicit gem fallback")
 	var borrowed: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전","sourceId":"local-unverified","image_path":POTION_PATH},"드래곤의 루비")
-	check(borrowed.path == "" and borrowed.family == "gem" and borrowed.status == "self_authored_substitute","even a pinned unrelated potion icon is rejected")
+	check(borrowed.path == POTION_PATH and borrowed.source_id == "local-unverified" and borrowed.status == "original_review_pending","explicit record art keeps unknown-source provenance instead of claiming original art")
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))
 	var wrong: Dictionary = catalog["아이템"][0].duplicate(true)
 	wrong.name = "HP 물약"
