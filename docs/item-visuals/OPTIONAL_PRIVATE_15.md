@@ -1,32 +1,13 @@
-# 선택형 아이템 이미지 15종 — 개인용 팩 연결
+# 아이템 이미지 15종 — 공개 main에 PNG 포함 (2026-10-14)
 
-기준 main `fb1e8fc459f577bd0afc387ce98ff01ecd79975b`, 작업 브랜치 `feature/item-15-private-icons-20261013`.
+사용자 확인에 따라 원본 ZIP의 15종 128×128 PNG를 `assets/original_items/inventory/{iconId}.png`에 포함했습니다. 별도 로컬 팩 설치는 필요하지 않습니다.
 
-## 적용 범위
-
-- 15개 중 일반 임시 심볼 교체 후보 11개 + 드래곤 보석 임시 이미지 교체 후보 4개.
-- `data/optional_item_icons_15.json`은 해당 항목의 정확한 한국어 이름·게임 종류·슬롯·PC 계열 SQL iconId 및 원본 PNG SHA-256만 갖고 있습니다.
-- 15개 실제 PNG 파일은 사용자 제공 `immma2004.zip`의 `img/item/{iconId}.png`에서 검증 후 **로컬에서만** 설치합니다. 공개 저장소에는 제3자 PNG 바이너리를 포함하지 않습니다.
-- `item_visual_resolver.gd`은 기존 sourceId 카탈로그의 확인된 이미지, 물리 아이템 경로, 검수 L1J, 정규 시각 매핑, A2 후보를 **먼저** 검사합니다. 이 우선순위의 다른 아이템은 절대 변경하지 않습니다.
-- 기존/검수 파일이 없으며 `sourceId`도 없는 지정된 15개 레코드에 한해, 정확한 이름·게임 `type`·`slot`·설치 파일의 SHA-256이 일치하면 개인용 팩을 표시합니다. 누락·손상·조건 불일치 시 기존 UI 그림이나 자체 아이콘으로 안전하게 되돌아갑니다.
-- 원본 미확정 `original_review_pending` 판정을 유지합니다. PC/리마스터 자료를 현행 리니지M 원본이나 재배포 허가된 자료로 표시하지 않습니다.
-
-## 설치 — 로컬 게임 프로젝트만
-
-```bash
-python3 tools/install_optional_item_icons.py --root . --source /path/to/immma2004.zip
-python3 tools/install_optional_item_icons.py --root . --verify
-```
-
-또는 사용자에게 별도로 전달한 개인용 이미지 ZIP의 `assets/` 디렉터리만 `project.godot`이 있는 폴더에 압축 해제할 수 있습니다. 기존 파일 내용이 다를 경우 덮어쓰지 마세요. 적용 결과는 정상 게임에서 확인해야 합니다. Godot 에디터에 리소스를 재가져오기하고 인벤토리·상점·장비 미리보기·드랍/습득과 작은 화면을 점검하세요.
-
-## 검증 범위
-
-- 공개 GitHub에 원본 PNG를 추가하지 않음. `.gitignore`에 15개 경로 지정.
-- 기존 DB, 원본 2,129개 연결, 저장/물리 장비 ID/드랍 수량/옵션/밸런스 무변경.
-- `tests/item_optional_icons_test.gd`에서 잘못된 이름/종류/슬롯/sourceId, 없는/변조된 파일, 기존 sourceId 원본 우선 경로를 확인. 팩이 설치된 실행에서는 PNG 디코드까지 검사.
-- 공개 CI는 PNG 자체를 갖지 않으므로 **개인용 팩 설치 완료나 실제 게임 화면 검증**을 대체하지 않습니다.
-- 저작권 보유자가 별도 게임 배포·재사용을 허가하지 않은 파일은 공개 저장소·공개 릴리스/APK에 넣지 않습니다.
+- 원본: 사용자 제공 `immma2004.zip`의 `img/item/{iconId}.png`, 15/15 SHA-256 일치
+- 사용자 확인: 공개 저장소 이미지 게시·재배포 권한 확보
+- 출처 구분: PC/리마스터 계열 참조 이미지이며 현행 리니지M 제작사의 공식 인증 이미지라는 뜻은 아닙니다
+- 적용 방식: sourceId가 없는 정확한 이름·종류·슬롯 매칭에만 사용하며 기존 검수 이미지 우선순위는 변경하지 않습니다
+- 기존 아이템 데이터베이스, 저장 데이터, 강화 수치, 드랍/전투 설정 변경 없음
+- 확인: `python3 tools/install_optional_item_icons.py --root . --verify` 와 `tests/item_optional_icons_test.gd`
 
 ## 적용 항목
 
