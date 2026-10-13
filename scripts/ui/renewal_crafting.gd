@@ -63,6 +63,7 @@ func configure(controller: Node) -> void:
 	add_child(layout)
 	listing = ItemList.new()
 	listing.name = "CraftRecipes"
+	listing.fixed_icon_size = Vector2i(36,36)
 	listing.custom_minimum_size.x = 260
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -104,7 +105,7 @@ func _rebuild_listing() -> void:
 		if not needle.is_empty() and not match_text.contains(needle):
 			continue
 		recipe_ids.append(id)
-		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))])
+		listing.add_item("[%s] %s" % [grade,str(recipe.get("name",id))],UI.item_icon(item_records.get(output_name,{}),output_name,hud.item_image_index.get("아이템",{})))
 	if recipe_ids.is_empty():
 		current_id = ""
 		detail.text = "조건에 맞는 제작법이 없습니다."

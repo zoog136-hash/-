@@ -34,10 +34,12 @@ static func _ensure() -> void:
 		var record: Dictionary = raw
 		var id: String = str(record.get("game_source_id", ""))
 		var name_value: String = str(record.get("game_name", ""))
-		if id.is_empty() or name_value.is_empty() or _items.has(id) or _names.has(name_value): continue
+		if id.is_empty() or name_value.is_empty() or _items.has(id): continue
 		if not str(record.get("source_candidate_id", "")).begins_with("ext:"): continue
 		_items[id] = record.duplicate(true)
-		_names[name_value] = record.duplicate(true)
+		# Keep each sourceId; disable ambiguous name-only lookup instead of
+		# silently discarding the second physical item's visual identity.
+		_names[name_value] = {} if _names.has(name_value) else record.duplicate(true)
 	for raw: Variant in monster_records:
 		if not raw is Dictionary: continue
 		var record: Dictionary = raw

@@ -186,23 +186,10 @@ static func safe(value: Variant) -> String:
 	return str(value).replace("[","[lb]")
 
 static func item_icon(record: Dictionary, item_name: String, images: Dictionary) -> Texture2D:
-	var external: Texture2D = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd").item_icon(record, item_name)
-	if external != null: return external
-	var original: Texture2D = preload("res://scripts/animation/visual_manifest.gd").item_icon(record, item_name)
-	if original != null: return original
-	var from_a2: Texture2D = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd").item_icon(record, item_name)
-	if from_a2 != null: return from_a2
-	var polished: Texture2D = ITEM_ART.item_icon(record, item_name, images)
-	if polished != null:
-		return polished
-	var path := str(images.get(item_name,record.get("image_path","")))
-	if path!="" and ResourceLoader.exists(path): return load(path) as Texture2D
-	# Starting items do not all have an extracted catalog image. Reuse UI art.
-	var file := "bag.png"
-	if item_name.contains("물약"): file="potionRed.png"
-	elif item_name.contains("잎"): file="leaf.png"
-	elif item_name.contains("주문서"): file="quest.png"
-	elif str(record.get("slot",""))=="weapon": file="attack.png"
-	elif str(record.get("slot","")) not in ["","consumable"]: file="shield.png"
-	elif item_name in ["화살","총알"]: file="attack.png"
-	return load("res://assets/ui/"+file) as Texture2D
+	return preload("res://scripts/ui/item_visual_resolver.gd").texture(record,item_name,images)
+
+static func apply_item_visual(view: TextureRect, record: Dictionary, item_name: String, images: Dictionary = {}, context: String = "slot") -> void:
+	preload("res://scripts/ui/item_visual.gd").apply(view,record,item_name,images,context)
+
+static func clear_item_visual(view: TextureRect) -> void:
+	preload("res://scripts/ui/item_visual.gd").clear(view)
