@@ -2,6 +2,7 @@ extends Node
 ## Reusable presentation attached once to an existing TextureRect. Texture pixels
 ## alone receive the shader; slot chrome, badges, labels and input stay untouched.
 const RESOLVER = preload("res://scripts/ui/item_visual_resolver.gd")
+const FOREGROUND = preload("res://scripts/ui/item_icon_foreground.gd")
 const SCHEDULER = preload("res://scripts/ui/item_visual_scheduler.gd")
 const SHADER = preload("res://scripts/ui/item_rarity.gdshader")
 const GRADES: Array[String] = ["일반","고급","희귀","영웅","전설","신화","유일"]
@@ -15,6 +16,7 @@ var phase_group: int = 0
 var context: String = "slot"
 var scheduler: Node
 var substitute_mark: Label
+var foreground_ready: bool = true
 
 static func set_reduced_motion(enabled: bool) -> void:
 	reduced_motion = enabled
@@ -58,6 +60,16 @@ func configure(view: TextureRect, record: Dictionary, item_name: String, images:
 	phase_group = posmod((str(record.get("sourceId",""))+item_name).hash(),8)
 	context = usage
 	var info: Dictionary = RESOLVER.describe(record,item_name,images)
+	foreground_ready = true
+	# Only turning surfaces need a cutout. Static list/quickslot/drag/ground
+	# art and every hero/legend source image remain exactly as they were.
+	if rank >= 5 and context not in ["quickslot","list","drag","ground"]:
+		var foreground: Dictionary = FOREGROUND.prepare(target.texture)
+		target.texture = foreground.texture
+		foreground_ready = bool(foreground.ready)
+		info["foreground_ready"] = foreground_ready
+		info["foreground_reason"] = foreground.reason
+		info["foreground_removed_pixels"] = foreground.removed_pixels
 	target.set_meta("item_visual",info)
 	if substitute_mark == null:
 		substitute_mark = Label.new()
@@ -96,11 +108,15 @@ func _register() -> void:
 func refresh_visibility() -> bool:
 	if target == null or not is_instance_valid(target): return false
 	var animate: bool = not reduced_motion and rank >= 3 and context not in ["quickslot","list","drag","ground"] and target.is_inside_tree() and SCHEDULER.visible_area(target)
-	target.material = shared_material(rank,phase_group) if animate else null
+	# An unsupported opaque frame may retain a non-rotating sheen, but must
+	# never be fed to rank 5/6's UV turn. Shared material count remains <= 32.
+	var shader_rank: int = 4 if rank >= 5 and not foreground_ready else rank
+	target.material = shared_material(shader_rank,phase_group) if animate else null
 	return animate
 
 func deactivate() -> void:
 	rank = 0
+	foreground_ready = true
 	if target != null: target.material = null
 	if substitute_mark != null: substitute_mark.hide()
 	if is_instance_valid(scheduler): scheduler.unregister(self)
