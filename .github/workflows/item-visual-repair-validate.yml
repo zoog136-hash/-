@@ -1,0 +1,53 @@
+name: Item Visual Repair Validate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/ui/item_visual*.gd'
+      - 'scripts/ui/item_icon_foreground.gd'
+      - 'assets/catalog/**'
+      - 'data/catalog_v19.json'
+      - 'tests/item_visual*_test.gd'
+      - '.github/workflows/item-visual-repair-validate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: item-visual-repair-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  restore-and-foreground:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify original resource integrity
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install repository-pinned Godot
+        run: |
+          curl -sS -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and run link, alpha, identity and UI lifecycle regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-results
+          export XDG_CONFIG_HOME="$RUNNER_TEMP/item-repair-config"
+          export XDG_CACHE_HOME="$RUNNER_TEMP/item-repair-cache"
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          timeout 480 "$ENGINE" --headless --path . --editor --quit > test-results/import.txt 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
+          for name in item_visual_repair_test item_visual_test item_icon_art_smoke_test; do
+            export XDG_DATA_HOME="$RUNNER_TEMP/item-repair-$name"
+            timeout 180 "$ENGINE" --headless --path . --script "res://tests/$name.gd" > "test-results/$name.txt" 2>&1
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|_FAILED' "test-results/$name.txt"; then exit 1; fi
+            grep -q '_OK' "test-results/$name.txt"
+          done
+          git diff --exit-code -- assets data
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: item-visual-repair-${{ github.sha }}
+          path: test-results/
+          if-no-files-found: error
