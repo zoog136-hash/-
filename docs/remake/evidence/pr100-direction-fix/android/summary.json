@@ -1,0 +1,40 @@
+{
+  "passed": true,
+  "apk": "/workspace/pr100-artifacts/TWILIGHT_PR100_ANDROID.apk",
+  "apk_bytes": 771837680,
+  "apk_sha256": "7192fb894c02e286656da514a959d82bc939b444ef3d8b0b7d30c32b2d14ac95",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "architectures": [
+    "arm64-v8a"
+  ],
+  "export_exit_code": 0,
+  "production_source_unchanged_during_export": true,
+  "export_environment_warning": "After export DONE, an adb device-scanning subprocess reports Cannot mkdir /home/agent/.android: Read-only file system. Offline export returned 0, and independent APK resource/signature/alignment validation passed. Android device execution was not performed.",
+  "device_execution": {
+    "status": "not_run",
+    "reason": "This verifier inspects the APK; device execution requires a separate connected device test.",
+    "physical_usb_bus_present": false
+  },
+  "artifact_delivery_status": "local_workspace_only",
+  "sprite_frames": 36,
+  "animations": 1864,
+  "frames": 10320,
+  "png_textures": 233,
+  "texture_byte_matches": 233,
+  "raw_json_matches": 39,
+  "sdk_validation": {
+    "build_tools": "36.0.0",
+    "signature": {
+      "passed": true,
+      "exit_code": 0
+    },
+    "alignment": {
+      "passed": true,
+      "exit_code": 0
+    },
+    "manifest": {
+      "passed": true,
+      "exit_code": 0
+    }
+  }
+}

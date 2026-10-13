@@ -1,0 +1,535 @@
+extends SceneTree
+
+# TWILIGHT_OPTIONAL_RENDER_CAPTURE
+# TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_PR100_CAPTURE_DIR
+## Regression exercise inside the production Main scene. QA changes positions,
+## pauses unrelated spawn slots, and equips existing DB records; combat stats,
+## actor scenes, AI, map, damage, flight, death, and pickup code are unchanged.
+const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+const ACTIONS = [["move_right"],["move_right","move_down"],["move_down"],["move_left","move_down"],
+	["move_left"],["move_left","move_up"],["move_up"],["move_right","move_up"]]
+# Independent screen-coordinate expectations, not derived from motion.face().
+const VECTORS = [Vector2(1,0),Vector2(1,1),Vector2(0,1),Vector2(-1,1),
+	Vector2(-1,0),Vector2(-1,-1),Vector2(0,-1),Vector2(1,-1)]
+const COMPASS = ["E","SE","S","SW","W","NW","N","NE"]
+const WEAPONS = [{"job":"기사","appearance":0,"transform_id":"131","name":"훈련용 한손검","type":"한손검","style":"slash","magic":false},
+	{"job":"요정","appearance":2,"transform_id":"135","name":"훈련용 활","type":"활","style":"bow","magic":false},
+	{"job":"마법사","appearance":1,"transform_id":"137","name":"훈련용 지팡이","type":"지팡이","style":"magic","magic":true}]
+
+var world: TwilightWorld
+var center := Vector2.INF
+var normal: TwilightMonster
+var failures: Array[String] = []
+var checks := 0
+var ticks_elapsed := 0
+var strikes: Array[Dictionary] = []
+var monster_strikes: Array[Dictionary] = []
+var flight_observations: Dictionary = {}
+var report := {"player":[],"staff_normal":[],"monster":[],"boss":[],"lifecycle":{},"screenshots":[]}
+var out: String
+var captures: String
+
+func _initialize() -> void: call_deferred("run")
+
+func check(ok: bool, label: String) -> void:
+	checks += 1
+	if not ok:
+		failures.append(label)
+		print("PR100_GAMEPLAY_FAIL: " + label)
+
+func tick(count: int = 1) -> void:
+	for _i: int in range(count):
+		await physics_frame
+		ticks_elapsed += 1
+
+func active_sprite() -> AnimatedSprite2D:
+	return world.player.transform_sprite if world.player.transform_active else world.player.class_sprite
+
+func upright(sprite: Node2D) -> bool:
+	return sprite.scale.x > 0.0 and sprite.scale.y > 0.0 and is_zero_approx(sprite.rotation) and not sprite.flip_h and not sprite.flip_v
+
+func release_inputs() -> void:
+	for actions: Array in ACTIONS:
+		for action: String in actions: Input.action_release(action)
+	Input.action_release("attack")
+
+func screen_direction(direction: int) -> Vector2:
+	return (VECTORS[direction] as Vector2).normalized()
+
+func attack_track(key: String, direction: int) -> bool:
+	return key.ends_with("_"+str(direction)) and (key.begins_with("attack") or key.begins_with("cast") or key.begins_with("ranged_attack") or key.begins_with("special"))
+
+func route_clear(point: Vector2, radius: float) -> bool:
+	if not world.field_map.walkable(point) or not world.field_map.point_clear(point) or world.field_map.is_safe(point): return false
+	for direction: int in range(8):
+		var spoke: Vector2 = point + screen_direction(direction) * radius
+		if not world.field_map.walkable(spoke) or not world.field_map.point_clear(spoke) or world.field_map.is_safe(spoke) or not world.field_map.line_clear(point,spoke): return false
+	return true
+
+func find_clearing() -> Vector2:
+	for slot: Dictionary in world.field_population.slots:
+		var actor: Variant = slot.monster
+		if not is_instance_valid(actor) or actor.monster_name != "해골 근위병": continue
+		for radius: float in [0.,80.,160.,240.,320.,400.,560.,720.]:
+			for direction: int in range(8):
+				var point: Vector2 = actor.position + screen_direction(direction) * radius
+				if route_clear(point,150.):
+					normal = actor
+					return point
+	return Vector2.INF
+
+func record_for(name_value: String) -> Dictionary:
+	for record: Dictionary in world.monster_db:
+		if str(record.name) == name_value: return record
+	return {}
+
+func db_actor(name_value: String) -> TwilightMonster:
+	var record := record_for(name_value)
+	check(not record.is_empty(),"production DB monster " + name_value)
+	if record.is_empty(): return null
+	var actor: TwilightMonster = world.MONSTER_SCENE.instantiate()
+	world.monsters_root.add_child(actor)
+	actor.position = center + Vector2(40,0)
+	actor.setup(record,world.player,world,world._monster_texture(record))
+	# Match the real FieldPopulation spawn configuration in this same map.
+	actor.collision_mask = 4
+	actor.died.connect(world._on_monster_died)
+	actor.player_hit.connect(world._on_player_hit)
+	actor.selected.connect(world._select_monster)
+	actor.set_physics_process(false)
+	return actor
+
+func capture(name_value: String) -> void:
+	if captures.is_empty(): return
+	await RenderingServer.frame_post_draw
+	check(root.get_texture().get_image().save_png(captures.path_join(name_value + ".png")) == OK,"actual Main screenshot " + name_value)
+	report.screenshots.append(name_value + ".png")
+
+func player_strike(sequence: int) -> void:
+	var origins: Array[String] = []
+	for flight: Dictionary in world.combat_flights.flights: origins.append(str(flight.position))
+	strikes.append({"id":sequence,"tick":ticks_elapsed,"elapsed":world.player.motion.attack_elapsed,
+		"marker_seconds":world.player.motion.attack_duration*world.player.motion.attack_hit_ratio,
+		"facing":world.player.facing8,"flights":world.combat_flights.flights.size(),"launch_origins":origins})
+
+func trace_flights() -> void:
+	# Physics may advance several ticks between rendered frames. Observe every
+	# real physics tick so a short flight cannot escape validation at low FPS.
+	if not is_instance_valid(world) or world.combat_flights == null: return
+	for flight: Dictionary in world.combat_flights.flights:
+		var target: Variant = flight.target.get_ref()
+		if not is_instance_valid(target) or not target is TwilightMonster: continue
+		var sequence: int = world.player.motion.sequence
+		var observation: Dictionary = flight_observations.get(sequence,{"samples":0,"delta":Vector2.ZERO,"kind":flight.kind})
+		observation.samples += 1
+		var delta: Vector2 = flight.position-flight.previous
+		if delta.length_squared() > .01:
+			observation.delta = delta
+			var aim: Vector2 = target.combat_hit_position()-(flight.previous as Vector2)
+			check(delta.normalized().dot(aim.normalized()) > .995,"actual physics projectile travels toward target, sequence " + str(sequence))
+		flight_observations[sequence] = observation
+
+func player_case(spec: Dictionary, transformed: bool) -> void:
+	world.player.position = center
+	world.player.clear_click_path()
+	var target := db_actor("데스나이트")
+	if target == null: return
+	var form: String = "transform:"+str(spec.transform_id) if transformed else "class:" + str(world.player.class_index)
+	for direction: int in range(8):
+		var prefix := "%s %s %s" % [spec.type,form,COMPASS[direction]]
+		world.player.position = center
+		target.position = center-screen_direction(direction)*145.
+		world.player.cancel_attack()
+		world.player.clear_click_path()
+		var before: Vector2 = world.player.position
+		for action: String in ACTIONS[direction]: Input.action_press(action)
+		await tick(12)
+		var moved: Vector2 = world.player.position - before
+		var sprite := active_sprite()
+		check(moved.length() > 10. and moved.normalized().dot(screen_direction(direction)) > .995,prefix + " actual input movement")
+		check(world.player.facing8 == direction,prefix + " velocity-facing")
+		check(sprite.animation == "walk_" + str(direction),prefix + " native walk track")
+		check(upright(sprite),prefix + " walk keeps upright original pixels")
+		release_inputs()
+		await tick(14)
+		check(sprite.animation == "idle_" + str(direction),prefix + " native idle track after movement")
+		world.player.position = center
+		var attack_distance: float = 140. if bool(spec.magic) else 96. if str(spec.type) == "활" else 40.
+		target.position = center + screen_direction(direction)*attack_distance
+		target.motion.cancel_attack()
+		world._select_monster(target)
+		# Wait for the real cooldown; do not bypass the production cadence.
+		for _wait: int in range(100):
+			if world.auto_attack_timer <= 0. and not world.player.motion.presenting_attack: break
+			await tick()
+		var hp_before: int = target.hp
+		var hits_before: int = target.damage_hit_count
+		var strike_before: int = strikes.size()
+		var seed_value := 1
+		var probe := RandomNumberGenerator.new()
+		var chance: float = world._player_magic_hit_chance(target) if bool(spec.magic) else world._normal_attack_hit_chance(target,world._current_attack_kind())
+		# Choose an actual RNG seed giving a normal successful hit; damage and
+		# hit formulas still run in production without substitutions.
+		while true:
+			probe.seed = seed_value
+			if probe.randf() < chance: break
+			seed_value += 1
+		world.rng.seed = seed_value
+		if bool(spec.magic): world.hud.combat_skill_pressed.emit("magic")
+		else: world.hud.attack_pressed.emit()
+		check(not world.pending_attack.is_empty(),prefix + " real command starts windup")
+		if world.pending_attack.is_empty():
+			print("PR100_COMMAND_REJECTED " + JSON.stringify({"case":prefix,"timer":world.auto_attack_timer,"strikes":strikes.size()-strike_before,
+				"hp":world.hp,"range_ok":world._target_in_current_weapon_range(target),"line_clear":world._has_line_of_sight_world(center,target.position),
+				"ammo":world.inventory.get("화살",-1),"stunned":world.player.is_stunned(),"fear":world.player.is_feared()}))
+			continue
+		check(world.player.facing8 == direction,prefix + " target-facing windup")
+		check(world.player.motion.attack_style == str(spec.style),prefix + " weapon action style")
+		var sequence: int = int(world.pending_attack.id)
+		var origin: Vector2 = world.player.combat_projectile_origin()
+		var anchor: Vector2 = world.player.motion.profile.projectile_origin
+		check(origin.is_equal_approx(center+Vector2(0,anchor.y)+screen_direction(direction)*absf(anchor.x)),prefix + " native projectile anchor follows independent screen vector")
+		var saw_attack := false
+		var attack_captured := false
+		var marker_pose_checked := false
+		var authored_track: String = ("cast_" if bool(spec.magic) else "ranged_attack_" if str(spec.type) == "활" else "attack_") + str(direction)
+		check(sprite.sprite_frames.has_animation(authored_track),prefix + " existing real weapon-specific native track")
+		var saw_flight := false
+		var projectile_delta := Vector2.ZERO
+		for _attack_tick: int in range(150):
+			await tick()
+			sprite = active_sprite()
+			if world.player.motion.presenting_attack and world.player.motion.attack_elapsed > 0.:
+				saw_attack = true
+				check(str(sprite.animation) == authored_track,prefix + " dedicated weapon track retains facing")
+				check(upright(sprite),prefix + " attack never flips actor")
+			if strikes.size() == strike_before:
+				check(target.hp == hp_before and target.damage_hit_count == hits_before,prefix + " no hit before marker")
+			elif not marker_pose_checked:
+				marker_pose_checked = true
+				var role: String = authored_track.trim_suffix("_"+str(direction))
+				check(str(sprite.animation) == authored_track and sprite.frame == world.player.motion.profile.hit_frame_for(role),prefix + " visible weapon contact frame and damage marker share clock")
+			if not attack_captured and world.player.motion.presenting_attack and world.player.motion.visual_progress >= world.player.motion.attack_hit_ratio:
+				attack_captured = true
+				await capture("attack-%s-%s-%s" % [spec.type,"transform" if transformed else "base",COMPASS[direction]])
+			for flight: Dictionary in world.combat_flights.flights:
+				if flight.target.get_ref() != target: continue
+				saw_flight = true
+				check(str(flight.kind) == ("magic" if bool(spec.magic) else "ranged"),prefix + " flight type")
+				var delta: Vector2 = flight.position - flight.previous
+				if delta.length_squared() > .01:
+					projectile_delta = delta
+					var aim: Vector2 = target.combat_hit_position() - (flight.previous as Vector2)
+					check(delta.normalized().dot(aim.normalized()) > .995,prefix + " projectile advances toward actual target torso")
+			if strikes.size() > strike_before and not world.player.motion.presenting_attack and world.combat_flights.flights.is_empty(): break
+		check(saw_attack,prefix + " native attack displayed")
+		check(strikes.size() == strike_before + 1 and int(strikes.back().id) == sequence,prefix + " exactly one marker")
+		if strikes.size() > strike_before:
+			check(float(strikes.back().elapsed) >= float(strikes.back().marker_seconds) and float(strikes.back().elapsed)-float(strikes.back().marker_seconds) < .04,prefix + " marker timing")
+			if bool(spec.magic) or str(spec.type) == "활": check((strikes.back().launch_origins as Array).has(str(origin)),prefix + " production flight launches at weapon origin at marker")
+		if flight_observations.has(sequence):
+			saw_flight = true
+			projectile_delta = flight_observations[sequence].delta
+		check(target.hp < hp_before and target.damage_hit_count == hits_before + 1,prefix + " real hit exactly once")
+		check(not target.dead,prefix + " original high-HP target survives directional inspection")
+		if bool(spec.magic) or str(spec.type) == "활": check(saw_flight,prefix + " real projectile visible in physics lifecycle")
+		await tick(14)
+		check(active_sprite().animation == "idle_" + str(direction),prefix + " attack settles to same directional idle")
+		report.player.append({"weapon":spec.type,"form":form,"compass":COMPASS[direction],"facing":world.player.facing8,
+			"movement":str(moved),"idle":str(active_sprite().animation),"style":world.player.motion.attack_style,"authored_attack_track":authored_track,
+			"attack_visible":saw_attack,"projectile_visible":saw_flight,"projectile_delta":str(projectile_delta),
+			"hp_before":hp_before,"hp_after":target.hp,"hit_count":target.damage_hit_count-hits_before})
+		await capture("player-%s-%s-%s" % [spec.type,"transform" if transformed else "base",COMPASS[direction]])
+		print("PR100_GAMEPLAY_DIRECTION " + JSON.stringify(report.player.back()))
+		if bool(spec.magic): await staff_normal_attack(target,spec,transformed,direction)
+	target.queue_free()
+	await tick(2)
+
+func staff_normal_attack(target: TwilightMonster, spec: Dictionary, transformed: bool, direction: int) -> void:
+	var form: String = "transform:"+str(spec.transform_id) if transformed else "class:"+str(world.player.class_index)
+	var prefix := "staff normal %s %s" % [form,COMPASS[direction]]
+	target.position = center+screen_direction(direction)*40.
+	world._select_monster(target)
+	for _wait: int in range(100):
+		if world.auto_attack_timer <= 0. and not world.player.motion.presenting_attack: break
+		await tick()
+	var hp_before: int = target.hp
+	var hits_before: int = target.damage_hit_count
+	var strikes_before := strikes.size()
+	var probe := RandomNumberGenerator.new()
+	var seed_value := 1
+	while true:
+		probe.seed = seed_value
+		if probe.randf() < world._normal_attack_hit_chance(target,world._current_attack_kind()): break
+		seed_value += 1
+	world.rng.seed = seed_value
+	world.hud.attack_pressed.emit()
+	check(not world.pending_attack.is_empty(),prefix+" real HUD normal attack starts")
+	if world.pending_attack.is_empty(): return
+	var seen := false
+	for _wait: int in range(100):
+		await tick()
+		if world.player.motion.presenting_attack and world.player.motion.attack_elapsed > 0.:
+			seen = true
+			check(str(active_sprite().animation) == "attack_"+str(direction),prefix+" dedicated staff attack track")
+			check(upright(active_sprite()),prefix+" no flip during normal attack")
+		if strikes.size() == strikes_before: check(target.hp == hp_before,prefix+" no normal damage before marker")
+		if strikes.size() > strikes_before and not world.player.motion.presenting_attack: break
+	check(seen and strikes.size() == strikes_before+1,prefix+" native staff swing releases once")
+	check(target.hp < hp_before and target.damage_hit_count == hits_before+1,prefix+" real staff melee hit once")
+	check(world.combat_flights.flights.is_empty(),prefix+" existing staff normal attack remains melee")
+	await tick(14)
+	check(str(active_sprite().animation) == "idle_"+str(direction),prefix+" normal attack returns to same facing idle")
+	report.staff_normal.append({"form":form,"compass":COMPASS[direction],"track":"attack_"+str(direction),"visible":seen,
+		"hp_before":hp_before,"hp_after":target.hp,"hits":target.damage_hit_count-hits_before})
+
+func monster_case() -> void:
+	check(is_instance_valid(normal),"existing field skeleton actor")
+	if not is_instance_valid(normal): return
+	normal.player_hit.connect(func(actor: TwilightMonster, damage: int, kind: String) -> void:
+		monster_strikes.append({"name":actor.monster_name,"damage":damage,"kind":kind,"facing":actor.motion.facing8}))
+	for direction: int in range(8):
+		world.player.position = center
+		world.player.clear_click_path()
+		normal.position = center-screen_direction(direction)*140.
+		normal.home_position = normal.position
+		normal.motion.cancel_attack()
+		normal.returning_home = false
+		normal.aggro_remaining = 10.
+		normal.attack_cooldown = 0.
+		normal.repath_cooldown = 0.
+		normal.path = PackedVector2Array()
+		var before := normal.position
+		var count_before := monster_strikes.size()
+		var saw_walk := false
+		var saw_attack := false
+		normal.set_physics_process(true)
+		for _wait: int in range(240):
+			await tick()
+			if normal.motion.state in ["walk","run"]:
+				saw_walk = true
+				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "walk_"+str(direction),"existing skeleton pursuit " + COMPASS[direction])
+			if normal.motion.presenting_attack:
+				saw_attack = true
+				check(normal.motion.facing8 == direction and normal.motion._resolved_key == "attack_"+str(direction),"existing skeleton attack " + COMPASS[direction])
+			if monster_strikes.size() > count_before: break
+		normal.set_physics_process(false)
+		check(saw_walk and saw_attack,"actual AI pursuit and windup " + COMPASS[direction])
+		check(monster_strikes.size() == count_before+1,"actual AI contact marker " + COMPASS[direction])
+		check((normal.position-before).normalized().dot(screen_direction(direction)) > .98,"AI moves toward player " + COMPASS[direction])
+		check(upright(normal.sprite),"monster pixels remain upright " + COMPASS[direction])
+		report.monster.append({"name":normal.monster_name,"compass":COMPASS[direction],"walk":saw_walk,"attack":saw_attack,
+			"movement":str(normal.position-before),"facing":normal.motion.facing8,"contacts":monster_strikes.size()-count_before})
+		normal.motion.cancel_attack()
+		await capture("monster-"+COMPASS[direction])
+		await tick(12)
+
+func boss_case() -> void:
+	var boss := db_actor("그라디움")
+	if boss == null: return
+	check(boss.ai.has("special"),"DB boss retains existing special configuration")
+	if not boss.ai.has("special"):
+		boss.queue_free()
+		return
+	var contacts: Array[int] = []
+	boss.player_hit.connect(func(_actor: TwilightMonster, damage: int, _kind: String) -> void: contacts.append(damage))
+	for direction: int in range(8):
+		world.player.position = center+screen_direction(direction)*80.
+		world.player.clear_click_path()
+		boss.position = center
+		boss.home_position = center
+		boss.motion.cancel_attack()
+		boss.special_cooldown = 0.
+		boss.aggro_remaining = 10.
+		boss.sight_clock = 0.
+		boss.set_physics_process(true)
+		var warning := false
+		var effect := false
+		var warning_aim := Vector2.ZERO
+		var effect_aim := Vector2.ZERO
+		var special_sequence := -1
+		var contacts_before: int = contacts.size()
+		var player_hp_before: int = world.hp
+		for _wait: int in range(180):
+			await tick()
+			var rig: TwilightMonsterVisual = boss.species_visual
+			if rig.warning_active:
+				warning = true
+				warning_aim = rig.warning_aim
+				check(rig.warning_center.is_equal_approx(center),"boss warning uses real world ground anchor " + COMPASS[direction])
+				special_sequence = boss.special_sequence
+				check(boss.motion.facing8 == direction and warning_aim.dot(screen_direction(direction)) > .995,"boss warns toward player " + COMPASS[direction])
+				check(attack_track(boss.motion._resolved_key,direction),"boss skill uses directional attack art " + COMPASS[direction])
+				check(boss.motion.active,"boss does not return idle during windup " + COMPASS[direction])
+			if rig.effect_age >= 0.:
+				effect = true
+				effect_aim = rig.effect_aim
+				check(rig.effect_center.is_equal_approx(center),"boss impact retains real world ground anchor " + COMPASS[direction])
+				check(effect_aim == warning_aim and not rig.warning_active,"boss impact retains authoritative warning direction " + COMPASS[direction])
+				check(boss.released_sequence == special_sequence,"boss effect releases at existing strike marker " + COMPASS[direction])
+				break
+		boss.set_physics_process(false)
+		check(warning and effect,"actual boss AI warning and skill effect " + COMPASS[direction])
+		check(contacts.size() == contacts_before+1,"existing boss beam contacts player in warned direction exactly once " + COMPASS[direction])
+		check(upright(boss.sprite),"boss pixels remain upright " + COMPASS[direction])
+		report.boss.append({"name":boss.monster_name,"kind":boss.ai.special.kind,"compass":COMPASS[direction],
+			"warning":warning,"effect":effect,"warning_aim":str(warning_aim),"effect_aim":str(effect_aim),"facing":boss.motion.facing8,
+			"contacts":contacts.size()-contacts_before,"player_hp_before":player_hp_before,"player_hp_after":world.hp})
+		await capture("boss-"+COMPASS[direction])
+		boss.motion.cancel_attack()
+		boss.species_visual.reset_presentation()
+		await tick(12)
+	boss.queue_free()
+	await tick(2)
+
+func lifecycle_case() -> void:
+	world._clear_drops()
+	world.player.position = center
+	normal.position = center+Vector2(40,0)
+	normal.home_position = normal.position
+	normal.motion.cancel_attack()
+	world._select_monster(normal)
+	var deaths: Array[int] = []
+	normal.died.connect(func(actor: TwilightMonster) -> void: deaths.append(actor.life_id))
+	var hp_start: int = normal.hp
+	var attempts := 0
+	var life_ticks := 0
+	var hit_seen := false
+	var inventory_before: Dictionary = world.inventory.duplicate(true)
+	while is_instance_valid(normal) and not normal.dead and attempts < 30 and life_ticks < 2400:
+		if world.auto_attack_timer <= 0. and world.pending_attack.is_empty():
+			world.rng.seed = 1 + attempts
+			world.hud.attack_pressed.emit()
+			attempts += 1
+		await tick()
+		life_ticks += 1
+		if is_instance_valid(normal) and normal.motion.hit_clock > 0. and not normal.dead:
+			# Render the frozen QA actor using its existing pose clock; no AI rewrite.
+			normal.motion.advance(.01,Vector2.ZERO)
+			normal.motion.apply(normal.sprite,normal.animation_base_scale)
+			hit_seen = hit_seen or normal.motion._resolved_key.begins_with("hit_")
+	check(is_instance_valid(normal) and normal.dead,"real equipped weapon kills existing field monster")
+	check(deaths.size() == 1,"monster death callback exactly once")
+	check(hit_seen,"native monster hit pose displayed")
+	var death_track := ""
+	if is_instance_valid(normal):
+		await tick(12)
+		death_track = normal.motion._resolved_key
+		check(death_track.begins_with("death_"),"real field corpse plays directional death")
+		check(upright(normal.sprite),"authored death has no second rotation")
+	var drops: Array = world.ground_loot.snapshot()
+	check(not drops.is_empty(),"real DB death produces ground drop")
+	var picked := false
+	if not drops.is_empty():
+		var drop: Dictionary = drops[0]
+		var name_value := str(drop.item_name)
+		var before: int = int(world.inventory.get(name_value,0))
+		check(before == int(inventory_before.get(name_value,0)),"drop is not immediately awarded")
+		(world.ground_loot.views[str(drop.id)] as Button).pressed.emit()
+		world.loot_pickup.pickup_button.pressed.emit()
+		for _wait: int in range(180):
+			await tick()
+			if not world.ground_loot.records.has(str(drop.id)): break
+		picked = int(world.inventory.get(name_value,0)) == before+int(drop.quantity)
+		check(picked and not world.ground_loot.records.has(str(drop.id)),"actual UI manual pickup awards once")
+	await tick(90)
+	check(not is_instance_valid(normal) or not normal.is_physics_processing(),"corpse lifecycle terminates or enters dormant pool")
+	report.lifecycle = {"hp_start":hp_start,"weapon_attempts":attempts,"hit_pose":hit_seen,"death_callbacks":deaths.size(),
+		"death_track":death_track,"ground_drops":drops,"manual_pickup":picked,"player_hp":world.hp}
+
+func run() -> void:
+	out = OS.get_environment("TWILIGHT_PR100_REPORT")
+	if out.is_empty(): out = "user://pr100-direction-gameplay.json"
+	captures = OS.get_environment("TWILIGHT_PR100_CAPTURE_DIR")
+	if not captures.is_empty():
+		check(DisplayServer.get_name() != "headless","screenshots require an actual rendered Main viewport")
+		if DisplayServer.get_name() == "headless": captures = ""
+		else: DirAccess.make_dir_recursive_absolute(captures)
+	world = load("res://Main.tscn").instantiate()
+	root.add_child(world)
+	check(CLASS_QA.enter_game(world,"기사"),"production UI initial class selection")
+	world.hud._hide_aux_panels()
+	world.save_timer = -10000.
+	world.rng.seed = 20261013
+	world._set_map("aden_world",false)
+	world.field_population.set_process(false)
+	for actor: Node in world.monsters_root.get_children(): actor.set_physics_process(false)
+	center = find_clearing()
+	check(center.is_finite(),"existing Aden field has a valid eight-direction movement and combat clearing")
+	if not center.is_finite(): await finish(); return
+	world.player.set_auto_enabled(false)
+	world.player.camera.zoom = Vector2(1.8,1.8)
+	world.player.camera.position = Vector2(0,-32)
+	world.player.attack_strike.connect(player_strike)
+	physics_frame.connect(trace_flights)
+	report.scope = "full"
+	report.setup = {"scene":"Main.tscn","map":"aden_world","clearing":str(center),"normal":"해골 근위병",
+		"attack_target":"데스나이트","boss":"그라디움","stats_overridden":false,"qa_positioning":true,
+		"background_spawn_slots_paused":true,"normal_is_existing_population_actor":true}
+	var section := OS.get_environment("TWILIGHT_PR100_SECTION")
+	if section == "boss":
+		# Same production scene and boss AI as the full regression, for short
+		# real-game skill recordings without rerunning weapon/corpse sequences.
+		report.scope = "boss_only"
+		await boss_case()
+		await finish()
+		return
+	check(section.is_empty(),"only the documented optional boss section may narrow this test")
+	for spec: Dictionary in WEAPONS:
+		var transform: Dictionary = {}
+		for record: Dictionary in world.catalog_db["변신"]:
+			if str(record.get("sourceId","")) == str(spec.transform_id): transform = record; break
+		check(not transform.is_empty(),"existing weapon-compatible transformation " + str(spec.transform_id))
+		check(CLASS_QA.enter_game(world,str(spec.job)),"production class UI " + str(spec.job))
+		# Job and appearance have separate existing HUD signals; explicitly cover
+		# the archer and mage sprites instead of accidentally reusing warrior.
+		world.hud.class_selected.emit(int(spec.appearance))
+		check(world.player.class_index == int(spec.appearance),"production appearance selection " + str(spec.job))
+		world.hud._hide_aux_panels()
+		var weapon: Dictionary = world._find_catalog_item_record(str(spec.name))
+		check(not weapon.is_empty(),"existing DB weapon " + str(spec.name))
+		world._equip_or_acquire_item(weapon,true)
+		check(world._current_weapon_type() == str(spec.type),"real equipment handler " + str(spec.type))
+		world._equip_catalog("변신",{})
+		await tick(14)
+		await player_case(spec,false)
+		world._equip_catalog("변신",transform)
+		await tick(14)
+		check(world.player.motion.profile.profile_id == "transform:"+str(spec.transform_id),"production transform equipment updates profile")
+		var interval: float = world._normal_attack_interval()
+		await player_case(spec,true)
+		world._equip_catalog("변신",{})
+		await tick(14)
+		check(not world.player.transform_active,"transform removal restores base class")
+		world._equip_catalog("변신",transform)
+		await tick(14)
+		check(world.player.transform_active and world.player.motion.profile.profile_id == "transform:"+str(spec.transform_id) and is_equal_approx(interval,world._normal_attack_interval()),"transform roundtrip retains motion and attack cadence " + str(spec.type))
+	# Knight and its existing DB sword are used for incoming combat / lifecycle.
+	check(CLASS_QA.enter_game(world,"기사"),"return to production knight class")
+	world.hud.class_selected.emit(0)
+	world.hud._hide_aux_panels()
+	world._equip_or_acquire_item(world._find_catalog_item_record("훈련용 한손검"),true)
+	for record: Dictionary in world.catalog_db["변신"]:
+		if str(record.get("sourceId","")) == "131": world._equip_catalog("변신",record); break
+	await monster_case()
+	await boss_case()
+	await lifecycle_case()
+	await finish()
+
+func finish() -> void:
+	release_inputs()
+	report.checks = checks
+	report.failures = failures
+	report.physics_ticks = ticks_elapsed
+	report.player_strikes = strikes
+	report.monster_contacts = monster_strikes
+	report.flight_physics_observations = flight_observations
+	DirAccess.make_dir_recursive_absolute(out.get_base_dir())
+	var file := FileAccess.open(out,FileAccess.WRITE)
+	check(file != null,"JSON evidence path writable")
+	if file != null: file.store_string(JSON.stringify(report,"\t"))
+	if is_instance_valid(world): world.queue_free()
+	await process_frame
+	print("PR100_DIRECTION_GAMEPLAY_RESULT " + JSON.stringify({"scope":report.get("scope","full"),"checks":checks,"failures":failures,"player_rows":report.player.size(),"staff_normal_rows":report.staff_normal.size(),"monster_rows":report.monster.size(),"boss_rows":report.boss.size(),"report":out}))
+	if failures.is_empty(): print("PR100_BOSS_GAMEPLAY_OK" if report.get("scope", "full") == "boss_only" else "PR100_DIRECTION_GAMEPLAY_OK")
+	quit(0 if failures.is_empty() else 1)

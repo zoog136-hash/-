@@ -12,7 +12,7 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, run_isolated
+from test_project_support import classify_result, requires_renderer, run_isolated
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
@@ -48,7 +48,7 @@ not_run=[]
 for name,extra in tests:
     executed.append(name)
     source=root/'tests'/(name+'.gd')
-    needs_draw=source.is_file() and 'RenderingServer.frame_post_draw' in source.read_text(encoding='utf-8')
+    needs_draw=source.is_file() and requires_renderer(source.read_text(encoding='utf-8'),os.environ)
     # A headless RenderingServer never emits frame_post_draw. Historically
     # these tests silently ran for 150 seconds each before timing out.
     visual=needs_draw # Never block awaiting draw events under the headless renderer.

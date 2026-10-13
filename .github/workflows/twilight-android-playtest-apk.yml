@@ -3,6 +3,7 @@ name: TWILIGHT Android ARM64 APK Playtest
 on:
   pull_request:
     branches:
+      - main
       - integration/twilight-complete-20261009
   workflow_dispatch:
 
@@ -38,7 +39,7 @@ jobs:
           java -version
           echo "ANDROID_HOME=${ANDROID_HOME:-}" >> "$GITHUB_ENV"
           echo "JAVA_HOME=${JAVA_HOME:-}" >> "$GITHUB_ENV"
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-35" "build-tools;35.0.1" "platform-tools"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install "platforms;android-36" "build-tools;36.0.0" "platform-tools"
           mkdir -p "$HOME/.android"
           keytool -genkeypair -noprompt -validity 1000 -keyalg RSA -keysize 2048 -alias androiddebugkey -dname "CN=Android Debug,O=Android,C=US" -keystore "$HOME/.android/debug.keystore" -storepass android -keypass android
           cat > /tmp/config-editor.gd <<'GDSCRIPT'
@@ -59,7 +60,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { echo "IMPORT_FAILED"; tail -n 100 /tmp/import-android.txt; exit 1; }
+          timeout 900 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --import > /tmp/import-android.txt 2>&1 || { echo "IMPORT_FAILED"; tail -n 100 /tmp/import-android.txt; exit 1; }
           echo "ANDROID_IMPORT_DONE"
       - name: Configure Android SDK in Godot editor settings
         shell: bash
@@ -93,14 +94,17 @@ jobs:
           timeout 360 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --export-debug "Android" build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/export-android.txt 2>&1 || { echo "EXPORT_FAILED"; tail -n 120 /tmp/export-android.txt; exit 1; }
           test -s build/TWILIGHT_ANDROID_PLAYTEST.apk
           unzip -tqq build/TWILIGHT_ANDROID_PLAYTEST.apk
-          "$ANDROID_HOME/build-tools/35.0.1/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging build/TWILIGHT_ANDROID_PLAYTEST.apk | head -n 16
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose build/TWILIGHT_ANDROID_PLAYTEST.apk
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -c -P 16 -v 4 build/TWILIGHT_ANDROID_PLAYTEST.apk > /tmp/alignment-android.txt
+          python3 tools/verify_android_animation_export.py --apk build/TWILIGHT_ANDROID_PLAYTEST.apk --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --android-sdk "$ANDROID_HOME" --output build/android-validation
           echo "TWILIGHT_ANDROID_APK_BUILD_OK"
           ls -lh build/TWILIGHT_ANDROID_PLAYTEST.apk
       - name: Upload signed Android debug APK
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: TWILIGHT_ANDROID_APK_PLAYTEST_20261009
+          name: TWILIGHT_ANDROID_APK_${{ github.sha }}
           path: build/TWILIGHT_ANDROID_PLAYTEST.apk
           if-no-files-found: error
           compression-level: 0
@@ -113,4 +117,6 @@ jobs:
             /tmp/import-android.txt
             /tmp/export-android.txt
             /tmp/android-settings.txt
+            /tmp/alignment-android.txt
+            build/android-validation/
           if-no-files-found: ignore

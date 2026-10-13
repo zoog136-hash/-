@@ -5,10 +5,10 @@ extends SceneTree
 ## Godot --headless --path . --script res://tools/build_open_sprite_sample.gd -- SOURCE_DIR
 const CELL := 256
 const PIVOT := Vector2i(256, 320) # native pixels before uniform 1/2 reduction
-# Source 0 faces screen-left, 2 faces the viewer and 6 shows the back.
-# The previous labels inverted all views by 180 degrees. Keep this source
-# convention separate from clockwise Godot screen coordinates (positive Y down).
-const SOURCE_DIRECTIONS := ["W", "SW", "S", "SE", "E", "NE", "N", "NW"]
+# Flare source 0 faces screen-left, 2 shows the back (screen-up), 6 faces
+# the viewer (screen-down). Avatar.cpp maps press_up=2 and press_down=6.
+# Keep source indices separate from clockwise Godot screen coordinates (+Y down).
+const SOURCE_DIRECTIONS := ["W", "NW", "N", "NE", "E", "SE", "S", "SW"]
 const GAME_DIRECTIONS := ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]
 const LAYERS := {"feet":"plate_boots", "legs":"plate_greaves", "chest":"plate_cuirass",
 	"hands":"plate_gauntlets", "head":"plate_helm", "main":"longsword", "off":"shield"}

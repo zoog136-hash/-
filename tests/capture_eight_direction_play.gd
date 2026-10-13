@@ -6,7 +6,7 @@ const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 const ACTIONS = [["move_right"],["move_right","move_down"],["move_down"],["move_left","move_down"],
 	["move_left"],["move_left","move_up"],["move_up"],["move_right","move_up"]]
 const COMPASS = ["E","SE","S","SW","W","NW","N","NE"]
-const SOURCE_VIEW = [4,3,2,1,0,7,6,5]
+const SOURCE_VIEW = [4,5,6,7,0,1,2,3]
 
 class DirectionGuide extends Node2D:
 	var vector := Vector2.ZERO

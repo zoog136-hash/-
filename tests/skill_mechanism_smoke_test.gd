@@ -89,11 +89,23 @@ func _run() -> void:
 	world.set("selected_monster", dummy)
 	world.call("_tick_skill_cooldowns", 10.0)
 	before_mp = int(world.get("mp"))
+	var stun_record: Dictionary = world.call("_skill_record", "쇼크 스턴") as Dictionary
+	var expected_stun_cooldown: float = SKILL_RULES.cooldown_seconds(stun_record) * float(world.call("_skill_cooldown_factor"))
+	_expect(SKILL_RULES.cooldown_seconds(stun_record) == 10.0, "stun base cooldown unexpectedly changed")
 	_expect(bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun did not use dedicated status path")
 	preload("res://tests/combat_test_clock.gd").settle(world)
 	_expect(int(world.get("mp")) == before_mp - 10, "stun MP not consumed on attempt")
 	var cds: Dictionary = world.get("skill_cooldowns") as Dictionary
-	_expect(float(cds.get("쇼크 스턴", 0.0)) >= 9.0, "stun cooldown not started")
+	# Class selection equips a mythic transformation with cooldown reduction.
+	# Verify the exact effective duration and its boundary, not an unreduced floor.
+	_expect(expected_stun_cooldown > 0.0 and is_equal_approx(float(cds.get("쇼크 스턴", 0.0)), expected_stun_cooldown), "stun cooldown did not match the active transformation/cast-speed policy")
+	var stun_mp: int = int(world.get("mp"))
+	_expect(not bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun cooldown did not reject an immediate recast")
+	world.call("_tick_skill_cooldowns", expected_stun_cooldown - 0.01)
+	_expect(not bool(world.call("_cast_job_skill", "쇼크 스턴")), "stun cooldown expired before its effective duration")
+	_expect(int(world.get("mp")) == stun_mp, "stun cooldown rejection consumed MP")
+	world.call("_tick_skill_cooldowns", 0.02)
+	_expect(not (world.get("skill_cooldowns") as Dictionary).has("쇼크 스턴"), "stun cooldown did not expire after its effective duration")
 
 	world.call("_tick_skill_cooldowns", 15.0)
 	world.call("_on_quickslot_assignment_requested", 0, "skill_auto", "에너지 볼트")

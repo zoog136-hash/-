@@ -52,7 +52,7 @@ func run() -> void:
 			motion.advance(.25, aim * profile.reference_speed)
 			motion.apply(sprite,Vector2.ONE * profile.pixel_scale)
 			check(sprite.animation == "walk_" + str(direction), "8-way velocity to artwork")
-			check(not sprite.flip_h and is_zero_approx(sprite.rotation), "no mirrored/rotated direction")
+			check(not sprite.flip_h and not sprite.flip_v and sprite.scale.y > 0.0 and is_zero_approx(sprite.rotation), "no mirrored/rotated direction")
 			check(sprite.position.is_equal_approx(profile.sprite_offset), "stable foot offset")
 			motion.advance(.2,Vector2.ZERO)
 			motion.apply(sprite,Vector2.ONE * profile.pixel_scale)

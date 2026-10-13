@@ -308035,7 +308035,10 @@
       "monster:패트롤": "expanded/male_plate_plate_helm_longsword",
       "monster:퍼포": "expanded/male_mage_mage_hood_staff",
       "monster:하이드": "expanded/male_plate_plate_helm_battle_axe",
-      "monster:해골 저격병": "expanded/skeleton_archer"
+      "monster:해골 저격병": "expanded/skeleton_archer",
+      "class:1": "expanded/male_mage_mage_hood_staff",
+      "class:2": "expanded/male_leather_head_short_longbow",
+      "class:3": "expanded/male_leather_head_short_dagger"
     },
     "direction_mapping": {
       "game_order": [
@@ -308050,29 +308053,29 @@
       ],
       "source_order": [
         "W",
-        "SW",
-        "S",
-        "SE",
-        "E",
-        "NE",
+        "NW",
         "N",
-        "NW"
+        "NE",
+        "E",
+        "SE",
+        "S",
+        "SW"
       ],
       "source_indices": [
         4,
-        3,
-        2,
-        1,
-        0,
-        7,
+        5,
         6,
-        5
+        7,
+        0,
+        1,
+        2,
+        3
       ],
-      "correction": "Original direction labels were opposite; runtime art and layer order corrected together.",
+      "correction": "PR100 follow-up: north/south and diagonal track labels corrected; all existing PNG pixels preserved. Prior source_order and visual approval were wrong.",
       "validation": {
-        "player_eight_directions": "actual Main screenshots reviewed",
-        "monster_directions": "40 pixel reference checks",
-        "monster_combat": "representative actual Main screen reviewed"
+        "source_convention": "Flare engine Avatar.cpp screen movement convention; see docs/remake/evidence/pr100-direction-fix/DIRECTION_CAUSE.md",
+        "pixel_preservation": "233 unchanged PNG SHA-256; 36 SpriteFrames resources remapped; see resource-mapping-audit.json",
+        "actual_gameplay": "Actual Main: base knight/archer/mage and native transforms131/135/137, each8direction weapon/cast; skeletonAI8 and Gradiumm beam8; scope is representative, not all-ID visual approval"
       }
     },
     "distinct_bodies": 36,
@@ -311124,9 +311127,9 @@
     "resources": {
       "expanded/female_chain_chain_coif_longsword": {
         "path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/SpriteFrames.tres",
-        "sha256": "ca112710e399a70e736f7689971a773cea542d60815115499a8b717ca66acc72",
+        "sha256": "0f856a69aed009fd66d97d2e3757888c14b2d32e4ffaa6f20dac89c730ece18f",
         "provenance_path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_longsword/provenance.json",
-        "provenance_sha256": "1c3e6a4fab0971e65db273380d2313a835cd950579aaf24a5b2f6eea1c287402",
+        "provenance_sha256": "261b5babeef5ecdcceb44c560ab94289e38461fc2e3778de72ec992332f84b00",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -311146,13 +311149,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "b3b8639a6be78246c423377ac5ba59791ac9a990b8c78dfd2a9158058c58e0b1",
@@ -311177,13 +311180,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "da3f8d45abdb06026862248541f33fcc3a1d40b6623a3809bc3688a75bed6f15",
@@ -311208,13 +311211,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "b4a8b27d9346be2f2927a57dee565a01dfb5dba571a0c0d6e5403ef1b697c9d3",
@@ -311239,13 +311242,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "060ada4c79143c3f8d4c5725acab01fd25c348507e95020368a59a059014c9bc",
@@ -311270,13 +311273,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "a2c204e19cb5313047ac3835985e12368d9ed4fc5a2f234eb88ee5222bf397df",
@@ -311301,13 +311304,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "bfa1b8cf54adc3b3027927b8c948362028a75f86327291f0fc70bf817c27a181",
@@ -311348,9 +311351,9 @@
       },
       "expanded/female_chain_chain_coif_battle_axe": {
         "path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/SpriteFrames.tres",
-        "sha256": "4f292144c5891331c36b00b292ba4481fe8b555422f2116e381a210e16e81dcc",
+        "sha256": "dc20a391d50415188299a82645e95e75848a895043e8a685412c31ee2b62ffc2",
         "provenance_path": "res://assets/actors/eight_direction/expanded/female_chain_chain_coif_battle_axe/provenance.json",
-        "provenance_sha256": "cb2cbf9e9d241a6f489e8ef84f42639d16c9e0ffd92b2d4ec0749e6937710b29",
+        "provenance_sha256": "9b32c69af0efc38eb38dd6ce9ed7ac648bac913cae4d3ec23341da1bfd7a736f",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -311370,13 +311373,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "ab9f2e59e43bbf316e4080710874f136d7218365e6fc86a922eed6e093621841",
@@ -311401,13 +311404,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "492e770e7195d0fce0540294d49b4eb393dac487d50c2d642daadff1a10f9da9",
@@ -311432,13 +311435,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "8e1f653486cc53217b79a2a76233c4aa4d51a278e3a56252b68f0bbea6dde257",
@@ -311463,13 +311466,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "73c0f08888864839c6e2f4ca2860b53945d64be8afbb3131fd689ca104de5afb",
@@ -311494,13 +311497,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "ce8cd5f3b39cb543189ab47ccbee23cae18f8fdb76400b0cbdfe0d6fa55ea88a",
@@ -311525,13 +311528,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "9870626e134c2ccb3ef745737de6d4dfe6b8a37970be161f21ad62f510123c21",
@@ -311571,9 +311574,9 @@
       },
       "expanded/male_plate_plate_helm_greatsword": {
         "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/SpriteFrames.tres",
-        "sha256": "944be8851ebc9b72238669fc81a341779fb1493dfb13c82f148867bd795b8fd0",
+        "sha256": "57a1b85f3c3b6f6c33941c71b01028adae84d7d6b8cfc41ae647bf49fb040cbd",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_greatsword/provenance.json",
-        "provenance_sha256": "907c95cb8b3eabf2ee9644b6897a2e73fe3edcd30be60ace5a73a1377ed82b3e",
+        "provenance_sha256": "450acb452bc6c1b728e59ba9778858f48b5dbecb9c21c8441a55f9949d357ca8",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -311593,13 +311596,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "69a26df442a9ce010885aa8339a83dccc6dfe53ca9ff3a32d025c7e279e7875e",
@@ -311624,13 +311627,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "541a8905e022ddd18eb30294c02280c5d9b0c1e596293cc240c053992bba2d03",
@@ -311655,13 +311658,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "265779224d1d44caff9d8122ae4cf3c25acfb78cd0164a628e9a667739963c6d",
@@ -311686,13 +311689,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "cb51467dee494f5ce5aea1d04fda83c386a435e6c6e724dd96be367d0a6ac239",
@@ -311717,13 +311720,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "29111445b3c4c36ceaacaccd885a2e0037d517823398ca441ad0017824277afe",
@@ -311748,13 +311751,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "6163c2f15456f794e85b3cb11166b11174e21bbdf3f08cf4747fbfc3cbe13f09",
@@ -311794,9 +311797,9 @@
       },
       "expanded/male_mage_mage_hood_staff": {
         "path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/SpriteFrames.tres",
-        "sha256": "b0ce742bde51b0c0c88d32aa5d83d686979c78633dddf3976589dfd9623cca77",
+        "sha256": "073eddbb0bdec03e44d4ec70af6c471465bafe8089716a40f12ec9014ef9737e",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_mage_mage_hood_staff/provenance.json",
-        "provenance_sha256": "477c05231023185aa2b64e2eef91b8b508f2c19edee4a63f53611b29bf8e8a9b",
+        "provenance_sha256": "688e670f2b1b41505bab3a0f2729d801a695f8b7608f7192c4b401733f62952d",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -311816,13 +311819,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "ec812780b7fad0c16b191287a0923e224b46d6801427a540285f16227efeb076",
@@ -311847,13 +311850,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "caa364d0fc8e6093286b5b04f48ad1eccf57ca32b432343af3be7e31c05bb8d2",
@@ -311878,13 +311881,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "7cd16579727d8c7258539ecd56fa3f1e49128725ceed4030be9c23ca15765074",
@@ -311909,13 +311912,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "baf2b777b6d86f988e2f4f67ceb224d7af75025d853896d3268c0b354c0af3da",
@@ -311940,13 +311943,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "3ae683e7d01c3babc807e941de3a6392b7a412aa938e2cb508f304da37141223",
@@ -311971,13 +311974,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "4489ef590cfa9a171329900cff8fa7d66ec10c397d43f4033ced80e9720d9952",
@@ -312017,9 +312020,9 @@
       },
       "expanded/female_plate_plate_helm_longsword": {
         "path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/SpriteFrames.tres",
-        "sha256": "7125c1d71330fd8f2e002c3c5537990925e18cdaa06bfab1c136a315ff346de1",
+        "sha256": "50ceb93dbaac6b90d3c7ac3a632588bc6ee1f55e5bff09f58811f78dcb230fa3",
         "provenance_path": "res://assets/actors/eight_direction/expanded/female_plate_plate_helm_longsword/provenance.json",
-        "provenance_sha256": "5749c61f88d9bea2290969767c4e2bce78362593727d2ed51d7967fbc1e62a31",
+        "provenance_sha256": "215355d2a5c3b493e7f2face4b3d0b621ad1c75eaad0ccd82c7acee48f621742",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -312039,13 +312042,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "8e16a6b5517ca208c5cb0cf2f0da5d244f06c5588b2b38854e68b9897a999280",
@@ -312070,13 +312073,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "e1418b87e5b806e77896bdc14096e53a09db6bfefdd17d3533673817feb2dca6",
@@ -312101,13 +312104,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "d8dca15b112f7d50de4c92b44d455fcde64a352fb040ee89a51feb629ca0982e",
@@ -312132,13 +312135,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "fdcd434a73d508be15e6a3f1f4ce1344eb204c3845b8e23a7309ccd4bb647b1f",
@@ -312163,13 +312166,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "6ab9cef2c72e796d81349860e87e1765664d004a596c409d331f11719064dc4d",
@@ -312194,13 +312197,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "2fcca0b7890e9aadcf589cd01518730b4b5577510c48bd863483cf9deef1019d",
@@ -312241,9 +312244,9 @@
       },
       "expanded/male_plate_plate_helm_longsword": {
         "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/SpriteFrames.tres",
-        "sha256": "57080d099584e52c886ab75659765dac1661aa570cd8afbd6a8112ca0aa9c251",
+        "sha256": "2e423628b7ff3c3fb8292edf19188fa61a80f1c80123ba091f38c71b1f007b8a",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_longsword/provenance.json",
-        "provenance_sha256": "7a079f1c677ee8105a7f64e0fa382a80ae7d9cc8f5dfd7e629dfcf1b1463b10d",
+        "provenance_sha256": "f8516e0b8dbd1efb5d130f70e44199a8a1ddb95f7d99b96016a7098b9fc9909e",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -312263,13 +312266,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "31c9e85eaa9a343bed2c64ab9b10aa85d67c3b6d33d01e7010811748e8419ac7",
@@ -312294,13 +312297,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "d4e91e3a82ed04f4c6cbb7d9508d235989bcdf30e6dc58b0586741e090daa6fa",
@@ -312325,13 +312328,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "ed93656f7a73c282895a87f833192d825ddd91a3812672bbe364f14c5552211b",
@@ -312356,13 +312359,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "f416014336b10b6c57b50754b374ded792a0974fcf99804b86232dabf7e44aca",
@@ -312387,13 +312390,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "ed9f3895ab03d2ddfcf5423b612bfb364248fc787848af24ff2ec9b433c92d99",
@@ -312418,13 +312421,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "e24f85cb8d174533217b978f3188100d90d0dbfc3ded6782d93b5f4c1d4511b7",
@@ -312465,9 +312468,9 @@
       },
       "expanded/male_chain_chain_coif_longsword": {
         "path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/SpriteFrames.tres",
-        "sha256": "a9ba4b8749d045b6966dba5a70b59ea800cdc2900845aa9464e79819c9334046",
+        "sha256": "5d5d54c9d19293744018b61f42b1b5a2015bf94a2146993f16f765dc7922bd7d",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_longsword/provenance.json",
-        "provenance_sha256": "cc9cc770c88bcd6c68a6256b3374b655b7b2e55754819b31b962a880ea37a359",
+        "provenance_sha256": "e2deb2b36e0baa43675c07b5cecee3304926f0569e6374f4d463a40476df8ba0",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -312487,13 +312490,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "9542025de4cc04428dd9a9aa9b6259e67c6d6418ef40bd10be6df7cdd88f0b15",
@@ -312518,13 +312521,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "516c81837bcf09afc24a9ccde4465fd78361f60a2acf085fb2ce859fc7ab4fed",
@@ -312549,13 +312552,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "c1b0001737d6e57fb9675b342dbd93938afab9186565e6c8081f5ec2b84cb937",
@@ -312580,13 +312583,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "6365f270ee768d0d9c1d557d7869ef08b86b942f4708a00ee81a61512011ca9b",
@@ -312611,13 +312614,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "952d127e2d1e058668d08d2f6dd656085b5b7133c989392526d85057cf2ed320",
@@ -312642,13 +312645,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "08a80093e6ab401015b9500ee3f7014c3986a01be08fcb609bcdf484765eed6e",
@@ -312689,9 +312692,9 @@
       },
       "expanded/skeleton_knight_boss": {
         "path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/SpriteFrames.tres",
-        "sha256": "ab3e94e715d0b7918d1007a2f86cd8ed96d8994396c3bc632efc802d4fef2030",
+        "sha256": "7806fcccb257b53e6b00ecd9661103075c7b39fde5f3b524b9ed8fb9bf2b4ead",
         "provenance_path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/provenance.json",
-        "provenance_sha256": "d75d003925af6d40717be65455c38e63a6f898cd53b3d40bfdaa356858974f10",
+        "provenance_sha256": "539540c0160577ccb7302674d5997714d6f3b50e288fa3367202fccc936283cf",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -312711,13 +312714,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "58e5060a66d60526107a87bd09b0302db5c113d178ffaaa947912fc46b75f10c",
@@ -312742,13 +312745,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "c490a9e656a70a2ee07aab89fa902c8b55005eea3eabd5a8a51757dda0d74c9e",
@@ -312773,13 +312776,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "0b39a71568313ed8339889d2a58ceb7829c1d8ccff3f35df6a32ab5a4604a454",
@@ -312804,13 +312807,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "d3d753126663401476b6b99940d25806ae43a48fa17bfd0d483ec4532273d97f",
@@ -312835,13 +312838,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "bcf03217c45a96394eab42369898a84c55fbe4a71d3cae9477b94b2a81496547",
@@ -312866,13 +312869,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "c490a9e656a70a2ee07aab89fa902c8b55005eea3eabd5a8a51757dda0d74c9e",
@@ -312897,13 +312900,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "f8449d160e6658559da2dea9fbbe3b756c2de13bfd0ff3b85e51072e52e53b26",
@@ -312939,9 +312942,9 @@
       },
       "expanded/male_chain_chain_coif_battle_axe": {
         "path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/SpriteFrames.tres",
-        "sha256": "8818020467320f4862c39daba10b6ac2454e6c4d8ccc2ee5d76bf0e9c15b04ce",
+        "sha256": "3e81c1289eda180be3358de7fbf25b091eea6d06785395d72e870f14c09ff2c5",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_chain_chain_coif_battle_axe/provenance.json",
-        "provenance_sha256": "5c63e35c74f80d5d2118bb3dcad405a66aa7a1e7b04300fa2d34976841fbd088",
+        "provenance_sha256": "1cb844e42c75cf50ad6f6de4a9d2e41e265cc498b85513fdd72fa3712a4e21b6",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -312961,13 +312964,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "a4f473feb478d4fadb7ef6b860f53bdc2ab44c9299dd754747486c8355bb64c4",
@@ -312992,13 +312995,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "a36544448c6583119b338ff1a6b9b103e6907e2d4c5d8c4fe13e82441efa3086",
@@ -313023,13 +313026,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "b1a71991d5675b847a98aca9603e8e12bab6848d5695e0134cfecfb7d05b9826",
@@ -313054,13 +313057,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "52ace00f93c1af4811d8d3fde62e7440dbfea77c944ee4e145f0bccbab91b7b8",
@@ -313085,13 +313088,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "f47f0e5bd19690a1a8e84982c7f0397809d715a2a3622e8e15f1b03d92337a3d",
@@ -313116,13 +313119,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "ca581cbd89defacc6ee6de1a11664cbfd17981b70dbb9d1d82b251f6bd306e55",
@@ -313162,9 +313165,9 @@
       },
       "expanded/female_mage_mage_hood_staff": {
         "path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/SpriteFrames.tres",
-        "sha256": "3cbb47c68c7734f1eaff8be35d986d4800e31536bd48b87795f4a72aff403e27",
+        "sha256": "22832122a8177eaf568f6ef914b8c56e88afd216d01469a202b2f1ca1fb29ded",
         "provenance_path": "res://assets/actors/eight_direction/expanded/female_mage_mage_hood_staff/provenance.json",
-        "provenance_sha256": "f379d1852e98198a20986502eac8012958ad4b272c341d94461821b4819c5a4b",
+        "provenance_sha256": "d4b93d799ff8bdee6a71ed7b1f89ef69f588dc94436c7ffeb774947f4d490654",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -313184,13 +313187,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "ac819fc5d33e539bdef0e03bd29c6734f65d465a342bf97c3bbeccba57101814",
@@ -313215,13 +313218,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "aec342113bb25a83b4d5ff9ffa85fc0665c5f78d8f0816c8c4d5e2f36c13981b",
@@ -313246,13 +313249,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "c8a622543fe8dbbffb224195148bcfe72fdea32eddd09878cf495ab3b22e2c73",
@@ -313277,13 +313280,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "4d65e445f4d0018371fe22bbab0d924bc9d2dc20649d14c41b628bbaa9f6bdf2",
@@ -313308,13 +313311,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "393d714106405580195baeb509f3c65da7ed5795d19b3e001ffcd92ced2efcac",
@@ -313339,13 +313342,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "01dfd3269359cfca9dd948e00273d84835f56f4f394036d33324461569d2c6a2",
@@ -313385,9 +313388,9 @@
       },
       "expanded/female_leather_head_long_longbow": {
         "path": "res://assets/actors/eight_direction/expanded/female_leather_head_long_longbow/SpriteFrames.tres",
-        "sha256": "8411be1244acf6d81bba71f2c43b989f77225eb9498b04ca133ab140d4da19e4",
+        "sha256": "ab5d3b6813479003a0c2147a1a636c1b287c552603cb25483f3da1a37f95c020",
         "provenance_path": "res://assets/actors/eight_direction/expanded/female_leather_head_long_longbow/provenance.json",
-        "provenance_sha256": "dd02a67914f269a8478ca940a16aa96b69a74ae4850d094641875d05fecc1dae",
+        "provenance_sha256": "d3725187e8de28317ffaa204029ef9d2768bf31d94161b0ce86a02a4ea962f15",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -313407,13 +313410,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "8d1235b1881e22a473bcf9d6c753be49457e3c656fdf85f36a96b074ac3fccab",
@@ -313438,13 +313441,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "4f357a52c6dc8c0f37b9efb381e41bb72a8583fef1e0982db3c9f4171c7c99fc",
@@ -313469,13 +313472,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "d785ea12f32af02da5374aa2d62010aa7d98dc9f3893f83f614ff4b20002cbe1",
@@ -313500,13 +313503,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "0aa1dcaa399846976d609a23baaac82da2d9a491649cf58d5aaffebe18c183a2",
@@ -313531,13 +313534,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "2e50413928f0ed73739315fe8076f390c0de4b5cc9ceda2f11e32903c7840645",
@@ -313562,13 +313565,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "8d1235b1881e22a473bcf9d6c753be49457e3c656fdf85f36a96b074ac3fccab",
@@ -313593,13 +313596,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "b524fbe5892ed9508dbed37951890509f378786c8a103acb094194b0328ca67d",
@@ -313640,9 +313643,9 @@
       },
       "expanded/male_leather_head_short_longbow": {
         "path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/SpriteFrames.tres",
-        "sha256": "035fbd84b9180504493b5fff49bbb1b51d9d94c94ea51b4b0f7bdf1e1ec5cd6e",
+        "sha256": "fbaa3f22aaae5a73900cb8f8e8321ed83d28c5c3aab147790ef2fb34d8cbd621",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_longbow/provenance.json",
-        "provenance_sha256": "378cb2170e90244bd4235a5510d41406be43f29f366c58611e73155c825a1ed9",
+        "provenance_sha256": "7887c568b499ece979d234e76b7e0988840fc14788271093082e42aff82aaeec",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -313662,13 +313665,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "09a86306f7f3a4f6008404d45e6050617fbb56fb7681907f5d4999ef005ea60a",
@@ -313693,13 +313696,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "35763b944f9d3cd23457caf6d073ca61bdf0a005a651a9da2c2d242fb59dee1a",
@@ -313724,13 +313727,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "a78c44ac58a1fd5bf9b101b97bd55cc34e15546a82470de0e6dbe8c6fc5cf795",
@@ -313755,13 +313758,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "fb62008466215e6745dc10ada1495d291949cddbe6557063cf86733278c17971",
@@ -313786,13 +313789,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "f86338a24de3b67f46d60ad6a47dd2193a80a70e1b42bbfe9e6ab098bf78dd8f",
@@ -313817,13 +313820,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "09a86306f7f3a4f6008404d45e6050617fbb56fb7681907f5d4999ef005ea60a",
@@ -313848,13 +313851,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "4d371482f257534b0d285743145578b17281485afe820b05ae1b09e557980a19",
@@ -313895,9 +313898,9 @@
       },
       "expanded/male_leather_head_short_dagger": {
         "path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_dagger/SpriteFrames.tres",
-        "sha256": "1e6da8580e81fa7ec1efeeb479d0e1708e974ecaee5dfd7c19953d0ab9e032dd",
+        "sha256": "1682870b671eceb02b90119604f6ec55a27f1834e94b6c364cf6e0200ddfccf6",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_leather_head_short_dagger/provenance.json",
-        "provenance_sha256": "df441a162392cecd772e93fc38562952e12d3d638399c2599e7f7e496f242de8",
+        "provenance_sha256": "ea50c19e708e890a5045d98e8f22f820d0198b954197dfa3b8814bbdc7713d9e",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -313917,13 +313920,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "c462dad036d1dfc745663b01032d01022fc1c4b0d2655761708863768c44c8f9",
@@ -313948,13 +313951,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "b72b676a964739a8b7640dfcceb9dc28e19d98bb4d656e590d7f1ec0361e6c51",
@@ -313979,13 +313982,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "a408d81a348b64398a2c603275167603242a92bff9eb0bcffa620da151f0a475",
@@ -314010,13 +314013,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "4044e8dd46c782ad29db7092ed00a7ca0153a760813c72905d83e031745bfd8f",
@@ -314041,13 +314044,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "e950e00421b9f5f388840f567ccc880c52da5d6aefd7bd698a027bac91103bb5",
@@ -314072,13 +314075,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "6198d1689cf0de6befac2e05fc81323df5011219787b5eee7428eefe3d159b22",
@@ -314118,9 +314121,9 @@
       },
       "expanded/skeleton": {
         "path": "res://assets/actors/eight_direction/expanded/skeleton/SpriteFrames.tres",
-        "sha256": "7cf84bd296153ddff1224033a2235a6a411acbf707304845c9cc68a38ac64616",
+        "sha256": "e7962cf2ebc15ec3b332c0809bc9a7275423368c2d47068007395955022d0b9e",
         "provenance_path": "res://assets/actors/eight_direction/expanded/skeleton/provenance.json",
-        "provenance_sha256": "23c436945206f6e11568f1cb9d73a4a4b3a7dbd8d8c39c84fe3106fe8b6b8dbb",
+        "provenance_sha256": "f0b431c3c09d1abc6052758b911dd172d2c60d3ab2967e27dcbfb232209118e9",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -314140,13 +314143,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "83ba829d7650f4e2ae3b80e624a2f85db0d66022065ec67c56a49d7113508903",
@@ -314171,13 +314174,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "367a1b2f8793ce77a4494247e0b178bf2c69d0681a507da0eae99032da9a7ce5",
@@ -314202,13 +314205,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "ade1f4f7b94cdbd86b26019889ee150071f79efd8fd2ba2e2eb0a05087413f82",
@@ -314233,13 +314236,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "3636380c1db1a4ca6f5b5f7b20a8cd1cd1669db0c492968160f7bc7416d06c91",
@@ -314264,13 +314267,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "4693739f6394840cc86c2925835294fdc85776f601d023ae8303d90f2e3470dc",
@@ -314295,13 +314298,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "f8265882b9faa71297684f993d04a629224db577e90a3ab49c35b6fe421ada6e",
@@ -314336,9 +314339,9 @@
       },
       "expanded/wyvern_air_boss": {
         "path": "res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres",
-        "sha256": "173f3dfd5d83d1581863b791f5bcb507301cce6c927625213c397917b765cfd9",
+        "sha256": "8b32f7658336c1a60303c28a52433c80fd5bf642bc046b5104d2b9901de43610",
         "provenance_path": "res://assets/actors/eight_direction/expanded/wyvern_air_boss/provenance.json",
-        "provenance_sha256": "fa4ba1394e29c012d27e032703922f82d4bcaad24dda2331bb90946d03029c9f",
+        "provenance_sha256": "b75eb538d5de582b16c75243ad9efff1ed02b6c3e9134c13af75f75c2d065f6f",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -314358,13 +314361,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "75bcaffe412900c586733c37cd7d8aca9a0efeaf5ed2f3b2df7342b9650dfb7b",
@@ -314389,13 +314392,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "01eb5f4cb0044b36cf6ba56eb3962b141c912767b3f9e10fa082d36ce99f9e5b",
@@ -314420,13 +314423,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "0264317dae8f64bd9c3b60cbf6450b16e8ee323f84100720a0665feee7f24225",
@@ -314451,13 +314454,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "f137f5cb0c8bcd9435a091492708186aebb86d2833b4037bd1e765add872206d",
@@ -314482,13 +314485,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "7c730cb7182c52d3608efbbafd30d9981d31c7f66c32d2d6272ef3521af08d70",
@@ -314513,13 +314516,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "01eb5f4cb0044b36cf6ba56eb3962b141c912767b3f9e10fa082d36ce99f9e5b",
@@ -314544,13 +314547,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "01eb5f4cb0044b36cf6ba56eb3962b141c912767b3f9e10fa082d36ce99f9e5b",
@@ -314575,13 +314578,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "493e640b415b278e5aacbb806057a2dafd679fde32f03f1f64de4dce93642b89",
@@ -314618,9 +314621,9 @@
       },
       "expanded/minotaur": {
         "path": "res://assets/actors/eight_direction/expanded/minotaur/SpriteFrames.tres",
-        "sha256": "347d911a261c7d41b0da3405dbeca69ee164e5d9968adbbaef48171596d4c759",
+        "sha256": "c04e06bf5ab66949306aef45b5e7d66b9a59a41660867890400d99f5bb9d5ed8",
         "provenance_path": "res://assets/actors/eight_direction/expanded/minotaur/provenance.json",
-        "provenance_sha256": "bcac5f0cd061f94d41bc89917ac9459899ae88c98e9530b91bf0f5eccc3cb76b",
+        "provenance_sha256": "f60460418930e53e868d4a8dbac6111d50f260b137c588af22556b1ae58103bb",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -314640,13 +314643,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "658e37c5f470e4149ea9cca9ed0bf4a33c8f19f1faaaedd676aed1f4705eda95",
@@ -314671,13 +314674,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "accf41856fc8c1f772bd0bd45d44cb82764b6b4419239e2d4b2394ae7b22ed9b",
@@ -314702,13 +314705,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "back_forth",
             "sha256": "8a1c24217db41d91bc3b69adca1d112e0d2435d980a9c7488929067b287d93c0",
@@ -314733,13 +314736,13 @@
             ],
             "direction_unique_frames": {
               "E": 3,
-              "N": 3,
-              "NE": 3,
-              "NW": 3,
-              "S": 3,
               "SE": 3,
+              "S": 3,
               "SW": 3,
-              "W": 3
+              "W": 3,
+              "NW": 3,
+              "N": 3,
+              "NE": 3
             },
             "loop_type": "back_forth",
             "sha256": "046447f09ef8f8ae0fcfc195da9e729725ce01756de71eedb1ed010dbed643aa",
@@ -314764,13 +314767,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "405b7240af6240d8373045da83cf81e30144243d73fc7cf85e5bad3c66b00b6c",
@@ -314795,13 +314798,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "4bef1e63339491912e7332a229def0a87852905ef1f99f657927995b4ad986a5",
@@ -314836,9 +314839,9 @@
       },
       "expanded/wyvern": {
         "path": "res://assets/actors/eight_direction/expanded/wyvern/SpriteFrames.tres",
-        "sha256": "a531332f967a170c36b705f7893cc8925be785f46fea42b36c121e5313b6294e",
+        "sha256": "7fa619df93d73222a61fe2a7909a7dae2f3fbc94ba4e56385ea248c4ade0b011",
         "provenance_path": "res://assets/actors/eight_direction/expanded/wyvern/provenance.json",
-        "provenance_sha256": "24e0006da23532e3be94c146697f372f662eeb02a79af09d616b9c3a7a91a4dc",
+        "provenance_sha256": "3275e2067c106b030f4045851ce4dcc5eab6aab9c4ff6610958cae5a546a69ae",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -314858,13 +314861,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "b4060566fc9be021efbc467b3f10aa58f2a9e7664911db3b5d5a42f7ab324672",
@@ -314889,13 +314892,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "cb7b0d98e7d5fc07625ee31741ec9202f670f84fab4acd5437fb9de98a163b76",
@@ -314920,13 +314923,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "93607f6f1110e95eb2d5c22a106e402e8fa4301fd0a53921ae86ce22620e3780",
@@ -314951,13 +314954,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "fc4c1bad04802c999540efbf1e5d26e83ae3fa16590be22ad28d8dec857c0fdc",
@@ -314982,13 +314985,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "cf434e8657db19e928d07786d53770045e9bcbd702f5368a5b0bf51dfb19bda6",
@@ -315013,13 +315016,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "cb7b0d98e7d5fc07625ee31741ec9202f670f84fab4acd5437fb9de98a163b76",
@@ -315044,13 +315047,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "cb7b0d98e7d5fc07625ee31741ec9202f670f84fab4acd5437fb9de98a163b76",
@@ -315075,13 +315078,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "02bcfe600e9c16061d5e558d1c8ecec83b23dee1c9c2093aea30b921ab3a7908",
@@ -315118,9 +315121,9 @@
       },
       "expanded/male_leather_leather_hood_longbow": {
         "path": "res://assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/SpriteFrames.tres",
-        "sha256": "8192a39765222fb81c7ba571c3af7b6ddf27bb95f8f64672e56c73167247b285",
+        "sha256": "50b6a520b61ad24eb33d5bdd64bf354cd14cb54e1d6003fd35cdca05473e5cf8",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_leather_leather_hood_longbow/provenance.json",
-        "provenance_sha256": "28c322726738725720cab8e792d1095a24ebf4786b747fc760909cfdc2949aec",
+        "provenance_sha256": "13e392bfbb4a09fe638d7913e9baa06a97a798e9b05c0d9c6fc1694b59128be1",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -315140,13 +315143,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "34934fb8eecbc57793eac3198c712decdaf122373e1006567768b02c009bee09",
@@ -315171,13 +315174,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "5dacf9c6df6eb388e5d98c8b1b7769704a72834d3821e626984446313c3f706f",
@@ -315202,13 +315205,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "d6011d546ceffda366d086ee0ad0b6d15b57871c1f6c6978c2f6684c1a1166a7",
@@ -315233,13 +315236,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "7042673c6041047060d2daa59db8d861e352e69364befefcc346b30a14e70c7c",
@@ -315264,13 +315267,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "979f92a04abf283eb9c343feb109b6fdc10841b829e209e112ea395b78009b1d",
@@ -315295,13 +315298,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "34934fb8eecbc57793eac3198c712decdaf122373e1006567768b02c009bee09",
@@ -315326,13 +315329,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "a9367d76473b0face1c2db693ccd67cbe70d6e33528c49e66df90446c2d6f8ef",
@@ -315373,9 +315376,9 @@
       },
       "expanded/antlion_small": {
         "path": "res://assets/actors/eight_direction/expanded/antlion_small/SpriteFrames.tres",
-        "sha256": "17aed1d4d7010c1b3b9daf76855d820ebb9878549c36c49e1588f54072f408b0",
+        "sha256": "b0a5388bfb6bf8fc851ebb63937755f73bc2ec507e2347b126ac7460d0e2c666",
         "provenance_path": "res://assets/actors/eight_direction/expanded/antlion_small/provenance.json",
-        "provenance_sha256": "2564bdadabe7346fb2b347ddb1d20b5df57e8c17f72973adaab658f682ca6ba5",
+        "provenance_sha256": "21a6a8a2e913cca721830fac74bd7bbae1b91502016c3ec04ef8fc9831a63297",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -315395,13 +315398,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "bf1ddce2a345f297f3322825f46a9295e3c19e1dd13d9c9fd39c9f0bd2e86885",
@@ -315426,13 +315429,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "bf1ddce2a345f297f3322825f46a9295e3c19e1dd13d9c9fd39c9f0bd2e86885",
@@ -315457,13 +315460,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "e86bffcc518426fadfd08ac59798965d09e6f8cfdcdae4461606408ea2f18ae0",
@@ -315488,13 +315491,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "2abd1719b7b3ad190911bde2690e8f03a81e68c8c2807e333082e960c533d9b2",
@@ -315519,13 +315522,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "e29c704e9ae730b9a4c4d5e1cd8cd312643542c6f7d06e29c6e9e74af9a74d84",
@@ -315550,13 +315553,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "ae6a06cb27d0b8ecdd704fff562b294752d27318f4f44e3fbcd5a2ad5f6ec755",
@@ -315591,9 +315594,9 @@
       },
       "expanded/skeleton_archer": {
         "path": "res://assets/actors/eight_direction/expanded/skeleton_archer/SpriteFrames.tres",
-        "sha256": "08a32fda5b5caa45920d587458ee6bb338686e82137efba763e9794cb80b1653",
+        "sha256": "46c6bdd12f27ec1c3a562f58b25952f960827aa008113b0380451b7c18125462",
         "provenance_path": "res://assets/actors/eight_direction/expanded/skeleton_archer/provenance.json",
-        "provenance_sha256": "48550f72292ef52693919a1ea97c6e33025ac88eb61dbdea6fd55c5fe359d5a1",
+        "provenance_sha256": "3bbf36ffae893863c1459a56f12085da6b20e278db460d07d1c56bfe4f31db0a",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -315613,13 +315616,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "60ef4865b699e9995b6327cdd76e5b6d33ee572fad0dc2b4ee5e39e53c7c70cc",
@@ -315644,13 +315647,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "7c1aaa9c69051c5b7fcd1aeb5b63b46c5bcedafdd194e71ab2823e81706d40a9",
@@ -315675,13 +315678,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "03ab7aa51d0f71af0d0cf37b5eccb6fbc26cf303afbc320c9103c15f3d76a2ea",
@@ -315706,13 +315709,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "a04e71d00d1d0bb59d9b8eadef479b188b88c815180a1708d23d3ab2856fa8d1",
@@ -315737,13 +315740,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "83428ca2bbabb2766a7d2d05bceefc686cae607df48b9ac6a704b67007459628",
@@ -315768,13 +315771,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "60ef4865b699e9995b6327cdd76e5b6d33ee572fad0dc2b4ee5e39e53c7c70cc",
@@ -315799,13 +315802,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "7a1db7d09aba46d666a51ab25a0222b33cf6803a4c1921b82c42f789318d7236",
@@ -315841,9 +315844,9 @@
       },
       "expanded/skeleton_mage_boss": {
         "path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/SpriteFrames.tres",
-        "sha256": "dd534d8e6b83a4c3fb3f12c2943f094f4b01f8dd053fbd85615d13625753b1bf",
+        "sha256": "f49d13a4fd04ae6a1d8c62b0e0d2cfda02523ff2a2b8cbaa5472bc102701ed35",
         "provenance_path": "res://assets/actors/eight_direction/expanded/skeleton_mage_boss/provenance.json",
-        "provenance_sha256": "6b96f4f7b4c228f30b5c5140722ec0b6ac1479de20dababd2fc79858fa2f73de",
+        "provenance_sha256": "09e22292bee8c830fb7fd943871de65d073e287593cf31f8f6af02fed40b3054",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -315863,13 +315866,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
@@ -315894,13 +315897,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
@@ -315925,13 +315928,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "c61c937bfb4cc0e081a3e3df0778092ce6f7898a9daf05ea00b8fda6ebf0a582",
@@ -315956,13 +315959,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "8127389a5847b06f83543455b10deed544af2f644ef56f291db82db71d0ddf4c",
@@ -315987,13 +315990,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "e9a0fbb6674cde910ac0f106924585b0862c785cc804b39dd8639a2abf2abfcb",
@@ -316018,13 +316021,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "869b68988c7bb732fe38c637c83548051136271c6127354b0fd3c6c9e119c2d9",
@@ -316049,13 +316052,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "aef58f3660661cdd68d78adf039c6dd483ea29effa8a9b6dd563717fe27902fd",
@@ -316091,9 +316094,9 @@
       },
       "expanded/goblin": {
         "path": "res://assets/actors/eight_direction/expanded/goblin/SpriteFrames.tres",
-        "sha256": "fa13c8dd1201f791c3817dcae3d8604602c1a2c9aada8d57fd2cd2436c9f7db8",
+        "sha256": "2ba6d642c281e867dbf978e933a4d2762bc4fddb6ceb366179335fb24345898a",
         "provenance_path": "res://assets/actors/eight_direction/expanded/goblin/provenance.json",
-        "provenance_sha256": "4d6acc9c57cbd293868151d30bc85bc7cfdcd03173906b24510ef166445613ee",
+        "provenance_sha256": "59c946df2a11764c4f9acbbea637fef8d47f75248c92b5ea57e15e0efa328291",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -316113,13 +316116,13 @@
             ],
             "direction_unique_frames": {
               "E": 3,
-              "N": 3,
-              "NE": 3,
-              "NW": 3,
-              "S": 3,
               "SE": 3,
+              "S": 3,
               "SW": 3,
-              "W": 3
+              "W": 3,
+              "NW": 3,
+              "N": 3,
+              "NE": 3
             },
             "loop_type": "play_once",
             "sha256": "ab7c9721e6418f8e8e92fd3bad2b429fdcd19203d79e28b15382cb0ca869dc7a",
@@ -316144,13 +316147,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "310a0543180c1eb53c64f1de6edf481d5d79241aef3ec2776142d417c8b4dd1b",
@@ -316175,13 +316178,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "37f7f9da975976830521fc7afe893cf62aa225dfc343cb68da9587584d9c506c",
@@ -316206,13 +316209,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "05c4ee166a4fd1673f1e10f5ad9d1c7e9df09fbbac5fa1f5e8f027484c04d1a2",
@@ -316237,13 +316240,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "1d0406e0b2bdd03700a8a42f6eff56776f3ef519ab0c1572e9747c6395148c7a",
@@ -316268,13 +316271,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "c1407e91447f5d4f9f9afb1a608dd11fdfb3b7316950ab3e5f0764ca34afaa50",
@@ -316309,9 +316312,9 @@
       },
       "expanded/hobgoblin": {
         "path": "res://assets/actors/eight_direction/expanded/hobgoblin/SpriteFrames.tres",
-        "sha256": "e3792f707c18d2c78eb77a42f70d8185a1754a8364596a268645ad9b091e5230",
+        "sha256": "968b8a15bb8ac5a24e4eabb5758f2e9669ae8ccf1dae4048fbf51b80d1ec12a0",
         "provenance_path": "res://assets/actors/eight_direction/expanded/hobgoblin/provenance.json",
-        "provenance_sha256": "82f812414459102b2bcfd7f19768d5675679a3d7120d3d78f883532fa1b1b306",
+        "provenance_sha256": "42962d02cbdc7b35cce62a3d360ed37bf3ef3f52c4b3b8a6a620044bd8aca051",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -316331,13 +316334,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "c85dee666d5b4e312721c0a2faab069ffcd80c01f4c66bec0a65391ef6a509c1",
@@ -316362,13 +316365,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "43c3810c3a5ea3b373391095750d478bdb3f8c21863afe7006bcce38177c399e",
@@ -316393,13 +316396,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "f991e1c95856bb8cb3571204064d765a3fd0bf2d23433f6a87df583259da2cff",
@@ -316424,13 +316427,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "71c77b04a1ea1ee1882e204093c86882a1af4cdea511c003f6978a31ad1f43bd",
@@ -316455,13 +316458,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "64de9f2936291440b332c8f224777a1ca7718713548527a089dc6b8c15b41754",
@@ -316486,13 +316489,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "7e526c8eea52b819322d8791a2e2172483f9e32db5c9c4ae4e3fb08ff9ad0dd9",
@@ -316527,9 +316530,9 @@
       },
       "expanded/male_leather_leather_hood_longsword": {
         "path": "res://assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/SpriteFrames.tres",
-        "sha256": "3892e9fa18a9ebff62a0e83fb7113df95a57803080afb0fb05284306db8b66f1",
+        "sha256": "958f153425be51483d47ec4ee981121becc29029e8e3e3e2e7256cc2fbdcb867",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_leather_leather_hood_longsword/provenance.json",
-        "provenance_sha256": "912d1a77e58d19cf73e492aeee1a7d2988319f1418891bb99ea2d742275352bd",
+        "provenance_sha256": "f0a5bc2a1d6081b1c6bb203d11a62f1b8fa55f1308588ede86e057b514471c67",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -316549,13 +316552,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "f5bde349af8cf9ce20b7b6d2cda51bdb23fff6ecccdfbf178667bf1746b837ae",
@@ -316580,13 +316583,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "113bb9a50b5fe51547443b5fd11354a2963a22888ed3e239d4ba6b43a5f06e53",
@@ -316611,13 +316614,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "a843bfa0297181d75df62c3afedc0486997e6233b6919316d9d70133844d0a88",
@@ -316642,13 +316645,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "ffcd664e0e1cd2fa975f5f7f8a99eb703ecfd5b55f8b63aceef3cf9200c61972",
@@ -316673,13 +316676,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "df4e97dcce12a19c6ae5f84844a93e8b33a40fb25ce51f43278398aa0bfd2a96",
@@ -316704,13 +316707,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "5d5601c862ab54c4699afb49fb4937a86724daf944aa54f47136272c365d400a",
@@ -316751,9 +316754,9 @@
       },
       "expanded/zombie": {
         "path": "res://assets/actors/eight_direction/expanded/zombie/SpriteFrames.tres",
-        "sha256": "486efb6f16b848c2870837c3c534173c5a011bb22fc70dc948a113f0b9eeffb7",
+        "sha256": "77ca2b4d2e3d3090b39e6818fadde314a193d5157069279268f1d1c4408ffb4f",
         "provenance_path": "res://assets/actors/eight_direction/expanded/zombie/provenance.json",
-        "provenance_sha256": "b86893a7dec6d83365f33de0621393bdc8e43f479c6914a036266be80b70c6a7",
+        "provenance_sha256": "9723bd9fc5bfea2db5878d8695aaafaef282a33551b8d994bec179f02ca955f3",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -316773,13 +316776,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "567d3c048a0e68c77ac075bb47aec512a01703b42db0a205f221ac7dd45b3428",
@@ -316804,13 +316807,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "95e85d81adbaff3c223510f7cc258ef5c4c9734bc153f8963dcddf83763935dd",
@@ -316835,13 +316838,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "9f1b963a4555a5739cdbd1a950ec336a0e5a8d2700d10024766f33ef7a05f963",
@@ -316866,13 +316869,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "5cb59af33b465819896272ff62d967731fbdaffcebe5f1dd7e33122527cdd5aa",
@@ -316897,13 +316900,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "edf1d4119defed6c196e7f455778bb2563aa38cb0732e7f90a770d14e586457a",
@@ -316928,13 +316931,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "9795c26ea0f31b87224c8d9935d4c0ed8695891c019c4a56d907c79168a22ca5",
@@ -316969,9 +316972,9 @@
       },
       "expanded/antlion_armored": {
         "path": "res://assets/actors/eight_direction/expanded/antlion_armored/SpriteFrames.tres",
-        "sha256": "30698c52a7a66716a8ff744b5e6f3af288adb21f26411c02e608417ddf04bf2d",
+        "sha256": "b4333c54d20cb9e53ae83864b39fb3fba733d8433ea8db24040ea3cca6715497",
         "provenance_path": "res://assets/actors/eight_direction/expanded/antlion_armored/provenance.json",
-        "provenance_sha256": "a5644d048dfb3bb164ef66dbcb404a0f4c2bb6f657af9993324e8ac3d16c66d3",
+        "provenance_sha256": "2a19231136dcf0144418a3d32add3ff9d2294a3ba3e9da707487dcba8cf88182",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -316991,13 +316994,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "ac400810118489168cf85336ec999a69cd541a97dec089fc9c0e39f96652ffa9",
@@ -317022,13 +317025,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "ac400810118489168cf85336ec999a69cd541a97dec089fc9c0e39f96652ffa9",
@@ -317053,13 +317056,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "5491186f876eaa47a8e9bb325f0d9970a84e1bbfb8f48eee497bfccfe58f75f0",
@@ -317084,13 +317087,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "b9ba810ef839cc982844f2b44fcdb445997d4d10f6e126aee67471c418480b1a",
@@ -317115,13 +317118,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "df91f37dae6a1edb2da1f43e9731cc61cf2622b9d81bba80398f7aee5d8440e6",
@@ -317146,13 +317149,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "219eb8324fb110290f92c484504296060215c4263f4f7d2153e44e2cf9bf4a2b",
@@ -317187,9 +317190,9 @@
       },
       "expanded/wyvern_fire": {
         "path": "res://assets/actors/eight_direction/expanded/wyvern_fire/SpriteFrames.tres",
-        "sha256": "ef43f6b4a4e2923dbb2e1812542889bb288befb48d4f876c0037075fce52e689",
+        "sha256": "69c5f02ca496a0a27ff0fa80d66851693b6b29ea07e8df69bba1e76780ffedec",
         "provenance_path": "res://assets/actors/eight_direction/expanded/wyvern_fire/provenance.json",
-        "provenance_sha256": "b7a55784069fc63ecb8579ba33ddf67a2af75ab872e0e5bf2e860806087c14a2",
+        "provenance_sha256": "3b5cb930ec8dbf20bbdc79288c31fd28c9fd9540c3b626c955b43c5d2338b1c4",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -317209,13 +317212,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "628a847211777057548fcce3481fd27dd9759d1e01103f94369e8a2e7d27eb1e",
@@ -317240,13 +317243,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "3e7c0475279463e9c497e910203964b889805eb1ac7a656035d82dff56c0df08",
@@ -317271,13 +317274,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "707cfd3b86f8ac2d4715b10b4548402a43855131e55a8b5f09d251cf14bac798",
@@ -317302,13 +317305,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "2821f22533c2636520ac4e274295e181ec078117a5220a625769679c870228d3",
@@ -317333,13 +317336,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "d2de2b3b3b0c23ad609e6d42268834a74b2eff4530db998e6adbdb7bca0566ad",
@@ -317364,13 +317367,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "3e7c0475279463e9c497e910203964b889805eb1ac7a656035d82dff56c0df08",
@@ -317395,13 +317398,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "3e7c0475279463e9c497e910203964b889805eb1ac7a656035d82dff56c0df08",
@@ -317426,13 +317429,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "e40ed8e8a8d614f5e0706a0dd7b4d97cd61c8556ed65b973a0370c5b5bb56a80",
@@ -317469,9 +317472,9 @@
       },
       "expanded/wyvern_air": {
         "path": "res://assets/actors/eight_direction/expanded/wyvern_air/SpriteFrames.tres",
-        "sha256": "a800b9eb10a64997b0b7b7435e09fa67c5876323385ef5106d7aa359ba220562",
+        "sha256": "ffcf4dcfa1600bd70a0d30ac3c9fa28f0b0aa6a3e10f04715842a6dbf2d8ddaf",
         "provenance_path": "res://assets/actors/eight_direction/expanded/wyvern_air/provenance.json",
-        "provenance_sha256": "4da634b68cb873bc96bdfc6ad1a39d8294b1ce79d795a82e2b4ed5bfe9f1b60e",
+        "provenance_sha256": "a3c354149b38b97bb22dae85d7c4dd4ed091b57a1ab4c74e051d7e16473c1eac",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -317491,13 +317494,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "4570d2086ec2f545f73eb2032eb00ce13b89797cb935ea56690c64ec98b5bd62",
@@ -317522,13 +317525,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
@@ -317553,13 +317556,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "a7bbf7ae2c4f89f9d4381f03f1655637a9a757a48d1a355113b998bf6b2076b6",
@@ -317584,13 +317587,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "1d4b49b6d80560c5bc300edf47b3dc074e03097466200059bf0b0089abbc6716",
@@ -317615,13 +317618,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "d397b3735db68ead42f75132fa3dad2eab92ad3522a2b02d9ff4689edbb9650b",
@@ -317646,13 +317649,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
@@ -317677,13 +317680,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "dfae5afdf9c8afdf94d7e07f6ae3e1914494773f57b1cd1662e11deae37dc6f4",
@@ -317708,13 +317711,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "e583853b8a5e684b5c710b56c61405dc390255fdc10f0ef176e994dd41036936",
@@ -317751,9 +317754,9 @@
       },
       "expanded/wyvern_water": {
         "path": "res://assets/actors/eight_direction/expanded/wyvern_water/SpriteFrames.tres",
-        "sha256": "d2d71341fe0dcfb171ca4e1e0c8c0c61d829d492dc9f7892d9982905a1a544e2",
+        "sha256": "67616b5cc1f6c2cf90c96d05abe397f2ee5cdce12a1d61ed6b79ba77494e8a15",
         "provenance_path": "res://assets/actors/eight_direction/expanded/wyvern_water/provenance.json",
-        "provenance_sha256": "2d7cf955649ad6093233884a40764d79d991fe0474551e0bcaffd7bca668d156",
+        "provenance_sha256": "aecbffb21d0c12ecc608a3d47c84b0ca2c19270759cf84ce620a9d88450681c0",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -317773,13 +317776,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "d07f52385b5b613302e13acff026bf0000c48f491579c3985df800261b956051",
@@ -317804,13 +317807,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "5b49e940567be180f5b36b21244e55d17e4d5794632b26098398d299b75261be",
@@ -317835,13 +317838,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "efb931680ae56a36e1a4a633efb73777fab1624a042b245f8c9b99ede57248f1",
@@ -317866,13 +317869,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "c4de936b02a14281dc851983ed9e1973906ea984219895c8142ece75a74b322d",
@@ -317897,13 +317900,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "a4b3bf306a0faaea82af1feb616965f9dd7db5af843bf0ce2b574357dce7b9bb",
@@ -317928,13 +317931,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "5b49e940567be180f5b36b21244e55d17e4d5794632b26098398d299b75261be",
@@ -317959,13 +317962,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "play_once",
             "sha256": "5b49e940567be180f5b36b21244e55d17e4d5794632b26098398d299b75261be",
@@ -317990,13 +317993,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "defb63da32ce1a09380105fc93dba94cebf76c96eca6b7e1dc3dcc4c64e714ae",
@@ -318033,9 +318036,9 @@
       },
       "expanded/male_plate_plate_helm_battle_axe": {
         "path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/SpriteFrames.tres",
-        "sha256": "52afacd2849685616e729c2040c78445f2699f25a4a22d8fe51e75d55c0e3334",
+        "sha256": "4c4452ef4793cb005ad16c905aac91c695c9207fe6914cc6b83f26676e06884e",
         "provenance_path": "res://assets/actors/eight_direction/expanded/male_plate_plate_helm_battle_axe/provenance.json",
-        "provenance_sha256": "99e84af124944a65832dc2a6ef7504e1243e9a774a6c14f4cc167b145dccf2ad",
+        "provenance_sha256": "7da44120a5a0c0e06a3a6dda8f3d18cf422b14058e30ad73e4fb502370f6149b",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -318055,13 +318058,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "042b73e3aa014733aa82e4eb438250f5b0e22ee116cc8462da98ff97a0c5d51f",
@@ -318086,13 +318089,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "3358278eeb3499d317abb5631b721c6cf8c43ec1c88059de603dadd86d6ce662",
@@ -318117,13 +318120,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "7b4babea957c6f79d644238cb6498e7adadc39b905b1ca40d8c947a44e134c95",
@@ -318148,13 +318151,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "1a8a6c40968d3d47501185a50d9a7528af1a0527297c7687abd0cdbb73908736",
@@ -318179,13 +318182,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "565dc3336bc64b766d28b797e8ba1b12b0ce01d3820b05bdfefddae2c3d3befc",
@@ -318210,13 +318213,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "61cffe64b274bbb813b11b0b0ba48f68deb96211da6d5507a571ad78aae3e549",
@@ -318256,9 +318259,9 @@
       },
       "expanded/skeleton_mage_high_boss": {
         "path": "res://assets/actors/eight_direction/expanded/skeleton_mage_high_boss/SpriteFrames.tres",
-        "sha256": "7e171a98e7c8edf7298b514fde30145e00caf7e146f7edf539f1a4127f71dcd2",
+        "sha256": "642fdd150269c67c676e52db5d9b1374360b1fdcab918032fabd6aa29b065048",
         "provenance_path": "res://assets/actors/eight_direction/expanded/skeleton_mage_high_boss/provenance.json",
-        "provenance_sha256": "621488deafb31004aa1d2af69ca8f2b8d15f8b1f8d48a431da4f5a7c7488d0ee",
+        "provenance_sha256": "03c03e54b331fa97c4fac578e65c7222cadb596dd11f8c87b7f0676b37afcb1d",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -318278,13 +318281,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "00c0ba0e828b5cc5eaaa8a68522abfa9c2ee25f24fd8d796efd76390d9857f91",
@@ -318309,13 +318312,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "00c0ba0e828b5cc5eaaa8a68522abfa9c2ee25f24fd8d796efd76390d9857f91",
@@ -318340,13 +318343,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "aa7ddabd3bb303a44f71af5b1e4c72f13771257c37c3cdc4e50e8e30d6040b54",
@@ -318371,13 +318374,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "8cdef3ffc4b9b1d6342c3765a558810a65a7e96d4a26c0b6dcaecc6c583f71ee",
@@ -318402,13 +318405,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "6fc03a0cd19261ae6f997d9248e98c1f162205d01668ff1f42972fa7513d3568",
@@ -318433,13 +318436,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "00c0ba0e828b5cc5eaaa8a68522abfa9c2ee25f24fd8d796efd76390d9857f91",
@@ -318464,13 +318467,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "244babcbbdebf35348bdb74e0cec40da02bafc438eb869c7415a24268291600f",
@@ -318506,9 +318509,9 @@
       },
       "expanded/skeleton_mage": {
         "path": "res://assets/actors/eight_direction/expanded/skeleton_mage/SpriteFrames.tres",
-        "sha256": "f520d1f2e9fee6d7649772e1854bd53385588a4ff69e57419b84130dc60f6b65",
+        "sha256": "fea592870989c7b6364fbf0a4002e2bfae1ad7d3ec353a23908e48a57a333dd2",
         "provenance_path": "res://assets/actors/eight_direction/expanded/skeleton_mage/provenance.json",
-        "provenance_sha256": "a0af5161020bcddcd72db43a0e51ae3306f08ca3d0fccf0eadd08b917bedc268",
+        "provenance_sha256": "ecdcbe57369860fbbf54af62c39e038bfb61f5b3c4ca80a3de308b839cb92759",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -318528,13 +318531,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "dc2ca47df74a9c82157ebfeeb7f9898df69a2c8400c244031bf3862bbfe86b3c",
@@ -318559,13 +318562,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "dc2ca47df74a9c82157ebfeeb7f9898df69a2c8400c244031bf3862bbfe86b3c",
@@ -318590,13 +318593,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "06c0944810c6fab02ee3cc199d86d7c0009a5d1a1e13578014893ce401e3e39a",
@@ -318621,13 +318624,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "back_forth",
             "sha256": "0a7c4c9b46b9ce70f9bd51f02a0d5c8431d41dfeca27b9f3898a1e61d7a3b384",
@@ -318652,13 +318655,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "20b8af3e159e0fef2c7a999d1d6a471d84d0348879174989b10497667558b4df",
@@ -318683,13 +318686,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "dc2ca47df74a9c82157ebfeeb7f9898df69a2c8400c244031bf3862bbfe86b3c",
@@ -318714,13 +318717,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "3e6e39da707501c5a09c45a286b5e3a283d6be7bad106c3aa6e7b59886a8b32d",
@@ -318756,9 +318759,9 @@
       },
       "expanded/hobgoblin_archer": {
         "path": "res://assets/actors/eight_direction/expanded/hobgoblin_archer/SpriteFrames.tres",
-        "sha256": "ccba1ab6858d841adb300bc6ba004e8337334c6b3586b1cd96f7d172f0e61c49",
+        "sha256": "6dc64bd566f530c82aef2ca255ddcb3f839989e4b67a469fd8e15790e12a5009",
         "provenance_path": "res://assets/actors/eight_direction/expanded/hobgoblin_archer/provenance.json",
-        "provenance_sha256": "1fdb77161524c1b9f915abf21870fc184dae087745fe524522d509a44f348f35",
+        "provenance_sha256": "b58092a75472f20cf57065b70f83922fc75061cf331603511dd4a6a50d100ac2",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -318778,13 +318781,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "356a44bd3eea47d0b7bfa0a48c0997493359ba7c5dc53d4ba6c449e8fe5a0595",
@@ -318809,13 +318812,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "91af1bfe4c1e83362175e75dfd50e8c7cc86b758ee3c8ad2683e5234d65df349",
@@ -318840,13 +318843,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "97f75a18c322985f0a660c55b81573e0acfd31003e8ba5b1c55cd24bfd61df83",
@@ -318871,13 +318874,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "b0cb865b434353cb4e7c9140abf0a297101bbff1606e47309f64d20722ed6e98",
@@ -318902,13 +318905,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "a8c0d103b73538de05ac5243c8749b112922f2a1ea4c937098366a68d5977b49",
@@ -318933,13 +318936,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "356a44bd3eea47d0b7bfa0a48c0997493359ba7c5dc53d4ba6c449e8fe5a0595",
@@ -318964,13 +318967,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "8118609d85bad7daaa8f7c7439ef95232d32bf021c538ef21187fbbf7e5b0225",
@@ -319006,9 +319009,9 @@
       },
       "expanded/zombie_dark": {
         "path": "res://assets/actors/eight_direction/expanded/zombie_dark/SpriteFrames.tres",
-        "sha256": "595516138b608a0489bfacf196d7d736c5898676c5cfab8195075553e9ac8429",
+        "sha256": "b42637c27e6f395668aaf8c7cc052836c9d72bc2d24b93b36e097278dab427ea",
         "provenance_path": "res://assets/actors/eight_direction/expanded/zombie_dark/provenance.json",
-        "provenance_sha256": "434dd53be1064e34da80be36ecd4b6ec65b980ae3fa8de076f371b9e1f906e38",
+        "provenance_sha256": "42ae1d37a8a8516587628a58463a155d0f215306572565f93b014ff4227746a8",
         "directions": 8,
         "tracks": {
           "attack": {
@@ -319028,13 +319031,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "0545012c64cbc78ee6ed5b75a4395c35796021133c257cd958b9b5731481f320",
@@ -319059,13 +319062,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "play_once",
             "sha256": "edd0fa17283850b2c35b4cef701f252e9599edcaff097ddd3e499c0b3346b17b",
@@ -319090,13 +319093,13 @@
             ],
             "direction_unique_frames": {
               "E": 6,
-              "N": 6,
-              "NE": 6,
-              "NW": 6,
-              "S": 6,
               "SE": 6,
+              "S": 6,
               "SW": 6,
-              "W": 6
+              "W": 6,
+              "NW": 6,
+              "N": 6,
+              "NE": 6
             },
             "loop_type": "play_once",
             "sha256": "b9f177cfdaeb26a26f60a63236120a8ecdc717dc045d7a1b15aed34fdf0d9e40",
@@ -319121,13 +319124,13 @@
             ],
             "direction_unique_frames": {
               "E": 2,
-              "N": 2,
-              "NE": 2,
-              "NW": 2,
-              "S": 2,
               "SE": 2,
+              "S": 2,
               "SW": 2,
-              "W": 2
+              "W": 2,
+              "NW": 2,
+              "N": 2,
+              "NE": 2
             },
             "loop_type": "play_once",
             "sha256": "11308fa3f76872e5086de87bf5aa2a061ae3ba184ed086c9a385fe403125adad",
@@ -319152,13 +319155,13 @@
             ],
             "direction_unique_frames": {
               "E": 4,
-              "N": 4,
-              "NE": 4,
-              "NW": 4,
-              "S": 4,
               "SE": 4,
+              "S": 4,
               "SW": 4,
-              "W": 4
+              "W": 4,
+              "NW": 4,
+              "N": 4,
+              "NE": 4
             },
             "loop_type": "back_forth",
             "sha256": "009e024f656aeb45f54579f45f0269c2e104144335c2838f0c0064162997141e",
@@ -319183,13 +319186,13 @@
             ],
             "direction_unique_frames": {
               "E": 8,
-              "N": 8,
-              "NE": 8,
-              "NW": 8,
-              "S": 8,
               "SE": 8,
+              "S": 8,
               "SW": 8,
-              "W": 8
+              "W": 8,
+              "NW": 8,
+              "N": 8,
+              "NE": 8
             },
             "loop_type": "looped",
             "sha256": "901b074ae451463a673c58b004f2ae3d7a7e58f565995964ced0a987c46f202f",
@@ -320329,6 +320332,28 @@
         ],
         "evidence": "docs/remake/evidence/animation-expansion/clean-delivery/result.json"
       }
+    },
+    "base_class_coverage": {
+      "connected": 4,
+      "total": 4,
+      "new_bindings": [
+        "class:1",
+        "class:2",
+        "class:3"
+      ],
+      "resources_reused": true,
+      "scope": "Base mage, archer and assassin use compatible existing staff, longbow and dagger outfits. Transform identity counts unchanged."
+    },
+    "followup_validation": {
+      "baseline_commit": "8ea63b3f036b91a801730ae101a1bfd7c0524b99",
+      "report": "docs/remake/PR100_COMPLETION_REPORT.md",
+      "direction_evidence": "docs/remake/evidence/pr100-direction-fix/",
+      "status": "direction_and_representative_gameplay_verified; full_ci_in_progress",
+      "gameplay_checks": 6569,
+      "native_frame_checks": 35742,
+      "weapon_direction_rows": 48,
+      "staff_normal_direction_rows": 16,
+      "android": "signed_ARM64_APK_export_and_compiled_animation_check_verified; device_not_run"
     }
   }
 }

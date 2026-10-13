@@ -18,13 +18,15 @@ var blocker_buckets: Dictionary = {}
 var region_geometries: Array[Dictionary] = []
 var spawn_geometries: Dictionary = {}
 const BLOCKER_BUCKET: float = 1024.0
-const NAV_CACHE_VERSION: int = 1
+const NAV_CACHE_VERSION: int = 2
 const NAV_CACHE_LIMIT: int = 8
 const NAVIGATION_CATALOG_PATH: String = "res://data/maps/navigation/catalog.json"
 static var navigation_files: Dictionary = {}
 static var navigation_snapshots: Dictionary = {}
 static var navigation_order: Array[String] = []
 var navigation_cache_hit: bool = false
+var spawn_sample_decks: Dictionary = {}
+var spawn_sample_cursors: Dictionary = {}
 
 func geometry_signature() -> String:
 	# Art and metadata do not affect walking. Every input used by navigation,
@@ -85,6 +87,8 @@ func _remember_navigation(key: String, snapshot: Dictionary) -> void:
 
 func configure(definition: Dictionary) -> void:
 	data = definition
+	spawn_sample_decks.clear()
+	spawn_sample_cursors.clear()
 	region_geometries.clear()
 	spawn_geometries.clear()
 	for region: Dictionary in data.get("regions",[]): region_geometries.append(REGION_GEOMETRY.prepare(region))
@@ -175,8 +179,30 @@ func configure(definition: Dictionary) -> void:
 				var point: Vector2 = cell_to_world(cell)
 				if reachable[y * width + x] != 0 and not is_safe(point) and spawn_contains(region,point):
 					cells.append(cell)
-		spawn_cells[str(region["id"])] = cells
+		spawn_cells[str(region["id"])] = _spaced_dense_cells(region, cells)
 	_remember_navigation(signature,navigation_snapshot())
+
+func _spaced_dense_cells(region: Dictionary, cells: Array[Vector2i]) -> Array[Vector2i]:
+	if str(region.get("mode", "normal")) != "dense": return cells
+	var box: Array = region.rect
+	var center := Vector2(float(box[0]) + float(box[2]) * 0.5, float(box[1]) + float(box[3]) * 0.5)
+	var radius: float = float(region.get("spawn_radius", 0.0))
+	var eligible: Array[Vector2i] = []
+	for cell: Vector2i in cells:
+		if radius <= 0.0 or cell_to_world(cell).distance_squared_to(center) <= radius * radius:
+			eligible.append(cell)
+	var spacing: float = float(region.get("min_spacing", 28.0))
+	# On a square grid, a checkerboard separates every cell by at least the
+	# diagonal distance. Random greedy choices can exhaust a cramped road-side
+	# hotspot before its declared capacity even when this valid layout fits.
+	if spacing <= float(cell_size) or spacing > float(cell_size) * sqrt(2.0): return eligible
+	var even: Array[Vector2i] = []
+	var odd: Array[Vector2i] = []
+	for cell: Vector2i in eligible:
+		if posmod(cell.x + cell.y, 2) == 0: even.append(cell)
+		else: odd.append(cell)
+	var spaced: Array[Vector2i] = even if even.size() >= odd.size() else odd
+	return spaced if spaced.size() >= int(region.max_count) else eligible
 
 func _inside_shape(p: Vector2, shape: Dictionary, padding: float) -> bool:
 	if not (shape["box"] as Rect2).grow(padding).has_point(p):
@@ -308,6 +334,19 @@ func sample_spawn(region_id: String, random: RandomNumberGenerator) -> Vector2:
 	var cells: Array = spawn_cells.get(region_id, [])
 	if cells.is_empty():
 		return Vector2.INF
+	if str(spawn_geometries.get(region_id, {}).get("mode", "normal")) == "dense":
+		var cursor: int = int(spawn_sample_cursors.get(region_id, cells.size()))
+		if cursor >= cells.size():
+			var deck: Array = cells.duplicate()
+			for index: int in range(deck.size() - 1, 0, -1):
+				var other: int = random.randi_range(0, index)
+				var previous: Variant = deck[index]
+				deck[index] = deck[other]
+				deck[other] = previous
+			spawn_sample_decks[region_id] = deck
+			cursor = 0
+		spawn_sample_cursors[region_id] = cursor + 1
+		return cell_to_world(spawn_sample_decks[region_id][cursor])
 	return cell_to_world(cells[random.randi_range(0, cells.size() - 1)])
 
 func region_at(p: Vector2) -> Dictionary:

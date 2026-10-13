@@ -19,9 +19,12 @@ class RenewedMapSpawnRulesTest(unittest.TestCase):
         self.assertEqual(len(self.rules['map_ids']), 25)
         self.assertNotIn('l1_4', self.rules['map_ids'])
 
-    def test_no_stat_reward_or_respawn_rebalance(self):
-        for key in ['preserve_normal_total', 'preserve_respawn_times', 'preserve_monster_stats_and_drops']:
+    def test_preserves_population_stats_and_regional_wall_clock_boss_policy(self):
+        for key in ['preserve_normal_total', 'preserve_monster_stats_and_drops']:
             self.assertIs(self.rules[key], True)
+        self.assertIs(self.rules['preserve_respawn_times'], False)
+        self.assertEqual(self.rules['boss_respawn_policy'], 'device_wall_clock')
+        self.assertEqual(self.rules['boss_respawn_seconds'], {'aden_world': 28800, 'other_maps': 86400})
         self.assertLess(self.rules['progression_weights'][0], self.rules['progression_weights'][1])
         self.assertGreater(self.rules['progression_weights'][0], 0)
 
@@ -37,7 +40,7 @@ class RenewedMapSpawnRulesTest(unittest.TestCase):
         self.assertEqual(len({boss['id'] for boss in bosses}), len(bosses))
         for boss in bosses:
             self.assertIn(boss['habitat'], self.rules['maps']['aden_world']['normal_counts'])
-            self.assertEqual(boss['respawn_time'], 600)
+            self.assertEqual(boss['respawn_time'], self.rules['boss_respawn_seconds']['aden_world'])
             self.assertTrue(all(0 < value < 1 for value in boss['fraction']))
             self.assertTrue(all(0 < value <= 300 for value in boss['half_size']))
 

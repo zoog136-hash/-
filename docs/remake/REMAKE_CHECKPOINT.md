@@ -1,3 +1,5 @@
+# PR #100 재개 — 상하 방향 수정`8ea63b3`과 기존 `feature/twilight-animation-20261013`에서 이어서 수정했다. 이전 원본 방향 승인(W,SW,S,SE,E,NE,N,NW)은 잘못됐다. 실제 원본 순서는 W,NW,N,NE,E,SE,S,SW이고, 게임 매핑은 [4,5,6,7,0,1,2,3]이다. 36개 기존 외형의 트랙·출처·픽셀 기준을 수정하고 PNG는 보존했다. 상세 검증·재현·남은 정확한 ID는 [후속 보고](PR100_COMPLETION_REPORT.md)와 [전체 방향 검증표](evidence/pr100-direction-fix/coverage/all-identities-eight-directions.csv)에 있다. 남은 변신54·일반139·보스29종의 적합한 원본 확보가 다음 재개 단계다. 전체 원본·실기기 완료를 주장하지 않는다.
+
 # TWILIGHT 8방향 애니메이션 재구축
 
 ## 이동과 반대 방향을 바라보는 오류 — 후속 수정

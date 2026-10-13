@@ -233,9 +233,7 @@ func combat_hit_position() -> Vector2:
 	return global_position + motion.profile.hit_position
 
 func combat_projectile_origin() -> Vector2:
-	var point: Vector2 = motion.profile.projectile_origin
-	point.x *= -1.0 if motion.direction.x < 0.0 else 1.0
-	return global_position + point
+	return global_position + motion.profile.projectile_offset(motion.direction)
 
 func set_class_index(value: int) -> void:
 	class_index = clampi(value, 0, CLASS_SHEETS.size() - 1)

@@ -37,8 +37,20 @@ func _run() -> void:
 		check(provenance.get("status","") == "bundled_ui_art" and provenance.get("source_id","") == "","local icon never claims original source art: "+item_name)
 		check(RESOLVER.describe({"name":item_name,"sourceId":"unknown-publisher-id"},item_name).path == "","explicit unknown source cannot borrow local art: "+item_name)
 	check(observed.size() == LOCAL_POTIONS.size(),"all three real starter potion slots were inspected")
-	var ruby: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전"},"드래곤의 루비",{"드래곤의 루비":POTION_PATH})
-	check(ruby.path == "" and ruby.family == "gem","unrelated ruby cannot borrow the local potion icon")
+	# world._load_data retains this explicit pre-rework UI index link. It is
+	# bundled placeholder art, never evidence of publisher-original ruby art.
+	var ruby_record: Dictionary = {"name":"드래곤의 루비","type":"축복충전"}
+	var ruby_before: String = JSON.stringify(ruby_record)
+	var legacy_images: Dictionary = hud.item_image_index.get("아이템",{})
+	check(legacy_images.get("드래곤의 루비","") == POTION_PATH,"production still preserves the explicit legacy ruby icon link")
+	var ruby: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name,legacy_images)
+	check(ruby.path == POTION_PATH and ruby.route == "legacy_exact_name_index","ruby uses its explicit legacy index rather than the starter-potion name rule")
+	check(ruby.status == "bundled_ui_art" and ruby.source_id == "","legacy ruby placeholder never claims verified original art")
+	check(RESOLVER.texture(ruby_record,ruby_record.name,legacy_images) == load(POTION_PATH),"legacy ruby resolves the actual preserved bundled texture")
+	var unindexed: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name)
+	check(unindexed.path == "" and unindexed.family == "gem","ruby without an explicit image link receives its appropriate family symbol")
+	check(RESOLVER.describe({"name":ruby_record.name,"sourceId":"unknown-publisher-id"},ruby_record.name,legacy_images).path == "","an explicit unknown ruby ID cannot borrow the name-only index")
+	check(JSON.stringify(ruby_record) == ruby_before,"ruby visual lookup preserves the existing item record")
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))
 	var wrong: Dictionary = catalog["아이템"][0].duplicate(true)
 	wrong.name = "HP 물약"

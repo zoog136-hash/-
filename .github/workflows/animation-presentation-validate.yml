@@ -47,6 +47,9 @@ jobs:
           "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then exit 1; fi
           python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
+          python3 -m pip install 'Pillow==11.3.0'
+          python3 tests/eight_direction_coverage_audit_test.py
+          python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
           for name in eight_direction_animation_test native_animation_expansion_test; do
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "test-results/${name}.txt"; then exit 1; fi
@@ -56,6 +59,12 @@ jobs:
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/${name}.txt"; then exit 1; fi
             grep -q '_OK' "test-results/${name}.txt"
           done
+          XDG_DATA_HOME="${RUNNER_TEMP}/aden-boss-special" "$ENGINE" --headless --path . --script res://tests/aden_boss_special_test.gd 2>&1 | tee test-results/aden-boss-special.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|ADEN_BOSS_SPECIAL_FAIL' test-results/aden-boss-special.txt; then exit 1; fi
+          grep -q 'ADEN_BOSS_SPECIAL_OK' test-results/aden-boss-special.txt
+          "$ENGINE" --headless --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-direction-gameplay.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-direction-gameplay.txt; then exit 1; fi
+          grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-direction-gameplay.txt
       - name: All boss poses and real gameplay renders
         shell: bash
         run: |
@@ -66,6 +75,11 @@ jobs:
             xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|FAILED' "test-results/${name}.txt"; then exit 1; fi
           done
+          export TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/pr100-main-directions"
+          export TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/pr100-main-directions/gameplay.json"
+          XDG_DATA_HOME="${RUNNER_TEMP}/pr100-main-user" timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-main-render.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-main-render.txt; then exit 1; fi
+          grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-main-render.txt
       - name: Preserve runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -79,4 +93,6 @@ jobs:
             ${{ runner.temp }}/presentation/**/presentation-sequences/
             ${{ runner.temp }}/presentation/**/combat-review/
             ${{ runner.temp }}/presentation/**/presentation-benchmark/
+            ${{ runner.temp }}/aden-boss-special/**/aden-boss-special-results.json
+            ${{ runner.temp }}/pr100-main-directions/
           if-no-files-found: error

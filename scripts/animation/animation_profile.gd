@@ -46,6 +46,15 @@ func marker_for(style: String) -> float:
 func hit_frame_for(role: String) -> int:
 	return int(action_hit_frames.get(role, attack_hit_frame))
 
+func projectile_offset(aim: Vector2) -> Vector2:
+	# The Y anchor is torso height, not a screen-space aim component. Native
+	# eight-view weapons release ahead of that anchor in the actual facing.
+	# East/west retain their existing offsets; legacy art keeps its old anchor.
+	if layout == "directional8":
+		var direction_value: Vector2 = aim.normalized() if not aim.is_zero_approx() else Vector2.DOWN
+		return Vector2(0, projectile_origin.y) + direction_value * absf(projectile_origin.x)
+	return Vector2(projectile_origin.x * (-1.0 if aim.x < 0.0 else 1.0), projectile_origin.y)
+
 static func weapon_style(weapon: String, attack_kind: String = "melee") -> String:
 	if attack_kind == "magic": return "magic"
 	if attack_kind == "ranged": return "bow"

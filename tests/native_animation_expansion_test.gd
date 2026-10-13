@@ -5,6 +5,7 @@ extends SceneTree
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
 const MONSTER_DB = preload("res://scripts/monsters/monster_catalog.gd")
+const PLAYER_SCRIPT = preload("res://scripts/player.gd")
 var assertions := 0
 var failures: Array[String] = []
 
@@ -21,7 +22,7 @@ func run() -> void:
 	for row: Dictionary in MONSTER_DB.expand(original["몬스터"]): monster_records[str(row.name)]=row
 	var resources: Dictionary = {}
 	var global_pixels: Dictionary = {}
-	var bindings := {"transform":0,"monster":0}
+	var bindings := {"transform":0,"monster":0,"class":0}
 	var retained := AnimatedSprite2D.new()
 	root.add_child(retained)
 	var retained_key := ""
@@ -32,7 +33,9 @@ func run() -> void:
 		if not path.begins_with("res://assets/actors/eight_direction/expanded/"): continue
 		var kind := key.get_slice(":",0)
 		var identity := key.trim_prefix(kind+":")
-		var record := {"sourceId":identity} if kind=="transform" else {"name":identity}
+		check(bindings.has(kind), "native profile belongs to a production actor kind " + key)
+		if not bindings.has(kind): continue
+		var record := {"sourceId":identity} if kind in ["transform","class"] else {"name":identity}
 		if kind=="transform":
 			var found := false
 			for row: Dictionary in db["변신"]:
@@ -41,6 +44,8 @@ func run() -> void:
 					record=row
 					check(row.grade in ["영웅","전설","신화","유일"], "expanded real Hero+ ID "+key)
 			check(found,"transformation remains in DB "+key)
+		elif kind=="class":
+			check(identity.is_valid_int() and int(identity)>=0 and int(identity)<PLAYER_SCRIPT.CLASS_SHEETS.size(),"native base class remains in player class selection "+key)
 		else:
 			check(monster_records.has(identity),"monster remains in expanded production DB "+key)
 			record=monster_records.get(identity,record)
@@ -53,7 +58,7 @@ func run() -> void:
 		resources[path]=true
 		var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path.get_base_dir().path_join("provenance.json")))
 		var compass_indices: Array = proof.source_direction_indices.map(func(value: Variant) -> int: return int(value))
-		check(compass_indices==[4,3,2,1,0,7,6,5],"reviewed source compass convention "+path)
+		check(compass_indices==[4,5,6,7,0,1,2,3],"reviewed source compass convention "+path)
 		check(Vector2(proof.foot[0],proof.foot[1])==Vector2(128,160) and Vector2(proof.cell[0],proof.cell[1])==Vector2(256,256),"fixed source foot canvas "+path)
 		for role: String in ["idle","walk","attack","hit","death"]:
 			check(proof.tracks.has(role),"five source actions "+path+role)

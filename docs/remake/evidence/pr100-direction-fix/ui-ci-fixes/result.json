@@ -1,0 +1,31 @@
+{
+  "engine": "Godot 4.7.2 official",
+  "renderer": "Compatibility OpenGL Mesa llvmpipe",
+  "display": ":99",
+  "baseline_failures": {
+    "lineagem_ui_visual_smoke_test": "stale assertion that CompactMenuButton is absent; existing connected menu shortcut is intentionally present and hidden until navigation connects",
+    "remake_ui_local_item_icons_test": "stale assertion rejecting the explicitly retained legacy ruby image index, contradictory with world._load_data and item_visual_test"
+  },
+  "changes": [
+    "tests/lineagem_ui_visual_smoke_test.gd",
+    "tests/remake_ui_local_item_icons_test.gd"
+  ],
+  "validation": {
+    "lineagem_ui_visual_smoke_test": {
+      "exit_code": 0,
+      "result": "LINEAGEM_UI_VISUAL_OK"
+    },
+    "remake_ui_local_item_icons_test": {
+      "exit_code": 0,
+      "checks": 22,
+      "failures": []
+    },
+    "item_visual_test": {
+      "exit_code": 0,
+      "checks": 6445,
+      "failures": []
+    }
+  },
+  "production_changes": [],
+  "note": "Preserved production UI and existing art. Added navigation visibility/routing and explicit legacy provenance/unknown-ID/family-fallback assertions."
+}
