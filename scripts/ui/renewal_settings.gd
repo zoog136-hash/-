@@ -1,6 +1,6 @@
 extends VBoxContainer
 
-# Presentation options only. No gameplay/save/schema changes.
+# Presentation options and character-specific consumable safety controls.
 const UI = preload("res://scripts/ui/renewal_theme.gd")
 const Dialog = preload("res://scripts/ui/renewal_dialog.gd")
 const SETTINGS_PATH = "user://twilight_ui_settings.cfg"
@@ -67,6 +67,10 @@ func configure(controller: Node) -> void:
 	mute.button_pressed = bool(config.get_value("audio","muted",false))
 	mute.toggled.connect(_mute_changed)
 	audio.add_child(mute)
+	stack.add_child(HSeparator.new())
+	var consumable_settings := preload("res://scripts/ui/consumable_auto_settings.gd").new()
+	consumable_settings.configure(hud)
+	stack.add_child(consumable_settings)
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("HUD 표시",18,UI.GOLD))
 	var log_toggle := CheckButton.new()
