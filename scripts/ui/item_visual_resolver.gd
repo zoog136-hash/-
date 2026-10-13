@@ -5,6 +5,7 @@ const FALLBACK = preload("res://scripts/ui/item_fallback_art.gd")
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const A2 = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd")
+const OPTIONAL = preload("res://scripts/ui/optional_item_icon_pack.gd")
 const MAX_CACHE: int = 256
 const LOCAL_ITEM_ICONS: Dictionary = {
 	"HP 물약":"res://assets/ui/potionRed.png",
@@ -127,6 +128,16 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 		if bridge != null:
 			result.path = bridge.resource_path
 			result.route = "a2_candidate"
+			return result
+	# Private exact-name icon candidates are allowed only for records with no
+	# sourceId. They never override verified catalog, physical, reviewed L1J,
+	# visual manifest, or A2 art, and invalid/missing files retain fallback.
+	if id.is_empty() and not ambiguous:
+		var optional: Dictionary = OPTIONAL.lookup(source, name_value)
+		if not optional.is_empty():
+			result.path = str(optional.get("path", ""))
+			result.route = "optional_exact_name_icon"
+			result.status = "original_review_pending"
 			return result
 	# The pre-rework exact-name index also contains deliberate stock UI links.
 	# Restore those links instead of replacing them with an unrelated family
