@@ -71,34 +71,34 @@ jobs:
           set -euo pipefail
           git rev-parse HEAD | tee consumable-tested-sha.txt
           timeout 420 "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee consumable-import.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|Parse Error|Failed to load script' consumable-import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|Parse Error|Failed to load script' consumable-import.log; then exit 1; fi
       - name: Automatic use, all-class cooking and saved settings
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$RUNNER_TEMP/consumable-auto-safety-user-data"
           timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/consumable_auto_safety_test.gd 2>&1 | tee consumable-auto-safety.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE_AUTO_FAIL|CONSUMABLE_AUTO_SAFETY_FAILED' consumable-auto-safety.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE_AUTO_FAIL|CONSUMABLE_AUTO_SAFETY_FAILED' consumable-auto-safety.log; then exit 1; fi
           grep -q 'CONSUMABLE_AUTO_SAFETY_OK:' consumable-auto-safety.log
       - name: Existing consumable acceptance smoke
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$RUNNER_TEMP/consumable-smoke-user-data"
           timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/consumable_smoke_test.gd 2>&1 | tee consumable-smoke.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE FAIL|CONSUMABLE_SMOKE_FAILED' consumable-smoke.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE FAIL|CONSUMABLE_SMOKE_FAILED' consumable-smoke.log; then exit 1; fi
           grep -q 'CONSUMABLE_SMOKE_OK' consumable-smoke.log
       - name: Per-instance enchantment regression
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$RUNNER_TEMP/consumable-instance-enchants-user-data"
           timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/per_instance_enchantments_smoke_test.gd 2>&1 | tee consumable-per-instance.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|PER_INSTANCE_FAIL:|PER_INSTANCE_ENCHANTMENTS_FAILED' consumable-per-instance.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|PER_INSTANCE_FAIL:|PER_INSTANCE_ENCHANTMENTS_FAILED' consumable-per-instance.log; then exit 1; fi
           grep -q 'PER_INSTANCE_ENCHANTMENTS_OK' consumable-per-instance.log
       - name: Equipment blessing regression
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$RUNNER_TEMP/consumable-equipment-blessing-user-data"
           timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/equipment_blessing_smoke_test.gd 2>&1 | tee consumable-blessing.log
-          ! grep -E 'SCRIPT ERROR:|ERROR:|BLESSING FAIL:|EQUIPMENT_BLESSING_SMOKE_FAILED' consumable-blessing.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|BLESSING FAIL:|EQUIPMENT_BLESSING_SMOKE_FAILED' consumable-blessing.log; then exit 1; fi
           grep -q 'EQUIPMENT_BLESSING_SMOKE_OK' consumable-blessing.log
       - name: Resource integrity after tests
         run: |
