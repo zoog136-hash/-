@@ -226,7 +226,7 @@ def import_sheet(root, candidate, actor, keys, apply):
                             "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff", "sprite_offset": [0, round(-32 * scale, 6)],
                             "embedded_shadow": False, "authored_motion_weight": 0, "hit_recoil": 0,
                             "action_hit_frames": {"attack": 1}, "attack_hit_frame": 1, "death_duration": SECONDS["death"],
-                            "movement_fps": len(ROLES["walk"]) / SECONDS["walk"], "authoring_reference": reference["path"]})
+                            "movement_fps": len(role_frames["walk"][0]) / SECONDS["walk"], "authoring_reference": reference["path"]})
             document["profiles"][key] = profile
         expansion.save_profiles(root / "data/combat_animation_profiles.json", document)
     if sha(original) != reference["sha256"] or any(sha(candidate_image(root, spec["output_path"])) != atlas["sha256"] for spec, atlas in zip(sheets, atlases)):

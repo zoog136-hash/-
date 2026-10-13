@@ -17,14 +17,14 @@ Godot의 화면 좌표 계산은 정상이다. `+Y`는 아래이고 게임 방�
 
 | 분류 | 실제 8방향 연속 프레임 연결 | 전체 | 미완료 |
 |---|---:|---:|---:|
-| 영웅 이상 변신 | 128 | 180 | 52 |
-| 일반 몬스터 | 145 | 258 | 113 |
-| 보스 | 31 | 60 | 29 |
+| 영웅 이상 변신 | 129 | 180 | 51 |
+| 일반 몬스터 | 146 | 258 | 112 |
+| 보스 | 32 | 60 | 28 |
 | 기본 외형 | 4 | 4 | 0 |
 
-기존 34개 확장 공용 외형과 기사·해골 표본 2개를 보존했다. `class:1/2/3`은 기존 지팡이·활·단검 외형에 연결한다. 후속 제작으로 **늑대인간·고스트·여성 사신·오우거·라바 골렘·아이스 골렘·코카트리스·사이클롭스·경비병(창) 대장·서큐버스·하피·라이칸스로프 12개 외형**을 각자의 기존 이미지에서 새로 그렸다. 각 104자세(8방향 × 대기 2·이동 3·공격 3·피격 2·사망 3), 합계 1,248자세이며 총 48개 리소스를 사용한다. 원본이 이미 동일한 지역 개체만 공유했고 각 이름으로 Main 전투를 별도로 검사했다. 새 그림 12개가 변신 2종·몬스터 26종에 적용됐다. 원본과 기존 모션을 덮어쓰지 않는다.
+기존 34개 확장 공용 외형과 기사·해골 표본 2개를 보존했다. `class:1/2/3`은 기존 지팡이·활·단검 외형에 연결한다. 후속 제작으로 **늑대인간·고스트·여성 사신·오우거·라바 골렘·아이스 골렘·코카트리스·사이클롭스·경비병(창) 대장·서큐버스·하피·라이칸스로프·버그베어·샌드 웜·남성 사신 15개 외형**을 각자의 기존 이미지에서 새로 그렸다. 14개는 각 104자세(8방향 × 대기 2·이동 3·공격 3·피격 2·사망 3), 남성 사신은 실제 이동 2프레임을 포함한 96자세로 합계 1,552자세다. 총 51개 리소스를 사용한다. 원본이 이미 동일한 지역 개체만 공유했고 각 이름으로 Main 전투를 별도로 검사했다. 새 그림 15개가 변신 3종·일반 몬스터 27종·보스 1종에 적용됐다. 원본과 기존 모션을 덮어쓰지 않는다.
 
-고정된 공개 소스의 377개 애니메이션 정의와 현재 로컬 자료를 확인했지만, 나머지 외형에 맞는 날개·마물·동물·특수 의상·창·총·이도류·클로·체인소드·낫 등의 8방향 원본은 확보하지 못했다. 서로 다른 몸체를 무리하게 대체하지 않았다. **남은 52/113/29종, 총 194종은 미완료**다. [현재 ID·사유 목록](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 기존 54/139/29종 조사표는 이전 검증 증거로 보존했다.
+고정된 공개 소스의 377개 애니메이션 정의와 현재 로컬 자료를 확인했지만, 나머지 외형에 맞는 날개·마물·동물·특수 의상·창·총·이도류·클로·체인소드·낫 등의 8방향 원본은 확보하지 못했다. 서로 다른 몸체를 무리하게 대체하지 않았다. **남은 51/112/28종, 총 191종은 원본 기반 제작·연결·검증이 미완료**다. [현재 ID·사유 목록](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 기존 54/139/29종 조사표는 이전 검증 증거로 보존했다.
 
 전체 413개 변신, 318개 몬스터/보스, 4개 기본 외형의 **735개 ID × 8방향 = 5,880행** [검증표](evidence/pr100-direction-fix/original-based/coverage/all-identities-eight-directions.csv)를 자동 생성했다. 실제 RGBA 고유 프레임과 재생 슬롯 수를 구분한다. `source_metadata_only`, `actual_gameplay=not_run`은 전수 화면 승인이 아니라는 뜻이다. 성공한 실제 Main 보고서를 명시한 행만 `recorded_Main_sample`로 표시하며 해당 증거 경로를 함께 기록한다. 같은 리소스를 쓰더라도 실행하지 않은 다른 이름은 자동 승격하지 않는다. 실제 플레이한 표본은 별도 [Main 실행 기록](evidence/pr100-direction-fix/gameplay.json)으로 제공한다.
 
@@ -72,7 +72,7 @@ APK 크기는 771,837,680 bytes, SHA-256은 `7192fb894c02e286656da514a959d82bc93
 
 실제 Main에서 늑대인간 headless **942개**, OpenGL 녹화 실행 **951개**, 고스트 headless **1,083개**, OpenGL **1,196개** 검사를 통과했다. 8방향 실제 추적/공격, 피격, 사망, 기존 확률 드랍, 수동 습득을 확인했다. 고스트의 기존 HP는 50으로 기본 캐릭터의 첫 공격에 죽으므로, 피격 모션 확인에는 실제 `take_damage(1)` 경로의 비치명 피해를 먼저 발생시킨다. 그 뒤 실제 무기로 처치하며 전투 능력치와 드랍 표는 바꾸지 않는다. 프레임별 수동 표본 검토는 AI 전투 증거와 별도로 기록한다.
 
-[실제 Main 늑대인간 영상](evidence/pr100-direction-fix/original-based/werewolf-main.mp4), [범위·원본 보존·산출물 해시](evidence/pr100-direction-fix/original-based/preservation-and-scope.json), [고스트 실제 Main 기록](evidence/pr100-direction-fix/original-based/original_based_ghost_gameplay_test-opengl.json)을 보존했다. 제작 중 발견한 프레임 겹침, 불투명 배경, 중복 낫 초안은 적용 수치에서 제외했다. 이 문단의 2개 외형은 `15c71f5`까지의 저장 내역이며, 아래 후속 제작을 포함한 현재 미완료 수는 205종이다.
+[실제 Main 늑대인간 영상](evidence/pr100-direction-fix/original-based/werewolf-main.mp4), [범위·원본 보존·산출물 해시](evidence/pr100-direction-fix/original-based/preservation-and-scope.json), [고스트 실제 Main 기록](evidence/pr100-direction-fix/original-based/original_based_ghost_gameplay_test-opengl.json)을 보존했다. 제작 중 발견한 프레임 겹침, 불투명 배경, 중복 낫 초안은 적용 수치에서 제외했다. 이 문단의 2개 외형은 `15c71f5`까지의 저장 내역이며, 현재 수치는 맨 위 표와 최신 제작 묶음에서 확인한다.
 
 새 2개 외형을 포함한 APK도 빌드 및 독립 검사에 통과했다. 38개 compiled SpriteFrames, 1,944개 트랙, 10,528개 재생 슬롯, 236개 PNG 임포트와 캔버스 메타데이터가 일치한다. APK는 774,993,177 bytes, SHA-256 `b582568218bcf9083f592e43de52a3635e7fbdb2d926a91bc6fede3502ea4e52`다. [검사 결과](evidence/pr100-direction-fix/original-based/android/android.json). 실제 Android 기기 실행은 여전히 미검증이다. 빌드 후 adb의 읽기 전용 홈 디렉터리 오류를 빌드 실패나 기기 실행 성공과 혼동하지 않는다.
 
@@ -137,13 +137,37 @@ APK 크기는 771,837,680 bytes, SHA-256은 `7192fb894c02e286656da514a959d82bc93
 
 ## 서큐버스·하피·라이칸스로프 추가
 
-기존 원본 `1112.png`의 서큐버스 7종, `1024.png`의 하피 2종, `4820.png`의 라이칸스로프 2종을 각각 원본 기반으로 제작한 3개 디자인·312자세에 연결했다. 몸체 메타데이터가 다른 블루 하피는 동일 이미지로 교체하지 않았다. 원본 참조 222건의 SHA와 기존 추적 에셋은 그대로이며, 11개 이름 각각에서 headless와 실제 OpenGL Main의 8방향 AI 추적·공격·피격·사망·원래 드랍·수동 습득을 확인했다. [22개 실행 기록](evidence/pr100-direction-fix/original-based/batch4/validation-summary.json). 현재 합계는 **변신 128/180, 일반 몬스터 145/258, 보스 31/60**, 남은 대상은 **194종**이다.
+기존 원본 `1112.png`의 서큐버스 7종, `1024.png`의 하피 2종, `4820.png`의 라이칸스로프 2종을 각각 원본 기반으로 제작한 3개 디자인·312자세에 연결했다. 몸체 메타데이터가 다른 블루 하피는 동일 이미지로 교체하지 않았다. 원본 참조 222건의 SHA와 기존 추적 에셋은 그대로이며, 11개 이름 각각에서 headless와 실제 OpenGL Main의 8방향 AI 추적·공격·피격·사망·원래 드랍·수동 습득을 확인했다. [22개 실행 기록](evidence/pr100-direction-fix/original-based/batch4/validation-summary.json). `fdffcd9` 시점의 합계는 **변신 128/180, 일반 몬스터 145/258, 보스 31/60**, 당시 남은 대상은 **194종**이었다.
 
 서큐버스는 실제 마법 사거리와 투사체를 유지한다. 근접 몬스터용 시작점 대신 각 방향에 통행·시야가 확보된 실제 지형을 선택하고, 실제 카메라에 시전자와 플레이어가 함께 들어오도록 검사 확대율을 조정했다. 7종 × 8방향에서 실제 마법 투사체의 이동 벡터·접촉 종류와 기존 타격 콜백을 확인했다. HP 1,919인 지룡서큐버스는 초반 검으로 200회 후 HP 217이 남았으므로, 기존 고레벨 장비 검사와 같이 실제 DB 무기를 정상 장착해 재검사했다. 몬스터 HP·방어력·명중 공식을 변경하지 않았다.
 
 원거리 필드 검사에서 발견한 검격 이펙트 오류도 수정했다. `impact_visuals.gd`가 큰 월드 좌표를 얇은 초승달 다각형의 정점에 직접 더하면 부동소수점 오차로 삼각분할이 실패했다. 동일 1,600개 표본에서 기존 방식은 7개 실패, 로컬 좌표는 0개 실패였다. 도형을 원점 근처에서 만들고 기존 위치로 캔버스를 이동하여 모양·방향·접촉 위치를 보존했다. 8방향·4개 크기·100개 진행도 검사와 기존 스트레스를 포함한 **3,258개 검사**, 실제 Main 검·활·지팡이 회귀 **headless 7,687 / OpenGL 7,302개**가 모두 통과했다. 검증에는 기본/변신 48사례와 지팡이 일반 공격 16사례, 일반 몬스터·보스 전투가 포함된다.
 
-Godot 전체 임포트와 실제 Main 기동이 통과했다. 현재 APK는 **790,048,921 bytes**, SHA-256 **`eb8d0d38d89accc98d8cad5c85ef09e94ce9d0d9e32960d4769756fd831a57c5`**다. compiled SpriteFrames **48개**, 트랙 **2,344개**, 재생 슬롯 **11,568개**, PNG 임포트 **249개**, ARM64·v2/v3 서명·16KB 정렬·ZIP CRC·원본 SHA·캔버스가 통과했다. [APK 검사 결과](evidence/pr100-direction-fix/original-based/batch4/android/android.json). **Android 실제 기기 실행은 미검증**이며 재생 슬롯 수를 고유 자세 수로 사용하지 않는다. 샌드 웜·버그베어의 다음 제작 후보는 이 커밋에 포함하지 않았고 완료 수에도 포함하지 않았다.
+Godot 전체 임포트와 실제 Main 기동이 통과했다. `fdffcd9`의 APK는 **790,048,921 bytes**, SHA-256 **`eb8d0d38d89accc98d8cad5c85ef09e94ce9d0d9e32960d4769756fd831a57c5`**다. compiled SpriteFrames **48개**, 트랙 **2,344개**, 재생 슬롯 **11,568개**, PNG 임포트 **249개**, ARM64·v2/v3 서명·16KB 정렬·ZIP CRC·원본 SHA·캔버스가 통과했다. [APK 검사 결과](evidence/pr100-direction-fix/original-based/batch4/android/android.json). **Android 실제 기기 실행은 미검증**이며 재생 슬롯 수를 고유 자세 수로 사용하지 않는다. 샌드 웜·버그베어의 다음 제작 후보는 당시 커밋과 완료 수에 포함하지 않았다.
+
+## 작업 복구와 버그베어·샌드 웜·남성 사신 추가
+
+원격 턴 중단 후 `/workspace/TWILIGHT`의 기존 브랜치와 PR #100의 HEAD가 모두 `fdffcd9c5cd572ea7cc79ea5548c337a6d50377e`임을 확인했다. 미커밋 19개 파일, binary patch, 제작 recipe를 별도 보관하고 백업 안의 바이트와 SHA를 검증했다. 강제 초기화·브랜치 변경·미커밋 삭제·원본 덮어쓰기는 하지 않았다. [복구 결과](evidence/pr100-direction-fix/original-based/batch5/recovery-result.json), [보존 파일 해시](evidence/pr100-direction-fix/original-based/batch5/recovery-backup-manifest.json). 백업 자체의 `/workspace` 경로는 해당 Work 환경의 로컬 경로이며 외부 배포 링크로 표시하지 않는다.
+
+사용자가 보고한 HTTP 503의 정확한 요청 기록은 남아 있는 로그에서 확인하지 못했다. 별도로 확인된 GitHub Godot release 다운로드 HTTP 500은 게임 검사 전 발생했고, [동일 CI의 두 번째 실행](https://github.com/zoog136-hash/-/actions/runs/38410431010)은 2026-10-13 14:39:16 UTC에 성공했다. `fdffcd9`의 **29 workflow / 39 job 모두 성공**으로 종료했다. [확인한 실제 종료 상태](evidence/pr100-direction-fix/original-based/batch5/previous-commit-ci.json). 두 HTTP 오류를 같은 원인으로 단정하지 않는다. 복구된 이미지·엔진·검증 로그가 온전하여 입력 파일을 다시 다운로드하지 않고 미완료 단계부터 재개했다.
+
+버그베어는 기존 `45223.png`의 몸체·빨간 허리옷·가시 곤봉, 남성 사신은 변신 258의 `0c6685aea67140a668a2e435.png`에 있는 검은 금장 갑옷·청록 장식·낫을 바탕으로 제작했다. 샌드 웜은 현재 게임의 `assets/monsters/original/atlas_3.png` 15번 영역에 있는 마디진 몸통·붉은 이빨 입·모래 받침을 유지했다. **샌드 웜의 프로젝트 원본을 검증된 외부 원작 이미지라고 표시하지 않는다.** 원본과 영역을 실제 production portrait 경로에서도 대조했다.
+
+버그베어와 샌드 웜은 각 104자세, 남성 사신은 실제 96자세로 이번에 **304개의 서로 다른 포즈**를 연결했다. 남성 사신 출력은 이동이 2프레임이므로 `movement_fps`를 실제 프레임 수 / 기존 이동 주기 0.48초로 계산하도록 importer를 수정했다. 3번째 이동 프레임을 복제하지 않았으며, 다른 3프레임 외형의 속도는 같다. 각 방향의 전면·측면·후면과 피격·쓰러짐·최종 사망 자세를 검사했다.
+
+| 실제 Main 대상 | headless 검사 | OpenGL 검사 |
+|---|---:|---:|
+| 버그베어 | 997 | 1,110 |
+| 샌드 웜 | 2,845 | 2,966 |
+| 남성 사신 | 1,500 | 1,427 |
+
+모두 실패 0개다. 샌드 웜은 일반 추적·공격 8방향과 별도로 기존 nova AI의 경고·공격 유지·효과 방향·실제 피해·대기 복귀·효과 종료·중단을 8방향 검사했다. 보스의 HP 3,200과 기존 공격 패턴은 유지했다. nova는 기존 `local_adaptation_not_verified_original_skill`이며 원작 고유 기술을 복원했다는 의미가 아니다. 정상 장착 무기로 처치한 뒤 실제 드랍·수동 습득도 통과했다. 남성 사신은 실제 직업·배틀 사이드·변신 장착/해제·입력 공격과 피격/사망/부활을 확인했다. 들어오는 피격·치명 독 피해의 production 콜백 검사는 AI 전투와 별도로 표시한다.
+
+[6개 실행 기록](evidence/pr100-direction-fix/original-based/batch5/validation-summary.json), [샌드 웜 Main 녹화](evidence/pr100-direction-fix/original-based/batch5/sand-worm-main.mp4), [남성 사신 Main 녹화](evidence/pr100-direction-fix/original-based/batch5/reaper-male-main.mp4)를 저장했다. 영상은 실제 게임 실행 앞부분을 압축한 검토 자료이며 이후 프레임별 자세 표본을 포함할 수 있다. 전투·자세 표본·피격 입력은 JSON에서 구분하며, 녹화가 전체 검사를 담았다고 주장하지 않는다.
+
+원본 참조 222건의 SHA, 기존 에셋, 35,742개 native 검사와 640개 캔버스 검사, Python 11개 검사, Godot 임포트가 통과했다. 735개 ID × 8방향 검증표를 새 3종의 실제 Main 기록으로 갱신하고, 원본 기반 31종의 CI를 8개 작업으로 연결했다. 현재 **변신 129/180·일반 몬스터 146/258·보스 32/60**, 나머지 **191종의 제작·연결·검증은 미완료**다. 이 변경을 푸시한 정확한 HEAD의 CI 종료 상태는 PR #100 본문과 Checks에서 별도로 확인한다.
+
+새 3종을 포함한 APK는 **798,517,984 bytes**, SHA-256 **`3045017f67a1e51ae1a687b6624fb30396fd9e43abea2c10700e4ea1f5ad506d`**다. compiled SpriteFrames **51개**, 트랙 **2,464개**, 재생 슬롯 **11,872개**, PNG 임포트 **255개**, ARM64·v2/v3 서명·16KB 정렬·ZIP CRC·원본 SHA·캔버스가 통과했다. [실제 APK 검사 결과](evidence/pr100-direction-fix/original-based/batch5/android/android.json). **Android 실제 기기 실행은 미검증**이다. 원래 미커밋 파일 19개는 복구 백업과 여전히 byte 일치하며, [별도 보존 확인](evidence/pr100-direction-fix/original-based/batch5/recovered-files-preserved.json)을 남겼다.
 
 ```sh
 python3 tools/check_resource_integrity.py --root .

@@ -1,0 +1,39 @@
+{
+  "observed_at_utc": "2026-10-13T22:13:19.541749+00:00",
+  "cwd": "/workspace/TWILIGHT",
+  "branch": "feature/twilight-animation-20261013",
+  "local_head": "fdffcd9c5cd572ea7cc79ea5548c337a6d50377e",
+  "remote_pr_head": "fdffcd9c5cd572ea7cc79ea5548c337a6d50377e",
+  "source_references_checked": 222,
+  "source_hash_mismatches": [],
+  "uncommitted_backup": "/workspace/pr100-recovery/20261013T220554Z/uncommitted-files.tar.gz",
+  "backup_manifest": "/workspace/pr100-recovery/20261013T220554Z/manifest.json",
+  "ci": {
+    "workflows": 29,
+    "jobs": 39,
+    "terminal": true,
+    "success": 29,
+    "failure": 0
+  },
+  "reported_http_503": {
+    "exact_request_available": false,
+    "searched": "Persisted PR100 authoring/CI logs; no matching 503 found",
+    "cause": "Unconfirmed; no request URL/response trace survived in available records",
+    "retry": "Existing local image, engine and report files are intact. No input download is needed to resume. A particular 503 request cannot be retried without identifying it."
+  },
+  "separate_ci_download_failure": {
+    "run_id": 38410431010,
+    "status_code": 500,
+    "cause": "GitHub Godot release asset HTTP server error before game checks",
+    "rerun_attempt": 2,
+    "conclusion": "success",
+    "completed_at": "2026-10-13T14:39:16Z"
+  },
+  "recovered_pending": [
+    "original_based_reaper_male_gameplay_test: OpenGL render",
+    "batch5 evidence/coverage/APK",
+    "commit and push on existing branch",
+    "new exact-head terminal CI"
+  ],
+  "no_reset_checkout_cleanup_or_merge": true
+}

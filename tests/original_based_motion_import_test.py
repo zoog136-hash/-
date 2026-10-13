@@ -42,35 +42,42 @@ class OriginalBasedImportTest(unittest.TestCase):
     def test_actual_imports_have_separated_distinct_articulated_poses(self):
         for actor, specs in {"werewolf": [("poses.png", 13)], "ogre": [("poses.png", 13)],
                              "succubus": [("poses.png", 13)], "harpy": [("poses.png", 13)], "lycanthrope": [("poses.png", 13)],
+                             "bugbear": [("poses-0.png", 8), ("poses-1.png", 5)], "sand_worm": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "reaper_male": [("poses-0.png", 7), ("poses-1.png", 5)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "spear_captain": [("poses-0.png", 8), ("poses-1.png", 5)]}.items():
             folder = ROOT / "assets/actors/eight_direction/original_based" / actor
             proof = json.loads((folder / "provenance.json").read_text())
-            self.assertEqual(proof["distinct_pixel_frames"], 104)
+            expected_poses = 96 if actor == "reaper_male" else 104
+            self.assertEqual(proof["distinct_pixel_frames"], expected_poses)
             parts = []
             for index, (name, rows) in enumerate(specs):
                 reference_rows = ([0, 1] if index == 0 else [1]) if len(specs) > 1 else None
                 parts.append(importer.analyze(folder / name, rows, reference_rows, parts[0]["neutral_height"] if parts else None))
-            self.assertEqual(sum(part["distinct_pixel_frames"] for part in parts), 104)
+            self.assertEqual(sum(part["distinct_pixel_frames"] for part in parts), expected_poses)
             for atlas in {entry["path"]: entry for role in proof["tracks"].values() for entry in role["atlas_files"]}.values():
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
-            self.assertEqual(len(frames), 104)
+            expected_poses = 96 if actor == "reaper_male" else 104
+            self.assertEqual(len(frames), expected_poses)
             self.assertEqual(len(tracks), 40)
             used = []
             for role, rows in importer.ROLES.items():
                 for direction in range(8):
                     track = tracks[f"{role}_{direction}"]
-                    self.assertEqual(len(track["frames"]), len(rows))
+                    self.assertEqual(len(track["frames"]), 2 if actor == "reaper_male" and role == "walk" else len(rows))
                     self.assertEqual(track["loop"], role in ("idle", "walk"))
                     used.extend(frame["texture"] for frame in track["frames"])
-            self.assertEqual(len(set(used)), 104)
+            self.assertEqual(len(set(used)), expected_poses)
+            if actor == "reaper_male":
+                profile = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]["transform:258"]
+                self.assertAlmostEqual(profile["movement_fps"], 2 / importer.SECONDS["walk"])
 
     def test_cannot_substitute_a_different_original_for_shared_output(self):
         with tempfile.TemporaryDirectory() as folder:

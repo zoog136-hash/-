@@ -1,0 +1,64 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate game production 2D isometric sprite atlas of EXACT original MALE REAPER from attached reference. Preserve the black armored man, elaborate sharply pointed golden armor trims/shoulders/boots and enclosed dark helmet, original tall teal-blue spectral crest/hair, tattered dark teal-black cloak, huge original crescent SCYTHE with glowing cyan/teal blade and dark gold shaft. Do not replace with female reaper, skeleton, purple robe, sword or different weapon. Exact colors, silhouette, gear, body proportions and detailed painted small RPG sprite style. TRANSPARENT RGBA background, no cast shadow, floating detached sparks or mist. EXACT EIGHT COLUMNS by EIGHT ROWS=64 full articulated poses. Character including entire long scythe occupies at most40% of EACH cell in BOTH dimensions; leave HUGE transparent gutters 35px minimum, never crop or touch another pose. Columns E strict right PROFILE, SE front-right, S DIRECT FRONT at viewer, SW front-left, W strict left PROFILE, NW BACK-left, N FULL BACK no face, NE BACK-right; every row retains same compass. Rows1 neutral idle,2 distinct breathing/cloth idle,3 movement step1,4 passing movement phase,5 opposite movement step,6 ATTACK WINDUP raises/pulls scythe back,7 ATTACK CONTACT swings scythe toward that column's direction (S down toward viewer, N up away, E right, W left),8 attack recovery scythe drawn back. Maintain actual grip/weapon hand/anatomy, torso turns only with attack pose not changing compass. Eight distinct views,64 actually articulated poses not translated/copied stills. Keep all glows tightly attached to crest/blade, complete whole weapon inside cell.\nHIT/DEATH FINAL EDIT:\nEdit ONLY TOP ROW (hit recoil) of the attached8-column5-row reaper atlas. The top row currently holds the scythe far overhead and exceeds its frame height. Redraw that TOP ROW as a CLEAR RECEIVING-HIT RECOIL, NOT ATTACK WINDUP: torso and helmet rocked backwards/slightly down, shoulders hunched, both hands gripping same scythe LOW across waist/chest, blade and handle never above helmet/teal crest, knees flexed. Keep each top-row full body/weapon within the same vertical envelope and pixel size as row2 beneath it (about140pixels high), large transparent gutters. Preserve exact compass E,SE,S,SW,W,NW,N,NE: right side/front-right/front/front-left/left side/back-left/full back/back-right. Preserve exact original black helmet/armor with golden spikes, teal crest, tattered cloak, cyan scythe and hand anatomy. Do not change ANY of the bottom4rows, especially final3 kneeling/falling/flat DEATH poses. Keep EXACT8columns5rows=40different articulated poses. Transparent RGBA empty background; no scenery, fog, grids or text. No body scale change across rows; just lower raised weapon and recoil the shoulders/head in top row.",
+  "prompt_record_kind": "exact prompts; reviewed actual output has seven main rows, not the requested eight",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/reaper_male/poses-0.png",
+      "rows": 7,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3
+        ],
+        "attack": [
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/reaper_male/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Original transform 258 black enclosed helmet and gold-trimmed armor, teal crest/cloak and cyan crescent scythe preserved. Front/profile/back compass consistent. The actual main sheet has two distinct opposed walking steps (not three); it is imported as seven rows and 96 total genuine poses, with no duplicated walking slot. Death was corrected from lunging to kneeling, falling and flat collapse. Top incoming hit was corrected to a low guarded recoil. All poses remain separated and source bytes unchanged."
+  },
+  "authoring_history": [
+    {
+      "prompt": "Create game production 2D isometric sprite atlas of EXACT original MALE REAPER from attached reference. Preserve the black armored man, elaborate sharply pointed golden armor trims/shoulders/boots and enclosed dark helmet, original tall teal-blue spectral crest/hair, tattered dark teal-black cloak, huge original crescent SCYTHE with glowing cyan/teal blade and dark gold shaft. Do not replace with female reaper, skeleton, purple robe, sword or different weapon. Exact colors, silhouette, gear, body proportions and detailed painted small RPG sprite style. TRANSPARENT RGBA background, no cast shadow, floating detached sparks or mist. EXACT EIGHT COLUMNS by EIGHT ROWS=64 full articulated poses. Character including entire long scythe occupies at most40% of EACH cell in BOTH dimensions; leave HUGE transparent gutters 35px minimum, never crop or touch another pose. Columns E strict right PROFILE, SE front-right, S DIRECT FRONT at viewer, SW front-left, W strict left PROFILE, NW BACK-left, N FULL BACK no face, NE BACK-right; every row retains same compass. Rows1 neutral idle,2 distinct breathing/cloth idle,3 movement step1,4 passing movement phase,5 opposite movement step,6 ATTACK WINDUP raises/pulls scythe back,7 ATTACK CONTACT swings scythe toward that column's direction (S down toward viewer, N up away, E right, W left),8 attack recovery scythe drawn back. Maintain actual grip/weapon hand/anatomy, torso turns only with attack pose not changing compass. Eight distinct views,64 actually articulated poses not translated/copied stills. Keep all glows tightly attached to crest/blade, complete whole weapon inside cell.",
+      "output_path": "/workspace/generated_images/exec-774c267e-5c25-445a-8bcf-95230f6dbc9e.png"
+    },
+    {
+      "prompt": "Correct the LAST THREE ROWS ONLY of this transparent8-column5-row male reaper hit/death sprite atlas. Keep original exact black-and-gold armor, helmet, teal crest, tattered cloak and glowing teal scythe, and keep first2hit rows unchanged. Current row4 wrongly looks like a fighting lunge; replace rows3/4/5 with REAL successive DEATH poses. Row3 ALL eight reapers kneel with BOTH KNEES ON GROUND, head bowed, torso hunched, scythe lowered onto floor (NOT standing attack). Row4 ALL eight reapers have torso almost HORIZONTAL close to ground, falling onto forearms/side, legs folded/extended behind, head near floor, scythe beside body, NOT held aloft or swung. Row5 ALL eight reapers lie fully FLAT and lifeless, armored torso/helmet resting on ground, both legs limp, empty cloak draped over body, scythe resting beside attached hand, no raised attack limbs. Keep directions during collapse: columns E right profile, SE front-right, S direct front, SW front-left, W left profile, NW back-left, N full back, NE back-right. Back columns show the back of helmet/cloak, no front chest. Preserve body size/anatomy/weapon and tightly attached crest glow; never dissolve into amorphous mist. EXACT8columns5rows, separate full poses in generous transparent gutters, all body/weapon pixels strictly inside each cell. Transparent RGBA empty background with no new mist/shadows/grids/text. These are collapsed death poses not additional attacks, ducks, or idle stances.",
+      "output_path": "/workspace/generated_images/reaper_male-hit-corrected.png"
+    },
+    {
+      "prompt": "Edit ONLY TOP ROW (hit recoil) of the attached8-column5-row reaper atlas. The top row currently holds the scythe far overhead and exceeds its frame height. Redraw that TOP ROW as a CLEAR RECEIVING-HIT RECOIL, NOT ATTACK WINDUP: torso and helmet rocked backwards/slightly down, shoulders hunched, both hands gripping same scythe LOW across waist/chest, blade and handle never above helmet/teal crest, knees flexed. Keep each top-row full body/weapon within the same vertical envelope and pixel size as row2 beneath it (about140pixels high), large transparent gutters. Preserve exact compass E,SE,S,SW,W,NW,N,NE: right side/front-right/front/front-left/left side/back-left/full back/back-right. Preserve exact original black helmet/armor with golden spikes, teal crest, tattered cloak, cyan scythe and hand anatomy. Do not change ANY of the bottom4rows, especially final3 kneeling/falling/flat DEATH poses. Keep EXACT8columns5rows=40different articulated poses. Transparent RGBA empty background; no scenery, fog, grids or text. No body scale change across rows; just lower raised weapon and recoil the shoulders/head in top row.",
+      "output_path": "/workspace/generated_images/exec-2a5e2b8b-8901-4afe-9305-edae9faf2e4d.png"
+    }
+  ]
+}

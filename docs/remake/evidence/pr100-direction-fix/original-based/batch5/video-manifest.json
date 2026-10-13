@@ -1,0 +1,46 @@
+{
+  "scope": "First 90 seconds of actual Main runs, compressed for review. May include explicit pose sampling after the AI/input cases; not the complete test and not a performance benchmark.",
+  "encoding": "H.264 CRF 30, source 1280x720 at 20 fps; no resizing or replacement frames",
+  "videos": [
+    {
+      "path": "sand-worm-main.mp4",
+      "sha256": "23c98c13a7961f15f47fc75537a088e4a50790e34983b5cef5a79143b6cd263c",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "20/1",
+            "nb_frames": "1797"
+          }
+        ],
+        "format": {
+          "duration": "90.000000",
+          "size": "3757803"
+        }
+      }
+    },
+    {
+      "path": "reaper-male-main.mp4",
+      "sha256": "49875a6f12eb40a31ecc625f91fea0fc25019f1f1c9b51117d9447df0a2c85f4",
+      "probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 720,
+            "r_frame_rate": "20/1",
+            "nb_frames": "1800"
+          }
+        ],
+        "format": {
+          "duration": "90.000000",
+          "size": "3113975"
+        }
+      }
+    }
+  ]
+}

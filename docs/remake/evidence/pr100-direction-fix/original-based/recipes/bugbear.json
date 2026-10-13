@@ -1,0 +1,66 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nRe-author production game sprites from the attached ORIGINAL character. Produce EXACTLY 8 COLUMNS by 8 ROWS, 64 total articulated poses, not 12 or 13 rows. Transparent RGBA. Keep full character including weapon or base at MOST 45 percent of its cell in both axes, with very large empty transparent gutters; no overlaps or clipping. Rows: 1 idle neutral, 2 clearly different idle breathing, 3 first locomotion step, 4 passing movement phase, 5 opposite locomotion step, 6 ATTACK WINDUP, 7 ATTACK CONTACT, 8 ATTACK RECOVERY. Every pose genuinely articulated, never repeated or merely translated. Columns exactly E, SE, S, SW, W, NW, N, NE in every row: true right profile, front-right, direct FRONT, front-left, true left profile, back-left, FULL BACK no face, back-right. Strict elevated isometric small painted 2D RPG art matching the ORIGINAL. No labels/grids/background/particles/cast shadows. Preserve identical anatomy, colors, size and character identity across all poses. Use only this exact original bald pale pot-bellied BUGBEAR with small blunt head, big bare fleshy torso, reddish brown loincloth, bare feet and original blue-gray spiked heavy club in its same anatomical hand. Preserve face, bald head, body, waistcloth and club design. No fur/armor/axe. Exclude black background/shadow. Important: E and W must be TRUE SIDE PROFILES, one side of belly and one profile eye only, NOT three-quarter front/rear. S sees belly directly frontally. SW points front-left and is visibly different from W side. N sees back of head and broad back. Movement has distinct leg steps. Attack winds original club overhead, CONTACT strikes in column direction (S DOWN toward viewer/bottom, N UP away toward top, E RIGHT, W LEFT); recover club back. Do NOT let S swing horizontally sideways or W swing backwards.\nHIT/DEATH EXACT PROMPT:\nCreate a matching production 2D RPG hit and death sprite atlas from the FIRST attached original bugbear portrait, using the second attached main atlas for exact character style/scale/palette consistency. Transparent RGBA with no shadow/background/particles. Exactly EIGHT COLUMNS and FIVE ROWS = 40 completely separate articulated poses. Each full body and club occupies at most 45% of its cell with large empty gutters, no clipped/overlapping pixels. Preserve pale bald pot-bellied heavy ogre with small blunt head, reddish brown waistcloth and original blue-gray spiked club, bare feet. No armor/fur/axe. Eight column directions: E true RIGHT PROFILE, SE front-right, S DIRECT FRONT, SW front-left, W true LEFT PROFILE, NW BACK-left, N FULL BACK no face, NE BACK-right. Keep torso and face compass in every row; falling does not turn to another camera view. Rows 1 pronounced incoming-hit flinch/recoil, 2 distinct recovering flinch, 3 death knees buckling/body slumping, 4 falling forwards close to ground with limbs connected, 5 final completely collapsed dead body and original club beside hand. All 40 poses truly different articulated limbs/torso, not scaled/translated duplicates. Exact original game portrait anatomy, face, colors and equipment. N and rear columns show bald back of head/back, no belly or face.",
+  "prompt_record_kind": "exact_final_prompts; preceding original-reference generation retained in recipe history",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/bugbear/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/bugbear/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Verified source 45223.png retains bald pale pot-bellied body, reddish waistcloth, bare feet and its blue-gray spiked club. Eight frontal/profile/rear views, alternating steps, club windup/contact/recovery, hit and connected three-stage collapse. No invented bear fur, armor or axe. Original portrait bytes stay unchanged."
+  },
+  "authoring_history": [
+    {
+      "prompt": "Create a complete production 2D isometric RPG animation atlas STRICTLY based on the specified ORIGINAL character in the attached reference. Preserve its design, silhouette, proportions, palette, face, equipment and anatomy. Same detailed painted game-sprite style and elevated isometric viewpoint. Fully transparent RGBA background. EXACTLY EIGHT COLUMNS and THIRTEEN ROWS = 104 separate whole articulated poses. Each complete character must occupy at most 50 percent of cell width and height. Leave large fully transparent gutters at least 25 pixels all around each pose and outer border, never touch neighbors or crop body. Exact column direction order E, SE, S, SW, W, NW, N, NE. E strict right profile, SE front-right, S DIRECT FRONT toward viewer, SW front-left, W strict left profile, NW back-left, N FULL BACK no face visible, NE back-right. Retain these compass views in every action. Rows exactly: 1 neutral idle; 2 visibly different breathing idle; 3 locomotion phase one; 4 locomotion phase two; 5 locomotion phase three; 6 attack windup; 7 attack CONTACT in facing direction; 8 attack recovery; 9 hit recoil; 10 hit recovery; 11 death begins; 12 falling close to ground; 13 final flat collapsed recognizable body. All 104 poses must be physically articulated and distinct, not repeated or merely translated. Keep body scale consistent throughout. No captions, grid lines, scenes, cast shadows or disconnected particles. Animate ONLY the exact original BUGBEAR in the attached portrait: a bald pale fleshy heavy pot-bellied ogre with a small head, muscular thick arms, bare huge belly and chest, reddish brown waist wrap/loincloth, bare broad feet, and the original heavy blue-gray dark spiked club held low. Preserve its old-game portrait proportions and specific blunt face. No fur, bear ears, armor, helmet, new axe or new costume. The black portrait background and floor shadow must not appear in the transparent atlas. It walks with wide planted feet and swaying weight; attack raises its original spiked club, swings it toward the facing direction at contact, then brings it back. Preserve the club shape and actual hand grip across poses. N shows back of bald head, broad fleshy back and rear waistcloth, with club clearly attached to its hand on its anatomical side. Hit flinches upper body, death buckles onto knees, then falls forward/on side with club beside attached hand. Keep all limbs and weapon inside each cell.",
+      "output_path": "/workspace/generated_images/exec-b3fc98c6-dc0e-49eb-9ca6-79b961eec239.png"
+    },
+    {
+      "prompt": "Re-author production game sprites from the attached ORIGINAL character. Produce EXACTLY 8 COLUMNS by 8 ROWS, 64 total articulated poses, not 12 or 13 rows. Transparent RGBA. Keep full character including weapon or base at MOST 45 percent of its cell in both axes, with very large empty transparent gutters; no overlaps or clipping. Rows: 1 idle neutral, 2 clearly different idle breathing, 3 first locomotion step, 4 passing movement phase, 5 opposite locomotion step, 6 ATTACK WINDUP, 7 ATTACK CONTACT, 8 ATTACK RECOVERY. Every pose genuinely articulated, never repeated or merely translated. Columns exactly E, SE, S, SW, W, NW, N, NE in every row: true right profile, front-right, direct FRONT, front-left, true left profile, back-left, FULL BACK no face, back-right. Strict elevated isometric small painted 2D RPG art matching the ORIGINAL. No labels/grids/background/particles/cast shadows. Preserve identical anatomy, colors, size and character identity across all poses. Use only this exact original bald pale pot-bellied BUGBEAR with small blunt head, big bare fleshy torso, reddish brown loincloth, bare feet and original blue-gray spiked heavy club in its same anatomical hand. Preserve face, bald head, body, waistcloth and club design. No fur/armor/axe. Exclude black background/shadow. Important: E and W must be TRUE SIDE PROFILES, one side of belly and one profile eye only, NOT three-quarter front/rear. S sees belly directly frontally. SW points front-left and is visibly different from W side. N sees back of head and broad back. Movement has distinct leg steps. Attack winds original club overhead, CONTACT strikes in column direction (S DOWN toward viewer/bottom, N UP away toward top, E RIGHT, W LEFT); recover club back. Do NOT let S swing horizontally sideways or W swing backwards.",
+      "output_path": "/workspace/generated_images/exec-1021afce-3f9c-46b9-bf7a-f5a3b73a202c.png"
+    },
+    {
+      "prompt": "Create a matching production 2D RPG hit and death sprite atlas from the FIRST attached original bugbear portrait, using the second attached main atlas for exact character style/scale/palette consistency. Transparent RGBA with no shadow/background/particles. Exactly EIGHT COLUMNS and FIVE ROWS = 40 completely separate articulated poses. Each full body and club occupies at most 45% of its cell with large empty gutters, no clipped/overlapping pixels. Preserve pale bald pot-bellied heavy ogre with small blunt head, reddish brown waistcloth and original blue-gray spiked club, bare feet. No armor/fur/axe. Eight column directions: E true RIGHT PROFILE, SE front-right, S DIRECT FRONT, SW front-left, W true LEFT PROFILE, NW BACK-left, N FULL BACK no face, NE BACK-right. Keep torso and face compass in every row; falling does not turn to another camera view. Rows 1 pronounced incoming-hit flinch/recoil, 2 distinct recovering flinch, 3 death knees buckling/body slumping, 4 falling forwards close to ground with limbs connected, 5 final completely collapsed dead body and original club beside hand. All 40 poses truly different articulated limbs/torso, not scaled/translated duplicates. Exact original game portrait anatomy, face, colors and equipment. N and rear columns show bald back of head/back, no belly or face.",
+      "output_path": "/workspace/generated_images/exec-58a7c0ab-8452-4e75-9606-a57bbe46e24b.png"
+    }
+  ]
+}

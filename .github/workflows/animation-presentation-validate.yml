@@ -150,6 +150,11 @@ jobs:
               succubus-disbelief|original_based_succubus_gameplay_test|불신의 서큐버스|directions
               succubus-dark-queen|original_based_succubus_gameplay_test|암흑의 서큐버스 퀸|directions
               succubus-arrogant-queen|original_based_succubus_gameplay_test|오만한 서큐버스 퀸|directions
+          - group: bugbear-sand-worm-reaper
+            cases: |
+              bugbear|original_based_bugbear_gameplay_test||poses
+              sand-worm|original_based_sand_worm_gameplay_test||poses
+              reaper-male|original_based_reaper_male_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

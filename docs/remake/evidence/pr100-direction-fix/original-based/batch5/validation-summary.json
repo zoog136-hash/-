@@ -1,0 +1,374 @@
+[
+  {
+    "case": "original_based_bugbear_gameplay_test",
+    "actor": "bugbear",
+    "headless": {
+      "checks_in_stdout": 997,
+      "seconds": 28.48296098799983,
+      "direction_cases": 8,
+      "boss_special_cases": 0,
+      "pose_samples": 104,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791901300.3307,
+            "expires_at": 1791901900.3307,
+            "grade": "일반",
+            "hunt_batch": "7ec6014f85a53d2f5f580a6e24bc1141",
+            "id": "4a446ce7ebce0338978b00f6804331df",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 65,
+        "manual_pickup": true,
+        "player_hp": 1796,
+        "weapon_attempts": 2
+      },
+      "incoming": []
+    },
+    "opengl": {
+      "checks_in_stdout": 1110,
+      "seconds": 109.9179955590007,
+      "direction_cases": 8,
+      "boss_special_cases": 0,
+      "pose_samples": 104,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791901571.46,
+            "expires_at": 1791902171.46,
+            "grade": "일반",
+            "hunt_batch": "d43d2056bd92cd13f429b37ee65b8758",
+            "id": "d033b57e13d553cb9b94852d443af14d",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 65,
+        "manual_pickup": true,
+        "player_hp": 1796,
+        "weapon_attempts": 2
+      },
+      "incoming": []
+    }
+  },
+  {
+    "case": "original_based_sand_worm_gameplay_test",
+    "actor": "sand_worm",
+    "headless": {
+      "checks_in_stdout": 2845,
+      "seconds": 72.63355808599954,
+      "direction_cases": 8,
+      "boss_special_cases": 8,
+      "pose_samples": 104,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791901527.50709,
+            "expires_at": 1791902127.50709,
+            "grade": "고급",
+            "hunt_batch": "22df602e51426f916748d384f44f8ecd",
+            "id": "37bbe4a06e0f079f82e4ee65aa6fa5a8",
+            "item_name": "강력 HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          },
+          {
+            "created_at": 1791901527.50815,
+            "expires_at": 1791902127.50815,
+            "grade": "희귀",
+            "hunt_batch": "22df602e51426f916748d384f44f8ecd",
+            "id": "ee125bb0773d49072a4d5300f6d9bc5a",
+            "item_name": "미스릴 원석",
+            "map_id": "aden_world",
+            "position": [
+              15214.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 3200,
+        "manual_pickup": true,
+        "player_hp": 2012,
+        "weapon_attempts": 54
+      },
+      "incoming": []
+    },
+    "opengl": {
+      "checks_in_stdout": 2966,
+      "seconds": 162.65575147100026,
+      "direction_cases": 8,
+      "boss_special_cases": 8,
+      "pose_samples": 104,
+      "failures": [],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1791901959.30839,
+            "expires_at": 1791902559.30839,
+            "grade": "고급",
+            "hunt_batch": "4c7d0e9ff150dfd50331dc072f5d15d0",
+            "id": "a307317d1017a40740fd8ecd6df5f67b",
+            "item_name": "강력 HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              15176.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          },
+          {
+            "created_at": 1791901959.30974,
+            "expires_at": 1791902559.30974,
+            "grade": "희귀",
+            "hunt_batch": "4c7d0e9ff150dfd50331dc072f5d15d0",
+            "id": "f3c70a34fb5801f73273ffe960fd159e",
+            "item_name": "미스릴 원석",
+            "map_id": "aden_world",
+            "position": [
+              15214.0,
+              1680.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 3200,
+        "manual_pickup": true,
+        "player_hp": 2012,
+        "weapon_attempts": 54
+      },
+      "incoming": []
+    }
+  },
+  {
+    "case": "original_based_reaper_male_gameplay_test",
+    "actor": "reaper_male",
+    "headless": {
+      "checks_in_stdout": 1500,
+      "seconds": 36.88751027699982,
+      "direction_cases": 8,
+      "boss_special_cases": 0,
+      "pose_samples": 96,
+      "failures": [],
+      "lifecycle": {},
+      "incoming": [
+        {
+          "compass": "E",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "S",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "W",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "N",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        }
+      ]
+    },
+    "opengl": {
+      "checks_in_stdout": 1427,
+      "seconds": 151.15386744500006,
+      "direction_cases": 8,
+      "boss_special_cases": 0,
+      "pose_samples": 96,
+      "failures": [],
+      "lifecycle": {},
+      "incoming": [
+        {
+          "compass": "E",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "S",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "SW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "W",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NW",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "N",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        },
+        {
+          "compass": "NE",
+          "death_frames": [
+            0,
+            1,
+            2
+          ],
+          "hp_before": 1832,
+          "respawn_hp": 1832
+        }
+      ]
+    }
+  }
+]

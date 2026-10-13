@@ -20,6 +20,14 @@ func lifecycle_attempt_limit() -> int:
 func verify_reference_binding(subject: String, proof: Dictionary) -> Dictionary:
 	var original := str(proof.reference.path)
 	check(FileAccess.get_sha256(original) == str(proof.reference.sha256), "exact original reference bytes remain unchanged")
+	if str(proof.reference.kind) == "existing_project_atlas":
+		var portrait: Texture2D = world._monster_texture(record_for(subject))
+		check(portrait is AtlasTexture, "production portrait retains original project atlas")
+		if portrait is AtlasTexture:
+			var region: Array = proof.reference.region
+			check(portrait.atlas.resource_path == original and portrait.region == Rect2(region[0], region[1], region[2], region[3]), "production portrait retains exact original atlas cell")
+		return {"synthetic_fixture":false, "original":original, "resolved_portrait":original,
+			"reference_kind":"existing_project_atlas", "identity_limit":proof.reference.identity_limit}
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/l1j/live_visual_bindings.json"))
 	var synthetic := bool(manifest.get("synthetic_fixture_only", false))
 	var expected := original
