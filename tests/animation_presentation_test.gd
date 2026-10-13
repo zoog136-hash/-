@@ -151,7 +151,9 @@ func _run() -> void:
 		check(count[0] == 8, "monster attack markers " + record.name)
 		check(mob.position == foot and mob.get_node("CollisionShape2D").transform == shape, "monster visual-only " + record.name)
 		mob.motion.die()
-		mob.motion.advance(.8, Vector2.ZERO)
+		# A native death can still be opaque at its final pose; inspect the
+		# fade after the configured sequence, not a fixed legacy deadline.
+		mob.motion.advance(maxf(.8, mob.motion.profile.death_duration + .1), Vector2.ZERO)
 		mob.motion.apply(mob.sprite, mob.animation_base_scale)
 		check(not mob.motion.active and mob.sprite.modulate.a < 1.0, "monster death " + record.name)
 		report.monsters.append({"name":record.name,"boss":mob.is_boss,"body":mob.motion.profile.body_kind,

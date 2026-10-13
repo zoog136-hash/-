@@ -14,7 +14,9 @@ func _run() -> void:
 	root.add_child(player)
 	await process_frame
 	player.set_physics_process(false)
-	var authored: SpriteFrames = player.class_sprite.sprite_frames.duplicate(true) as SpriteFrames
+	# This fixture exercises the legacy five-frame native resource contract;
+	# the default class now uses real eight-direction tracks in production.
+	var authored: SpriteFrames = CATALOG.frames("res://assets/sprites/classes/warrior.png", "class5").duplicate(true) as SpriteFrames
 	var path: String = "user://authored-frames.tres"
 	check(ResourceSaver.save(authored, path) == OK, "could not save native SpriteFrames fixture")
 	var record: Dictionary = {"sourceId":"fixture", "animation_profile":{

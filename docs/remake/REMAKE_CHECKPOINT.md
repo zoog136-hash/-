@@ -3,8 +3,8 @@
 ## 기준 / 작업 보존
 - 기준 main: `434b904d957fd2146b6d2e73325693a402028035` (2026-10-13 원격 재확인).
 - 작업: `feature/twilight-animation-20261013`, `/workspace/twilight-animation`.
-- 이전 `feature/twilight-remake-20261013`, PR #98, `1216c00756fe602173fb7346a452c9586d9f5754` 및 미커밋 파일은 별도 checkout에 보존. 이 작업에 전투/맵 변경을 가져오지 않음.
-- 신규 PR: 아직 없음. main 병합 금지.
+- 이전 `feature/twilight-remake-20261013`, PR #98, `1216c00756fe602173fb7346a452c9586d9f5754` 및 미커밋 파일은 별도 checkout에 보존. 착수 시 별도로 이식하지 않았으며 이후 main에 병합된 변경은 아래 merge에 포함.
+- PR: [#100](https://github.com/zoog136-hash/-/pull/100), draft. main 병합 금지.
 
 ## 1단계 조사
 - `Main.tscn` → `world.gd` → `player.gd` / `monster.gd` → 기존 `animation_catalog.gd`, `actor_motion.gd`가 실제 표시/공격 마커를 관리.
@@ -31,13 +31,19 @@
 - 사망은 해당 profile의 0.8초 연속 동작 후 fade. 기존 비대상 사망 시간, 판정/드랍/제거 중복 방지 유지. 플레이어는 기존 즉시 부활 + corpse VFX 경로를 그대로 사용함; 부활 전 카메라 정지 연출은 추가하지 않음.
 - 추가 리소스 import를 기다리지 않고 실행한 검사에서 미임포트 PNG 오류가 발생한 기록은 실패로 보존. 120초 import timeout 이후 300초 예산으로 완결. 완결 로그 `import-complete.log` 및 이후 `*-verified.log`의 1,314 assertions / 0 failures, 기존 모션 3종 PASS 확인.
 - `animation_restore_test`, `animation_catalog_test` PASS. 카탈로그 시험은 1방향이라는 과거 가정 대신 실제 새 8방향 5동작 전부를 검증하도록 확장.
-- 현재 전후 동일 장면을 새 카메라 위치로 촬영 중. 전체 외형 확장, Android, 사용자 시각 승인 미완료/미검증.
+- 전후 동일 장면 촬영 및 업로드 완료(아래 최종 기록). 전체 외형 확장, Android, 사용자 시각 승인 미완료/미검증.
 
 ## 최신 main 반영
 - 작업 도중 PR #96/#97/#98이 main `80076490518942647ad538ae440a91a3d3605c7e`에 병합됨. 새 작업 브랜치에 merge하여 기존 작업을 보존. 이번 PR은 #100 (draft).
 - merge commit `5a4a48ef19c67ca781cced2ed3433ac64357162f`: 최신 main 기능 보존 및 애니메이션 1,314 assertions / 타격 lifecycle 158 checks PASS. 최종 Main 영상 23.7초, 711프레임 PASS.
 - 5단계: 알파 여백을 제거해 10장 아틀라스 원시 RGBA 합계 96MiB → 15.516MiB (83.84% 감소). 384프레임의 알파/가시 픽셀 차이 0. 원래 256×256 발 캔버스는 AtlasTexture.margin으로 복원. 실제 프로세스 메모리 피크와는 구분.
-- 새 PNG 재임포트 후 1,314 assertions 재통과. 전달용 clean clone 및 마지막 화면 검증 진행 중.
+- runtime 완료 SHA `fe0cef3` (이후 증거/문서만 추가). 새 PNG 재임포트 후 1,314 assertions 재통과.
+- GitHub clean clone `/workspace/twilight-animation-delivery` 초기 .godot 없음 확인. import 244.949초 / boot 13.536초 / native-frames 0.737초 / restore 16.979초, 모두 종료 0 / ERROR 없음.
+- 마지막 패킹본 Main 실제 화면/녹화 PASS: 23.7초 / 711프레임, 기사 9타격, 해골 AI 공격, 사망/드랍/수동 습득 및 변신 왕복. 렌더 경고는 llvmpipe V-Sync 변경 미지원 1건. 성능 비교용 실행이 아님.
+- 마지막 추가 회귀: `authored_frames_test`, `full_visual_manifest_test` PASS. `animation_presentation_test`의 고정 fade 시점 가정을 새 profile 길이에 맞춘 후 76,231 checks PASS. 0.8초 동작의 마지막 자세를 잘라내어 기존 검사에 맞추지 않음. 초기 실패와 이후 성공 로그 모두 보존.
+- 전후/비교 MP4를 제공된 Drive 폴더에 업로드. 비교 파일 재다운로드 SHA-256 `656c774a6954db430a93b28efce36805b0caec6f9f6e1dcb65b305dda782d83c` 일치. 링크/전체 해시는 `evidence/eight-direction/video-delivery.json`, `video-files.json`. 익명 공개 접근은 미검증.
+- 새 runtime SHA `fe0cef3106442b4369852b08ba82e5e790fa7ecb` 이후 변경은 회귀 fixture 및 증거/문서. 검증 프로세스는 종료되었고 자동 재개 작업은 없음. 원래 checkout의 미커밋 변경을 삭제하거나 초기화하지 않음.
+- 상세 결과/부족 수량/실행 방법: `docs/remake/ANIMATION_REBUILD_REPORT.md`. 다음 실행: Godot 4.7.2로 Main 실행 → 메뉴/변신/고급 흑기사 장착. 전체 확장 전 남은 ID에 맞는 독립 연속 모션 확보 필요. 본체 2종을 다른 ID에 복제하지 않음.
 - 아래는 이전 PR #98 체크포인트 원문 보존 기록이며, 이번 8방향 검증 상태는 위 기록을 따름.
 
 <details><summary>이전 PR #98 기록</summary>
