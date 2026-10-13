@@ -6,7 +6,9 @@
 - 기존 두 본체만 방향별 원본 프레임/장비 layer 순서로 다시 합성. 게임 이동 벡터·판정·공통 재생 코드는 수정하지 않음. 신규 전체 리소스 제작/원본 ZIP 재추출 없음.
 - 수정 전 방향 픽셀 검사 40건 실패 재현. 수정 후 기사 8시점 reference 포함 **1,362 assertions PASS**, 타격 lifecycle 158 / catalog / restore PASS.
 - 최초 import의 sandbox 로컬 TCP 생성 오류를 기록. 네트워크 권한이 제공된 같은 명령에서 import 완료 / ERROR 없음. Daybreak 사용 없음.
-- 실제 Main에서 이동 변위 화살표와 원본 방향 번호를 표시하는 선택적 QA 가이드를 추가. 최종 실제 화면 녹화/검토는 진행 중이며 완료로 간주하지 않음.
+- runtime 완료 SHA `292c80363fbc88d18a004277f740749b86b7fd71`. 실제 Main에서 이동 변위 화살표와 원본 방향 번호를 표시하는 선택적 QA 가이드를 사용해 8방향 화면을 모두 검토. 모션/입력 방향 일치 확인. 몬스터 전수 시각 검증은 아님.
+- 최종 Main 녹화 PASS: 712프레임 / 23.733초, 기사 9타격 / 해골 5타격, 사망·바닥 드랍·수동 습득·변신 왕복. [수정 영상](https://drive.google.com/file/d/1yK6vMn9c8FhdTpnv1Zhr1JcFFmilvcnM/view). 새 리소스 해시·로그는 `evidence/direction-correction/`.
+- 다음 실행: PR #100의 최신 코드를 받아 Godot 4.7.2로 실행 → 고급 흑기사 장착 → WASD/방향키 이동. 현재 수정은 두 기존 본체의 방향 오류이며 전체 외형 확장/Android 검증은 기존 미완료 상태를 유지.
 
 ## 기준 / 작업 보존
 - 기준 main: `434b904d957fd2146b6d2e73325693a402028035` (2026-10-13 원격 재확인).

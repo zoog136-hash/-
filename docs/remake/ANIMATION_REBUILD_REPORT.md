@@ -1,5 +1,19 @@
 # 실제 8방향 스프라이트 재구축 — PR #100
 
+## 후속 수정: 이동과 반대 방향을 바라보는 오류
+
+사용자의 모션 품질에 대한 긍정적인 피드백과 방향 오류 지적을 반영했다. 초기 검토에서 원본 방향을 180도 반대로 해석한 오류가 있었다. 실제 원본 순서는 **W / SW / S / SE / E / NE / N / NW**이고, 게임의 E / SE / S / SW / W / NW / N / NE에는 원본 번호 **4 / 3 / 2 / 1 / 0 / 7 / 6 / 5**를 연결해야 한다.
+
+runtime 수정 SHA **`292c80363fbc88d18a004277f740749b86b7fd71`**에서 기존 두 본체의 5동작을 올바른 방향과 장비 layer 순서로 다시 합성했다. 이동 입력·좌표계·ActorMotion·피해 계산은 바꾸지 않았다. 변환기가 같은 오류를 다시 생성하지 않도록 원본 순서도 고쳤다.
+
+- 수정 전 해골의 방향별 픽셀 reference 40건 실패를 재현했다. 기사 8시점 reference도 추가한 최종 검사 **1,362 assertions PASS**, 기존 타격 lifecycle **158 checks PASS**, catalog / restore PASS.
+- 실제 Main에서 **8방향 이동 화면 모두** 이동 화살표와 몸의 방향이 일치하는 것을 검토했다. 대표 해골 AI 추적/공격, 기사 9타격, 피격·사망·바닥 드랍·수동 습득·변신 왕복도 통과. 몬스터의 전 방향 시각 검증과는 구분한다.
+- [수정 후 실제 게임 영상](https://drive.google.com/file/d/1yK6vMn9c8FhdTpnv1Zhr1JcFFmilvcnM/view): **23.733초 / 712프레임**. 화살표와 방향/원본 번호는 선택적 QA 표시이며 평상시 게임에는 나타나지 않는다.
+- [픽셀 오류 재현·회귀·Main 로그 및 리소스 해시](evidence/direction-correction/) 보존. 처음 import의 sandbox 로컬 TCP 생성 오류는 별도 기록하고, 네트워크 권한이 제공된 실행에서 ERROR 없이 import를 완료했다.
+- 현재 10장 아틀라스의 원시 RGBA 합계는 **15.375MiB**다. 아래의 15.516MiB 측정 및 영상 링크는 방향 수정 전 `fe0cef3`의 기록이다.
+
+아래 초기 기록은 보존한다. 방향 판정과 현재 게임 영상은 이 후속 수정 기록을 기준으로 한다.
+
 이 변경은 **흑기사(변신 ID 46)와 해골 근위병 2본체**의 실제 연속 프레임을 기존 TWILIGHT에 적용한다. 전체 캐릭터/몬스터 완료가 아니다. 최초 main `434b904`에서 시작했고, 작업 중 갱신된 main `8007649`(PR #96/#97/#98)를 보존하여 merge했다. [PR #100](https://github.com/zoog136-hash/-/pull/100)은 `feature/twilight-animation-20261013`의 draft이며 main에 병합하지 않았다. 실제 영상·깨끗한 clone 검증의 runtime SHA는 `fe0cef3106442b4369852b08ba82e5e790fa7ecb`이다.
 
 영상: [전후 나란히 비교](https://drive.google.com/file/d/1SrBIY5QfJRwjnS-Kaxh77tQYIUkCzzMm/view) · [변경 전 전체 화면](https://drive.google.com/file/d/1dTxRtYMemnxMILpLMfpbN9UYM5EkdTRA/view) · [변경 후 전체 화면](https://drive.google.com/file/d/1fdgRWQPNUGajtYQUXXeyQ9m2WTI5PQLK/view). 비교 영상은 같은 실제 Main 녹화의 중앙을 잘라 나란히 놓은 것이며 새 장면이 아니다. 후반 전투의 세부 사건은 각 전체 영상/JSON에서 확인한다.

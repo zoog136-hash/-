@@ -6362,7 +6362,7 @@
     "transform:46": "knight",
     "monster:해골 근위병": "skeleton_guard"
   },
-  "direction_mapping": {"game_order":["E","SE","S","SW","W","NW","N","NE"],"source_order":["W","SW","S","SE","E","NE","N","NW"],"source_indices":[4,3,2,1,0,7,6,5],"correction":"Original direction labels were opposite; runtime art and layer order corrected together."},
+  "direction_mapping": {"game_order":["E","SE","S","SW","W","NW","N","NE"],"source_order":["W","SW","S","SE","E","NE","N","NW"],"source_indices":[4,3,2,1,0,7,6,5],"correction":"Original direction labels were opposite; runtime art and layer order corrected together.","validation":{"player_eight_directions":"actual Main screenshots reviewed","monster_directions":"40 pixel reference checks","monster_combat":"representative actual Main screen reviewed"}},
   "distinct_bodies": 2,
   "directions_per_body": 8,
   "unique_frames_per_direction": {
