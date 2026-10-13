@@ -5,6 +5,8 @@ signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
 signal quickslot_edit_requested(action: String, source_index: int, target: int)
+signal consumable_auto_settings_changed(settings: Dictionary)
+signal consumable_auto_settings_updated(settings: Dictionary)
 
 signal shop_bulk_buy_requested(item_name: String, quantity: int)
 signal reviewed_shop_buy_requested(vendor_id: String, item_name: String, quantity: int)

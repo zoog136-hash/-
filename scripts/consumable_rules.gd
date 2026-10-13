@@ -17,6 +17,9 @@ static func is_removed_item(item_name: String) -> bool:
 	var normalized: String = normalize_name(item_name)
 	return normalized in STATUS_CLEANSERS or normalized.contains("상태이상 해제 물약")
 
+# Cooking extends the historical four-class table to all 13 TWILIGHT jobs
+# by combat role. Values, duration and groups are unchanged. This is local
+# compatibility policy, not verified Korean live eligibility.
 static func records() -> Array[Dictionary]:
 	return [
 		{"name":"드래곤의 루비", "grade":"고급", "type":"축복충전", "slot":"consumable", "kind":"ain_charge", "amount":30,
@@ -41,11 +44,11 @@ static func records() -> Array[Dictionary]:
 		 "kind":"instant_mp", "amount":1000, "cooldown":1800.0,
 		 "desc":"MP 즉시 1000 회복 · 재사용 30분"},
 		{"name":"힘센 한우 스테이크", "grade":"일반", "type":"요리", "slot":"consumable", "kind":"food",
-		 "duration":1800.0, "group":"cooking", "classes":["기사", "군주"],
+		 "duration":1800.0, "group":"cooking", "classes":["기사", "군주", "다크엘프", "투사", "암흑기사", "신성검사", "광전사", "사신", "뇌신", "마검사"],
 		 "buff":{"melee_damage":2, "melee_accuracy":1, "mp_regen_tick":2, "hp_regen_tick":2, "tick_interval":30.0, "mr":10, "damage_reduction":2},
 		 "desc":"지속 시간 1800초 · 근거리 대미지 +2 · 근거리 명중 +1 · HP/MP 회복 틱 +2 · MR +10 · 리덕션 +2"},
 		{"name":"날쌘 연어 찜", "grade":"일반", "type":"요리", "slot":"consumable", "kind":"food",
-		 "duration":1800.0, "group":"cooking", "classes":["요정"],
+		 "duration":1800.0, "group":"cooking", "classes":["요정", "총사"],
 		 "buff":{"ranged_damage":2, "ranged_accuracy":1, "mp_regen_tick":2, "hp_regen_tick":2, "tick_interval":30.0, "mr":10, "damage_reduction":2},
 		 "desc":"지속 시간 1800초 · 원거리 대미지 +2 · 원거리 명중 +1 · HP/MP 회복 틱 +2 · MR +10 · 리덕션 +2"},
 		{"name":"영리한 칠면조 구이", "grade":"일반", "type":"요리", "slot":"consumable", "kind":"food",

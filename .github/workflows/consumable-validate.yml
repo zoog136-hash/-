@@ -1,70 +1,117 @@
-name: Twilight Consumable Integration
+name: Consumable Validate
 
 on:
+  push:
+    paths:
+      - 'scripts/consumable_rules.gd'
+      - 'scripts/consumable_service.gd'
+      - 'scripts/consumable_auto_policy.gd'
+      - 'scripts/equipment_blessing.gd'
+      - 'scripts/world.gd'
+      - 'scripts/hud.gd'
+      - 'scripts/ui/consumable_auto_settings.gd'
+      - 'scripts/ui/renewal_settings.gd'
+      - 'scripts/ui/renewal_hud.gd'
+      - 'scripts/ui/lineage_inventory_ui.gd'
+      - 'scripts/ui/renewal_inventory.gd'
+      - 'tests/consumable_smoke_test.gd'
+      - 'tests/consumable_auto_safety_test.gd'
+      - 'tests/per_instance_enchantments_smoke_test.gd'
+      - 'tests/equipment_blessing_smoke_test.gd'
+      - '.github/workflows/consumable-validate.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'scripts/world.gd'
       - 'scripts/consumable_rules.gd'
       - 'scripts/consumable_service.gd'
+      - 'scripts/consumable_auto_policy.gd'
       - 'scripts/equipment_blessing.gd'
+      - 'scripts/world.gd'
+      - 'scripts/hud.gd'
+      - 'scripts/ui/consumable_auto_settings.gd'
+      - 'scripts/ui/renewal_settings.gd'
+      - 'scripts/ui/renewal_hud.gd'
       - 'scripts/ui/lineage_inventory_ui.gd'
       - 'scripts/ui/renewal_inventory.gd'
-      - 'tests/equipment_blessing_smoke_test.gd'
       - 'tests/consumable_smoke_test.gd'
+      - 'tests/consumable_auto_safety_test.gd'
       - 'tests/per_instance_enchantments_smoke_test.gd'
-      - 'scripts/hud.gd'
+      - 'tests/equipment_blessing_smoke_test.gd'
       - '.github/workflows/consumable-validate.yml'
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: consumable-validate-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   consumables:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 24
     steps:
       - uses: actions/checkout@v4
-      - name: Install Godot 4.7.2
+        with:
+          persist-credentials: false
+      - name: Resource integrity before tests
         run: |
-          curl -L --fail --retry 3 -o godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
-          unzip -q godot.zip
-          chmod +x Godot_v4.7.2-stable_linux.x86_64
-      - name: Parse all scripts
-        shell: bash
+          set -euo pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee consumable-integrity-before.log
+      - name: Install Godot
         run: |
-          set -o pipefail
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee consumable-parse.log
-          if grep -E "SCRIPT ERROR:|ERROR:" consumable-parse.log; then exit 1; fi
-      - name: Run consumables integration smoke
-        shell: bash
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/consumable-godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/consumable-godot.zip -d /tmp/consumable-godot
+          chmod +x /tmp/consumable-godot/Godot_v4.7.2-stable_linux.x86_64
+          echo "GODOT_BIN=/tmp/consumable-godot/Godot_v4.7.2-stable_linux.x86_64" >> "$GITHUB_ENV"
+      - name: Import real project
         run: |
-          set -o pipefail
-          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-consumable-test"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/consumable_smoke_test.gd 2>&1 | tee consumable-smoke.log
-          if grep -E "SCRIPT ERROR:|ERROR:|CONSUMABLE FAIL:|CONSUMABLE_SMOKE_FAILED" consumable-smoke.log; then exit 1; fi
-          grep -q "CONSUMABLE_SMOKE_OK" consumable-smoke.log
-      - name: Run per-instance enchantment regression
-        shell: bash
+          set -euo pipefail
+          git rev-parse HEAD | tee consumable-tested-sha.txt
+          timeout 420 "$GODOT_BIN" --headless --editor --path . --quit 2>&1 | tee consumable-import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|Parse Error|Failed to load script' consumable-import.log; then exit 1; fi
+      - name: Automatic use, all-class cooking and saved settings
         run: |
-          set -o pipefail
-          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-instance-enchants"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/per_instance_enchantments_smoke_test.gd 2>&1 | tee per-instance-smoke.log
-          if grep -E "SCRIPT ERROR:|ERROR:|PER_INSTANCE_FAIL:|PER_INSTANCE_ENCHANTMENTS_FAILED" per-instance-smoke.log; then exit 1; fi
-          grep -q "PER_INSTANCE_ENCHANTMENTS_OK" per-instance-smoke.log
-      - name: Run equipment blessing regression
-        shell: bash
+          set -euo pipefail
+          export XDG_DATA_HOME="$RUNNER_TEMP/consumable-auto-safety-user-data"
+          timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/consumable_auto_safety_test.gd 2>&1 | tee consumable-auto-safety.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE_AUTO_FAIL|CONSUMABLE_AUTO_SAFETY_FAILED' consumable-auto-safety.log; then exit 1; fi
+          grep -q 'CONSUMABLE_AUTO_SAFETY_OK:' consumable-auto-safety.log
+      - name: Existing consumable acceptance smoke
         run: |
-          set -o pipefail
-          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-equipment-blessing"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/equipment_blessing_smoke_test.gd 2>&1 | tee blessing-smoke.log
-          if grep -E "SCRIPT ERROR:|ERROR:|BLESSING FAIL:|EQUIPMENT_BLESSING_SMOKE_FAILED" blessing-smoke.log; then exit 1; fi
-          grep -q "EQUIPMENT_BLESSING_SMOKE_OK" blessing-smoke.log
-      - name: Upload smoke test logs
+          set -euo pipefail
+          export XDG_DATA_HOME="$RUNNER_TEMP/consumable-smoke-user-data"
+          timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/consumable_smoke_test.gd 2>&1 | tee consumable-smoke.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|CONSUMABLE FAIL|CONSUMABLE_SMOKE_FAILED' consumable-smoke.log; then exit 1; fi
+          grep -q 'CONSUMABLE_SMOKE_OK' consumable-smoke.log
+      - name: Per-instance enchantment regression
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$RUNNER_TEMP/consumable-instance-enchants-user-data"
+          timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/per_instance_enchantments_smoke_test.gd 2>&1 | tee consumable-per-instance.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|PER_INSTANCE_FAIL:|PER_INSTANCE_ENCHANTMENTS_FAILED' consumable-per-instance.log; then exit 1; fi
+          grep -q 'PER_INSTANCE_ENCHANTMENTS_OK' consumable-per-instance.log
+      - name: Equipment blessing regression
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="$RUNNER_TEMP/consumable-equipment-blessing-user-data"
+          timeout 240 "$GODOT_BIN" --headless --path . --script res://tests/equipment_blessing_smoke_test.gd 2>&1 | tee consumable-blessing.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|BLESSING FAIL:|EQUIPMENT_BLESSING_SMOKE_FAILED' consumable-blessing.log; then exit 1; fi
+          grep -q 'EQUIPMENT_BLESSING_SMOKE_OK' consumable-blessing.log
+      - name: Resource integrity after tests
+        run: |
+          set -euo pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee consumable-integrity-after.log
+          git diff --exit-code
+      - name: Preserve validation evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: consumable-test-logs-${{ github.sha }}
+          name: consumable-validation-${{ github.event_name }}-${{ github.sha }}
           path: |
             consumable-*.log
-            per-instance-*.log
-            blessing-*.log
-          if-no-files-found: ignore
+            consumable-tested-sha.txt
+          if-no-files-found: warn
+          retention-days: 14

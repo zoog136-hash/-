@@ -58,6 +58,7 @@ var presentation_settings: Dictionary = {"impact_intensity":0.85, "reduced_motio
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
+const CONSUMABLE_AUTO = preload("res://scripts/consumable_auto_policy.gd")
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
@@ -295,6 +296,8 @@ func _ready() -> void:
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
 	_connect_signals()
+	if hud.has_signal("consumable_auto_settings_changed"):
+		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
 	_setup_collision_tileset()
 	_setup_field_services()
 	hud.refresh_maps(maps)
@@ -3832,6 +3835,7 @@ func _load_game(quiet: bool) -> void:
 		job_class = "기사"
 	var saved_ui: Variant = data.get("ui_preferences", {})
 	ui_preferences = saved_ui.duplicate(true) if saved_ui is Dictionary else {}
+	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
 	for key: String in ["quickslot_pages","edited_quickslots","item_locks"]:
 		if not ui_preferences.get(key) is Dictionary: ui_preferences[key] = {}
 	var quickslots_value: Variant = data.get("quickslots", quickslots)
@@ -3904,6 +3908,7 @@ func _load_game(quiet: bool) -> void:
 	_update_job_skillbar()
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	_update_hud()
+	_emit_consumable_auto_settings()
 	if not quiet:
 		hud.show_message("불러오기 완료")
 
@@ -4383,25 +4388,55 @@ func _on_quickslot_edit_requested(action: String, source_index: int, target: int
 	_update_hud()
 	_save_game(true)
 
+func get_consumable_auto_settings() -> Dictionary:
+	return CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
+
+func set_consumable_auto_settings(settings: Dictionary) -> void:
+	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(settings)
+	auto_item_clock = 0.0
+	_emit_consumable_auto_settings()
+	_save_game(true)
+
+func _emit_consumable_auto_settings() -> void:
+	if is_instance_valid(hud) and hud.has_signal("consumable_auto_settings_updated"):
+		hud.emit_signal("consumable_auto_settings_updated", get_consumable_auto_settings())
+
 func _run_auto_item_quickslots(delta: float) -> void:
 	auto_item_clock -= delta
-	if auto_item_clock > 0 or hp <= 0 or player.is_stunned() or player.is_feared(): return
+	if auto_item_clock > 0 or hp <= 0 or player.is_stunned() or player.is_feared():
+		return
 	auto_item_clock = 0.2
-	for entry: Dictionary in quickslots:
-		if entry.get("kind","") != "item" or not bool(entry.get("auto",false)): continue
-		var item: String = str(entry.get("id",""))
-		if int(inventory.get(item,0)) <= 0 or float(item_use_cooldowns.get(item,0)) > 0: continue
+	var settings: Dictionary = get_consumable_auto_settings()
+	var candidates: Array[Dictionary] = []
+	var seen: Dictionary = {}
+	for value: Variant in quickslots:
+		if not value is Dictionary:
+			continue
+		var entry: Dictionary = value as Dictionary
+		if entry.get("kind", "") != "item" or not bool(entry.get("auto", false)):
+			continue
+		var item: String = str(entry.get("id", ""))
+		if seen.has(item) or int(inventory.get(item, 0)) <= 0 or float(item_use_cooldowns.get(item, 0)) > 0:
+			continue
+		seen[item] = true
 		var record: Dictionary = _find_catalog_item_record(item)
 		var spec: Dictionary = CONSUMABLE_RULES.definition(item)
-		var wanted: bool = int(record.get("heal",0)) > 0 and hp < _effective_max_hp()
-		if spec.get("kind","") == "instant_mp": wanted = mp < _effective_max_mp()
-		if spec.get("kind","") in ["regen","food","buff"]:
-			wanted = not active_item_buffs.has(item)
-			for buff: Dictionary in active_item_buffs.values():
-				if not str(spec.get("group","")).is_empty() and buff.get("group","") == spec.group: wanted = false
-		if wanted and _quickslot_auto_allowed(entry):
+		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, _effective_max_hp(), mp, _effective_max_mp(), job_class, active_item_buffs):
+			continue
+		if not _quickslot_auto_allowed(entry):
+			continue
+		candidates.append({"item":item, "priority":CONSUMABLE_AUTO.priority(record, spec)})
+	# One successful consumption per interval. HP first; slot order within
+	# each class is preserved. A refused item cannot starve later slots.
+	for priority: int in range(3):
+		for candidate: Dictionary in candidates:
+			if int(candidate.priority) != priority:
+				continue
+			var item: String = str(candidate.item)
+			var before: int = int(inventory.get(item, 0))
 			_use_quickslot_item(item)
-			return
+			if int(inventory.get(item, 0)) < before:
+				return
 
 func _on_self_mode_changed(enabled: bool) -> void:
 	self_mode_enabled = enabled
