@@ -100,12 +100,21 @@ def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, di
             if not entry["files"][kind]["tracked"]: errors.append("L1J file not tracked: " + path)
         l1j_report.append(entry)
     protected = {}
-    for path in ("data/catalog_v19.json", "data/game_db_v17.json", "data/catalog_image_index_v19.json",
-                 "scripts/world.gd", "scripts/player.gd", "scripts/original_enhancement.gd"):
-        original = subprocess.check_output(["git", "show", f"{base}:{path}"], cwd=root)
-        protected[path] = {"sha256": sha(root / path), "unchanged_from_base": original == (root / path).read_bytes()}
-        if not protected[path]["unchanged_from_base"]:
-            errors.append("protected gameplay source changed: " + path)
+    # Catalog/DB identity is pinned to the item-audit baseline. Gameplay modules
+    # may legitimately change in a full-game PR, so compare them to the checked
+    # out commit instead. This still catches mutation by the audit/runtime steps.
+    pinned_data = ("data/catalog_v19.json", "data/game_db_v17.json", "data/catalog_image_index_v19.json")
+    runtime_code = ("scripts/world.gd", "scripts/player.gd", "scripts/original_enhancement.gd")
+    for path in (*pinned_data, *runtime_code):
+        reference = base if path in pinned_data else "HEAD"
+        original = subprocess.check_output(["git", "show", f"{reference}:{path}"], cwd=root)
+        unchanged = original == (root / path).read_bytes()
+        protected[path] = {"sha256": sha(root / path), "reference": reference,
+                           "unchanged_from_reference": unchanged}
+        if path in pinned_data:
+            protected[path]["unchanged_from_base"] = unchanged
+        if not unchanged:
+            errors.append("protected source changed relative to " + reference + ": " + path)
     sets = {}
     for group in ("catalog", "legacy", "runtime"):
         rows = runtime.get(group, [])

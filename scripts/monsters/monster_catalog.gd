@@ -4,6 +4,15 @@ class_name TwilightMonsterCatalog
 const CATALOG_PATH = "res://data/monsters/monster_world_catalog.json"
 const SPAWN_PATH = "res://data/monsters/world_spawn_profiles.json"
 const RELAYOUT = preload("res://scripts/monsters/renewed_map_spawns.gd")
+# These dedicated field encounters were added by the renewed placement layer.
+# Reuse supported local boss attacks, without changing base HP, loot or visuals.
+# These are local adaptations, not claims about verified original-game skills.
+const DEDICATED_BOSS_SPECIALS: Dictionary = {
+	"흑장로": {"kind":"beam", "cooldown":12.0, "windup":1.15, "radius":220.0,
+		"multiplier":1.6, "label":"직선 마법", "evidence":"local_adaptation_not_verified_original_skill"},
+	"데스나이트": {"kind":"charge", "cooldown":12.0, "windup":1.15, "radius":220.0,
+		"multiplier":1.6, "label":"돌진", "evidence":"local_adaptation_not_verified_original_skill"},
+}
 static var catalog: Dictionary = {}
 static var spawn_profiles: Dictionary = {}
 static var records_by_name: Dictionary = {}
@@ -31,7 +40,17 @@ static func expand(original: Array) -> Array:
 		result.append(record)
 		by_name[str(record.name)] = record
 	records_by_name = {}
-	for record: Dictionary in result: records_by_name[str(record.name)] = record
+	for record: Dictionary in result:
+		var name: String = str(record.name)
+		if DEDICATED_BOSS_SPECIALS.has(name):
+			var ai: Dictionary = record.get("ai", {}).duplicate(true)
+			if not ai.has("special"):
+				var special: Dictionary = DEDICATED_BOSS_SPECIALS[name].duplicate(true)
+				special["element"] = str(record.get("attack_element", "physical"))
+				ai["special"] = special
+			record["ai"] = ai
+			record["is_boss"] = true
+		records_by_name[name] = record
 	return result
 
 static func apply_map(definition: Dictionary) -> Dictionary:
@@ -58,6 +77,13 @@ static func apply_map(definition: Dictionary) -> Dictionary:
 	# Resolve against the current map, not the historical coordinate tables.
 	result = RELAYOUT.apply(result, spawn_profiles.maps, records_by_name)
 	for spawn: Dictionary in result.monster_spawn:
+		if str(spawn.get("mode", "normal")) == "boss":
+			# Additional encounters must satisfy the same schema as catalog bosses.
+			spawn["map_id"] = str(result.map_id)
+			var verification: Dictionary = spawn.get("verification_status", {}).duplicate(true)
+			if not verification.has("exact_spawn_area"):
+				verification["exact_spawn_area"] = "unverified"
+			spawn["verification_status"] = verification
 		if str(spawn.get("mode", "normal")) == "dense":
 			var a: Array = spawn.rect
 			# Safe zones keep priority; dense UI wins over broad combat regions.

@@ -235,7 +235,7 @@ def add_map(file, roster, boss, source, level, special, dense=False, note=''):
         base=next((r for r in regions if r['id']=='room_4'),regions[0]);rect=base['rect'];cx=rect[0]+rect[2]/2;cy=rect[1]+rect[3]/2
         dense_region=dict(base,id='dense_hotspot',rect=[cx-224,cy-224,448,448],mode='dense',
                           monster_types=roster[:],weights=[3]+[1]*(len(roster)-1),max_count=24,respawn_time=7,
-                          spawn_radius=220,roaming_radius=70,activation_distance=1900,min_spacing=38,
+                          spawn_radius=(240 if file in {'oman_03', 'oman_07'} else 220),roaming_radius=70,activation_distance=1900,min_spacing=38,
                           source_hotspot='oman_low' if file=='oman_03' else 'local_layout_of_documented_hotspot',
                           density=119.58)
         dense_region['level']=[min(int(records[n].get('lv',level)) for n in roster),max(int(records[n].get('lv',level)) for n in roster)]

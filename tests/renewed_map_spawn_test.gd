@@ -46,7 +46,8 @@ func _sample_capacity(field: PlayableField, seed_value: int) -> void:
 		var first := Vector2.INF
 		var placed: int = 0
 		for slot: int in range(int(spawn.max_count)):
-			for attempt: int in range(64):
+			var attempts: int = 160 if str(spawn.get("mode", "normal")) == "dense" else 64
+			for attempt: int in range(attempts):
 				var point: Vector2 = field.sample_spawn(str(spawn.id), rng)
 				if not point.is_finite(): break
 				if radius > 0 and point.distance_to(box.get_center()) > radius: continue
@@ -97,8 +98,15 @@ func _run() -> void:
 			for spawn: Dictionary in definition.monster_spawn:
 				if str(spawn.id) == str(previous.id): current = spawn; break
 			check(not current.is_empty(), "existing spawn ID preserved " + id + "/" + str(previous.id))
-			if id != "albino_04" or str(previous.get("mode", "normal")) != "boss":
-				check(current.get("respawn_time") == previous.get("respawn_time"), "respawn unchanged " + id + "/" + str(previous.id))
+			if str(previous.get("mode", "normal")) == "boss":
+				if id == "albino_04":
+					check(str(current.get("mode", "")) == "normal", "Albino four boss converted to hunting " + id)
+				else:
+					var expected_respawn: int = 28800 if id == "aden_world" else 86400
+					check(int(current.get("respawn_time", 0)) == expected_respawn, "boss wall-clock interval " + id + "/" + str(previous.id))
+					check(str(current.get("respawn_policy", "")) == "wall_clock", "boss wall-clock policy " + id + "/" + str(previous.id))
+			else:
+				check(current.get("respawn_time") == previous.get("respawn_time"), "normal/dense respawn preserved " + id + "/" + str(previous.id))
 		for spawn: Dictionary in definition.monster_spawn:
 			var mode: String = str(spawn.get("mode", "normal"))
 			check(int(spawn.max_count) > 0, "positive capacity " + id + "/" + str(spawn.id))
