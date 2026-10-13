@@ -1,6 +1,6 @@
 extends "res://scripts/hud_v20.gd"
 
-# ISOLATED PLAYTEST BUILD ONLY: remove these debug signals before production.
+# Debug-build tools. Requests are also checked by the authoritative world.
 signal playtest_catalog_grant_requested(item_name: String, amount: int)
 signal playtest_catalog_variant_grant_requested(source_id: String, amount: int)
 signal playtest_aden_grant_requested
@@ -222,6 +222,30 @@ func blocks_keyboard_input() -> bool:
 		if dialog.name == "TwilightConfirmation" and dialog.visible: return true
 	return false
 
+func blocks_world_input(point: Vector2) -> bool:
+	# Native ScreenTouch may reach _unhandled_input on passive panel areas.
+	# Use the same canvas and clipping coordinates as the real controls so
+	# responsive shelves and dragged windows cannot issue a world destination.
+	return _control_blocks_world_input($Root,point)
+
+func _control_blocks_world_input(node: Node, point: Vector2) -> bool:
+	if node is Control:
+		var control: Control = node
+		if not control.is_visible_in_tree() or control.is_queued_for_deletion(): return false
+		var local: Vector2 = control.get_global_transform_with_canvas().affine_inverse()*point
+		var inside: bool = Rect2(Vector2.ZERO,control.size).has_point(local)
+		if control.clip_contents and not inside: return false
+		if inside and control.mouse_filter != Control.MOUSE_FILTER_IGNORE: return true
+	for child: Node in node.get_children():
+		# SubViewport content is rendered into a parent Control; its internal
+		# coordinates do not belong to the world viewport.
+		if child is Viewport: continue
+		if _control_blocks_world_input(child,point): return true
+	return false
+
+func playtest_tools_enabled() -> bool:
+	return OS.is_debug_build()
+
 func _panel_style(alpha: float = .9, radius: int = 3, border: Color = UI.BRONZE) -> StyleBoxFlat:
 	var s := UI.box(Color(.035,.045,.055,alpha),border,7)
 	s.set_corner_radius_all(radius)
@@ -428,8 +452,11 @@ func _build_v20_message_and_log() -> void:
 	log_label.add_theme_stylebox_override("normal",clear_panel)
 	log_label.add_theme_stylebox_override("focus",clear_panel)
 	log_label.add_theme_color_override("default_color",Color("ebdcbd"))
-	log_label.add_theme_font_size_override("normal_font_size",11)
-	log_label.modulate.a = .82
+	log_label.add_theme_font_size_override("normal_font_size",12)
+	log_label.add_theme_color_override("font_shadow_color",Color(0,0,0,.95))
+	log_label.add_theme_constant_override("shadow_offset_x",1)
+	log_label.add_theme_constant_override("shadow_offset_y",1)
+	log_label.modulate.a = 1.0
 
 func _fit_hud() -> void:
 	if v20_layer == null: return
@@ -562,6 +589,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 	for index: int in range(quickslot_icons.size()):
 		var button: Button = v20_quickslot_buttons[index]
 		var absolute: int = quickslot_index(index)
+		UI.clear_item_visual(quickslot_icons[index])
 		quickslot_icons[index].texture = null
 		quickslot_captions[index].text = ""
 		quickslot_auto_badges[index].text = ""
@@ -575,7 +603,7 @@ func _render_quickslots(inventory: Dictionary,_buffs: Dictionary) -> void:
 		var id: String = str(entry.get("id",""))
 		button.tooltip_text = id+" · 아래로 끌기: AUTO / 위로 끌기: 해제"
 		if entry.get("kind","") == "item":
-			quickslot_icons[index].texture = UI.item_icon(lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}))
+			UI.apply_item_visual(quickslot_icons[index],lineage_inventory_ui._find_item_record(id),id,item_image_index.get("아이템",{}),"quickslot")
 			quickslot_captions[index].text = str(int(inventory.get(id,0)))
 			quickslot_icons[index].modulate = Color.WHITE if int(inventory.get(id,0)) > 0 else Color(.4,.4,.4)
 		else:
@@ -624,6 +652,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _close_workspace() -> void:
 	if class_picker_initial:
 		return
+	catalog_icon_generation += 1
 	if workspace != null and workspace.visible:
 		navigation_memory.capture(active_section,workspace.content)
 	if not switching_workspace:
@@ -1011,7 +1040,7 @@ func open_catalog(category: String) -> void:
 	for grant: Button in playtest_scroll_buttons:
 		grant.visible = category == "아이템"
 	catalog_clear_button.visible = category != "아이템"
-	catalog_test_toggle.visible = category == "아이템"
+	catalog_test_toggle.visible = category == "아이템" and playtest_tools_enabled()
 	catalog_test_tools.hide()
 	catalog_test_toggle.button_pressed = false
 	_refresh_catalog_list("")
@@ -1173,18 +1202,18 @@ func _build_catalog_panel() -> void:
 	catalog_test_tools.name = "CatalogTestTools"
 	right.add_child(catalog_test_tools)
 	catalog_test_tools.hide()
-	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled)
-	catalog_test_tools.add_child(UI.label("테스트 전용 · 정식 게임에서는 제거",11,UI.GOLD))
+	catalog_test_toggle.toggled.connect(func(enabled: bool) -> void: catalog_test_tools.visible = enabled and playtest_tools_enabled())
+	catalog_test_tools.add_child(UI.label("개발 빌드 전용 지급 도구",11,UI.GOLD))
 	playtest_grant_button = UI.button("선택 아이템 1개 임시 지급",_request_playtest_catalog_grant,Vector2(0,42))
 	playtest_grant_button.name = "PlaytestGrantSelected"
 	catalog_test_tools.add_child(playtest_grant_button)
-	playtest_aden_button = UI.button("아데나 1억 맞추기",func() -> void: playtest_aden_grant_requested.emit(),Vector2(0,42))
+	playtest_aden_button = UI.button("아데나 1억 맞추기",_request_playtest_aden,Vector2(0,42))
 	playtest_aden_button.name = "PlaytestAden"
 	catalog_test_tools.add_child(playtest_aden_button)
 	for scroll: String in ["무기 마법 주문서 (각인)","갑옷 마법 주문서 (각인)","장신구 마법 주문서 (각인)"]:
 		var grant_name: String = scroll
 		var grant := UI.button("테스트 " + grant_name.replace(" (각인)","") + " ×10",func() -> void:
-			playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
+			if playtest_tools_enabled(): playtest_catalog_grant_requested.emit(grant_name,10),Vector2(0,39))
 		grant.name = "PlaytestScroll" + str(playtest_scroll_buttons.size())
 		catalog_test_tools.add_child(grant)
 		playtest_scroll_buttons.append(grant)
@@ -1334,6 +1363,7 @@ func _refresh_catalog_list(filter_text: String) -> void:
 	_apply_catalog_page()
 
 func _apply_catalog_page() -> void:
+	UI.clear_item_visual(catalog_preview)
 	catalog_icon_generation += 1
 	var request_id: int = catalog_icon_generation
 	super._apply_catalog_page()
@@ -1373,13 +1403,16 @@ func _fill_catalog_page_icons(request_id: int) -> void:
 			await get_tree().process_frame
 
 func _request_playtest_catalog_grant() -> void:
-	if catalog_category != "아이템" or selected_catalog_record.is_empty():
+	if not playtest_tools_enabled() or catalog_category != "아이템" or selected_catalog_record.is_empty():
 		return
 	var source_id: String = str(selected_catalog_record.get("sourceId", ""))
 	if source_id != "":
 		playtest_catalog_variant_grant_requested.emit(source_id, 1)
 	else:
 		playtest_catalog_grant_requested.emit(str(selected_catalog_record.get("name", "")), 1)
+
+func _request_playtest_aden() -> void:
+	if playtest_tools_enabled(): playtest_aden_grant_requested.emit()
 
 func _catalog_variant_count(item_name: String) -> int:
 	return int(catalog_variant_counts.get(item_name, 0))
@@ -1405,6 +1438,7 @@ func _catalog_pinned_instance_id(record: Dictionary) -> String:
 	return ""
 
 func _on_catalog_item_selected(index: int) -> void:
+	UI.clear_item_visual(catalog_preview)
 	super._on_catalog_item_selected(index)
 	if selected_catalog_record.is_empty():
 		if playtest_grant_button != null: playtest_grant_button.disabled = true
@@ -1420,9 +1454,9 @@ func _on_catalog_item_selected(index: int) -> void:
 		option_lines.append("• "+UI.safe(option)+CARD_OPTION_VISIBILITY.suffix(catalog_category,option,selected_catalog_record))
 	catalog_detail.text = "[font_size=18][b]%s[/b][/font_size]\n%s\n\n%s" % [UI.safe(item_name),UI.safe(selected_catalog_record.get("type","")),"\n".join(option_lines) if not option_lines.is_empty() else UI.safe(selected_catalog_record.get("desc",""))]
 	if catalog_category == "아이템":
-		var selected_texture: Texture2D = UI.item_icon(selected_catalog_record, item_name, item_image_index.get("아이템", {}))
-		if selected_texture != null:
-			catalog_preview.texture = selected_texture
+		UI.apply_item_visual(catalog_preview,selected_catalog_record,item_name,item_image_index.get("아이템",{}),"detail")
+		if catalog_preview.get_meta("item_visual",{}).get("status","") == "self_authored_substitute":
+			catalog_detail.text += "\n대체 아이콘 ◇"
 	catalog_detail.text="[color=#%s]%s[/color]\n%s" % [UI.grade(grade_name).to_html(false),UI.safe(grade_name),catalog_detail.text]
 	if catalog_category=="아이템":
 		var owned := int(lineage_inventory_ui.inventory.get(item_name,0)) if lineage_inventory_ui!=null else 0

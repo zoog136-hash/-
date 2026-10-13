@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "base_sha": "434b904d957fd2146b6d2e73325693a402028035",
+  "implementation_sha": "1040dea65e8c9c2933b9b019c713b32526108327",
+  "main_full_run": {
+    "total": 139,
+    "passed": 123,
+    "failed": [
+      "ground_loot_system_test",
+      "hunting_navigation_cache_test",
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test",
+      "lineagem_ui_visual_smoke_test",
+      "monster_world_test",
+      "original_turn_undead_rewards_test",
+      "renewed_map_spawn_test",
+      "skill_mechanism_smoke_test",
+      "ui_pointer_transfer_test",
+      "world_regions_test",
+      "world_structure_test"
+    ],
+    "skipped": [
+      "original_map_catalog_test",
+      "original_world_runtime_test",
+      "source_first_map_test"
+    ],
+    "not_run": []
+  },
+  "feature_full_run_before_contract_update": {
+    "total": 140,
+    "passed": 124,
+    "failed": [
+      "hunting_navigation_cache_test",
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_runtime_game_test",
+      "l1j_spx_frames_test",
+      "lineagem_ui_visual_smoke_test",
+      "monster_world_test",
+      "original_turn_undead_rewards_test",
+      "renewed_map_spawn_test",
+      "skill_mechanism_smoke_test",
+      "ui_pointer_transfer_test",
+      "world_regions_test",
+      "world_structure_test"
+    ],
+    "skipped": [
+      "original_map_catalog_test",
+      "original_world_runtime_test",
+      "source_first_map_test"
+    ],
+    "not_run": []
+  },
+  "strict_extra_failures": {
+    "main": [],
+    "feature": []
+  },
+  "targeted_rechecks": {
+    "l1j_runtime_game_test": {
+      "passed": true,
+      "checks": 85,
+      "reason": "Update old L1J-first UI expectation to exact catalog sourceId PNG, retain reviewed pack and ground/save/combat coverage"
+    },
+    "item_visual_test": {
+      "passed": true,
+      "checks": 6445
+    },
+    "item_rarity_render_test": {
+      "passed": true,
+      "separate_from_140_test_collection": true
+    }
+  },
+  "remaining_failed_tests": [
+    "hunting_navigation_cache_test",
+    "l1j_map_grid_test",
+    "l1j_png_load_test",
+    "l1j_spx_frames_test",
+    "lineagem_ui_visual_smoke_test",
+    "monster_world_test",
+    "original_turn_undead_rewards_test",
+    "renewed_map_spawn_test",
+    "skill_mechanism_smoke_test",
+    "ui_pointer_transfer_test",
+    "world_regions_test",
+    "world_structure_test"
+  ],
+  "remaining_failed_tests_also_failed_on_main": [
+    "hunting_navigation_cache_test",
+    "l1j_map_grid_test",
+    "l1j_png_load_test",
+    "l1j_spx_frames_test",
+    "lineagem_ui_visual_smoke_test",
+    "monster_world_test",
+    "original_turn_undead_rewards_test",
+    "renewed_map_spawn_test",
+    "skill_mechanism_smoke_test",
+    "ui_pointer_transfer_test",
+    "world_regions_test",
+    "world_structure_test"
+  ],
+  "remaining_new_failed_test_names": [],
+  "world_regions": {
+    "main_assertion_failures": 67,
+    "feature_assertion_failures": 75,
+    "main_elapsed_seconds": 126.2,
+    "feature_elapsed_seconds": 413.8,
+    "checks_each": 6036,
+    "maps_each": 24,
+    "note": "Same regional level assertion category; elapsed increase remains unexplained, not a controlled benchmark or global regression-free claim."
+  },
+  "notes": [
+    "Full run is 124/140 pass, 13 failed, 3 skipped; after the one contract recheck, 12 preexisting failed test names remain. This is not a repeated full suite.",
+    "No player save used. Optional original packs absent, not fabricated as original art."
+  ]
+}

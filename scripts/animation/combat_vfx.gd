@@ -12,6 +12,8 @@ var emitted: int = 0
 var detailed_draws: int = 0
 var font: Font
 var visuals = VISUALS.new()
+var reduced_motion: bool = false
+var detail_limit: int = VISUALS.DETAIL_LIMIT
 
 func _init() -> void:
 	for i: int in range(CAPACITY): available.append({})
@@ -95,12 +97,11 @@ func _draw() -> void:
 		match str(entry.kind):
 			"death":
 				var texture: Texture2D = entry.texture
-				var lean: float = minf(1.0, p * 2.0) * 1.3
+				var lean: float = 0.0 if reduced_motion else minf(1.0, p * 2.0) * 1.3
 				if entry.has("frames"):
 					var frames: SpriteFrames = entry.frames
 					var animation: String = entry.animation
-					var count: int = frames.get_frame_count(animation)
-					texture = frames.get_frame_texture(animation, mini(count - 1, int(minf(1.0, p * 2.0) * count)))
+					texture = frames.get_frame_texture(animation, _death_frame(frames, animation, minf(1.0, p * 2.0)))
 					lean = 0.0
 				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, entry.scale)
 				draw_texture(texture, -texture.get_size() * 0.5, Color(1.0, 0.7, 0.65, alpha))
@@ -117,7 +118,7 @@ func _draw() -> void:
 			if str(entry.kind) != "impact" or bool(entry.critical) != priority: continue
 			var point: Vector2 = to_local(entry.point)
 			if not view.has_point(canvas * point): continue
-			var detailed: bool = detailed_draws < VISUALS.DETAIL_LIMIT
+			var detailed: bool = detailed_draws < detail_limit
 			if detailed: detailed_draws += 1
 			visuals.draw_impact(self, point, entry, detailed, impact_intensity)
 	for entry: Dictionary in active:
@@ -135,13 +136,14 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	var alpha: float = minf(1.0, (1.0 - p) * 2.0)
 	var color: Color = entry.color
 	color.a *= alpha
-	point += Vector2((int(entry.serial) % 3 - 1) * 8.0, -p * 35.0)
-	var scale_value: float = VISUALS.number_scale(age, critical)
+	point += Vector2((int(entry.serial) % 3 - 1) * 8.0, 0.0 if reduced_motion else -p * 35.0)
+	var scale_value: float = 1.0 if reduced_motion else VISUALS.number_scale(age, critical)
 	draw_set_transform(point, 0.0, Vector2.ONE * scale_value)
 	var baseline: Vector2 = Vector2(-width * 0.5, 0.0)
 	draw_string_outline(font, baseline, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, 4, Color(0.025, 0.025, 0.03, color.a))
 	draw_string(font, baseline, text_value, HORIZONTAL_ALIGNMENT_LEFT, -1, size, color)
 	draw_set_transform(Vector2.ZERO)
+
 	if not bool(entry.get("caption", false)): return
 	var title_point: Vector2 = point + Vector2(0.0, -27.0)
 	var title_width: float = float(entry.critical_width)
@@ -153,3 +155,14 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	draw_string_outline(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 2, Color(1.0, 0.48, 0.10, alpha))
 	draw_string(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, Color(1.0, 0.91, 0.53, alpha))
 	draw_set_transform(Vector2.ZERO)
+
+static func _death_frame(frames: SpriteFrames, animation: String, progress: float) -> int:
+	# Authored death tracks can contain unequal frame ticks just like attacks.
+	var count: int = frames.get_frame_count(animation)
+	var duration: float = 0.0
+	for index: int in range(count): duration += frames.get_frame_duration(animation, index)
+	var point: float = clampf(progress, 0.0, 1.0) * duration
+	for index: int in range(count):
+		point -= frames.get_frame_duration(animation, index)
+		if point < 0.0: return index
+	return maxi(0, count - 1)

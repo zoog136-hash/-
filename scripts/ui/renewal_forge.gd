@@ -110,7 +110,7 @@ func _select(index: int) -> void:
 	selected_index = index
 	var entry: Dictionary = values[index]
 	var reference: String = str(entry.get("target_id",entry.get("name","")))
-	preview.texture = UI.item_icon(hud.lineage_inventory_ui._find_item_record(reference),str(entry.get("name","")),hud.item_image_index.get("아이템",{}))
+	UI.apply_item_visual(preview,hud.lineage_inventory_ui._find_item_record(reference),str(entry.get("name","")),hud.item_image_index.get("아이템",{}),"detail")
 	if mode == "scroll":
 		detail.text = "[font_size=20][color=#d8b878]%s[/color][/font_size]\n\n보유 수량: %d\n\n장비 선택 화면에서 기존 게임 규칙에 따라 확률이 표시됩니다." % [UI.safe(entry.get("name","")),int(entry.get("count",0))]
 		action.text = "장비 선택하기"

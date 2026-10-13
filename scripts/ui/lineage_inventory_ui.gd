@@ -355,14 +355,9 @@ func _refresh_inventory_grid() -> void:
 		button.add_theme_stylebox_override("normal", _slot_style_for_grade(grade, reference == selected_item))
 		button.add_theme_stylebox_override("hover", _slot_hover_style(grade))
 		button.add_theme_stylebox_override("pressed", _slot_pressed_style(grade))
-		var path: String = str(images.get(item_name, ""))
-		var bridge_icon: Texture2D = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd").item_icon(record, item_name)
-		var original_icon: Texture2D = preload("res://scripts/animation/visual_manifest.gd").item_icon(record, item_name)
-		if original_icon != null: bridge_icon = original_icon
-		if bridge_icon != null or (path != "" and ResourceLoader.exists(path)):
-			button.icon = bridge_icon if bridge_icon != null else load(path) as Texture2D
-			button.expand_icon = true
-			button.add_theme_constant_override("icon_max_width", 42)
+		button.icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(record,item_name,images)
+		button.expand_icon = true
+		button.add_theme_constant_override("icon_max_width", 42)
 		button.pressed.connect(_select_item.bind(reference))
 		button.mouse_filter = Control.MOUSE_FILTER_PASS
 		item_grid.add_child(button)
@@ -536,11 +531,7 @@ func _refresh_detail(item_name: String) -> void:
 	detail_type.text = "%s%s%s%s" % [item_type, (" · " + slot) if slot != "" else "", " · E" if equipped else "", " · ID:"+selected_id if selected_id != "" else ""]
 
 	var images: Dictionary = item_image_index.get("아이템", {}) as Dictionary
-	var path := str(images.get(item_name, ""))
-	var bridge_icon: Texture2D = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd").item_icon(record, item_name)
-	var original_icon: Texture2D = preload("res://scripts/animation/visual_manifest.gd").item_icon(record, item_name)
-	if original_icon != null: bridge_icon = original_icon
-	detail_icon.texture = bridge_icon if bridge_icon != null else (load(path) as Texture2D if path != "" and ResourceLoader.exists(path) else null)
+	preload("res://scripts/ui/item_visual.gd").apply(detail_icon,record,item_name,images,"detail")
 
 	var lines := PackedStringArray()
 	if selected_id != "":

@@ -68,6 +68,7 @@ func _run() -> void:
 	world._update_hud()
 	hud.refresh_inventory(world.inventory)
 	hud.toggle_inventory()
+	await frames() # Wait for deferred navigation restoration before setting the fixture query.
 	var bag: Control = hud.lineage_inventory_ui
 	bag.search_line.text = "HP 물약"
 	bag._refresh_inventory_grid()
@@ -224,6 +225,7 @@ func equipment_and_services() -> void:
 	world.item_instances[ids[1]]["level"] = 1
 	world._update_hud()
 	hud.toggle_inventory()
+	await frames() # Opening restores the previous search on the next frame.
 	var bag: Control = hud.lineage_inventory_ui
 	bag.search_line.text = "낡은 장검"
 	bag._refresh_inventory_grid()
@@ -296,6 +298,7 @@ func equipment_and_services() -> void:
 	check(world.gold == wallet_before,"locked stack cannot be sold")
 	world._set_item_locked("HP 물약",false)
 	hud.toggle_inventory()
+	await frames() # Apply this fixture query after the saved inventory view is restored.
 	bag.search_line.text = "HP 물약"
 	bag._refresh_inventory_grid()
 	await frames(5)

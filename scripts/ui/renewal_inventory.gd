@@ -161,10 +161,6 @@ func _find_item_record(item_name: String) -> Dictionary:
 	return super._find_item_record(item_name)
 
 func _icon_for_reference(record: Dictionary, name_value: String, item_reference: String) -> Texture2D:
-	if _ref_instance_id(item_reference) != "" and str(record.get("sourceId", "")) != "":
-		var path: String = str(record.get("image_path", ""))
-		if path != "" and ResourceLoader.exists(path):
-			return load(path) as Texture2D
 	return UI.item_icon(record, name_value, item_image_index.get("아이템", {}))
 
 func _grade_color(value: String) -> Color:
@@ -218,13 +214,12 @@ func _refresh_inventory_grid() -> void:
 		var button: Button = slot_buttons[reference] as Button
 		item_grid.move_child(button, index)
 		var record: Dictionary = _find_item_record(reference)
-		var texture: Texture2D = _icon_for_reference(record, item_name, reference)
 		button.icon = null
 		button.text = ""
 		button.custom_minimum_size = Vector2(72,72)
 		button.tooltip_text += " · 끌어서 퀵슬롯 등록 / 터치: 길게 누른 후 이동"
 		var icon := TextureRect.new()
-		icon.texture = texture
+		UI.apply_item_visual(icon,record,item_name,item_image_index.get("아이템",{}),"inventory")
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.position = Vector2(7,7)
@@ -294,7 +289,7 @@ func _refresh_detail(item_reference: String) -> void:
 	var item_name: String = _base_item_name(item_reference)
 	var selected_id: String = _ref_instance_id(item_reference)
 	var item: Dictionary = _find_item_record(item_reference)
-	detail_icon.texture = _icon_for_reference(item, item_name, item_reference)
+	UI.apply_item_visual(detail_icon,item,item_name,item_image_index.get("아이템",{}),"detail")
 	var lines := PackedStringArray()
 	for raw: Variant in item.get("sourceOptions",[]):
 		var option: String = str(raw)
@@ -328,6 +323,8 @@ func _refresh_detail(item_reference: String) -> void:
 		detail_action.disabled = false
 		detail_action.tooltip_text = "선택한 장비의 장착을 해제합니다"
 	detail_type.text = str(item.get("type","")) + (" · 각인" if _is_engraved(item,item_name) else "")
+	if detail_icon.get_meta("item_visual",{}).get("status","") == "self_authored_substitute":
+		detail_type.text += " · 대체 아이콘 ◇"
 
 func _activate_selected() -> void:
 	if selected_item.is_empty(): return

@@ -1,0 +1,73 @@
+name: Debug Runner and Turn Undead Validate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/test_project*.py'
+      - 'tests/original_turn_undead_rewards_test.gd'
+      - '.github/workflows/debug-runner-validate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/test_project*.py'
+      - 'tests/original_turn_undead_rewards_test.gd'
+      - '.github/workflows/debug-runner-validate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: debug-runner-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  runner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test subprocess runner without claiming game execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/test_project.py tools/test_project_support.py tools/test_project_runner_test.py
+          python tools/test_project_runner_test.py 2>&1 | tee runner-tests.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: debug-runner-python-${{ github.sha }}
+          path: runner-tests.log
+          if-no-files-found: error
+  turn-undead:
+    needs: runner
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resource preflight and pinned project engine
+        run: |
+          python3 tools/check_resource_integrity.py --root .
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Execute real reward regression in isolated user data
+        shell: bash
+        run: |
+          set -euo pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/turn-undead-debug"
+          export APPDATA="$XDG_DATA_HOME" LOCALAPPDATA="$XDG_DATA_HOME"
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          timeout 300 "$ENGINE" --headless --path . --import 2>&1 | tee debug-import.log
+          if grep -E 'SCRIPT ERROR:|ERROR:' debug-import.log; then exit 1; fi
+          timeout 180 "$ENGINE" --headless --path . --script res://tests/original_turn_undead_rewards_test.gd 2>&1 | tee turn-rewards.log
+          if grep -E 'SCRIPT ERROR:|ERROR:|TURN_REWARDS FAIL:' turn-rewards.log; then exit 1; fi
+          grep -q 'ORIGINAL_TURN_UNDEAD_REWARDS_OK' turn-rewards.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: debug-turn-undead-${{ github.sha }}
+          path: |
+            debug-import.log
+            turn-rewards.log
+          if-no-files-found: error

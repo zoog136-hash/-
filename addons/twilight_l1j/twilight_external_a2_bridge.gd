@@ -59,6 +59,13 @@ static func _texture(group: String, name_value: String) -> Texture2D:
 
 static func item_icon(record: Dictionary, fallback_name: String = "") -> Texture2D:
 	var value: String = str(record.get("name", fallback_name))
+	_ensure()
+	var id: String = str(record.get("sourceId", ""))
+	if not id.is_empty():
+		var entry: Dictionary = _items.get(value, {})
+		# Older manifests are only name candidates. They cannot prove a
+		# relationship to one of several records sharing that name.
+		if str(entry.get("game_source_id", "")) != id: return null
 	return _texture("items", value)
 
 static func monster_texture(record: Dictionary) -> Texture2D:

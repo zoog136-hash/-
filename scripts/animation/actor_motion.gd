@@ -20,6 +20,12 @@ var attack_style: String = "slash"
 var weapon_variant: String = "" # visual only; the existing style still owns hit timing
 var released: bool = false
 var active: bool = false
+# Preserve the release pose until a renderer samples it, even if a tick crosses recovery.
+var impact_pose_pending: bool = false
+var _impact_pose_age: float = 0.0
+var presenting_attack: bool:
+	get: return active or impact_pose_pending
+var reduced_motion: bool = false
 var dead: bool = false
 var death_clock: float = 0.0
 var hit_clock: float = 0.0
@@ -63,7 +69,11 @@ func face(vector: Vector2) -> void:
 		facing4 = 1 if vector.y < 0.0 else 0
 
 func begin_attack(total: float, aim: Vector2, style: String = "", marker: float = -1.0) -> int:
+	if dead: return -1
+	var previous_sequence: int = sequence
 	cancel_attack()
+	# A cancellation subscriber may kill this actor or start a replacement action.
+	if dead or sequence != previous_sequence: return -1
 	face(aim)
 	sequence += 1
 	attack_elapsed = 0.0
@@ -72,7 +82,7 @@ func begin_attack(total: float, aim: Vector2, style: String = "", marker: float 
 	weapon_variant = ""
 	action_role = ""
 	invalidate_pose()
-	attack_hit_ratio = profile.attack_hit_ratio if marker < 0.0 else clampf(marker, 0.1, 0.85)
+	attack_hit_ratio = clampf(profile.attack_hit_ratio if marker < 0.0 else marker, 0.1, 0.85)
 	active = true
 	released = false
 	visual_hold = 0.0
@@ -96,12 +106,16 @@ static func presentation_seconds(frames: SpriteFrames, role: String, fallback: f
 	return fallback
 
 func cancel_attack() -> void:
-	if active: cancelled.emit(sequence)
+	var was_active: bool = active
+	var cancelled_sequence: int = sequence
+	# Commit cancellation before notifying subscribers; they may cancel again or die.
 	active = false
+	impact_pose_pending = false
 	attack_duration = 0.0
 	attack_elapsed = 0.0
 	visual_hold = 0.0
-	_set_state("idle")
+	if not dead: _set_state("idle")
+	if was_active: cancelled.emit(cancelled_sequence)
 
 func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	if dead: return
@@ -111,17 +125,22 @@ func react(critical: bool = false, incoming: Vector2 = Vector2.ZERO) -> void:
 	hit_strength = 1.45 if critical else 1.0
 	hit_direction = incoming.normalized() if incoming.length_squared() > 0.001 else -direction
 	# Pose freeze only: physics, cooldowns and attack markers are never paused.
-	visual_hold = 0.028 if critical else 0.0
+	visual_hold = 0.028 if critical and not reduced_motion else 0.0
 
 func die() -> void:
-	cancel_attack()
+	if dead: return
 	dead = true
 	death_clock = 0.0
 	state_clock = 0.0
 	state = "death"
+	cancel_attack()
 
 func advance(delta: float, real_velocity: Vector2) -> void:
 	delta = maxf(0.0, delta)
+	if impact_pose_pending:
+		_impact_pose_age += delta
+		# Offscreen actors may never be sampled; do not replay an old strike on return.
+		if _impact_pose_age > 0.2: impact_pose_pending = false
 	idle_clock += delta
 	hit_clock = maxf(0.0, hit_clock - delta)
 	turn_clock = maxf(0.0, turn_clock - delta)
@@ -134,6 +153,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 	locomotion_weight = move_toward(locomotion_weight, minf(move_ratio, 1.5) if not active else 0.0, delta * 12.0)
 	gait += delta * profile.movement_fps * move_ratio
 	if active:
+		var advancing_sequence: int = sequence
 		var struck_this_tick: bool = false
 		attack_elapsed += delta
 		if visual_hold <= 0.0:
@@ -150,12 +170,19 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 			visual_progress = attack_hit_ratio
 			released = true # mark before signal: reentrant handlers cannot double-hit
 			struck_this_tick = true
-			strike.emit(sequence)
+			impact_pose_pending = true
+			_impact_pose_age = 0.0
+			strike.emit(advancing_sequence)
+			# Signal handlers can kill, cancel, or replace this action synchronously.
+			if dead or not active or sequence != advancing_sequence: return
 		if active and attack_elapsed >= attack_duration:
 			active = false
 		if active:
 			_set_state("attack" if struck_this_tick or attack_elapsed < attack_duration * maxf(0.7, attack_hit_ratio) else "recovery", delta)
 			return
+	if impact_pose_pending:
+		_set_state("attack")
+		return
 	if move_ratio > 0.01:
 		face(real_velocity)
 		_set_state("run" if move_ratio > 1.12 or (profile.reference_speed >= 180.0 and move_ratio >= 0.92) else "walk", delta)
@@ -166,6 +193,9 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 
 func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	if not is_instance_valid(sprite): return
+	if impact_pose_pending and not dead:
+		visual_progress = attack_hit_ratio
+		_set_state("attack")
 	var source: SpriteFrames = (sprite as AnimatedSprite2D).sprite_frames if sprite is AnimatedSprite2D else frame_source
 	# Uniform class sheets already use the legacy clock below. Once identified,
 	# avoid a second authored-track resolution for every actor/tick.
@@ -194,7 +224,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 		var breath: float = sin(idle_clock * 2.5)
 		bob = breath * (maxf(1.2, profile.idle_amplitude) if profile.floating else profile.idle_amplitude) * weight
 		stretch.y = 1.0 + breath * 0.003 * weight
-		if locomotion_weight > 0.001 and not active:
+		if locomotion_weight > 0.001 and not presenting_attack:
 			var stride: float = sin(stride_phase)
 			var footfall: float = absf(stride)
 			var running: bool = state == "run"
@@ -202,7 +232,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 			lean = stride * profile.stride_lean * locomotion_weight * weight
 			if running and not profile.floating:
 				stretch = Vector2(1.0 + footfall * .012 * weight, 1.0 - footfall * .016 * weight)
-		if active:
+		if presenting_attack:
 			var p: float = visual_progress
 			# The three non-overlapping envelopes need only one smoothstep.
 			var anticipation: float = 0.0
@@ -241,6 +271,11 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 		if hit_clock > 0.0:
 			var recoil: float = sin((hit_clock / hit_duration) * PI * 0.5) * profile.hit_recoil * hit_strength
 			offset += hit_direction * recoil
+	if reduced_motion:
+		bob = 0.0
+		stretch = Vector2.ONE
+		lean = 0.0
+		offset = Vector2.ZERO
 	var anchor: Vector2 = profile.sprite_offset
 	# Rotate/scale around the established foot anchor, never the collision body.
 	sprite.scale = base_scale * stretch
@@ -254,6 +289,7 @@ func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	elif sprite is Sprite2D:
 		if frame_source != null: apply_frames(sprite)
 		else: (sprite as Sprite2D).flip_h = direction.x < -0.1
+	impact_pose_pending = false
 
 func _resolve_frames(frames: SpriteFrames) -> void:
 	if _track_source != frames or _resolved_profile != profile:
@@ -269,7 +305,7 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	_resolved_role = "legacy"
 	_resolved_directional = false
 	var roles: Array[String] = [state]
-	if active and state in ["attack", "recovery"]:
+	if presenting_attack and state in ["attack", "recovery"]:
 		if attack_style == "bow": roles.push_front("ranged_attack")
 		elif attack_style == "magic": roles.push_front("cast")
 		if not action_role.is_empty(): roles.push_front(action_role)
@@ -293,8 +329,8 @@ func _resolve_frames(frames: SpriteFrames) -> void:
 	# Keep existing class/directional/single-image art as the final fallback.
 	match profile.layout:
 		"class5":
-			_resolved_key = "attack" if active else CLASS_DIRECTIONS[facing4]
-			_resolved_role = "attack" if active else "legacy"
+			_resolved_key = "attack" if presenting_attack else CLASS_DIRECTIONS[facing4]
+			_resolved_role = "attack" if presenting_attack else "legacy"
 		"directional4": _resolved_key = SHEET_DIRECTIONS[facing4]
 		"directional8": _resolved_key = "dir_" + str(facing8)
 		_: _resolved_key = "still"
@@ -348,27 +384,27 @@ func apply_frames(sprite: Node2D) -> void:
 	var track: Dictionary = _track(frames, key)
 	var count: int = track.count
 	var frame_value: int = 0
-	if active and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
+	if presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
 		var marker_frame: int = clampi(profile.attack_hit_frame, 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))
 		else:
 			frame_value = _weighted_frame(track, (visual_progress - attack_hit_ratio) / (1.0 - attack_hit_ratio), marker_frame)
-	elif active and _resolved_role == "recovery":
+	elif presenting_attack and _resolved_role == "recovery":
 		var start: float = maxf(0.7, attack_hit_ratio)
 		frame_value = _weighted_frame(track, (attack_elapsed / attack_duration - start) / (1.0 - start))
 	elif dead and _resolved_role == "death":
 		frame_value = _weighted_frame(track, death_clock / maxf(.01, profile.death_duration))
 	elif _resolved_role == "hit":
 		frame_value = _weighted_frame(track, 1.0 - hit_clock / hit_duration)
-	elif move_ratio > 0.01 and not active and _resolved_role in ["walk", "run", "legacy"]:
+	elif move_ratio > 0.01 and not presenting_attack and _resolved_role in ["walk", "run", "legacy"]:
 		frame_value = _weighted_frame(track, fposmod(gait, float(count)) / float(count))
 	elif _resolved_role != "legacy":
 		var ends: PackedFloat64Array = track.ends
 		var progress: float = state_clock * float(track.fps) / ends[-1]
 		frame_value = _weighted_frame(track, fposmod(progress, 1.0) if track.loop else minf(progress, 1.0))
 	var mirrored: bool = profile.layout == "still" and not _resolved_directional and direction.x < -0.1
-	if profile.layout == "class5" and active and not _resolved_directional: mirrored = facing4 == 2
+	if profile.layout == "class5" and presenting_attack and not _resolved_directional: mirrored = facing4 == 2
 	if sprite is AnimatedSprite2D:
 		var animated: AnimatedSprite2D = sprite as AnimatedSprite2D
 		if animated.animation != key: animated.animation = key
@@ -385,22 +421,22 @@ func _apply_legacy_frames(sprite: Node2D, frames: SpriteFrames) -> void:
 	# Existing uniform sheets need neither authored-name search nor weighted tracks.
 	var key: String = "still"
 	match profile.layout:
-		"class5": key = "attack" if active else CLASS_DIRECTIONS[facing4]
+		"class5": key = "attack" if presenting_attack else CLASS_DIRECTIONS[facing4]
 		"directional4": key = SHEET_DIRECTIONS[facing4]
 		"directional8": key = "dir_" + str(facing8)
 	if not frames.has_animation(key): return
 	var count: int = frames.get_frame_count(key)
 	if count <= 0: return
 	var frame_value: int = 0
-	if active and profile.layout == "class5":
+	if presenting_attack and profile.layout == "class5":
 		var marker: int = clampi(profile.attack_hit_frame, 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = mini(maxi(0, marker - 1), int(visual_progress / attack_hit_ratio * marker))
 		else:
 			frame_value = marker + int((visual_progress - attack_hit_ratio) / (1.0 - attack_hit_ratio) * (count - marker))
-	elif move_ratio > 0.01 and not active: frame_value = posmod(int(gait), count)
+	elif move_ratio > 0.01 and not presenting_attack: frame_value = posmod(int(gait), count)
 	frame_value = clampi(frame_value, 0, count - 1)
-	var mirrored: bool = direction.x < -0.1 if profile.layout == "still" else (active and profile.layout == "class5" and facing4 == 2)
+	var mirrored: bool = direction.x < -0.1 if profile.layout == "still" else (presenting_attack and profile.layout == "class5" and facing4 == 2)
 	if sprite is AnimatedSprite2D:
 		var animated: AnimatedSprite2D = sprite as AnimatedSprite2D
 		if animated.animation != key: animated.animation = key

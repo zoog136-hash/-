@@ -15,6 +15,7 @@ var learn_button: Button
 var book_button: Button
 var preview_button: Button
 var preview_vfx: TwilightOriginalSkillVFX
+var preview_container: SubViewportContainer
 var school_filter: OptionButton
 var cards: ItemList
 var detail: RichTextLabel
@@ -30,6 +31,7 @@ var touch_active: bool = false
 
 func configure(controller: Node) -> void:
 	hud=controller
+	visibility_changed.connect(_sync_visibility)
 	records=hud.job_skills
 	var toolbar := HFlowContainer.new()
 	add_child(toolbar)
@@ -122,7 +124,7 @@ func configure(controller: Node) -> void:
 	book_button.name = "BuyOriginalSkillBook"
 	book_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	actions.add_child(book_button)
-	var preview_container := SubViewportContainer.new()
+	preview_container = SubViewportContainer.new()
 	preview_container.custom_minimum_size = Vector2(278,85)
 	preview_container.stretch = true
 	preview_container.visible = false
@@ -134,7 +136,7 @@ func configure(controller: Node) -> void:
 	preview_vfx = preload("res://scripts/skills/skill_vfx.gd").new()
 	viewport.add_child(preview_vfx)
 	preview_button = UI.button("이펙트 프리뷰", func() -> void:
-		if selected.is_empty(): return
+		if selected.is_empty() or not is_visible_in_tree(): return
 		preview_container.visible = true
 		preview_vfx.clear()
 		preview_vfx.emit_skill(str(selected.id), "cast", Vector2(90,45))
@@ -287,6 +289,13 @@ func _process(delta: float) -> void:
 	cooldown.text="재사용 %.1f초 남음" % remain if remain>0 else "재사용 준비됨"
 	var owned := str(selected.get("class","공용")) in ["공용",str(hud.character_state.get("job_class","기사"))]
 	use_button.disabled=RULES.is_passive(selected) or not owned or not RULES.is_supported(RULES.effect_kind(selected)) or remain>0 or int(hud.character_state.get("mp",0))<int(selected.get("mp",0))
+
+func _sync_visibility() -> void:
+	set_process(is_visible_in_tree())
+	clock = 0
+	if not is_visible_in_tree() and is_instance_valid(preview_vfx):
+		preview_vfx.clear()
+		preview_container.hide()
 
 func _touch(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:

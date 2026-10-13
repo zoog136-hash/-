@@ -1,0 +1,35 @@
+{
+  "matched": {
+    "script_sha256": true,
+    "scenario_sha256": true,
+    "data_sha256": true,
+    "viewport": true,
+    "engine": true,
+    "adapter": true,
+    "runner_cache_policy": true,
+    "seed": true,
+    "time_scale": true,
+    "physics_hz": true,
+    "fps_cap": true,
+    "vsync_mode": true
+  },
+  "runs": 1,
+  "order": [
+    "baseline",
+    "feature"
+  ],
+  "environment": {
+    "os": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "render": "Linux llvmpipe OpenGL Compatibility",
+    "no_competing_godot": true
+  },
+  "limits": [
+    "Single pair; OS cache warmed by prior tests, no cold-disk/driver equivalence claim.",
+    "24 real DB actors across six species; HP/ATK controlled to retain a constant workload.",
+    "Fresh process/save/settings,120 measured frames after60 warm-up.",
+    "Godot allocator peak measured; Linux process RSS peak absent from report and unverified.",
+    "Not Windows/Android device FPS; no60fps or improvement claim."
+  ],
+  "checks_pass": true,
+  "reference_production_sha": "c79955089704f59edfb01d86a2e0daf128fffb2e"
+}

@@ -54,6 +54,7 @@ var pending_attack: Dictionary = {}
 var combat_generation: int = 0
 var resolving_combat_action: bool = false
 var stat_hud_refresh_pending: bool = false
+var presentation_settings: Dictionary = {"impact_intensity":0.85, "reduced_motion":false, "effect_detail":"full"}
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
@@ -382,10 +383,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var mouse_event: InputEventMouseButton = event
 		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
+			if hud.blocks_world_input(mouse_event.position): return
 			_set_click_destination(COORD.screen_to_world(get_viewport(), mouse_event.position))
 	elif event is InputEventScreenTouch:
 		var touch_event: InputEventScreenTouch = event
-		if touch_event.pressed:
+		if touch_event.pressed and not touch_event.canceled and touch_event.device != InputEvent.DEVICE_ID_EMULATION:
+			if hud.blocks_world_input(touch_event.position): return
 			# Android touch events carry real viewport coordinates. Mouse emulation is
 			# disabled in project.godot, so get_global_mouse_position() may be stale.
 			var world_touch_position: Vector2 = COORD.screen_to_world(get_viewport(), touch_event.position)
@@ -743,7 +746,8 @@ func _transformation_skill_bonus(skill_name: String, kind: String) -> float:
 	return TRANSFORM_SKILL.amount(record, job_class, skill_name, kind)
 
 func _skill_cooldown_factor() -> float:
-	return clampf(1.0 - float(_catalog_stat_sum("skillCooldownPct")) / 100.0, 0.1, 1.0)
+	var cast_bonus: float = original_skills.stat("castSpeed") if original_skills != null else 0.0
+	return clampf(1.0 - (float(_catalog_stat_sum("skillCooldownPct")) + cast_bonus) / 100.0, 0.1, 1.0)
 
 func _effective_max_mp() -> int:
 	var added: int = _catalog_stat_sum("mpFlat")
@@ -1053,6 +1057,11 @@ func _connect_signals() -> void:
 	combat_flights.name = "CombatFlights"
 	combat_flights.z_index = 12
 	add_child(combat_flights)
+	var saved_presentation := ConfigFile.new()
+	if saved_presentation.load("user://twilight_ui_settings.cfg") == OK:
+		for key: String in presentation_settings:
+			presentation_settings[key] = saved_presentation.get_value("visual", key, presentation_settings[key])
+	apply_presentation_settings(presentation_settings)
 	player.attack_strike.connect(_release_player_attack)
 	player.attack_cancelled.connect(_cancel_player_attack)
 	player.attack_requested.connect(_attack)
@@ -2159,6 +2168,11 @@ func _update_target_hud() -> void:
 		hud.clear_target()
 
 func _on_monster_died(monster: TwilightMonster) -> void:
+	# Pooled actors can signal the same death more than once, but each life owns
+	# one reward transaction. Claim before callbacks/passives can re-enter.
+	if not is_instance_valid(monster) or not monster.dead: return
+	if int(monster.get_meta("rewarded_life_id", -1)) == monster.life_id: return
+	monster.set_meta("rewarded_life_id", monster.life_id)
 	if bool(monster.get_meta("summoned",false)):
 		# Bounded boss helpers cannot become an unlimited XP/equipment farm.
 		if monster==selected_monster: selected_monster = null
@@ -2364,7 +2378,7 @@ func _on_player_bleed_tick(damage_value: int) -> void:
 		_refresh_combat_hud()
 
 func _on_player_hit(attacker: TwilightMonster, damage_value: int, attack_type: String) -> void:
-	if attacker == null or not is_instance_valid(attacker):
+	if attacker == null or not is_instance_valid(attacker) or attacker.dead or hp <= 0:
 		return
 	if field_map != null and field_map.is_safe(player.global_position):
 		return
@@ -2628,6 +2642,7 @@ func _scroll_mode(scroll_name: String) -> String:
 # Temporary catalog test grants. Never available in the production/main HUD.
 # Only catalog-backed names and the three known enhancement scrolls are accepted.
 func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
+	if not OS.is_debug_build(): return
 	if item_name.is_empty() or CONSUMABLE_RULES.is_removed_item(item_name):
 		hud.show_message("테스트 지급 불가 아이템")
 		return
@@ -2647,6 +2662,7 @@ func _grant_playtest_catalog_item(item_name: String, amount: int) -> void:
 	_save_game(true)
 
 func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
+	if not OS.is_debug_build(): return
 	var record: Dictionary = _catalog_item_from_source_id(source_id)
 	if record.is_empty() or str(record.get("name", "")) == "":
 		hud.show_message("유효하지 않은 도감 원본 ID")
@@ -2673,6 +2689,7 @@ func _grant_playtest_catalog_variant(source_id: String, amount: int) -> void:
 		_save_game(true)
 
 func _grant_playtest_aden() -> void:
+	if not OS.is_debug_build(): return
 	gold = maxi(gold,100000000)
 	_update_hud()
 	hud.show_message("테스트 아데나 · 현재 %d" % gold)
@@ -6405,19 +6422,37 @@ func _skill_motion_duration(skill: Dictionary) -> float:
 	return clampf(maxf(0.42, SKILL_RULES.global_cooldown_seconds(skill)) / _effective_attack_speed_multiplier(), 0.14, 0.85)
 
 func _queue_damage_skill(skill: Dictionary, target: TwilightMonster, max_range: float) -> void:
-	_queue_player_attack(target, _skill_attack_kind(skill), _apply_job_skill_damage.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, max_range)
+	if not _queue_player_attack(target, _skill_attack_kind(skill), _apply_job_skill_damage.bind(skill.duplicate(true), target), _skill_motion_duration(skill), false, max_range): return
 	pending_attack["skill"] = skill.duplicate(true)
 	pending_attack["duration"] = _skill_motion_duration(skill)
 
-func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> void:
+func _queue_player_attack(target: TwilightMonster, kind: String, callback: Callable, duration: float, normal: bool = false, max_range: float = 0.0) -> bool:
+	if not is_instance_valid(target) or target.dead or hp <= 0: return false
 	player.cancel_attack()
 	player.clear_click_path()
 	var style: String = TwilightAnimationProfile.weapon_style(_current_weapon_type(), kind)
 	var marker: float = player.motion.profile.marker_for(style)
 	var id: int = player.start_combat_attack(target.global_position, duration, style, marker)
+	if id < 0: return false
 	player.motion.weapon_variant = _current_weapon_type()
 	pending_attack = {"id":id, "target":weakref(target), "callback":callback, "kind":kind,
-		"style":style, "normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation}
+		"style":style, "normal":normal, "range":max_range, "start":player.global_position, "generation":combat_generation,
+		"target_life_id":target.life_id, "impact_resolved":false}
+	return true
+
+func _queue_player_area_attack(skill: Dictionary) -> bool:
+	# Self-centred attacks use the same cancellable motion marker as targeted
+	# attacks, never a second SceneTree timer that survives movement/transform.
+	player.cancel_attack()
+	player.clear_click_path()
+	var kind: String = str(skill.get("attack_type", "magic"))
+	var style: String = TwilightAnimationProfile.weapon_style(_current_weapon_type(), kind)
+	var id: int = player.start_combat_attack(player.global_position + player.motion.direction,
+		float(skill.get("cast_time", 0.42)), style, player.motion.profile.marker_for(style))
+	if id < 0: return false
+	pending_attack = {"id":id, "kind":kind, "style":style, "area_skill":skill.duplicate(true),
+		"start":player.global_position, "generation":combat_generation}
+	return true
 
 func _cancel_player_attack(id: int) -> void:
 	if int(pending_attack.get("id", -1)) == id: pending_attack.clear()
@@ -6426,11 +6461,15 @@ func _release_player_attack(id: int) -> void:
 	if int(pending_attack.get("id", -1)) != id: return
 	var action: Dictionary = pending_attack
 	pending_attack = {}
-	var target: TwilightMonster = action.target.get_ref() as TwilightMonster
-	if not is_instance_valid(target) or target.dead or hp <= 0: return
+	if int(action.generation) != combat_generation or hp <= 0: return
 	if player.is_stunned() or player.is_feared(): return
 	if action.kind == "magic" and player.is_silenced(): return
 	if player.global_position.distance_to(action.start) > 12.0: return
+	if action.has("area_skill"):
+		original_skills.area_marker(action.area_skill, int(action.generation))
+		return
+	var target: TwilightMonster = action.target.get_ref() as TwilightMonster
+	if not is_instance_valid(target) or target.dead or target.life_id != int(action.get("target_life_id", target.life_id)): return
 	var in_range: bool = _target_in_current_weapon_range(target) if action.normal else player.global_position.distance_to(target.global_position) <= float(action.range)
 	if not in_range or not _has_line_of_sight_world(player.global_position, target.global_position): return
 	player.face_target(target.global_position)
@@ -6459,9 +6498,11 @@ func _release_player_attack(id: int) -> void:
 		_impact_player_attack(action)
 
 func _impact_player_attack(action: Dictionary) -> void:
+	if bool(action.get("impact_resolved", false)): return
+	action["impact_resolved"] = true # one event, even if its callback re-enters
 	if int(action.generation) != combat_generation or hp <= 0: return
 	var target: TwilightMonster = action.target.get_ref() as TwilightMonster
-	if not is_instance_valid(target) or target.dead: return
+	if not is_instance_valid(target) or target.dead or target.life_id != int(action.get("target_life_id", target.life_id)): return
 	if not _has_line_of_sight_world(player.global_position, target.global_position): return
 	var callback: Callable = action.callback
 	if not callback.is_valid(): return
@@ -6490,7 +6531,28 @@ func monster_combat_feedback(target: TwilightMonster, critical: bool, damage_kin
 	if not is_instance_valid(combat_vfx): return
 	var style: String = feedback_style if damage_kind.is_empty() else damage_kind
 	combat_vfx.impact(target.combat_hit_position(), player.global_position.direction_to(target.global_position), style, critical)
-	if critical: player.motion.visual_hold = 0.028
+	if critical and not bool(presentation_settings.reduced_motion): player.motion.visual_hold = 0.028
+
+func apply_presentation_settings(settings: Dictionary) -> void:
+	presentation_settings = {
+		"impact_intensity":clampf(float(settings.get("impact_intensity", presentation_settings.impact_intensity)), 0.0, 1.0),
+		"reduced_motion":bool(settings.get("reduced_motion", presentation_settings.reduced_motion)),
+		"effect_detail":"low" if str(settings.get("effect_detail", presentation_settings.effect_detail)) == "low" else "full"
+	}
+	if is_instance_valid(combat_vfx):
+		combat_vfx.impact_intensity = presentation_settings.impact_intensity
+		combat_vfx.reduced_motion = presentation_settings.reduced_motion
+		combat_vfx.detail_limit = 6 if presentation_settings.effect_detail == "low" else COMBAT_VFX.VISUALS.DETAIL_LIMIT
+	if is_instance_valid(combat_flights):
+		combat_flights.visual_limit = 24 if presentation_settings.effect_detail == "low" else 64
+	if is_instance_valid(player):
+		player.motion.reduced_motion = presentation_settings.reduced_motion
+		if bool(presentation_settings.reduced_motion): player.motion.visual_hold = 0.0
+	if is_instance_valid(monsters_root):
+		for monster: Node in monsters_root.get_children():
+			if monster is TwilightMonster:
+				monster.motion.reduced_motion = presentation_settings.reduced_motion
+				if bool(presentation_settings.reduced_motion): monster.motion.visual_hold = 0.0
 
 func _notification(what: int) -> void:
 	if what in [NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED] and is_instance_valid(player):
