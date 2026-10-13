@@ -5,10 +5,12 @@ extends "res://tests/pr100_direction_gameplay_test.gd"
 # RenderingServer.frame_post_draw is awaited by the inherited capture helper.
 ## Production class/equipment/input/attack/respawn paths. Explicit pose sampling
 ## and controlled incoming damage are reported separately from real attacks.
-const SUBJECT_PATH = "res://assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres"
-const SPEC = {"job":"사신", "appearance":3, "transform_id":"412", "name":"배틀 사이드", "type":"사이드", "style":"slash", "magic":false}
+func subject_path() -> String: return "res://assets/actors/eight_direction/original_based/reaper_female/SpriteFrames.tres"
+func subject_spec() -> Dictionary: return {"job":"사신", "appearance":3, "transform_id":"412", "name":"배틀 사이드", "type":"사이드", "style":"slash", "magic":false}
 
 func run() -> void:
+	var spec := subject_spec()
+	var profile_id := "transform:" + str(spec.transform_id)
 	out = OS.get_environment("TWILIGHT_PR100_REPORT")
 	if out.is_empty(): out = "user://original-based-reaper-gameplay.json"
 	captures = OS.get_environment("TWILIGHT_PR100_CAPTURE_DIR")
@@ -18,8 +20,8 @@ func run() -> void:
 		else: DirAccess.make_dir_recursive_absolute(captures)
 	world = load("res://Main.tscn").instantiate()
 	root.add_child(world)
-	check(CLASS_QA.enter_game(world, SPEC.job), "production reaper class entry")
-	world.hud.class_selected.emit(SPEC.appearance)
+	check(CLASS_QA.enter_game(world, spec.job), "production subject class entry")
+	world.hud.class_selected.emit(spec.appearance)
 	world.hud._hide_aux_panels()
 	world.save_timer = -10000.
 	world.rng.seed = 20261013
@@ -37,29 +39,29 @@ func run() -> void:
 	world.player.camera.force_update_scroll()
 	world.player.attack_strike.connect(player_strike)
 	physics_frame.connect(trace_flights)
-	var weapon: Dictionary = world._find_catalog_item_record(SPEC.name)
-	check(not weapon.is_empty(), "existing DB scythe")
+	var weapon: Dictionary = world._find_catalog_item_record(spec.name)
+	check(not weapon.is_empty(), "existing DB weapon")
 	world._equip_or_acquire_item(weapon, true)
-	check(world._current_weapon_type() == SPEC.type, "production scythe equipment")
+	check(world._current_weapon_type() == spec.type, "production subject weapon equipment")
 	var transform: Dictionary = {}
 	for record: Dictionary in world.catalog_db["변신"]:
-		if str(record.get("sourceId", "")) == SPEC.transform_id: transform = record; break
-	check(not transform.is_empty(), "existing female reaper transformation")
+		if str(record.get("sourceId", "")) == spec.transform_id: transform = record; break
+	check(not transform.is_empty(), "existing subject transformation")
 	world._equip_catalog("변신", transform)
 	await tick(14)
-	check(world.player.motion.profile.profile_id == "transform:412" and world.player.motion.profile.frames_path == SUBJECT_PATH, "production transform binds own authored image")
-	report.scope = "original-based female reaper, actual Main/equipment/input/scythe/respawn"
-	report.setup = {"scene":"Main.tscn", "map":"aden_world", "transform":"412", "weapon":SPEC.name,
+	check(world.player.motion.profile.profile_id == profile_id and world.player.motion.profile.frames_path == subject_path(), "production transform binds own authored image")
+	report.scope = "original-based " + profile_id + ", actual Main/equipment/input/weapon/respawn"
+	report.setup = {"scene":"Main.tscn", "map":"aden_world", "transform":str(spec.transform_id), "weapon":spec.name,
 		"qa_positioning":true, "stats_overridden":false, "background_spawn_slots_paused":true,
 		"incoming_damage":"controlled production hit and poison-tick callbacks; not an AI attack sample"}
 	var interval: float = world._normal_attack_interval()
-	await player_case(SPEC, true)
+	await player_case(spec, true)
 	world._equip_catalog("변신", {})
 	await tick(14)
 	check(not world.player.transform_active, "transform removal restores base")
 	world._equip_catalog("변신", transform)
 	await tick(14)
-	check(world.player.transform_active and world.player.motion.profile.profile_id == "transform:412" and is_equal_approx(interval, world._normal_attack_interval()), "transform roundtrip preserves original identity and cadence")
+	check(world.player.transform_active and world.player.motion.profile.profile_id == profile_id and is_equal_approx(interval, world._normal_attack_interval()), "transform roundtrip preserves original identity and cadence")
 	await inspect_poses()
 	await incoming_and_death()
 	await finish()

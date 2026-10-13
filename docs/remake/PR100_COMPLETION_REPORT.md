@@ -17,14 +17,14 @@ Godot의 화면 좌표 계산은 정상이다. `+Y`는 아래이고 게임 방�
 
 | 분류 | 실제 8방향 연속 프레임 연결 | 전체 | 미완료 |
 |---|---:|---:|---:|
-| 영웅 이상 변신 | 127 | 180 | 53 |
-| 일반 몬스터 | 126 | 258 | 132 |
+| 영웅 이상 변신 | 128 | 180 | 52 |
+| 일반 몬스터 | 134 | 258 | 124 |
 | 보스 | 31 | 60 | 29 |
 | 기본 외형 | 4 | 4 | 0 |
 
-기존 34개 확장 공용 외형과 기사·해골 표본 2개를 보존했다. `class:1/2/3`은 기존 지팡이·활·단검 외형에 연결한다. 후속 제작으로 **늑대인간·고스트·여성 사신·오우거 4개 외형**을 각자의 기존 이미지에서 새로 그려 추가했다. 각각 실제 104자세(8방향 × 대기 2·이동 3·공격 3·피격 2·사망 3)이며, 총 40개 리소스를 사용한다. 기존 원본 이미지가 일치하는 고스트 3종과 오우거 3종에 공용 연결했고, 지역 개체 4종도 별도로 실제 Main 전투를 검사했다. 새 그림은 4개이며 적용 대상은 변신 1개·몬스터 7개다. 원본 파일과 기존 모션을 덮어쓰지 않는다.
+기존 34개 확장 공용 외형과 기사·해골 표본 2개를 보존했다. `class:1/2/3`은 기존 지팡이·활·단검 외형에 연결한다. 후속 제작으로 **늑대인간·고스트·여성 사신·오우거·라바 골렘·아이스 골렘·코카트리스·사이클롭스·경비병(창) 대장 9개 외형**을 각자의 기존 이미지에서 새로 그렸다. 각 104자세(8방향 × 대기 2·이동 3·공격 3·피격 2·사망 3), 합계 936자세이며 총 45개 리소스를 사용한다. 원본이 이미 동일한 지역 개체만 공유했고 각 이름으로 Main 전투를 별도로 검사했다. 새 그림 9개가 변신 2종·몬스터 15종에 적용됐다. 원본과 기존 모션을 덮어쓰지 않는다.
 
-고정된 공개 소스의 377개 애니메이션 정의와 현재 로컬 자료를 확인했지만, 나머지 외형에 맞는 날개·마물·동물·특수 의상·창·총·이도류·클로·체인소드·낫 등의 8방향 원본은 확보하지 못했다. 서로 다른 몸체를 무리하게 대체하지 않았다. **남은 53/132/29종, 총 214종은 미완료**다. [현재 ID·사유 목록](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 기존 54/139/29종 조사표는 이전 검증 증거로 보존했다.
+고정된 공개 소스의 377개 애니메이션 정의와 현재 로컬 자료를 확인했지만, 나머지 외형에 맞는 날개·마물·동물·특수 의상·창·총·이도류·클로·체인소드·낫 등의 8방향 원본은 확보하지 못했다. 서로 다른 몸체를 무리하게 대체하지 않았다. **남은 52/124/29종, 총 205종은 미완료**다. [현재 ID·사유 목록](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 기존 54/139/29종 조사표는 이전 검증 증거로 보존했다.
 
 전체 413개 변신, 318개 몬스터/보스, 4개 기본 외형의 **735개 ID × 8방향 = 5,880행** [검증표](evidence/pr100-direction-fix/original-based/coverage/all-identities-eight-directions.csv)를 자동 생성했다. 실제 RGBA 고유 프레임과 재생 슬롯 수를 구분한다. `source_metadata_only`, `actual_gameplay=not_run`은 전수 화면 승인이 아니라는 뜻이다. 성공한 실제 Main 보고서를 명시한 행만 `recorded_Main_sample`로 표시하며 해당 증거 경로를 함께 기록한다. 같은 리소스를 쓰더라도 실행하지 않은 다른 이름은 자동 승격하지 않는다. 실제 플레이한 표본은 별도 [Main 실행 기록](evidence/pr100-direction-fix/gameplay.json)으로 제공한다.
 
@@ -72,7 +72,7 @@ APK 크기는 771,837,680 bytes, SHA-256은 `7192fb894c02e286656da514a959d82bc93
 
 실제 Main에서 늑대인간 headless **942개**, OpenGL 녹화 실행 **951개**, 고스트 headless **1,083개**, OpenGL **1,196개** 검사를 통과했다. 8방향 실제 추적/공격, 피격, 사망, 기존 확률 드랍, 수동 습득을 확인했다. 고스트의 기존 HP는 50으로 기본 캐릭터의 첫 공격에 죽으므로, 피격 모션 확인에는 실제 `take_damage(1)` 경로의 비치명 피해를 먼저 발생시킨다. 그 뒤 실제 무기로 처치하며 전투 능력치와 드랍 표는 바꾸지 않는다. 프레임별 수동 표본 검토는 AI 전투 증거와 별도로 기록한다.
 
-[실제 Main 늑대인간 영상](evidence/pr100-direction-fix/original-based/werewolf-main.mp4), [범위·원본 보존·산출물 해시](evidence/pr100-direction-fix/original-based/preservation-and-scope.json), [고스트 실제 Main 기록](evidence/pr100-direction-fix/original-based/original_based_ghost_gameplay_test-opengl.json)을 보존했다. 제작 중 발견한 프레임 겹침, 불투명 배경, 중복 낫 초안은 적용 수치에서 제외했다. 이 문단의 2개 외형은 `15c71f5`까지의 저장 내역이며, 아래 후속 제작을 포함한 현재 미완료 수는 214종이다.
+[실제 Main 늑대인간 영상](evidence/pr100-direction-fix/original-based/werewolf-main.mp4), [범위·원본 보존·산출물 해시](evidence/pr100-direction-fix/original-based/preservation-and-scope.json), [고스트 실제 Main 기록](evidence/pr100-direction-fix/original-based/original_based_ghost_gameplay_test-opengl.json)을 보존했다. 제작 중 발견한 프레임 겹침, 불투명 배경, 중복 낫 초안은 적용 수치에서 제외했다. 이 문단의 2개 외형은 `15c71f5`까지의 저장 내역이며, 아래 후속 제작을 포함한 현재 미완료 수는 205종이다.
 
 새 2개 외형을 포함한 APK도 빌드 및 독립 검사에 통과했다. 38개 compiled SpriteFrames, 1,944개 트랙, 10,528개 재생 슬롯, 236개 PNG 임포트와 캔버스 메타데이터가 일치한다. APK는 774,993,177 bytes, SHA-256 `b582568218bcf9083f592e43de52a3635e7fbdb2d926a91bc6fede3502ea4e52`다. [검사 결과](evidence/pr100-direction-fix/original-based/android/android.json). 실제 Android 기기 실행은 여전히 미검증이다. 빌드 후 adb의 읽기 전용 홈 디렉터리 오류를 빌드 실패나 기기 실행 성공과 혼동하지 않는다.
 
@@ -80,7 +80,7 @@ APK 크기는 771,837,680 bytes, SHA-256은 `7192fb894c02e286656da514a959d82bc93
 
 ## 여성 사신·오우거와 같은 원본의 지역 개체 추가
 
-`신화-사신(여)`는 기존 카탈로그 이미지 `e090d7a50d6f7a23fe55576c.png`, 오우거는 기존 `16145.png`를 기준으로 제작했다. 원본의 얼굴·의상·무기·색상을 보존하며, 각 104개 실제 포즈를 별도 PNG로 연결했다. 중복 낫·접촉한 프레임·잘못된 행 수의 후보는 제외했다. 미완료 창 경비병 후보도 집계하지 않는다.
+`신화-사신(여)`는 기존 카탈로그 이미지 `e090d7a50d6f7a23fe55576c.png`, 오우거는 기존 `16145.png`를 기준으로 제작했다. 원본의 얼굴·의상·무기·색상을 보존하며, 각 104개 실제 포즈를 별도 PNG로 연결했다. 중복 낫·접촉한 프레임·잘못된 행 수의 후보는 제외했다. 당시 창 경비병 후보는 집계하지 않았으며, 아래 세 번째 제작 묶음의 수정 시트로 별도 검증했다.
 
 고스트/글루디오 던전 유령/지옥의 고스트는 기존 `1318.png`, 오우거/기란 평원 오우거/잊혀진 섬 고대오우거는 기존 `16145.png`를 이미 공유한다. 기존 `MonsterArt.material_for`와 `MonsterVisual`에서 사용하지 않는 폴백 색·장비·폭 메타데이터만 공유 비교에서 제외하고, **원본 경로·SHA·종 연결·몸체·표시 높이·공격 형태·모션 설정은 일치해야 한다.** 서로 다른 이미지나 프로젝트 atlas의 장식을 같은 외형으로 대체하지 않는다. 각 대상의 이전 설정을 출처 메타데이터에 보존했다.
 
@@ -99,13 +99,43 @@ APK 크기는 771,837,680 bytes, SHA-256은 `7192fb894c02e286656da514a959d82bc93
 
 추가 검사: 원본/고유 포즈/공유 제한 Python 6개, 검증표의 실패 보고서·미실행 별칭 승격 방지 5개, 기존 native 35,742개, 캔버스 640개, hit feedback 58개 및 VFX 3,000회 스트레스가 통과했다. Godot 전체 임포트와 실제 Main OpenGL 기동도 통과했다. [원본 보존·새 파일 해시](evidence/pr100-direction-fix/original-based/preservation-and-scope.json), [사신 북쪽](evidence/pr100-direction-fix/original-based/original_based_reaper_gameplay_test-authored-N-idle-0.png), [사신 남쪽](evidence/pr100-direction-fix/original-based/original_based_reaper_gameplay_test-authored-S-idle-0.png), [오우거 북쪽](evidence/pr100-direction-fix/original-based/original_based_ogre_gameplay_test-authored-N-idle-0.png).
 
-현재 추가분의 APK는 **778,717,948 bytes**, SHA-256 **`578d72f67cd3b5b9f2c8bd1a8b0e0af0247c4bc1c8dc924f95b04aeb6311489e`**다. 40개 compiled SpriteFrames·2,024개 트랙·10,736개 재생 슬롯·239개 PNG 임포트 및 SHA·캔버스, ARM64·서명·16KB 정렬·ZIP CRC가 통과했다. [현재 APK 검증](evidence/pr100-direction-fix/original-based/android-expanded/android.json). 실제 Android 기기 실행은 미검증이며, APK 빌드 성공으로 대체하지 않는다.
+`bc9dddc`까지의 APK는 **778,717,948 bytes**, SHA-256 **`578d72f67cd3b5b9f2c8bd1a8b0e0af0247c4bc1c8dc924f95b04aeb6311489e`**다. 40개 compiled SpriteFrames·2,024개 트랙·10,736개 재생 슬롯·239개 PNG 임포트 및 SHA·캔버스, ARM64·서명·16KB 정렬·ZIP CRC가 통과했다. [이전 APK 검증](evidence/pr100-direction-fix/original-based/android-expanded/android.json). 실제 Android 기기 실행은 미검증이며, APK 빌드 성공으로 대체하지 않는다.
 
-`15c71f5`는 자동 CI가 등록되지 않아 기존 브랜치의 검증 workflow 29개를 명시적으로 실행했다. 2026-10-13 후속 확인에서 10 성공/19 진행·대기/0 실패였으며 최종 성공으로 표시하지 않는다. 이후 커밋은 별도로 정확한 SHA의 CI를 확인해야 한다.
+`15c71f5`는 자동 CI가 등록되지 않아 기존 브랜치의 검증 workflow 29개를 명시적으로 실행했다. 실제 종료 결과는 27 성공·1 실패·1 취소다. `bc9dddc`에서 별도로 실행한 관련 5개 workflow는 2 성공·3 실패로 종료했다. 아래 수정과 최종 HEAD의 CI를 이전 실행과 구분한다.
+
+## 골렘·코카트리스·사이클롭스·창 대장 추가
+
+이번 묶음은 기존 `15738.png`의 라바 골렘 2종, `10358.png`의 아이스 골렘, `14169.png`의 코카트리스 4종, `5683.png`의 사이클롭스, 카탈로그 `4954db6f65010804b3185b7a.png`의 경비병(창) 대장이다. **원본 5개 디자인에서 새 520자세를 제작하여 9종을 연결**했다. 원본 팔레트·얼굴·몸체·장비를 유지했고 상하·좌우를 별도로 그렸다. 코카트리스의 남쪽 접촉이 오른쪽으로 돌아간 후보는 수정했으며, 무기가 이웃 프레임에 닿은 사이클롭스·창 대장 후보는 다시 제작했다. 픽셀 중복·잘림·안전한 프레임 영역 검사도 통과했다.
+
+| 실제 Main 대상 | headless 검사 | OpenGL 검사 |
+|---|---:|---:|
+| 라바 골렘 | 1,284 | 1,397 |
+| 아이스 골렘 | 996 | 1,077 |
+| 화룡의 둥지 라바 골렘 | 1,044 | 1,053 |
+| 코카트리스 | 956 | 1,117 |
+| 기란 평원 코카트리스 | 1,020 | 1,013 |
+| 잊혀진 섬 고대코카트리스 | 1,086 | 1,095 |
+| 왜곡의 코카트리스 | 844 | 837 |
+| 사이클롭스 | 1,204 | 1,302 |
+| 경비병(창) 대장 | 1,528 | 1,553 |
+
+모두 실패 0개다. 몬스터는 각 이름별 8방향 실제 AI 추적·공격, 정상 장착 무기로 처치, 원래 확률 드랍, 수동 습득을 검사했다. 코카트리스는 HP 880을 유지한 채 30회 공격 한도를 초과하므로 검사 시도 한도를 200회로 통일했다. 낮은 HP 표본은 처치 즉시 루프를 끝내며 전투 공식을 바꾸지 않는다. 창 대장은 기사 직업에서 기존 크림슨 랜스를 장착하고 변신 176을 적용하여 8방향 타격·변신 왕복·피격·사망/부활을 검사했다. 사망 시험의 들어오는 피해는 기존 사신 시험처럼 명시적인 production 콜백 입력이며 AI 공격으로 표기하지 않는다. [실행 기록 및 검사 수](evidence/pr100-direction-fix/original-based/batch3/validation-summary.json).
+
+원본 참조 222건의 SHA-256과 이전에 추적하던 에셋은 모두 유지됐다. 새 리소스를 Git에 등록한 뒤 735개 ID × 8방향 검증표를 다시 생성했다. 새 제작 리소스 9개, 기존 리소스 36개, 총 45개이며 누락 경로·프레임 무결성 오류는 0개다. 원본/공유/포즈 Python 6개, 검증표 Python 5개, 기존 native 35,742개와 캔버스 640개 검사가 통과했다. 기존 사신과 늑대인간의 Main 회귀도 별도로 통과했다.
+
+최신 로컬 APK는 **786,426,179 bytes**, SHA-256 **`4f43f77b4198ee645f676dcdbe6272b666b23074cbcb3c61066e7f9c053d07b6`**다. compiled SpriteFrames 45개·트랙 2,224개·재생 슬롯 11,256개·PNG 임포트 246개, ARM64·서명·16KB 정렬·ZIP CRC·원본 SHA·캔버스가 통과했다. [APK 검사 결과](evidence/pr100-direction-fix/original-based/batch3/android/android.json). Android 실제 기기 실행은 미검증이다.
+
+이전 CI 실패 세 가지를 다음과 같이 수정했다.
+
+- 아덴 고정 시작점은 몬스터와 1,000px 이상 떨어져 빠른 렌더러에서 180프레임이 접근 도중 끝났다. 실제 스폰된 몬스터 근처의 통행·시야가 유효한 지점으로 검사 시작점을 선택한다. 로컬 37장 캡처와 4개 필드 활성 전투가 종료 코드 0으로 끝났다.
+- 군중 검사 종료 후 남은 독·출혈이 새 피해 숫자 VFX를 생성했다. 표본 사이에서 상태 효과도 정리한다. 실제 독·출혈 경로의 수정 전 실패를 재현했고 수정 후 재검사와 32/96/192마리 × 사냥/보스의 6개 OpenGL 표본이 모두 통과했다. 전투 중 실제 상태 효과는 그대로 검사한다.
+- L1J 합성 CI는 늑대인간 원본을 별도 `_ci_fixture` 경로로 교체하므로 원본 경로 단언과 충돌했다. 원본 SHA를 항상 검사하면서 명시적으로 선언된 합성 경로와 해당 SHA도 확인한다. 실제 원본 경로와 분리된 동일 TWILIGHT 프로젝트의 합성 경로에서 모두 통과했다. **합성 결과는 원본 화면 검증표에 포함할 수 없도록 거부한다.**
+
+원본 기반 17종의 Main 검사를 CI의 네 작업으로 나눴으며 기존 표본과 단언을 유지했다. [수정 전 CI 종료 결과](evidence/pr100-direction-fix/original-based/batch3/ci-before-fixes/bc9-ci-summary.json)는 성공으로 바꾸지 않았다. 이 문서 저장 후 푸시된 HEAD의 실제 종료 결과는 PR #100의 Checks와 본문에 기록한다. 남은 **205종 제작과 Android 실기기 실행은 미완료**다.
 
 ```sh
 python3 tools/check_resource_integrity.py --root .
-godot --headless --editor --path . --import
+godot --headless --editor --path . --import --quit
 godot --headless --path . --quit-after 120
 godot --headless --path . --script res://tests/eight_direction_animation_test.gd
 godot --headless --path . --script res://tests/native_animation_expansion_test.gd

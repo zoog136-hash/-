@@ -68,18 +68,96 @@
         "bytes": 48443,
         "sha256": "0975e65ef8b7d402b5c1bd3aa4ba72ac5374725ddf9fedb17a52680ae290a922"
       }
+    },
+    "lava_golem": {
+      "assets/actors/eight_direction/original_based/lava_golem/SpriteFrames.tres": {
+        "bytes": 25180,
+        "sha256": "58753f44c844136e4c27184edbc26042a1524a71bbeb0dd2b75f5a4e22220924"
+      },
+      "assets/actors/eight_direction/original_based/lava_golem/poses.png": {
+        "bytes": 1830178,
+        "sha256": "88f1063e77a1cd950214b0fb5a4a9469de1ea3b1dcfa0daa13caa1d67b9ca6cd"
+      },
+      "assets/actors/eight_direction/original_based/lava_golem/provenance.json": {
+        "bytes": 46882,
+        "sha256": "db4d14c675d4e26bf06f37324218f0bb66707a18641ad321f3d80e1c8cee0693"
+      }
+    },
+    "ice_golem": {
+      "assets/actors/eight_direction/original_based/ice_golem/SpriteFrames.tres": {
+        "bytes": 25187,
+        "sha256": "f16f8e03a7d0b2892cc0f8cfc5a44f5f393d1a22a448ab0dd831750ddec98518"
+      },
+      "assets/actors/eight_direction/original_based/ice_golem/poses.png": {
+        "bytes": 2230123,
+        "sha256": "18c31b7d917641f11c908fd8004b8245b185826c4a8ff26ed885dbec8ad46105"
+      },
+      "assets/actors/eight_direction/original_based/ice_golem/provenance.json": {
+        "bytes": 46409,
+        "sha256": "284245644f31bba9363f25113e01e889303b640b79525e689caa031992a4aed0"
+      }
+    },
+    "cockatrice": {
+      "assets/actors/eight_direction/original_based/cockatrice/SpriteFrames.tres": {
+        "bytes": 25214,
+        "sha256": "63c64f14f7b35845c139eb49e5d21eca43476caad204e7f5e2b60527efaf5f7b"
+      },
+      "assets/actors/eight_direction/original_based/cockatrice/poses.png": {
+        "bytes": 1759011,
+        "sha256": "a6dfd5f3fc0012267ffe4d14f35f150fb5654cd0b36e870a8efc13408e5aec14"
+      },
+      "assets/actors/eight_direction/original_based/cockatrice/provenance.json": {
+        "bytes": 49141,
+        "sha256": "888e9ae7ae7c12863c8985aedd72de5f43969d0275276c80d5b49bf7ec7e1172"
+      }
+    },
+    "cyclops": {
+      "assets/actors/eight_direction/original_based/cyclops/SpriteFrames.tres": {
+        "bytes": 25473,
+        "sha256": "66911aa52c234993d1dda4f3bb64f8a718466757137d430a8bee6f011a7f2618"
+      },
+      "assets/actors/eight_direction/original_based/cyclops/poses-0.png": {
+        "bytes": 1109766,
+        "sha256": "50db3b4956d3b948407f5ae60cab26799fb4e6ff000924c49aa70a97ca5828bf"
+      },
+      "assets/actors/eight_direction/original_based/cyclops/poses-1.png": {
+        "bytes": 1228726,
+        "sha256": "795f07f0b8da197f320eacf9b15f6b52991c67ccdcc3daa7a70fd7677b523924"
+      },
+      "assets/actors/eight_direction/original_based/cyclops/provenance.json": {
+        "bytes": 50862,
+        "sha256": "cdf18205cd038dc01febc03ff9fcdcbb447c8fc29dc49f77b918efd0eb7d1fcd"
+      }
+    },
+    "spear_captain": {
+      "assets/actors/eight_direction/original_based/spear_captain/SpriteFrames.tres": {
+        "bytes": 25505,
+        "sha256": "fcb32a8740fc2e510261884fe70f6a5fac1fce3a94f65b7bf8161ce425c4ff57"
+      },
+      "assets/actors/eight_direction/original_based/spear_captain/poses-0.png": {
+        "bytes": 1195751,
+        "sha256": "da13e98e7135e215455ab934668cd5d1d7f06d05f553076510f552da7f0f0ba4"
+      },
+      "assets/actors/eight_direction/original_based/spear_captain/poses-1.png": {
+        "bytes": 1221849,
+        "sha256": "01520a092553b0244a582804c1bf064f191d14b555375fe70efff3ce1f1210f7"
+      },
+      "assets/actors/eight_direction/original_based/spear_captain/provenance.json": {
+        "bytes": 50706,
+        "sha256": "9f87ae78b09a70f728b7f269555d041fb5f9a8bbc9d7f3eb0c073b51a9d00523"
+      }
     }
   },
   "remaining": {
-    "hero_plus": 53,
-    "normal_monster": 132,
+    "hero_plus": 52,
+    "normal_monster": 124,
     "boss": 29
   },
   "not_completed": [
-    "All remaining 214 identities",
-    "Spear guard captain: rejected crowded/wrong-row candidate; no production binding",
+    "All remaining 205 identities",
     "Actual Android device execution",
-    "Exact final-commit CI still needs terminal confirmation"
+    "Exact pushed-commit CI requires terminal confirmation"
   ],
-  "test_scope": "Production Main and real equipment/input/AI/contact/death/drop/pickup. Each regional alias tested independently. Explicit pose sampling is distinct from real input/AI. Ghost nonlethal recoil uses take_damage(1); reaper incoming/death use controlled production hit/poison callbacks. Level-105 ogre uses the existing catalog execution sword via normal equipment handler, retaining full monster HP/armor/evasion. No combat formulas or drop tables changed."
+  "test_scope": "Production Main and real equipment/input/AI/contact/death/drop/pickup. Each regional alias tested independently. Explicit pose sampling is distinct from real input/AI. Ghost nonlethal recoil uses take_damage(1); reaper incoming/death use controlled production hit/poison callbacks. Level-105 ogre uses the existing catalog execution sword via normal equipment handler, retaining full monster HP/armor/evasion. No combat formulas or drop tables changed.",
+  "latest_batch": "batch3: 5 original-based designs, 9 identities, independently exercised in real Main"
 }

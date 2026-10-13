@@ -12,9 +12,28 @@ func subject_folder() -> String: return "werewolf"
 func subject_job() -> String: return "기사"
 func prepare_lifecycle() -> void: pass
 func lifecycle_attempt_limit() -> int:
-	# High-level regional actors have 1680/2325 HP. Let the real equipped
-	# weapon finish the fight; retain their original HP, armor and hit chance.
-	return 200 if is_instance_valid(normal) and normal.max_hp > 1000 else 30
+	# Even the field cockatrice has 880 HP and survives 30 training-sword
+	# attempts. Allow the same bounded fight for every original-based target;
+	# successful low-HP fights still exit immediately. Preserve HP and armor.
+	return 200
+
+func verify_reference_binding(subject: String, proof: Dictionary) -> Dictionary:
+	var original := str(proof.reference.path)
+	check(FileAccess.get_sha256(original) == str(proof.reference.sha256), "exact original reference bytes remain unchanged")
+	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/l1j/live_visual_bindings.json"))
+	var synthetic := bool(manifest.get("synthetic_fixture_only", false))
+	var expected := original
+	if synthetic:
+		# The L1J workflow intentionally remaps reviewed portraits to isolated
+		# synthetic files. Verify that exact fixture and its digest separately;
+		# it cannot replace the original-reference hash check above.
+		var fixture := original.get_base_dir().path_join("_ci_fixture").path_join(original.get_file())
+		for binding: Dictionary in manifest.get("monsters", []):
+			if str(binding.get("game_name", "")) == subject and str(binding.get("texture", "")) == fixture:
+				expected = fixture
+				check(FileAccess.get_sha256(fixture) == str(binding.sha256), "explicit synthetic fixture digest matches")
+	check(world._monster_texture(record_for(subject)).resource_path == expected, "production portrait lookup retains the declared original or explicit CI fixture")
+	return {"synthetic_fixture":synthetic, "original":original, "resolved_portrait":expected}
 
 func run() -> void:
 	var subject := OS.get_environment("TWILIGHT_ORIGINAL_SUBJECT")
@@ -52,10 +71,11 @@ func run() -> void:
 	check(normal.motion.frame_source != null, "production Sprite2D uses authored SpriteFrames")
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/actors/eight_direction/original_based/" + subject_folder() + "/provenance.json"))
 	check((proof.target_keys as Array).has("monster:" + subject), "subject is an explicitly reviewed original-image binding")
-	check(world._monster_texture(record_for(subject)).resource_path == str(proof.reference.path), "production portrait lookup retains this exact original source")
+	var reference_binding := verify_reference_binding(subject, proof)
 	report.scope = "original-based " + subject_folder() + ", actual Main and production AI/combat/lifecycle"
 	report.setup = {"scene":"Main.tscn", "map":"aden_world", "normal":subject, "qa_positioning":true,
-		"job":subject_job(), "stats_overridden":false, "background_spawn_slots_paused":true, "normal_is_existing_population_actor":false}
+		"job":subject_job(), "stats_overridden":false, "background_spawn_slots_paused":true, "normal_is_existing_population_actor":false,
+		"reference_binding":reference_binding, "synthetic_fixture":reference_binding.synthetic_fixture}
 	await monster_case()
 	# Snapshot the real production texture regions at all role/frame/direction
 	# combinations. This pose sampling is labelled separately from the AI test.

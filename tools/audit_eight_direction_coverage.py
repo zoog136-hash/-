@@ -195,6 +195,8 @@ def attach_gameplay_evidence(result, rows, paths, output_dir):
         report = load(path)
         if report.get("failures") != [] or report.get("setup", {}).get("scene") != "Main.tscn" or report.get("checks", 0) < 1:
             raise ValueError("Not a successful production Main report: " + str(path))
+        if report.get("setup", {}).get("synthetic_fixture", False):
+            raise ValueError("Synthetic fixture execution cannot prove original-art gameplay: " + str(path))
         reference = Path(os.path.relpath(path.resolve(), output_dir.resolve())).as_posix()
         matched = set()
         for kind in ("player", "monster", "boss"):

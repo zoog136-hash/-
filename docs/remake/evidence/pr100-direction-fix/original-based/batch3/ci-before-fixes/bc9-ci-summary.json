@@ -1,0 +1,104 @@
+{
+  "sha": "bc9dddcfd99c2cf526399d06108c5375c6c17c90",
+  "observed_at_utc": "2026-10-13T12:53:38.354554+00:00",
+  "workflow_count": 5,
+  "check_count": 7,
+  "job_count": 7,
+  "terminal": true,
+  "success": 2,
+  "failure": 3,
+  "pending": 0,
+  "workflows": [
+    {
+      "id": 38394727237,
+      "name": "TWILIGHT Android ARM64 APK Playtest",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394727237",
+      "run_attempt": 1
+    },
+    {
+      "id": 38394722560,
+      "name": "L1J Runtime and Recovery Validation",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394722560",
+      "run_attempt": 1
+    },
+    {
+      "id": 38394718107,
+      "name": "TWILIGHT resource integrity (no silent missing assets)",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394718107",
+      "run_attempt": 1
+    },
+    {
+      "id": 38394713582,
+      "name": "Combat Animation Validate",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394713582",
+      "run_attempt": 1
+    },
+    {
+      "id": 38394707545,
+      "name": "Animation Presentation Validate",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394707545",
+      "run_attempt": 1
+    }
+  ],
+  "jobs": [
+    {
+      "id": 115286928677,
+      "name": "build-android-apk",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394727237/job/115286928677"
+    },
+    {
+      "id": 115286939124,
+      "name": "regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394722560/job/115286939124"
+    },
+    {
+      "id": 115286939509,
+      "name": "regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64)",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394722560/job/115286939509"
+    },
+    {
+      "id": 115286939576,
+      "name": "android-export",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394722560/job/115286939576"
+    },
+    {
+      "id": 115286900522,
+      "name": "Verify committed assets, manifest SHA, and delivery status",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394718107/job/115286900522"
+    },
+    {
+      "id": 115286887920,
+      "name": "validate",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394713582/job/115286887920"
+    },
+    {
+      "id": 115287391916,
+      "name": "presentation",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38394707545/job/115287391916"
+    }
+  ]
+}

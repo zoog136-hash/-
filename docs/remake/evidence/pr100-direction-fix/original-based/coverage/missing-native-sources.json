@@ -2,8 +2,8 @@
   "schema": 1,
   "scope": "Remaining target identities; compatible source motion unavailable, legacy art preserved",
   "missing_counts": {
-    "hero_plus": 53,
-    "normal_monster": 132,
+    "hero_plus": 52,
+    "normal_monster": 124,
     "boss": 29
   },
   "categories": {
@@ -15,15 +15,14 @@
     "No compatible published sequential weapon frames: 이도류": 2,
     "Distinctive costume is not supplied by the licensed equipment layers": 10,
     "No matching licensed eight-view body: spirit": 5,
-    "No compatible published sequential weapon frames: 창": 4,
     "No matching licensed eight-view body: special": 7,
     "No matching licensed eight-view body: beast": 2,
     "No matching licensed eight-view body: large": 4,
     "No matching licensed eight-view body: golem": 1,
     "No compatible published sequential weapon frames: 랜서": 1,
     "No compatible published sequential weapon frames: 랜스": 2,
+    "No compatible published sequential weapon frames: 창": 3,
     "No identity-compatible licensed source for bugbear": 2,
-    "No identity-compatible licensed source for lava_golem": 2,
     "No identity-compatible licensed source for succubus": 7,
     "No identity-compatible licensed source for fire": 5,
     "No identity-compatible licensed source for goat_demon": 4,
@@ -32,9 +31,7 @@
     "No identity-compatible licensed source for phoenix": 2,
     "No identity-compatible licensed source for queen": 2,
     "No identity-compatible licensed source for wolf": 3,
-    "No identity-compatible licensed source for cyclops": 1,
     "No identity-compatible licensed source for ettin": 1,
-    "No identity-compatible licensed source for cockatrice": 4,
     "No identity-compatible licensed source for demon": 10,
     "No identity-compatible licensed source for reaper": 2,
     "No identity-compatible licensed source for dog": 1,
@@ -73,7 +70,6 @@
     "No identity-compatible licensed source for salamander": 1,
     "No identity-compatible licensed source for tiger": 2,
     "No identity-compatible licensed source for scorpion": 1,
-    "No identity-compatible licensed source for stone_golem": 1,
     "No identity-compatible licensed source for ice_man": 1,
     "No identity-compatible licensed source for frog": 2,
     "No identity-compatible licensed source for dryad": 2,
@@ -180,12 +176,6 @@
       "name": "하딘의 영혼",
       "group": "hero_plus",
       "missing_source": "No matching licensed eight-view body: spirit"
-    },
-    {
-      "key": "transform:176",
-      "name": "경비병(창) 대장",
-      "group": "hero_plus",
-      "missing_source": "No compatible published sequential weapon frames: 창"
     },
     {
       "key": "transform:166",
@@ -422,12 +412,6 @@
       "missing_source": "No identity-compatible licensed source for bugbear"
     },
     {
-      "key": "monster:라바 골렘",
-      "name": "라바 골렘",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for lava_golem"
-    },
-    {
       "key": "monster:킹버그베어",
       "name": "킹버그베어",
       "group": "normal_monster",
@@ -506,22 +490,10 @@
       "missing_source": "No identity-compatible licensed source for wolf"
     },
     {
-      "key": "monster:사이클롭스",
-      "name": "사이클롭스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for cyclops"
-    },
-    {
       "key": "monster:에틴",
       "name": "에틴",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for ettin"
-    },
-    {
-      "key": "monster:코카트리스",
-      "name": "코카트리스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for cockatrice"
     },
     {
       "key": "monster:아시타지오",
@@ -590,12 +562,6 @@
       "missing_source": "No identity-compatible licensed source for lizard"
     },
     {
-      "key": "monster:기란 평원 코카트리스",
-      "name": "기란 평원 코카트리스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for cockatrice"
-    },
-    {
       "key": "monster:기란 평원 바실리스크",
       "name": "기란 평원 바실리스크",
       "group": "normal_monster",
@@ -656,12 +622,6 @@
       "missing_source": "No identity-compatible licensed source for fire"
     },
     {
-      "key": "monster:화룡의 둥지 라바 골렘",
-      "name": "화룡의 둥지 라바 골렘",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for lava_golem"
-    },
-    {
       "key": "monster:풍룡의 둥지 폭풍정령",
       "name": "풍룡의 둥지 폭풍정령",
       "group": "normal_monster",
@@ -702,12 +662,6 @@
       "name": "수룡의 둥지 파도수호자",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for water"
-    },
-    {
-      "key": "monster:잊혀진 섬 고대코카트리스",
-      "name": "잊혀진 섬 고대코카트리스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for cockatrice"
     },
     {
       "key": "monster:테베라스 아누비스 수호자",
@@ -1010,12 +964,6 @@
       "missing_source": "No identity-compatible licensed source for eye"
     },
     {
-      "key": "monster:아이스 골렘",
-      "name": "아이스 골렘",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for stone_golem"
-    },
-    {
       "key": "monster:아이스 맨",
       "name": "아이스 맨",
       "group": "normal_monster",
@@ -1212,12 +1160,6 @@
       "name": "왜곡의 제니스 퀸",
       "group": "boss",
       "missing_source": "No identity-compatible licensed source for spider_queen"
-    },
-    {
-      "key": "monster:왜곡의 코카트리스",
-      "name": "왜곡의 코카트리스",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for cockatrice"
     },
     {
       "key": "monster:왜곡의 키메라",

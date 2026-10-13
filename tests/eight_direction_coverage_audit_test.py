@@ -31,6 +31,11 @@ class CoverageAuditTest(unittest.TestCase):
             path.write_text(json.dumps(report))
             with self.assertRaisesRegex(ValueError, "Not a successful"):
                 audit.attach_gameplay_evidence(result, rows, [path], root)
+            report["failures"] = []
+            report["setup"]["synthetic_fixture"] = True
+            path.write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError, "Synthetic fixture"):
+                audit.attach_gameplay_evidence(result, rows, [path], root)
 
     def build_pack(self, root, repeated=False):
         folder = root / "assets/actors/eight_direction/test"

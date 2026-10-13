@@ -69,11 +69,6 @@ jobs:
           "$ENGINE" --headless --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-direction-gameplay.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-direction-gameplay.txt; then exit 1; fi
           grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-direction-gameplay.txt
-          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test original_based_ogre_gameplay_test original_based_reaper_gameplay_test; do
-            XDG_DATA_HOME="${RUNNER_TEMP}/${name}" "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${name}.txt"; then exit 1; fi
-            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${name}.txt"
-          done
       - name: All boss poses and real gameplay renders
         shell: bash
         run: |
@@ -89,29 +84,6 @@ jobs:
           XDG_DATA_HOME="${RUNNER_TEMP}/pr100-main-user" timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/pr100_direction_gameplay_test.gd 2>&1 | tee test-results/pr100-main-render.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/pr100-main-render.txt; then exit 1; fi
           grep -q 'PR100_DIRECTION_GAMEPLAY_OK' test-results/pr100-main-render.txt
-          for name in original_based_monster_gameplay_test original_based_ghost_gameplay_test original_based_ogre_gameplay_test original_based_reaper_gameplay_test; do
-            TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/${name}-render" TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/${name}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${name}-render-user" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}-render.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${name}-render.txt"; then exit 1; fi
-            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${name}-render.txt"
-          done
-      - name: Existing original-image regional aliases in Main
-        shell: bash
-        run: |
-          set -euo pipefail
-          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
-          while read -r label script subject; do
-            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout 300 "$ENGINE" --headless --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-headless.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-headless.txt"; then exit 1; fi
-            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-headless.txt"
-            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE=0 TWILIGHT_PR100_CAPTURE_DIR="${RUNNER_TEMP}/original-based-aliases/${label}" TWILIGHT_PR100_REPORT="${RUNNER_TEMP}/original-based-aliases/${label}/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" LIBGL_ALWAYS_SOFTWARE=1 timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-render.txt"
-            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-render.txt"; then exit 1; fi
-            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-render.txt"
-          done <<'CASES'
-          ghost-gludio original_based_ghost_gameplay_test 글루디오 던전 유령
-          ghost-hell original_based_ghost_gameplay_test 지옥의 고스트
-          ogre-giran original_based_ogre_gameplay_test 기란 평원 오우거
-          ogre-ancient original_based_ogre_gameplay_test 잊혀진 섬 고대오우거
-          CASES
       - name: Preserve runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -127,9 +99,81 @@ jobs:
             ${{ runner.temp }}/presentation/**/presentation-benchmark/
             ${{ runner.temp }}/aden-boss-special/**/aden-boss-special-results.json
             ${{ runner.temp }}/pr100-main-directions/
-            ${{ runner.temp }}/original_based_monster_gameplay_test-render/
-            ${{ runner.temp }}/original_based_ghost_gameplay_test-render/
-            ${{ runner.temp }}/original_based_ogre_gameplay_test-render/
-            ${{ runner.temp }}/original_based_reaper_gameplay_test-render/
-            ${{ runner.temp }}/original-based-aliases/
+          if-no-files-found: error
+  original-based:
+    name: Original-based Main / ${{ matrix.group }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - group: werewolf-ghost
+            cases: |
+              werewolf|original_based_monster_gameplay_test||poses
+              ghost|original_based_ghost_gameplay_test||poses
+              ghost-gludio|original_based_ghost_gameplay_test|글루디오 던전 유령|directions
+              ghost-hell|original_based_ghost_gameplay_test|지옥의 고스트|directions
+          - group: ogre-reaper
+            cases: |
+              ogre|original_based_ogre_gameplay_test||poses
+              reaper|original_based_reaper_gameplay_test||poses
+              ogre-giran|original_based_ogre_gameplay_test|기란 평원 오우거|directions
+              ogre-ancient|original_based_ogre_gameplay_test|잊혀진 섬 고대오우거|directions
+          - group: golems-cyclops
+            cases: |
+              lava-golem|original_based_lava_golem_gameplay_test||poses
+              ice-golem|original_based_ice_golem_gameplay_test||poses
+              lava-golem-nest|original_based_lava_golem_gameplay_test|화룡의 둥지 라바 골렘|directions
+              cyclops|original_based_cyclops_gameplay_test||poses
+          - group: cockatrice-spear
+            cases: |
+              cockatrice|original_based_cockatrice_gameplay_test||poses
+              cockatrice-giran|original_based_cockatrice_gameplay_test|기란 평원 코카트리스|directions
+              cockatrice-ancient|original_based_cockatrice_gameplay_test|잊혀진 섬 고대코카트리스|directions
+              cockatrice-distorted|original_based_cockatrice_gameplay_test|왜곡의 코카트리스|directions
+              spear-captain|original_based_spear_captain_gameplay_test||poses
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify existing resource ledger
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned Godot and software GL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import actual TWILIGHT project
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p test-results
+          XDG_DATA_HOME="${RUNNER_TEMP}/original-import" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
+      - name: Production Main headless and rendered gameplay
+        shell: bash
+        env:
+          ORIGINAL_CASES: ${{ matrix.cases }}
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: |
+          set -euo pipefail
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          while IFS='|' read -r label script subject capture_mode; do
+            [ -n "$label" ] || continue
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout 300 "$ENGINE" --headless --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-headless.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-headless.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-headless.txt"
+            pose_capture=0
+            if [ "$capture_mode" = poses ]; then pose_capture=1; fi
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE="$pose_capture" TWILIGHT_PR100_CAPTURE_DIR="${PWD}/test-results/${label}-render" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-render.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-render.txt"; then exit 1; fi
+            grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-render.txt"
+          done <<< "$ORIGINAL_CASES"
+      - name: Preserve actual Main logs and captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-based-${{ matrix.group }}-${{ github.sha }}
+          path: test-results/
           if-no-files-found: error

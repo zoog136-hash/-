@@ -54,6 +54,25 @@ func _validate_cache(renderer: FieldRenderer) -> void:
 		push_error("Landmark atlas continues rendering after its initial frame")
 		failed = true
 
+func _aden_combat_point(world: TwilightWorld, preferred: Vector2) -> Vector2:
+	# The old fixed point can be over 1000 px from every awake actor. A fast
+	# renderer finishes its 180-frame sample while AUTO is still travelling.
+	# Place this active-combat probe near a real spawned normal monster, with
+	# valid terrain/line of sight, then let normal population waking and AI run.
+	var candidates: Array[TwilightMonster] = []
+	for monster: TwilightMonster in world.monsters_root.get_children():
+		if not monster.dead and not monster.is_boss: candidates.append(monster)
+	candidates.sort_custom(func(a: TwilightMonster, b: TwilightMonster) -> bool:
+		return a.global_position.distance_squared_to(preferred) < b.global_position.distance_squared_to(preferred))
+	for monster: TwilightMonster in candidates:
+		for direction: int in range(8):
+			var point: Vector2 = monster.global_position + Vector2.RIGHT.rotated(float(direction) * PI / 4.) * 180.
+			point = world.field_map.cell_to_world(world.field_map.nearest_cell(point))
+			if world.field_map.walkable(point) and world.field_map.point_clear(point) and not world.field_map.is_safe(point) and world.field_map.line_clear(point, monster.global_position):
+				print("REGION_COMBAT_START ", monster.monster_name, " point=", point, " monster=", monster.global_position)
+				return point
+	return Vector2.INF
+
 func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) -> Dictionary:
 	world.rng.seed = 20261008
 	world._set_map(map_id,false)
@@ -61,6 +80,12 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 	# Keep population, AI, physics, combat, HUD and chunk streaming active here.
 	# The static screenshot phase above intentionally freezes monster AI.
 	var point: Vector2 = Vector2(3550,4300) if map_id == "aden_world" else COORD.array_vector(world.field_map.data["review_points"]["central"])
+	if map_id == "aden_world":
+		point = _aden_combat_point(world, point)
+		if not point.is_finite():
+			push_error("No real spawned Aden monster has a valid combat probe approach")
+			failed = true
+			return {"map":map_id, "setup_failed":true}
 	_aim(world,point)
 	world.player.set_auto_enabled(true)
 	var frames: Array[float] = []
@@ -110,6 +135,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 	process_ms.sort()
 	physics_ms.sort()
 	var report: Dictionary = {"map":map_id, "mode":"active_auto_hunt", "frames":frames.size(),
+		"initial_position":str(point), "aden_setup":"existing_spawn_approach" if map_id == "aden_world" else "existing_review_point",
 		"median_ms":frames[frames.size()/2], "p95_ms":frames[int(frames.size()*.95)],
 		"process_p95_ms":process_ms[int(process_ms.size()*.95)], "physics_p95_ms":physics_ms[int(physics_ms.size()*.95)],
 		"peak_draw_calls":peak_calls, "active_monsters":active_monsters,
