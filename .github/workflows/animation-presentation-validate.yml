@@ -9,6 +9,11 @@ on:
       - 'scripts/player.gd'
       - 'scripts/world.gd'
       - 'data/animation_presentation.json'
+      - 'data/combat_animation_profiles.json'
+      - 'assets/actors/eight_direction/**'
+      - 'tools/build_animation_expansion.py'
+      - 'tools/build_open_sprite_sample.gd'
+      - 'tests/*animation*'
       - 'tests/*presentation*'
       - '.github/workflows/animation-presentation-validate.yml'
   workflow_dispatch:
@@ -41,6 +46,11 @@ jobs:
           mkdir -p test-results
           "$ENGINE" --headless --path . --editor --quit 2>&1 | tee test-results/presentation-import.txt
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/presentation-import.txt; then exit 1; fi
+          python3 tests/animation_expansion_plan_test.py 2>&1 | tee test-results/animation-expansion-plan.txt
+          for name in eight_direction_animation_test native_animation_expansion_test; do
+            "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
+            if grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "test-results/${name}.txt"; then exit 1; fi
+          done
           for name in actor_motion_test animation_presentation_test boss_presentation_test authored_state_motion_test animation_restore_test monster_attack_profiles_test combat_timing_test combat_resolution_equivalence_test volley_motion_test hit_feedback_test combat_vfx_test; do
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/${name}.txt"; then exit 1; fi

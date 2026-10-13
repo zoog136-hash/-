@@ -2,6 +2,7 @@ extends SceneTree
 ## Real Main.tscn flow. Private bundle = original art; CI fixture = synthetic art.
 const ASSETS = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const THEME = preload("res://scripts/ui/renewal_theme.gd")
+const ANIMATION = preload("res://scripts/animation/animation_catalog.gd")
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 var failures: Array[String] = []
 var checks: int = 0
@@ -131,7 +132,21 @@ func _run() -> void:
 		actor.setup(monster_record, world.player, world, texture)
 		actor.set_physics_process(false)
 		actor.died.connect(world._on_monster_died)
-		check(actor.monster_name == str(binding.game_name) and actor.sprite.texture == texture, "live field actor is bound")
+		check(actor.monster_name == str(binding.game_name), "live field actor retains bound identity")
+		var configured: Dictionary = ANIMATION.records.get("monster:" + str(binding.game_name), {})
+		var native_path: String = str(configured.get("frames_path", ""))
+		if native_path.begins_with("res://assets/actors/eight_direction/") and str(configured.get("layout", "")) == "directional8":
+			# Reviewed sequential art supersedes the portrait on the live actor.
+			# The independent static bridge lookup is still asserted above.
+			var native_frames: SpriteFrames = load(native_path) as SpriteFrames
+			check(actor.motion.frame_source == native_frames and native_frames != null,
+				"live field actor uses its declared native frames")
+			var idle_track: String = "idle_%d" % actor.motion.facing8
+			check(native_frames != null and native_frames.has_animation(idle_track)
+				and actor.sprite.texture == native_frames.get_frame_texture(idle_track, 0),
+				"new live field actor displays its facing-specific native idle pose")
+		else:
+			check(actor.sprite.texture == texture, "live field actor is bound to static fallback")
 		actor.take_damage(999999)
 		check(actor.dead, "existing death callback with external static art")
 		check(str(binding.animation_status) == "STATIC_ONLY", "unclassified SPX cannot claim native combat animations")
