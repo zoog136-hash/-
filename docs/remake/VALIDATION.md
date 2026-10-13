@@ -15,9 +15,9 @@
 | 경로 | 변경 |
 |---|---|
 | `scripts/animation/actor_motion.gd`, `scripts/player.gd`, `scripts/monster.gd` | 큰 delta에서도 타격 포즈와 이벤트 유지, 콜백 도중 취소/사망 대응, 상태이상 공격 취소 |
-| `scripts/combat/boss_director.gd`, `boss_geometry.gd` | 예고 시작 시 피해 범위를 고정하고 같은 기하/시계를 사용, 사망 중단과 상태 복원 |
+| `scripts/monsters/boss_director.gd`, `boss_geometry.gd` | 예고 시작 시 피해 범위를 고정하고 같은 기하/시계를 사용, 사망 중단과 상태 복원 |
 | `scripts/world.gd`, `scripts/skills/skill_service.gd` | 공격/투사체의 개체 수명과 사이클 검증, 중복 피해·보상 방지, 자기 주변 스킬을 실제 strike 신호로 연결, 시전속도는 쿨타임에 적용 |
-| `scripts/combat/combat_flights.gd`, `combat_vfx.gd` | 지연 해제 후 남은 시간만 비행, 표시에 따른 효과 예산, 원본 프레임 duration으로 사망 표시, 모션 감소 |
+| `scripts/animation/combat_flights.gd`, `combat_vfx.gd` | 지연 해제 후 남은 시간만 비행, 표시에 따른 효과 예산, 원본 프레임 duration으로 사망 표시, 모션 감소 |
 | `scripts/maps/field_renderer.gd`, `field_population.gd` | 발 주변 지붕/수관 가림 완화, 높은 구조물의 표시 유지, 살아 있는 스폰 슬롯/보스 중복 방지 |
 | `scripts/ui/renewal_hud.gd`, 설정/스킬/아이템 표시 코드 | 실제 UI 입력 차단, 표시 설정을 월드에 반영, 숨은 연출 정지, 등급 연출, 세 개 로컬 물약 아이콘 복원 |
 | `addons/twilight_l1j/*`, `scripts/loot/ground_loot_manager.gd` | 출처 ID와 이름이 일치하는 아이콘 선택, UI 도감/바닥 이미지 우선순위 분리 |
