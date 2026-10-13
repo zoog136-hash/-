@@ -46,7 +46,8 @@ func _sample_capacity(field: PlayableField, seed_value: int) -> void:
 		var first := Vector2.INF
 		var placed: int = 0
 		for slot: int in range(int(spawn.max_count)):
-			for attempt: int in range(64):
+			var attempts: int = 160 if str(spawn.get("mode", "normal")) == "dense" else 64
+			for attempt: int in range(attempts):
 				var point: Vector2 = field.sample_spawn(str(spawn.id), rng)
 				if not point.is_finite(): break
 				if radius > 0 and point.distance_to(box.get_center()) > radius: continue

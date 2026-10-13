@@ -56,7 +56,10 @@ func _spawn_point(region: Dictionary) -> Vector2:
 	var a: Array = region.rect
 	var center := Vector2(float(a[0])+float(a[2])*.5,float(a[1])+float(a[3])*.5)
 	var spacing: float = float(region.get("min_spacing",28.))
-	for attempt: int in range(64):
+	# Dense hotspots need more attempts near capacity, without reducing the
+	# authored population target or weakening collision/spacing constraints.
+	var attempts: int = 160 if str(region.get("mode", "normal")) == "dense" else 64
+	for attempt: int in range(attempts):
 		var p: Vector2 = field.sample_spawn(str(region.id),world.rng)
 		if not p.is_finite(): return Vector2.INF
 		if radius > 0. and p.distance_to(center) > radius: continue
