@@ -38,6 +38,15 @@ func walk_until_empty(limit: int = 360) -> int:
 		frames += 1
 	return frames
 
+
+func isolate_population() -> void:
+	# Map and save/load transitions can respawn enemies immediately even when
+	# population _process is paused. This suite tests ground-loot physics, GUI,
+	# AUTO, and persistence, not hundreds of unrelated combat AI actors.
+	world.field_population.set_process(false)
+	world._clear_monsters()
+	check(world.monsters_root.get_child_count() == 0, "ground loot isolation clears map transition mobs")
+
 func pointer(view: Button, use_touch: bool) -> void:
 	var point: Vector2 = view.get_global_transform_with_canvas() * (view.size * 0.5)
 	for pressed_value: bool in [true, false]:
@@ -61,8 +70,7 @@ func _run() -> void:
 	await process_frame
 	world.set_process(false)
 	world.save_timer = -10000
-	world.field_population.set_process(false)
-	world._clear_monsters()
+	isolate_population()
 	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550,4300)))
 	var origin: Vector2 = world.player.global_position
 	var before: int = int(world.inventory.get("HP 물약", 0))
@@ -211,7 +219,7 @@ func _run() -> void:
 	var original_map: String = world.active_map_id
 	var second_map: String = str(world.maps[1]["id"])
 	world._set_map(second_map, false)
-	world.field_population.set_process(false)
+	isolate_population()
 	check(world.ground_loot.records.has(saved_id) and not world.ground_loot.views.has(saved_id), "map change hides old loot while retaining record")
 	world._spawn_ground_drop("HP 물약", world.player.global_position)
 	var saved: Array = world._ground_drops_snapshot()
@@ -220,10 +228,10 @@ func _run() -> void:
 	world._save_game(true)
 	world._clear_drops()
 	world._load_game(true)
-	world.field_population.set_process(false)
+	isolate_population()
 	check(world.ground_loot.records.size() == 2 and int(world.inventory.get("HP 물약", 0)) == before, "real save file restores two maps without grant")
 	world._set_map(original_map, false)
-	world.field_population.set_process(false)
+	isolate_population()
 	check(world.ground_loot.views.has(saved_id), "returning to region restores same ID")
 	check(absf(float(world.ground_loot.records[saved_id]["expires_at"]) - saved_time) < 0.01, "travel/load do not reset expiry")
 	world.player.global_position = origin
@@ -232,7 +240,7 @@ func _run() -> void:
 	check(world._collect_ground_drop(view), "restored item can be picked up once")
 	world._save_game(true)
 	world._load_game(true)
-	world.field_population.set_process(false)
+	isolate_population()
 	check(not world.ground_loot.records.has(saved_id), "collected item does not resurrect after save/load")
 	var duplicate: Array = saved.duplicate(true)
 	duplicate.append(duplicate[0].duplicate(true))
