@@ -11,6 +11,10 @@ var volume: HSlider
 var mute: CheckButton
 var map_visual_mode: OptionButton
 var spx_actor_mode: OptionButton
+var impact_intensity: HSlider
+var impact_readout: Label
+var reduced_motion: CheckButton
+var effect_detail: OptionButton
 
 static func apply_saved(controller: Node) -> void:
 	var saved := ConfigFile.new()
@@ -25,6 +29,7 @@ static func apply_saved(controller: Node) -> void:
 		AudioServer.set_bus_mute(0,bool(saved.get_value("audio","muted",false)) or level <= 0.0)
 
 func configure(controller: Node) -> void:
+	name = "RenewalSettings"
 	hud = controller
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -78,6 +83,49 @@ func configure(controller: Node) -> void:
 		if hud.coordinates_readout != null: hud.coordinates_readout.visible = enabled
 		_store("interface","coordinates",enabled))
 	stack.add_child(coord_toggle)
+	stack.add_child(HSeparator.new())
+	stack.add_child(UI.label("전투 연출",18,UI.GOLD))
+	stack.add_child(UI.section("피해 판정·공격 속도는 유지하며 화면 연출만 조절합니다.",12))
+	var impact_row := HBoxContainer.new()
+	stack.add_child(impact_row)
+	impact_row.add_child(UI.label("타격 연출 강도",14))
+	impact_intensity = HSlider.new()
+	impact_intensity.name = "ImpactIntensity"
+	impact_intensity.min_value = 0
+	impact_intensity.max_value = 100
+	impact_intensity.step = 5
+	impact_intensity.custom_minimum_size.x = 120
+	impact_intensity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	impact_intensity.value = clampf(float(config.get_value("visual","impact_intensity",.85)),0.0,1.0)*100.0
+	impact_row.add_child(impact_intensity)
+	impact_readout = UI.label("%d%%" % int(impact_intensity.value),14,UI.TEXT)
+	impact_readout.custom_minimum_size.x = 44
+	impact_row.add_child(impact_readout)
+	impact_intensity.value_changed.connect(func(value: float) -> void:
+		impact_readout.text = "%d%%" % int(value)
+		_store("visual","impact_intensity",value/100.0)
+		_apply_presentation())
+	reduced_motion = CheckButton.new()
+	reduced_motion.name = "ReducedMotion"
+	reduced_motion.text = "움직임 줄이기 · 화면 흔들림 끄기"
+	reduced_motion.button_pressed = bool(config.get_value("visual","reduced_motion",false))
+	reduced_motion.toggled.connect(func(enabled: bool) -> void:
+		_store("visual","reduced_motion",enabled)
+		_apply_presentation())
+	stack.add_child(reduced_motion)
+	var detail_row := HBoxContainer.new()
+	stack.add_child(detail_row)
+	detail_row.add_child(UI.label("이펙트 세부 표현",14))
+	effect_detail = OptionButton.new()
+	effect_detail.name = "EffectDetail"
+	effect_detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	effect_detail.add_item("전체")
+	effect_detail.add_item("간소화")
+	effect_detail.select(1 if str(config.get_value("visual","effect_detail","full")) == "low" else 0)
+	effect_detail.item_selected.connect(func(index: int) -> void:
+		_store("visual","effect_detail","low" if index == 1 else "full")
+		_apply_presentation())
+	detail_row.add_child(effect_detail)
 	stack.add_child(HSeparator.new())
 	stack.add_child(UI.label("월드 외형",18,UI.GOLD))
 	stack.add_child(UI.section("지도 좌표·충돌·몬스터 배치를 변경하지 않는 시각 설정입니다.",12))
@@ -139,6 +187,15 @@ func _store(section: String,key: String,value: Variant) -> void:
 	config.set_value(section,key,value)
 	var error := config.save(SETTINGS_PATH)
 	if error != OK: push_warning("Could not save UI preferences: %d" % error)
+
+func _apply_presentation() -> void:
+	var world: Node = hud.get_parent()
+	if world != null and world.has_method("apply_presentation_settings"):
+		world.call("apply_presentation_settings",{
+			"impact_intensity":impact_intensity.value/100.0,
+			"reduced_motion":reduced_motion.button_pressed,
+			"effect_detail":"low" if effect_detail.selected == 1 else "full"
+		})
 
 func _volume_changed(value: float) -> void:
 	if AudioServer.get_bus_count() > 0:
