@@ -44,6 +44,8 @@ var terrain_materials: Array[ShaderMaterial] = []
 var courtyard_materials: Array[ShaderMaterial] = []
 var terrain: Texture2D
 var buckets: Dictionary = {}
+var bucket_bounds: Dictionary = {}
+var prop_overhang := Vector2.ZERO
 var chunks: Dictionary = {}
 var ground: Node2D
 var terrain_root: Node2D
@@ -86,7 +88,12 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 		var key := Vector2i((COORD.array_vector(record["position"]) / chunk_size).floor())
 		if not buckets.has(key):
 			buckets[key] = []
+			bucket_bounds[key] = Rect2(Vector2(key)*chunk_size,Vector2.ONE*chunk_size)
 		buckets[key].append(record)
+		var extent: Rect2 = _prop_extent(record)
+		prop_overhang = prop_overhang.max(extent.position.abs()).max(extent.end.abs())
+		extent.position += COORD.array_vector(record["position"])
+		bucket_bounds[key] = (bucket_bounds[key] as Rect2).merge(extent)
 	_build_landmark_cache()
 	_build_markers()
 	_apply_visual_mode()
@@ -528,12 +535,38 @@ func _process(delta: float) -> void:
 	for sprite: Node2D in faded:
 		if not is_instance_valid(sprite):
 			continue
-		var size: Vector2 = sprite.get_meta("visual_size",Vector2(80,140)) as Vector2
-		var p: Vector2 = player.global_position
-		var behind: bool = p.y < sprite.position.y + 16 and p.y > sprite.position.y - size.y*.83 and absf(p.x-sprite.position.x)<size.x*.34
+		var behind: bool = occludes_player(sprite as Sprite2D)
 		var target_alpha: float = float(field.data["foreground"]["fade_alpha"]) if behind else 1.0
 		if not is_equal_approx(sprite.modulate.a,target_alpha):
 			sprite.modulate.a = move_toward(sprite.modulate.a,target_alpha,delta*4)
+
+func occludes_player(sprite: Sprite2D) -> bool:
+	if sprite == null or player.global_position.y >= sprite.global_position.y+16.0: return false
+	# Use the same atlas rectangle, offset and scale that is actually drawn.
+	# Checking only the feet against a narrow canopy box left the actor hidden
+	# at roof/tree edges and behind differently proportioned replacement art.
+	var foreground: Rect2 = sprite.global_transform * sprite.get_rect()
+	var actor_body: Rect2 = player.global_transform * Rect2(-18,-100,36,100)
+	return foreground.intersects(actor_body)
+
+func _prop_texture(record: Dictionary) -> Texture2D:
+	var kind: String = str(record.kind)
+	# Retain the existing cottage exception and each record's atlas choice in
+	# one place so culling and the rendered sprite cannot select different art.
+	if aden_stone_cottage != null and kind == "house" and (COORD.array_vector(record.position) == Vector2(1630,3610) or str(record.get("asset","")) == "aden_stone_cottage_v1"):
+		return aden_stone_cottage
+	return detail_textures[kind] if str(record.get("texture_style","reference")) == "aden_original" else textures[kind]
+
+func _prop_extent(record: Dictionary) -> Rect2:
+	var kind: String = str(record.kind)
+	var prop_scale: float = float(record.get("scale",1.0))
+	if textures.has(kind):
+		var size: Vector2 = _prop_texture(record).get_size()
+		var scale_value: float = float(HEIGHTS[kind])*prop_scale/size.y
+		return Rect2(Vector2(-size.x*.5,-size.y*.96)*scale_value,size*scale_value)
+	if not reference_profile.is_empty() and kind in ["crystal","altar","arch","obelisk"]:
+		return Rect2(Vector2(-90,-162)*prop_scale,Vector2(180,180)*prop_scale)
+	return Rect2(-LANDMARK_ORIGIN*prop_scale,LANDMARK_CELL*prop_scale)
 
 func refresh_visible() -> void:
 	var viewport: Viewport = get_viewport()
@@ -545,11 +578,16 @@ func refresh_visible() -> void:
 		view.position = player.global_position-view.size*.5
 	view = view.grow(float(field.data["streaming"]["margin"]))
 	var wanted: Dictionary = {}
-	var lo := Vector2i((view.position/chunk_size).floor())
-	var hi := Vector2i((view.end/chunk_size).floor())
+	# Props belong to their foot-anchor chunk. A roof/canopy can extend past
+	# that chunk and the configured margin, so consider its actual draw bounds
+	# before unloading it. Keep ordinary distant chunks unloaded.
+	var lo := Vector2i(((view.position-prop_overhang)/chunk_size).floor())
+	var hi := Vector2i(((view.end+prop_overhang)/chunk_size).floor())
 	for y: int in range(lo.y,hi.y+1):
 		for x: int in range(lo.x,hi.x+1):
 			var key := Vector2i(x,y)
+			var chunk_bounds: Rect2 = bucket_bounds.get(key,Rect2(Vector2(key)*chunk_size,Vector2.ONE*chunk_size))
+			if not chunk_bounds.intersects(view): continue
 			wanted[key] = true
 			if not chunks.has(key) and field.bounds.intersects(Rect2(Vector2(key)*chunk_size,Vector2.ONE*chunk_size)):
 				_load_chunk(key)
@@ -593,7 +631,7 @@ func _load_chunk(key: Vector2i) -> void:
 				accent.scale = Vector2.ONE * 180.0 * prop_scale / accent.texture.get_height()
 			accent.set_meta("prop_kind",kind)
 			accent.set_meta("visual_size",LANDMARK.VISUAL_SIZES.get(kind,Vector2(110,160))*prop_scale)
-			if kind in ["crystal","obelisk","arch","banner"]:
+			if kind in ["crystal","obelisk","arch","banner"] or float(accent.get_meta("visual_size").y) >= 120.0:
 				accent.set_meta("occluder",true)
 			if kind in ["rubble","rune"]:
 				accent.z_index = -8
@@ -601,17 +639,9 @@ func _load_chunk(key: Vector2i) -> void:
 			_scatter_ambient_details(node, record, kind)
 			continue
 		var sprite := Sprite2D.new()
-		sprite.texture = textures[kind]
-		# Placement records may reuse either of the two already shipped atlases.
-		# Old records keep the existing reference-profile appearance.
-		if str(record.get("texture_style","reference")) == "aden_original":
-			sprite.texture = detail_textures[kind]
+		sprite.texture = _prop_texture(record)
 		sprite.set_meta("prop_kind",kind)
 		sprite.position = COORD.array_vector(record["position"])
-		# One existing north-village house receives authored stone/slate art.
-		# Keep its map record, anchor, scale, collision and occlusion behavior.
-		if aden_stone_cottage != null and kind == "house" and (sprite.position == Vector2(1630,3610) or str(record.get("asset",""))=="aden_stone_cottage_v1"):
-			sprite.texture = aden_stone_cottage
 		var tex_size: Vector2 = sprite.texture.get_size()
 		sprite.offset = Vector2(0,-tex_size.y*.46)
 		var scale_value: float = float(HEIGHTS[kind])*float(record["scale"])/tex_size.y
@@ -622,7 +652,7 @@ func _load_chunk(key: Vector2i) -> void:
 		sprite.modulate = Color(tint,tint,tint,1)
 		if field.data.has("render_style"):
 			sprite.modulate *= Color(str(field.data["render_style"].get("prop_tint","ffffff")))
-		if kind in ["oak","oak2","pine","birch","house","tower","market","pillar"]:
+		if kind in ["oak","oak2","pine","birch","house","tower","market","pillar"] or (tex_size.y*scale_value >= 120.0 and kind not in ["grass","bush"]):
 			sprite.set_meta("occluder",true)
 		if kind in ["grass","bush"]:
 			sprite.z_index = -8
