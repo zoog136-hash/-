@@ -1,0 +1,241 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 176,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		3,
+		2,
+		1,
+		0,
+		7,
+		6,
+		5
+	],
+	"source_directions": [
+		"W",
+		"SW",
+		"S",
+		"SE",
+		"E",
+		"NE",
+		"N",
+		"NW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/antlion_small/attack.png",
+					"sha256": "bf1ddce2a345f297f3322825f46a9295e3c19e1dd13d9c9fd39c9f0bd2e86885",
+					"size": [
+						1024,
+						120
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				120
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"N": 4,
+				"NE": 4,
+				"NW": 4,
+				"S": 4,
+				"SE": 4,
+				"SW": 4,
+				"W": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "bf1ddce2a345f297f3322825f46a9295e3c19e1dd13d9c9fd39c9f0bd2e86885",
+			"source_duration_seconds": 0.266,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/antlion_small/cast.png",
+					"sha256": "bf1ddce2a345f297f3322825f46a9295e3c19e1dd13d9c9fd39c9f0bd2e86885",
+					"size": [
+						1024,
+						120
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				120
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"N": 4,
+				"NE": 4,
+				"NW": 4,
+				"S": 4,
+				"SE": 4,
+				"SW": 4,
+				"W": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "bf1ddce2a345f297f3322825f46a9295e3c19e1dd13d9c9fd39c9f0bd2e86885",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/antlion_small/death.png",
+					"sha256": "e86bffcc518426fadfd08ac59798965d09e6f8cfdcdae4461606408ea2f18ae0",
+					"size": [
+						1024,
+						144
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				144
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"N": 6,
+				"NE": 6,
+				"NW": 6,
+				"S": 6,
+				"SE": 6,
+				"SW": 6,
+				"W": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "e86bffcc518426fadfd08ac59798965d09e6f8cfdcdae4461606408ea2f18ae0",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/antlion_small/hit.png",
+					"sha256": "2abd1719b7b3ad190911bde2690e8f03a81e68c8c2807e333082e960c533d9b2",
+					"size": [
+						1024,
+						52
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				52
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"N": 2,
+				"NE": 2,
+				"NW": 2,
+				"S": 2,
+				"SE": 2,
+				"SW": 2,
+				"W": 2
+			},
+			"loop_type": "back_forth",
+			"sha256": "2abd1719b7b3ad190911bde2690e8f03a81e68c8c2807e333082e960c533d9b2",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/antlion_small/idle.png",
+					"sha256": "e29c704e9ae730b9a4c4d5e1cd8cd312643542c6f7d06e29c6e9e74af9a74d84",
+					"size": [
+						1024,
+						88
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				88
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"N": 4,
+				"NE": 4,
+				"NW": 4,
+				"S": 4,
+				"SE": 4,
+				"SW": 4,
+				"W": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "e29c704e9ae730b9a4c4d5e1cd8cd312643542c6f7d06e29c6e9e74af9a74d84",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/antlion_small/walk.png",
+					"sha256": "ae6a06cb27d0b8ecdd704fff562b294752d27318f4f44e3fbcd5a2ad5f6ec755",
+					"size": [
+						1024,
+						164
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				164
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"N": 8,
+				"NE": 8,
+				"NW": 8,
+				"S": 8,
+				"SE": 8,
+				"SW": 8,
+				"W": 8
+			},
+			"loop_type": "looped",
+			"sha256": "ae6a06cb27d0b8ecdd704fff562b294752d27318f4f44e3fbcd5a2ad5f6ec755",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

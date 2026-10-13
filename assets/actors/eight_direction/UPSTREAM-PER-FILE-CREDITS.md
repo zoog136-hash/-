@@ -216,7 +216,7 @@ Concept Artist - [Sarah Benalene](http://benalene.com/)
 * License: CC-BY 3.0
 * /art_src/concepts/eastern_concept.png ([original](http://opengameart.org/content/eastern-armor-concepts))
 
-Concept Artist - [Naraphim](http://naraphim.deviantart.com) 
+Concept Artist - [Naraphim](http://naraphim.deviantart.com)
 
 * License: CC-BY-SA 3.0
 * Various weapon inspirations ([original](http://naraphim.deviantart.com/art/Weapon-Set-Complete-2007-73660253))

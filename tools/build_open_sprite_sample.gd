@@ -32,11 +32,22 @@ func _initialize() -> void:
 			order[parts[0]] = parts.slice(1)
 	if args.size() == 2:
 		var recipes: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(args[1]))
+		var prepared: Dictionary = {}
 		for actor: String in recipes.actors:
 			var recipe: Dictionary = recipes.actors[actor]
 			var parts: Dictionary = {}
 			for layer: String in recipe.layers: parts[layer] = read_source(str(recipe.layers[layer]))
+			prepared[actor]=parts
+			for data: Dictionary in parts.values():
+				for relative: String in data.images.values():
+					if not FileAccess.file_exists(source.path_join(relative.replace("/","__"))): failures.append("missing input "+relative)
+		if not failures.is_empty():
+			printerr(failures);quit(1);return
+		for actor: String in recipes.actors:
+			var recipe: Dictionary = recipes.actors[actor]
+			var parts: Dictionary = prepared[actor]
 			build(actor,parts,order if recipe.get("equipment",false) else {},recipe)
+			if not failures.is_empty(): break
 		print("OPEN_SPRITE_EXPANSION_%s actors=%d" % ["OK" if failures.is_empty() else "FAILED",recipes.actors.size()])
 		if not failures.is_empty(): printerr(failures)
 		quit(0 if failures.is_empty() else 1)
@@ -54,6 +65,9 @@ func read_source(name_value: String) -> Dictionary:
 	var relative: String = name_value if name_value.begins_with("mods/") else "mods/fantasycore/animations/"+name_value+".txt"
 	var stem := relative.replace("/","__")
 	var mod: String = "/".join(relative.split("/").slice(0,2))
+	if not FileAccess.file_exists(source.path_join(stem)):
+		failures.append("missing metadata "+relative)
+		return {"tracks":{},"images":{}}
 	var text := FileAccess.get_file_as_string(source.path_join(stem))
 	var result := {"tracks":{},"images":{}}
 	for line: String in text.split("\n"):
@@ -87,6 +101,9 @@ func source_image(data: Dictionary, rect: Array) -> Image:
 		image_order.erase(relative);image_order.append(relative)
 		return image_cache[relative]
 	var value := Image.load_from_file(source.path_join(relative.replace("/","__")))
+	if value==null or value.is_empty():
+		failures.append("invalid input image "+relative)
+		return null
 	image_cache[relative]=value;image_order.append(relative)
 	while image_order.size()>16: image_cache.erase(image_order.pop_front())
 	return value
@@ -147,6 +164,7 @@ func build(actor: String, layers: Dictionary, order: Dictionary, recipe: Diction
 					if pos.x < 0 or pos.y < 0 or pos.x + size_value.x > 512 or pos.y + size_value.y > 512:
 						failures.append("clipped %s %s %s %d" % [actor, role, compass, index])
 					var image_value := source_image(data,rect)
+					if image_value==null: return
 					if is_equal_approx(fit,1.): frame.blend_rect(image_value, Rect2i(rect[0],rect[1],rect[2],rect[3]), pos)
 					else:
 						var part := image_value.get_region(Rect2i(rect[0],rect[1],rect[2],rect[3]))

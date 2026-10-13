@@ -128,3 +128,16 @@ git log -3 --oneline
 - 초기 캡처 실패 원인과 로그 보존: 마법형 보스 사거리를 근거리 사거리로 가정한 검사 동선; 다음 캡처는 레벨업 회복 후 최종 HP만 비교한 검사 가정. 게임 수치·AI·보상은 수정하지 않고 실제 키 입력 접근과 최저 HP 기록으로 해결. JSON 수치 배열 검사의 float/int 비교 실패도 검사에서 정규화; 프레임 내용은 바꾸지 않음.
 - 확장 일반 시스템: 동작별 contact pose, 기존 공통 재생기 사용, decoded atlas lookup cache 96MiB 예산. 실제 메모리 피크·전체 화면 검증 미완료.
 - 현재 추가 2 외형만 실제 게임 검증 통과. 다음 실행: 남은 확인된 장비/종족 recipe 변환 → 전수 연결/import/회귀 → 실제 활·시전 Main 검증. 35 shared outfits의 대량 적용은 최소 검증 통과 후에만 진행.
+
+## 확장 1차 — 실제 검/활/시전 검증 및 전체 연결 완료
+- 최소 적용 저장 커밋 `7af22e0206a8abd94647b55c28b32d5e83901e92`를 기존 PR #100에 push 완료.
+- 영웅 이상 126/180, 일반 몬스터 119/258(기존 해골 근위병 포함), 보스 31/60에 실제 연속 8방향 연결. 34개 공유 장비/종족 리소스(남녀 장비 조합 15, 생물/언데드 원본 변형 19)를 사용하며 per-ID 전용 원본 모션 수와 구별.
+- 신화-요정(여)135 + DB 훈련용 활: actual Main 20.467초 / 614프레임, 13 발사, 실제 ranged_attack 0/1/2/3 source poses, Drake 사망·바닥 드랍·습득·변신 복귀 PASS.
+- 신화-마법사(여)137 + DB 훈련용 지팡이: actual Main 23.033초 / 691프레임, 기존 HUD 마법 액션 22회 시전, Drake 사망·바닥 드랍·습득·변신 복귀 PASS. 마법 공식을 바꾸지 않음.
+- 확장 후 native 35,455 assertions / presentation 76,336 checks / boss geometry 60종·693 checks / world lifecycle 21 / weapon rules PASS. 새 Python identity/rollback 2개 PASS. 모든 변신413·몬스터318의 실제 registry load/fallback probe 누락 0.
+- 원본 입력 선택 후 recipe가 변경되어 입력 PNG 2개가 누락된 첫 확장 변환을 종료. 해당 2개만 pinned Git blob/크기/SHA로 보완, 정상 30개 변환을 재사용하고 남은/수정 5개만 변환. fail-fast 입력 검사 추가. 원본 입력 183파일 / 309,516,282B, 프로젝트에는 사용하는 PNG 92,415,885B만 추가.
+- 이름/주무기 대조로 천사궁수·창병·기마/특수 개체 7종의 부적합 대체 후보를 제거하고 이전 설정/기본 폴백을 복원. 데스나이트는 실제 skeletal-knight source, 심해마녀는 여성 staff source로 수정. `prior_visual_profile`로 자신의 확장 후보 철회 시 원래 외형 복원 지원; 다른 기능의 아트/설정을 변경하지 않음.
+- 무기 선택은 첫 실제 주무기 보너스가 범용 body label보다 우선. 사신의 사이드 등 없는 전용 무기는 미확보 유지.
+- 비사용 임시 생성 2개 폴더는 삭제하지 않고 `/workspace/research/unbound-animation-output`으로 보존, 게임 import/export 영역에서 제외.
+- 부족: 영웅 이상 54, 일반 139, 보스 29는 기존 유효 외형 유지. 정적 전수 검증과 실제 화면 표본 3 플레이어 + Drake를 구분. Android·전체 ID의 시각 검증·새 GPU 성능 측정 미완료.
+- 추가 공개 2D 생물 스프라이트(늑대/촉수)의 출처·라이선스와 원본 PNG/동작표를 조사 중. 3D 생성/모델 실행 없음. 아직 게임 적용이나 완료로 집계하지 않음.

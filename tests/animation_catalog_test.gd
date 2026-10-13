@@ -20,6 +20,7 @@ func _run() -> void:
 	actor.position = Vector2(135, 237)
 	actor.auto_enabled = true
 	var directional_count: int = 0
+	var native_count: int = 0
 	for item: Dictionary in db["변신"]:
 		var id: String = "transform:" + str(item.sourceId)
 		var resource: String = str(art.get(id, {}).get("path", item.image_path))
@@ -33,14 +34,15 @@ func _run() -> void:
 		check(not actor.class_sprite.visible, "old class still visible " + id)
 		var frames: SpriteFrames = actor.transform_sprite.sprite_frames
 		var generated: Dictionary = preload("res://scripts/animation/visual_manifest.gd").record(id)
+		if art.has(id): directional_count+=1
 		if profile.layout == "directional8" and not profile.frames_path.is_empty():
+			native_count+=1
 			for direction: int in range(8):
 				for role: String in ["idle", "walk", "attack", "hit", "death"]:
 					var key := role + "_" + str(direction)
 					check(frames.has_animation(key) and frames.get_frame_count(key) >= 2, "native eight-view action " + id + key)
 			continue
 		if art.has(id):
-			directional_count += 1
 			if generated.is_empty():
 				check(frames.get_animation_names().size() == 4, "directional layout " + id)
 			else:
@@ -59,5 +61,5 @@ func _run() -> void:
 	check(actor.class_sprite.visible and not actor.transform_sprite.visible, "clear leaves transform residue")
 	actor.queue_free()
 	await process_frame
-	if failures == 0: print("ANIMATION_CATALOG_OK transforms=413 directional=78 shared_attack=413")
+	if failures == 0: print("ANIMATION_CATALOG_OK transforms=413 registered_directional=78 native_eight_way=",native_count," shared_attack=413")
 	quit(0 if failures == 0 else 1)

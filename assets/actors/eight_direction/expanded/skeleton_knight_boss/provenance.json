@@ -1,0 +1,273 @@
+{
+	"cell": [
+		256,
+		256
+	],
+	"directions": [
+		"E",
+		"SE",
+		"S",
+		"SW",
+		"W",
+		"NW",
+		"N",
+		"NE"
+	],
+	"distinct_pixel_frames": 208,
+	"foot": [
+		128,
+		160
+	],
+	"motion": "actual sequential frames",
+	"packing": "trimmed alpha rectangles; AtlasTexture.margin restores the full original canvas",
+	"source": "Flare Game af6eee6d339ac98011864bfe89da837fe7769c28",
+	"source_direction_indices": [
+		4,
+		3,
+		2,
+		1,
+		0,
+		7,
+		6,
+		5
+	],
+	"source_directions": [
+		"W",
+		"SW",
+		"S",
+		"SE",
+		"E",
+		"NE",
+		"N",
+		"NW"
+	],
+	"source_roles": {
+		"attack": "swing",
+		"cast": "cast",
+		"death": "die",
+		"hit": "hit",
+		"idle": "stance",
+		"special": "cast",
+		"walk": "run"
+	},
+	"source_scale": 0.5,
+	"tracks": {
+		"attack": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/attack.png",
+					"sha256": "58e5060a66d60526107a87bd09b0302db5c113d178ffaaa947912fc46b75f10c",
+					"size": [
+						1024,
+						700
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				700
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"N": 4,
+				"NE": 4,
+				"NW": 4,
+				"S": 4,
+				"SE": 4,
+				"SW": 4,
+				"W": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "58e5060a66d60526107a87bd09b0302db5c113d178ffaaa947912fc46b75f10c",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"cast": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/cast.png",
+					"sha256": "c490a9e656a70a2ee07aab89fa902c8b55005eea3eabd5a8a51757dda0d74c9e",
+					"size": [
+						1024,
+						784
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				784
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"N": 4,
+				"NE": 4,
+				"NW": 4,
+				"S": 4,
+				"SE": 4,
+				"SW": 4,
+				"W": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "c490a9e656a70a2ee07aab89fa902c8b55005eea3eabd5a8a51757dda0d74c9e",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"death": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/death.png",
+					"sha256": "0b39a71568313ed8339889d2a58ceb7829c1d8ccff3f35df6a32ab5a4604a454",
+					"size": [
+						1024,
+						776
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				776
+			],
+			"direction_unique_frames": {
+				"E": 6,
+				"N": 6,
+				"NE": 6,
+				"NW": 6,
+				"S": 6,
+				"SE": 6,
+				"SW": 6,
+				"W": 6
+			},
+			"loop_type": "play_once",
+			"sha256": "0b39a71568313ed8339889d2a58ceb7829c1d8ccff3f35df6a32ab5a4604a454",
+			"source_duration_seconds": 0.8,
+			"source_frames_per_direction": 6,
+			"unique_frames_per_direction": 6
+		},
+		"hit": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/hit.png",
+					"sha256": "d3d753126663401476b6b99940d25806ae43a48fa17bfd0d483ec4532273d97f",
+					"size": [
+						1024,
+						288
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				288
+			],
+			"direction_unique_frames": {
+				"E": 2,
+				"N": 2,
+				"NE": 2,
+				"NW": 2,
+				"S": 2,
+				"SE": 2,
+				"SW": 2,
+				"W": 2
+			},
+			"loop_type": "back_forth",
+			"sha256": "d3d753126663401476b6b99940d25806ae43a48fa17bfd0d483ec4532273d97f",
+			"source_duration_seconds": 0.133,
+			"source_frames_per_direction": 2,
+			"unique_frames_per_direction": 2
+		},
+		"idle": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/idle.png",
+					"sha256": "bcf03217c45a96394eab42369898a84c55fbe4a71d3cae9477b94b2a81496547",
+					"size": [
+						1024,
+						660
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				660
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"N": 4,
+				"NE": 4,
+				"NW": 4,
+				"S": 4,
+				"SE": 4,
+				"SW": 4,
+				"W": 4
+			},
+			"loop_type": "back_forth",
+			"sha256": "bcf03217c45a96394eab42369898a84c55fbe4a71d3cae9477b94b2a81496547",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"special": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/special.png",
+					"sha256": "c490a9e656a70a2ee07aab89fa902c8b55005eea3eabd5a8a51757dda0d74c9e",
+					"size": [
+						1024,
+						784
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				784
+			],
+			"direction_unique_frames": {
+				"E": 4,
+				"N": 4,
+				"NE": 4,
+				"NW": 4,
+				"S": 4,
+				"SE": 4,
+				"SW": 4,
+				"W": 4
+			},
+			"loop_type": "play_once",
+			"sha256": "c490a9e656a70a2ee07aab89fa902c8b55005eea3eabd5a8a51757dda0d74c9e",
+			"source_duration_seconds": 0.4,
+			"source_frames_per_direction": 4,
+			"unique_frames_per_direction": 4
+		},
+		"walk": {
+			"atlas_files": [
+				{
+					"path": "res://assets/actors/eight_direction/expanded/skeleton_knight_boss/walk.png",
+					"sha256": "f8449d160e6658559da2dea9fbbe3b756c2de13bfd0ff3b85e51072e52e53b26",
+					"size": [
+						1024,
+						1080
+					]
+				}
+			],
+			"atlas_size": [
+				1024,
+				1080
+			],
+			"direction_unique_frames": {
+				"E": 8,
+				"N": 8,
+				"NE": 8,
+				"NW": 8,
+				"S": 8,
+				"SE": 8,
+				"SW": 8,
+				"W": 8
+			},
+			"loop_type": "looped",
+			"sha256": "f8449d160e6658559da2dea9fbbe3b756c2de13bfd0ff3b85e51072e52e53b26",
+			"source_duration_seconds": 0.533,
+			"source_frames_per_direction": 8,
+			"unique_frames_per_direction": 8
+		}
+	}
+}

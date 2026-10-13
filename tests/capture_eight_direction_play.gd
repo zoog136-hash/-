@@ -45,6 +45,9 @@ var lowest_hp := 0
 var inventory_before: Dictionary
 var transform_id := "46"
 var monster_name := "해골 근위병"
+var job := "기사"
+var weapon := ""
+var use_magic := false
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, label: String) -> void:
@@ -98,11 +101,18 @@ func landing() -> Vector2:
 func run() -> void:
 	if not OS.get_environment("TWILIGHT_CAPTURE_TRANSFORM").is_empty(): transform_id=OS.get_environment("TWILIGHT_CAPTURE_TRANSFORM")
 	if not OS.get_environment("TWILIGHT_CAPTURE_MONSTER").is_empty(): monster_name=OS.get_environment("TWILIGHT_CAPTURE_MONSTER")
+	if not OS.get_environment("TWILIGHT_CAPTURE_JOB").is_empty(): job=OS.get_environment("TWILIGHT_CAPTURE_JOB")
+	weapon=OS.get_environment("TWILIGHT_CAPTURE_WEAPON")
+	use_magic=OS.get_environment("TWILIGHT_CAPTURE_USE_MAGIC")=="1"
 	out=OS.get_environment("TWILIGHT_CAPTURE_DIR")
 	if out.is_empty(): out="user://eight-direction-play"
 	DirAccess.make_dir_recursive_absolute(out)
 	world=load("res://Main.tscn").instantiate();root.add_child(world)
-	check(CLASS_QA.enter_game(world),"class selection")
+	check(CLASS_QA.enter_game(world,job),"actual UI class selection")
+	if not weapon.is_empty():
+		var record: Dictionary=world._find_catalog_item_record(weapon)
+		check(not record.is_empty(),"QA weapon is an existing DB item")
+		if not record.is_empty(): world._equip_or_acquire_item(record,true)
 	world.hud._hide_aux_panels()
 	world.save_timer=-10000
 	world.rng.seed=20261013
@@ -110,6 +120,11 @@ func run() -> void:
 	for record: Dictionary in world.catalog_db["변신"]:
 		if str(record.get("sourceId",""))==transform_id: world._equip_catalog("변신",record); break
 	check(world.player.motion.profile.profile_id=="transform:"+transform_id,"actual selected transformation ID")
+	if OS.get_environment("TWILIGHT_CAPTURE_PREFLIGHT")=="1":
+		report.preflight_only=true
+		report.setup={"job":world.job_class,"weapon_type":world._current_weapon_type(),"transform":world.player.motion.profile.profile_id}
+		check(weapon.is_empty() or not world._equipped_weapon_record().is_empty(),"real weapon equipped through existing item handler")
+		await finish();return
 	var start := Vector2.INF
 	for slot: Dictionary in world.field_population.slots:
 		if is_instance_valid(slot.monster) and slot.monster.monster_name==monster_name:
@@ -141,6 +156,7 @@ func run() -> void:
 	enemy.died.connect(func(_mob: TwilightMonster) -> void: killed=true;world.player.set_auto_enabled(false);event("death",{"floor_drops":world.ground_loot.records.size()}))
 	report.setup={"map":"aden_world","transform":transform_id,"monster":monster_name,"max_hp":enemy.max_hp,
 		"attack":enemy.attack_power,"background_paused":paused-1,"stats_overridden":false,"camera_zoom":1.8,"performance_test":false}
+	report.setup.job=job;report.setup.qa_db_weapon=weapon;report.setup.existing_magic_action=use_magic
 	await seconds(.4);await shot("00-before-movement")
 	for direction: int in range(8):
 		var before := world.player.position
@@ -173,7 +189,10 @@ func run() -> void:
 		for action: String in ACTIONS[direction]: Input.action_release(action)
 	event("weapon_range_reached",{"cells":world._weapon_cell_distance(enemy),"allowed_cells":world._current_attack_range_cells()})
 	while not killed and elapsed<42.:
-		await press("attack")
+		if use_magic:
+			world.hud.combat_skill_pressed.emit("magic")
+		else:
+			await press("attack")
 		await seconds(maxf(.4,world._normal_attack_interval()+.1))
 		if player_strikes==2: await shot("10-continuous-combat")
 	check(killed,"real weapon attacks killed selected DB monster")

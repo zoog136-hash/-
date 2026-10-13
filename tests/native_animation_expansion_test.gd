@@ -4,6 +4,7 @@ extends SceneTree
 ## and live actors whose appearance is evicted from the lookup cache.
 const CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const MOTION = preload("res://scripts/animation/actor_motion.gd")
+const MONSTER_DB = preload("res://scripts/monsters/monster_catalog.gd")
 var assertions := 0
 var failures: Array[String] = []
 
@@ -15,7 +16,11 @@ func check(ok: bool, label: String) -> void:
 func run() -> void:
 	var db: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))
 	var raw: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CATALOG.PROFILE_PATH))
+	var monster_records: Dictionary = {}
+	var original: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/game_db_v17.json"))
+	for row: Dictionary in MONSTER_DB.expand(original["몬스터"]): monster_records[str(row.name)]=row
 	var resources: Dictionary = {}
+	var global_pixels: Dictionary = {}
 	var bindings := {"transform":0,"monster":0}
 	var retained := AnimatedSprite2D.new()
 	root.add_child(retained)
@@ -33,8 +38,12 @@ func run() -> void:
 			for row: Dictionary in db["변신"]:
 				if str(row.sourceId)==identity:
 					found=true
+					record=row
 					check(row.grade in ["영웅","전설","신화","유일"], "expanded real Hero+ ID "+key)
 			check(found,"transformation remains in DB "+key)
+		else:
+			check(monster_records.has(identity),"monster remains in expanded production DB "+key)
+			record=monster_records.get(identity,record)
 		bindings[kind]+=1
 		var profile = CATALOG.for_record(kind,record)
 		check(profile.frames_path==path and profile.layout=="directional8","native production profile "+key)
@@ -65,7 +74,8 @@ func run() -> void:
 					check(not pixels.is_invisible(),"no empty playback frame "+path+track)
 					var hash := HashingContext.new()
 					hash.start(HashingContext.HASH_SHA256);hash.update(pixels.get_data())
-					images[hash.finish().hex_encode()]=true
+					var digest := hash.finish().hex_encode()
+					images[digest]=true;global_pixels[digest]=true
 				check(images.size()==int(proof.tracks[role].direction_unique_frames[proof.directions[direction]]),"measured distinct source poses "+path+track)
 				if role in ["attack","ranged_attack","cast","special"]:
 					verify_contact(profile,frames,role,direction)
@@ -73,14 +83,19 @@ func run() -> void:
 			retained.sprite_frames=frames
 			retained.animation="idle_0"
 			retained_key=path+":"+profile.layout
-		total_cost+=int(CATALOG.frame_costs.get(path+":"+profile.layout,0))
+	# Make the eviction assertion independent of repeated shared-outfit bindings.
+	CATALOG.frames(retained_key.trim_suffix(":directional8"),"directional8")
+	for path: String in resources:
+		if path+":directional8"==retained_key: continue
+		CATALOG.frames(path,"directional8")
+		total_cost+=int(CATALOG.frame_costs.get(path+":directional8",0))
 	check(not resources.is_empty(),"real expansion resources installed")
 	check(CATALOG.frame_cache_bytes<=CATALOG.MAX_FRAME_CACHE_BYTES,"decoded lookup cache stays within budget")
 	if total_cost>CATALOG.MAX_FRAME_CACHE_BYTES:
 		check(not CATALOG.frame_cache.has(retained_key),"old lookup entry evicted after many appearances")
 	check(retained.sprite_frames!=null and not retained.sprite_frames.get_frame_texture("idle_0",0).get_image().is_invisible(),"eviction retains live actor artwork")
 	retained.free()
-	print("NATIVE_EXPANSION_RESULT "+JSON.stringify({"assertions":assertions,"failures":failures,"bindings":bindings,"shared_outfits":resources.size(),"lookup_cache_bytes":CATALOG.frame_cache_bytes}))
+	print("NATIVE_EXPANSION_RESULT "+JSON.stringify({"assertions":assertions,"failures":failures,"bindings":bindings,"shared_outfits":resources.size(),"distinct_rgba_frames_global":global_pixels.size(),"lookup_cache_bytes":CATALOG.frame_cache_bytes}))
 	quit(0 if failures.is_empty() else 1)
 
 func verify_contact(profile: TwilightAnimationProfile, frames: SpriteFrames, role: String, direction: int) -> void:
