@@ -6,9 +6,12 @@ const PROFILE_PATH = "res://data/combat_animation_profiles.json"
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const PRESENTATION = preload("res://scripts/animation/presentation_catalog.gd")
 const MAX_FRAME_CACHE = 96
+const MAX_FRAME_CACHE_BYTES = 96 * 1024 * 1024
 static var records: Dictionary = {}
 static var frame_cache: Dictionary = {}
 static var frame_order: Array[String] = []
+static var frame_costs: Dictionary = {}
+static var frame_cache_bytes: int = 0
 
 static func for_record(kind: String, record: Dictionary, resource: String = "") -> TwilightAnimationProfile:
 	if records.is_empty():
@@ -25,7 +28,7 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	if record.get("animation_profile", {}) is Dictionary:
 		settings = settings.duplicate(true)
 		settings.merge(record.get("animation_profile", {}), true)
-	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
+	for property: String in ["frames_path", "layout", "motion_style", "movement_fps", "reference_speed", "attack_hit_ratio", "attack_hit_frame", "action_hit_frames", "attack_animation_speed", "floating", "dedicated_attack", "animation_names"]:
 		if settings.has(property): result.set(property, settings[property])
 	result.use_profile_hit_ratio = settings.has("attack_hit_ratio")
 	for property: String in ["sprite_offset", "collision_offset", "projectile_origin", "hit_position", "shadow_size"]:
@@ -48,8 +51,9 @@ static func for_record(kind: String, record: Dictionary, resource: String = "") 
 	PRESENTATION.configure(result, kind, record)
 	# Explicit sequential-art settings outrank the generic portrait rig. Native
 	# poses already contain limb motion; moving/rotating the root adds foot slip.
-	for property: String in ["pixel_scale", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration"]:
+	for property: String in ["pixel_scale", "embedded_shadow", "authored_motion_weight", "hit_recoil", "death_duration", "body_kind"]:
 		if settings.has(property): result.set(property, settings[property])
+	if settings.has("color_tint"): result.color_tint = Color.from_string(str(settings.color_tint), Color.WHITE)
 	return result
 
 static func frames(path: String, layout: String) -> SpriteFrames:
@@ -97,10 +101,28 @@ static func frames(path: String, layout: String) -> SpriteFrames:
 	return result
 
 static func _cache_frames(key: String, result: SpriteFrames) -> void:
+	# Bound decoded texture estimates as well as entry count. A live actor keeps
+	# its own resource reference when this lookup cache evicts an old appearance.
+	var textures: Dictionary = {}
+	var bytes: int = 0
+	for animation: String in result.get_animation_names():
+		for index: int in range(result.get_frame_count(animation)):
+			var texture: Texture2D = result.get_frame_texture(animation,index)
+			while texture is AtlasTexture: texture = (texture as AtlasTexture).atlas
+			if texture != null and not textures.has(texture.get_instance_id()):
+				textures[texture.get_instance_id()] = true
+				bytes += texture.get_width() * texture.get_height() * 4
+	frame_cache_bytes -= int(frame_costs.get(key,0))
 	frame_cache[key] = result
+	frame_costs[key] = bytes
+	frame_cache_bytes += bytes
+	frame_order.erase(key)
 	frame_order.append(key)
-	while frame_order.size() > MAX_FRAME_CACHE:
-		frame_cache.erase(frame_order.pop_front())
+	while frame_order.size() > 1 and (frame_order.size() > MAX_FRAME_CACHE or frame_cache_bytes > MAX_FRAME_CACHE_BYTES):
+		var old: String = frame_order.pop_front()
+		frame_cache_bytes -= int(frame_costs.get(old,0))
+		frame_costs.erase(old)
+		frame_cache.erase(old)
 
 static func first_texture(source: SpriteFrames) -> Texture2D:
 	if source == null: return null

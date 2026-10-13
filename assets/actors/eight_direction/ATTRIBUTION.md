@@ -23,7 +23,7 @@ This is an openly licensed TWILIGHT visual adaptation, **not Lineage or
 LineageM original art**. Black plate armor, one-handed sword and shield identify
 the selected existing `transform:46` 흑기사; a sword/shield skeleton identifies
 the existing `monster:해골 근위병`. Their previous illustrative details are not
-an exact match. Other transformations and monster identities are not replaced.
+an exact match. Expanded adaptations use separately selected compatible gender, armor, weapon and creature-family sprites; these are explicitly shared outfits, not a claim of dedicated original art per ID.
 
 `tools/build_open_sprite_sample.gd` reconstructs the runtime files from the
 pinned PNG / text inputs listed by hash in `source_receipt.json`. Only runtime
@@ -33,3 +33,19 @@ unique poses separately from the back-and-forth idle playback order.
 Source stance/run durations are Flare timing, not evidence of Lineage timing.
 TWILIGHT's existing attack interval and hit ratio remain authoritative; frame 2
 is the chosen contact pose. Only visual playback is fitted around that marker.
+
+Expansion inputs are pinned and hashed in `expansion_source_receipt.json`.
+The published female/male equipment PNG layers and skeleton, goblin/hobgoblin,
+zombie, antlion, minotaur and wyvern sprites are adapted under CC BY-SA 3.0.
+Minotaur art by Lamoot and skeleton-knight art by VWolfdog carry CC BY 3.0
+([license](https://creativecommons.org/licenses/by/3.0/)); attribution and
+per-file upstream exceptions are preserved in `UPSTREAM-PER-FILE-CREDITS.md`.
+No upstream 3D model is downloaded, run, rendered or included.
+
+The converter preserves genuine directions and poses, composes the supplied
+gender-specific equipment, uniformly fits large creatures about their source
+foot pivot, and packs transparent pages no larger than 1024 x 2048. Frame hashes
+measure actual distinct pixels independently of playback slots. Runtime named
+colour tints are TWILIGHT adaptations, not additional unique bodies. Role-specific
+contact poses are TWILIGHT choices fitted to the unchanged combat timeline;
+source duration values are Flare metadata, not measured Lineage timing.

@@ -11,6 +11,9 @@ class_name TwilightAnimationProfile
 @export var reference_speed: float = 210.0
 @export_range(0.1, 0.85) var attack_hit_ratio: float = 0.45
 @export var attack_hit_frame: int = 3
+## Different authored attacks can release on different source poses.
+@export var action_hit_frames: Dictionary = {}
+@export var color_tint: Color = Color.WHITE
 @export var use_profile_hit_ratio: bool = false
 @export var attack_animation_speed: float = 1.0
 @export var sprite_offset: Vector2 = Vector2(0, -46)
@@ -39,6 +42,9 @@ class_name TwilightAnimationProfile
 
 func marker_for(style: String) -> float:
 	return clampf(attack_hit_ratio, 0.1, 0.85) if use_profile_hit_ratio else hit_ratio(style)
+
+func hit_frame_for(role: String) -> int:
+	return int(action_hit_frames.get(role, attack_hit_frame))
 
 static func weapon_style(weapon: String, attack_kind: String = "melee") -> String:
 	if attack_kind == "magic": return "magic"

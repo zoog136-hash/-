@@ -193,6 +193,7 @@ func advance(delta: float, real_velocity: Vector2) -> void:
 
 func apply(sprite: Node2D, base_scale: Vector2) -> void:
 	if not is_instance_valid(sprite): return
+	sprite.self_modulate = profile.color_tint
 	if impact_pose_pending and not dead:
 		visual_progress = attack_hit_ratio
 		_set_state("attack")
@@ -385,7 +386,7 @@ func apply_frames(sprite: Node2D) -> void:
 	var count: int = track.count
 	var frame_value: int = 0
 	if presenting_attack and _resolved_role in ["attack", "ranged_attack", "cast", "special"]:
-		var marker_frame: int = clampi(profile.attack_hit_frame, 0, count - 1)
+		var marker_frame: int = clampi(profile.hit_frame_for(_resolved_role), 0, count - 1)
 		if visual_progress < attack_hit_ratio:
 			frame_value = _weighted_frame(track, visual_progress / attack_hit_ratio, 0, maxi(0, marker_frame - 1))
 		else:

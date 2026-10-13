@@ -41,7 +41,10 @@ var player_strikes := 0
 var monster_strikes := 0
 var killed := false
 var initial_hp := 0
+var lowest_hp := 0
 var inventory_before: Dictionary
+var transform_id := "46"
+var monster_name := "해골 근위병"
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool, label: String) -> void:
@@ -53,6 +56,7 @@ func event(kind: String, values: Dictionary = {}) -> void:
 func tick() -> void:
 	await physics_frame
 	elapsed += 1.0/60.0
+	lowest_hp=mini(lowest_hp,world.hp)
 	var sprite := world.player.transform_sprite if world.player.transform_active else world.player.class_sprite
 	report.player_poses[str(sprite.animation)+":"+str(sprite.frame)] = true
 	if player_guide != null:
@@ -92,6 +96,8 @@ func landing() -> Vector2:
 	return Vector2.INF
 
 func run() -> void:
+	if not OS.get_environment("TWILIGHT_CAPTURE_TRANSFORM").is_empty(): transform_id=OS.get_environment("TWILIGHT_CAPTURE_TRANSFORM")
+	if not OS.get_environment("TWILIGHT_CAPTURE_MONSTER").is_empty(): monster_name=OS.get_environment("TWILIGHT_CAPTURE_MONSTER")
 	out=OS.get_environment("TWILIGHT_CAPTURE_DIR")
 	if out.is_empty(): out="user://eight-direction-play"
 	DirAccess.make_dir_recursive_absolute(out)
@@ -102,15 +108,15 @@ func run() -> void:
 	world.rng.seed=20261013
 	world._set_map("aden_world",false)
 	for record: Dictionary in world.catalog_db["변신"]:
-		if str(record.get("sourceId",""))=="46": world._equip_catalog("변신",record); break
-	check(world.player.motion.profile.profile_id=="transform:46","actual black knight ID")
+		if str(record.get("sourceId",""))==transform_id: world._equip_catalog("변신",record); break
+	check(world.player.motion.profile.profile_id=="transform:"+transform_id,"actual selected transformation ID")
 	var start := Vector2.INF
 	for slot: Dictionary in world.field_population.slots:
-		if is_instance_valid(slot.monster) and slot.monster.monster_name=="해골 근위병":
+		if is_instance_valid(slot.monster) and slot.monster.monster_name==monster_name:
 			enemy=slot.monster
 			start=landing()
 			if start.is_finite(): break
-	check(is_instance_valid(enemy),"existing normal skeleton spawn")
+	check(is_instance_valid(enemy),"selected monster exists in the actual map population")
 	if not is_instance_valid(enemy): finish(); return
 	event("route_setup",{"enemy_position":str(enemy.position),"stride":world.player.move_speed*world.player.equipment_move_speed_multiplier*world.player.skill_speed_multiplier*.45,"landing":str(start)})
 	check(start.is_finite(),"existing field has a clear eight-direction route")
@@ -128,12 +134,12 @@ func run() -> void:
 		previous_enemy_position=enemy.position
 		report.direction_guides="QA only: arrows show actual position changes; captions identify selected runtime track and reviewed source index"
 	world.player.set_auto_enabled(false)
-	initial_hp=world.hp;inventory_before=world.inventory.duplicate(true)
+	initial_hp=world.hp;lowest_hp=initial_hp;inventory_before=world.inventory.duplicate(true)
 	world.player.attack_strike.connect(func(id: int) -> void:
 		player_strikes+=1;event("player_strike",{"cycle":id,"enemy_hp_before_callback":enemy.hp if is_instance_valid(enemy) else -1}))
 	enemy.player_hit.connect(func(_mob: TwilightMonster,_damage: int,_kind: String) -> void: monster_strikes+=1;event("monster_strike"))
 	enemy.died.connect(func(_mob: TwilightMonster) -> void: killed=true;world.player.set_auto_enabled(false);event("death",{"floor_drops":world.ground_loot.records.size()}))
-	report.setup={"map":"aden_world","transform":"46","monster":"해골 근위병","max_hp":enemy.max_hp,
+	report.setup={"map":"aden_world","transform":transform_id,"monster":monster_name,"max_hp":enemy.max_hp,
 		"attack":enemy.attack_power,"background_paused":paused-1,"stats_overridden":false,"camera_zoom":1.8,"performance_test":false}
 	await seconds(.4);await shot("00-before-movement")
 	for direction: int in range(8):
@@ -158,18 +164,26 @@ func run() -> void:
 	while monster_strikes==0 and elapsed<18.: await tick()
 	check(monster_strikes>0,"monster AI pursuit and attack")
 	await shot("09-monster-attack")
+	# A ranged boss stops farther away than a melee monster. Approach through
+	# real movement input rather than assuming its attack range matches ours.
+	while not world._target_in_current_weapon_range(enemy) and elapsed<24.:
+		var direction: int=posmod(roundi((enemy.position-world.player.position).angle()/(PI/4.0)),8)
+		for action: String in ACTIONS[direction]: Input.action_press(action)
+		await tick()
+		for action: String in ACTIONS[direction]: Input.action_release(action)
+	event("weapon_range_reached",{"cells":world._weapon_cell_distance(enemy),"allowed_cells":world._current_attack_range_cells()})
 	while not killed and elapsed<42.:
 		await press("attack")
 		await seconds(maxf(.4,world._normal_attack_interval()+.1))
 		if player_strikes==2: await shot("10-continuous-combat")
-	check(killed,"real weapon attacks killed normal monster")
+	check(killed,"real weapon attacks killed selected DB monster")
 	check(player_strikes>=2,"consecutive attack cycles")
-	check(world.hp<initial_hp,"actual player hit")
+	check(lowest_hp<initial_hp,"actual player hit before existing recovery or potion healing")
 	await shot("11-death-floor-drop")
 	await seconds(1.1)
 	var drops: Array = world.ground_loot.snapshot()
 	report.floor_drops=drops
-	check(not drops.is_empty(),"normal monster drops on ground")
+	check(not drops.is_empty(),"selected DB monster drops on ground")
 	if not drops.is_empty():
 		var drop: Dictionary=drops[0]
 		var item: String=str(drop.item_name)
@@ -186,7 +200,7 @@ func run() -> void:
 	var speed := world._normal_attack_interval()
 	world._equip_catalog("변신",world.catalog_db["변신"][0]);await seconds(.4)
 	world._equip_catalog("변신",black);await seconds(.4)
-	check(world.player.motion.profile.profile_id=="transform:46" and is_equal_approx(speed,world._normal_attack_interval()),"transform roundtrip preserves ID and speed")
+	check(world.player.motion.profile.profile_id=="transform:"+transform_id and is_equal_approx(speed,world._normal_attack_interval()),"transform roundtrip preserves ID and speed")
 	await shot("13-transform-restored")
 	await finish()
 
@@ -196,6 +210,7 @@ func finish() -> void:
 	Input.action_release("attack")
 	report.failures=failures;report.seconds=elapsed
 	report.player_strikes=player_strikes;report.monster_strikes=monster_strikes
+	report.initial_hp=initial_hp;report.lowest_hp=lowest_hp
 	FileAccess.open(out.path_join("play-evidence.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	if is_instance_valid(world):world.queue_free()
 	await process_frame

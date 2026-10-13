@@ -117,3 +117,14 @@ git log -3 --oneline
 ```
 
 </details>
+
+## 영웅 이상 / 몬스터 확장 — 최소 연결 검증 완료
+- 기존 작업 브랜치 `feature/twilight-animation-20261013`, draft PR #100 유지. 기준 main `80076490518942647ad538ae440a91a3d3605c7e`, 확장 전 마지막 정상 커밋 `cb0cd1c046ed349a9395255050c56cf7d44cdf6b`.
+- 현재 실제 DB 영웅 이상 변신 180, 일반 258 / 보스 60. 예정 수량과 실제 적용 수량을 구분.
+- 신화-기사(여) `transform:131`: 검/방패 여성 장비 레이어, 실제 드레이크: elite wyvern 8방향 idle/walk/attack/hit/death 및 cast/ranged/special 연결. 원본 복원이 아닌 공개 CC BY-SA 3.0 2D 적합 외형 적용.
+- 입력 PNG/메타데이터 181파일, 300,715,675B를 pinned Git blob 및 SHA-256으로 검증. 연구 입력 `/workspace/research/flare`, 게임에는 사용 atlas만 포함. `expansion_source_receipt.json`에 영수증 보존.
+- Godot 4.7.2 Compatibility: 변환/import 성공. 기존 8방향 1,362 assertions, 새 확장 2,499 assertions, 타격 lifecycle 158 checks, 변신/인형/성물 restore PASS.
+- 실제 Main 녹화 `expansion-knight-drake-verified`: 종료 0 / ERROR 없음, 20.267초·608프레임, 실제 8방향 이동, 기사 14 타격·보스 5 타격, 보스 사망·바닥 드랍 2·수동 습득·변신 왕복. 자동 회복 전 최저 체력으로 피격 검증. Linux llvmpipe 소프트웨어 렌더; FPS/Android 성능 증거 아님.
+- 초기 캡처 실패 원인과 로그 보존: 마법형 보스 사거리를 근거리 사거리로 가정한 검사 동선; 다음 캡처는 레벨업 회복 후 최종 HP만 비교한 검사 가정. 게임 수치·AI·보상은 수정하지 않고 실제 키 입력 접근과 최저 HP 기록으로 해결. JSON 수치 배열 검사의 float/int 비교 실패도 검사에서 정규화; 프레임 내용은 바꾸지 않음.
+- 확장 일반 시스템: 동작별 contact pose, 기존 공통 재생기 사용, decoded atlas lookup cache 96MiB 예산. 실제 메모리 피크·전체 화면 검증 미완료.
+- 현재 추가 2 외형만 실제 게임 검증 통과. 다음 실행: 남은 확인된 장비/종족 recipe 변환 → 전수 연결/import/회귀 → 실제 활·시전 Main 검증. 35 shared outfits의 대량 적용은 최소 검증 통과 후에만 진행.
