@@ -1,0 +1,81 @@
+name: TWILIGHT publish authorized 15 icons (one-shot)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish_verified_item_15_once.yml'
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install SHA-verified PNGs and update manifest/docs
+        env:
+          SOURCE_URL: "https://sdmntprjapaneast.oaiusercontent.com/files/00000000-734c-8209-af4c-4f7853db730b/raw?se=2026-10-13T22%3A52%3A00Z&sp=r&sv=2026-02-06&sr=b&scid=8a5ece6b-62fa-5d24-91f7-dceda0131399&skoid=03727f49-62d3-42ac-8350-1c0e6559d238&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-10-13T20%3A30%3A35Z&ske=2026-10-14T20%3A30%3A35Z&sks=b&skv=2026-02-06&sig=jD4eMuva%2B7kQ%2BhvFwkK3YL5MMqb1O8kKm6SDZHsuNPA%3D"
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, io, json, os, pathlib, struct, urllib.request, zipfile
+          root = pathlib.Path(".")
+          manifest_path = root / "data/optional_item_icons_15.json"
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          rows = manifest["items"]
+          assert len(rows) == 15 and len({str(r["icon_id"]) for r in rows}) == 15
+          with urllib.request.urlopen(os.environ["SOURCE_URL"], timeout=65) as response:
+              data = response.read()
+          assert hashlib.sha256(data).hexdigest() == "5bc8e83dde421205399a0604a0606d0192de08933486db26fbbf497b52df0c1e", "archive checksum mismatch"
+          names = []
+          with zipfile.ZipFile(io.BytesIO(data), "r") as archive:
+              assert len(archive.namelist()) == 15, "Unexpected entries in archive"
+              for row in rows:
+                  target = pathlib.Path("assets/original_items/inventory") / (str(row["icon_id"]) + ".png")
+                  content = archive.read(target.as_posix())
+                  assert hashlib.sha256(content).hexdigest() == row["sha256"], "PNG checksum mismatch"
+                  assert content.startswith(b"\x89PNG\r\n\x1a\n") and struct.unpack(">II", content[16:24]) == (128,128), "PNG format mismatch"
+                  dest = root / target
+                  dest.parent.mkdir(parents=True, exist_ok=True)
+                  if dest.exists():
+                      assert dest.read_bytes() == content, "Refusing to overwrite existing file"
+                  else:
+                      dest.write_bytes(content)
+                  names.append(target.as_posix())
+          ignore = root / ".gitignore"
+          old = ignore.read_text(encoding="utf-8")
+          kept = [s for s in old.splitlines() if s.strip() not in names and not s.startswith("# Optional third-party item icon pack (personal local use only).")]
+          ignore.write_text("\n".join(kept).rstrip() + "\n", encoding="utf-8")
+          manifest["rights"] = "Public repository inclusion authorized by project owner on 2026-10-14; source imagery remains PC/Remaster reference; specific license terms not supplied."
+          manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
+          docs = root / "docs/item-visuals/OPTIONAL_PRIVATE_15.md"
+          prior = docs.read_text(encoding="utf-8")
+          intro = """# 아이템 이미지 15종 — 공개 main에 PNG 포함 (2026-10-14)
+
+          사용자 확인에 따라 원본 ZIP의 15종 128×128 PNG를 `assets/original_items/inventory/{iconId}.png`에 포함했습니다. 별도 로컬 팩 설치는 필요하지 않습니다.
+
+          - 원본: 사용자 제공 `immma2004.zip`의 `img/item/{iconId}.png`, 15/15 SHA-256 일치
+          - 사용자 확인: 공개 저장소 이미지 게시·재배포 권한 확보
+          - 출처 구분: PC/리마스터 계열 참조 이미지이며 현행 리니지M 제작사의 공식 인증 이미지라는 뜻은 아닙니다
+          - 적용 방식: sourceId가 없는 정확한 이름·종류·슬롯 매칭에만 사용하며 기존 검수 이미지 우선순위는 변경하지 않습니다
+          - 기존 아이템 데이터베이스, 저장 데이터, 강화 수치, 드랍/전투 설정 변경 없음
+          - 확인: `python3 tools/install_optional_item_icons.py --root . --verify` 와 `tests/item_optional_icons_test.gd`
+
+          """
+          tail = prior[prior.index("## 적용 항목"):] if "## 적용 항목" in prior else ""
+          docs.write_text(intro+tail, encoding="utf-8")
+          print("PUBLIC_ICON_PACK_INSTALLED 15/15 exact SHA-256 files")
+          PY
+      - name: Commit all 15 PNGs to main and remove the one-shot workflow
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f -- assets/original_items/inventory/{7,75,473,474,3028,3029,3030,3032,3721,3725,3727,4944,4955,4956,7836}.png
+          git add -- .gitignore data/optional_item_icons_15.json docs/item-visuals/OPTIONAL_PRIVATE_15.md
+          git rm -f -- .github/workflows/publish_verified_item_15_once.yml
+          git diff --cached --stat
+          git commit -m 'feat: include 15 SHA-verified item PNGs in public main'
+          git push origin HEAD:main
