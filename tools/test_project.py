@@ -18,8 +18,9 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
 parser.add_argument('--render-visual-tests',action='store_true',help='Compatibility flag: frame-dependent tests always use a real renderer')
-parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; exhaustive map/save and skill-learning audits have a 540-second minimum')
+parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; regional map audits run in five independently timed shards')
 parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
+parser.add_argument('--region-shard-timeout',type=int,default=360,help='Seconds per world family; all five families mandatory')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 # CI checkouts intentionally omit third-party visuals; install tiny, original
@@ -69,6 +70,10 @@ for name,extra in tests:
         try:
             budget=timeout_budget(name,args.timeout,args.import_timeout)
             command=[args.godot,*display_args,'--path',str(root),*extra]
+            if name=='world_regions_test':
+                command=[sys.executable,str(root/'tools/world_region_shards.py'),'--godot',args.godot,
+                         '--path',str(root),'--logs',str(logs/'world-region-shards'),
+                         '--timeout',str(args.region_shard_timeout)]
             if visual and sys.platform.startswith('linux') and not env.get('DISPLAY'):
                 if not shutil.which('xvfb-run'):
                     raise RuntimeError('Visual test requires xvfb-run (or DISPLAY); never wait for frame_post_draw in headless mode')
