@@ -20,6 +20,23 @@ jobs:
         run: |
           python3 -m py_compile samples/oman01/build_sample.py
           python3 samples/oman01/build_sample.py --self-test
+      - name: Validate authored 2D dungeon atlas
+        run: |
+          python3 samples/oman01/make_floor.py /tmp/oman01_flagstones.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, struct, zlib
+          p=Path('/tmp/oman01_flagstones.png')
+          raw=p.read_bytes()
+          assert raw[:8]==b'\\x89PNG\\r\\n\\x1a\\n'
+          w,h=struct.unpack('>II',raw[16:24])
+          assert (w,h)==(768,192) and len(raw)>1000
+          first=hashlib.sha256(raw).hexdigest()
+          import subprocess,sys
+          subprocess.run([sys.executable,'samples/oman01/make_floor.py',str(p)],check=True)
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==first
+          print('ORIGINAL_2D_ART_VALIDATED',len(raw),first)
+          PY
       - name: Install the project's engine
         run: |
           mkdir -p /tmp/oman01-godot
