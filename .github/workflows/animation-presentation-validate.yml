@@ -212,6 +212,14 @@ jobs:
             cases: |
               albino-giant-crab|original_based_albino_giant_crab_gameplay_test||poses
               kraken-transform|original_based_kraken_transform_gameplay_test||poses
+          - group: snowman-yeti
+            cases: |
+              snowman|original_based_snowman_gameplay_test||poses
+              yeti|original_based_yeti_gameplay_test||poses
+          - group: ice-man-scorpion
+            cases: |
+              ice-man|original_based_ice_man_gameplay_test||poses
+              scorpion|original_based_scorpion_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

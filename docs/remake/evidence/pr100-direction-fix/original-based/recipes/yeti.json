@@ -1,0 +1,57 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate a separate NEW transparent RGBA 2D sprite atlas from ONLY the attached original TWILIGHT monster portrait. The original stays unchanged. Match its detailed hand-painted isometric 2D dark-fantasy style, anatomy and exact palette. EXACTLY8 direction columns by8 phase rows,64 separately articulated actual poses on a large square canvas. Keep the ENTIRE silhouette at most38percent of each cell width AND height, with very large clear transparent gutters/borders. No overlapping pose rectangles. Direction columns E true right PROFILE,SE front-right,S full FRONT toward screen down,SW front-left,W true left PROFILE,NW rear-left,N full BACK toward screen up,NE rear-right. Genuine anatomical rotations; never a face looking backward in N. Phase rows1 relaxed idle,2 different breathing idle,3 walking phaseA,4 walking phaseB,5 walking phaseC,6 attack windup,7 attack directed contact,8 recovery. Correct physical articulation and different joint positions in every phase; never repeat, translate or scale a still. Keep constant body volume. No text, grid, floor/shadows/background, detached effects or added gear. Background and gaps between limbs are alpha0, not black. Preserve the exact bulky hunched WHITE/GRAY furry ape-like yeti: broad high rounded shoulders, small recessed face partly hidden under long white brow fur, long heavy fur-covered arms ending in large gray fingers, stocky bent legs and broad gray clawed toes, silver-gray chest/belly shading and very long layered white back fur. No horns, armor, belt, weapon, colored skin or smiling cartoon face. Original silhouette is deeply hunched with hands hanging near knees. N shows solid shaggy back/shoulders and rear head with face fully hidden. Walk alternates actual bent knee/foot contacts and opposing arms. Melee attack draws its own fist/forearm back, drives the heavy fist down-forward into the direction, then recovers, keeping the whole body inside the cell.\nHIT/DEATH EXACT PROMPT:\nDraw a separate NEW fully transparent RGBA HIT/DEATH atlas of ONLY the FIRST attached original TWILIGHT monster portrait. Preserve that exact original anatomy/palette/details. SECOND image is the approved same-identity idle/movement reference for body volume and consistent views; do not copy its phase arrangement. Detailed hand-painted isometric 2D dark-fantasy game sprites. EXACTLY8 direction columns by5 phase rows,40 genuinely different joint-articulated poses, preferably a wide landscape canvas. All silhouettes at most35percent of cell width AND height including collapsed poses; huge transparent gutters, safely contained borders, no neighboring-body rectangle overlaps. Columns E right profile,SE front-right,S fully front screen down,SW front-left,W left profile,NW back-left,N full rear screen up,NE back-right. N must hide front eyes/face/buttons/chest; exact eight rotated views through the entire fall. ROW1 nonlethal impact recoil with body flexing backward,ROW2 different recoil recovery,ROW3 death beginning with legs/body losing support,ROW4 body falling much lower,ROW5 entirely collapsed LOW body on the ground, clearly flatter than row4. Keep original head/limbs/tail/equipment visible and connected, never a disappearing shadow. No blood, gore, wounds, severed pieces, flash, explosion or extra particles. No idle/walk/attack rows. No repeating or merely translating/scaling any still. No text/grid/background/floor/shadows. Alpha0 everywhere outside the actual body, even between limbs. Preserve the exact bulky hunched WHITE/GRAY furry ape-like yeti: broad high rounded shoulders, small recessed face partly hidden under long white brow fur, long heavy fur-covered arms ending in large gray fingers, stocky bent legs and broad gray clawed toes, silver-gray chest/belly shading and very long layered white back fur. No horns, armor, belt, weapon, colored skin or smiling cartoon face. Original silhouette is deeply hunched with hands hanging near knees. N shows solid shaggy back/shoulders and rear head with face fully hidden.  Death must retain the entire recognizable original identity, including the snowman's cap/twig arms, the yeti's shaggy white fur, the ice man's ice limbs or the scorpion's whole segmented tail/pincers as appropriate.",
+  "prompt_record_kind": "exact final prompts; unchanged original portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/yeti/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/yeti/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared the original portrait and all generated phases/views. Preserve the exact bulky hunched WHITE/GRAY furry ape-like yeti: broad high rounded shoulders, small recessed face partly hidden under long white brow fur, long heavy fur-covered arms ending in large gray fingers, stocky bent legs and broad gray clawed toes, silver-gray chest/belly shading and very long layered white back fur. No horns, armor, belt, weapon, colored skin or smiling cartoon face. Original silhouette is deeply hunched with hands hanging near knees. N shows solid shaggy back/shoulders and rear head with face fully hidden. Walk alternates actual bent knee/foot contacts and opposing arms. Melee attack draws its own fist/forearm back, drives the heavy fist down-forward into the direction, then recovers, keeping the whole body inside the cell. Main has64 actual idle/walk/attack poses and the separate hit/death sheet has40 real poses ending in a low recognizable complete body. All eight anatomical views keep N rear/S front; source and output PNG bytes remain unchanged. Strict disjoint-body, canvas and unique-pixel checks pass. Use one uniform living-height scale and proportional virtual canvases. Actual Main combat, transparency, hit/death/drop/pickup and visible identity are still pending; import alone is not counted as completion."
+  }
+}

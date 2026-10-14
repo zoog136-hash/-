@@ -69,6 +69,10 @@ class OriginalBasedImportTest(unittest.TestCase):
                              "ancient_penguin": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "albino_giant_crab": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "kraken_transform": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "snowman": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "yeti": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "ice_man": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "scorpion": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
@@ -86,7 +90,7 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah", "bone_dragon", "king_bugbear", "ettin", "ancient_penguin", "pan", "albino_giant_crab", "kraken_transform"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah", "bone_dragon", "king_bugbear", "ettin", "ancient_penguin", "pan", "albino_giant_crab", "kraken_transform", "snowman", "yeti", "ice_man", "scorpion"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
             expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin"} else 104
