@@ -11,11 +11,10 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	player = actor
 	y_sort_enabled = true
 	authored_art_enabled = false
-	var atlas: Texture2D = load("res://assets/maps/aden/terrain.png")
-	var crop := AtlasTexture.new()
-	crop.atlas = atlas
-	crop.region = Rect2(0,atlas.get_height()/2.0,atlas.get_width()/2.0,atlas.get_height()/2.0)
-	sample_floor = crop
+	sample_floor = load("res://samples/oman01/assets/oman01_flagstones.png")
+	if sample_floor == null:
+		push_error("Oman 1F floor atlas unavailable; refuse placeholder fallback")
+		return
 	refresh_visible()
 
 func refresh_visible() -> void:
@@ -74,7 +73,7 @@ class SampleChunk extends Node2D:
 					continue
 				var p: Vector2 = map.cell_to_world(cell)
 				ground.cells.append(p)
-				ground.variations.append(float((x*73856093 ^ y*19349663)&15)/15.0)
+				ground.variations.append(float((x*73856093 ^ y*19349663)&31)/31.0)
 				for edge: int in range(4):
 					var heading: int = edge*2
 					if map.can_step(cell,heading):
@@ -89,7 +88,9 @@ class SampleChunk extends Node2D:
 					rail.position = (a+b)*0.5
 					rail.a = a-rail.position
 					rail.b = b-rail.position
-					rail.pillar = (x+y+edge)%5==0
+					var wall_line: int = y if edge == 0 else x
+					rail.kind = "fence" if edge < 2 and ((wall_line*173+101)&15)<9 else ("masonry" if edge < 2 else "curb")
+					rail.pillar = ((x*7+y*5+edge)%11)==0
 					rail.debug = debug
 					rail.set_meta("source_closed_edge",[x,y,heading])
 					add_child(rail)
@@ -101,39 +102,65 @@ class StoneGround extends Node2D:
 	var variations: Array[float] = []
 	var debug: bool = false
 	func _draw() -> void:
-		var uv := PackedVector2Array([Vector2(0,0.5),Vector2(0.5,0),Vector2(1,0.5),Vector2(0.5,1)])
+		if texture == null: return
 		for i: int in range(cells.size()):
 			var p: Vector2 = cells[i]
-			var corners := PackedVector2Array([p+Vector2(-24,0),p+Vector2(0,-12),p+Vector2(24,0),p+Vector2(0,12)])
-			var shade: float = 0.47+variations[i]*0.11
-			var tint := Color(shade,shade*0.96,shade*0.83)
+			var idx: int = clampi(int(variations[i]*31.0),0,31)
+			var uv := Rect2(float((idx%8)*96),float((idx/8)*48),96,48)
+			var shade: float = 0.83 + float(idx%7)*0.015
+			var tint := Color(shade,shade,shade*0.95)
+			if debug: tint = Color(0.27,0.58,0.46)
+			draw_texture_rect_region(texture,Rect2(p-Vector2(24,12),Vector2(48,24)),uv,tint)
 			if debug:
-				tint = Color(0.28,0.52,0.46)
-			draw_polygon(corners,PackedColorArray([tint,tint,tint,tint]),uv,texture)
-			if debug:
-				draw_polyline(PackedVector2Array([corners[0],corners[1],corners[2],corners[3],corners[0]]),Color(0.1,0.24,0.22,0.5),0.6,true)
+				var c:=PackedVector2Array([p+Vector2(-24,0),p+Vector2(0,-12),p+Vector2(24,0),p+Vector2(0,12),p+Vector2(-24,0)])
+				draw_polyline(c,Color(0.12,0.23,0.19,0.5),0.7,true)
 
 class IronBoundary extends Node2D:
+	## Visual representation ONLY. Movement collision remains the A3 directional map.
+	## Wall material types are TWILIGHT reference-inspired art, not exact M prop IDs.
 	var a: Vector2
 	var b: Vector2
+	var kind: String = "curb"
 	var pillar: bool = false
 	var debug: bool = false
+
 	func _draw() -> void:
 		if debug:
 			draw_line(a,b,Color(0.95,0.28,0.18),3.0,true)
 			return
-		var up := Vector2(0,-38)
-		draw_line(a+Vector2(3,5),b+Vector2(3,5),Color(0,0,0,0.55),12.0,true)
-		draw_line(a,b,Color(0.12,0.11,0.095),9.0,true)
-		draw_line(a+Vector2(0,-5),b+Vector2(0,-5),Color(0.35,0.32,0.25),5.0,true)
-		for t: float in [0.0,0.25,0.5,0.75,1.0]:
-			var p: Vector2 = a.lerp(b,t)
-			draw_line(p+Vector2(0,-7),p+up,Color(0.16,0.15,0.125),2.8,true)
-			draw_line(p+Vector2(1,-7),p+up+Vector2(1,0),Color(0.42,0.38,0.28),0.8,true)
-			draw_colored_polygon(PackedVector2Array([p+up+Vector2(0,-6),p+up+Vector2(-2.5,0),p+up+Vector2(2.5,0)]),Color(0.38,0.34,0.26))
-		draw_line(a+up,b+up,Color(0.43,0.39,0.3),3.3,true)
-		draw_line(a+Vector2(0,-17),b+Vector2(0,-17),Color(0.2,0.18,0.14),2.8,true)
+		var foot:=Vector2(0,7)
+		draw_colored_polygon(PackedVector2Array([a,b,b+foot,a+foot]),Color("1a201f"))
+		draw_line(a+foot,b+foot,Color("080b0d"),2,true)
+		draw_line(a,b,Color("505147"),2.8,true)
+		draw_line(a+Vector2(0,-2),b+Vector2(0,-2),Color("777260"),.9,true)
+		if kind=="curb":
+			if pillar: _rubble(a.lerp(b,.5))
+			return
+		if kind=="masonry":
+			var up:=Vector2(0,-34)
+			draw_colored_polygon(PackedVector2Array([a,b,b+up,a+up]),Color("282f2e"))
+			draw_line(a+up,b+up,Color("716f5c"),2.5,true)
+			draw_line(a+Vector2(0,-17),b+Vector2(0,-17),Color("101616"),1.5,true)
+			for part: float in [0.2,0.52,0.84]:
+				var pos:=a.lerp(b,part)
+				draw_line(pos+Vector2(0,-17),pos+Vector2(0,-34),Color("151b1b"),1.1,true)
+		else:
+			draw_line(a+Vector2(0,-38),b+Vector2(0,-38),Color("394241"),3.5,true)
+			for i: int in range(6):
+				var p:=a.lerp(b,float(i)/5.0)
+				var up:=Vector2(0,-39-float((i*5)%4))
+				draw_line(p,p+up,Color("111719"),3.5,true)
+				draw_line(p+Vector2(1,0),p+up+Vector2(1,0),Color("46514a"),.8,true)
+				draw_colored_polygon(PackedVector2Array([p+up,p+up+Vector2(-2,-4),p+up+Vector2(2,-4)]),Color("394039"))
+			draw_line(a+Vector2(0,-15),b+Vector2(0,-15),Color("323d3b"),2.7,true)
+			draw_line(a+Vector2(0,-29),b+Vector2(0,-29),Color("0e1414"),2.0,true)
 		if pillar:
-			draw_colored_polygon(PackedVector2Array([Vector2(-6,0),Vector2(-6,-49),Vector2(0,-53),Vector2(6,-49),Vector2(6,0),Vector2(0,4)]),Color(0.25,0.23,0.2))
-			draw_line(Vector2(0,-52),Vector2(0,3),Color(0.42,0.38,0.3),2.0,true)
-			draw_line(Vector2(-7,-49),Vector2(0,-54),Color(0.55,0.49,0.37),2.0,true)
+			var p:Vector2=a.lerp(b,.48)
+			draw_colored_polygon(PackedVector2Array([p+Vector2(-6,2),p+Vector2(6,2),p+Vector2(5,-38),p+Vector2(0,-43),p+Vector2(-6,-38)]),Color("2c3432"))
+			draw_line(p+Vector2(-6,-38),p+Vector2(0,-43),Color("676956"),2,true)
+			draw_line(p+Vector2(-3,-35),p+Vector2(-3,2),Color("596055"),1.1,true)
+			draw_rect(Rect2(p+Vector2(-7,-1),Vector2(14,6)),Color("44473e"),true)
+
+	func _rubble(pos: Vector2)->void:
+		draw_colored_polygon(PackedVector2Array([pos+Vector2(-8,1),pos+Vector2(6,1),pos+Vector2(10,-5),pos+Vector2(-5,-9)]),Color("323a37"))
+		draw_line(pos+Vector2(-5,-9),pos+Vector2(10,-5),Color("6b6b59"),1.4,true)
