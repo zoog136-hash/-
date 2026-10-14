@@ -233,12 +233,15 @@ jobs:
           fi
           grep -q "FIELD_WORLD_OK" godot-field-world.log
 
+      - name: Verify regional test shard coverage and failure handling
+        run: python3 tools/test_world_region_shards.py
+
       - name: All playable world regions
         shell: bash
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-region-tests"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/world_regions_test.gd 2>&1 | tee godot-world-regions.log
+          python3 tools/world_region_shards.py --godot ./Godot_v4.7.2-stable_linux.x86_64 --path . --logs world-region-shards --timeout 360 2>&1 | tee godot-world-regions.log
           if grep -E "SCRIPT ERROR:|ERROR:|REGION FAIL:|WORLD_REGIONS_FAILED" godot-world-regions.log; then
             exit 1
           fi
@@ -283,4 +286,6 @@ jobs:
             ${{ runner.temp }}/twilight-render/**/world-regions-review/*.png
             ${{ runner.temp }}/twilight-render/**/world-regions-review/*.json
             godot-*.log
+            world-region-shards/*.log
+            world-region-shards/summary.json
           if-no-files-found: error

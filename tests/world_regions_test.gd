@@ -46,6 +46,7 @@ func _run() -> void:
 		if not id.begins_with(prefix):
 			continue
 		tested += 1
+		var started_ms: int = Time.get_ticks_msec()
 		world._set_map(id,false)
 		world.field_population.set_process(false)
 		for monster: TwilightMonster in world.monsters_root.get_children():
@@ -81,6 +82,7 @@ func _run() -> void:
 			var slot: Dictionary = world.field_population.slots[int(monster.get_meta("field_slot"))]
 			var levels: Array = slot["region"]["level"]
 			check(monster.monster_level>=int(levels[0]) and monster.monster_level<=int(levels[1]),id+" authored regional levels applied without DB mutation")
+		print("REGION TIMING ",id," before_routes_ms=",Time.get_ticks_msec()-started_ms)
 		for raw: Array in field.data["route_checks"]:
 			var goal: Vector2 = COORD.array_vector(raw)
 			var route: PackedVector2Array = field.path(spawn,goal)
@@ -130,6 +132,7 @@ func _run() -> void:
 			await physics_frame
 		world.player.set_touch_vector(Vector2.ZERO)
 		check(world.player.global_position.x>spawn.x+100,id+" actual joystick movement")
+		print("REGION TIMING ",id," before_save_ms=",Time.get_ticks_msec()-started_ms)
 		world._save_game(true)
 		var saved: Vector2 = world.player.global_position
 		var saved_gold: int = world.gold
@@ -179,6 +182,7 @@ func _run() -> void:
 		await process_frame
 		check(old_cache.get_ref()==null,id+" leaving region releases its render cache")
 		check(world.field_map != null and world.field_minimap.field==world.field_map,id+" world services refresh after portal")
+		print("REGION TIMING ",id," full_ms=",Time.get_ticks_msec()-started_ms)
 		print("REGION CHECKED ",id)
 	if prefix.is_empty():
 		check(tested==24 and families.size()==5,"all 24 new maps and all five families tested")

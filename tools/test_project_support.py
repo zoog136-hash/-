@@ -30,7 +30,11 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
     """Keep exhaustive real-save audits bounded without dropping assertions."""
     if name == 'import':
         return max(requested, import_timeout)
-    if name in ('world_regions_test', 'original_skill_learning_conditions_test'):
+    if name == 'world_regions_test':
+        # Five isolated family shards (360 seconds each by default), not one
+        # 540-second timer shared by all 24 maps. The child enforces deadlines.
+        return max(requested, 1860)
+    if name == 'original_skill_learning_conditions_test':
         return max(requested, 540)
     if name == 'ground_loot_system_test':
         # The unchanged 166-check full GUI/physics/save/loot suite completed
