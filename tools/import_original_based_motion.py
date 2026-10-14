@@ -41,8 +41,10 @@ def sharing_identity(target):
 
     MonsterArt.material_for returns no shader for external_l1j portraits, and
     MonsterVisual omits fallback weapons/crests for these existing family
-    bindings. Their exact reference, body category, height, attack style and
-    animation profile must still agree. Project atlas artwork stays strict.
+    bindings. Byte-identical portrait files may have distinct names/bindings;
+    their SHA, dimensions, body, height, attack style and animation profile
+    must agree. Every bound source is independently checked by import_sheet.
+    Project atlas artwork (including its selected region) stays strict.
     """
     presentation = json.loads(json.dumps(target["presentation_to_preserve"]))
     reference = target["reference"]
@@ -51,6 +53,7 @@ def sharing_identity(target):
         visual = presentation.get("visual", {})
         presentation["visual"] = {key: value for key, value in visual.items()
                                   if key not in {"atlas", "cell", "variant", "width", "weapon", "crest", "accent"}}
+        reference = {key: reference[key] for key in ("kind", "sha256", "image_size")}
     return reference, presentation
 
 
@@ -180,9 +183,11 @@ def import_sheet(root, candidate, actor, keys, apply):
     if any(sharing_identity(row) != identity for row in bindings):
         raise ValueError("Cannot share an authored sheet across different original images/presentations")
     reference = first["reference"]
-    original = root / reference["path"].removeprefix("res://")
-    if sha(original) != reference["sha256"]:
-        raise ValueError("Original reference bytes changed")
+    originals = [(root / row["reference"]["path"].removeprefix("res://"), row["reference"]["sha256"])
+                 for row in bindings]
+    for original, expected_sha in originals:
+        if sha(original) != expected_sha:
+            raise ValueError("Original reference bytes changed: " + str(original))
     review = candidate.get("review", {})
     for key in ("identity_preserved", "eight_views", "motion_roles", "no_clipping"):
         if review.get(key) is not True:
@@ -247,8 +252,9 @@ def import_sheet(root, candidate, actor, keys, apply):
     (folder / "SpriteFrames.tres").write_text(spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames))
     proof = {"schema": 1, "source": "Newly authored from the existing target image; not recovered original animation",
              "reference": reference, "target_keys": keys, "presentation_to_preserve": first["presentation_to_preserve"],
+             "target_references": {row["key"]: row["reference"] for row in bindings},
              "target_presentations": {row["key"]: row["presentation_to_preserve"] for row in bindings},
-             "sharing_rule": "Exact original reference and rendered presentation. Existing external portrait family aliases omit only unused fallback ornaments; project atlases remain strict.",
+             "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
              "authoring_instructions": candidate["prompt"], "instruction_record_kind": candidate.get("prompt_record_kind", "exact_prompt"), "visual_review": review,
              "directions": DIRECTIONS, "source_directions": DIRECTIONS, "source_direction_indices": list(range(8)),
              "cell": [256, 256], "foot": [128, 160], "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
@@ -275,10 +281,10 @@ def import_sheet(root, candidate, actor, keys, apply):
                             "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff", "sprite_offset": [0, round(-32 * scale, 6)],
                             "embedded_shadow": False, "authored_motion_weight": 0, "hit_recoil": 0,
                             "action_hit_frames": {"attack": 1}, "attack_hit_frame": 1, "death_duration": SECONDS["death"],
-                            "movement_fps": len(role_frames["walk"][0]) / SECONDS["walk"], "authoring_reference": reference["path"]})
+                            "movement_fps": len(role_frames["walk"][0]) / SECONDS["walk"], "authoring_reference": targets[key]["reference"]["path"]})
             document["profiles"][key] = profile
         expansion.save_profiles(root / "data/combat_animation_profiles.json", document)
-    if sha(original) != reference["sha256"] or any(sha(candidate_image(root, spec["output_path"])) != atlas["sha256"] for spec, atlas in zip(sheets, atlases)):
+    if any(sha(original) != expected_sha for original, expected_sha in originals) or any(sha(candidate_image(root, spec["output_path"])) != atlas["sha256"] for spec, atlas in zip(sheets, atlases)):
         raise AssertionError("Byte preservation failed")
     return {"resource": str(folder), "identities": keys, "poses": geometry["distinct_pixel_frames"], "original_unchanged": True, "applied": apply}
 

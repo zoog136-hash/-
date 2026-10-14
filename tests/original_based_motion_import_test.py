@@ -23,6 +23,7 @@ class OriginalBasedImportTest(unittest.TestCase):
                       ("크랩맨", "에바 왕국 크랩맨"), ("아시타지오", "오만한 아시타지오"),
                       ("알비노 개구리", "알비노 뿔 개구리"), ("파이어 에그", "공포의 파이어 에그"),
                       ("혼 켈베로스", "잔혹한 혼 켈베로스"),
+                      ("샤벨 타이거", "잔혹한 샤벨타이거"),
                       ("용의 계곡 본 드래곤", "불멸의 본 드래곤", "지옥의 본 드래곤")]:
             first = targets["monster:" + names[0]]
             for name in names[1:]:
@@ -35,10 +36,44 @@ class OriginalBasedImportTest(unittest.TestCase):
             other = copy.deepcopy(first)
             other["reference"]["sha256"] = "different original"
             self.assertNotEqual(importer.sharing_identity(first), importer.sharing_identity(other))
+            other = copy.deepcopy(first)
+            other["presentation_to_preserve"]["visual"]["body"] = "different anatomy"
+            self.assertNotEqual(importer.sharing_identity(first), importer.sharing_identity(other))
+            other = copy.deepcopy(first)
+            other["reference"]["image_size"] = [1, 2]
+            self.assertNotEqual(importer.sharing_identity(first), importer.sharing_identity(other))
         atlas = next(row for row in targets.values() if row["reference"]["kind"] == "existing_project_atlas")
         other = copy.deepcopy(atlas)
         other["presentation_to_preserve"]["visual"]["variant"] = -999
         self.assertNotEqual(importer.sharing_identity(atlas), importer.sharing_identity(other))
+        other = copy.deepcopy(atlas)
+        other["reference"]["path"] = "res://assets/different-atlas.png"
+        self.assertNotEqual(importer.sharing_identity(atlas), importer.sharing_identity(other))
+
+    def test_byte_identical_portrait_alias_checks_each_actual_source_before_writing(self):
+        plan = json.loads((ROOT / "data/animation_authoring_sources.json").read_text())
+        targets = {row["key"]: row for row in plan["targets"]}
+        keys = ["monster:샤벨 타이거", "monster:잔혹한 샤벨타이거"]
+        references = [targets[key]["reference"] for key in keys]
+        self.assertNotEqual(references[0]["path"], references[1]["path"])
+        self.assertEqual(importer.sharing_identity(targets[keys[0]]), importer.sharing_identity(targets[keys[1]]))
+        self.assertEqual(*(importer.sha(ROOT / ref["path"].removeprefix("res://")) for ref in references))
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "data").mkdir()
+            (root / "data/animation_authoring_sources.json").write_text(json.dumps(plan))
+            for ref in references:
+                path = root / ref["path"].removeprefix("res://")
+                path.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(ROOT / ref["path"].removeprefix("res://"), path)
+            secondary = root / references[1]["path"].removeprefix("res://")
+            secondary.write_bytes(b"intentionally different secondary reference, never game art")
+            with self.assertRaisesRegex(ValueError, "Original reference bytes changed"):
+                importer.import_sheet(root, {}, "tiger_alias", keys, True)
+            self.assertFalse((root / "assets/actors").exists())
+            self.assertFalse((root / "data/combat_animation_profiles.json").exists())
+            self.assertEqual(importer.sha(root / references[0]["path"].removeprefix("res://")), references[0]["sha256"])
+            self.assertEqual(secondary.read_bytes(), b"intentionally different secondary reference, never game art")
 
     def test_all_source_references_remain_unchanged(self):
         plan = json.loads((ROOT / "data/animation_authoring_sources.json").read_text())
@@ -73,13 +108,16 @@ class OriginalBasedImportTest(unittest.TestCase):
                              "yeti": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "ice_man": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "scorpion": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "dire_wolf": [("poses-0.png", 8), ("poses-1.png", 4)],
+                             "saber_tiger": [("poses-0.png", 8), ("poses-1.png", 4)],
+                             "basilisk": [("poses-0.png", 8), ("poses-1.png", 4)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "spear_captain": [("poses-0.png", 8), ("poses-1.png", 5)]}.items():
             folder = ROOT / "assets/actors/eight_direction/original_based" / actor
             proof = json.loads((folder / "provenance.json").read_text())
-            expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin"} else 104
+            expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin", "dire_wolf", "saber_tiger", "basilisk"} else 104
             self.assertEqual(proof["distinct_pixel_frames"], expected_poses)
             parts = []
             for index, (name, rows) in enumerate(specs):
@@ -90,17 +128,18 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah", "bone_dragon", "king_bugbear", "ettin", "ancient_penguin", "pan", "albino_giant_crab", "kraken_transform", "snowman", "yeti", "ice_man", "scorpion"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah", "bone_dragon", "king_bugbear", "ettin", "ancient_penguin", "pan", "albino_giant_crab", "kraken_transform", "snowman", "yeti", "ice_man", "scorpion", "dire_wolf", "saber_tiger", "basilisk"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
-            expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin"} else 104
+            expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin", "dire_wolf", "saber_tiger", "basilisk"} else 104
             self.assertEqual(len(frames), expected_poses)
             self.assertEqual(len(tracks), 40)
             used = []
             for role, rows in importer.ROLES.items():
                 for direction in range(8):
                     track = tracks[f"{role}_{direction}"]
-                    reviewed_counts = {("reaper_male", "walk"): 2, ("asitagio", "death"): 2, ("ettin", "death"): 2}
+                    reviewed_counts = {("reaper_male", "walk"): 2, ("asitagio", "death"): 2, ("ettin", "death"): 2,
+                                       ("dire_wolf", "death"): 2, ("saber_tiger", "death"): 2, ("basilisk", "death"): 2}
                     self.assertEqual(len(track["frames"]), reviewed_counts.get((actor, role), len(rows)))
                     self.assertEqual(track["loop"], role in ("idle", "walk"))
                     used.extend(frame["texture"] for frame in track["frames"])
@@ -108,6 +147,23 @@ class OriginalBasedImportTest(unittest.TestCase):
             if actor == "reaper_male":
                 profile = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]["transform:258"]
                 self.assertAlmostEqual(profile["movement_fps"], 2 / importer.SECONDS["walk"])
+
+    def test_tiger_alias_retains_each_original_path_with_one_native_resource(self):
+        folder = ROOT / "assets/actors/eight_direction/original_based/saber_tiger"
+        proof = json.loads((folder / "provenance.json").read_text())
+        profiles = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]
+        targets = {row["key"]: row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
+        keys = ["monster:샤벨 타이거", "monster:잔혹한 샤벨타이거"]
+        self.assertEqual(proof["target_keys"], keys)
+        self.assertEqual(proof["target_references"], {key: targets[key]["reference"] for key in keys})
+        self.assertEqual(profiles[keys[0]]["frames_path"], profiles[keys[1]]["frames_path"])
+        self.assertEqual(profiles[keys[0]]["pixel_scale"], profiles[keys[1]]["pixel_scale"])
+        for key in keys:
+            self.assertEqual(profiles[key]["authoring_reference"], targets[key]["reference"]["path"])
+        _, textures, tracks = audit.read_spriteframes(folder / "SpriteFrames.tres")
+        self.assertEqual(len(textures), 96)
+        self.assertEqual(len(tracks), 40)
+        self.assertEqual(len({frame["path"] for frame in textures.values()}), 2)
 
     def test_pan_keeps_separate_real_spear_phases_and_original_identity(self):
         folder = ROOT / "assets/actors/eight_direction/original_based/pan"

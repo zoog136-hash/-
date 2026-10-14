@@ -220,6 +220,12 @@ jobs:
             cases: |
               ice-man|original_based_ice_man_gameplay_test||poses
               scorpion|original_based_scorpion_gameplay_test||poses
+          - group: wolf-tiger-basilisk
+            cases: |
+              dire-wolf|original_based_dire_wolf_gameplay_test||poses
+              saber-tiger|original_based_saber_tiger_gameplay_test||poses
+              saber-tiger-cruel|original_based_saber_tiger_gameplay_test|잔혹한 샤벨타이거|directions
+              basilisk|original_based_basilisk_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

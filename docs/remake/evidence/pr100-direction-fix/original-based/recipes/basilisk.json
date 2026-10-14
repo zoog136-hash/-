@@ -1,0 +1,56 @@
+{
+  "prompt": "main-v2 EXACT PROMPT:\nEdit the SECOND attached sprite atlas. The FIRST attached unchanged original portrait is the identity reference. Correct ONLY the SIXTH COLUMN which is intended NORTHWEST / REAR-LEFT. Every one of its 8 poses must point diagonally toward the UPPER-LEFT corner: SNOUT at UPPER LEFT, REAR/TAPERED TAIL at LOWER RIGHT, the viewer sees RUMP, BACK and BACK OF HEAD. This is the opposite diagonal from the existing SW fourth column. Do not duplicate SW. Do not draw the snout at lower-left or lower-right, including attack, recoil and fully collapsed phases. Hide the frontal face/mouth and front teeth behind the back of the head, especially during attack. Keep the other seven columns E,SE,S,SW,W,N,NE as already drawn and do not horizontally mirror the entire atlas. Repaint true articulated rear-left anatomical poses, never merely move or scale a still. Keep8columns ×8rows, full separated bodies with wide clean transparent gutters, alpha0 background, no added text/grid/haze/shadows. Preserve exact original olive or blue-gray skin/scute/spine palette and whole original tail/limb count. The8 phase rows are2idle,3walk,3attack; all eighth directions must keep facing while attacking. In NW the jaws lunge away to upper-left, so the back of the head hides the open mouth. Identity: Preserve the exact pictured low OLIVE/BROWN scaled basilisk reptile: broad ridged head with small original side horn/spikes and heavy toothy jaw, pale ivory bony dorsal spikes along its long back, thick tapered tail, original short splayed reptile limbs with pale hooked claws, cream underside highlights. Follow the attached original limb count and body proportions exactly. No wings, human torso, gear, invented bright colors or additional heads. Keep the whole original tail and every dorsal spike. N has tail/rear spine ridge/back of head facing away with no frontal face, S the original broad reptile face and front claws. Walking uses three actual articulated alternating reptile leg contacts with natural tail counterbalance. Attack lowers and draws the head back, snaps original jaws forward in the compass direction, then recoils.\n\nhit-v3 EXACT PROMPT:\nEdit the SECOND attached sprite atlas. The FIRST attached unchanged original portrait is the identity reference. Correct ONLY the SIXTH COLUMN which is intended NORTHWEST / REAR-LEFT. Every one of its 4 poses must point diagonally toward the UPPER-LEFT corner: SNOUT at UPPER LEFT, REAR/TAPERED TAIL at LOWER RIGHT, the viewer sees RUMP, BACK and BACK OF HEAD. This is the opposite diagonal from the existing SW fourth column. Do not duplicate SW. Do not draw the snout at lower-left or lower-right, including attack, recoil and fully collapsed phases. Hide the frontal face/mouth and front teeth behind the back of the head, especially during attack. Keep the other seven columns E,SE,S,SW,W,N,NE as already drawn and do not horizontally mirror the entire atlas. Repaint true articulated rear-left anatomical poses, never merely move or scale a still. Keep8columns ×4rows, full separated bodies with wide clean transparent gutters, alpha0 background, no added text/grid/haze/shadows. Preserve exact original olive or blue-gray skin/scute/spine palette and whole original tail/limb count. The4 rows are2hit,2death. Final row stays a flattened complete body with limp limbs and whole tail; the head rests upper-left and the tail rests lower-right. Do not stand or turn toward camera while dying. Identity: Preserve the exact pictured low OLIVE/BROWN scaled basilisk reptile: broad ridged head with small original side horn/spikes and heavy toothy jaw, pale ivory bony dorsal spikes along its long back, thick tapered tail, original short splayed reptile limbs with pale hooked claws, cream underside highlights. Follow the attached original limb count and body proportions exactly. No wings, human torso, gear, invented bright colors or additional heads. Keep the whole original tail and every dorsal spike. N has tail/rear spine ridge/back of head facing away with no frontal face, S the original broad reptile face and front claws. Walking uses three actual articulated alternating reptile leg contacts with natural tail counterbalance. Attack lowers and draws the head back, snaps original jaws forward in the compass direction, then recoils.",
+  "prompt_record_kind": "exact selected prompts; unchanged original portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "output_path": "res://assets/actors/eight_direction/original_based/basilisk/poses-0.png"
+    },
+    {
+      "rows": 4,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3
+        ]
+      },
+      "output_path": "res://assets/actors/eight_direction/original_based/basilisk/poses-1.png"
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Both main and hit/death NW views were repainted as rear-left with head upper-left and tail lower-right. Reviewed all8 views and real articulated phases; last death poses are low complete bodies with folded/splayed limbs. Rejected front-left NW and standing-death drafts are not used. Exactly96 real poses:64 main+32 hit/death with2 actual death phases. No duplicate third death slot. One uniform maximum-living-height scale preserves the original78px budget. Preserve the exact pictured low OLIVE/BROWN scaled basilisk reptile: broad ridged head with small original side horn/spikes and heavy toothy jaw, pale ivory bony dorsal spikes along its long back, thick tapered tail, original short splayed reptile limbs with pale hooked claws, cream underside highlights. Follow the attached original limb count and body proportions exactly. No wings, human torso, gear, invented bright colors or additional heads. Keep the whole original tail and every dorsal spike. N has tail/rear spine ridge/back of head facing away with no frontal face, S the original broad reptile face and front claws. Walking uses three actual articulated alternating reptile leg contacts with natural tail counterbalance. Attack lowers and draws the head back, snaps original jaws forward in the compass direction, then recoils. All source and generated PNG bytes remain unchanged; disjoint-body and unique-pixel checks pass. Actual Main verification remains pending; import alone is not completion."
+  }
+}
