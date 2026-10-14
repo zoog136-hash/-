@@ -1,0 +1,65 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate a production 2D isometric RPG animation atlas faithfully based ONLY on the attached ORIGINAL lizard game portrait. Preserve this exact slender low quadrupedal reptile: deep navy and vivid cyan/teal scales, narrow long snout, pale gray/cream underside and claws, four thin splayed bent legs, a long tapering tail, and the distinctive line of red/orange triangular spines along the back and tail. Keep original silhouette, body proportions, palette and number of limbs. No wings, armor, clothing, horns not in reference, weapon or fire. Match the detailed small painted RPG style and elevated camera. Transparent RGBA; exclude black portrait background and shadow. Exactly8 columns x8 rows=64 genuinely distinct articulated whole-body poses. The complete lizard INCLUDING long tail occupies only the central 40% of each cell, broad transparent margins and outer padding. No touching/overlapping/clipping, no text/grid/effects. Eight column directions in EVERY row: E true right profile with snout RIGHT and tail LEFT; SE front-right with snout DOWN-RIGHT; S direct FRONT with snout DOWN toward viewer and foreshortened torso/tail receding UP; SW front-left snout DOWN-LEFT; W true left profile snout LEFT and tail RIGHT; NW back-left snout UP-LEFT; N full BACK with tail toward viewer/DOWN and snout pointing away/UP; NE back-right snout UP-RIGHT. Side, diagonal, front and back must clearly differ. Especially do NOT put right-facing lizards in W/NW columns. Rows1-2 different poised idle breathing/tail tension, rows3-5 three real four-legged crawling steps with alternating feet and swaying articulated tail, row6 bite windup draws head back, row7 lunging open-jaw bite CONTACT in EXACT column direction, row8 jaw and body recovery. S and N bite must remain foreshortened front and rear, not turn sideways. All64 genuinely articulated unique poses, no repeated or merely shifted/scaled still. Maintain the original lean blue/red-spined lizard rather than inventing a bulky dragon or a plain white gecko.\nHIT/DEATH EXACT PROMPT:\nCreate the matching HIT and DEATH animation atlas from the FIRST attached ORIGINAL lizard game portrait, with the SECOND attached main animation sheet as style/scale/palette reference. Preserve the exact slender quadruped: dark navy and brilliant cyan/teal scales, slim long snout, pale gray belly/claws, four thin splayed legs, long tapering tail, and bright red-orange triangular dorsal/tail spines. No wings, clothing, armor, invented appendages or fire. Same detailed painted isometric 2D RPG view. Transparent RGBA, no backdrop/shadow/text/grid/effects. Exactly EIGHT COLUMNS x FIVE ROWS, forty separated whole articulated creatures. Entire tail and all four limbs must fit within central40% of each cell, very generous transparent padding, no clipped tips or intersecting neighbors. Columns same in every row: E snout right/tail left true PROFILE, SE snout down-right, S snout toward viewer/down with tail receding up, SW snout down-left, W snout left/tail right true PROFILE, NW snout up-left, N back view with tail pointing toward viewer/down and head away/up, NE snout up-right. Keep those compass views even when falling. Rows1 pronounced incoming-hit recoil arch, row2 distinct recovering recoil, row3 death starts with limbs buckling, row4 body collapses close to floor with limbs folded, row5 terminal completely flat dead lizard with recognizable head/tail and relaxed connected limbs. Every one is a different genuine articulated pose, not simple translated/scaled/duplicated still. No severed parts, detached particles, disappearance or decomposition. Preserve exact original blue/red design, and keep all bones/limbs/tail connected to its body.",
+  "prompt_record_kind": "exact_final_prompts",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/lizard/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/lizard/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared all main/hit/death poses with original 15649.png: preserved slender navy/cyan lizard, red-orange dorsal/tail spines, four splayed legs, pale underside/claws and full tapering tail. E/W snout direction and frontal S versus rear N snout/tail ends are distinct; articulated crawl, directional lunge, recoil and three-stage flat corpse. Existing albino regional name already shares this exact colored portrait and rendering metadata; no invented white recolor. Real Main execution remains required before completion counting. Actual Main review found that long N/S silhouettes exceeded the existing nameplate height when scaled by median idle height. Use one uniform scale that fits every living pose into the preserved visual_height; do not resize/flip/repaint source PNGs or change per-direction scale."
+  },
+  "authoring_history": [
+    {
+      "prompt": "Create a production 2D isometric RPG animation atlas faithfully based ONLY on the attached ORIGINAL lizard game portrait. Preserve this exact slender low quadrupedal reptile: deep navy and vivid cyan/teal scales, narrow long snout, pale gray/cream underside and claws, four thin splayed bent legs, a long tapering tail, and the distinctive line of red/orange triangular spines along the back and tail. Keep original silhouette, body proportions, palette and number of limbs. No wings, armor, clothing, horns not in reference, weapon or fire. Match the detailed small painted RPG style and elevated camera. Transparent RGBA; exclude black portrait background and shadow. Exactly8 columns x8 rows=64 genuinely distinct articulated whole-body poses. The complete lizard INCLUDING long tail occupies only the central 40% of each cell, broad transparent margins and outer padding. No touching/overlapping/clipping, no text/grid/effects. Eight column directions in EVERY row: E true right profile with snout RIGHT and tail LEFT; SE front-right with snout DOWN-RIGHT; S direct FRONT with snout DOWN toward viewer and foreshortened torso/tail receding UP; SW front-left snout DOWN-LEFT; W true left profile snout LEFT and tail RIGHT; NW back-left snout UP-LEFT; N full BACK with tail toward viewer/DOWN and snout pointing away/UP; NE back-right snout UP-RIGHT. Side, diagonal, front and back must clearly differ. Especially do NOT put right-facing lizards in W/NW columns. Rows1-2 different poised idle breathing/tail tension, rows3-5 three real four-legged crawling steps with alternating feet and swaying articulated tail, row6 bite windup draws head back, row7 lunging open-jaw bite CONTACT in EXACT column direction, row8 jaw and body recovery. S and N bite must remain foreshortened front and rear, not turn sideways. All64 genuinely articulated unique poses, no repeated or merely shifted/scaled still. Maintain the original lean blue/red-spined lizard rather than inventing a bulky dragon or a plain white gecko.",
+      "output_path": "/workspace/generated_images/exec-b8e857fe-8cd4-4391-9ae9-4cf53216993c.png",
+      "status": "candidate_pending_complete_roles_and_Main"
+    },
+    {
+      "prompt": "Create the matching HIT and DEATH animation atlas from the FIRST attached ORIGINAL lizard game portrait, with the SECOND attached main animation sheet as style/scale/palette reference. Preserve the exact slender quadruped: dark navy and brilliant cyan/teal scales, slim long snout, pale gray belly/claws, four thin splayed legs, long tapering tail, and bright red-orange triangular dorsal/tail spines. No wings, clothing, armor, invented appendages or fire. Same detailed painted isometric 2D RPG view. Transparent RGBA, no backdrop/shadow/text/grid/effects. Exactly EIGHT COLUMNS x FIVE ROWS, forty separated whole articulated creatures. Entire tail and all four limbs must fit within central40% of each cell, very generous transparent padding, no clipped tips or intersecting neighbors. Columns same in every row: E snout right/tail left true PROFILE, SE snout down-right, S snout toward viewer/down with tail receding up, SW snout down-left, W snout left/tail right true PROFILE, NW snout up-left, N back view with tail pointing toward viewer/down and head away/up, NE snout up-right. Keep those compass views even when falling. Rows1 pronounced incoming-hit recoil arch, row2 distinct recovering recoil, row3 death starts with limbs buckling, row4 body collapses close to floor with limbs folded, row5 terminal completely flat dead lizard with recognizable head/tail and relaxed connected limbs. Every one is a different genuine articulated pose, not simple translated/scaled/duplicated still. No severed parts, detached particles, disappearance or decomposition. Preserve exact original blue/red design, and keep all bones/limbs/tail connected to its body.",
+      "output_path": "/workspace/generated_images/exec-b06e7beb-cc28-457b-a9a9-65ccbb259407.png",
+      "status": "candidate_pending_geometry_and_Main"
+    }
+  ],
+  "display_height_basis": "max_living_frame"
+}

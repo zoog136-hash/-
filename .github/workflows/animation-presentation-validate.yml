@@ -155,6 +155,16 @@ jobs:
               bugbear|original_based_bugbear_gameplay_test||poses
               sand-worm|original_based_sand_worm_gameplay_test||poses
               reaper-male|original_based_reaper_male_gameplay_test||poses
+          - group: iron-golem-ghoul
+            cases: |
+              iron-golem|original_based_iron_golem_gameplay_test||poses
+              iron-golem-hell|original_based_iron_golem_gameplay_test|지옥의 아이언골렘|directions
+              ghoul-gludio|original_based_ghoul_gameplay_test||poses
+              ghoul-undying|original_based_ghoul_gameplay_test|불사의 구울|directions
+          - group: lizard-regional
+            cases: |
+              lizard|original_based_lizard_gameplay_test||poses
+              lizard-albino|original_based_lizard_gameplay_test|알비노 도마뱀|directions
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

@@ -1,0 +1,74 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nRe-author the SECOND attached draft atlas using the FIRST attached original portrait as the authoritative identity. Keep the exact original design and the draft's painted sprite style, scale, transparency and generous spacing. Produce exactly 8 columns x 8 rows, 64 separate full articulated poses, transparent RGBA background. Keep complete poses within 50% of each cell, no overlap or clipping, no labels/grid/shadows/particles. Rows remain idle 1, idle 2, three different walking steps, attack windup, attack CONTACT, attack recovery. Correct compass orientation: columns E right true side-profile, SE front-right diagonal, S directly frontal, SW front-left diagonal, W left true side-profile, NW back-left diagonal, N directly rear with no face or front chest, NE back-right diagonal. E and SE must clearly differ, likewise W versus SW. Every row keeps its own column compass. CRITICAL FIX: In draft row7 the SOUTH contact turned sideways and attacked horizontally. Re-draw row7 so torso/skull/facing stay in their column direction and the strike projects in that EXACT direction: E right, SE down-right, S down toward viewer, SW down-left, W left, NW up-left, N up away, NE up-right. Do not rotate S/N contact into diagonal or side pose. A foreshortened frontal/rear reach is essential. Leave anatomical body proportions unchanged and articulate true different footsteps and attack phases. Never duplicate stills. The original golem is a squat hunched gunmetal-gray iron-block creature, recessed small head, very thick hanging arms and fists, short thick legs. No facial additions, glow, weapons, clothing or spikes. At S attack contact show front chest STILL symmetrical toward viewer; lead fist is thrust DOWNWARD in image coordinates in front of abdomen/knees, visually below elbow, other arm retained. At N contact show only back with striking arm going UP in image coordinates, not outward horizontally.\nHIT/DEATH EXACT PROMPT:\nCreate the matching HIT and DEATH animation atlas for the FIRST attached ORIGINAL game portrait. Use the SECOND attached movement/attack atlas for consistent painted 2D RPG style, palette, proportions and compass convention. FULLY TRANSPARENT RGBA background, no black/white fill, no shadows, text, grids or detached particles. Exactly EIGHT COLUMNS and FIVE ROWS, forty separate complete articulated full bodies. Each whole body in both upright and fallen poses fits within 45 percent of cell width/height, with very generous transparent gutters and no overlap/clipping. Eight columns STRICTLY E true right profile, SE front-right, S direct FRONT, SW front-left, W true left profile, NW back-left, N full BACK without face, NE back-right. Preserve each column's camera view while collapsing; do not turn all fallen bodies into a side view. Five rows exactly: row1 pronounced hit recoil, row2 distinct hit recovery, row3 death starts with knees/body buckling, row4 falling very low near ground, row5 terminal fully flat dead body. All40 are genuinely different articulated poses, no duplicate stills or simple scaled/translated versions. Same body size and material throughout. The exact original squat hunched iron golem: mottled dark gunmetal-gray rounded heavy blocks, small recessed blunt head between massive rounded shoulders, two huge thick arms and fists, broad body and short bent legs. Retain pale chipped metallic highlights and dark joints, no glowing core/weapon/clothes/spikes. Hit recoils body and pulls fists toward torso. Death slumps first onto buckling legs, then topples, finally lies as a recognizable flat connected iron-block body. Do not detach blocks or disintegrate into flying stones. Keep the whole collapsed silhouette connected.",
+  "prompt_record_kind": "exact_final_prompts; preceding rejected compass draft retained in authoring_history",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/iron_golem/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/iron_golem/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared 2147.png with all 64 main and 40 hit/death poses: preserved squat hunched dark gray iron-block body, recessed head, thick unarmed fists and short legs. Eight profile/front/rear views, distinct planted steps, frontal/rear compass contact after correcting the first draft, recoil and three-stage connected collapse. No original pixels replaced; no invented glow, clothing or weapon."
+  },
+  "authoring_history": [
+    {
+      "prompt": "Create a production 2D isometric RPG sprite animation atlas STRICTLY based on the attached ORIGINAL game portrait. Preserve that exact character design, anatomy, silhouette, proportions, colors and material in every pose. Match its detailed painted game-sprite style and elevated viewing angle. Fully transparent RGBA; exclude the portrait's black background and floor shadow. Exactly EIGHT COLUMNS and EIGHT ROWS, 64 separate complete articulated bodies. Occupy at most 45 percent of each cell in width and height, with large transparent gutters and outer border, no touching/overlap/clipping. No text, grid lines, background, cast shadows or disconnected particles. Column directions in EVERY row: E true RIGHT PROFILE; SE front-right; S DIRECT FRONT toward viewer; SW front-left; W true LEFT PROFILE; NW back-left; N FULL BACK facing away with no face; NE back-right. Strictly keep all eight compass views and body orientation, especially S front versus N rear. Row 1 idle neutral; row 2 visibly different breathing idle; rows 3,4,5 three distinct articulated locomotion phases; row 6 attack WINDUP; row 7 attack CONTACT directed along the column compass; row 8 attack RECOVERY. All 64 poses genuinely differ through articulation, not translated/scaled/repeated stills. Maintain same body scale and consistent anatomy. Animate only this exact IRON GOLEM: massive hunched squat humanoid constructed from mottled dark gunmetal gray rounded iron blocks, small recessed blunt head joined into towering rounded shoulders, very thick long lowered arms with huge blunt fists, broad chest and short thick bent legs with heavy feet. Retain chipped pale gray metallic highlights, dark joints and original block arrangement. It has no clothing, no weapon, no glowing cores, no added spikes or armor decoration. Head must stay small and recessed, not a human head. Walk by shifting huge weight with different planted-foot steps. Attack lifts its attached heavy arm/fist, punches forward along the facing direction, then recovers. In S the punch approaches viewer/down; N strikes up/away showing broad back, not front torso. Preserve both arms and fists and all visible body components without inventing extra limbs.",
+      "output_path": "/workspace/generated_images/exec-12306af5-bc10-45dd-9e33-75faf34241db.png",
+      "status": "candidate_not_counted",
+      "review_concerns": [
+        "South attack contact appears to turn sideways; re-author compass-correct contact before approval.",
+        "Side and adjacent diagonal views need closer review."
+      ]
+    },
+    {
+      "prompt": "Re-author the SECOND attached draft atlas using the FIRST attached original portrait as the authoritative identity. Keep the exact original design and the draft's painted sprite style, scale, transparency and generous spacing. Produce exactly 8 columns x 8 rows, 64 separate full articulated poses, transparent RGBA background. Keep complete poses within 50% of each cell, no overlap or clipping, no labels/grid/shadows/particles. Rows remain idle 1, idle 2, three different walking steps, attack windup, attack CONTACT, attack recovery. Correct compass orientation: columns E right true side-profile, SE front-right diagonal, S directly frontal, SW front-left diagonal, W left true side-profile, NW back-left diagonal, N directly rear with no face or front chest, NE back-right diagonal. E and SE must clearly differ, likewise W versus SW. Every row keeps its own column compass. CRITICAL FIX: In draft row7 the SOUTH contact turned sideways and attacked horizontally. Re-draw row7 so torso/skull/facing stay in their column direction and the strike projects in that EXACT direction: E right, SE down-right, S down toward viewer, SW down-left, W left, NW up-left, N up away, NE up-right. Do not rotate S/N contact into diagonal or side pose. A foreshortened frontal/rear reach is essential. Leave anatomical body proportions unchanged and articulate true different footsteps and attack phases. Never duplicate stills. The original golem is a squat hunched gunmetal-gray iron-block creature, recessed small head, very thick hanging arms and fists, short thick legs. No facial additions, glow, weapons, clothing or spikes. At S attack contact show front chest STILL symmetrical toward viewer; lead fist is thrust DOWNWARD in image coordinates in front of abdomen/knees, visually below elbow, other arm retained. At N contact show only back with striking arm going UP in image coordinates, not outward horizontally.",
+      "output_path": "/workspace/generated_images/exec-c64d2ae5-fff8-49fd-8c70-f83954631308.png",
+      "status": "candidate_pending_complete_role_set",
+      "previous_candidate": "/workspace/generated_images/exec-12306af5-bc10-45dd-9e33-75faf34241db.png"
+    },
+    {
+      "prompt": "Create the matching HIT and DEATH animation atlas for the FIRST attached ORIGINAL game portrait. Use the SECOND attached movement/attack atlas for consistent painted 2D RPG style, palette, proportions and compass convention. FULLY TRANSPARENT RGBA background, no black/white fill, no shadows, text, grids or detached particles. Exactly EIGHT COLUMNS and FIVE ROWS, forty separate complete articulated full bodies. Each whole body in both upright and fallen poses fits within 45 percent of cell width/height, with very generous transparent gutters and no overlap/clipping. Eight columns STRICTLY E true right profile, SE front-right, S direct FRONT, SW front-left, W true left profile, NW back-left, N full BACK without face, NE back-right. Preserve each column's camera view while collapsing; do not turn all fallen bodies into a side view. Five rows exactly: row1 pronounced hit recoil, row2 distinct hit recovery, row3 death starts with knees/body buckling, row4 falling very low near ground, row5 terminal fully flat dead body. All40 are genuinely different articulated poses, no duplicate stills or simple scaled/translated versions. Same body size and material throughout. The exact original squat hunched iron golem: mottled dark gunmetal-gray rounded heavy blocks, small recessed blunt head between massive rounded shoulders, two huge thick arms and fists, broad body and short bent legs. Retain pale chipped metallic highlights and dark joints, no glowing core/weapon/clothes/spikes. Hit recoils body and pulls fists toward torso. Death slumps first onto buckling legs, then topples, finally lies as a recognizable flat connected iron-block body. Do not detach blocks or disintegrate into flying stones. Keep the whole collapsed silhouette connected.",
+      "output_path": "/workspace/generated_images/exec-24d15cc2-43ca-42fe-ab55-7985248ed13f.png",
+      "status": "candidate_pending_geometry_and_gameplay"
+    }
+  ]
+}

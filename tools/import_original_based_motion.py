@@ -180,6 +180,20 @@ def import_sheet(root, candidate, actor, keys, apply):
         parsed.append(part)
     if set(role_frames) != set(ROLES):
         raise ValueError("Each mandatory role must have actual frames")
+    height_basis = candidate.get("display_height_basis", "median_idle")
+    if height_basis not in {"median_idle", "max_living_frame"}:
+        raise ValueError("Unknown reviewed display-height basis")
+    display_reference_height = parsed[0]["neutral_height"]
+    if height_basis == "max_living_frame":
+        # Long quadrupeds project a much taller silhouette in N/S than E/W.
+        # Fit all living poses into the existing visible-height budget while
+        # keeping one uniform scale across directions, roles and source sheets.
+        living = {frame for role, directions in role_frames.items() if role != "death"
+                  for direction in directions for frame in direction}
+        display_reference_height = max(
+            geometry["frames"][index]["region"][3] * 256
+            / parsed[geometry["frames"][index].get("sheet", 0)]["canvas_size"][1]
+            for index in living)
     geometry["distinct_pixel_frames"] = len({frame["rgba_sha256"] for frame in geometry["frames"]})
     if geometry["distinct_pixel_frames"] != len(geometry["frames"]):
         raise ValueError("Duplicate pose across source sheets")
@@ -206,6 +220,8 @@ def import_sheet(root, candidate, actor, keys, apply):
              "directions": DIRECTIONS, "source_directions": DIRECTIONS, "source_direction_indices": list(range(8)),
              "cell": [256, 256], "foot": [128, 160], "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
              "distinct_pixel_frames": geometry["distinct_pixel_frames"], "frames": geometry["frames"], "tracks": {}}
+    proof["display_height_basis"] = height_basis
+    proof["display_reference_height"] = display_reference_height
     for role, directions in role_frames.items():
         count = len(directions[0])
         sheet_index = geometry["frames"][directions[0][0]].get("sheet", 0)
@@ -220,7 +236,7 @@ def import_sheet(root, candidate, actor, keys, apply):
             if "prior_visual_profile" not in profile:
                 profile["prior_visual_profile"] = profile.copy() or None
             height = float(first["presentation_to_preserve"].get("visual_height", 100))
-            source_height = parsed[0]["neutral_height"]
+            source_height = display_reference_height
             scale = round(height / source_height, 6)
             profile.update({"name": targets[key]["name"], "frames_path": "res://" + str((folder / "SpriteFrames.tres").relative_to(root)),
                             "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff", "sprite_offset": [0, round(-32 * scale, 6)],
