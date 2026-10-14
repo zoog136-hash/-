@@ -1,0 +1,69 @@
+name: Inventory Inven Icons
+on:
+  push:
+    branches: [feature/inventory-inven-icons-20261014]
+    paths:
+      - '.github/workflows/inventory-inven-icons.yml'
+      - 'tools/inven_inventory/**'
+      - 'scripts/ui/inven_inventory_icons.gd'
+      - 'scripts/ui/item_visual_resolver.gd'
+      - 'data/inven_inventory_icons.json'
+  pull_request:
+    paths:
+      - '.github/workflows/inventory-inven-icons.yml'
+      - 'tools/inven_inventory/**'
+      - 'scripts/ui/inven_inventory_icons.gd'
+      - 'scripts/ui/item_visual_resolver.gd'
+      - 'data/inven_inventory_icons.json'
+permissions:
+  contents: read
+concurrency:
+  group: inventory-inven-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  inventory-icons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Inspect source data and package inventory resources
+        shell: bash
+        run: |
+          mkdir -p /tmp/inventory-inven
+          python3 - <<'PY'
+          import json, pathlib, zipfile, urllib.request, re, html, hashlib
+          root=pathlib.Path('.')
+          out=pathlib.Path('/tmp/inventory-inven')
+          with zipfile.ZipFile(out/'inventory-source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for folder in ['data','scripts','addons','tools','tests','assets/catalog','assets/ui','.github/workflows']:
+                  base=root/folder
+                  if base.exists():
+                      for p in base.rglob('*'):
+                          if p.is_file() and p.stat().st_size < 12000000 and '.git' not in p.parts:
+                              z.write(p,p.as_posix())
+              for name in ['project.godot','export_presets.cfg']:
+                  p=root/name
+                  if p.exists(): z.write(p,p.as_posix())
+          for label,url in [('list','https://lineagem.inven.co.kr/db/item/?vtype=pc'),('detail','https://lineagem.inven.co.kr/db/item/425')]:
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'TWILIGHT-inventory-icons/1.0'})
+                  with urllib.request.urlopen(req,timeout=25) as r: data=r.read(4000000)
+                  (out/(label+'.html')).write_bytes(data)
+                  text=data.decode('utf-8','replace')
+                  for tag,props in re.findall(r'id="([^"]+)"\s+data-props="([^"]+)"',text):
+                      parsed=json.loads(html.unescape(props)); (out/(label+'-'+tag+'.json')).write_text(json.dumps(parsed,ensure_ascii=False,indent=2))
+                      print(label,tag,list(parsed)[:30])
+                  print(label,'bytes',len(data),'sha256',hashlib.sha256(data).hexdigest())
+              except Exception as e: print(label,type(e).__name__,str(e))
+          print('INVENTORY_SOURCE_READY')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: inventory-inven-inspection
+          path: /tmp/inventory-inven/
+          retention-days: 7
+          if-no-files-found: error
