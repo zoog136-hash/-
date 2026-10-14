@@ -1,0 +1,40 @@
+name: Ground Category Icons
+on:
+  push:
+    branches: [feature/ground-category-icons-20261015]
+    paths: ['.github/workflows/ground-category-icons.yml', 'tools/ground_icons/**']
+permissions:
+  contents: read
+jobs:
+  ground-icons:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Package current source and existing ground art for inspection
+        run: |
+          mkdir -p /tmp/ground-icons
+          python3 - <<'PY'
+          import pathlib,subprocess,zipfile,json,hashlib
+          root=pathlib.Path('.'); out=pathlib.Path('/tmp/ground-icons')
+          entries=[]
+          with zipfile.ZipFile(out/'source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in subprocess.check_output(['git','ls-files'],text=True).splitlines():
+                  p=root/name
+                  if not p.is_file():continue
+                  size=p.stat().st_size
+                  entries.append({'path':name,'size':size})
+                  if (name.startswith(('scripts/','data/','addons/','tests/','tools/','assets/catalog/','assets/ui/','assets/inven_inventory/','assets/l1j/','.github/workflows/')) or '/' not in name) and size<12000000 and p.suffix not in ['.zip','.mp4','.apk']:
+                      z.write(p,name)
+          (out/'file-inventory.json').write_text(json.dumps(entries,ensure_ascii=False,indent=2))
+          print('SOURCE_READY',len(entries),'files',hashlib.sha256((out/'source.zip').read_bytes()).hexdigest())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ground-icons-source-inspection
+          path: /tmp/ground-icons/
+          retention-days: 7
+          if-no-files-found: error
