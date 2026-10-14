@@ -36,9 +36,16 @@ jobs:
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           python3 tools/ground_icons/build.py
           git diff --exit-code -- scripts/loot scripts/world.gd scripts/player.gd data/catalog_v19.json data/game_db_v17.json data/inven_inventory_icons.json
-          mkdir -p docs/verification
+          mkdir -p docs/verification/ground_categories_20261015
           cp /tmp/ground-icons/preservation-proof.json docs/verification/ground_categories_20261015.json
-          git add -- scripts/ui/item_visual_resolver.gd tests/inven_inventory_icons_test.gd data/ground_item_icons.json assets/ground_categories docs/verification/ground_categories_20261015.json
+          cp /tmp/ground-icons/test-summary.json docs/verification/ground_categories_20261015/test-summary.json
+          cp /tmp/ground-icons/after-probe.log docs/verification/ground_categories_20261015/after-probe.log
+          for stage in before after; do
+            mkdir -p docs/verification/ground_categories_20261015/$stage
+            cp /tmp/ground-icons/$stage-captures/equipment.png docs/verification/ground_categories_20261015/$stage/equipment.png
+            cp /tmp/ground-icons/$stage-captures/consumables.png docs/verification/ground_categories_20261015/$stage/consumables.png
+          done
+          git add -- scripts/ui/item_visual_resolver.gd tests/inven_inventory_icons_test.gd data/ground_item_icons.json assets/ground_categories docs/verification/ground_categories_20261015.json docs/verification/ground_categories_20261015
           if ! git diff --cached --quiet; then
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Connect ground item categories with transparent local art; preserve inventory, names and drop effects'
             git push origin HEAD:refs/heads/feature/ground-category-icons-20261015
@@ -51,7 +58,7 @@ jobs:
           import pathlib,zipfile
           out=pathlib.Path('/tmp/ground-icons');out.mkdir(exist_ok=True)
           paths=['scripts/ui/ground_item_icons.gd','scripts/ui/item_visual_resolver.gd','tests/inven_inventory_icons_test.gd','tests/ground_category_probe.gd','tests/capture_ground_categories.gd','data/ground_item_icons.json','docs/verification/ground_categories_20261015.json']
-          for folder in ['tools/ground_icons','assets/ground_categories']:
+          for folder in ['tools/ground_icons','assets/ground_categories','docs/verification/ground_categories_20261015']:
               if pathlib.Path(folder).exists():paths.extend(str(p) for p in pathlib.Path(folder).rglob('*') if p.is_file() and '__pycache__' not in str(p))
           with zipfile.ZipFile(out/'ground-patch.zip','w',zipfile.ZIP_DEFLATED) as z:
               for name in paths:

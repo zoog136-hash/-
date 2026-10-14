@@ -11,8 +11,7 @@ protected += [str(f) for f in Path('scripts/loot').glob('*.gd')]
 before_hashes={f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in protected}
 def run(label,script=None,render=False,stage='after',timeout=240,importing=False):
     env=dict(os.environ,GODOT_SILENCE_ROOT_WARNING='1',XDG_DATA_HOME=str(out/'user-data'/label),GROUND_STAGE=stage,GROUND_REPORT=str(out/(stage+'-probe.json')),GROUND_CAPTURES=str(out/(stage+'-captures')))
-    # CI has no audio hardware. Select Dummy explicitly rather than ignoring
-    # real engine ERROR lines or treating an ALSA fallback as a game failure.
+    # CI has no audio hardware; keep strict error checking with Dummy audio.
     command=[engine,'--audio-driver','Dummy','--path','.']
     if importing:command+=['--headless','--editor','--import']
     elif render:command=['xvfb-run','-a']+command+['--rendering-method','gl_compatibility','--script','res://tests/'+script+'.gd']
@@ -39,9 +38,11 @@ if a.install:
 else:subprocess.run([sys.executable,'tools/ground_icons/build.py'],check=True)
 if not run('after-import',importing=True):sys.exit(1)
 run('after-probe','ground_category_probe')
-for test in ['inven_inventory_icons_test','item_visual_test','ground_drop_smoke_test','ground_loot_system_test','aden_ground_continuity_test','remake_ui_local_item_icons_test','ui_stage4_item_instance_test','original_skill_warehouse_migration_test']:
+for test in ['inven_inventory_icons_test','item_visual_test','ground_drop_smoke_test','ground_loot_system_test','remake_ui_local_item_icons_test','ui_stage4_item_instance_test','original_skill_warehouse_migration_test']:
     run(test,test)
-run('eight_interactions_test','eight_interactions_test',render=True)
+# These tests explicitly inspect rendered pixels or native UI pointer events.
+for test in ['aden_ground_continuity_test','eight_interactions_test']:
+    run(test,test,render=True)
 run('after-capture','capture_ground_categories',render=True)
 now={f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in protected}
 if now!=before_hashes:raise SystemExit('Protected name/effect/loot/inventory/gameplay files changed')
