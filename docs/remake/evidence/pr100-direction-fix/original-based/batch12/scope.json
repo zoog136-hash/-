@@ -1,0 +1,16 @@
+{
+  "original_based_designs": 4,
+  "actual_unique_poses": 416,
+  "identities": [
+    "transform:249",
+    "transform:218",
+    "transform:351",
+    "transform:401"
+  ],
+  "actual_Main": "Eight final runs: four headless and four OpenGL, each8 input movement/idle/attack directions and8 incoming-hit/death/respawn directions, with104 explicit real pose samples.",
+  "equipment_scope": "Pan uses knight/Crimson Lance; penguin/crab/kraken use dark elf/Steel Claw with their own natural body attacks. These samples do not approve every sword/bow/staff combination.",
+  "controlled_incoming": "Production hit and lethal poison callbacks test orientation, lifetime and respawn; not an AI incoming-attack sample.",
+  "visual_review": "Own original palettes/anatomy retained; N rear and S front distinct. Penguin original blue crest/white beard; Pan four hooves/two arms/whole spear and consistent body size with clear terrain; crab original red carapace despite albino name; kraken original gold/teal humanoid tentacle roots. Final bodies remain visible and collapsed.",
+  "Android": "The current72-resource state is not locally exported. Previous65-resource APK and in-progress68-resource c6e7da6 CI have their own limited scopes; actual device execution remains unverified.",
+  "CI": "Previous c6e7da6 Windows focused death step passed; complete previous-commit workflow and current-commit CI are not claimed successful."
+}

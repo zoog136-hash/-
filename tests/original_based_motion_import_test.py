@@ -66,6 +66,9 @@ class OriginalBasedImportTest(unittest.TestCase):
                              "bone_dragon": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "king_bugbear": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "ettin": [("poses-0.png", 8), ("poses-1.png", 4)],
+                             "ancient_penguin": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "albino_giant_crab": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "kraken_transform": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
@@ -83,7 +86,7 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah", "bone_dragon", "king_bugbear", "ettin"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah", "bone_dragon", "king_bugbear", "ettin", "ancient_penguin", "pan", "albino_giant_crab", "kraken_transform"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
             expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin"} else 104
@@ -101,6 +104,27 @@ class OriginalBasedImportTest(unittest.TestCase):
             if actor == "reaper_male":
                 profile = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]["transform:258"]
                 self.assertAlmostEqual(profile["movement_fps"], 2 / importer.SECONDS["walk"])
+
+    def test_pan_keeps_separate_real_spear_phases_and_original_identity(self):
+        folder = ROOT / "assets/actors/eight_direction/original_based/pan"
+        proof = json.loads((folder / "provenance.json").read_text())
+        target = next(row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]
+                      if row["key"] == "transform:218")
+        self.assertEqual(proof["reference"], target["reference"])
+        self.assertEqual(proof["target_keys"], ["transform:218"])
+        _, textures, tracks = audit.read_spriteframes(folder / "SpriteFrames.tres")
+        hashes = set()
+        for index, (phases, canvas) in enumerate([(5, 320), (3, 392), (5, 240)]):
+            path = folder / f"poses-{index}.png"
+            result = importer.analyze(path, phases, reference_rows=[0, 1], canvas_size=canvas)
+            self.assertEqual(result["distinct_pixel_frames"], phases * 8)
+            hashes.update(frame["rgba_sha256"] for frame in result["frames"])
+        self.assertEqual(len(hashes), 104)
+        for direction in range(8):
+            for role, sheet in [("idle", 0), ("walk", 0), ("attack", 1), ("hit", 2), ("death", 2)]:
+                frames = [textures[slot["texture"]] for slot in tracks[f"{role}_{direction}"]["frames"]]
+                self.assertTrue(all(frame["path"].endswith(f"/poses-{sheet}.png") for frame in frames))
+                self.assertEqual(len(frames), 2 if role in {"idle", "hit"} else 3)
 
     def test_guard_attack_uses_source_direction_rows_without_transposing_pixels(self):
         folder = ROOT / "assets/actors/eight_direction/original_based/spear_guard_green"

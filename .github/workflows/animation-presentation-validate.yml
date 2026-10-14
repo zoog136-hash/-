@@ -204,6 +204,14 @@ jobs:
             cases: |
               king-bugbear|original_based_king_bugbear_gameplay_test||poses
               ettin|original_based_ettin_gameplay_test||poses
+          - group: penguin-pan-transform
+            cases: |
+              ancient-penguin|original_based_ancient_penguin_gameplay_test||poses
+              pan|original_based_pan_gameplay_test||poses
+          - group: crab-kraken-transform
+            cases: |
+              albino-giant-crab|original_based_albino_giant_crab_gameplay_test||poses
+              kraken-transform|original_based_kraken_transform_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

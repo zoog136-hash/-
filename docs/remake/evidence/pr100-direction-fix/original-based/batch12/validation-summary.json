@@ -1,0 +1,195 @@
+[
+  {
+    "case": "original_based_ancient_penguin_gameplay_test",
+    "actor": "ancient_penguin",
+    "mode": "headless",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 39.937,
+    "checks_in_stdout": 1470,
+    "player_directions": 8,
+    "incoming_directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": [],
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "249",
+      "weapon": "강철 크로우"
+    }
+  },
+  {
+    "case": "original_based_albino_giant_crab_gameplay_test",
+    "actor": "albino_giant_crab",
+    "mode": "headless",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 41.683,
+    "checks_in_stdout": 1462,
+    "player_directions": 8,
+    "incoming_directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": [],
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "351",
+      "weapon": "강철 크로우"
+    }
+  },
+  {
+    "case": "original_based_kraken_transform_gameplay_test",
+    "actor": "kraken_transform",
+    "mode": "headless",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 41.661,
+    "checks_in_stdout": 1482,
+    "player_directions": 8,
+    "incoming_directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": [],
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "401",
+      "weapon": "강철 크로우"
+    }
+  },
+  {
+    "case": "original_based_ancient_penguin_gameplay_test",
+    "actor": "ancient_penguin",
+    "mode": "opengl",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 177.717,
+    "checks_in_stdout": 1119,
+    "player_directions": 8,
+    "incoming_directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": [],
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "249",
+      "weapon": "강철 크로우"
+    }
+  },
+  {
+    "case": "original_based_albino_giant_crab_gameplay_test",
+    "actor": "albino_giant_crab",
+    "mode": "opengl",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 140.749,
+    "checks_in_stdout": 1237,
+    "player_directions": 8,
+    "incoming_directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": [],
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "351",
+      "weapon": "강철 크로우"
+    }
+  },
+  {
+    "case": "original_based_kraken_transform_gameplay_test",
+    "actor": "kraken_transform",
+    "mode": "opengl",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 147.162,
+    "checks_in_stdout": 1229,
+    "player_directions": 8,
+    "incoming_directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": [],
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "401",
+      "weapon": "강철 크로우"
+    }
+  },
+  {
+    "case": "batch12_pan_review",
+    "actor": "pan",
+    "mode": "headless",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 34.01,
+    "checks_in_stdout": 1504,
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "218",
+      "weapon": "크림슨 랜스"
+    },
+    "failures": []
+  },
+  {
+    "case": "batch12_pan_review",
+    "actor": "pan",
+    "mode": "opengl",
+    "passed": true,
+    "exit_code": 0,
+    "seconds": 141.528,
+    "checks_in_stdout": 1220,
+    "setup": {
+      "background_spawn_slots_paused": true,
+      "incoming_damage": "controlled production hit and poison-tick callbacks; not an AI attack sample",
+      "map": "aden_world",
+      "pose_review": {
+        "foreground_clear": true,
+        "offset": [
+          0.0,
+          -160.0
+        ],
+        "terrain_hidden_or_modified": false,
+        "walkable": true
+      },
+      "qa_positioning": true,
+      "scene": "Main.tscn",
+      "stats_overridden": false,
+      "transform": "218",
+      "weapon": "크림슨 랜스"
+    },
+    "failures": []
+  }
+]

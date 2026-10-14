@@ -1,0 +1,6 @@
+{
+  "gameplay": "Both first runs passed; no sprite/production bug found.",
+  "visual_limitation": "The real terrain correctly occluded the long E spear behind a foreground rock.",
+  "review_fix": "QA moves the actor to nearby walkable ground with no foreground prop intersection; terrain and sprite pixels are unchanged.",
+  "final_evidence": "batch12_pan_review headless/OpenGL reruns; previous reports remain here and are not double-counted."
+}
