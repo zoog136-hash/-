@@ -29,7 +29,7 @@
     "other_transform:registered": 233,
     "other_transform:native_connected": 1,
     "normal_monster:registered": 258,
-    "normal_monster:native_connected": 162,
+    "normal_monster:native_connected": 167,
     "boss:registered": 60,
     "boss:native_connected": 35,
     "class:registered": 4,
@@ -4230,11 +4230,11 @@
       "key": "monster:킹버그베어",
       "name": "킹버그베어",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for bugbear",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/king_bugbear/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:드레이크",
@@ -4520,11 +4520,11 @@
       "key": "monster:에틴",
       "name": "에틴",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for ettin",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:코카트리스",
@@ -4930,11 +4930,11 @@
       "key": "monster:용의 계곡 본 드래곤",
       "name": "용의 계곡 본 드래곤",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for bone_dragon",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/bone_dragon/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:용의 계곡 용기사",
@@ -6120,11 +6120,11 @@
       "key": "monster:불멸의 본 드래곤",
       "name": "불멸의 본 드래곤",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for bone_dragon",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/bone_dragon/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:불멸의 해골 근위병",
@@ -7060,11 +7060,11 @@
       "key": "monster:지옥의 본 드래곤",
       "name": "지옥의 본 드래곤",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for bone_dragon",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/bone_dragon/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:지옥의 아이언골렘",
@@ -14101,6 +14101,238 @@
       "pixel_integrity": "verified"
     },
     {
+      "path": "res://assets/actors/eight_direction/original_based/king_bugbear/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "692af10f82c5f88d274086d1d142d6ca396e4870f593c4ed413af53c65d75f1d",
+      "pixel_integrity": "verified"
+    },
+    {
       "path": "res://assets/actors/eight_direction/expanded/wyvern_air_boss/SpriteFrames.tres",
       "tracks": {
         "idle_0": {
@@ -17133,6 +17365,238 @@
       "pixel_integrity": "verified"
     },
     {
+      "path": "res://assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "221ad6774c03e1e418dd8f5c9746b003b960f5fd1fc4b887d0bb812acc800c3a",
+      "pixel_integrity": "verified"
+    },
+    {
       "path": "res://assets/actors/eight_direction/original_based/cockatrice/SpriteFrames.tres",
       "tracks": {
         "idle_0": {
@@ -19730,6 +20194,238 @@
         "NE"
       ],
       "resource_sha256": "a88f0125e0cf654745029cd09f94f168a16ef8ba8297632000333e1068a45e10",
+      "pixel_integrity": "verified"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/original_based/bone_dragon/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "7707762025beb09a97622ed7934741f65e4bfa099dcadaaac9294a6a4b6a8f08",
       "pixel_integrity": "verified"
     },
     {
@@ -24605,13 +25301,11 @@
     "No compatible published sequential weapon frames: 랜서": 1,
     "No compatible published sequential weapon frames: 랜스": 2,
     "Existing legacy art retained; no native sequential8 profile": 232,
-    "No identity-compatible licensed source for bugbear": 1,
     "No identity-compatible licensed source for fire": 5,
     "No identity-compatible licensed source for goat_demon": 3,
     "No identity-compatible licensed source for dark_knight": 16,
     "No identity-compatible licensed source for phoenix": 2,
     "No identity-compatible licensed source for queen": 2,
-    "No identity-compatible licensed source for ettin": 1,
     "No identity-compatible licensed source for reaper": 2,
     "No identity-compatible licensed source for dog": 1,
     "No identity-compatible licensed source for wolf": 1,
@@ -24621,7 +25315,6 @@
     "No identity-compatible licensed source for basilisk": 1,
     "No identity-compatible licensed source for water": 3,
     "No identity-compatible licensed source for fishman": 3,
-    "No identity-compatible licensed source for bone_dragon": 3,
     "No identity-compatible licensed source for demon": 8,
     "No identity-compatible licensed source for wind": 2,
     "No identity-compatible licensed source for angel": 2,
@@ -25321,6 +26014,96 @@
       "path": "../batch10/original_based_salah_gameplay_test-opengl.json",
       "sha256": "537a7c451264ffbcc9bad1b189729d5de2afc37bc6e663ea001c21448e38a42e",
       "scope": "original-based salah, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_immortal-headless.json",
+      "sha256": "4a3fa6f6d3be20c420230d9396201930c951e8b3087066b38c0d4413b133262a",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_gameplay_test-headless.json",
+      "sha256": "bcff3a1190e894aee57c84ef734672f48df00c73e467d6339fef3f5cb7eaf81f",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_king_bugbear_gameplay_test-headless.json",
+      "sha256": "78c8598057fbc475849c3bdfdcd3bb7c8859b8dcbc58385b4043e4b105554380",
+      "scope": "original-based king_bugbear, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_hell-headless.json",
+      "sha256": "34b244f9714a76ecb866a73396c3d1d2b5aede9bd4f4ba66a8658af20d788a4a",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_ettin_gameplay_test-headless.json",
+      "sha256": "d85481c3c4c53c000e692addef6df7a660048333c92c971f567b32e95015ebfe",
+      "scope": "original-based ettin, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_gameplay_test-opengl.json",
+      "sha256": "75e6f6621b86b55d75431abd2850230ff2262a04d8b919c214f1206fff5293bc",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_immortal-opengl.json",
+      "sha256": "e3095607ab2a0654c3825f5fcbb4adc1229dab107f4fe7a7493aa4b8bec0d3d8",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_bone_dragon_hell-opengl.json",
+      "sha256": "65572668f9bdccf502876dcb63e48c8b717e2b29e3d454be2bb01e275d77a7df",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_king_bugbear_gameplay_test-opengl.json",
+      "sha256": "f99843e511308825257311bfc46d5dab030317ec9f62883846674a27203cb00b",
+      "scope": "original-based king_bugbear, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_ettin_gameplay_test-opengl.json",
+      "sha256": "54030031cc32b4bd48edb33003d8e38033da2a929a24878ab1c5a7e827429077",
+      "scope": "original-based ettin, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/batch11_spear_captain_timing-headless.json",
+      "sha256": "f218b885c9caa997be3c7c0a9dddb13c8d77e8d2ef4a529dc104341b430ff6f8",
+      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/batch11_spear_red_timing-headless.json",
+      "sha256": "58593981ddd9bbae71aeda5b6c2394ef263c82fffc206e7e58f67987241f19e3",
+      "scope": "original-based transform:110, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/batch11_reaper_timing-headless.json",
+      "sha256": "b35c323c7c618f01525458f7042bf15e6df8cb8ff47e964d446a2b54fa0d3bb9",
+      "scope": "original-based transform:412, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/batch11_spear_captain_timing-opengl.json",
+      "sha256": "d6e0d95997795a30a9a5c2950a5ed92e1b065f5b5c355a1c7803c11cd321e25c",
+      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/batch11_spear_red_timing-opengl.json",
+      "sha256": "bcffe640f9c811e66280e9e9fc17a59891ac190b170d5f03231628469fbb572b",
+      "scope": "original-based transform:110, actual Main/equipment/input/weapon/respawn",
       "direction_rows": 8
     }
   ]

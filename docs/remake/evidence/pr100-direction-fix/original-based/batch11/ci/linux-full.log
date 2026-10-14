@@ -1,0 +1,488 @@
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	﻿2026-10-14T02:24:43.4826192Z Current runner version: '2.337.0'
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4852701Z ##[group]Runner Image Provisioner
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4853541Z Hosted Compute Agent
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4854146Z Version: 20261002.596
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4854955Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4855670Z Build Date: 2026-10-02T22:28:27Z
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4856341Z Worker ID: {24c34c46-4bc8-444b-b76a-430b4adab85f}
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4857012Z Region: westus3
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4857528Z Cloud: Azure
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4858036Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4859578Z ##[group]Operating System
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4860216Z Ubuntu
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4860684Z 24.04.5
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4861249Z LTS
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4861754Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4862252Z ##[group]Runner Image
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4862804Z Image: ubuntu-24.04
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4863342Z Version: 20261004.327.1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4864298Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4866159Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4867090Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4868162Z ##[group]GITHUB_TOKEN Permissions
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4870399Z Contents: read
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4870916Z Metadata: read
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4871763Z Packages: read
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4872267Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4874370Z Secret source: Actions
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4875414Z Cache mode: write
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.4876222Z Prepare workflow directory
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.5259506Z Prepare all required actions
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.5307601Z Getting action download info
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.8485951Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:43.9211926Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:44.0259237Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Set up job	2026-10-14T02:24:44.3144140Z Complete job name: regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	﻿2026-10-14T02:24:44.3972540Z ##[group]Run actions/checkout@v4
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3973316Z with:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3973716Z   repository: zoog136-hash/-
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3977669Z   token: ***
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3978068Z   ssh-strict: true
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3978456Z   ssh-user: git
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3978847Z   persist-credentials: true
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3979281Z   clean: true
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3979672Z   sparse-checkout-cone-mode: true
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3980137Z   fetch-depth: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3980524Z   fetch-tags: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3980915Z   show-progress: true
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3981314Z   lfs: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3981681Z   submodules: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3982075Z   set-safe-directory: true
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3982526Z   allow-unsafe-pr-checkout: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3983341Z env:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3983700Z   PYTHONUTF8: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.3984072Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5015450Z Syncing repository: zoog136-hash/-
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5017414Z ##[group]Getting Git version info
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5018104Z Working directory is '/home/runner/work/-/-'
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5018947Z [command]/usr/bin/git version
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5116218Z git version 2.55.0
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5144272Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5169981Z Temporarily overriding HOME='/home/runner/work/_temp/e6a4220a-9270-40f7-af46-1a478796d784' before making global git config changes
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5171463Z Adding repository directory to the temporary git global config as a safe directory
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5172422Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5230164Z Deleting the contents of '/home/runner/work/-/-'
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5235254Z ##[group]Initializing the repository
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5240743Z [command]/usr/bin/git init /home/runner/work/-/-
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5352860Z hint: Using 'master' as the name for the initial branch. This default branch name
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5355114Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5356935Z hint: to use in all of your new repositories, which will suppress this warning,
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5358287Z hint: call:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5359109Z hint:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5360075Z hint: 	git config --global init.defaultBranch <name>
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5361225Z hint:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5362316Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5364105Z hint: 'development'. The just-created branch can be renamed via this command:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5365695Z hint:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5366547Z hint: 	git branch -m <name>
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5367512Z hint:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5368639Z hint: Disable this message with "git config set advice.defaultBranchName false"
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5370286Z Initialized empty Git repository in /home/runner/work/-/-/.git/
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5373306Z [command]/usr/bin/git remote add origin https://github.com/zoog136-hash/-
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5434883Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5436725Z ##[group]Disabling automatic garbage collection
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5440262Z [command]/usr/bin/git config --local gc.auto 0
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5483179Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5484653Z ##[group]Setting up auth
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5494466Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5535021Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5934278Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.5968702Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.6164633Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.6195738Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.6375620Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.6408701Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.6410823Z ##[group]Fetching the repository
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:24:44.6419919Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39:refs/remotes/origin/feature/twilight-animation-20261013
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0763463Z From https://github.com/zoog136-hash/-
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0765333Z  * [new ref]         c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39 -> origin/feature/twilight-animation-20261013
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0767197Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0767780Z ##[group]Determining the checkout info
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0768400Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0771097Z [command]/usr/bin/git sparse-checkout disable
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0824986Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0850652Z ##[group]Checking out the ref
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:30.0855392Z [command]/usr/bin/git checkout --progress --force -B feature/twilight-animation-20261013 refs/remotes/origin/feature/twilight-animation-20261013
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.2269134Z Updating files:  39% (3057/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.3416338Z Updating files:  40% (3107/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.4549708Z Updating files:  41% (3185/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.5699082Z Updating files:  42% (3263/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6196462Z Updating files:  43% (3340/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6564021Z Updating files:  44% (3418/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6678647Z Updating files:  45% (3496/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6732959Z Updating files:  46% (3573/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6795450Z Updating files:  47% (3651/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6860310Z Updating files:  48% (3729/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6929587Z Updating files:  49% (3806/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.6983628Z Updating files:  50% (3884/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.8023984Z Updating files:  51% (3962/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.9587813Z Updating files:  52% (4039/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.9631931Z Updating files:  53% (4117/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.9662816Z Updating files:  54% (4195/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:31.9732024Z Updating files:  55% (4272/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.0046756Z Updating files:  56% (4350/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.0430181Z Updating files:  57% (4428/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.0679341Z Updating files:  58% (4505/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.1069601Z Updating files:  59% (4583/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.1359948Z Updating files:  60% (4661/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.1623275Z Updating files:  60% (4709/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.2288781Z Updating files:  61% (4738/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.2863301Z Updating files:  62% (4816/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.3667360Z Updating files:  63% (4894/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.3931401Z Updating files:  64% (4971/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.3948377Z Updating files:  65% (5049/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.4444583Z Updating files:  66% (5127/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.4785852Z Updating files:  67% (5204/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.5267473Z Updating files:  68% (5282/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.5857934Z Updating files:  69% (5360/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.5993444Z Updating files:  70% (5437/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.6120863Z Updating files:  71% (5515/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.6441673Z Updating files:  72% (5593/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.6453649Z Updating files:  73% (5670/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.7311872Z Updating files:  74% (5748/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.7643125Z Updating files:  75% (5826/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.7923804Z Updating files:  76% (5903/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.8238565Z Updating files:  77% (5981/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.8376057Z Updating files:  78% (6059/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.8531451Z Updating files:  79% (6136/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.8612408Z Updating files:  80% (6214/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.9052628Z Updating files:  81% (6292/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.9210751Z Updating files:  82% (6369/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.9445367Z Updating files:  83% (6447/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.9749843Z Updating files:  84% (6525/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:32.9869461Z Updating files:  85% (6602/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.0588458Z Updating files:  86% (6680/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.0707289Z Updating files:  87% (6758/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.0724554Z Updating files:  88% (6835/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.0750349Z Updating files:  89% (6913/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.1383920Z Updating files:  90% (6991/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.1584851Z Updating files:  90% (7056/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.1733949Z Updating files:  91% (7068/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2298546Z Updating files:  92% (7146/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2309295Z Updating files:  93% (7224/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2346273Z Updating files:  94% (7301/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2393989Z Updating files:  95% (7379/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2437790Z Updating files:  96% (7457/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2466984Z Updating files:  97% (7534/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2503900Z Updating files:  98% (7612/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2542410Z Updating files:  99% (7690/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2542998Z Updating files: 100% (7767/7767)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2543350Z Updating files: 100% (7767/7767), done.
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2628896Z Switched to a new branch 'feature/twilight-animation-20261013'
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2636815Z branch 'feature/twilight-animation-20261013' set up to track 'origin/feature/twilight-animation-20261013'.
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2756118Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2794824Z [command]/usr/bin/git log -1 --format=%H
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/checkout@v4	2026-10-14T02:25:33.2833175Z c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	﻿2026-10-14T02:25:33.3058164Z ##[group]Run actions/setup-python@v5
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3058585Z with:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3058796Z   python-version: 3.12
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3059029Z   check-latest: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3061262Z   token: ***
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3061481Z   update-environment: true
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3061723Z   allow-prereleases: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3061957Z   freethreaded: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3062167Z env:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3062352Z   PYTHONUTF8: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.3062551Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.4391731Z ##[group]Installed versions
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.4479096Z (node:2280) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.4479817Z (Use `node --trace-deprecation ...` to show where the warning was created)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.4480387Z Successfully set up CPython (3.12.15)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Run actions/setup-python@v5	2026-10-14T02:25:33.4481216Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	﻿2026-10-14T02:25:33.4690802Z ##[group]Run import pathlib, urllib.request, zipfile
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4691366Z [36;1mimport pathlib, urllib.request, zipfile[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4692336Z [36;1murl = 'https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip'[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4693104Z [36;1murllib.request.urlretrieve(url, 'godot.zip')[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4693551Z [36;1mwith zipfile.ZipFile('godot.zip') as z: z.extractall('engine')[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4694000Z [36;1mexe = pathlib.Path('engine/Godot_v4.7.2-stable_linux.x86_64')[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4694354Z [36;1mexe.chmod(0o755)[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4711034Z shell: /opt/hostedtoolcache/Python/3.12.15/x64/bin/python {0}
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4711414Z env:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4711627Z   PYTHONUTF8: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4711922Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4712358Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4712829Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4713206Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4713596Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4713972Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Download official Godot 4.7.2	2026-10-14T02:25:33.4714296Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	﻿2026-10-14T02:25:34.8479174Z ##[group]Run python tools/l1j_ci_make_fixture.py --root .
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8479866Z [36;1mpython tools/l1j_ci_make_fixture.py --root .[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8480330Z [36;1mpython tools/l1j/make_live_fixture.py --root .[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8652783Z shell: /usr/bin/bash -e {0}
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8653083Z env:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8653302Z   PYTHONUTF8: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8653593Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8654032Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8654447Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8655065Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8655467Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8655844Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.8656170Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.9032930Z synthetic_rgba_pngs=4 registry_records=2 spriteframe_fixture=1 tile_grid=4x3 third_party_assets=0
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Generate synthetic fixtures (no third-party game art)	2026-10-14T02:25:34.9453776Z Synthetic live-binding fixture: 5 items, 4 monsters, no original art
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	﻿2026-10-14T02:25:34.9541054Z ##[group]Run python tools/l1j/test_pack_install.py
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9541514Z [36;1mpython tools/l1j/test_pack_install.py[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9583960Z shell: /usr/bin/bash -e {0}
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9584234Z env:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9584443Z   PYTHONUTF8: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9584843Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9585293Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9585716Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9586230Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9586601Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9586976Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:34.9587288Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:35.2995776Z ......
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:35.2996460Z {"verified_entries": 1, "installed": 1, "unchanged": 0, "overwritten": 0}
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:35.2997369Z {"verified_entries": 1, "installed": 0, "unchanged": 1, "overwritten": 0}
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:35.2998036Z ----------------------------------------------------------------------
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:35.2998386Z Ran 6 tests in 0.007s
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:35.2998530Z 
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Verify resource installation safety	2026-10-14T02:25:35.2998614Z OK
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	﻿2026-10-14T02:25:35.3116355Z ##[group]Run python tools/test_project.py --godot engine/Godot_v4.7.2-stable_linux.x86_64 --logs l1j-test-results --timeout 450
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3117198Z [36;1mpython tools/test_project.py --godot engine/Godot_v4.7.2-stable_linux.x86_64 --logs l1j-test-results --timeout 450[0m
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3156620Z shell: /usr/bin/bash -e {0}
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3156923Z env:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3157138Z   PYTHONUTF8: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3157429Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3157868Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3158288Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3158670Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3159041Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3159423Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:25:35.3159746Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:28:53.7294192Z PASS import
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:03.0281814Z PASS boot
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:04.2169374Z PASS actor_motion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:13.4229545Z PASS aden_boss_special_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:36.6158333Z PASS aden_building_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:46.3999963Z PASS aden_courtyard_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:47.2885820Z PASS aden_ground_continuity_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:29:56.5775638Z PASS aden_shoreline_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:12.8684630Z PASS aden_terrain_polish_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:21.4274192Z PASS ainhasad_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:27.0858088Z PASS animation_catalog_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:40.3707513Z PASS animation_presentation_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:52.9315004Z PASS animation_restore_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:54.1207847Z PASS authored_frames_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:55.3099581Z PASS authored_state_motion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:30:57.4278523Z PASS boss_presentation_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:05.7942980Z PASS card_special_policy_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:14.1607622Z PASS catalog_effects_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:25.6003345Z PASS catalog_full_browser_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:35.5537044Z PASS combat_hud_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:35.7160239Z PASS combat_resolution_equivalence_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:36.9053402Z PASS combat_timeline_lifecycle_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:48.3434987Z PASS combat_timing_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:31:48.6002961Z PASS combat_vfx_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:00.3200593Z PASS consumable_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:00.6720584Z PASS crafting_atomic_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:01.1171236Z PASS crafting_material_drop_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:01.4663978Z PASS crafting_scroll_grade_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:02.0041844Z PASS eight_direction_animation_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:13.2542569Z PASS equipment_blessing_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:22.9218066Z PASS equipment_slot_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:23.1786994Z PASS external_a2_bridge_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:24.3702289Z PASS external_spx_actor_runtime_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:44.9261889Z PASS field_world_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:46.0221308Z PASS flight_lifecycle_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:48.7924639Z PASS follower_motion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:32:57.0710332Z PASS full_inven_catalog_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:06.1752385Z PASS full_visual_manifest_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:14.7294597Z PASS ground_drop_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:37.9833433Z PASS ground_loot_system_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:39.1819926Z PASS hit_feedback_render_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:39.4398479Z PASS hit_feedback_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:33:47.7162136Z PASS hp_mp_unique_effects_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:34:02.3998034Z PASS hunting_navigation_cache_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:34:59.5053448Z PASS hunting_paths_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:33.1158853Z PASS hunting_world_capture_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:42.0458579Z PASS input_routing_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:50.9734502Z PASS inventory_db_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:59.7111387Z PASS item_buff_description_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:35:59.9686195Z PASS item_db_slot_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:00.1313358Z PASS item_icon_art_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:08.4067304Z PASS item_options_runtime_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:09.0935096Z PASS item_rarity_render_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:09.6310516Z PASS item_visual_repair_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:10.6318563Z PASS item_visual_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:10.7904919Z PASS item_weight_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:20.6403112Z PASS job_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:20.8017897Z PASS l1j_full_source_data_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:20.9619287Z PASS l1j_map_grid_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:21.1235474Z PASS l1j_map_recovery_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:21.3778513Z PASS l1j_optional_bridge_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:21.7247789Z PASS l1j_packed_assets_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:21.9763851Z PASS l1j_png_load_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:35.1842328Z PASS l1j_reviewed_shop_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:58.0710396Z PASS l1j_runtime_game_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:58.2326017Z PASS l1j_source_map_catalog_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:58.3962575Z PASS l1j_source_navigation_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:58.5573300Z PASS l1j_spx_frames_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:58.7199663Z PASS l1j_visual_link_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:59.2567064Z PASS lineage_inventory_ui_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:59.6070936Z PASS lineage_side_ui_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:36:59.9587822Z PASS lineagem_ui_visual_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:00.3097881Z PASS local_crafting_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:01.2176207Z PASS loot_balance_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:01.3796011Z PASS main_debug_crafting_blessing_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:02.4751308Z PASS main_debug_failed_load_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:02.6347683Z PASS main_debug_input_bindings_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:02.8879174Z PASS map_visual_toggle_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:11.2520494Z PASS mobile_scroll_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:12.3517411Z PASS monster_ai_leash_path_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:22.5799631Z PASS monster_attack_profiles_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:37:28.2361578Z PASS monster_motion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:38:10.1048450Z PASS monster_world_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:38:19.3908710Z PASS native_animation_expansion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:38:27.7657413Z PASS non_skill_options_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:38:28.0272492Z PASS npc_dialogue_branching_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:38:28.2864038Z PASS npc_teleport_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:38:36.6594910Z PASS option_finalize_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:39:08.6627405Z PASS original_based_albino_frog_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:39:53.5069819Z PASS original_based_asitagio_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:40:19.1768551Z PASS original_based_bugbear_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:40:19.4333301Z PASS original_based_canvas_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:40:54.6897772Z PASS original_based_cockatrice_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:41:26.1388848Z PASS original_based_crabman_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:42:03.5433782Z PASS original_based_cyclops_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:42:50.6938934Z PASS original_based_fire_egg_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:43:17.9520067Z PASS original_based_ghost_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:43:46.7033614Z PASS original_based_ghoul_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:44:27.2579620Z PASS original_based_harpy_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:45:13.3917834Z PASS original_based_horn_cerberus_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:45:53.4788949Z PASS original_based_ice_golem_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:46:31.9849402Z PASS original_based_iron_golem_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:47:03.8030758Z PASS original_based_lava_golem_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:47:35.8044600Z PASS original_based_lizard_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:48:07.9074006Z PASS original_based_lycanthrope_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:48:33.9532344Z PASS original_based_monster_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:49:04.6391825Z PASS original_based_ogre_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:49:32.6383196Z PASS original_based_reaper_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:50:00.6338837Z PASS original_based_reaper_male_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:07.6852907Z PASS original_based_sand_worm_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:51:35.8603562Z PASS original_based_spear_captain_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:52:04.3144150Z PASS original_based_spear_guard_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:52:32.8617117Z PASS original_based_spear_guard_green_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:53:01.4115067Z PASS original_based_spear_guard_red_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:53:37.4094884Z PASS original_based_succubus_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:53:38.6920341Z PASS original_counter_probability_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:53:47.0576273Z PASS original_lineagem_effects_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:53:47.3143290Z SKIP original_map_catalog_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:53:55.4936081Z PASS original_skill_audio_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:54:12.2349965Z PASS original_skill_catalog_runtime_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:56:55.5395841Z PASS original_skill_learning_conditions_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:04.0042284Z PASS original_skill_provenance_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:11.6275986Z PASS original_skill_reduction_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:20.2741385Z PASS original_skill_restore_guard_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:27.7110642Z PASS original_skill_status_coexistence_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:36.8218257Z PASS original_skill_summon_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:48.7242735Z PASS original_skill_system_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:57:55.8808987Z PASS original_skill_target_state_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:09.3720730Z PASS original_skill_warehouse_migration_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:19.2349763Z PASS original_turn_undead_rewards_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:30.8616158Z PASS original_turn_undead_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:31.1177252Z PASS original_world_coordinates_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:32.2127726Z SKIP original_world_runtime_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:40.9502654Z PASS passive_skill_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:58:51.5533942Z PASS per_instance_enchantments_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T02:59:04.2982334Z PASS playtest_catalog_drag_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:48.3716401Z PASS pr100_direction_gameplay_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:49.1863924Z PASS pr80_original_resources_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:49.6277181Z PASS pr80_resource_assets_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:50.7207116Z PASS pr93_landing_bounds_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:00:59.4580325Z PASS quickslot_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:01:30.7135137Z PASS reference_expansion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:00.9614338Z PASS reference_object_capture_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:11.2811094Z PASS reference_object_placement_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:13.2138664Z PASS relic_motion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:14.6838259Z PASS remake_map_inventory_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:23.6156088Z PASS remake_map_population_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:26.4774430Z PASS remake_map_readability_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:35.9691483Z PASS remake_ui_local_item_icons_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:44.6157471Z PASS remake_ui_presentation_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:51.6750221Z PASS remake_world_lifecycle_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:55.0066936Z PASS renewed_map_spawn_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:02:59.1720905Z PASS road_surface_mesh_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:27.5850339Z PASS road_surface_render_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:36.7886700Z PASS shield_rules_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:36.9498263Z PASS shop_authority_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:37.3001287Z PASS shop_buyback_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:47.0587290Z PASS skill_element_integration_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:57.2840902Z PASS skill_mechanism_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:58.7279071Z SKIP source_first_map_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:03:58.9834389Z PASS source_pack_guard_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:04:07.2564161Z PASS speed_option_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:04:19.4372213Z PASS stage5_save_compatibility_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:04:20.0655806Z PASS terrain_surface_geometry_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:00.4103298Z PASS terrain_surface_render_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:00.6669183Z PASS terrain_variation_texture_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:10.8975927Z PASS ui_fidelity_regression_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:20.5675948Z PASS ui_navigation_preservation_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:41.3107647Z PASS ui_pointer_transfer_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:50.7010902Z PASS ui_renewal_integration_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:05:59.3462356Z PASS ui_stage4_item_instance_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:06:00.8146696Z PASS visible_gameplay_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:06:09.4593685Z PASS volley_motion_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:06:09.7158324Z PASS warehouse_persistence_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:06:18.3633000Z PASS weapon_rules_smoke_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:06:43.3790658Z PASS world_region_portals_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:09:42.8709475Z PASS world_regions_test
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Import, boot and all regression checks with isolated saves	2026-10-14T03:10:01.2111494Z ##[error]The operation was canceled.
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	﻿2026-10-14T03:10:01.2202673Z ##[group]Run actions/upload-artifact@v4
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2202987Z with:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2203210Z   name: l1j-runtime-Linux-synthetic
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2203562Z   path: l1j-test-results/
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	l1j-render-userdata/
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	l1j-render.log
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2203915Z   if-no-files-found: warn
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2204162Z   compression-level: 6
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2204383Z   overwrite: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2204599Z   include-hidden-files: false
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2204979Z env:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2205168Z   PYTHONUTF8: 1
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2205439Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2205860Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib/pkgconfig
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2206282Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2206647Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2207022Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.15/x64
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2207392Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.15/x64/lib
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.2207756Z ##[endgroup]
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.4136171Z (node:5379) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.4158164Z (Use `node --trace-deprecation ...` to show where the warning was created)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.4931242Z Multiple search paths detected. Calculating the least common ancestor of all paths
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.4934276Z The least common ancestor is /home/runner/work/-/-. This will be the root directory of the artifact
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.4935581Z With the provided path, there will be 177 files uploaded
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.4937018Z Artifact name is valid!
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.4937786Z Root directory input is valid!
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:01.8070561Z Beginning upload of artifact content to blob storage
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.1025775Z (node:5379) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.4457257Z Uploaded bytes 161276
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.5120973Z Finished uploading artifact content to blob storage!
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.5125563Z SHA256 digest of uploaded artifact zip is 22307c067ca5c188df86dd33ba79d0909dffb15890edb2b3f764a85fe2382621
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.5135754Z Finalizing artifact upload
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.7759040Z Artifact l1j-runtime-Linux-synthetic.zip successfully finalized. Artifact ID 11867382556
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.7760617Z Artifact l1j-runtime-Linux-synthetic has been successfully uploaded! Final size is 161276 bytes. Artifact ID is 11867382556
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Preserve evidence	2026-10-14T03:10:02.7766684Z Artifact download URL: https://github.com/zoog136-hash/-/actions/runs/38499830475/artifacts/11867382556
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	﻿2026-10-14T03:10:02.7958841Z Post job cleanup.
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.8840632Z [command]/usr/bin/git version
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.8891996Z git version 2.55.0
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.8943167Z Temporarily overriding HOME='/home/runner/work/_temp/88c38f60-bf71-4492-8032-b30450504dee' before making global git config changes
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.8947293Z Adding repository directory to the temporary git global config as a safe directory
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.8951542Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.8999341Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.9044995Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.9347804Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.9382001Z http.https://github.com/.extraheader
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.9390342Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.9435187Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.9719192Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Post Run actions/checkout@v4	2026-10-14T03:10:02.9763454Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Complete job	﻿2026-10-14T03:10:03.0245343Z Cleaning up orphan processes
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Complete job	2026-10-14T03:10:03.0485574Z Terminate orphan process: pid (2296) (python)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Complete job	2026-10-14T03:10:03.0611242Z Terminate orphan process: pid (5312) (xvfb-run)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Complete job	2026-10-14T03:10:03.0634130Z Terminate orphan process: pid (5322) (Xvfb)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Complete job	2026-10-14T03:10:03.0668849Z Terminate orphan process: pid (5325) (Godot_v4.7.2-stable_linux.x86_64)
+regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)	Complete job	2026-10-14T03:10:03.0693165Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

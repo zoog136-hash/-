@@ -57,6 +57,14 @@ func death_pose(point: Vector2, texture: Texture2D, scale_value: Vector2, offset
 	if frames != null and not animation.is_empty() and frames.has_animation(animation):
 		entry["frames"] = frames
 		entry["animation"] = animation
+		var ticks: float = 0.0
+		for index: int in range(frames.get_frame_count(animation)):
+			ticks += frames.get_frame_duration(animation, index)
+		# Play the source track at its declared speed. The old p*2 compressed
+		# every death into .4s, dropping phases during ordinary slow rendering.
+		var speed: float = frames.get_animation_speed(animation)
+		entry["pose_duration"] = ticks / speed if speed > 0.0 and ticks > 0.0 else .4
+		entry.duration = maxf(float(entry.duration), float(entry.pose_duration) + .15)
 		if frames.has_meta("twilight_canvas_size"):
 			# The live actor already normalizes sheets of different resolutions.
 			# Preserve that displayed canvas when its death uses another sheet.
@@ -110,7 +118,7 @@ func _draw() -> void:
 				if entry.has("frames"):
 					var frames: SpriteFrames = entry.frames
 					var animation: String = entry.animation
-					texture = frames.get_frame_texture(animation, _death_frame(frames, animation, minf(1.0, p * 2.0)))
+					texture = frames.get_frame_texture(animation, _death_frame_at_age(entry))
 					lean = 0.0
 				draw_set_transform(point + (entry.offset as Vector2).rotated(lean), lean, _death_draw_scale(entry, texture))
 				draw_texture(texture, -texture.get_size() * 0.5, Color(1.0, 0.7, 0.65, alpha))
@@ -164,6 +172,9 @@ func _draw_number(point: Vector2, entry: Dictionary) -> void:
 	draw_string_outline(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, 2, Color(1.0, 0.48, 0.10, alpha))
 	draw_string(font, title_base, "Critical", HORIZONTAL_ALIGNMENT_LEFT, -1, 21, Color(1.0, 0.91, 0.53, alpha))
 	draw_set_transform(Vector2.ZERO)
+
+static func _death_frame_at_age(entry: Dictionary) -> int:
+	return _death_frame(entry.frames, str(entry.animation), float(entry.age) / maxf(.001, float(entry.pose_duration)))
 
 static func _death_frame(frames: SpriteFrames, animation: String, progress: float) -> int:
 	# Authored death tracks can contain unequal frame ticks just like attacks.

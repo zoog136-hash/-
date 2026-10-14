@@ -18,7 +18,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
 parser.add_argument('--render-visual-tests',action='store_true',help='Compatibility flag: frame-dependent tests always use a real renderer')
-parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; world_regions and original_skill_learning_conditions have a 540-second minimum for scene and learning transactions')
+parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; repeated scene/learning transactions have a 540-second minimum and real boss lifecycle probes have a 450-second minimum')
 parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
@@ -60,6 +60,10 @@ for name,extra in tests:
         # the PCK probe child, must inherit its own empty save/config directory.
         env['APPDATA']=user_data
         env['LOCALAPPDATA']=user_data
+        if name.startswith('original_based_') or name == 'pr100_direction_gameplay_test':
+            # Keep the real directional/lifecycle report after isolated saves
+            # are cleaned up, including diagnostics from a failed CI case.
+            env['TWILIGHT_PR100_REPORT']=str(logs/(name+'.gameplay.json'))
         if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
         try:
             # This integration case visits 24 fields, saves/loads each one and
@@ -74,6 +78,13 @@ for name,extra in tests:
                 # 125 real purchases/learning/save transactions completed all
                 # 1,689 assertions in 195s; preserve them with a bounded budget.
                 budget = max(args.timeout, 540)
+            elif name in {'original_based_mummy_lord_gameplay_test',
+                          'original_based_seer_boss_gameplay_test',
+                          'original_based_salah_gameplay_test'}:
+                # Keep original boss HP, armor, weapon damage and every real
+                # skill/death/drop assertion. Salah headless took 166.9s,
+                # beyond the ordinary 150s limit; rendered probes took 290.6s.
+                budget = max(args.timeout, 450)
             else:
                 budget = args.timeout
             command=[args.godot,*display_args,'--path',str(root),*extra]
@@ -96,6 +107,9 @@ for name,extra in tests:
         print(('SKIP ' if name in skipped else ('PASS ' if ok else 'FAIL '))+name,flush=True)
         if not ok:
             failed.append(name)
+            # Artifact delivery may fail independently of the test. Retain the
+            # bounded failure detail in ordinary job logs as well as the file.
+            print('FAILED_OUTPUT_BEGIN '+name+'\n'+output[-16000:]+'\nFAILED_OUTPUT_END '+name,flush=True)
             if name=='import':
                 # An incomplete import leaves PNGs without usable Godot .ctex
                 # data; running every test would manufacture unrelated failures

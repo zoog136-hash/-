@@ -22,7 +22,8 @@ class OriginalBasedImportTest(unittest.TestCase):
                       ("아이언 골렘", "지옥의 아이언골렘"), ("글루디오 던전 구울", "불사의 구울"), ("도마뱀", "알비노 도마뱀"),
                       ("크랩맨", "에바 왕국 크랩맨"), ("아시타지오", "오만한 아시타지오"),
                       ("알비노 개구리", "알비노 뿔 개구리"), ("파이어 에그", "공포의 파이어 에그"),
-                      ("혼 켈베로스", "잔혹한 혼 켈베로스")]:
+                      ("혼 켈베로스", "잔혹한 혼 켈베로스"),
+                      ("용의 계곡 본 드래곤", "불멸의 본 드래곤", "지옥의 본 드래곤")]:
             first = targets["monster:" + names[0]]
             for name in names[1:]:
                 self.assertEqual(importer.sharing_identity(first), importer.sharing_identity(targets["monster:" + name]))
@@ -62,13 +63,16 @@ class OriginalBasedImportTest(unittest.TestCase):
                              "mummy_lord": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "seer_boss": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "salah": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "bone_dragon": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "king_bugbear": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "ettin": [("poses-0.png", 8), ("poses-1.png", 4)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "spear_captain": [("poses-0.png", 8), ("poses-1.png", 5)]}.items():
             folder = ROOT / "assets/actors/eight_direction/original_based" / actor
             proof = json.loads((folder / "provenance.json").read_text())
-            expected_poses = 96 if actor in {"reaper_male", "asitagio"} else 104
+            expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin"} else 104
             self.assertEqual(proof["distinct_pixel_frames"], expected_poses)
             parts = []
             for index, (name, rows) in enumerate(specs):
@@ -79,17 +83,17 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus", "mummy_lord", "seer_boss", "salah", "bone_dragon", "king_bugbear", "ettin"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
-            expected_poses = 96 if actor in {"reaper_male", "asitagio"} else 104
+            expected_poses = 96 if actor in {"reaper_male", "asitagio", "ettin"} else 104
             self.assertEqual(len(frames), expected_poses)
             self.assertEqual(len(tracks), 40)
             used = []
             for role, rows in importer.ROLES.items():
                 for direction in range(8):
                     track = tracks[f"{role}_{direction}"]
-                    reviewed_counts = {("reaper_male", "walk"): 2, ("asitagio", "death"): 2}
+                    reviewed_counts = {("reaper_male", "walk"): 2, ("asitagio", "death"): 2, ("ettin", "death"): 2}
                     self.assertEqual(len(track["frames"]), reviewed_counts.get((actor, role), len(rows)))
                     self.assertEqual(track["loop"], role in ("idle", "walk"))
                     used.extend(frame["texture"] for frame in track["frames"])

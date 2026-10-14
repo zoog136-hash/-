@@ -1,0 +1,74 @@
+[
+  {
+    "case": "batch11_spear_captain_after",
+    "mode": "headless",
+    "subject": null,
+    "exit_code": 0,
+    "passed": true,
+    "seconds": 38.301,
+    "checks_in_stdout": 1430,
+    "directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": []
+  },
+  {
+    "case": "batch11_spear_red_after",
+    "mode": "headless",
+    "subject": null,
+    "exit_code": 0,
+    "passed": true,
+    "seconds": 47.38,
+    "checks_in_stdout": 1452,
+    "directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": []
+  },
+  {
+    "case": "batch11_reaper_after",
+    "mode": "headless",
+    "subject": null,
+    "exit_code": 0,
+    "passed": true,
+    "seconds": 44.16,
+    "checks_in_stdout": 1396,
+    "directions": 8,
+    "pose_samples": 104,
+    "failures": [],
+    "log_errors": []
+  },
+  {
+    "case": "batch11_spear_captain_after",
+    "mode": "opengl",
+    "subject": null,
+    "exit_code": 1,
+    "passed": false,
+    "seconds": 181.929,
+    "checks_in_stdout": 998,
+    "directions": 8,
+    "pose_samples": 104,
+    "failures": [
+      "real VFX clock displays all death frames NE observed=[1, 2]"
+    ],
+    "log_errors": []
+  },
+  {
+    "case": "batch11_spear_red_after",
+    "mode": "opengl",
+    "subject": null,
+    "exit_code": 1,
+    "passed": false,
+    "seconds": 197.528,
+    "checks_in_stdout": 1011,
+    "directions": 8,
+    "pose_samples": 104,
+    "failures": [
+      "real VFX clock displays all death frames E observed=[0, 2]",
+      "real VFX clock displays all death frames SE observed=[0, 2]",
+      "real VFX clock displays all death frames S observed=[1, 2]",
+      "real VFX clock displays all death frames NW observed=[0, 2]"
+    ],
+    "log_errors": []
+  }
+]

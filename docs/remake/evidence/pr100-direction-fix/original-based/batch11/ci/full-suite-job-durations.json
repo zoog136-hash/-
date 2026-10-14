@@ -1,0 +1,892 @@
+[
+  {
+    "workflow": "TWILIGHT Monster AI Leash and Path",
+    "job": "monster-ai",
+    "id": 115643997110,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-14T02:26:46Z",
+    "completed_at": "2026-10-14T03:01:45Z",
+    "elapsed_minutes": 34.98,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:46Z",
+        "completed_at": "2026-10-14T02:26:47Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:47Z",
+        "completed_at": "2026-10-14T02:27:17Z"
+      },
+      {
+        "name": "Install official Godot 4.7.2",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:27:17Z",
+        "completed_at": "2026-10-14T02:27:19Z"
+      },
+      {
+        "name": "Provision software OpenGL for frame-dependent regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:27:19Z",
+        "completed_at": "2026-10-14T02:27:26Z"
+      },
+      {
+        "name": "Full project import, boot and GDScript regression suite",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:27:26Z",
+        "completed_at": "2026-10-14T03:01:42Z"
+      },
+      {
+        "name": "Archive exact test evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:01:42Z",
+        "completed_at": "2026-10-14T03:01:44Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:01:44Z",
+        "completed_at": "2026-10-14T03:01:44Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:01:44Z",
+        "completed_at": "2026-10-14T03:01:44Z"
+      }
+    ]
+  },
+  {
+    "workflow": "TWILIGHT 25 Map Visual Styles",
+    "job": "map-visuals",
+    "id": 115643989001,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-14T02:21:54Z",
+    "completed_at": "2026-10-14T03:05:00Z",
+    "elapsed_minutes": 43.1,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:21:55Z",
+        "completed_at": "2026-10-14T02:21:55Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:21:55Z",
+        "completed_at": "2026-10-14T02:22:27Z"
+      },
+      {
+        "name": "Install official Godot 4.7.2",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:22:27Z",
+        "completed_at": "2026-10-14T02:22:29Z"
+      },
+      {
+        "name": "Provision software OpenGL for frame-dependent regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:22:29Z",
+        "completed_at": "2026-10-14T02:22:34Z"
+      },
+      {
+        "name": "Full Godot import boot and map regression tests",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:22:34Z",
+        "completed_at": "2026-10-14T03:04:56Z"
+      },
+      {
+        "name": "Save exact engine evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:04:56Z",
+        "completed_at": "2026-10-14T03:04:58Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:04:58Z",
+        "completed_at": "2026-10-14T03:04:58Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:04:58Z",
+        "completed_at": "2026-10-14T03:04:58Z"
+      }
+    ]
+  },
+  {
+    "workflow": "TWILIGHT Integration Validate",
+    "job": "godot-integration",
+    "id": 115643971914,
+    "status": "completed",
+    "conclusion": "cancelled",
+    "started_at": "2026-10-14T02:26:08Z",
+    "completed_at": "2026-10-14T03:06:34Z",
+    "elapsed_minutes": 40.43,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:09Z",
+        "completed_at": "2026-10-14T02:26:09Z"
+      },
+      {
+        "name": "Check out integration candidate",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:09Z",
+        "completed_at": "2026-10-14T02:26:43Z"
+      },
+      {
+        "name": "Install Godot 4.7.2 and software GL",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:43Z",
+        "completed_at": "2026-10-14T02:26:53Z"
+      },
+      {
+        "name": "Full project regression, import, boot and all smoke tests",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:53Z",
+        "completed_at": "2026-10-14T03:03:12Z"
+      },
+      {
+        "name": "Floor-loot visual, manual pickup and live AUTO regression",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:03:12Z",
+        "completed_at": "2026-10-14T03:03:19Z"
+      },
+      {
+        "name": "Combat animation and world rendering regression",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:03:19Z",
+        "completed_at": "2026-10-14T03:05:07Z"
+      },
+      {
+        "name": "Monster-crowd and authored-state animation regression",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "started_at": "2026-10-14T03:05:07Z",
+        "completed_at": "2026-10-14T03:06:28Z"
+      },
+      {
+        "name": "Preserve Godot test evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:06:28Z",
+        "completed_at": "2026-10-14T03:06:32Z"
+      },
+      {
+        "name": "Post Check out integration candidate",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:06:32Z",
+        "completed_at": "2026-10-14T03:06:32Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:06:32Z",
+        "completed_at": "2026-10-14T03:06:32Z"
+      }
+    ]
+  },
+  {
+    "workflow": "TWILIGHT Combat Resolution Equivalence",
+    "job": "combat-formula",
+    "id": 115643956398,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-14T02:23:39Z",
+    "completed_at": "2026-10-14T03:01:52Z",
+    "elapsed_minutes": 38.22,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:23:39Z",
+        "completed_at": "2026-10-14T02:23:40Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:23:40Z",
+        "completed_at": "2026-10-14T02:24:10Z"
+      },
+      {
+        "name": "Install Godot 4.7.2",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:10Z",
+        "completed_at": "2026-10-14T02:24:12Z"
+      },
+      {
+        "name": "Provision software OpenGL for frame-dependent regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:12Z",
+        "completed_at": "2026-10-14T02:24:26Z"
+      },
+      {
+        "name": "Full project boot and exact formula regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:26Z",
+        "completed_at": "2026-10-14T03:01:49Z"
+      },
+      {
+        "name": "Preserve evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:01:49Z",
+        "completed_at": "2026-10-14T03:01:50Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:01:50Z",
+        "completed_at": "2026-10-14T03:01:50Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:01:50Z",
+        "completed_at": "2026-10-14T03:01:50Z"
+      }
+    ]
+  },
+  {
+    "workflow": "TWILIGHT renewed-map spawn validation",
+    "job": "validate",
+    "id": 115643928028,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-14T02:24:02Z",
+    "completed_at": "2026-10-14T03:09:34Z",
+    "elapsed_minutes": 45.53,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:03Z",
+        "completed_at": "2026-10-14T02:24:03Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:03Z",
+        "completed_at": "2026-10-14T02:24:38Z"
+      },
+      {
+        "name": "Prepare evidence directory",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:38Z",
+        "completed_at": "2026-10-14T02:24:38Z"
+      },
+      {
+        "name": "Resource integrity preflight",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:38Z",
+        "completed_at": "2026-10-14T02:24:38Z"
+      },
+      {
+        "name": "Portable rule checks",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:38Z",
+        "completed_at": "2026-10-14T02:24:39Z"
+      },
+      {
+        "name": "Install project-pinned Godot",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:39Z",
+        "completed_at": "2026-10-14T02:24:40Z"
+      },
+      {
+        "name": "Install software OpenGL for frame-dependent regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:40Z",
+        "completed_at": "2026-10-14T02:24:46Z"
+      },
+      {
+        "name": "Import scripts and resources",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:46Z",
+        "completed_at": "2026-10-14T02:27:44Z"
+      },
+      {
+        "name": "Validate all 25 current maps and export effective placements",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:27:44Z",
+        "completed_at": "2026-10-14T02:27:48Z"
+      },
+      {
+        "name": "Full project regression including boss persistence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:27:48Z",
+        "completed_at": "2026-10-14T03:09:31Z"
+      },
+      {
+        "name": "Publish validation evidence, not an untested game build",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:09:31Z",
+        "completed_at": "2026-10-14T03:09:32Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:09:32Z",
+        "completed_at": "2026-10-14T03:09:32Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:09:32Z",
+        "completed_at": "2026-10-14T03:09:32Z"
+      }
+    ]
+  },
+  {
+    "workflow": "Original Skill Migration Validation",
+    "job": "original-skills",
+    "id": 115643920780,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-14T02:14:54Z",
+    "completed_at": "2026-10-14T02:58:13Z",
+    "elapsed_minutes": 43.32,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:14:55Z",
+        "completed_at": "2026-10-14T02:14:55Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:14:55Z",
+        "completed_at": "2026-10-14T02:15:15Z"
+      },
+      {
+        "name": "Godot 4.7.2 Compatibility",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:15:15Z",
+        "completed_at": "2026-10-14T02:15:17Z"
+      },
+      {
+        "name": "Install software OpenGL display for visual regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:15:17Z",
+        "completed_at": "2026-10-14T02:15:24Z"
+      },
+      {
+        "name": "Dated data and graph invariants",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:15:24Z",
+        "completed_at": "2026-10-14T02:15:24Z"
+      },
+      {
+        "name": "All behavioral and regression suites",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:15:24Z",
+        "completed_at": "2026-10-14T02:57:51Z"
+      },
+      {
+        "name": "Real OpenGL render",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:57:51Z",
+        "completed_at": "2026-10-14T02:58:09Z"
+      },
+      {
+        "name": "Preserve test logs and actual rendered previews",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:58:09Z",
+        "completed_at": "2026-10-14T02:58:11Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:58:11Z",
+        "completed_at": "2026-10-14T02:58:11Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:58:11Z",
+        "completed_at": "2026-10-14T02:58:11Z"
+      }
+    ]
+  },
+  {
+    "workflow": "Monster World Validate",
+    "job": "validate",
+    "id": 115643913892,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-14T02:26:07Z",
+    "completed_at": "2026-10-14T03:09:23Z",
+    "elapsed_minutes": 43.27,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:08Z",
+        "completed_at": "2026-10-14T02:26:08Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:08Z",
+        "completed_at": "2026-10-14T02:26:32Z"
+      },
+      {
+        "name": "Install Godot 4.7.2 and software OpenGL",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:32Z",
+        "completed_at": "2026-10-14T02:26:45Z"
+      },
+      {
+        "name": "Reproducible catalog and all regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:26:45Z",
+        "completed_at": "2026-10-14T03:05:09Z"
+      },
+      {
+        "name": "Actual OpenGL regions, AUTO dense hunts, bosses, all species poses",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:05:09Z",
+        "completed_at": "2026-10-14T03:06:34Z"
+      },
+      {
+        "name": "Actual 32, 96, 192 creature combat and movement",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:06:34Z",
+        "completed_at": "2026-10-14T03:08:43Z"
+      },
+      {
+        "name": "Checkout PR43 before HUD optimization with PR46 and PR48 integrated",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:08:43Z",
+        "completed_at": "2026-10-14T03:08:46Z"
+      },
+      {
+        "name": "Identical 192-strike HUD and real damage comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:08:46Z",
+        "completed_at": "2026-10-14T03:09:18Z"
+      },
+      {
+        "name": "Upload exact-sha logs and OpenGL review evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:09:18Z",
+        "completed_at": "2026-10-14T03:09:21Z"
+      },
+      {
+        "name": "Persist source-labelled unedited review files on the feature branch",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T03:09:21Z",
+        "completed_at": "2026-10-14T03:09:21Z"
+      },
+      {
+        "name": "Post Checkout PR43 before HUD optimization with PR46 and PR48 integrated",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:09:21Z",
+        "completed_at": "2026-10-14T03:09:21Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:09:21Z",
+        "completed_at": "2026-10-14T03:09:22Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:09:22Z",
+        "completed_at": "2026-10-14T03:09:22Z"
+      }
+    ]
+  },
+  {
+    "workflow": "L1J Runtime and Recovery Validation",
+    "job": "regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe, 60)",
+    "id": 115643895703,
+    "status": "completed",
+    "conclusion": "failure",
+    "started_at": "2026-10-14T02:20:22Z",
+    "completed_at": "2026-10-14T03:11:38Z",
+    "elapsed_minutes": 51.27,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:20:23Z",
+        "completed_at": "2026-10-14T02:20:24Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:20:24Z",
+        "completed_at": "2026-10-14T02:21:00Z"
+      },
+      {
+        "name": "Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:21:00Z",
+        "completed_at": "2026-10-14T02:21:00Z"
+      },
+      {
+        "name": "Download official Godot 4.7.2",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:21:00Z",
+        "completed_at": "2026-10-14T02:21:04Z"
+      },
+      {
+        "name": "Generate synthetic fixtures (no third-party game art)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:21:04Z",
+        "completed_at": "2026-10-14T02:21:04Z"
+      },
+      {
+        "name": "Verify resource installation safety",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T02:21:04Z",
+        "completed_at": "2026-10-14T02:21:04Z"
+      },
+      {
+        "name": "Import, boot and all regression checks with isolated saves",
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-10-14T02:21:04Z",
+        "completed_at": "2026-10-14T03:11:32Z"
+      },
+      {
+        "name": "Install software OpenGL capture dependencies",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T03:11:32Z",
+        "completed_at": "2026-10-14T03:11:32Z"
+      },
+      {
+        "name": "Render the actual game with synthetic CI fixtures",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T03:11:32Z",
+        "completed_at": "2026-10-14T03:11:32Z"
+      },
+      {
+        "name": "Preserve evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:11:32Z",
+        "completed_at": "2026-10-14T03:11:34Z"
+      },
+      {
+        "name": "Post Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T03:11:34Z",
+        "completed_at": "2026-10-14T03:11:34Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:11:34Z",
+        "completed_at": "2026-10-14T03:11:36Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:11:36Z",
+        "completed_at": "2026-10-14T03:11:36Z"
+      }
+    ]
+  },
+  {
+    "workflow": "L1J Runtime and Recovery Validation",
+    "job": "regression (ubuntu-latest, linux.x86_64, Godot_v4.7.2-stable_linux.x86_64, 45)",
+    "id": 115643895825,
+    "status": "completed",
+    "conclusion": "cancelled",
+    "started_at": "2026-10-14T02:24:42Z",
+    "completed_at": "2026-10-14T03:10:04Z",
+    "elapsed_minutes": 45.37,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:43Z",
+        "completed_at": "2026-10-14T02:24:44Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:24:44Z",
+        "completed_at": "2026-10-14T02:25:33Z"
+      },
+      {
+        "name": "Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:25:33Z",
+        "completed_at": "2026-10-14T02:25:33Z"
+      },
+      {
+        "name": "Download official Godot 4.7.2",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:25:33Z",
+        "completed_at": "2026-10-14T02:25:34Z"
+      },
+      {
+        "name": "Generate synthetic fixtures (no third-party game art)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:25:34Z",
+        "completed_at": "2026-10-14T02:25:34Z"
+      },
+      {
+        "name": "Verify resource installation safety",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:25:34Z",
+        "completed_at": "2026-10-14T02:25:35Z"
+      },
+      {
+        "name": "Import, boot and all regression checks with isolated saves",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "started_at": "2026-10-14T02:25:35Z",
+        "completed_at": "2026-10-14T03:10:01Z"
+      },
+      {
+        "name": "Install software OpenGL capture dependencies",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T03:10:01Z",
+        "completed_at": "2026-10-14T03:10:01Z"
+      },
+      {
+        "name": "Render the actual game with synthetic CI fixtures",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T03:10:01Z",
+        "completed_at": "2026-10-14T03:10:01Z"
+      },
+      {
+        "name": "Preserve evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:10:01Z",
+        "completed_at": "2026-10-14T03:10:02Z"
+      },
+      {
+        "name": "Post Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-14T03:10:02Z",
+        "completed_at": "2026-10-14T03:10:02Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:10:02Z",
+        "completed_at": "2026-10-14T03:10:03Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T03:10:03Z",
+        "completed_at": "2026-10-14T03:10:03Z"
+      }
+    ]
+  },
+  {
+    "workflow": "Combat Animation Validate",
+    "job": "validate",
+    "id": 115643847617,
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-14T02:19:42Z",
+    "completed_at": "2026-10-14T02:59:14Z",
+    "elapsed_minutes": 39.53,
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:19:42Z",
+        "completed_at": "2026-10-14T02:19:43Z"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:19:43Z",
+        "completed_at": "2026-10-14T02:20:13Z"
+      },
+      {
+        "name": "Install engine and virtual GL",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:20:13Z",
+        "completed_at": "2026-10-14T02:20:21Z"
+      },
+      {
+        "name": "All headless regressions",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:20:21Z",
+        "completed_at": "2026-10-14T02:54:05Z"
+      },
+      {
+        "name": "Actual combat rendering and live AUTO",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:54:05Z",
+        "completed_at": "2026-10-14T02:54:24Z"
+      },
+      {
+        "name": "Existing region render and active-play comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:54:24Z",
+        "completed_at": "2026-10-14T02:55:36Z"
+      },
+      {
+        "name": "Actual 32/96/192 monster crowd combat",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:55:36Z",
+        "completed_at": "2026-10-14T02:56:49Z"
+      },
+      {
+        "name": "Checkout original map-complete main for comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:56:49Z",
+        "completed_at": "2026-10-14T02:56:52Z"
+      },
+      {
+        "name": "Original main render and active-play benchmark",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:56:52Z",
+        "completed_at": "2026-10-14T02:58:02Z"
+      },
+      {
+        "name": "Identical CPU and crowd benchmark against starting main",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:58:02Z",
+        "completed_at": "2026-10-14T02:59:08Z"
+      },
+      {
+        "name": "Upload review evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:59:08Z",
+        "completed_at": "2026-10-14T02:59:11Z"
+      },
+      {
+        "name": "Post Checkout original map-complete main for comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:59:11Z",
+        "completed_at": "2026-10-14T02:59:11Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:59:11Z",
+        "completed_at": "2026-10-14T02:59:11Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-14T02:59:12Z",
+        "completed_at": "2026-10-14T02:59:12Z"
+      }
+    ]
+  }
+]

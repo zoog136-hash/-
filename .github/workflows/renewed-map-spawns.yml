@@ -30,7 +30,7 @@ env:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:

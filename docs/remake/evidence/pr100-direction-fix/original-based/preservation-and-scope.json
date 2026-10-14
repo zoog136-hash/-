@@ -506,18 +506,73 @@
         "bytes": 51847,
         "sha256": "b79c03e24e33c37bb62a430d92ce0c38c14978b649a64b99555b178de241ed69"
       }
+    },
+    "bone_dragon": {
+      "assets/actors/eight_direction/original_based/bone_dragon/SpriteFrames.tres": {
+        "bytes": 25517,
+        "sha256": "7707762025beb09a97622ed7934741f65e4bfa099dcadaaac9294a6a4b6a8f08"
+      },
+      "assets/actors/eight_direction/original_based/bone_dragon/poses-0.png": {
+        "bytes": 2698600,
+        "sha256": "cbe446f684e49497ba636529c40d7a116212169c81823b6032f51ac26453a29e"
+      },
+      "assets/actors/eight_direction/original_based/bone_dragon/poses-1.png": {
+        "bytes": 1781313,
+        "sha256": "74b78a8ac2c11bb08549d8beb18552e01dee8fc03ce506344280240a9b5edcb6"
+      },
+      "assets/actors/eight_direction/original_based/bone_dragon/provenance.json": {
+        "bytes": 52428,
+        "sha256": "a65425eb7566c55b8f7ee8758bdf39304f22c4c6553d21e7126450df940c03da"
+      }
+    },
+    "king_bugbear": {
+      "assets/actors/eight_direction/original_based/king_bugbear/SpriteFrames.tres": {
+        "bytes": 25470,
+        "sha256": "692af10f82c5f88d274086d1d142d6ca396e4870f593c4ed413af53c65d75f1d"
+      },
+      "assets/actors/eight_direction/original_based/king_bugbear/poses-0.png": {
+        "bytes": 1475248,
+        "sha256": "af59f1c02f0b26d5e42467317e0c7d736113f8a64f569750b11fb052e70db5db"
+      },
+      "assets/actors/eight_direction/original_based/king_bugbear/poses-1.png": {
+        "bytes": 948464,
+        "sha256": "101f59d958e25935097d9cc5daf903ade8e0cfb9cda03c8c055ad350be502787"
+      },
+      "assets/actors/eight_direction/original_based/king_bugbear/provenance.json": {
+        "bytes": 51568,
+        "sha256": "c2c79ce03452dcb670064df47a0930b2d9e58129c61214ab1037a584fd1ea4c6"
+      }
+    },
+    "ettin": {
+      "assets/actors/eight_direction/original_based/ettin/SpriteFrames.tres": {
+        "bytes": 23767,
+        "sha256": "221ad6774c03e1e418dd8f5c9746b003b960f5fd1fc4b887d0bb812acc800c3a"
+      },
+      "assets/actors/eight_direction/original_based/ettin/poses-0.png": {
+        "bytes": 1915622,
+        "sha256": "4aef3c11f239b0bd4762d7f102e71e44bc76326249bad381d617bc185a7a570b"
+      },
+      "assets/actors/eight_direction/original_based/ettin/poses-1.png": {
+        "bytes": 1043179,
+        "sha256": "098b197d9b979ea72a9f2a585445575dd78521ed2781de62a1aa8ae7c619c53a"
+      },
+      "assets/actors/eight_direction/original_based/ettin/provenance.json": {
+        "bytes": 48462,
+        "sha256": "0d424d28f4f4cb08d77cc5fe87d6558c24df5b9d39a9eea7d6c17402809a0342"
+      }
     }
   },
   "remaining": {
     "hero_plus": 48,
-    "normal_monster": 96,
+    "normal_monster": 91,
     "boss": 25
   },
   "not_completed": [
-    "All remaining 169 identities",
+    "All remaining164 identities",
+    "Current-commit Android export verification",
     "Actual Android device execution",
     "Exact pushed-commit CI requires terminal confirmation"
   ],
   "test_scope": "Production Main and real equipment/input/AI/contact/death/drop/pickup. Each regional alias tested independently. Explicit pose sampling is distinct from real input/AI. Ghost nonlethal recoil uses take_damage(1); reaper incoming/death use controlled production hit/poison callbacks. Level-105 ogre uses the existing catalog execution sword via normal equipment handler, retaining full monster HP/armor/evasion. No combat formulas or drop tables changed.",
-  "latest_batch": "batch10: 3 existing-project-image-based boss designs / 312 genuine poses; actual Main normal attacks, existing skills and lifecycle validated"
+  "latest_batch": "batch11: 3 original-portrait designs /304 genuine poses /5 normal identities; actual Main eight-direction combat and lifecycle validated; corpse source timing corrected"
 }

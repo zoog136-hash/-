@@ -1,0 +1,57 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCorrect the second attached 8x8 skeletal dragon motion atlas to match the FIRST original portrait. Keep the64 distinct articulated poses and8 compass columns E,SE,S,SW,W,NW,N,NE and8 action rows idle1,idle2,walk1,walk2,walk3,attack-windup,attack-contact,attack-recovery. The second image incorrectly added large opaque BLACK MEMBRANES BETWEEN THE WING BONES. Remove those invented membranes completely: inside each wing frame there are ONLY THIN IVORY BONE SPARS, with FULLY TRANSPARENT alpha0 empty gaps between them. The original has no painted black leathery bat membrane. Also keep natural gaps between separate bones transparent, with no black silhouette fill or dark backing plate. Keep every actual bone and joint intact, all wings/tail/claws complete, and maintain the original limb arrangement. Preserve the original detailed ivory/gray bone palette and exact skull/rib/spine design; no flesh, feathers, armor or aura. Do not erase or shorten the wings. N shows back of skull and spine, tail toward viewer, with no frontal eyes/jaw facing viewer; S shows frontal rib cage and skull; E/W true side view. Each full creature remains very small inside its cell, with huge empty transparent gutters. All empty background, including inside wings, alpha0. Produce a separate transparent RGBA sprite atlas, no floor/shadow/labels/grid.\nHIT/DEATH EXACT PROMPT:\nCreate a NEW fully transparent RGBA 2D HIT AND DEATH atlas, LANDSCAPE canvas about1600pixels wide by1000high. Exactly8 equal direction columns and5 equal phase rows,40 poses. Each ENTIRE body and ALL weapons, wings and tail must be SMALLER THAN40percent of its cell width and height, with very wide horizontal and vertical transparent gutters. The first attached ORIGINAL portrait is authoritative; second main atlas establishes consistent motion art style. Preserve original identity, anatomy, colors, equipment and proportions. E true right side,SE front-right,S front toward viewer/down,SW front-left,W true left side,NW back-left,N entire back away/up,NE back-right. Rows1 recoil,2 distinct recovery,3 dying/buckling,4 collapse,5 terminal fully flat corpse, all40 organically articulated unique poses. No standing final row; no detached parts, particles, floor, shadow, labels, grid, black backing, glow or haze. All40 alpha-bounded rectangles disjoint and complete inside safe outer borders. Make a separate file; original unchanged. The actual source is the small ivory/gray skeletal dragon: its long bony neck and horned skull, exposed rib cage and spine, bony jointed wing spars without fleshy feathered wings, original clawed limbs and long tapering bony tail. Preserve the original limb arrangement and thin bare bone anatomy, no armor, flesh, robe, glowing orb or replacement living dragon. Keep wings and tail COMPLETELY inside each tiny cell silhouette with generous empty margin. E skull/snout points RIGHT, W LEFT, S skull/snout faces DOWN toward viewer and rib cage is visible in front; N shows BACK of skull, back vertebral column and rear ribs, wings from behind, and tail extending toward viewer. In N the FACE and jaw opening must NOT look back at the viewer. Walking has actual alternating claw contacts, flexed wing joints and changed neck/tail curves. Magic attack braces the body and folds/extends the original neck and jaws toward the column direction to release the existing game projectile, then recovers. No detached fireball added to the body sheet. Wings have ONLY skeletal bone spars with fully transparent alpha0 holes between them, NO opaque dark leathery membrane or silhouette fill. Keep all wing bones complete and connected. Terminal corpse lies flat with wing bones folded against the body, long tail relaxed on the ground and skull/neck collapsed. N shows rear skeleton and back of skull, no face/jaw looking backward.",
+  "prompt_record_kind": "exact final prompts; original existing portrait is authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/bone_dragon/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/bone_dragon/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared source portrait with every direction and role. The actual source is the small ivory/gray skeletal dragon: its long bony neck and horned skull, exposed rib cage and spine, bony jointed wing spars without fleshy feathered wings, original clawed limbs and long tapering bony tail. Preserve the original limb arrangement and thin bare bone anatomy, no armor, flesh, robe, glowing orb or replacement living dragon. Keep wings and tail COMPLETELY inside each tiny cell silhouette with generous empty margin. E skull/snout points RIGHT, W LEFT, S skull/snout faces DOWN toward viewer and rib cage is visible in front; N shows BACK of skull, back vertebral column and rear ribs, wings from behind, and tail extending toward viewer. In N the FACE and jaw opening must NOT look back at the viewer. Walking has actual alternating claw contacts, flexed wing joints and changed neck/tail curves. Magic attack braces the body and folds/extends the original neck and jaws toward the column direction to release the existing game projectile, then recovers. No detached fireball added to the body sheet. Main has64 real articulated poses. N shows rear anatomy with face hidden, S front anatomy, E/W side views, and four distinct diagonal views. All frame rectangles are disjoint. Preserve source and generated image bytes; normalize resolution with virtual canvases, and use one maximum-living-pose scale within the original display-height budget. Actual Main combat, lifecycle and rendered appearance remain pending; this import alone does not certify completion. Hit sheet has40poses: two recoil and three death phases ending with a flat corpse. The first main sheet was rejected for opaque wing-gap fill. Main-v2 preserves skeletal spars and largely transparent gaps; minor low-alpha fringe requires inspection over the real Main terrain before approval."
+  }
+}

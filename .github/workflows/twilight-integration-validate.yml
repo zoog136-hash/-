@@ -13,7 +13,9 @@ permissions:
 jobs:
   godot-integration:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    # c19b53a passed all 177 checks, then the final render hit the old 40m cap.
+    # Retain the full suite and allow the additional real boss lifecycle tests.
+    timeout-minutes: 75
     steps:
       - name: Check out integration candidate
         uses: actions/checkout@v4

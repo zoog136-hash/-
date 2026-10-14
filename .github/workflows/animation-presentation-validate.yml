@@ -195,6 +195,15 @@ jobs:
             case_timeout: 450
             cases: |
               salah|original_based_salah_gameplay_test||poses
+          - group: bone-dragons
+            cases: |
+              bone-dragon|original_based_bone_dragon_gameplay_test||poses
+              bone-dragon-immortal|original_based_bone_dragon_gameplay_test|불멸의 본 드래곤|directions
+              bone-dragon-hell|original_based_bone_dragon_gameplay_test|지옥의 본 드래곤|directions
+          - group: king-bugbear-ettin
+            cases: |
+              king-bugbear|original_based_king_bugbear_gameplay_test||poses
+              ettin|original_based_ettin_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

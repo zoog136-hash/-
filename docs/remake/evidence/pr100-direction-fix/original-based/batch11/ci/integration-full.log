@@ -1,0 +1,553 @@
+godot-integration	Set up job	﻿2026-10-14T02:26:09.0217615Z Current runner version: '2.337.0'
+godot-integration	Set up job	2026-10-14T02:26:09.0238388Z ##[group]Runner Image Provisioner
+godot-integration	Set up job	2026-10-14T02:26:09.0239213Z Hosted Compute Agent
+godot-integration	Set up job	2026-10-14T02:26:09.0239762Z Version: 20261002.596
+godot-integration	Set up job	2026-10-14T02:26:09.0240328Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+godot-integration	Set up job	2026-10-14T02:26:09.0240923Z Build Date: 2026-10-02T22:28:27Z
+godot-integration	Set up job	2026-10-14T02:26:09.0241604Z Worker ID: {2107a9d5-3bdc-4ec9-877a-63544ff4b003}
+godot-integration	Set up job	2026-10-14T02:26:09.0242191Z Region: westus3
+godot-integration	Set up job	2026-10-14T02:26:09.0242646Z Cloud: Azure
+godot-integration	Set up job	2026-10-14T02:26:09.0243132Z ##[endgroup]
+godot-integration	Set up job	2026-10-14T02:26:09.0244505Z ##[group]Operating System
+godot-integration	Set up job	2026-10-14T02:26:09.0245008Z Ubuntu
+godot-integration	Set up job	2026-10-14T02:26:09.0245516Z 24.04.5
+godot-integration	Set up job	2026-10-14T02:26:09.0245945Z LTS
+godot-integration	Set up job	2026-10-14T02:26:09.0246397Z ##[endgroup]
+godot-integration	Set up job	2026-10-14T02:26:09.0246892Z ##[group]Runner Image
+godot-integration	Set up job	2026-10-14T02:26:09.0247423Z Image: ubuntu-24.04
+godot-integration	Set up job	2026-10-14T02:26:09.0247974Z Version: 20261004.327.1
+godot-integration	Set up job	2026-10-14T02:26:09.0248837Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+godot-integration	Set up job	2026-10-14T02:26:09.0250261Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+godot-integration	Set up job	2026-10-14T02:26:09.0251056Z ##[endgroup]
+godot-integration	Set up job	2026-10-14T02:26:09.0251985Z ##[group]GITHUB_TOKEN Permissions
+godot-integration	Set up job	2026-10-14T02:26:09.0253985Z Contents: read
+godot-integration	Set up job	2026-10-14T02:26:09.0254618Z Metadata: read
+godot-integration	Set up job	2026-10-14T02:26:09.0255088Z ##[endgroup]
+godot-integration	Set up job	2026-10-14T02:26:09.0257070Z Secret source: Actions
+godot-integration	Set up job	2026-10-14T02:26:09.0257881Z Cache mode: write
+godot-integration	Set up job	2026-10-14T02:26:09.0258504Z Prepare workflow directory
+godot-integration	Set up job	2026-10-14T02:26:09.0516910Z Prepare all required actions
+godot-integration	Set up job	2026-10-14T02:26:09.0557085Z Getting action download info
+godot-integration	Set up job	2026-10-14T02:26:09.3550676Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+godot-integration	Set up job	2026-10-14T02:26:09.6848684Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+godot-integration	Set up job	2026-10-14T02:26:09.8948680Z Complete job name: godot-integration
+godot-integration	Check out integration candidate	﻿2026-10-14T02:26:09.9548605Z ##[group]Run actions/checkout@v4
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9549295Z with:
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9549658Z   repository: zoog136-hash/-
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9552805Z   token: ***
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9553168Z   ssh-strict: true
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9553669Z   ssh-user: git
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9554031Z   persist-credentials: true
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9554421Z   clean: true
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9554781Z   sparse-checkout-cone-mode: true
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9555201Z   fetch-depth: 1
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9555551Z   fetch-tags: false
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9555913Z   show-progress: true
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9556275Z   lfs: false
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9556608Z   submodules: false
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9556968Z   set-safe-directory: true
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9557382Z   allow-unsafe-pr-checkout: false
+godot-integration	Check out integration candidate	2026-10-14T02:26:09.9557949Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0423713Z Syncing repository: zoog136-hash/-
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0425889Z ##[group]Getting Git version info
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0426712Z Working directory is '/home/runner/work/-/-'
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0428017Z [command]/usr/bin/git version
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0501552Z git version 2.55.0
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0526587Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0531912Z Temporarily overriding HOME='/home/runner/work/_temp/c1704330-edc4-4af0-aa26-b17ef1d61259' before making global git config changes
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0533773Z Adding repository directory to the temporary git global config as a safe directory
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0538000Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0582956Z Deleting the contents of '/home/runner/work/-/-'
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0589746Z ##[group]Initializing the repository
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.0590354Z [command]/usr/bin/git init /home/runner/work/-/-
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3356355Z hint: Using 'master' as the name for the initial branch. This default branch name
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3357895Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3360444Z hint: to use in all of your new repositories, which will suppress this warning,
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3361928Z hint: call:
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3362535Z hint:
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3363394Z hint: 	git config --global init.defaultBranch <name>
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3364244Z hint:
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3365009Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3366257Z hint: 'development'. The just-created branch can be renamed via this command:
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3367251Z hint:
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3367855Z hint: 	git branch -m <name>
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3368488Z hint:
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3369319Z hint: Disable this message with "git config set advice.defaultBranchName false"
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3370549Z Initialized empty Git repository in /home/runner/work/-/-/.git/
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.3372742Z [command]/usr/bin/git remote add origin https://github.com/zoog136-hash/-
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5329074Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5330196Z ##[group]Disabling automatic garbage collection
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5331745Z [command]/usr/bin/git config --local gc.auto 0
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5363007Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5364093Z ##[group]Setting up auth
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5368257Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5396233Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5857429Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.5959230Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.6091672Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.6121102Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.6307423Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.6341054Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.6348274Z ##[group]Fetching the repository
+godot-integration	Check out integration candidate	2026-10-14T02:26:10.6349799Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39:refs/remotes/origin/feature/twilight-animation-20261013
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.3955818Z From https://github.com/zoog136-hash/-
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.3957346Z  * [new ref]         c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39 -> origin/feature/twilight-animation-20261013
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.3960852Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.3961473Z ##[group]Determining the checkout info
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.3962329Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.3968064Z [command]/usr/bin/git sparse-checkout disable
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.4016629Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.4045342Z ##[group]Checking out the ref
+godot-integration	Check out integration candidate	2026-10-14T02:26:40.4048337Z [command]/usr/bin/git checkout --progress --force -B feature/twilight-animation-20261013 refs/remotes/origin/feature/twilight-animation-20261013
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.4352169Z Updating files:  40% (3162/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.5294400Z Updating files:  41% (3185/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.6239897Z Updating files:  42% (3263/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.6655154Z Updating files:  43% (3340/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.6980198Z Updating files:  44% (3418/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.7085340Z Updating files:  45% (3496/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.7156110Z Updating files:  46% (3573/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.7220060Z Updating files:  47% (3651/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.7286325Z Updating files:  48% (3729/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.7355824Z Updating files:  49% (3806/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.7412508Z Updating files:  50% (3884/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.8269515Z Updating files:  51% (3962/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.9544765Z Updating files:  52% (4039/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.9583910Z Updating files:  53% (4117/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.9610699Z Updating files:  54% (4195/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.9664058Z Updating files:  55% (4272/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:41.9916449Z Updating files:  56% (4350/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.0236209Z Updating files:  57% (4428/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.0448610Z Updating files:  58% (4505/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.0777911Z Updating files:  59% (4583/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.1244347Z Updating files:  60% (4661/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.1804090Z Updating files:  61% (4738/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.2286896Z Updating files:  62% (4816/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.2960186Z Updating files:  63% (4894/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.3183135Z Updating files:  64% (4971/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.3205441Z Updating files:  65% (5049/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.3622620Z Updating files:  66% (5127/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.3915136Z Updating files:  67% (5204/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.4139290Z Updating files:  68% (5282/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.4313861Z Updating files:  68% (5343/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.4819216Z Updating files:  69% (5360/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.4933987Z Updating files:  70% (5437/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.5049444Z Updating files:  71% (5515/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.5321750Z Updating files:  72% (5593/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.5340979Z Updating files:  73% (5670/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.6059833Z Updating files:  74% (5748/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.6347438Z Updating files:  75% (5826/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.6590813Z Updating files:  76% (5903/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.6861047Z Updating files:  77% (5981/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.6978628Z Updating files:  78% (6059/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.7121458Z Updating files:  79% (6136/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.7198181Z Updating files:  80% (6214/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.7577994Z Updating files:  81% (6292/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.7719624Z Updating files:  82% (6369/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.7926783Z Updating files:  83% (6447/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.8208944Z Updating files:  84% (6525/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.8317246Z Updating files:  85% (6602/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.8895903Z Updating files:  86% (6680/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.9002266Z Updating files:  87% (6758/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.9023029Z Updating files:  88% (6835/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.9044865Z Updating files:  89% (6913/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.9703119Z Updating files:  90% (6991/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:42.9831233Z Updating files:  91% (7068/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0303902Z Updating files:  92% (7146/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0322009Z Updating files:  93% (7224/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0361159Z Updating files:  94% (7301/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0408228Z Updating files:  95% (7379/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0451865Z Updating files:  96% (7457/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0484031Z Updating files:  97% (7534/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0523845Z Updating files:  98% (7612/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0562840Z Updating files:  99% (7690/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0563668Z Updating files: 100% (7767/7767)
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0563999Z Updating files: 100% (7767/7767), done.
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0625347Z Switched to a new branch 'feature/twilight-animation-20261013'
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0627863Z branch 'feature/twilight-animation-20261013' set up to track 'origin/feature/twilight-animation-20261013'.
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0766152Z ##[endgroup]
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0803532Z [command]/usr/bin/git log -1 --format=%H
+godot-integration	Check out integration candidate	2026-10-14T02:26:43.0828935Z c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39
+godot-integration	Install Godot 4.7.2 and software GL	﻿2026-10-14T02:26:43.1007179Z ##[group]Run set -euo pipefail
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1007473Z [36;1mset -euo pipefail[0m
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1008039Z [36;1mcurl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip[0m
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1008593Z [36;1munzip -q /tmp/godot.zip -d /tmp[0m
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1008843Z [36;1mchmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64[0m
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1009257Z [36;1msudo apt-get update -qq[0m
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1009516Z [36;1msudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri[0m
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1009820Z [36;1m/tmp/Godot_v4.7.2-stable_linux.x86_64 --version[0m
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1445169Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1445476Z ##[endgroup]
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1581518Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1582167Z                                  Dload  Upload   Total   Spent    Left  Speed
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.1582805Z 
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.3155570Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.3170976Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.3171422Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.6924035Z 
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:43.6924460Z 100 74.2M  100 74.2M    0     0   138M      0 --:--:-- --:--:-- --:--:--  138M
+godot-integration	Install Godot 4.7.2 and software GL	2026-10-14T02:26:53.5929868Z 4.7.2.stable.official.ed1daf0bf
+godot-integration	Full project regression, import, boot and all smoke tests	﻿2026-10-14T02:26:53.7287892Z ##[group]Run set -euo pipefail
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:26:53.7288162Z [36;1mset -euo pipefail[0m
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:26:53.7288540Z [36;1mpython3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs test-results[0m
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:26:53.7342878Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:26:53.7343156Z ##[endgroup]
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:26:53.8915652Z synthetic_rgba_pngs=4 registry_records=2 spriteframe_fixture=1 tile_grid=4x3 third_party_assets=0
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:26:53.8950083Z CI_SYNTHETIC_L1J_FIXTURES_OK
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:06.7141023Z PASS import
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:13.6822934Z PASS boot
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:14.5820694Z PASS actor_motion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:21.1774370Z PASS aden_boss_special_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:39.7725489Z PASS aden_building_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:47.1100162Z PASS aden_courtyard_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:48.0361553Z PASS aden_ground_continuity_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:29:55.1271840Z PASS aden_shoreline_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:08.5706848Z PASS aden_terrain_polish_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:14.7950682Z PASS ainhasad_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:18.9496407Z PASS animation_catalog_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:28.2207373Z PASS animation_presentation_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:37.4221408Z PASS animation_restore_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:38.3214855Z PASS authored_frames_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:39.2215345Z PASS authored_state_motion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:40.7718228Z PASS boss_presentation_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:46.8091078Z PASS card_special_policy_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:30:52.8451199Z PASS catalog_effects_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:01.0257558Z PASS catalog_full_browser_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:08.3647316Z PASS combat_hud_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:08.5146187Z PASS combat_resolution_equivalence_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:09.4152576Z PASS combat_timeline_lifecycle_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:18.5200022Z PASS combat_timing_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:18.7627733Z PASS combat_vfx_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:27.0339318Z PASS consumable_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:27.2795597Z PASS crafting_atomic_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:27.6172656Z PASS crafting_material_drop_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:27.8627372Z PASS crafting_scroll_grade_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:28.2935391Z PASS eight_direction_animation_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:36.3795189Z PASS equipment_blessing_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:43.3491688Z PASS equipment_slot_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:43.5931585Z PASS external_a2_bridge_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:31:44.4931514Z PASS external_spx_actor_runtime_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:01.3192699Z PASS field_world_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:02.1271371Z PASS flight_lifecycle_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:04.2364217Z PASS follower_motion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:10.2740475Z PASS full_inven_catalog_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:17.0369715Z PASS full_visual_manifest_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:23.1685200Z PASS ground_drop_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:40.1864208Z PASS ground_loot_system_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:41.0529911Z PASS hit_feedback_render_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:41.2978271Z PASS hit_feedback_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:47.3351210Z PASS hp_mp_unique_effects_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:32:57.7242854Z PASS hunting_navigation_cache_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:33:49.2272402Z PASS hunting_paths_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:12.8981411Z PASS hunting_world_capture_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:19.4957852Z PASS input_routing_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:25.8126323Z PASS inventory_db_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:32.1285296Z PASS item_buff_description_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:32.3731876Z PASS item_db_slot_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:32.5234559Z PASS item_icon_art_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:38.4681801Z PASS item_options_runtime_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:39.1310715Z PASS item_rarity_render_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:39.5646664Z PASS item_visual_repair_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:40.4614466Z PASS item_visual_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:40.6110726Z PASS item_weight_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:47.5760904Z PASS job_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:47.7255771Z PASS l1j_full_source_data_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:47.8747897Z PASS l1j_map_grid_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:48.0239392Z PASS l1j_map_recovery_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:48.2664846Z PASS l1j_optional_bridge_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:48.4151942Z PASS l1j_packed_assets_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:48.6585288Z PASS l1j_png_load_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:34:58.0491412Z PASS l1j_reviewed_shop_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:10.8780757Z PASS l1j_runtime_game_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:11.0282103Z PASS l1j_source_map_catalog_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:11.1787474Z PASS l1j_source_navigation_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:11.3285774Z PASS l1j_spx_frames_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:11.4781919Z PASS l1j_visual_link_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:11.9093817Z PASS lineage_inventory_ui_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:12.1542190Z PASS lineage_side_ui_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:12.3977608Z PASS lineagem_ui_visual_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:12.6427626Z PASS local_crafting_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:13.3512741Z PASS loot_balance_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:13.5016750Z PASS main_debug_crafting_blessing_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:14.4002900Z PASS main_debug_failed_load_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:14.5501220Z PASS main_debug_input_bindings_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:14.7940304Z PASS map_visual_toggle_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:20.8302809Z PASS mobile_scroll_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:21.6370655Z PASS monster_ai_leash_path_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:29.1613159Z PASS monster_attack_profiles_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:35:33.4095721Z PASS monster_motion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:36:00.0890599Z PASS monster_world_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:36:06.6663111Z PASS native_animation_expansion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:36:12.7040142Z PASS non_skill_options_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:36:12.9488227Z PASS npc_dialogue_branching_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:36:13.1942384Z PASS npc_teleport_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:36:19.3248246Z PASS option_finalize_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:36:48.5149228Z PASS original_based_albino_frog_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:37:30.7173496Z PASS original_based_asitagio_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:37:53.6802428Z PASS original_based_bugbear_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:37:53.9326065Z PASS original_based_canvas_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:38:26.6618939Z PASS original_based_cockatrice_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:38:55.4864535Z PASS original_based_crabman_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:39:30.5398838Z PASS original_based_cyclops_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:40:15.4453707Z PASS original_based_fire_egg_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:40:39.9880846Z PASS original_based_ghost_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:41:06.1087828Z PASS original_based_ghoul_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:41:44.0348924Z PASS original_based_harpy_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:42:27.4480950Z PASS original_based_horn_cerberus_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:43:04.8161105Z PASS original_based_ice_golem_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:43:40.8818003Z PASS original_based_iron_golem_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:44:09.4193638Z PASS original_based_lava_golem_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:44:39.4448174Z PASS original_based_lizard_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:45:08.6316419Z PASS original_based_lycanthrope_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:45:31.8688887Z PASS original_based_monster_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:45:59.6654638Z PASS original_based_ogre_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:46:24.7661959Z PASS original_based_reaper_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:46:49.8683396Z PASS original_based_reaper_male_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:47:54.0184460Z PASS original_based_sand_worm_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:48:19.2134234Z PASS original_based_spear_captain_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:48:44.8707294Z PASS original_based_spear_guard_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:49:10.5251494Z PASS original_based_spear_guard_green_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:49:36.1821816Z PASS original_based_spear_guard_red_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:50:09.3663141Z PASS original_based_succubus_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:50:10.3593084Z PASS original_counter_probability_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:50:16.5825297Z PASS original_lineagem_effects_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:50:16.8262752Z SKIP original_map_catalog_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:50:22.8611974Z PASS original_skill_audio_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:50:34.1975200Z PASS original_skill_catalog_runtime_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:13.1382128Z PASS original_skill_learning_conditions_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:19.2710631Z PASS original_skill_provenance_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:24.7465598Z PASS original_skill_reduction_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:30.8798884Z PASS original_skill_restore_guard_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:36.1710235Z PASS original_skill_status_coexistence_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:42.5803847Z PASS original_skill_summon_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:50.7573621Z PASS original_skill_system_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:52:55.9555736Z PASS original_skill_target_state_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:05.8138742Z PASS original_skill_warehouse_migration_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:12.7829154Z PASS original_turn_undead_rewards_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:21.1467767Z PASS original_turn_undead_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:21.3897394Z PASS original_world_coordinates_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:22.1955618Z SKIP original_world_runtime_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:28.5111280Z PASS passive_skill_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:36.2227523Z PASS per_instance_enchantments_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:53:45.4256123Z PASS playtest_catalog_drag_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:55:25.6417234Z PASS pr100_direction_gameplay_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:55:26.3528191Z PASS pr80_original_resources_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:55:26.6913602Z PASS pr80_resource_assets_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:55:27.5944144Z PASS pr93_landing_bounds_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:55:33.9123922Z PASS quickslot_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:55:57.8589273Z PASS reference_expansion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:19.2369284Z PASS reference_object_capture_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:26.6717480Z PASS reference_object_placement_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:28.1281766Z PASS relic_motion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:29.1217537Z PASS remake_map_inventory_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:35.6255378Z PASS remake_map_population_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:37.9049105Z PASS remake_map_readability_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:44.8037138Z PASS remake_ui_local_item_icons_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:51.3073620Z PASS remake_ui_presentation_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:56.4104347Z PASS remake_world_lifecycle_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:56:58.7972592Z PASS renewed_map_spawn_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:02.0193530Z PASS road_surface_mesh_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:21.9314334Z PASS road_surface_render_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:28.5287942Z PASS shield_rules_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:28.6778739Z PASS shop_authority_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:28.9216490Z PASS shop_buyback_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:35.7951955Z PASS skill_element_integration_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:43.0438488Z PASS skill_mechanism_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:44.2142058Z SKIP source_first_map_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:44.4580942Z PASS source_pack_guard_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:50.4018264Z PASS speed_option_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:59.4215926Z PASS stage5_save_compatibility_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:57:59.8530982Z PASS terrain_surface_geometry_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:58:28.5092609Z PASS terrain_surface_render_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:58:28.6608624Z PASS terrain_variation_texture_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:58:36.3737659Z PASS ui_fidelity_regression_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:58:43.7139556Z PASS ui_navigation_preservation_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:58:58.9646599Z PASS ui_pointer_transfer_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:59:05.9331060Z PASS ui_renewal_integration_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:59:12.1574472Z PASS ui_stage4_item_instance_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:59:13.2428254Z PASS visible_gameplay_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:59:19.3731058Z PASS volley_motion_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:59:19.6170753Z PASS warehouse_persistence_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:59:25.8403636Z PASS weapon_rules_smoke_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T02:59:43.5952008Z PASS world_region_portals_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T03:02:04.8164150Z PASS world_regions_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T03:02:24.4092969Z PASS world_structure_capture_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T03:02:48.3918776Z PASS world_structure_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T03:03:12.3315696Z PASS world_terrain_coverage_test
+godot-integration	Full project regression, import, boot and all smoke tests	2026-10-14T03:03:12.3332582Z 177/180 checks passed; 3 skipped; 0 not run
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	﻿2026-10-14T03:03:12.3417656Z ##[group]Run set -euo pipefail
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3417921Z [36;1mset -euo pipefail[0m
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3418137Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3418428Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-loot"[0m
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3419138Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_ground_loot.gd 2>&1 | tee test-results/integration-loot-render.log[0m
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3419894Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-loot-render.log; then exit 1; fi[0m
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3420331Z [36;1mgrep -q 'GROUND_LOOT_RENDER_OK' test-results/integration-loot-render.log[0m
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3474160Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3474427Z ##[endgroup]
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.3951486Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.5315643Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.5316265Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.6102430Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:12.6103099Z 
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:18.2542349Z GROUND_LOOT_CAPTURE 01-seven-grades
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:18.5354171Z GROUND_LOOT_CAPTURE 02-manual-selection
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:18.8545596Z GROUND_LOOT_CAPTURE 03-auto-approach
+godot-integration	Floor-loot visual, manual pickup and live AUTO regression	2026-10-14T03:03:18.8549421Z GROUND_LOOT_RENDER_OK captures=3 directory=/home/runner/work/_temp/twilight-integration-loot/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/ground-loot-review
+godot-integration	Combat animation and world rendering regression	﻿2026-10-14T03:03:19.2512483Z ##[group]Run set -euo pipefail
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2512770Z [36;1mset -euo pipefail[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2512975Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2513463Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-combat"[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2514181Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat.gd 2>&1 | tee test-results/integration-combat-render.log[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2514921Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-combat-render.log; then exit 1; fi[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2515373Z [36;1mgrep -q 'COMBAT_RENDER' test-results/integration-combat-render.log[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2515754Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-regions"[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2516424Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_regions.gd 2>&1 | tee test-results/integration-regions-render.log[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2517183Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-regions-render.log; then exit 1; fi[0m
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2570914Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.2571188Z ##[endgroup]
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.3047640Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.4401330Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.4402121Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.5014840Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:19.5015443Z 
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:28.0140158Z COMBAT_CAPTURE 01-base-companions
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:28.2849716Z COMBAT_CAPTURE 02-slash-hit
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:28.5422980Z COMBAT_CAPTURE 03-heavy-critical
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:28.8006514Z COMBAT_CAPTURE 04-magic-hit
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:29.0841379Z COMBAT_CAPTURE 05-transform-43
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:29.3788828Z COMBAT_CAPTURE 05-transform-393
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:29.6329716Z COMBAT_CAPTURE 06-monster-death
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:32.8576483Z COMBAT_CAPTURE 07-auto-120
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:36.6834642Z COMBAT_CAPTURE 07-auto-240
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:42.1585771Z COMBAT_CAPTURE 07-auto-359
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:42.1588004Z COMBAT_RENDER {"adapter":"llvmpipe (LLVM 20.1.2, 256 bits)","captures":10,"frames":300,"median_ms":32.716,"movement":2795.1162109375,"note":"Linux software GL diagnostic poses and live AUTO; not a hardware FPS guarantee.","p95_ms":50.861,"peak_nodes":8332,"peak_orphans":0,"vfx_high_water":2,"xp_delta":0}
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:42.6421562Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:42.7789008Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:42.7789512Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:42.8407679Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:42.8408238Z 
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:47.5301306Z LANDMARK_CACHE oman_01 cells=3 size=(1152, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:48.5252620Z REGION_CAPTURE oman_01 entrance calls=528.0 props=138
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:49.2153477Z REGION_CAPTURE oman_01 central calls=416.0 props=151
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:49.9466051Z LANDMARK_CACHE oman_10 cells=5 size=(1536, 768)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:50.7448985Z REGION_CAPTURE oman_10 entrance calls=560.0 props=72
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:51.6517765Z REGION_CAPTURE oman_10 central calls=587.0 props=122
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:51.7950295Z LANDMARK_CACHE domination_summit cells=7 size=(1536, 768)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:52.5522518Z REGION_CAPTURE domination_summit entrance calls=380.0 props=63
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:53.3673380Z REGION_CAPTURE domination_summit central calls=368.0 props=115
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:54.3143098Z LANDMARK_CACHE escaros_01 cells=3 size=(1152, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:55.1709212Z REGION_CAPTURE escaros_01 entrance calls=593.0 props=246
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:56.2054182Z REGION_CAPTURE escaros_01 central calls=651.0 props=148
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:56.3927353Z LANDMARK_CACHE escaros_02 cells=3 size=(1152, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:57.2868089Z REGION_CAPTURE escaros_02 entrance calls=611.0 props=263
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:58.2388895Z REGION_CAPTURE escaros_02 central calls=603.0 props=120
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:58.3622561Z LANDMARK_CACHE escaros_03 cells=3 size=(1152, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:03:59.2665691Z REGION_CAPTURE escaros_03 entrance calls=608.0 props=210
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:00.2551457Z REGION_CAPTURE escaros_03 central calls=591.0 props=250
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:00.4102190Z LANDMARK_CACHE escaros_04 cells=3 size=(1152, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:01.3497895Z REGION_CAPTURE escaros_04 entrance calls=593.0 props=239
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:02.3930121Z REGION_CAPTURE escaros_04 central calls=613.0 props=150
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:02.6191257Z LANDMARK_CACHE escaros_05 cells=3 size=(1152, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:03.5427407Z REGION_CAPTURE escaros_05 entrance calls=576.0 props=249
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:04.5309440Z REGION_CAPTURE escaros_05 central calls=556.0 props=84
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:06.0875102Z LANDMARK_CACHE albino_01 cells=4 size=(1536, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:07.2386513Z REGION_CAPTURE albino_01 entrance calls=1217.0 props=155
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:08.3543527Z REGION_CAPTURE albino_01 central calls=1074.0 props=206
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:09.9747274Z LANDMARK_CACHE albino_02 cells=4 size=(1536, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:11.1638876Z REGION_CAPTURE albino_02 entrance calls=1204.0 props=148
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:12.3634340Z REGION_CAPTURE albino_02 central calls=1075.0 props=212
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:13.0216085Z LANDMARK_CACHE albino_03 cells=4 size=(1536, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:14.2102122Z REGION_CAPTURE albino_03 entrance calls=1239.0 props=159
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:15.4006075Z REGION_CAPTURE albino_03 central calls=1099.0 props=218
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:16.0578916Z LANDMARK_CACHE albino_04 cells=4 size=(1536, 384)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:17.2691663Z REGION_CAPTURE albino_04 entrance calls=1223.0 props=157
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:18.3525348Z REGION_CAPTURE albino_04 central calls=1075.0 props=244
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:18.5143796Z LANDMARK_CACHE faith_01 cells=5 size=(1536, 768)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:19.5377812Z REGION_CAPTURE faith_01 entrance calls=591.0 props=76
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:20.7460420Z REGION_CAPTURE faith_01 central calls=631.0 props=115
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:20.9286564Z LANDMARK_CACHE faith_04 cells=5 size=(1536, 768)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:21.9247135Z REGION_CAPTURE faith_04 entrance calls=589.0 props=79
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:23.1321311Z REGION_CAPTURE faith_04 central calls=632.0 props=116
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:24.3198917Z REGION_RENDER median_ms=31.894 p95_ms=44.031
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:26.4127708Z REGION_COMBAT_START 오크 point=(6112.0, 7200.0) monster=(5920.0, 7200.0)
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:39.7242105Z ACTIVE_PLAY {"active_monsters":10,"aden_setup":"existing_spawn_approach","auto_target_frames":143,"distance_world_pixels":902.8,"frames":180,"initial_position":"(6112.0, 7200.0)","map":"aden_world","median_ms":50.875,"mode":"active_auto_hunt","p95_ms":76.119,"peak_draw_calls":1217,"physics_p95_ms":86.814,"player_landed_hits":0,"process_p95_ms":139.271,"xp_gained":864}
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:47.9282027Z ACTIVE_PLAY {"active_monsters":38,"aden_setup":"existing_review_point","auto_target_frames":179,"distance_world_pixels":3611.1,"frames":180,"initial_position":"(3456.0, 3328.0)","map":"oman_10","median_ms":33.04,"mode":"active_auto_hunt","p95_ms":46.821,"peak_draw_calls":1092,"physics_p95_ms":86.469,"player_landed_hits":4,"process_p95_ms":42.179,"xp_gained":0}
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:57.5454282Z REGION_AUTO_STATIONARY albino_04 target_frames=180 damage_hits=11 active_monsters=15
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:04:57.5455995Z ACTIVE_PLAY {"active_monsters":15,"aden_setup":"existing_review_point","auto_target_frames":180,"distance_world_pixels":0.0,"frames":180,"initial_position":"(3456.0, 3456.0)","map":"albino_04","median_ms":38.611,"mode":"active_auto_hunt","p95_ms":48.104,"peak_draw_calls":1235,"physics_p95_ms":3.413,"player_landed_hits":11,"process_p95_ms":48.317,"xp_gained":0}
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:05:07.5524515Z REGION_AUTO_STATIONARY faith_04 target_frames=180 damage_hits=19 active_monsters=14
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:05:07.5525816Z ACTIVE_PLAY {"active_monsters":14,"aden_setup":"existing_review_point","auto_target_frames":180,"distance_world_pixels":0.0,"frames":180,"initial_position":"(3456.0, 3328.0)","map":"faith_04","median_ms":45.73,"mode":"active_auto_hunt","p95_ms":48.457,"peak_draw_calls":773,"physics_p95_ms":4.595,"player_landed_hits":19,"process_p95_ms":51.582,"xp_gained":0}
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:05:07.5529071Z REGION_CAPTURE_COUNT 37
+godot-integration	Combat animation and world rendering regression	2026-10-14T03:05:07.5529947Z REGION_CAPTURE_DIRECTORY /home/runner/work/_temp/twilight-integration-regions/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD/world-regions-review
+godot-integration	Monster-crowd and authored-state animation regression	﻿2026-10-14T03:05:07.9180174Z ##[group]Run set -euo pipefail
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9180452Z [36;1mset -euo pipefail[0m
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9180654Z [36;1mexport LIBGL_ALWAYS_SOFTWARE=1[0m
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9180952Z [36;1mexport XDG_DATA_HOME="${RUNNER_TEMP}/twilight-integration-crowd"[0m
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9181666Z [36;1mxvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --audio-driver Dummy --path . --script res://tests/capture_combat_crowd.gd 2>&1 | tee test-results/integration-crowd-render.log[0m
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9182402Z [36;1mif grep -E 'SCRIPT ERROR:|ERROR:' test-results/integration-crowd-render.log; then exit 1; fi[0m
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9182848Z [36;1mgrep -q 'COMBAT_CROWD_RENDER_OK' test-results/integration-crowd-render.log[0m
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9237128Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9237395Z ##[endgroup]
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:07.9723579Z Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:08.1142190Z WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:08.1143105Z      at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:08.1773569Z OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.4 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:08.1774213Z 
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:27.7261947Z CROWD_SAMPLE {"flights_returned":true,"frames":240,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":32.677,"monster_released_hits":145,"orphans":0,"p95_ms":44.269,"peak_flights":4,"peak_nodes":6855,"physics_p95_ms":6.056,"player_landed_hits":41,"population":32,"process_p95_ms":38.867,"vfx_high_water":21,"vfx_returned":true}
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:05:50.9807804Z CROWD_SAMPLE {"flights_returned":true,"frames":240,"hud_work":{"character_snapshots":0,"equipment_syncs":0,"full_hud_refreshes":0,"max_hp_queries":0,"max_mp_queries":0},"median_ms":62.215,"monster_released_hits":570,"orphans":0,"p95_ms":71.095,"peak_flights":8,"peak_nodes":7367,"physics_p95_ms":10.669,"player_landed_hits":69,"population":96,"process_p95_ms":49.07,"vfx_high_water":33,"vfx_returned":true}
+godot-integration	Monster-crowd and authored-state animation regression	2026-10-14T03:06:28.6046764Z ##[error]The operation was canceled.
+godot-integration	Preserve Godot test evidence	﻿2026-10-14T03:06:28.6127988Z ##[group]Run actions/upload-artifact@v4
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6128243Z with:
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6128526Z   name: twilight-integration-check-c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6129570Z   path: test-results/
+godot-integration	Preserve Godot test evidence	/home/runner/work/_temp/twilight-integration-loot/**/ground-loot-review/
+godot-integration	Preserve Godot test evidence	/home/runner/work/_temp/twilight-integration-combat/**/combat-review/
+godot-integration	Preserve Godot test evidence	/home/runner/work/_temp/twilight-integration-regions/**/world-regions-review/
+godot-integration	Preserve Godot test evidence	/home/runner/work/_temp/twilight-integration-crowd/**/combat-crowd-review/
+godot-integration	Preserve Godot test evidence	
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6130496Z   if-no-files-found: warn
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6130686Z   compression-level: 6
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6130863Z   overwrite: false
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6131035Z   include-hidden-files: false
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.6131233Z ##[endgroup]
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.7584199Z (node:5861) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.7585319Z (Use `node --trace-deprecation ...` to show where the warning was created)
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.8726121Z Multiple search paths detected. Calculating the least common ancestor of all paths
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.8729355Z The least common ancestor is /home/runner/work. This will be the root directory of the artifact
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.8730130Z With the provided path, there will be 239 files uploaded
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.8731055Z Artifact name is valid!
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:28.8731480Z Root directory input is valid!
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:29.2117791Z Beginning upload of artifact content to blob storage
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:29.6210082Z (node:5861) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:30.3674012Z Uploaded bytes 8388608
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:30.6268561Z Uploaded bytes 16777216
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:30.6854057Z Uploaded bytes 25165824
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:30.9526598Z Uploaded bytes 33554432
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:31.0009054Z Uploaded bytes 41943040
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:31.2602481Z Uploaded bytes 50331648
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:31.5882975Z Uploaded bytes 58720256
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:31.7169836Z Uploaded bytes 60854297
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:31.7797353Z Finished uploading artifact content to blob storage!
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:31.7799401Z SHA256 digest of uploaded artifact zip is a0a736709d9ea797aed76912b3ef56bb48fc45bf08a57539ffcba038634e95cd
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:31.7801091Z Finalizing artifact upload
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:32.0207640Z Artifact twilight-integration-check-c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39.zip successfully finalized. Artifact ID 11867276146
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:32.0209240Z Artifact twilight-integration-check-c19b53ab9ebaa8e8aab26e382ce6ab7e63479c39 has been successfully uploaded! Final size is 60854297 bytes. Artifact ID is 11867276146
+godot-integration	Preserve Godot test evidence	2026-10-14T03:06:32.0214292Z Artifact download URL: https://github.com/zoog136-hash/-/actions/runs/38499854733/artifacts/11867276146
+godot-integration	Post Check out integration candidate	﻿2026-10-14T03:06:32.0444205Z Post job cleanup.
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1287494Z [command]/usr/bin/git version
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1318899Z git version 2.55.0
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1349793Z Temporarily overriding HOME='/home/runner/work/_temp/88485456-e779-4e2d-82c6-a4f33866cb12' before making global git config changes
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1351212Z Adding repository directory to the temporary git global config as a safe directory
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1353336Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/-/-
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1387260Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1418287Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1692587Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1712717Z http.https://github.com/.extraheader
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1723702Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.1754165Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.2058370Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+godot-integration	Post Check out integration candidate	2026-10-14T03:06:32.2090637Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+godot-integration	Complete job	﻿2026-10-14T03:06:32.2550741Z Cleaning up orphan processes
+godot-integration	Complete job	2026-10-14T03:06:32.2802870Z Terminate orphan process: pid (5795) (xvfb-run)
+godot-integration	Complete job	2026-10-14T03:06:32.2834821Z Terminate orphan process: pid (5796) (tee)
+godot-integration	Complete job	2026-10-14T03:06:32.2861234Z Terminate orphan process: pid (5806) (Xvfb)
+godot-integration	Complete job	2026-10-14T03:06:32.2886326Z Terminate orphan process: pid (5809) (Godot_v4.7.2-stable_linux.x86_64)
+godot-integration	Complete job	2026-10-14T03:06:32.2895475Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

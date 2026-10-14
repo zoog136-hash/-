@@ -137,28 +137,35 @@ func incoming_and_death() -> void:
 		world.player.camera.force_update_scroll()
 		var death_frames: Array[int] = []
 		var death_captures: Array[Dictionary] = []
-		for _wait: int in range(80):
+		var death_samples: Array[Dictionary] = []
+		var death_deadline: int = Time.get_ticks_msec() + 3000
+		# CombatVFX advances in _process, independently of the physics clock.
+		# Observe every render/process update instead of polling physics ticks;
+		# retain the real lifetime and the requirement to see every real frame.
+		while not death.is_empty() and Time.get_ticks_msec() < death_deadline:
+			if captures.is_empty(): await process_frame
+			else: await RenderingServer.frame_post_draw
 			if death.is_empty(): break
-			var frame_index: int = world.combat_vfx._death_frame(frames, str(death.animation), minf(1., float(death.age) / float(death.duration) * 2.))
+			var frame_index: int = world.combat_vfx._death_frame_at_age(death)
 			var texture: Texture2D = frames.get_frame_texture(str(death.animation), frame_index)
 			var draw_scale: Vector2 = world.combat_vfx._death_draw_scale(death, texture)
 			check((texture.get_size() * draw_scale).is_equal_approx(displayed_canvas), "corpse preserves live displayed size")
 			check(((death.offset as Vector2) + Vector2(0, texture.get_height() / 8.) * draw_scale).length() < .01, "corpse preserves foot anchor")
 			if frame_index not in death_frames:
 				death_frames.append(frame_index)
+				death_samples.append({"frame":frame_index, "age":float(death.age), "duration":float(death.duration), "pose_duration":float(death.pose_duration)})
 				if not captures.is_empty():
-					await RenderingServer.frame_post_draw
 					# Synchronous PNG compression can consume an entire short VFX
 					# phase on software rendering. Read the actual frame now, but
 					# write it only after the unchanged production clock completes.
 					death_captures.append({"name":"death-%s-%d" % [COMPASS[direction], frame_index],
 						"image":root.get_texture().get_image()})
-			await tick()
-		check(death_frames == [0, 1, 2], "real VFX clock displays all death frames")
+		check(death_frames == [0, 1, 2], "real VFX clock displays all death frames " + COMPASS[direction] + " observed=" + str(death_frames))
 		check(death.is_empty(), "corpse lifetime ends and returns pool record")
 		for sample: Dictionary in death_captures:
 			check((sample.image as Image).save_png(captures.path_join(str(sample.name) + ".png")) == OK, "actual Main screenshot " + str(sample.name))
 			report.screenshots.append(str(sample.name) + ".png")
 		report.incoming.append({"compass":COMPASS[direction], "hp_before":hp_before, "death_frames":death_frames, "respawn_hp":world.hp,
+			"death_clock_samples":death_samples, "observation_clock":"process_frame" if captures.is_empty() else "frame_post_draw",
 			"png_written_after_vfx_clock":not captures.is_empty()})
 		world.player.camera.position = Vector2(0, -32)
