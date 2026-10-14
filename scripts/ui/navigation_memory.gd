@@ -108,6 +108,8 @@ func restore(section: String, root: Node) -> void:
 		# Exact physical item reference only; a sold item must not select its neighbor.
 		if slots.has(identity):
 			view.call("_select_item", identity)
+			# Restoring a retained selection is not a fresh user tap.
+			view.call("_hide_item_name")
 			view.set("detail_active", bool(state.get("detail", false)))
 		view.call("_reflow")
 	else:

@@ -36,6 +36,9 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         return max(requested, 1860)
     if name == 'original_skill_learning_conditions_test':
         return max(requested, 540)
+    if name == 'eight_interactions_test':
+        # Real UI events plus repeated complete floor/inventory save-load cycles.
+        return max(requested, 300)
     if name == 'ground_loot_system_test':
         # The unchanged 166-check full GUI/physics/save/loot suite completed
         # in ~112 seconds in its dedicated workflow, but exceeded the generic

@@ -131,8 +131,36 @@ func set_auto(enabled: bool) -> void:
 		v20_auto_button.text = "AUTO\nON" if enabled else "AUTO"
 		v20_auto_button.add_theme_stylebox_override("normal",_round_button_style(.88,42,Color("69c49b") if enabled else UI.BRONZE))
 
+func _build_v20_target() -> void:
+	# Keep the map title; do not construct the removed target readout.
+	var map_panel_small: PanelContainer = PanelContainer.new()
+	map_panel_small.add_theme_stylebox_override("panel", _panel_style(0.68, 4))
+	map_panel_small.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_place(map_panel_small, 510.0, 10.0, 770.0, 44.0)
+	v20_layer.add_child(map_panel_small)
+	v20_map_name = Label.new()
+	v20_map_name.text = "아덴 월드"
+	v20_map_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v20_map_name.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	v20_map_name.add_theme_font_size_override("font_size", 15)
+	v20_map_name.add_theme_color_override("font_color", Color(0.94, 0.87, 0.72, 1.0))
+	map_panel_small.add_child(v20_map_name)
+
+
+func show_target(_monster_name: String, _hp: int, _max_hp: int) -> void:
+	pass
+
+func clear_target() -> void:
+	if is_instance_valid(target_panel): target_panel.hide()
+
 func _ready() -> void:
 	super._ready()
+	if is_instance_valid(target_panel):
+		target_panel.get_parent().remove_child(target_panel)
+		target_panel.queue_free()
+	target_panel = null
+	target_label = null
+	target_hp = null
 	$Root.theme = UI.make_theme()
 	catalog_drag_icon = TextureRect.new()
 	catalog_drag_icon.name = "CatalogDragPreview"
@@ -533,10 +561,6 @@ func _process(delta: float) -> void:
 		if index < cooldown_shades.size(): cooldown_shades[index].visible = remain > 0
 	if workspace != null and workspace.visible:
 		workspace.footer.text = "아데나  %s  ·  Lv.%d  ·  %s  ·  Esc로 닫기" % [lineage_inventory_ui._format_number(int(character_state.get("gold",0))),int(character_state.get("level",1)),v20_map_name.text]
-	if v20_target_panel.visible:
-		var selected: Node = world.get("selected_monster")
-		if is_instance_valid(selected):
-			v20_target_name.text = "Lv.%d %s  ·  HP %d / %d" % [int(selected.get("monster_level")),str(selected.get("monster_name")),int(selected.get("hp")),int(selected.get("max_hp"))]
 
 func update_player(level: int,hp: int,max_hp: int,mp: int,max_mp: int,experience_value: int,exp_need: int,gold: int) -> void:
 	super.update_player(level,hp,max_hp,mp,max_mp,experience_value,exp_need,gold)
@@ -1517,7 +1541,7 @@ func toggle_map() -> void:
 	var region_count: Label = UI.label("지역 선택  ·  %d개 지역" % map_records.size(),15)
 	region_count.name = "RegionCount"
 	regions.add_child(region_count)
-	region_selection=ItemList.new()
+	region_selection=preload("res://scripts/ui/native_touch_list.gd").new()
 	region_selection.name="RegionSelection"
 	region_selection.size_flags_vertical=Control.SIZE_EXPAND_FILL
 	regions.add_child(region_selection)
@@ -1525,7 +1549,10 @@ func toggle_map() -> void:
 		var index: int = region_selection.add_item(str(record.get("name",record.get("id",""))))
 		region_selection.set_item_metadata(index,str(record.id))
 	_add_original_map_controls(regions)
-	var enter := UI.button("선택 지역으로 이동",func() -> void:
+	var enter := preload("res://scripts/ui/native_touch_button.gd").new()
+	enter.text = "선택 지역으로 이동"
+	enter.custom_minimum_size.y = 44
+	enter.pressed.connect(func() -> void:
 		var indices: PackedInt32Array=region_selection.get_selected_items()
 		if not indices.is_empty(): map_selected.emit(str(region_selection.get_item_metadata(indices[0]))))
 	enter.name="EnterRegion"

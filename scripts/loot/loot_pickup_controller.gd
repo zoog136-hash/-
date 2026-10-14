@@ -87,7 +87,6 @@ func select(view: Button) -> void:
 		request_selected()
 		return
 	cancel()
-	if player.auto_enabled: player.set_auto_enabled(false)
 	selected_id = id
 	(view as TwilightGroundLoot).set_selected(true)
 	var record: Dictionary = manager.records[id]
@@ -100,7 +99,6 @@ func request_selected() -> void:
 	if player.is_stunned() or player.is_feared() or player.is_held():
 		world.hud.show_message("이동 불가 상태에서는 아이템을 주울 수 없습니다")
 		return
-	if player.auto_enabled: player.set_auto_enabled(false)
 	target_id = selected_id
 	mode = "manual"
 	stuck_time = 0.0
@@ -191,7 +189,8 @@ func _priority(a: String, b: String) -> bool:
 
 func run_auto() -> bool:
 	if not player.auto_enabled: return false
-	if mode == "manual": cancel()
+	if mode == "manual" or not selected_id.is_empty(): return true
+	if player.has_manual_movement(): return true
 	if mode == "auto":
 		if _advance_target(): return true
 	if scan_time > 0 and seen_revision == manager.revision: return false
@@ -201,6 +200,7 @@ func run_auto() -> bool:
 	var candidates: Array[String] = []
 	for id: String in manager.views.keys():
 		if float(blocked.get(id, 0)) > clock: continue
+		if bool(manager.records[id].get("player_dropped",false)): continue
 		if manager.valid_view(manager.views[id]) and player.global_position.distance_to(_destination(id)) <= SCAN_RADIUS: candidates.append(id)
 	candidates.sort_custom(_priority)
 	# Bound path searches even with many inaccessible drops. Rejected IDs are

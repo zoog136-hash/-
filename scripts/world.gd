@@ -154,6 +154,10 @@ var active_map_id: String = "aden_world"
 var astar: AStarGrid2D = null
 var world_size: Vector2 = Vector2(8192, 4224)
 var tile_size: int = 32
+const WORLD_INTERACTIONS = preload("res://scripts/input/world_interactions.gd")
+const INVENTORY_GROUND_TRANSFER = preload("res://scripts/loot/inventory_ground_transfer.gd")
+var world_interactions: Node
+var ammo_notice_at: int = -10000
 var selected_monster: TwilightMonster = null
 var auto_target: TwilightMonster = null
 var auto_attack_timer: float = 0.0
@@ -315,6 +319,10 @@ func _ready() -> void:
 	# replacing character creation. Show it only on a fresh playable launch.
 	# Headless automated suites explicitly open the picker to test it; the
 	# existing movement/input regressions must not inherit an opaque modal.
+	world_interactions = WORLD_INTERACTIONS.new()
+	world_interactions.name = "WorldInteractions"
+	add_child(world_interactions)
+	world_interactions.configure(self)
 	if creating_character and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
 
@@ -381,21 +389,8 @@ func _process(delta: float) -> void:
 	_update_target_hud()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if bool(hud.get("class_picker_initial")):
-		return
-	if event is InputEventMouseButton:
-		var mouse_event: InputEventMouseButton = event
-		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
-			if hud.blocks_world_input(mouse_event.position): return
-			_set_click_destination(COORD.screen_to_world(get_viewport(), mouse_event.position))
-	elif event is InputEventScreenTouch:
-		var touch_event: InputEventScreenTouch = event
-		if touch_event.pressed and not touch_event.canceled and touch_event.device != InputEvent.DEVICE_ID_EMULATION:
-			if hud.blocks_world_input(touch_event.position): return
-			# Android touch events carry real viewport coordinates. Mouse emulation is
-			# disabled in project.godot, so get_global_mouse_position() may be stale.
-			var world_touch_position: Vector2 = COORD.screen_to_world(get_viewport(), touch_event.position)
-			_set_click_destination(world_touch_position)
+	if bool(hud.get("class_picker_initial")): return
+	if is_instance_valid(world_interactions): world_interactions.begin(event)
 
 func _load_data() -> void:
 	var maps_text: String = FileAccess.get_file_as_string(MAPS_PATH)
@@ -1151,6 +1146,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
 			return
+	if is_instance_valid(world_interactions):
+		world_interactions.cancel_gesture()
+		world_interactions.clear_selection()
 	field_population.configure(self, null)
 	field_population = original_population if requested_original != null else legacy_population
 	if field_map is OriginalPlayableField: (field_map as OriginalPlayableField).close()
@@ -1450,8 +1448,7 @@ func _set_click_destination(target: Vector2) -> void:
 				return
 	var path: PackedVector2Array = find_world_path(player.global_position, target)
 	if path.size() > 0:
-		player.set_auto_enabled(false)
-		player.set_click_path(path, target)
+		player.set_manual_click_path(path, target)
 
 func _spawn_monsters(count: int) -> void:
 	if monster_db.is_empty():
@@ -1973,6 +1970,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
+	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
 	if auto_attack_timer > 0.0 or not pending_attack.is_empty():
@@ -1985,6 +1983,7 @@ func _attack() -> void:
 	if target_usable:
 		target_usable = _has_line_of_sight_world(player.global_position, target.global_position)
 	if not target_usable:
+		if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
 		target = _nearest_visible_monster_in_weapon_range()
 	if target == null:
 		hud.show_message("무기 사거리 안에 보이는 대상이 없습니다")
@@ -2031,6 +2030,16 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	_update_target_hud()
 
 func _run_auto_hunt() -> void:
+	if player.has_manual_movement():
+		auto_stuck_time = 0.0
+		return
+	if is_instance_valid(world_interactions):
+		if world_interactions.pointer != -2: return
+		if world_interactions.primary_is_npc(): return
+		var priority: TwilightMonster = world_interactions.primary_monster()
+		if priority != null:
+			auto_target = priority
+			selected_monster = priority
 	if not pending_attack.is_empty(): return
 	if player.is_stunned() or player.is_feared():
 		player.clear_click_path()
@@ -2075,6 +2084,7 @@ func _run_auto_hunt() -> void:
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
 		if path.is_empty():
+			if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
 			auto_target = _nearest_reachable_monster(99999.0)
 			if auto_target == null:
 				selected_monster = null
@@ -2166,15 +2176,13 @@ func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
 	return best
 
 func _select_monster(monster: TwilightMonster) -> void:
-	selected_monster = monster
-	_update_target_hud()
+	if is_instance_valid(world_interactions): world_interactions.select_monster(monster)
+	else: selected_monster = monster
 
 func _update_target_hud() -> void:
-	if is_instance_valid(selected_monster) and not selected_monster.dead:
-		hud.show_target("Lv.%d %s · AC %d" % [selected_monster.monster_level, selected_monster.monster_name, selected_monster.armor_class], selected_monster.hp, selected_monster.max_hp)
-	else:
-		selected_monster = null
-		hud.clear_target()
+	# Combat selection is independent of the removed top-center readout.
+	if is_instance_valid(world_interactions): world_interactions.prune()
+	if not is_instance_valid(selected_monster) or selected_monster.dead: selected_monster = null
 
 func _on_monster_died(monster: TwilightMonster) -> void:
 	# Pooled actors can signal the same death more than once, but each life owns
@@ -2252,16 +2260,23 @@ func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: in
 
 func _collect_ground_drop(drop: Button) -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
+	if not ground_loot.valid_view(drop): return false
+	var pending: Dictionary = ground_loot.records[str(drop.get_meta("id"))]
+	if not INVENTORY_GROUND_TRANSFER.can_collect(self,pending):
+		hud.show_message("장비 고유 ID 충돌: 바닥 아이템을 보존했습니다")
+		return false
 	var record: Dictionary = ground_loot.take(drop, player.global_position, GROUND_PICKUP_RADIUS)
 	if record.is_empty(): return false
 	var item_name: String = str(record["item_name"])
 	var quantity: int = int(record["quantity"])
+	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.refresh_inventory(inventory)
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	_update_hud()
+	if bool(record.get("player_dropped",false)): _save_game(true)
 	return true
 
 func _on_ground_drop_clicked(drop: Button) -> void:
@@ -3625,8 +3640,8 @@ func _return_to_spawn() -> void:
 	if player.is_stunned() or player.is_feared():
 		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
 		return
-	player.set_auto_enabled(false)
 	player.clear_click_path()
+	if is_instance_valid(world_interactions): world_interactions.clear_selection()
 	player.global_position = _spawn_position()
 	player.camera.reset_smoothing()
 	selected_monster = null
@@ -5762,17 +5777,15 @@ func _ensure_inventory_ammo_defaults() -> void:
 
 func _consume_weapon_ammo() -> bool:
 	var ammo_name: String = _current_ammo_name()
-	if ammo_name == "":
-		return true
-	var count: int = int(inventory.get(ammo_name, 0))
+	if ammo_name == "": return true
+	var count: int = int(inventory.get(ammo_name,0))
 	if count <= 0:
-		hud.show_message("%s이(가) 없습니다 · AUTO OFF" % ammo_name)
-		hud.append_log("탄약 부족 · %s" % ammo_name)
-		if player.auto_enabled:
-			player.set_auto_enabled(false)
-		_update_hud()
+		var now: int = Time.get_ticks_msec()
+		if now-ammo_notice_at >= 3000:
+			ammo_notice_at = now
+			hud.show_message("%s 부족 · 공격 대기 (AUTO 유지)" % ammo_name)
 		return false
-	inventory[ammo_name] = count - 1
+	inventory[ammo_name] = count-1
 	_update_hud()
 	return true
 
@@ -6391,7 +6404,7 @@ func use_field_portal(portal_id: String) -> bool:
 		var target_map: String = str(portal["target_map"])
 		if not maps_by_id.has(target_map):
 			return false
-		player.set_auto_enabled(false)
+		player.clear_click_path()
 		player.clear_click_path()
 		player.velocity = Vector2.ZERO
 		player.set_touch_vector(Vector2.ZERO)
@@ -6606,3 +6619,6 @@ func constrain_original_motion(actor: CharacterBody2D) -> void:
 
 func return_from_original_map() -> bool:
 	return SOURCE_TRAVEL.return_home(self)
+
+func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
+	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)
