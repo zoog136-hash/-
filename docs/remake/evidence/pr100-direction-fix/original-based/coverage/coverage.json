@@ -29,7 +29,7 @@
     "other_transform:registered": 233,
     "other_transform:native_connected": 1,
     "normal_monster:registered": 258,
-    "normal_monster:native_connected": 184,
+    "normal_monster:native_connected": 187,
     "boss:registered": 60,
     "boss:native_connected": 35,
     "class:registered": 4,
@@ -6240,21 +6240,21 @@
       "key": "monster:불신의 미믹",
       "name": "불신의 미믹",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for mimic",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/distrust_mimic/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:불신의 비홀더",
       "name": "불신의 비홀더",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for eye",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/distrust_beholder/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:불신의 서큐버스",
@@ -6820,11 +6820,11 @@
       "key": "monster:오크 마법사",
       "name": "오크 마법사",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for orc_mage",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/orc_mage/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:왜곡의 라미아",
@@ -25085,6 +25085,470 @@
       "pixel_integrity": "verified"
     },
     {
+      "path": "res://assets/actors/eight_direction/original_based/distrust_mimic/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "089cc09e24281e58edc5bc22e9bc63e8acc51723eba56ae17dddb865332b0078",
+      "pixel_integrity": "verified"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/original_based/distrust_beholder/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "94c00c39a4243cac95aa90103bfb2660c4ef4c12579d26829abe72a36dc30028",
+      "pixel_integrity": "verified"
+    },
+    {
       "path": "res://assets/actors/eight_direction/original_based/seer_boss/SpriteFrames.tres",
       "tracks": {
         "idle_0": {
@@ -28029,6 +28493,238 @@
       "pixel_integrity": "verified"
     },
     {
+      "path": "res://assets/actors/eight_direction/original_based/orc_mage/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "495459ce8bf3c765712304d2390ceda1ab6a8c2a4259486f6ceadfe2fbc72028",
+      "pixel_integrity": "verified"
+    },
+    {
       "path": "res://assets/actors/eight_direction/original_based/horn_cerberus/SpriteFrames.tres",
       "tracks": {
         "idle_0": {
@@ -28809,9 +29505,8 @@
     "No identity-compatible licensed source for orc_captain": 2,
     "No identity-compatible licensed source for watcher": 2,
     "No identity-compatible licensed source for living_sword": 1,
-    "No identity-compatible licensed source for mimic": 1,
-    "No identity-compatible licensed source for eye": 2,
     "No identity-compatible licensed source for salamander": 1,
+    "No identity-compatible licensed source for eye": 1,
     "No identity-compatible licensed source for dryad": 2,
     "No identity-compatible licensed source for stag": 1,
     "No identity-compatible licensed source for ape": 1,
@@ -28821,7 +29516,6 @@
     "No identity-compatible licensed source for crab": 1,
     "No identity-compatible licensed source for flower": 1,
     "No identity-compatible licensed source for ugnu": 1,
-    "No identity-compatible licensed source for orc_mage": 1,
     "No identity-compatible licensed source for medusa": 1,
     "No identity-compatible licensed source for spider_queen": 1,
     "No identity-compatible licensed source for chimera": 1,
@@ -28833,632 +29527,20 @@
   },
   "recorded_main_evidence": [
     {
-      "path": "../original_based_monster_gameplay_test-opengl.json",
-      "sha256": "f814da3f58ae7ca2f74651c54fd5c4fb61274fc3dc74b2bbb56c6b37071549d9",
-      "scope": "original-based werewolf, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ogre_gameplay_test-opengl.json",
-      "sha256": "5f1b3b12fcc155eb99b11204792bc6f00cb51868e29f50935cab4ffb9263ce57",
-      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ghost_hell-opengl.json",
-      "sha256": "9971643afe0c5e77724b085b06b16e62d530d96c9ddf0107fffabcb9b9f0c4f5",
-      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ogre_giran-opengl.json",
-      "sha256": "8b6bb6d8e9c720e5122d2eaad89ddb28741a32921e6a14cd6db2a78c88685069",
-      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_monster_gameplay_test-headless.json",
-      "sha256": "8902f86cbae82c2b1e64cd0ed70381e3b49e184f2ded4df8bfc1ed44f41a7a32",
-      "scope": "original-based werewolf, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ghost_hell-headless.json",
-      "sha256": "cbc5ba9c46a7d75e577bb6a98506db3254b292d9474841d0966a74e6186dd8c8",
-      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_reaper_gameplay_test-opengl.json",
-      "sha256": "0f417de7533f020fa4db3e38fb366dadcacf7f9b43924102a16065cfd1bd68f6",
-      "scope": "original-based female reaper, actual Main/equipment/input/scythe/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ogre_ancient-headless.json",
-      "sha256": "c849a323e81f2781254948ff61c575e5359e85fa2e20de0a2439ca39af22741a",
-      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_reaper_gameplay_test-headless.json",
-      "sha256": "b22a9ab739754bf9a9419e946fbbedc5fcfdcb93bff692faba570e4b09e2ee21",
-      "scope": "original-based female reaper, actual Main/equipment/input/scythe/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ogre_gameplay_test-headless.json",
-      "sha256": "ade07552c2abb565d5377d093ef26e2fb96fddf54bcced3ae9bf4ac9776bd88f",
-      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ghost_gameplay_test-headless.json",
-      "sha256": "bac7dae0d983becb0957555d93fed22180b66de052f8cdb4425446bfaf632f86",
-      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ghost_gameplay_test-opengl.json",
-      "sha256": "9f2a57cdb110bc60a1bee9c604e3d87f9a78f42794a15863bae6d8bb31643bdc",
-      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ghost_gludio-opengl.json",
-      "sha256": "62eecd380ec074765fc322886b131ba57022956adacde3233e55a24716f5b7af",
-      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ogre_ancient-opengl.json",
-      "sha256": "0de1b61f09f502ca52823b0fbee48a398a558f2a14e99635825d3e5cb21d6d6f",
-      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ogre_giran-headless.json",
-      "sha256": "ca44526052f9e9e59d6e5b752806f235383df5912a1af65857220c651529fb00",
-      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../original_based_ghost_gludio-headless.json",
-      "sha256": "379c0f30b3d2f01a3238c5d1da0dd6b7bf5a59036f568979837f88203fdbb172",
-      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_spear_captain_gameplay_test-opengl.json",
-      "sha256": "8af2a408d978e6aa4c4dd6aa8733660a844c9a0292ad4ed25d42cdbcf845485d",
-      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_ancient-opengl.json",
-      "sha256": "e5b72df593ee95201235073e59a8808f2b746d68ae2ae05075ef6b52b6c4cbc9",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_gameplay_test-headless.json",
-      "sha256": "176afb57fbc763e11d15662fd37a1240e4735999b07a56579ce65558b40dc6fb",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_lava_golem_gameplay_test-opengl.json",
-      "sha256": "a7361d88eb8f22141d59d0ad5490dd8ad091a9a2bebc8e3980672228c7a95b59",
-      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_ancient-headless.json",
-      "sha256": "3e62494eda60477dac364474b6d32794097aa95e14636f9773e24b6e02728bd1",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cyclops_gameplay_test-opengl.json",
-      "sha256": "dcece774802eba9ce7cf3725dadaf665a862249c4d9fbf67d6af087df385c3e5",
-      "scope": "original-based cyclops, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_distorted-opengl.json",
-      "sha256": "ad0530824cb960011710812c955994f08ee9e776fce0e0439ff21f7a4a166f0c",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_gameplay_test-opengl.json",
-      "sha256": "837c62032a4d0e42c83ce0fdbfc06d3f6f7d8238a353ab15faaa01d51176ea74",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_lava_golem_gameplay_test-headless.json",
-      "sha256": "16cb735b22131fcfd2bec77a2cfb8c7d40d24c3b248287573ce6584bcc68b5a6",
-      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_giran-headless.json",
-      "sha256": "03fd0a18e46e5c381c56ac6678eab21b48d19e29f9ca0a014ac24121f1b76c36",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_spear_captain_gameplay_test-headless.json",
-      "sha256": "903651984b51cc466dd3f54c9d703beca37d540eb842ac1b4c30dbc002a9d2ea",
-      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_ice_golem_gameplay_test-opengl.json",
-      "sha256": "a301b989306fdb57a9e8342bd8833e0075ceccb87cb55cfa3f27c715f2ff7a8d",
-      "scope": "original-based ice_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_distorted-headless.json",
-      "sha256": "2ba7cbf6dd5baab773b9b6ded4ba0df95d19d499a78f7ec17b47b6be2bef8290",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cockatrice_giran-opengl.json",
-      "sha256": "0d5315d505f9313f437617aac41b9667fb864d8a8cae0aa0dff9a6b90185dd6e",
-      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_ice_golem_gameplay_test-headless.json",
-      "sha256": "82e8db8c9a1c6c4d0515e7afc798fef5fd95975e3f6715b6fd951d226070c458",
-      "scope": "original-based ice_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_cyclops_gameplay_test-headless.json",
-      "sha256": "8377e18b544c2c7e4c2d103a8bb467abaceadf7709d1ffcd1f21b938a70d1f1b",
-      "scope": "original-based cyclops, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_lava_golem_nest-headless.json",
-      "sha256": "c6a030398d6fd320eb4149ab3202a6ef96e95e9a9a83a0f78dd8cf21187cadd5",
-      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch3/original_based_lava_golem_nest-opengl.json",
-      "sha256": "73b8391ff71b5112b299d4541d003d485731056a450e602bf2eccbc987c263b9",
-      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_queen_dark-headless.json",
-      "sha256": "552b0d460bd1c4392ff9920f2120ee34eea072237deaaf4ec8a3a60a74c6a716",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_lycanthrope_gameplay_test-opengl.json",
-      "sha256": "67c7ef9f41ef6286c74dc262973dc865becb58f77b4b75709fee67766f3f0538",
-      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_lycanthrope_cruel-headless.json",
-      "sha256": "2d4ee1c330aaa57360234c1f6c8eed6d8cd41f5402f9093eace35d8fe01f995a",
-      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_queen_earth-opengl.json",
-      "sha256": "dc5c463e6fc119489440fd194f609674b9d46f8ff8457d9885579df1dfbf5ce4",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_gameplay_test-headless.json",
-      "sha256": "c2c8865eb9ea4d5f5007a3606246f6a1c9502aedfec7bbde75f33e4e383072a6",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_harpy_gameplay_test-headless.json",
-      "sha256": "1c571158e8c0eea86ea7e188e39fc11bfabbb0774c0b14611a04d16f7f884921",
-      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_queen_arrogant-headless.json",
-      "sha256": "dcccc3f0ecaa1ac3c42aceff55ebcc39b43668952d957ac5e85a28c205f6cc12",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_disbelief-headless.json",
-      "sha256": "c8d06f4217e8cb5feae83369b20fc26d4de728cc3498bd56f1d95dde5d7c4fc3",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_valley-headless.json",
-      "sha256": "cacf5d6a940f44c50995b4613dbb9611ba9d79afbeb7c7a14fc1efc47892ba34",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_disbelief-opengl.json",
-      "sha256": "9e436fc483c884ca8c0f26b89f5fd8aff32f40503ac5e959efbafce744c4ea57",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_queen_arrogant-opengl.json",
-      "sha256": "46110c5978325d9ab94241e198a96b07b124f9cb46297229ed299c52ae4d561f",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_harpy_nest-headless.json",
-      "sha256": "daa9c09711abafd870a2eda4feced14e4e9d495ea5b83200d044b4d408439f4a",
-      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_lycanthrope_gameplay_test-headless.json",
-      "sha256": "34e4c04925fd768ecd375f033812dbb7e1b9b4e068a70c07b89918fb916006b4",
-      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_lycanthrope_cruel-opengl.json",
-      "sha256": "7f4ca3fd4a53346858142459b9e7e41dfea7f414dbb393a39e58088be3d81395",
-      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_nest-opengl.json",
-      "sha256": "6012dce9783fb2638e99534f22825e9de6fa0ed7dfaf72d9d952e940359af88c",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_harpy_nest-opengl.json",
-      "sha256": "d64c40ed5e4355af0433d760371a0df3b1c70c621b7daca45424a5c02164ca35",
-      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_valley-opengl.json",
-      "sha256": "cb7a325802fbaf0baa96d1613eeef3cf205b71120323c0d0d805d747f90151ce",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_nest-headless.json",
-      "sha256": "ef57321ed8e6a87029ed5fc3433cb30df768f2c6e4ba1cb0992a1f8d70a5d1e4",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_harpy_gameplay_test-opengl.json",
-      "sha256": "57d13ab72b7d70fbab9cd14ba14c86c639c388164530788abcfc36a273b7d0f1",
-      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_queen_earth-headless.json",
-      "sha256": "7620309f00290ef6d8cc0a529d5fdc2817461bc531eb3f619acceeda3773cfcc",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_queen_dark-opengl.json",
-      "sha256": "ed36d67071d9cde4e852430268b0ea1a3a3290487e543057fd76d8b7a95aeb38",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch4/original_based_succubus_gameplay_test-opengl.json",
-      "sha256": "0f9410415e66e876e6fe852ea4caec37ec366f5884929ab5f7bd585ee9f491d9",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
       "path": "../../gameplay.json",
       "sha256": "9a5fb8333c81d139dc7988fd9bdc195fe1afc0f4f106ad6fe870adb590de9da2",
       "scope": "full",
       "direction_rows": 64
     },
     {
-      "path": "../batch5/original_based_bugbear_gameplay_test-headless.json",
-      "sha256": "613593e9c33e95118facd7a24ddd53f8cfd83c661238db67cbc4b4a8fc16132c",
-      "scope": "original-based bugbear, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch5/original_based_bugbear_gameplay_test-opengl.json",
-      "sha256": "067d4f5a20f3d3bb2ec940971a3cd2c710746264dc1481cf69b49dacb50882c9",
-      "scope": "original-based bugbear, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch5/original_based_sand_worm_gameplay_test-headless.json",
-      "sha256": "12db15c7bd5bdc26226d7c44fc8f91f8ce90d09119b580a2ac74efeb3ce2d348",
-      "scope": "original-based sand_worm, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch5/original_based_sand_worm_gameplay_test-opengl.json",
-      "sha256": "7c0047638f4e25b9da90b4bb8e223c8598c8b304775c91fa722c26d22c056a2d",
-      "scope": "original-based sand_worm, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch5/original_based_reaper_male_gameplay_test-headless.json",
-      "sha256": "efe65343375c5e5366ccb0e840cf5a4325cf1c8313091921c5379a11cdc7944c",
-      "scope": "original-based transform:258, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch5/original_based_reaper_male_gameplay_test-opengl.json",
-      "sha256": "89f299551b94855f5030c9107303b53dbcecaa35a870160d1749fed8104cf6c2",
-      "scope": "original-based transform:258, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_iron_golem_gameplay_test-headless.json",
-      "sha256": "1c90f47ef86c9f512ce8c4a589b8a2133324a59b90f03677638bf05d08fa4f3a",
-      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_iron_golem_clear_pose-opengl.json",
-      "sha256": "e9cc47544763cd3338cbcb6037e163c3c522a72c2f0fc7b259245bdc2dd61d20",
-      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_iron_golem_hell-headless.json",
-      "sha256": "06a0231a2a8dc48c0cf4cf8a57c8c387c4e3e1d1fe5976f54a0ba7989ae30608",
-      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_iron_golem_hell-opengl.json",
-      "sha256": "dd78dd5ac71c25fd9ac68cd1643dfcd0713e1a383cae31cf074d6c6297b91769",
-      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_ghoul_gameplay_test-headless.json",
-      "sha256": "2fe36f61ab8ad9540a0fe16ed03376507d03627fc124c628f20acbd47dc818a8",
-      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_ghoul_clear_pose-opengl.json",
-      "sha256": "0271f05b16b36de709feb001949a6f98e5bec4de2eae23f9c9a65e89f1616cb3",
-      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_ghoul_undying-headless.json",
-      "sha256": "11c85fee3946e13e2cf99c85f492b752a3342444b6a46739afff7035bd87af9b",
-      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_ghoul_undying-opengl.json",
-      "sha256": "fb8a9aa6775eaafdcc4baba8a0f038046c18236c859e6e50b7a7826f22b6a3bb",
-      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_lizard_sized-headless.json",
-      "sha256": "251dd77bbb730c299999ea77e2961779c3f90862ded7537da2ab31666bcb7c40",
-      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_lizard_sized-opengl.json",
-      "sha256": "2ed3eb6d9aef6511dcf91ae47264f96d9f4d01bce11e4a70c384c3674e314b25",
-      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_lizard_albino_sized-headless.json",
-      "sha256": "aa0e6e5898ef121e809be2d318ba26b782d11d1bb49613b695acec572fc01ba8",
-      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch6/original_based_lizard_albino_sized-opengl.json",
-      "sha256": "8aa8aa9f3652df046aa1d6b36a9e33b47c50dfbaa942ff6e3595bc2c974b3631",
-      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_crabman_gameplay_test-headless.json",
-      "sha256": "1193d801b215e547486fb136dbb14854859674518173413e419db666ccdce4c3",
-      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_crabman_gameplay_test-opengl.json",
-      "sha256": "30d4f56995bbb6f2ef45cb77cf62be7c5aa6284eb5afc7db05c3772e85944bc7",
-      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_crabman_eva-headless.json",
-      "sha256": "f919d4fc328127f24046c50474dc6fc201e32d99eb4af44809be41cdc2cab4a0",
-      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_crabman_eva-opengl.json",
-      "sha256": "d85ccf28903aa956f8e998b153fbde6d34ea3c3513b38c32a596669fb8a6cbe7",
-      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_asitagio_gameplay_test-headless.json",
-      "sha256": "798a7bfa471f4bdf2e691ccd3161a9a45cd83b7433828939d2e72dc7d796c696",
-      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_asitagio_gameplay_test-opengl.json",
-      "sha256": "af93b615ccc007375a12eb9d66828758301c1c6cac6b7aa497269c42e6eda88a",
-      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_asitagio_arrogant-headless.json",
-      "sha256": "9997cf362925371f91ca9ee832237d42579b51b5a93a01a8a84248afc9787c20",
-      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_asitagio_arrogant-opengl.json",
-      "sha256": "b55be203273ace5c96a5b3870ac4812fbcce54ddb561fc1f23c2cfd798c7aa1c",
-      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_spear_guard_green_gameplay_test-headless.json",
-      "sha256": "624f9e85cbe098500b526ad855f49ea8fbdd2ed088eb3772fa054158bdb96909",
-      "scope": "original-based transform:167, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch7/original_based_spear_guard_green_gameplay_test-opengl.json",
-      "sha256": "cf676c8dad912cfcb061711dabcfd873a3c9bfdf63d5dc9b95102631f39f0a22",
-      "scope": "original-based transform:167, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch8/original_based_spear_guard_gameplay_test-headless.json",
-      "sha256": "48f98531c86289a0455aaaa58c25a6f91370de414eadbd16f1be6176b69845bf",
-      "scope": "original-based transform:2, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch8/original_based_spear_guard_gameplay_test-opengl.json",
-      "sha256": "1549e49626c36e6bee9eeed1ba47dd3be207ecb4a5a92ec08c58162b41ae9e78",
-      "scope": "original-based transform:2, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch8/original_based_spear_guard_red_gameplay_test-headless.json",
-      "sha256": "d4abb41605ab5edca1dbec920b9f68d1395ea479c3a0a4b5381ac71be93c291a",
-      "scope": "original-based transform:110, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch8/original_based_spear_guard_red_gameplay_test-opengl.json",
-      "sha256": "cef9ddefc552ee726f848abbf38e8f19356702903aab4c0bdd3008958f5aa7f9",
-      "scope": "original-based transform:110, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch8/batch8_green_regression-opengl.json",
-      "sha256": "e7b4f9a0a1499f6e3f820057d0f54c2359fd2794a3b81cb1f2ce069ba6b1b526",
-      "scope": "original-based transform:167, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_albino_frog_gameplay_test-headless.json",
-      "sha256": "5cc57064ae2e860c139181fc67e601e03c21b3dc2641a119b7f98aa1d6589fa4",
-      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_albino_horned_frog-headless.json",
-      "sha256": "537b935bf94706012228f8f92d7a24c1a972a41a89a42f61ad60b39e12a80b2f",
-      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_fire_egg_fear-headless.json",
-      "sha256": "104b96c7c08aa984a5660fd698978db7f7e42c76d7d021a6989f3d560146e02d",
-      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_fire_egg_gameplay_test-headless.json",
-      "sha256": "041b4001f4112daa30975a425a07e4b2ca1cddbb17f5ac28f6613225181817e4",
-      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_albino_frog_gameplay_test-opengl.json",
-      "sha256": "e3648effb4d6868a23c76eb863e5dcb15950fc9189e1fe4d674a1ac3dc215e09",
-      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_horn_cerberus_cruel-headless.json",
-      "sha256": "f0959c50695bf4c39e69f50c9aac2603af798863a5cc7f7cef7a5ed8af22d370",
-      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_horn_cerberus_gameplay_test-headless.json",
-      "sha256": "15854c00fd0c79db752af97cce8dbcdcebfb084816b0f17c58e2ae21342c13b7",
-      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_albino_horned_frog-opengl.json",
-      "sha256": "9f35e97ea491eaadf4346857294ca09338f7ebccd7704126506fe63b0c7a8431",
-      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_fire_egg_gameplay_test-opengl.json",
-      "sha256": "86afaaa4560ffa2beb89f36f13c44b99c82d426f6374770bfe571507b7f91d8e",
-      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_fire_egg_fear-opengl.json",
-      "sha256": "f74684d7433af4f1d3da1e0f17af86fde0c963aa75569d3254b47f9a1e868f11",
-      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_horn_cerberus_gameplay_test-opengl.json",
-      "sha256": "ab98b79346672d65f3e999351ee9afe8a6970d06a8f10cf80710bf9ee9349bac",
-      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/original_based_horn_cerberus_cruel-opengl.json",
-      "sha256": "c040ae39d7e61f26bcde50dadad0af1da27945adbbdcd91ba8d49286df79029d",
-      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch9/batch9_succubus_regression-opengl.json",
-      "sha256": "67fe7efb71e49e91fe69730631ead1a5d77e95137757c5aeddda6babb7149249",
-      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch10/original_based_seer_boss_gameplay_test-headless.json",
-      "sha256": "ae30f25344727f951cb7dbb9d970e71033bbbfa8e52a7170d7000c1cb941ce3a",
-      "scope": "original-based seer_boss, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
       "path": "../batch10/original_based_mummy_lord_gameplay_test-headless.json",
       "sha256": "8c5cea25b23c54d0384a6a4bfdae3de0d49e81268cddecb849aa6a21320eb9b4",
+      "scope": "original-based mummy_lord, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch10/original_based_mummy_lord_gameplay_test-opengl.json",
+      "sha256": "9794fca3c9223d2ce7bcd18277f5d63d6eff7640b200dae05c19ef6c6325a384",
       "scope": "original-based mummy_lord, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
@@ -29469,9 +29551,15 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch10/original_based_mummy_lord_gameplay_test-opengl.json",
-      "sha256": "9794fca3c9223d2ce7bcd18277f5d63d6eff7640b200dae05c19ef6c6325a384",
-      "scope": "original-based mummy_lord, actual Main and production AI/combat/lifecycle",
+      "path": "../batch10/original_based_salah_gameplay_test-opengl.json",
+      "sha256": "537a7c451264ffbcc9bad1b189729d5de2afc37bc6e663ea001c21448e38a42e",
+      "scope": "original-based salah, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch10/original_based_seer_boss_gameplay_test-headless.json",
+      "sha256": "ae30f25344727f951cb7dbb9d970e71033bbbfa8e52a7170d7000c1cb941ce3a",
+      "scope": "original-based seer_boss, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
@@ -29481,74 +29569,20 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch10/original_based_salah_gameplay_test-opengl.json",
-      "sha256": "537a7c451264ffbcc9bad1b189729d5de2afc37bc6e663ea001c21448e38a42e",
-      "scope": "original-based salah, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_bone_dragon_immortal-headless.json",
-      "sha256": "4a3fa6f6d3be20c420230d9396201930c951e8b3087066b38c0d4413b133262a",
-      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_bone_dragon_gameplay_test-headless.json",
-      "sha256": "bcff3a1190e894aee57c84ef734672f48df00c73e467d6339fef3f5cb7eaf81f",
-      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_king_bugbear_gameplay_test-headless.json",
-      "sha256": "78c8598057fbc475849c3bdfdcd3bb7c8859b8dcbc58385b4043e4b105554380",
-      "scope": "original-based king_bugbear, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_bone_dragon_hell-headless.json",
-      "sha256": "34b244f9714a76ecb866a73396c3d1d2b5aede9bd4f4ba66a8658af20d788a4a",
-      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_ettin_gameplay_test-headless.json",
-      "sha256": "d85481c3c4c53c000e692addef6df7a660048333c92c971f567b32e95015ebfe",
-      "scope": "original-based ettin, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_bone_dragon_gameplay_test-opengl.json",
-      "sha256": "75e6f6621b86b55d75431abd2850230ff2262a04d8b919c214f1206fff5293bc",
-      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_bone_dragon_immortal-opengl.json",
-      "sha256": "e3095607ab2a0654c3825f5fcbb4adc1229dab107f4fe7a7493aa4b8bec0d3d8",
-      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_bone_dragon_hell-opengl.json",
-      "sha256": "65572668f9bdccf502876dcb63e48c8b717e2b29e3d454be2bb01e275d77a7df",
-      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_king_bugbear_gameplay_test-opengl.json",
-      "sha256": "f99843e511308825257311bfc46d5dab030317ec9f62883846674a27203cb00b",
-      "scope": "original-based king_bugbear, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/original_based_ettin_gameplay_test-opengl.json",
-      "sha256": "54030031cc32b4bd48edb33003d8e38033da2a929a24878ab1c5a7e827429077",
-      "scope": "original-based ettin, actual Main and production AI/combat/lifecycle",
+      "path": "../batch11/batch11_reaper_timing-headless.json",
+      "sha256": "b35c323c7c618f01525458f7042bf15e6df8cb8ff47e964d446a2b54fa0d3bb9",
+      "scope": "original-based transform:412, actual Main/equipment/input/weapon/respawn",
       "direction_rows": 8
     },
     {
       "path": "../batch11/batch11_spear_captain_timing-headless.json",
       "sha256": "f218b885c9caa997be3c7c0a9dddb13c8d77e8d2ef4a529dc104341b430ff6f8",
+      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/batch11_spear_captain_timing-opengl.json",
+      "sha256": "d6e0d95997795a30a9a5c2950a5ed92e1b065f5b5c355a1c7803c11cd321e25c",
       "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
       "direction_rows": 8
     },
@@ -29559,57 +29593,69 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch11/batch11_reaper_timing-headless.json",
-      "sha256": "b35c323c7c618f01525458f7042bf15e6df8cb8ff47e964d446a2b54fa0d3bb9",
-      "scope": "original-based transform:412, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch11/batch11_spear_captain_timing-opengl.json",
-      "sha256": "d6e0d95997795a30a9a5c2950a5ed92e1b065f5b5c355a1c7803c11cd321e25c",
-      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
-      "direction_rows": 8
-    },
-    {
       "path": "../batch11/batch11_spear_red_timing-opengl.json",
       "sha256": "bcffe640f9c811e66280e9e9fc17a59891ac190b170d5f03231628469fbb572b",
       "scope": "original-based transform:110, actual Main/equipment/input/weapon/respawn",
       "direction_rows": 8
     },
     {
-      "path": "../batch12/original_based_ancient_penguin_gameplay_test-headless.json",
-      "sha256": "b5aba5d08a2ea61ead657f766a8f6b824c20179dbce8e78d45456001586696d9",
-      "scope": "original-based transform:249, actual Main/equipment/input/weapon/respawn",
+      "path": "../batch11/original_based_bone_dragon_gameplay_test-headless.json",
+      "sha256": "bcff3a1190e894aee57c84ef734672f48df00c73e467d6339fef3f5cb7eaf81f",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch12/original_based_albino_giant_crab_gameplay_test-headless.json",
-      "sha256": "c3f5b62a7342f9ff5a37e0ac1e6e2224ccf4ea8f5218752ce09eecd5f4fee95a",
-      "scope": "original-based transform:351, actual Main/equipment/input/weapon/respawn",
+      "path": "../batch11/original_based_bone_dragon_gameplay_test-opengl.json",
+      "sha256": "75e6f6621b86b55d75431abd2850230ff2262a04d8b919c214f1206fff5293bc",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch12/original_based_kraken_transform_gameplay_test-headless.json",
-      "sha256": "d9241cbb0c0944c70863cf0efb4d566685c9a341f044a735eda686cd9d7aee72",
-      "scope": "original-based transform:401, actual Main/equipment/input/weapon/respawn",
+      "path": "../batch11/original_based_bone_dragon_hell-headless.json",
+      "sha256": "34b244f9714a76ecb866a73396c3d1d2b5aede9bd4f4ba66a8658af20d788a4a",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch12/original_based_ancient_penguin_gameplay_test-opengl.json",
-      "sha256": "e8bfd1f34352f378558a0e3af6b72c0f7ab12a8f1d7b3e1dc5453864be20fc8c",
-      "scope": "original-based transform:249, actual Main/equipment/input/weapon/respawn",
+      "path": "../batch11/original_based_bone_dragon_hell-opengl.json",
+      "sha256": "65572668f9bdccf502876dcb63e48c8b717e2b29e3d454be2bb01e275d77a7df",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch12/original_based_albino_giant_crab_gameplay_test-opengl.json",
-      "sha256": "0a60ed376b2319e485c5cb3dc5146c2818972a9134f4c2a26ce3ed28563e04f8",
-      "scope": "original-based transform:351, actual Main/equipment/input/weapon/respawn",
+      "path": "../batch11/original_based_bone_dragon_immortal-headless.json",
+      "sha256": "4a3fa6f6d3be20c420230d9396201930c951e8b3087066b38c0d4413b133262a",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch12/original_based_kraken_transform_gameplay_test-opengl.json",
-      "sha256": "3b839845a3c18b349401aa56716be8bf4d2cb304672cbd94460a9b611f494ec1",
-      "scope": "original-based transform:401, actual Main/equipment/input/weapon/respawn",
+      "path": "../batch11/original_based_bone_dragon_immortal-opengl.json",
+      "sha256": "e3095607ab2a0654c3825f5fcbb4adc1229dab107f4fe7a7493aa4b8bec0d3d8",
+      "scope": "original-based bone_dragon, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_ettin_gameplay_test-headless.json",
+      "sha256": "d85481c3c4c53c000e692addef6df7a660048333c92c971f567b32e95015ebfe",
+      "scope": "original-based ettin, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_ettin_gameplay_test-opengl.json",
+      "sha256": "54030031cc32b4bd48edb33003d8e38033da2a929a24878ab1c5a7e827429077",
+      "scope": "original-based ettin, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_king_bugbear_gameplay_test-headless.json",
+      "sha256": "78c8598057fbc475849c3bdfdcd3bb7c8859b8dcbc58385b4043e4b105554380",
+      "scope": "original-based king_bugbear, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch11/original_based_king_bugbear_gameplay_test-opengl.json",
+      "sha256": "f99843e511308825257311bfc46d5dab030317ec9f62883846674a27203cb00b",
+      "scope": "original-based king_bugbear, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
@@ -29625,8 +29671,74 @@
       "direction_rows": 8
     },
     {
+      "path": "../batch12/original_based_albino_giant_crab_gameplay_test-headless.json",
+      "sha256": "c3f5b62a7342f9ff5a37e0ac1e6e2224ccf4ea8f5218752ce09eecd5f4fee95a",
+      "scope": "original-based transform:351, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch12/original_based_albino_giant_crab_gameplay_test-opengl.json",
+      "sha256": "0a60ed376b2319e485c5cb3dc5146c2818972a9134f4c2a26ce3ed28563e04f8",
+      "scope": "original-based transform:351, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch12/original_based_ancient_penguin_gameplay_test-headless.json",
+      "sha256": "b5aba5d08a2ea61ead657f766a8f6b824c20179dbce8e78d45456001586696d9",
+      "scope": "original-based transform:249, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch12/original_based_ancient_penguin_gameplay_test-opengl.json",
+      "sha256": "e8bfd1f34352f378558a0e3af6b72c0f7ab12a8f1d7b3e1dc5453864be20fc8c",
+      "scope": "original-based transform:249, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch12/original_based_kraken_transform_gameplay_test-headless.json",
+      "sha256": "d9241cbb0c0944c70863cf0efb4d566685c9a341f044a735eda686cd9d7aee72",
+      "scope": "original-based transform:401, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch12/original_based_kraken_transform_gameplay_test-opengl.json",
+      "sha256": "3b839845a3c18b349401aa56716be8bf4d2cb304672cbd94460a9b611f494ec1",
+      "scope": "original-based transform:401, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch13/original_based_ice_man_gameplay_test-headless.json",
+      "sha256": "ac2fb18ff68d6462ed1906d1ed2ae0e1ef49b8893bbabd27abaa4a03b2f1e3ca",
+      "scope": "original-based ice_man, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch13/original_based_ice_man_gameplay_test-opengl.json",
+      "sha256": "7db678bcd66e3228e385ac74545a5a6047765cc3b7cb51a45fc1162e837d84c7",
+      "scope": "original-based ice_man, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch13/original_based_scorpion_gameplay_test-headless.json",
+      "sha256": "040bf220eaf66edeb3992a5145e2f55691882ad5caf6fa421d3a7b16a54eb7a3",
+      "scope": "original-based scorpion, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch13/original_based_scorpion_gameplay_test-opengl.json",
+      "sha256": "601161c38206b40d325527b045bd608bd4ad37de6ede57c50c479afd6825a1ff",
+      "scope": "original-based scorpion, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
       "path": "../batch13/original_based_snowman_gameplay_test-headless.json",
       "sha256": "056c3c5cb3955622f526423ae31165caa95c1cbdff4fe534ae14d5c739e22838",
+      "scope": "original-based snowman, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch13/original_based_snowman_gameplay_test-opengl.json",
+      "sha256": "b2f4c3d76445c2353e978401cc5197ab9b68e3d02b185d976f7c182364e81f0b",
       "scope": "original-based snowman, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
@@ -29637,45 +29749,9 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch13/original_based_scorpion_gameplay_test-headless.json",
-      "sha256": "040bf220eaf66edeb3992a5145e2f55691882ad5caf6fa421d3a7b16a54eb7a3",
-      "scope": "original-based scorpion, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch13/original_based_ice_man_gameplay_test-headless.json",
-      "sha256": "ac2fb18ff68d6462ed1906d1ed2ae0e1ef49b8893bbabd27abaa4a03b2f1e3ca",
-      "scope": "original-based ice_man, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch13/original_based_snowman_gameplay_test-opengl.json",
-      "sha256": "b2f4c3d76445c2353e978401cc5197ab9b68e3d02b185d976f7c182364e81f0b",
-      "scope": "original-based snowman, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
       "path": "../batch13/original_based_yeti_gameplay_test-opengl.json",
       "sha256": "ea3aa4e03dce7412450dae10d3d519d78c1a1a5339d33d715480ca053f321086",
       "scope": "original-based yeti, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch13/original_based_ice_man_gameplay_test-opengl.json",
-      "sha256": "7db678bcd66e3228e385ac74545a5a6047765cc3b7cb51a45fc1162e837d84c7",
-      "scope": "original-based ice_man, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch13/original_based_scorpion_gameplay_test-opengl.json",
-      "sha256": "601161c38206b40d325527b045bd608bd4ad37de6ede57c50c479afd6825a1ff",
-      "scope": "original-based scorpion, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch14-safe-close/original_based_dire_wolf_gameplay_test-headless.json",
-      "sha256": "4ee1f73807731293174053e7595bd3e15e2cd54b06e37a68241dc55fb71569d9",
-      "scope": "original-based dire_wolf, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
@@ -29685,15 +29761,9 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch14-safe-close/safe_close_saber_tiger-headless.json",
-      "sha256": "7917549b16820f1d7b7c01cdecbef206f3ed3edece64ece96f0174b1df9852c8",
-      "scope": "original-based saber_tiger, actual Main and production AI/combat/lifecycle",
-      "direction_rows": 8
-    },
-    {
-      "path": "../batch14-safe-close/safe_close_saber_tiger-opengl.json",
-      "sha256": "e4c6be67b941e18522d01ca838dce7590608bdf4b801ae11611f7ea6f45e81eb",
-      "scope": "original-based saber_tiger, actual Main and production AI/combat/lifecycle",
+      "path": "../batch14-safe-close/original_based_dire_wolf_gameplay_test-headless.json",
+      "sha256": "4ee1f73807731293174053e7595bd3e15e2cd54b06e37a68241dc55fb71569d9",
+      "scope": "original-based dire_wolf, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
@@ -29709,8 +29779,14 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch14-safe-close/safe_close_saber_tiger_cruel_reference_fixed-headless.json",
-      "sha256": "89f47a1166e6ec86b0dc25c3942e5822eb56aadfc1f074d4ee3a72cd3a19992a",
+      "path": "../batch14-safe-close/safe_close_saber_tiger-headless.json",
+      "sha256": "7917549b16820f1d7b7c01cdecbef206f3ed3edece64ece96f0174b1df9852c8",
+      "scope": "original-based saber_tiger, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch14-safe-close/safe_close_saber_tiger-opengl.json",
+      "sha256": "e4c6be67b941e18522d01ca838dce7590608bdf4b801ae11611f7ea6f45e81eb",
       "scope": "original-based saber_tiger, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
@@ -29721,10 +29797,10 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch15/recovery/main-gameplay.json",
-      "sha256": "3f069d4863e3d3b52a9311cad05423068ca8ca6e8ac0e45be15d0ff9cd40edc9",
-      "scope": "full",
-      "direction_rows": 64
+      "path": "../batch14-safe-close/safe_close_saber_tiger_cruel_reference_fixed-headless.json",
+      "sha256": "89f47a1166e6ec86b0dc25c3942e5822eb56aadfc1f074d4ee3a72cd3a19992a",
+      "scope": "original-based saber_tiger, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
     },
     {
       "path": "../batch15/final-headless-cases/asitagio-cruel.json",
@@ -29757,6 +29833,12 @@
       "direction_rows": 8
     },
     {
+      "path": "../batch15/recovery/main-gameplay.json",
+      "sha256": "3f069d4863e3d3b52a9311cad05423068ca8ca6e8ac0e45be15d0ff9cd40edc9",
+      "scope": "full",
+      "direction_rows": 64
+    },
+    {
       "path": "../batch15/render-cases/asitagio-cruel.json",
       "sha256": "121f88fc7e0d327999aeb689c5ec8631c4b6b12b00effb9e274e2c9c67c4c149",
       "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
@@ -29784,6 +29866,30 @@
       "path": "../batch15/render-cases/water-spirit-eva.json",
       "sha256": "eba9f6550746c35ca160d46c1434b2e5b46e952ebb26fe1657ac8dc7201cb2c5",
       "scope": "original-based water_spirit, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/asitagio-arrogant.json",
+      "sha256": "ef87bdaf0995198ec4c26b617fc962d54289aa2015c845fa9d938fd53034f617",
+      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/asitagio.json",
+      "sha256": "d1fc70f3c0ffbb5bd9423c6b282c63e81e592643725bb6cf62f3245f3208a6a8",
+      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/harpy-wind-dragon.json",
+      "sha256": "9d312e2332b0def41e9d05e7db0a420914e731be794f01d1a4b24a07628cf63a",
+      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch16/ci-reference-fix/old-aliases-cases/harpy.json",
+      "sha256": "15c3876886d4bf44d13163d6ae1e5bd011e13e7c9564743964182022c80d9ab1",
+      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
@@ -29835,27 +29941,651 @@
       "direction_rows": 8
     },
     {
-      "path": "../batch16/ci-reference-fix/old-aliases-cases/asitagio-arrogant.json",
-      "sha256": "ef87bdaf0995198ec4c26b617fc962d54289aa2015c845fa9d938fd53034f617",
-      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "path": "../batch17/headless-cases/distrust-beholder.json",
+      "sha256": "7a2377d1e1611fbf1cb032b02d884d685a64e20254aa696887e9e4c30c1985d2",
+      "scope": "original-based distrust_beholder, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch16/ci-reference-fix/old-aliases-cases/asitagio.json",
-      "sha256": "d1fc70f3c0ffbb5bd9423c6b282c63e81e592643725bb6cf62f3245f3208a6a8",
-      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "path": "../batch17/headless-cases/distrust-mimic.json",
+      "sha256": "0bd1a2150fb3d3005cad9583a7f45b7deb0ad691489a8b6d16cba8c3d24ea7fe",
+      "scope": "original-based distrust_mimic, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch16/ci-reference-fix/old-aliases-cases/harpy-wind-dragon.json",
-      "sha256": "9d312e2332b0def41e9d05e7db0a420914e731be794f01d1a4b24a07628cf63a",
+      "path": "../batch17/headless-cases/orc-mage.json",
+      "sha256": "a7f7ca07966b9f707a358ad2f1ea3d8fd9a5fcf5da3275dbada99267fb05fb7f",
+      "scope": "original-based orc_mage, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch17/render-cases/distrust-beholder.json",
+      "sha256": "7dba28262204abca15099c2609e3f8d8ca505841df874b16f4d8304fd0af11ec",
+      "scope": "original-based distrust_beholder, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch17/render-cases/distrust-mimic.json",
+      "sha256": "d3c8558711a53f4a90fd9a8757832a321c8453570111511bfc47e150a8a3b09a",
+      "scope": "original-based distrust_mimic, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch17/render-cases/orc-mage.json",
+      "sha256": "2bd13e40b98910daf753a7d38c72f55fe08d1801109c55d2df02545da4bceaf0",
+      "scope": "original-based orc_mage, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_ancient-headless.json",
+      "sha256": "3e62494eda60477dac364474b6d32794097aa95e14636f9773e24b6e02728bd1",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_ancient-opengl.json",
+      "sha256": "e5b72df593ee95201235073e59a8808f2b746d68ae2ae05075ef6b52b6c4cbc9",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_distorted-headless.json",
+      "sha256": "2ba7cbf6dd5baab773b9b6ded4ba0df95d19d499a78f7ec17b47b6be2bef8290",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_distorted-opengl.json",
+      "sha256": "ad0530824cb960011710812c955994f08ee9e776fce0e0439ff21f7a4a166f0c",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_gameplay_test-headless.json",
+      "sha256": "176afb57fbc763e11d15662fd37a1240e4735999b07a56579ce65558b40dc6fb",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_gameplay_test-opengl.json",
+      "sha256": "837c62032a4d0e42c83ce0fdbfc06d3f6f7d8238a353ab15faaa01d51176ea74",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_giran-headless.json",
+      "sha256": "03fd0a18e46e5c381c56ac6678eab21b48d19e29f9ca0a014ac24121f1b76c36",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cockatrice_giran-opengl.json",
+      "sha256": "0d5315d505f9313f437617aac41b9667fb864d8a8cae0aa0dff9a6b90185dd6e",
+      "scope": "original-based cockatrice, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cyclops_gameplay_test-headless.json",
+      "sha256": "8377e18b544c2c7e4c2d103a8bb467abaceadf7709d1ffcd1f21b938a70d1f1b",
+      "scope": "original-based cyclops, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_cyclops_gameplay_test-opengl.json",
+      "sha256": "dcece774802eba9ce7cf3725dadaf665a862249c4d9fbf67d6af087df385c3e5",
+      "scope": "original-based cyclops, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_ice_golem_gameplay_test-headless.json",
+      "sha256": "82e8db8c9a1c6c4d0515e7afc798fef5fd95975e3f6715b6fd951d226070c458",
+      "scope": "original-based ice_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_ice_golem_gameplay_test-opengl.json",
+      "sha256": "a301b989306fdb57a9e8342bd8833e0075ceccb87cb55cfa3f27c715f2ff7a8d",
+      "scope": "original-based ice_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_gameplay_test-headless.json",
+      "sha256": "16cb735b22131fcfd2bec77a2cfb8c7d40d24c3b248287573ce6584bcc68b5a6",
+      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_gameplay_test-opengl.json",
+      "sha256": "a7361d88eb8f22141d59d0ad5490dd8ad091a9a2bebc8e3980672228c7a95b59",
+      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_nest-headless.json",
+      "sha256": "c6a030398d6fd320eb4149ab3202a6ef96e95e9a9a83a0f78dd8cf21187cadd5",
+      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_lava_golem_nest-opengl.json",
+      "sha256": "73b8391ff71b5112b299d4541d003d485731056a450e602bf2eccbc987c263b9",
+      "scope": "original-based lava_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_spear_captain_gameplay_test-headless.json",
+      "sha256": "903651984b51cc466dd3f54c9d703beca37d540eb842ac1b4c30dbc002a9d2ea",
+      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch3/original_based_spear_captain_gameplay_test-opengl.json",
+      "sha256": "8af2a408d978e6aa4c4dd6aa8733660a844c9a0292ad4ed25d42cdbcf845485d",
+      "scope": "original-based transform:176, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_harpy_gameplay_test-headless.json",
+      "sha256": "1c571158e8c0eea86ea7e188e39fc11bfabbb0774c0b14611a04d16f7f884921",
       "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     },
     {
-      "path": "../batch16/ci-reference-fix/old-aliases-cases/harpy.json",
-      "sha256": "15c3876886d4bf44d13163d6ae1e5bd011e13e7c9564743964182022c80d9ab1",
+      "path": "../batch4/original_based_harpy_gameplay_test-opengl.json",
+      "sha256": "57d13ab72b7d70fbab9cd14ba14c86c639c388164530788abcfc36a273b7d0f1",
       "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_harpy_nest-headless.json",
+      "sha256": "daa9c09711abafd870a2eda4feced14e4e9d495ea5b83200d044b4d408439f4a",
+      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_harpy_nest-opengl.json",
+      "sha256": "d64c40ed5e4355af0433d760371a0df3b1c70c621b7daca45424a5c02164ca35",
+      "scope": "original-based harpy, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_cruel-headless.json",
+      "sha256": "2d4ee1c330aaa57360234c1f6c8eed6d8cd41f5402f9093eace35d8fe01f995a",
+      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_cruel-opengl.json",
+      "sha256": "7f4ca3fd4a53346858142459b9e7e41dfea7f414dbb393a39e58088be3d81395",
+      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_gameplay_test-headless.json",
+      "sha256": "34e4c04925fd768ecd375f033812dbb7e1b9b4e068a70c07b89918fb916006b4",
+      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_lycanthrope_gameplay_test-opengl.json",
+      "sha256": "67c7ef9f41ef6286c74dc262973dc865becb58f77b4b75709fee67766f3f0538",
+      "scope": "original-based lycanthrope, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_disbelief-headless.json",
+      "sha256": "c8d06f4217e8cb5feae83369b20fc26d4de728cc3498bd56f1d95dde5d7c4fc3",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_disbelief-opengl.json",
+      "sha256": "9e436fc483c884ca8c0f26b89f5fd8aff32f40503ac5e959efbafce744c4ea57",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_gameplay_test-headless.json",
+      "sha256": "c2c8865eb9ea4d5f5007a3606246f6a1c9502aedfec7bbde75f33e4e383072a6",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_gameplay_test-opengl.json",
+      "sha256": "0f9410415e66e876e6fe852ea4caec37ec366f5884929ab5f7bd585ee9f491d9",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_nest-headless.json",
+      "sha256": "ef57321ed8e6a87029ed5fc3433cb30df768f2c6e4ba1cb0992a1f8d70a5d1e4",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_nest-opengl.json",
+      "sha256": "6012dce9783fb2638e99534f22825e9de6fa0ed7dfaf72d9d952e940359af88c",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_arrogant-headless.json",
+      "sha256": "dcccc3f0ecaa1ac3c42aceff55ebcc39b43668952d957ac5e85a28c205f6cc12",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_arrogant-opengl.json",
+      "sha256": "46110c5978325d9ab94241e198a96b07b124f9cb46297229ed299c52ae4d561f",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_dark-headless.json",
+      "sha256": "552b0d460bd1c4392ff9920f2120ee34eea072237deaaf4ec8a3a60a74c6a716",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_dark-opengl.json",
+      "sha256": "ed36d67071d9cde4e852430268b0ea1a3a3290487e543057fd76d8b7a95aeb38",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_earth-headless.json",
+      "sha256": "7620309f00290ef6d8cc0a529d5fdc2817461bc531eb3f619acceeda3773cfcc",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_queen_earth-opengl.json",
+      "sha256": "dc5c463e6fc119489440fd194f609674b9d46f8ff8457d9885579df1dfbf5ce4",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_valley-headless.json",
+      "sha256": "cacf5d6a940f44c50995b4613dbb9611ba9d79afbeb7c7a14fc1efc47892ba34",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch4/original_based_succubus_valley-opengl.json",
+      "sha256": "cb7a325802fbaf0baa96d1613eeef3cf205b71120323c0d0d805d747f90151ce",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch5/original_based_bugbear_gameplay_test-headless.json",
+      "sha256": "613593e9c33e95118facd7a24ddd53f8cfd83c661238db67cbc4b4a8fc16132c",
+      "scope": "original-based bugbear, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch5/original_based_bugbear_gameplay_test-opengl.json",
+      "sha256": "067d4f5a20f3d3bb2ec940971a3cd2c710746264dc1481cf69b49dacb50882c9",
+      "scope": "original-based bugbear, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch5/original_based_reaper_male_gameplay_test-headless.json",
+      "sha256": "efe65343375c5e5366ccb0e840cf5a4325cf1c8313091921c5379a11cdc7944c",
+      "scope": "original-based transform:258, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch5/original_based_reaper_male_gameplay_test-opengl.json",
+      "sha256": "89f299551b94855f5030c9107303b53dbcecaa35a870160d1749fed8104cf6c2",
+      "scope": "original-based transform:258, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch5/original_based_sand_worm_gameplay_test-headless.json",
+      "sha256": "12db15c7bd5bdc26226d7c44fc8f91f8ce90d09119b580a2ac74efeb3ce2d348",
+      "scope": "original-based sand_worm, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch5/original_based_sand_worm_gameplay_test-opengl.json",
+      "sha256": "7c0047638f4e25b9da90b4bb8e223c8598c8b304775c91fa722c26d22c056a2d",
+      "scope": "original-based sand_worm, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_ghoul_clear_pose-opengl.json",
+      "sha256": "0271f05b16b36de709feb001949a6f98e5bec4de2eae23f9c9a65e89f1616cb3",
+      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_ghoul_gameplay_test-headless.json",
+      "sha256": "2fe36f61ab8ad9540a0fe16ed03376507d03627fc124c628f20acbd47dc818a8",
+      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_ghoul_undying-headless.json",
+      "sha256": "11c85fee3946e13e2cf99c85f492b752a3342444b6a46739afff7035bd87af9b",
+      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_ghoul_undying-opengl.json",
+      "sha256": "fb8a9aa6775eaafdcc4baba8a0f038046c18236c859e6e50b7a7826f22b6a3bb",
+      "scope": "original-based ghoul, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_clear_pose-opengl.json",
+      "sha256": "e9cc47544763cd3338cbcb6037e163c3c522a72c2f0fc7b259245bdc2dd61d20",
+      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_gameplay_test-headless.json",
+      "sha256": "1c90f47ef86c9f512ce8c4a589b8a2133324a59b90f03677638bf05d08fa4f3a",
+      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_hell-headless.json",
+      "sha256": "06a0231a2a8dc48c0cf4cf8a57c8c387c4e3e1d1fe5976f54a0ba7989ae30608",
+      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_iron_golem_hell-opengl.json",
+      "sha256": "dd78dd5ac71c25fd9ac68cd1643dfcd0713e1a383cae31cf074d6c6297b91769",
+      "scope": "original-based iron_golem, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_lizard_albino_sized-headless.json",
+      "sha256": "aa0e6e5898ef121e809be2d318ba26b782d11d1bb49613b695acec572fc01ba8",
+      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_lizard_albino_sized-opengl.json",
+      "sha256": "8aa8aa9f3652df046aa1d6b36a9e33b47c50dfbaa942ff6e3595bc2c974b3631",
+      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_lizard_sized-headless.json",
+      "sha256": "251dd77bbb730c299999ea77e2961779c3f90862ded7537da2ab31666bcb7c40",
+      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch6/original_based_lizard_sized-opengl.json",
+      "sha256": "2ed3eb6d9aef6511dcf91ae47264f96d9f4d01bce11e4a70c384c3674e314b25",
+      "scope": "original-based lizard, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_asitagio_arrogant-headless.json",
+      "sha256": "9997cf362925371f91ca9ee832237d42579b51b5a93a01a8a84248afc9787c20",
+      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_asitagio_arrogant-opengl.json",
+      "sha256": "b55be203273ace5c96a5b3870ac4812fbcce54ddb561fc1f23c2cfd798c7aa1c",
+      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_asitagio_gameplay_test-headless.json",
+      "sha256": "798a7bfa471f4bdf2e691ccd3161a9a45cd83b7433828939d2e72dc7d796c696",
+      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_asitagio_gameplay_test-opengl.json",
+      "sha256": "af93b615ccc007375a12eb9d66828758301c1c6cac6b7aa497269c42e6eda88a",
+      "scope": "original-based asitagio, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_crabman_eva-headless.json",
+      "sha256": "f919d4fc328127f24046c50474dc6fc201e32d99eb4af44809be41cdc2cab4a0",
+      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_crabman_eva-opengl.json",
+      "sha256": "d85ccf28903aa956f8e998b153fbde6d34ea3c3513b38c32a596669fb8a6cbe7",
+      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_crabman_gameplay_test-headless.json",
+      "sha256": "1193d801b215e547486fb136dbb14854859674518173413e419db666ccdce4c3",
+      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_crabman_gameplay_test-opengl.json",
+      "sha256": "30d4f56995bbb6f2ef45cb77cf62be7c5aa6284eb5afc7db05c3772e85944bc7",
+      "scope": "original-based crabman, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_spear_guard_green_gameplay_test-headless.json",
+      "sha256": "624f9e85cbe098500b526ad855f49ea8fbdd2ed088eb3772fa054158bdb96909",
+      "scope": "original-based transform:167, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch7/original_based_spear_guard_green_gameplay_test-opengl.json",
+      "sha256": "cf676c8dad912cfcb061711dabcfd873a3c9bfdf63d5dc9b95102631f39f0a22",
+      "scope": "original-based transform:167, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch8/batch8_green_regression-opengl.json",
+      "sha256": "e7b4f9a0a1499f6e3f820057d0f54c2359fd2794a3b81cb1f2ce069ba6b1b526",
+      "scope": "original-based transform:167, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_gameplay_test-headless.json",
+      "sha256": "48f98531c86289a0455aaaa58c25a6f91370de414eadbd16f1be6176b69845bf",
+      "scope": "original-based transform:2, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_gameplay_test-opengl.json",
+      "sha256": "1549e49626c36e6bee9eeed1ba47dd3be207ecb4a5a92ec08c58162b41ae9e78",
+      "scope": "original-based transform:2, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_red_gameplay_test-headless.json",
+      "sha256": "d4abb41605ab5edca1dbec920b9f68d1395ea479c3a0a4b5381ac71be93c291a",
+      "scope": "original-based transform:110, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch8/original_based_spear_guard_red_gameplay_test-opengl.json",
+      "sha256": "cef9ddefc552ee726f848abbf38e8f19356702903aab4c0bdd3008958f5aa7f9",
+      "scope": "original-based transform:110, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/batch9_succubus_regression-opengl.json",
+      "sha256": "67fe7efb71e49e91fe69730631ead1a5d77e95137757c5aeddda6babb7149249",
+      "scope": "original-based succubus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_albino_frog_gameplay_test-headless.json",
+      "sha256": "5cc57064ae2e860c139181fc67e601e03c21b3dc2641a119b7f98aa1d6589fa4",
+      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_albino_frog_gameplay_test-opengl.json",
+      "sha256": "e3648effb4d6868a23c76eb863e5dcb15950fc9189e1fe4d674a1ac3dc215e09",
+      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_albino_horned_frog-headless.json",
+      "sha256": "537b935bf94706012228f8f92d7a24c1a972a41a89a42f61ad60b39e12a80b2f",
+      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_albino_horned_frog-opengl.json",
+      "sha256": "9f35e97ea491eaadf4346857294ca09338f7ebccd7704126506fe63b0c7a8431",
+      "scope": "original-based albino_frog, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_fear-headless.json",
+      "sha256": "104b96c7c08aa984a5660fd698978db7f7e42c76d7d021a6989f3d560146e02d",
+      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_fear-opengl.json",
+      "sha256": "f74684d7433af4f1d3da1e0f17af86fde0c963aa75569d3254b47f9a1e868f11",
+      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_gameplay_test-headless.json",
+      "sha256": "041b4001f4112daa30975a425a07e4b2ca1cddbb17f5ac28f6613225181817e4",
+      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_fire_egg_gameplay_test-opengl.json",
+      "sha256": "86afaaa4560ffa2beb89f36f13c44b99c82d426f6374770bfe571507b7f91d8e",
+      "scope": "original-based fire_egg, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_cruel-headless.json",
+      "sha256": "f0959c50695bf4c39e69f50c9aac2603af798863a5cc7f7cef7a5ed8af22d370",
+      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_cruel-opengl.json",
+      "sha256": "c040ae39d7e61f26bcde50dadad0af1da27945adbbdcd91ba8d49286df79029d",
+      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_gameplay_test-headless.json",
+      "sha256": "15854c00fd0c79db752af97cce8dbcdcebfb084816b0f17c58e2ae21342c13b7",
+      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch9/original_based_horn_cerberus_gameplay_test-opengl.json",
+      "sha256": "ab98b79346672d65f3e999351ee9afe8a6970d06a8f10cf80710bf9ee9349bac",
+      "scope": "original-based horn_cerberus, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_gameplay_test-headless.json",
+      "sha256": "bac7dae0d983becb0957555d93fed22180b66de052f8cdb4425446bfaf632f86",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_gameplay_test-opengl.json",
+      "sha256": "9f2a57cdb110bc60a1bee9c604e3d87f9a78f42794a15863bae6d8bb31643bdc",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_gludio-headless.json",
+      "sha256": "379c0f30b3d2f01a3238c5d1da0dd6b7bf5a59036f568979837f88203fdbb172",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_gludio-opengl.json",
+      "sha256": "62eecd380ec074765fc322886b131ba57022956adacde3233e55a24716f5b7af",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_hell-headless.json",
+      "sha256": "cbc5ba9c46a7d75e577bb6a98506db3254b292d9474841d0966a74e6186dd8c8",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ghost_hell-opengl.json",
+      "sha256": "9971643afe0c5e77724b085b06b16e62d530d96c9ddf0107fffabcb9b9f0c4f5",
+      "scope": "original-based ghost, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_monster_gameplay_test-headless.json",
+      "sha256": "8902f86cbae82c2b1e64cd0ed70381e3b49e184f2ded4df8bfc1ed44f41a7a32",
+      "scope": "original-based werewolf, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_monster_gameplay_test-opengl.json",
+      "sha256": "f814da3f58ae7ca2f74651c54fd5c4fb61274fc3dc74b2bbb56c6b37071549d9",
+      "scope": "original-based werewolf, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_ancient-headless.json",
+      "sha256": "c849a323e81f2781254948ff61c575e5359e85fa2e20de0a2439ca39af22741a",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_ancient-opengl.json",
+      "sha256": "0de1b61f09f502ca52823b0fbee48a398a558f2a14e99635825d3e5cb21d6d6f",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_gameplay_test-headless.json",
+      "sha256": "ade07552c2abb565d5377d093ef26e2fb96fddf54bcced3ae9bf4ac9776bd88f",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_gameplay_test-opengl.json",
+      "sha256": "5f1b3b12fcc155eb99b11204792bc6f00cb51868e29f50935cab4ffb9263ce57",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_giran-headless.json",
+      "sha256": "ca44526052f9e9e59d6e5b752806f235383df5912a1af65857220c651529fb00",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_ogre_giran-opengl.json",
+      "sha256": "8b6bb6d8e9c720e5122d2eaad89ddb28741a32921e6a14cd6db2a78c88685069",
+      "scope": "original-based ogre, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_reaper_gameplay_test-headless.json",
+      "sha256": "b22a9ab739754bf9a9419e946fbbedc5fcfdcb93bff692faba570e4b09e2ee21",
+      "scope": "original-based female reaper, actual Main/equipment/input/scythe/respawn",
+      "direction_rows": 8
+    },
+    {
+      "path": "../original_based_reaper_gameplay_test-opengl.json",
+      "sha256": "0f417de7533f020fa4db3e38fb366dadcacf7f9b43924102a16065cfd1bd68f6",
+      "scope": "original-based female reaper, actual Main/equipment/input/scythe/respawn",
       "direction_rows": 8
     }
   ]

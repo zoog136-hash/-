@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "display_height_basis": "max_living_frame",
+  "prompt": "IDLE_WALK EXACT PROMPT:\nSparse, generously spaced PRODUCTION GAME SPRITE SHEET: exactly8 columns and5 rows =40 SEPARATE small complete 2D orc shaman figures, true transparent background. Use the approved8view turnaround reference for exact columns and design. Important layout: each figure only60% of cell height and55% of cell width, with40% of every cell entirely transparent gutters! Do not enlarge figures to fill grid. Blank padding at all four canvas edges. No neighboring overlaps. Each staff touches its gripping hand. Entire hood/staff/body/feet inside individual cell. No shadows/floor/text/grid/effects. Same ragged lean gray-green hunched orc, pale beige rough shoulder trim, patched loincloth, bare limbs/feet, brown hood and ragged cloak, plain crooked brown staff. Column1 pure RIGHT profile;2 front-right;3 directly FRONT;4 front-left;5 pure LEFT profile;6 BACK-LEFT (staff on left, head/toes point upper-left, cloak back shown);7 full BACK no face;8 BACK-RIGHT (staff on right, head/toes upper-right). Same fixed high-angle isometric camera all40 figures. Row1 neutral idle; row2 clearly different relaxed breathing with shoulders lowered and free hand open. Rows3/4/5 a clear WALK CYCLE:3 left foot forward/right foot back;4 legs pass and one knee raised;5 right foot forward/left foot back. Swing free arm oppositely and let cloak follow walking stride. Keep staff connected. The character does not hop or float. Grounded stance on the same baseline within each row. Distinct silhouettes for the three walking phases, no repeated stills or simple translations. Small sprites with very large transparent gutters are mandatory; the previous sheet failed because feet and cloak encroached on neighbor rows.\n\nATTACK EXACT PROMPTS:\nAuthor ATTACK ONLY for the exact orc shaman in the attached approved8direction turnaround. 2D isometric RPG sprite atlas, transparent RGBA with no shadows/effects/background/text. EXACTLY8 columns by3 rows=24 complete separated figures. Small figures taking only55% cell width and60% cell height; huge transparent gutters and all outer margins. Whole connected body and staff inside each cell. Same ragged lean gray-green hunched orc, brown pointed hood/torn cloak, pale beige rough shoulder trim, short patched loincloth, bare limbs/feet, plain brown crooked staff in one anatomical hand. Fixed isometric camera. Columns EXACT same as turnaround: E/right profile, SE/front-right, S/frontal, SW/front-left, W/left profile, NW/rear-LEFT, N/back NOFACE, NE/rear-RIGHT. Preserve viewing direction for all three phases. Row1 WINDUP: free hand bends before chest, shoulders compress back, staff braced close. Row2 CONTACT: free arm extends clearly forward along correct compass, palm OPEN visibly beyond silhouette; E points RIGHT, SE down-right, S hand palm reaches toward viewer DOWN below chest (not sideways), SW down-left, W LEFT, NW up-LEFT beyond LEFT shoulder with cloak BACK visible, N UP away beyond shoulder with NO face, NE up-RIGHT beyond RIGHT shoulder with back visible. This contact must be visibly a distinct reaching casting pose in EVERY column, especially NW/N/NE; keep staff held solidly by opposite hand. Row3 RECOVERY: free hand retracts, elbow bends toward ribs, shoulders relax. Character stays grounded, stable height, whole feet visible; no flying, no sparks or spell graphics. All24 poses differ by articulated shoulder/elbow/wrist and torso movement; no repeated stills, no copied/mirrored poses.\nCORRECTION:\nRELAYOUT THIS24-SPRITE ATTACK ATLAS to fix CROPPING OVERLAP while retaining same orc designs,24 physical poses,8directions and3attack phases. Main defect: outstretched arms encroach on adjacent characters' rectangular crop area. Make ALL24 sprites uniformly MUCH SMALLER, approximately HALF their current displayed size, and center each one inside its equal cell. Eight columns, three rows. At least70 pixels of fully transparent EMPTY GUTTER separating the bounding rectangle of each complete figure/staff/extended hand from every neighboring bounding rectangle. Also at least70 pixels margin around ALL4 outside edges. Keep every complete outline separate, don't cut off or omit hands/staff/feet. Transparent RGBA, no background, shadows, glow, labels, floor or grid. All same24 distinct poses and exact column compass E,SE,S,SW,W,NW,N,NE. Phase row1 windup hand to chest; row2 contact free palm reaches along facing compass; row3 recovery hand retracts. Maintain the large visible arm extension in contact, but contain it wholly in each wide empty cell by reducing all figures equally; keep one staff firmly in opposite gripping hand. Especially frontal contact cell row2column3: opposite non-casting hand must visibly WRAP around staff shaft, not leave floating staff against chest. Actual output should look very sparse, mostly transparent unused space. Small sprites, wide clear gutters, no near-touching bounding rectangles.\n\nREACTIONS EXACT PROMPT:\n2D GAME SPRITE REACTION ATLAS for exact same shabby gray-green orc shaman as attached approved turnaround. EXACT8 columns by5 rows=40 separated complete poses, transparent RGBA, no floor/shadows/effects/text/grid. Same fixed high-angle isometric camera, lean hunched green body, ragged BROWN hood/back cloak, pale beige shoulder trim, short patched loincloth, bare feet, plain crooked BROWN wooden staff held or touching hand. Preserve 8 COLUMN COMPASS exactly E right, SE front-right, S front, SW front-left, W left, NW BACK-LEFT, N full BACK NO FACE, NE BACK-RIGHT. Rear orientations face away; NW left side of back and NE right side of back never duplicate. Rows1,2 two distinct HIT REACTIONS:1 flinch with shoulders pulled back and free hand guarding chest;2 wince recovering with knee bent, hood lowered. Rows3,4,5 a clear DEATH collapse:3 buckled knees, still partly upright;4 collapses onto hands/knees and staff tilts low, cloak folds downward;5 body entirely prone and FLAT ON GROUND, no raised standing torso, crumpled cloak covering back, staff lying alongside attached hand. S body collapses toward viewer, N collapses away, compass silhouette consistent. All whole poses connected including staff, limbs and cloak; no detached equipment pieces. Dead body should be long and low. Each SMALL complete figure occupies at most55percent cell width and60percent cell height; generous clear gutters and transparent outer margins. No image touches neighboring figures. Keep design and body proportions fixed across sheets, genuinely articulated poses with weight falling to floor, no shrinking/turning upside down to fake death.",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/orc_mage/poses-0.png",
+      "rows": 5,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ],
+      "canvas_size": 384
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/orc_mage/poses-1.png",
+      "rows": 3,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "reference_rows": [
+        0
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/orc_mage/poses-2.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0
+      ]
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Reviewed original portrait and isolated turnaround, corrected NW to rear-left without changing runtime compass. E/W side, SE/SW front diagonals, S front and N back, opposite NW/NE. Separate sparse role sheets avoid overlapping pose rectangles; attack contact reaches along each facing, frontal off-hand grips staff, rear palms extend beyond shoulder; walk alternates knees/feet. Hit recoil and three-stage grounded collapse, last corpse flat. Geometry and complete visible-pixel coverage passed for 40+24+40 poses. One uniform maximum-living-frame scale; production Main validation pending."
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "display_height_basis": "max_living_frame",
+  "prompt": "beholderMain EXACT PROMPT:\nProduction 2D isometric RPG sprite atlas of the EXACT creature in attached original: small spherical BROWN leathery beholder with huge round golden-yellow single eye and vertical dark slit pupil, short stubby curling eye-stalk appendages with little amber ends, original spiky ridged brown texture, no mouth of teeth, no humanoid limbs/weapons/clothes. Preserve original small stubby stalks and asymmetrical rough silhouette, not generic D&D many-long-tentacles. Fixed high-angle isometric camera. TRANSPARENT RGBA, no ground/shadow/glow/effects/labels/grid. 8columns compass left-to-right E true RIGHT profile with eye on RIGHT rim; SE front-right; S direct FRONT centered round iris; SW front-left; W true LEFT profile eye on LEFT rim; NW rear-left NO central eye, rough BACK surface; N straight BACK NO EYE; NE rear-right NO central eye, BACK surface. Distinct45degree orientations. Whole creature including every stalk connected, at most50%cell width andheight, big EMPTY transparent gutters and margins. Never crop a tentacle, never paint detached eye fragments. EXACT8columns8rows=64 separated full creatures. Rows1/2 idle with eye open then half-blink and stalks gently curling. Rows3/4/5 movement: body leans into each facing direction and short stalks sweep back/pass/sweep front, maintain fixed size and stable vertical origin, no arbitrary hopping. Rows6/7/8 MAGICAL ATTACK:6 central eye narrows and stalks curl inward windup;7 eye wide open and stalks flex OUT/FORWARD in facing compass as body braces, NO beam/particles painted;8 eyelid relaxes and stalks retract. Back-facing attacks show only wrinkled back and moving stalks pointing away, never central iris onN/NW/NE. Distinct articulated eyelids/bodyfolds/stalk phases, not translations/mirrors/copies.\n\nbeholderReaction EXACT PROMPT:\nProduction 2D isometric RPG sprite atlas of the EXACT creature in attached original: small spherical BROWN leathery beholder with huge round golden-yellow single eye and vertical dark slit pupil, short stubby curling eye-stalk appendages with little amber ends, original spiky ridged brown texture, no mouth of teeth, no humanoid limbs/weapons/clothes. Preserve original small stubby stalks and asymmetrical rough silhouette, not generic D&D many-long-tentacles. Fixed high-angle isometric camera. TRANSPARENT RGBA, no ground/shadow/glow/effects/labels/grid. 8columns compass left-to-right E true RIGHT profile with eye on RIGHT rim; SE front-right; S direct FRONT centered round iris; SW front-left; W true LEFT profile eye on LEFT rim; NW rear-left NO central eye, rough BACK surface; N straight BACK NO EYE; NE rear-right NO central eye, BACK surface. Distinct45degree orientations. Whole creature including every stalk connected, at most50%cell width andheight, big EMPTY transparent gutters and margins. Never crop a tentacle, never paint detached eye fragments. EXACT8columns5rows=40 separated full creatures. Rows1/2 two HIT phases:eye winces shut/stalks pull back then reopens partially with distinct body crumple. Rows3/4/5 DEATH:3 body sags and stalks droop;4 creature collapses low, folds leathery body onto ground;5 entirely flat shrivelled brown corpse with centraleye closed and all short stalks folded around/against the body, no floating parts. Back rows continue showing back, no centraliris. Maintain same anatomical facing and texture through collapse. Each complete frame is one connected creature, no blood, no effects. Last death must visibly be flat and grounded.",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_beholder/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_beholder/poses-1.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Original brown spherical body, gold slit pupil and short curled stalks preserved. E/W eye at opposite silhouette edge, S centered eye and N rough back without iris; rear diagonals stay on opposite sides. Blink/stalk walk and attack phases articulate. Hit recoil then three-stage sag to flattened corpse with closed eye, no detached limbs. Floating is the existing production trait, not a new ground offset. Actual Main validation pending."
+  }
+}
