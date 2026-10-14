@@ -92,13 +92,13 @@ func run() -> void:
 	var bag: Control = await bag_search("낡은 장검")
 	var p: Vector2 = point(bag.slot_buttons[ref0])
 	await tap(p)
-	check(bag.detail_active and bag.detail_panel.is_visible_in_tree() and bag.selected_item == ref0,"single mouse tap shows correct equipment details")
+	check(not bag.detail_active and not bag.detail_panel.is_visible_in_tree() and bag.selected_item == ref0 and bag.item_name_hint.is_visible_in_tree(),"single mouse tap selects equipment and shows its name only")
 	await tap(p)
 	check(world.equipped_items.weapon.get("instance_id","") == ids[0],"double mouse tap equips exact instance")
 	bag = await bag_search("낡은 장검")
 	p = point(bag.slot_buttons[ref1])
 	await tap(p,true)
-	check(bag.detail_active and bag.selected_item == ref1,"single native tap shows details")
+	check(not bag.detail_active and bag.selected_item == ref1 and bag.item_name_hint.is_visible_in_tree(),"single native tap selects equipment and shows its name only")
 	await tap(p,true)
 	check(world.equipped_items.weapon.get("instance_id","") == ids[1],"double native tap equips second instance")
 	bag = await bag_search("HP 물약")
@@ -112,6 +112,8 @@ func run() -> void:
 	check(int(world.inventory["HP 물약"]) == count-1,"double native tap consumes exactly once")
 	print("EIGHT_STAGE ",assertions)
 	stages.append("single_double_tap")
+	await preload("res://tests/inventory_item_name_checks.gd").run(self,ref0,ref1)
+	stages.append("timed_grade_name_explicit_details")
 
 	# Native outward drag works without long-press; equipped/locked gear is safe.
 	world.item_instances[ids[0]]["level"] = 7

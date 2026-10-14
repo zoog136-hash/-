@@ -1,6 +1,12 @@
 extends "res://scripts/ui/lineage_inventory_ui.gd"
 
 const UI = preload("res://scripts/ui/renewal_theme.gd")
+const NATIVE_BUTTON = preload("res://scripts/ui/native_touch_button.gd")
+const ITEM_NAME_DURATION_MS: int = 5000
+const ITEM_NAME_GAP: float = 4.0
+var item_name_hint: Label
+var item_name_reference: String = ""
+var item_name_until: int = 0
 var controller: Node
 var search_row: HBoxContainer
 var expand_button: Button
@@ -70,7 +76,10 @@ func _ready() -> void:
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	close_row.add_child(spacer)
-	close_row.add_child(UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,30)))
+	var detail_close: Button = UI.button("닫기",func() -> void: detail_active=false; _reflow(),Vector2(52,30))
+	detail_close.set_script(NATIVE_BUTTON)
+	detail_close.name = "InventoryDetailClose"
+	close_row.add_child(detail_close)
 	detail_stack.add_child(close_row)
 	detail_stack.move_child(close_row,0)
 	lock_button = UI.button("잠금",_toggle_lock,Vector2(0,32))
@@ -90,11 +99,28 @@ func _ready() -> void:
 	expand_button = UI.button("확장",_toggle_expanded,Vector2(62,34))
 	expand_button.name = "ExpandInventory"
 	actions.add_child(expand_button)
-	actions.add_child(UI.button("정보",open_detail,Vector2(64,34)))
+	var detail_button: Button = UI.button("상세정보",open_detail,Vector2(86,34))
+	detail_button.set_script(NATIVE_BUTTON)
+	detail_button.name = "InventoryDetail"
+	actions.add_child(detail_button)
 	actions.add_child(UI.button("장비",func() -> void: controller.show_companion_equipment(),Vector2(64,34)))
 	compact_tabs = HBoxContainer.new()
 	compact_tabs.hide()
 	layout.add_child(compact_tabs)
+	# A sibling of the scroll container: the name is not clipped by its top row.
+	item_name_hint = UI.label("",14,UI.TEXT)
+	item_name_hint.name = "InventoryItemName"
+	item_name_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	item_name_hint.focus_mode = Control.FOCUS_NONE
+	item_name_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	item_name_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	item_name_hint.add_theme_color_override("font_outline_color",Color.BLACK)
+	item_name_hint.add_theme_constant_override("outline_size",4)
+	item_name_hint.z_index = 20
+	add_child(item_name_hint)
+	_hide_item_name()
+	visibility_changed.connect(_inventory_visibility_changed)
+	inventory_panel.visibility_changed.connect(_inventory_visibility_changed)
 	resized.connect(_reflow)
 	inventory_panel.resized.connect(_reflow)
 	_reflow()
@@ -127,11 +153,73 @@ func _input(_event: InputEvent) -> void:
 func _select_item(reference: String) -> void:
 	gesture_dragged = false
 	super._select_item(reference)
-	detail_active = not reference.is_empty()
+	# A selection never opens details, including when changing the selected item.
+	detail_active = false
 	_reflow()
+	_show_item_name(reference)
+
+func _show_item_name(reference: String) -> void:
+	if item_name_hint == null or not slot_buttons.has(reference):
+		_hide_item_name()
+		return
+	var record: Dictionary = _find_item_record(reference)
+	item_name_reference = reference
+	item_name_hint.text = _enhanced_display_name(record,reference)
+	item_name_hint.add_theme_color_override("font_color",_grade_color(str(record.get("grade","일반"))))
+	# One deadline, replaced on each click; old callbacks cannot hide a new name.
+	item_name_until = Time.get_ticks_msec()+ITEM_NAME_DURATION_MS
+	set_process(true)
+	_update_item_name()
+
+func _hide_item_name() -> void:
+	item_name_reference = ""
+	item_name_until = 0
+	if item_name_hint != null: item_name_hint.hide()
+	set_process(false)
+	# Deliberately do not clear selected_item or its highlighted item border.
+
+func _inventory_visibility_changed() -> void:
+	if not is_visible_in_tree() or not inventory_panel.is_visible_in_tree():
+		_hide_item_name()
+		detail_active = false
+		detail_panel.hide()
+
+func _process(_delta: float) -> void:
+	_update_item_name()
+
+func _update_item_name() -> void:
+	if item_name_reference.is_empty(): return
+	if Time.get_ticks_msec() >= item_name_until or not inventory_panel.is_visible_in_tree() or selected_item != item_name_reference or not slot_buttons.has(item_name_reference):
+		_hide_item_name()
+		return
+	# Resolve the current button by physical reference after sort/equip/redraw.
+	var button: Control = slot_buttons[item_name_reference] as Control
+	if not is_instance_valid(button) or not button.is_visible_in_tree():
+		_hide_item_name()
+		return
+	var slot_rect: Rect2 = button.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,button.size)
+	var scroll_rect: Rect2 = grid_scroll.get_global_transform_with_canvas()*Rect2(Vector2.ZERO,grid_scroll.size)
+	# A scrolled-out/clipped slot must not leave a floating name over another row.
+	if not scroll_rect.grow(1.0).encloses(slot_rect):
+		item_name_hint.hide()
+		return
+	var inverse: Transform2D = get_global_transform_with_canvas().affine_inverse()
+	var local_slot: Rect2 = inverse*slot_rect
+	var viewport_bounds: Rect2 = inverse*get_viewport_rect()
+	var font: Font = item_name_hint.get_theme_font("font")
+	var font_size: int = item_name_hint.get_theme_font_size("font_size")
+	var natural_width: float = font.get_string_size(item_name_hint.text,HORIZONTAL_ALIGNMENT_LEFT,-1,font_size).x+12.0
+	var label_width: float = minf(natural_width,maxf(1.0,viewport_bounds.size.x-16.0))
+	item_name_hint.size = Vector2(label_width,0)
+	item_name_hint.size.y = item_name_hint.get_minimum_size().y
+	item_name_hint.position = Vector2(
+		clampf(local_slot.get_center().x-label_width*0.5,viewport_bounds.position.x+8.0,viewport_bounds.end.x-label_width-8.0),
+		local_slot.position.y-item_name_hint.size.y-ITEM_NAME_GAP)
+	item_name_hint.visible = item_name_hint.position.y >= viewport_bounds.position.y
 
 func open_detail() -> void:
 	if selected_item.is_empty(): return
+	_hide_item_name()
 	detail_active = true
 	_refresh_detail(selected_item)
 	_reflow()
@@ -147,7 +235,12 @@ func _toggle_lock() -> void:
 	_refresh_detail(selected_item)
 
 func _slot_style_for_grade(grade: String, selected: bool) -> StyleBoxFlat:
-	return UI.item_frame(grade,selected)
+	var style: StyleBoxFlat = UI.item_frame(grade,selected)
+	if selected:
+		style.set_border_width_all(2)
+		style.border_color = _grade_color(grade).lightened(0.25)
+		style.bg_color = style.bg_color.lightened(0.08)
+	return style
 
 func _find_item_record(item_name: String) -> Dictionary:
 	var instance_id: String = _ref_instance_id(item_name)
@@ -218,7 +311,7 @@ func _refresh_inventory_grid() -> void:
 		button.icon = null
 		button.text = ""
 		button.custom_minimum_size = Vector2(72,72)
-		button.tooltip_text += " · 끌어서 퀵슬롯 등록 / 터치: 길게 누른 후 이동"
+		button.tooltip_text = "" # Only the timed, grade-colored name is shown.
 		var icon := TextureRect.new()
 		UI.apply_item_visual(icon,record,item_name,item_image_index.get("아이템",{}),"inventory")
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -246,8 +339,6 @@ func _refresh_inventory_grid() -> void:
 			lock_mark.size = Vector2(18,18)
 			lock_mark.position = Vector2(4,48)
 			button.add_child(lock_mark)
-		if _ref_instance_id(reference) != "":
-			button.tooltip_text += " · 개체 ID:" + _ref_instance_id(reference)
 	# Empty cells are real noninteractive slots, so the 4-column silhouette survives filtering.
 	var count: int = item_grid.get_child_count()
 	for i: int in range(maxi(0,20-count)):

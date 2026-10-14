@@ -47,8 +47,11 @@ func run() -> void:
 	bag._refresh_inventory_grid()
 	await frames()
 	await tap(point(bag.slot_buttons.values()[0]))
+	if bag.detail_panel.is_visible_in_tree() or not bag.item_name_hint.is_visible_in_tree(): push_error("INTERACTION_CAPTURE_NAME_FAILED")
+	await shot("01-single-touch-name")
+	await tap(point(bag.find_child("InventoryDetail",true,false)))
 	if not bag.detail_panel.is_visible_in_tree(): push_error("INTERACTION_CAPTURE_DETAIL_FAILED")
-	await shot("01-single-touch-detail")
+	await shot("01b-explicit-item-detail")
 	hud._close_workspace()
 	await frames()
 	var i: int = 0
