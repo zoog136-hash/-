@@ -150,12 +150,14 @@ func _input(event: InputEvent) -> void:
 		if mode == "pending" and distance.length() > (L.TOUCH_SCROLL_DISTANCE if pointer >= 0 else L.MOUSE_DRAG_DISTANCE):
 			if pointer >= 0 and elapsed < L.TOUCH_HOLD_SECONDS:
 				if source.from == "inventory":
-					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(hud.lineage_inventory_ui.grid_scroll,position) else "drag"
+					# Crossing the grid edge into the bag header is still a scroll.
+					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(hud.lineage_inventory_ui.inventory_panel,position) else "drag"
 				elif source.from != "quick": mode = "scroll"
 				elif absf(distance.x) > absf(distance.y)*1.5: mode = "page"
 				else: mode = "drag"
 			else: mode = "drag"
-		if mode == "scroll" and source.from == "inventory" and not inside(hud.lineage_inventory_ui.grid_scroll,position): mode = "drag"
+		# Only leaving the bag itself converts a vertical swipe into a transfer.
+		if mode == "scroll" and source.from == "inventory" and not inside(hud.lineage_inventory_ui.inventory_panel,position): mode = "drag"
 		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
 			var bar: VScrollBar
