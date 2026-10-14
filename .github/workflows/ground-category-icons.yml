@@ -8,33 +8,31 @@ permissions:
 jobs:
   ground-icons:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: Package current source and existing ground art for inspection
+      - name: Package complete runtime with immutable source hashes
         run: |
           mkdir -p /tmp/ground-icons
           python3 - <<'PY'
           import pathlib,subprocess,zipfile,json,hashlib
-          root=pathlib.Path('.'); out=pathlib.Path('/tmp/ground-icons')
-          entries=[]
-          with zipfile.ZipFile(out/'source.zip','w',zipfile.ZIP_DEFLATED) as z:
+          root=pathlib.Path('.'); out=pathlib.Path('/tmp/ground-icons'); hashes={}
+          with zipfile.ZipFile(out/'runtime.zip','w',zipfile.ZIP_DEFLATED) as z:
               for name in subprocess.check_output(['git','ls-files'],text=True).splitlines():
                   p=root/name
-                  if not p.is_file():continue
-                  size=p.stat().st_size
-                  entries.append({'path':name,'size':size})
-                  if (name.startswith(('scripts/','data/','addons/','tests/','tools/','assets/catalog/','assets/ui/','assets/inven_inventory/','assets/l1j/','.github/workflows/')) or '/' not in name) and size<12000000 and p.suffix not in ['.zip','.mp4','.apk']:
-                      z.write(p,name)
-          (out/'file-inventory.json').write_text(json.dumps(entries,ensure_ascii=False,indent=2))
-          print('SOURCE_READY',len(entries),'files',hashlib.sha256((out/'source.zip').read_bytes()).hexdigest())
+                  if not p.is_file() or name.startswith(('docs/','releases/','evidence/','screenshots/','.github/')) or p.suffix in ['.zip','.mp4','.apk']:continue
+                  z.write(p,name); hashes[name]=hashlib.sha256(p.read_bytes()).hexdigest()
+          (out/'source-hashes.json').write_text(json.dumps(hashes,ensure_ascii=False,indent=2))
+          print('RUNTIME_READY',len(hashes),'files')
           PY
+          curl --fail --location --retry 2 -o /tmp/ground-icons/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
       - uses: actions/upload-artifact@v4
         with:
-          name: ground-icons-source-inspection
+          name: ground-icons-runtime
           path: /tmp/ground-icons/
+          compression-level: 0
           retention-days: 7
           if-no-files-found: error
