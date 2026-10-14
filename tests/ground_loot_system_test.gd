@@ -168,7 +168,7 @@ func _run() -> void:
 	world.loot_pickup.scan_time = 0
 	world._run_auto_ground_pickup()
 	world._set_click_destination(point_at(130))
-	check(not world.player.auto_enabled and world.loot_pickup.target_id.is_empty(), "manual move cancels automatic pickup")
+	check(world.player.auto_enabled and world.loot_pickup.target_id.is_empty() and world.player.manual_navigation, "manual move cancels pickup task, retains AUTO and owns navigation")
 	clear()
 
 	# Identity, inaccessible endpoints, priority ties and vanished selections.

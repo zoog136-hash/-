@@ -28,7 +28,7 @@ func _run() -> void:
 		var expected: String = str(index[i+1]["map_id"]) if i+1<index.size() else "aden_world"
 		check(world.use_field_portal("next"),id+" next portal accepted")
 		check(world.active_map_id==expected,id+" next destination")
-		check(not world.player.auto_enabled and world.player.click_path.is_empty(),id+" stale hunt/path cleared")
+		check(world.player.auto_enabled and world.player.click_path.is_empty(),id+" stale path cleared without disabling AUTO preference")
 		await physics_frame
 		await process_frame
 		check(world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position),expected+" landing clearance")

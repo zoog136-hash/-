@@ -195,7 +195,7 @@ func _player_busy_for_travel() -> bool:
 	return bool(world.player.is_stunned() or world.player.is_feared())
 
 func _teleport_player(destination: Vector2) -> void:
-	world.player.set_auto_enabled(false)
+	if is_instance_valid(world.world_interactions): world.world_interactions.clear_selection()
 	world.player.clear_click_path()
 	world.player.set_touch_vector(Vector2.ZERO)
 	world.player.velocity = Vector2.ZERO

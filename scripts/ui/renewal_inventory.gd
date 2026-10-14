@@ -127,6 +127,7 @@ func _input(_event: InputEvent) -> void:
 func _select_item(reference: String) -> void:
 	gesture_dragged = false
 	super._select_item(reference)
+	detail_active = not reference.is_empty()
 	_reflow()
 
 func open_detail() -> void:
