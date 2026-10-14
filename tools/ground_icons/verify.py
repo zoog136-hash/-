@@ -11,7 +11,9 @@ protected += [str(f) for f in Path('scripts/loot').glob('*.gd')]
 before_hashes={f:hashlib.sha256(Path(f).read_bytes()).hexdigest() for f in protected}
 def run(label,script=None,render=False,stage='after',timeout=240,importing=False):
     env=dict(os.environ,GODOT_SILENCE_ROOT_WARNING='1',XDG_DATA_HOME=str(out/'user-data'/label),GROUND_STAGE=stage,GROUND_REPORT=str(out/(stage+'-probe.json')),GROUND_CAPTURES=str(out/(stage+'-captures')))
-    command=[engine,'--path','.']
+    # CI has no audio hardware. Select Dummy explicitly rather than ignoring
+    # real engine ERROR lines or treating an ALSA fallback as a game failure.
+    command=[engine,'--audio-driver','Dummy','--path','.']
     if importing:command+=['--headless','--editor','--import']
     elif render:command=['xvfb-run','-a']+command+['--rendering-method','gl_compatibility','--script','res://tests/'+script+'.gd']
     else:command+=['--headless','--script','res://tests/'+script+'.gd']
