@@ -1,0 +1,71 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nDraw a production animation atlas based only on this original portrait: The original ASITAGIO is a hunched heavy humanoid demon made from black volcanic rock/armor plates, a recessed dark head with two short curved horns, thick shoulders, long massive forearms and clenched claw-like fists, and two short heavy legs. Original intense orange/red/yellow lava cracks and flames hug the forearms/fists and shins, with a mostly dark craggy torso and head. Preserve the original horn shape, dark jagged plates, limb proportions and patchy fire placement. No invented weapon, clothing, wings or glowing chest orb. Keep all flames connected to the body, no free sparks. EXACT64 TINY separate sprites on fully transparent RGBA, arranged as8 columns and8 rows with huge blank gutters. Each body including striking arm stays under40% of cellwidth and40% of cellheight, far apart with no intersecting fire. No shadows/text/grid/particles. Column1 true right SIDE profile E;2 front-right SE;3 direct FRONT S toward viewer/down;4 front-left SW;5 true left SIDE W;6 back-left NW;7 full BACK N away/up;8 back-right NE. Differentiate each adjacent view. Row1 idle,2 breathing idle,3 walking stepA,4 walking stepB,5 walking stepC,6 fist held back windup,7 fist punch CONTACT along exact column direction,8 fist drawn back recovery. STOP after row8; no ninth neutral row. Keep head/torso compass, S fist reaches down in front of body, N fist reaches upward away. Same exact portrait style and scale, real articulation, no duplicated or translated stills.\nHIT/DEATH EXACT PROMPT:\nDraw a HIT and DEATH atlas based on this original portrait: The original ASITAGIO is a hunched heavy humanoid demon made from black volcanic rock/armor plates, a recessed dark head with two short curved horns, thick shoulders, long massive forearms and clenched claw-like fists, and two short heavy legs. Original intense orange/red/yellow lava cracks and flames hug the forearms/fists and shins, with a mostly dark craggy torso and head. Preserve the original horn shape, dark jagged plates, limb proportions and patchy fire placement. No invented weapon, clothing, wings or glowing chest orb. Keep all flames connected to the body, no free sparks. Fully transparent RGBA. Exactly8 columns x5 rows,40 TINY separate full bodies, whole silhouette occupies under40% of each cell in BOTH dimensions. Very large empty transparent gaps, no overlap/clipping, no shadows/text/grid/flying fire/particles. Columns E true right SIDE;SE front-right;S FRONT down toward viewer;SW front-left;W true left SIDE;NW rear-left;N BACK up away;NE rear-right. Rows1 hit recoil leaning backward with bent knees,2 hit recovery straightening,3 death collapsing onto knees,4 body toppling horizontally onto ground,5 DEAD COMPLETELY LYING FLAT with abdomen/chest/head and ALL limbs resting on ground. In lastrow NO upright torsos, NO squatting, NO fists propping the chest, NO planted standing feet. Whole volcanic body topples onto side or stomach while retaining the column viewpoint. Keep joints attached and final fire dim and connected. This is hit/death only, absolutely no punching poses. Forty genuinely articulated distinct silhouettes, never same still scaled.",
+  "prompt_record_kind": "exact_final_prompts; delivered hit/death image has four genuine rows",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/asitagio/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/asitagio/poses-1.png",
+      "rows": 4,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Original 16150.png retained: dark craggy volcanic horned demon, recessed head, heavy forearms/fists, short legs and attached orange/yellow lava. Third main draft separates E/W side views, front S and full back N; distinct planted steps, windup/contact/recovery with compass-directed fists. Revised hit/death has FOUR delivered rows: two hit poses and two real death poses, buckling then a fully flat connected body with dim attached fire. Only these96 real poses are counted; no invented third death frame. Main gameplay review remains a separate requirement."
+  },
+  "authoring_history": [
+    {
+      "version": "main-v1",
+      "status": "rejected",
+      "reason": "Nine rows and insufficient side-view separation",
+      "output_path": "/workspace/generated_images/exec-776774d3-5be5-4efd-9bcf-2b7cf44364d4.png"
+    },
+    {
+      "version": "main-v2",
+      "status": "rejected",
+      "reason": "Nine rows with overlapping attack silhouettes",
+      "output_path": "/workspace/generated_images/exec-3b432ba9-242d-49a9-8b90-972c82712ff7.png"
+    },
+    {
+      "version": "hit-v1",
+      "status": "rejected",
+      "reason": "Foot-canvas overflow and rear terminal corpse not convincingly flat",
+      "output_path": "/workspace/generated_images/exec-9c3b6a38-f91f-4429-a6c3-9f8db0769b9d.png"
+    }
+  ]
+}

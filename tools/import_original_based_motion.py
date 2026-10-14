@@ -54,8 +54,18 @@ def sharing_identity(target):
     return reference, presentation
 
 
-def analyze(path, rows_count=13, reference_rows=None, reference_height=None):
-    """Reject wrong pose counts, clipping, overlaps, and repeated stills."""
+def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
+            directions_axis="columns", canvas_size=None, source_anchors=None):
+    """Return phase-major metadata, rejecting clipped or repeated poses.
+
+    rows_count is the number of logical pose phases. A directions_axis="rows"
+    sheet has eight physical rows and rows_count physical columns. Its pixels
+    stay untouched; only the resulting frame indices are normalized.
+    """
+    if directions_axis not in {"columns", "rows"}:
+        raise ValueError("Unknown direction axis")
+    if canvas_size is not None and (not isinstance(canvas_size, int) or not 64 <= canvas_size <= 2048):
+        raise ValueError("Reviewed canvas size must be an integer from 64 to 2048")
     with Image.open(path) as source:
         if source.mode != "RGBA":
             raise ValueError("The generated sheet must have a real alpha channel")
@@ -75,24 +85,33 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None):
         expected = rows_count * 8
         if len(bodies) != expected:
             raise ValueError(f"Expected exactly {expected} separated poses, found {len(bodies)}; review/re-author, never invent slots")
-        # Row top, rather than center, is stable for long weapons and collapse
-        # poses. Within each eight-body row, retain the reviewed compass order.
+        # Normalize metadata to phase-major order, without transposing pixels.
+        # Some long-weapon atlases put the eight directions in physical rows.
         bodies.sort(key=lambda item: item["box"][1])
-        rows = [sorted(bodies[start:start + 8], key=lambda item: item["box"][0]) for start in range(0, expected, 8)]
+        columns = rows_count if directions_axis == "rows" else 8
+        physical_rows = [sorted(bodies[start:start + columns], key=lambda item: item["box"][0])
+                         for start in range(0, expected, columns)]
+        rows = [[physical_rows[direction][phase] for direction in range(8)]
+                for phase in range(rows_count)] if directions_axis == "rows" else physical_rows
         neutral_rows = reference_rows if reference_rows is not None else [0, 1]
         neutral_height = float(np.median([item["box"][3] - item["box"][1] for index in neutral_rows for item in rows[index]]))
         # Preserve each sheet's actual pixels. Different source resolutions use
         # proportional virtual canvases; the runtime normalizes that canvas.
         canvas = max(64, round(256 * neutral_height / reference_height / 8) * 8) if reference_height else 256
+        if canvas_size is not None:
+            canvas = canvas_size
         foot_x, foot_y = canvas // 2, canvas * 5 // 8
         column_anchors = [round(float(np.median([(rows[row][direction]["box"][0] + rows[row][direction]["box"][2]) / 2 for row in neutral_rows]))) for direction in range(8)] if reference_rows is not None else [round(source.width / 8 * (direction + .5)) for direction in range(8)]
+        if source_anchors is not None and len(source_anchors) != expected:
+            raise ValueError("Every reviewed pose must have its own source anchor")
         all_hashes = set()
         frames = []
         for row_index, row in enumerate(rows):
             for direction, item in enumerate(row):
                 x1, y1, x2, y2 = item["box"]
                 center_x = (x1 + x2) / 2
-                if abs(center_x / source.width * 8 - (direction + .5)) > .55:
+                column = row_index if directions_axis == "rows" else direction
+                if abs(center_x / source.width * columns - (column + .5)) > .55:
                     raise ValueError("Pose crossed into a neighbouring direction column")
                 x1, y1 = max(0, x1 - 3), max(0, y1 - 3)
                 x2, y2 = min(source.width, x2 + 3), min(source.height, y2 + 3)
@@ -100,8 +119,16 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None):
                 if any(areas[value] >= 200 for value in foreign):
                     raise ValueError("A pose rectangle includes another body; cannot safely crop")
                 width, height = x2 - x1, y2 - y1
-                anchor_x = column_anchors[direction]
+                anchor_x = (round(source.width / columns * (column + .5))
+                            if directions_axis == "rows" else column_anchors[direction])
                 anchor_y = item["box"][3] - 1
+                if source_anchors is not None:
+                    anchor = source_anchors[row_index * 8 + direction]
+                    if (not isinstance(anchor, list) or len(anchor) != 2
+                            or any(not isinstance(value, int) for value in anchor)
+                            or not x1 <= anchor[0] < x2 or not y1 <= anchor[1] < y2):
+                        raise ValueError("Reviewed source anchor must lie inside its pose")
+                    anchor_x, anchor_y = anchor
                 margin_x, margin_y = foot_x - (anchor_x - x1), foot_y - (anchor_y - y1)
                 if min(margin_x, margin_y) < 0 or margin_x + width > canvas or margin_y + height > canvas:
                     raise ValueError("Pose cannot fit the foot-anchored canvas")
@@ -168,7 +195,9 @@ def import_sheet(root, candidate, actor, keys, apply):
     geometry = {"frames": []}
     for index, spec in enumerate(sheets):
         source = candidate_image(root, spec["output_path"])
-        part = analyze(source, spec["rows"], spec.get("reference_rows"), parsed[0]["neutral_height"] if parsed else None)
+        reference_height = parsed[0]["neutral_height"] * 256 / parsed[0]["canvas_size"][1] if parsed else None
+        part = analyze(source, spec["rows"], spec.get("reference_rows"), reference_height,
+                       spec.get("directions_axis", "columns"), spec.get("canvas_size"), spec.get("source_anchors"))
         offset = len(geometry["frames"])
         if len(sheets) > 1:
             for frame in part["frames"]: frame["sheet"] = index
@@ -183,7 +212,7 @@ def import_sheet(root, candidate, actor, keys, apply):
     height_basis = candidate.get("display_height_basis", "median_idle")
     if height_basis not in {"median_idle", "max_living_frame"}:
         raise ValueError("Unknown reviewed display-height basis")
-    display_reference_height = parsed[0]["neutral_height"]
+    display_reference_height = parsed[0]["neutral_height"] * 256 / parsed[0]["canvas_size"][1]
     if height_basis == "max_living_frame":
         # Long quadrupeds project a much taller silhouette in N/S than E/W.
         # Fit all living poses into the existing visible-height budget while
@@ -211,6 +240,10 @@ def import_sheet(root, candidate, actor, keys, apply):
             shutil.copyfile(source, sheet)
         atlases.append({"path": "res://" + str(sheet.relative_to(root)), "sha256": sha(sheet), "size": parsed[index]["image_size"],
                         "canvas_size": parsed[index]["canvas_size"], "foot": parsed[index]["foot"]})
+        if spec.get("directions_axis", "columns") != "columns":
+            atlases[-1]["directions_axis"] = spec["directions_axis"]
+        if spec.get("source_anchors") is not None:
+            atlases[-1]["source_anchor_kind"] = "reviewed per-pose foot anchors recorded in frames"
     (folder / "SpriteFrames.tres").write_text(spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames))
     proof = {"schema": 1, "source": "Newly authored from the existing target image; not recovered original animation",
              "reference": reference, "target_keys": keys, "presentation_to_preserve": first["presentation_to_preserve"],

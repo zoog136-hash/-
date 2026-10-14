@@ -1,0 +1,62 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nRevise the SECOND attached draft sprite atlas using the FIRST attached original portrait as the authoritative identity. Preserve original appearance, colors and equipment. Fully transparent RGBA, no backgrounds, text, grids or shadows. Exactly8 columns by8 rows with completely separate full bodies, equipment safely within each cell. Direction columns E right profile, SE front-right, S front toward viewer/down, SW front-left, W left profile, NW back-left, N fullback away/up, NE back-right. Rows1-2 idle,3-5 three distinct walk phases,6 attackwindup,7 contact,8 recovery. Every pose must be genuinely articulated and all 8 compass views distinct; no mirrored or repeated stills. Retain the narrow original crustacean identity, but change column1 to a TRUE RIGHT SIDE PROFILE and column5 to a TRUE LEFT SIDE PROFILE in all8 rows. A side view shows the side carapace and one near primary arm overlapping the farther arm, while diagonal views show more front breastplate. Column2 SE and column4 SW must remain clearly front-diagonal, not duplicates of E/W. Preserve the complete curved plated back for rear directions. Match the original soft shaded painted sprite style, avoid thick cartoon outlines. Original identity: The original CRABMAN is the narrow upright lobster/crab humanoid in the portrait, with pale salmon-pink/copper segmented chitin, white shell highlights, a curved hunched head/upper carapace, elongated plated body tapering downward, thin supporting legs and two long hooked claw forearms. Preserve this slim shrimp-like upright silhouette and its original number/shape of limbs; do not replace it with a broad sideways beach crab, add a human face, armor, clothes or weapons. Back directions show the curved ridged shell rather than its front. Walking has clearly articulated supporting legs and counter-moving claws. Attack brings the original claw arm back, reaches forward in the exact compass direction with the other arm still present, and recovers.\nHIT/DEATH EXACT PROMPT:\nCreate the HIT/DEATH atlas for the FIRST attached ORIGINAL portrait. The second image only shows its draft movement design; keep the exact original identity and detailed painted 2D elevated RPG viewpoint, no cartoon outline or anatomy changes. Fully TRANSPARENT RGBA, no floor/shadows/text/grid/background/detached effects. EXACTLY8 COLUMNS and5 ROWS, forty separate complete articulated bodies. Keep each whole body AND weapon under45% of cell width/height, exceptionally generous clear gutters; nothing overlaps, touches or clips. Camera columns E right SIDE PROFILE, SE front-right, S straight FRONT looking toward viewer/down, SW front-left, W left SIDE PROFILE, NW back-left, N completely BACK away/up without face, NE back-right. Keep all8 compass views distinct while collapsing; E/W must not repeat the front-diagonal view. Rows: 1 pronounced HIT recoil,2 distinct HIT recovery,3 DEATH knees/legs buckle,4 collapsing very low onto ground,5 terminal entirely FLAT dead body. No extra rows. Each pose genuinely different through articulation, not translated/scaled duplicates. Keep every full silhouette connected. The original CRABMAN is the narrow upright lobster/crab humanoid in the portrait, with pale salmon-pink/copper segmented chitin, white shell highlights, a curved hunched head/upper carapace, elongated plated body tapering downward, thin supporting legs and two long hooked claw forearms. Preserve this slim shrimp-like upright silhouette and its original number/shape of limbs; do not replace it with a broad sideways beach crab, add a human face, armor, clothes or weapons. Back directions show the curved ridged shell rather than its front. Walking has clearly articulated supporting legs and counter-moving claws. Attack brings the original claw arm back, reaches forward in the exact compass direction with the other arm still present, and recovers. Recoil bends its segmented upper shell. Death buckles the legs, folds claws against the body and ends as a compact fully flat connected shell with curled limbs. No detached claws or disintegration.",
+  "prompt_record_kind": "exact_final_prompts; first candidate retained in authoring_history",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/crabman/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/crabman/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared source 1610.png and both final atlases: narrow upright salmon/copper segmented crustacean silhouette, curved upper shell, long front claws and supporting limbs retained. Main revision separates side from front diagonal views; S shows front, N plated back. Eight compass claw contacts, distinct steps/recoil, folding limbs and terminal flat connected shell. Original pixels remain unchanged. Actual Main validation is a separate next step."
+  },
+  "authoring_history": [
+    {
+      "prompt": "Create a production 2D isometric RPG animation atlas strictly based on the attached ORIGINAL game portrait. Preserve its exact character design, silhouette, material, equipment and colors. Match the original detailed painted game-sprite style and elevated viewpoint. Fully TRANSPARENT RGBA with no black or white background, floor, text, labels, grid, cast shadows or detached particles. EXACTLY 8 COLUMNS x 8 ROWS, 64 separate complete articulated full bodies. Each whole pose including equipment occupies at most 45% of its cell width and height; large transparent gutters, no overlap or clipping. Column directions in EVERY row: E true right PROFILE; SE front-right diagonal; S direct FRONT looking down toward viewer; SW front-left diagonal; W true left PROFILE; NW rear-left diagonal; N full BACK facing up away with no face or front chest; NE rear-right diagonal. Keep adjacent directions visibly distinct. Rows: 1 neutral idle; 2 visibly different breathing idle; 3,4,5 three different articulated walking steps; 6 attack WINDUP; 7 attack CONTACT; 8 attack RECOVERY. All64 genuinely different poses, never duplicate/translate/scale stills. Same body scale throughout. At CONTACT the torso keeps the column compass and the strike goes in that exact direction: E right, SE down-right, S straight down toward viewer with frontal foreshortening, SW down-left, W left, NW up-left, N straight up away with rear foreshortening, NE up-right. Do not turn the S/N contact into a horizontal side pose. The original CRABMAN is the narrow upright lobster/crab humanoid in the portrait, with pale salmon-pink/copper segmented chitin, white shell highlights, a curved hunched head/upper carapace, elongated plated body tapering downward, thin supporting legs and two long hooked claw forearms. Preserve this slim shrimp-like upright silhouette and its original number/shape of limbs; do not replace it with a broad sideways beach crab, add a human face, armor, clothes or weapons. Back directions show the curved ridged shell rather than its front. Walking has clearly articulated supporting legs and counter-moving claws. Attack brings the original claw arm back, reaches forward in the exact compass direction with the other arm still present, and recovers.",
+      "output_path": "/workspace/generated_images/exec-57d754e8-2710-440f-aeb5-e14f452d20ee.png",
+      "status": "superseded_unapplied_draft",
+      "review_concerns": [
+        "Side views need clearer separation from front diagonals before approval."
+      ]
+    }
+  ]
+}

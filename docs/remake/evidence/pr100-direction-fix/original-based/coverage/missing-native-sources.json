@@ -2,8 +2,8 @@
   "schema": 1,
   "scope": "Remaining target identities; compatible source motion unavailable, legacy art preserved",
   "missing_counts": {
-    "hero_plus": 51,
-    "normal_monster": 106,
+    "hero_plus": 50,
+    "normal_monster": 102,
     "boss": 28
   },
   "categories": {
@@ -20,7 +20,7 @@
     "No matching licensed eight-view body: golem": 1,
     "No compatible published sequential weapon frames: 랜서": 1,
     "No compatible published sequential weapon frames: 랜스": 2,
-    "No compatible published sequential weapon frames: 창": 3,
+    "No compatible published sequential weapon frames: 창": 2,
     "No identity-compatible licensed source for bugbear": 1,
     "No identity-compatible licensed source for fire": 5,
     "No identity-compatible licensed source for goat_demon": 4,
@@ -28,7 +28,6 @@
     "No identity-compatible licensed source for phoenix": 2,
     "No identity-compatible licensed source for queen": 2,
     "No identity-compatible licensed source for ettin": 1,
-    "No identity-compatible licensed source for demon": 10,
     "No identity-compatible licensed source for reaper": 2,
     "No identity-compatible licensed source for dog": 1,
     "No identity-compatible licensed source for wolf": 1,
@@ -37,9 +36,9 @@
     "No identity-compatible licensed source for lizard": 4,
     "No identity-compatible licensed source for basilisk": 1,
     "No identity-compatible licensed source for water": 3,
-    "No identity-compatible licensed source for crab": 3,
     "No identity-compatible licensed source for fishman": 3,
     "No identity-compatible licensed source for bone_dragon": 3,
+    "No identity-compatible licensed source for demon": 8,
     "No identity-compatible licensed source for wind": 2,
     "No identity-compatible licensed source for angel": 2,
     "No identity-compatible licensed source for skeleton_archer": 1,
@@ -74,6 +73,7 @@
     "No identity-compatible licensed source for crystal": 1,
     "No identity-compatible licensed source for turtle": 1,
     "No identity-compatible licensed source for unicorn": 1,
+    "No identity-compatible licensed source for crab": 1,
     "No identity-compatible licensed source for flower": 1,
     "No identity-compatible licensed source for yeti": 1,
     "No identity-compatible licensed source for ugnu": 1,
@@ -336,12 +336,6 @@
       "missing_source": "No matching licensed eight-view body: spirit"
     },
     {
-      "key": "transform:167",
-      "name": "경비병 (창) 그린",
-      "group": "hero_plus",
-      "missing_source": "No compatible published sequential weapon frames: 창"
-    },
-    {
       "key": "transform:155",
       "name": "데스",
       "group": "hero_plus",
@@ -456,12 +450,6 @@
       "missing_source": "No identity-compatible licensed source for ettin"
     },
     {
-      "key": "monster:아시타지오",
-      "name": "아시타지오",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for demon"
-    },
-    {
       "key": "monster:베레스",
       "name": "베레스",
       "group": "boss",
@@ -532,12 +520,6 @@
       "name": "에바 왕국 상어전사",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for lizard"
-    },
-    {
-      "key": "monster:에바 왕국 크랩맨",
-      "name": "에바 왕국 크랩맨",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for crab"
     },
     {
       "key": "monster:에바 왕국 심해어인",
@@ -1008,12 +990,6 @@
       "missing_source": "No identity-compatible licensed source for prince"
     },
     {
-      "key": "monster:오만한 아시타지오",
-      "name": "오만한 아시타지오",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for demon"
-    },
-    {
       "key": "monster:오만한 우그누스",
       "name": "오만한 우그누스",
       "group": "boss",
@@ -1156,12 +1132,6 @@
       "name": "커스번",
       "group": "normal_monster",
       "missing_source": "No identity-compatible licensed source for demon"
-    },
-    {
-      "key": "monster:크랩맨",
-      "name": "크랩맨",
-      "group": "normal_monster",
-      "missing_source": "No identity-compatible licensed source for crab"
     },
     {
       "key": "monster:탐욕의 엔트키아",

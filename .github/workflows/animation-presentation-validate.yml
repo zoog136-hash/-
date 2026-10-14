@@ -165,6 +165,15 @@ jobs:
             cases: |
               lizard|original_based_lizard_gameplay_test||poses
               lizard-albino|original_based_lizard_gameplay_test|알비노 도마뱀|directions
+          - group: crabman-asitagio
+            cases: |
+              crabman|original_based_crabman_gameplay_test||poses
+              crabman-eva|original_based_crabman_gameplay_test|에바 왕국 크랩맨|directions
+              asitagio|original_based_asitagio_gameplay_test||poses
+              asitagio-arrogant|original_based_asitagio_gameplay_test|오만한 아시타지오|directions
+          - group: spear-guards
+            cases: |
+              spear-guard-green|original_based_spear_guard_green_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger

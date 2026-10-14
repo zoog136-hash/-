@@ -31,14 +31,16 @@ jobs:
           - os: ubuntu-latest
             artifact: linux.x86_64
             executable: Godot_v4.7.2-stable_linux.x86_64
+            job_minutes: 45
           - os: windows-latest
             artifact: win64.exe
             executable: Godot_v4.7.2-stable_win64_console.exe
+            job_minutes: 60
     runs-on: ${{ matrix.os }}
-    # The Windows suite reached world_structure_capture after 34m48s, then
-    # the old 35m job cap cancelled the final checks. Retain every assertion
-    # and each existing per-test deadline, with room for the full suite.
-    timeout-minutes: 45
+    # At 8bce4dd Windows passed through world_regions at 44m49s; the 45m
+    # cap cancelled the last checks. Allow the expanded full suite to finish,
+    # retaining every assertion and per-test deadline. Linux keeps 45m.
+    timeout-minutes: ${{ matrix.job_minutes }}
     env:
       PYTHONUTF8: '1'
     steps:

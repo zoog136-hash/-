@@ -19,7 +19,8 @@ class OriginalBasedImportTest(unittest.TestCase):
     def test_existing_family_aliases_share_only_the_same_rendered_original(self):
         targets = {row["key"]: row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
         for names in [("고스트", "글루디오 던전 유령", "지옥의 고스트"), ("오우거", "기란 평원 오우거", "잊혀진 섬 고대오우거"),
-                      ("아이언 골렘", "지옥의 아이언골렘"), ("글루디오 던전 구울", "불사의 구울"), ("도마뱀", "알비노 도마뱀")]:
+                      ("아이언 골렘", "지옥의 아이언골렘"), ("글루디오 던전 구울", "불사의 구울"), ("도마뱀", "알비노 도마뱀"),
+                      ("크랩맨", "에바 왕국 크랩맨"), ("아시타지오", "오만한 아시타지오")]:
             first = targets["monster:" + names[0]]
             for name in names[1:]:
                 self.assertEqual(importer.sharing_identity(first), importer.sharing_identity(targets["monster:" + name]))
@@ -50,13 +51,15 @@ class OriginalBasedImportTest(unittest.TestCase):
                              "iron_golem": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "ghoul": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "lizard": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "crabman": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "asitagio": [("poses-0.png", 8), ("poses-1.png", 4)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "spear_captain": [("poses-0.png", 8), ("poses-1.png", 5)]}.items():
             folder = ROOT / "assets/actors/eight_direction/original_based" / actor
             proof = json.loads((folder / "provenance.json").read_text())
-            expected_poses = 96 if actor == "reaper_male" else 104
+            expected_poses = 96 if actor in {"reaper_male", "asitagio"} else 104
             self.assertEqual(proof["distinct_pixel_frames"], expected_poses)
             parts = []
             for index, (name, rows) in enumerate(specs):
@@ -67,23 +70,66 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
-            expected_poses = 96 if actor == "reaper_male" else 104
+            expected_poses = 96 if actor in {"reaper_male", "asitagio"} else 104
             self.assertEqual(len(frames), expected_poses)
             self.assertEqual(len(tracks), 40)
             used = []
             for role, rows in importer.ROLES.items():
                 for direction in range(8):
                     track = tracks[f"{role}_{direction}"]
-                    self.assertEqual(len(track["frames"]), 2 if actor == "reaper_male" and role == "walk" else len(rows))
+                    reviewed_counts = {("reaper_male", "walk"): 2, ("asitagio", "death"): 2}
+                    self.assertEqual(len(track["frames"]), reviewed_counts.get((actor, role), len(rows)))
                     self.assertEqual(track["loop"], role in ("idle", "walk"))
                     used.extend(frame["texture"] for frame in track["frames"])
             self.assertEqual(len(set(used)), expected_poses)
             if actor == "reaper_male":
                 profile = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]["transform:258"]
                 self.assertAlmostEqual(profile["movement_fps"], 2 / importer.SECONDS["walk"])
+
+    def test_guard_attack_uses_source_direction_rows_without_transposing_pixels(self):
+        folder = ROOT / "assets/actors/eight_direction/original_based/spear_guard_green"
+        proof = json.loads((folder / "provenance.json").read_text())
+        _, textures, tracks = audit.read_spriteframes(folder / "SpriteFrames.tres")
+        attack_atlas = proof["tracks"]["attack"]["atlas_files"][0]
+        self.assertEqual(attack_atlas["directions_axis"], "rows")
+        with self.assertRaises(ValueError):
+            importer.analyze(folder / "poses-1.png", 3)
+        anchors = [frame["source_anchor"] for frame in proof["frames"] if frame["sheet"] == 1]
+        attack = importer.analyze(folder / "poses-1.png", 3, directions_axis="rows",
+                                  canvas_size=224, source_anchors=anchors)
+        self.assertEqual(attack["distinct_pixel_frames"], 24)
+        previous_contact_y = -1
+        for direction in range(8):
+            frames = [textures[frame["texture"]] for frame in tracks[f"attack_{direction}"]["frames"]]
+            self.assertTrue(all(frame["path"].endswith("/poses-1.png") for frame in frames))
+            centers_x = [frame["region"][0] + frame["region"][2] / 2 for frame in frames]
+            self.assertEqual(centers_x, sorted(centers_x))
+            self.assertGreater(frames[1]["region"][1], previous_contact_y)
+            previous_contact_y = frames[1]["region"][1]
+        atlases = {a["path"]: a for track in proof["tracks"].values() for a in track["atlas_files"]}
+        self.assertEqual(len(atlases), 3)
+        for path, atlas in atlases.items():
+            self.assertEqual(importer.sha(ROOT / path.removeprefix("res://")), atlas["sha256"])
+
+    def test_guard_first_sheet_normalization_keeps_original_display_height(self):
+        folder = ROOT / "assets/actors/eight_direction/original_based/spear_guard_green"
+        _, textures, tracks = audit.read_spriteframes(folder / "SpriteFrames.tres")
+        profile = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]["transform:167"]
+        with Image.open(folder / "poses-0.png") as image:
+            pixels = np.asarray(image)
+            for direction in range(8):
+                for slot in tracks[f"idle_{direction}"]["frames"]:
+                    frame = textures[slot["texture"]]
+                    x, y, width, height = map(int, frame["region"])
+                    canvas_height = height + frame["margin"][3]
+                    self.assertEqual(canvas_height, 392)
+                    occupied = np.nonzero(pixels[y:y + height, x:x + width, 3] > 100)[0]
+                    visible = (int(occupied.max()) - int(occupied.min()) + 1) * 256 / canvas_height * profile["pixel_scale"]
+                    self.assertGreater(visible, 90)
+                    self.assertLess(visible, 110)
 
     def test_long_lizard_living_poses_fit_the_existing_visual_height(self):
         folder = ROOT / "assets/actors/eight_direction/original_based/lizard"

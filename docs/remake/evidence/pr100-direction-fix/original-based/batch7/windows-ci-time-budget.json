@@ -1,0 +1,14 @@
+{
+  "sha": "8bce4ddf062347524a2bef4c3e691ddcdb9b1886",
+  "ci_terminal": true,
+  "workflows_success": 28,
+  "workflows_cancelled": 1,
+  "workflow_run": 38487714352,
+  "windows_job": 115605260467,
+  "cause": "45-minute Windows job deadline after world_regions_test passed; final tests did not finish",
+  "completed_pass_lines": 166,
+  "completed_fail_lines": 0,
+  "last_pass": "regression (windows-latest, win64.exe, Godot_v4.7.2-stable_win64_console.exe)\tImport, boot and all regression checks with isolated saves\t2026-10-14T00:46:07.0637426Z PASS world_regions_test",
+  "fix": "Windows job allowance 60 minutes; Linux stays 45; all assertions and individual test deadlines unchanged",
+  "artifact_download": "GitHub log retrieved; Windows artifact redirect returned HTTP 403; no artifact claimed downloaded"
+}
