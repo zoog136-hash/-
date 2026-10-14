@@ -26,9 +26,9 @@ HP/MP 물약·주문서·드래곤 보석·엘릭서·음식·광석·가죽·�
 
 ## 검증 자료
 
-- [적용 전후 인벤토리 픽셀 비교 및 보호 파일 SHA-256](../ground_categories_20261015.json)
+- [전체 연결 집계·전후 인벤토리 픽셀 비교 및 보호 파일 SHA-256](../ground_categories_20261015.json)
 - [단계별 실제 엔진 실행 결과](test-summary.json)
-- [실제 Main 바닥 이미지 전체 조회 결과](after-probe.log)
+- [전체 실행 로그와 전후 원시 결과 산출물](https://github.com/zoog136-hash/-/actions/runs/38655342601)
 - [구현 방식과 유지보수](../../ground_category_icons_KO.md)
 
 화면 캡처는 Linux OpenGL 소프트웨어 렌더러에서 실행한 결과이며 Android 실기기 성능이나 터치 하드웨어 검증을 대신하지 않는다. 종류별 대표 그림은 정확한 원작 개별 아이템 이미지라는 뜻이 아니다.
