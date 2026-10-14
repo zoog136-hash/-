@@ -17,7 +17,7 @@ func _run() -> void:
 	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/optional_item_icons_15.json"))
 	check(raw is Dictionary, "manifest JSON")
 	var rows: Array = raw.get("items", []) if raw is Dictionary else []
-	check(rows.size() == 15, "exactly 15 private candidates")
+	check(rows.size() == 15, "exactly 15 registered icon candidates")
 	var seen: Dictionary = {}
 	for value: Variant in rows:
 		if not (value is Dictionary):
@@ -33,9 +33,13 @@ func _run() -> void:
 		with_id["sourceId"] = "unmatched-123"
 		check(PACK.lookup(with_id,name_value).is_empty(), "reject sourceId reuse: " + name_value)
 		var data: Dictionary = PACK.lookup(typed,name_value)
-		var path: String = "res://assets/original_items/inventory/" + str(row.icon_id) + ".png"
+		# JSON numbers are floats: stringify the integral ID, not "7.0.png".
+		# Keep this independent of PACK.lookup so a wrong resolver path still fails.
+		var icon_id: int = int(row.get("icon_id", 0))
+		check(icon_id > 0 and float(icon_id) == float(row.get("icon_id", 0)), "positive integral icon ID: " + name_value)
+		var path: String = "res://assets/original_items/inventory/" + str(icon_id) + ".png"
 		if FileAccess.file_exists(path) and FileAccess.get_sha256(path) == str(row.sha256):
-			check(data.get("path","") == path, "installed private image loads: " + name_value)
+			check(data.get("path","") == path, "installed SHA-verified image loads: " + name_value)
 			var loaded: Texture2D = RESOLVER.texture(typed,name_value)
 			check(loaded != null, "installed icon decodes: " + name_value)
 		else:
