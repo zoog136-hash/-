@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "actor": "orc_mage",
+  "target_key": "monster:오크 마법사",
+  "status": "BLOCKED_AUTHORING_COMPASS_REPEAT",
+  "original_reference": {
+    "path": "res://assets/external_l1j/monsters/1211.png",
+    "sha256": "04a09168d13bbade36971ba4e6a971bc17505abe7b08943a2ed5fe76ad55c0c4"
+  },
+  "new_runtime_frames": 0,
+  "profile_applied": false,
+  "runtime_validation": "NOT_RUN",
+  "reason": "Same compass failure repeated twice; further whole-atlas generation stopped per batch rule. No reaction sheet authored and no complete candidate/SpriteFrames created.",
+  "analysis": "Single original camera view plus defective full64frame draft conditioning retained repeated view composition despite explicit45degree column instructions. Quantitative distinct frame hashes and connected geometry do not establish8different views.",
+  "next_step": "Change strategy: independently create and inspect a small8view turntable against original first. Only after8correctviews pass author articulated phases, then hit/death; no repeated full64frame retry against same failed draft.",
+  "required_display_height_basis": "max_living_frame",
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "REJECTED_NOT_CONNECTED",
+      "source_generation_path": "/workspace/generated_images/exec-0fce7ecc-8954-4cce-be12-41d94f137bf8.png",
+      "preserved_png_path": "docs/remake/evidence/pr100-direction-fix/original-based/batch16/orc-mage-blocked/drafts/rejected-main-1.png",
+      "sha256": "db55de01329a9b194110c3831446c5fcee2e98410b342bdff673903e1635b957",
+      "exact_prompt": "Author a TRUE 2D RPG animation sprite atlas for the exact shabby orc shaman in the attached ORIGINAL game portrait. Preserve his actual design, never replace with a generic fantasy wizard: lean sinewy hunched gray-green orc, pale gray-green coarse muzzle/face, long brown ragged hood framing the face with an uneven pointed fold behind crown, faded earth-brown torn cloak hanging down his back, rough pale beige collar trim and patched tattered short brown/beige waist wrapping, bare thin greenish forearms and lower legs, broad bare pale green feet. Carry the original long irregular BROWN WOODEN STAFF in one hand throughout; staff is about character height and has an unadorned rough crooked wooden tip, NO jewel, orb, skull or fantasy ornaments. Small imperfect original details and muted palette matter. One whole connected sprite: wooden shaft continuously visibly touches gripping hand in every pose; cloak remains joined to shoulders. Fixed high-angle 2D isometric game camera. TRANSPARENT RGBA background, no floor, ground shadow, labels, borders, grid, fog, particles or separate magical effects. Exactly EIGHT equal columns by EIGHT equal rows =64 complete separate full-body articulated frames. VERY generous transparent gutters: entire body PLUS complete staff must fit inside central50percent of a cell's width and65percent of its height, at least35pixels blank space around each complete figure on a roughly1536x1536 canvas. No neighboring overlap or clipped staff/cloth/feet. Strict column compass in SCREEN coordinates:1 E true right side profile;2 SE front-right diagonal;3 S straight FRONT toward viewer/downscreen with face/chest visible;4 SW front-left diagonal;5 W true left side profile;6 NW back-left diagonal;7 N straight BACK away/upscreen with back of hood/cloak and NO face/chest;8 NE back-right diagonal. Eight views must visibly differ and remain same compass for every phase. Rows1,2 distinct breathing idle poses, two feet planted. Rows3,4,5 three genuinely different articulated walking steps with left stride/pass/right stride, alternating legs and staff-bearing arm motion. Rows6,7,8 the existing MAGIC ATTACK as three physical acting phases: windup draws staff closer and free hand to chest; contact reaches free palm forward toward that column's precise facing while gripping staff; recovery pulls palm back and relaxes staff to ready. No projectile or detached glows. S contact palm extends DOWN toward viewer; N contact palm projects UP away from viewer and torso remains back view, never sideways. This is attack, not a separate spell role. Preserve staff on same anatomical hand as character rotates; left/right views are independently drawn, no copied stills or mirrored substitutes. All64 poses unique through limb articulation, hood/cloak folds, balance and foot placement while preserving stature, source identity and stable camera. Body and held staff stay complete and connected in each frame. Avoid filling transparent space; small sprites with huge clear gutters are required.",
+      "geometry": {
+        "image_size": [
+          1254,
+          1254
+        ],
+        "distinct_pixel_frames": 64,
+        "neutral_height": 127.0,
+        "canvas_size": [
+          256,
+          256
+        ],
+        "status": "PASS"
+      },
+      "visual_rejection": "E/SE and W/SW repeat near-identical camera angle, NE repeats rear-left like NW instead of rear-right. Frontal contact also extends mostly sideways. Actual8view completion cannot be claimed."
+    },
+    {
+      "attempt": 2,
+      "status": "REJECTED_NOT_CONNECTED",
+      "source_generation_path": "/workspace/generated_images/exec-88775de3-d32d-4f26-b31d-fec5e2b52fa8.png",
+      "preserved_png_path": "docs/remake/evidence/pr100-direction-fix/original-based/batch16/orc-mage-blocked/drafts/rejected-main-2.png",
+      "sha256": "72a03d1573c29c07b333494703012695ee4333a0c99ef389088098c7c1a5a9e7",
+      "exact_prompt": "RE-DRAW the SECOND attached draft animation sheet, with FIRST original portrait as exact character-design authority. Draft's identity is good, but compass views FAILED: E and SE repeat the same angle, W and SW repeat, and NE incorrectly faces left like NW. Correct those exact errors in ALL8 rows. Main deliverable exactly8 columns×8 rows=64 full separate articulated poses on transparent RGBA. Spacing same or wider; whole body plus connected woodstaff fits central50percent cell with big transparent gutters. No backgrounds/shadows/effects/text/grids or detached parts. Character SAME lean hunched gray-green orc, pale rugged green face, ragged earth-brown hood and long torn back-cloak, pale beige rough collar/shoulder trim, patched short rag skirt, bare green arms/legs/feet, original plain crooked brown staff approximately body height. All poses at fixed isometric camera angle. STRICT column turntable, define torso/feet/head together: c1 EAST TRUE90degree RIGHT SIDE profile, nose and toes project horizontally RIGHT; c2 SOUTHEAST45degree FRONT-RIGHT quarter view, see front chest and right-side profile; c3 SOUTH direct FRONTAL, symmetric face/chest toward viewer, toes DOWN; c4 SOUTHWEST45degree FRONT-LEFT quarter view, see front chest and left-side profile; c5 WEST TRUE90degree LEFT SIDE profile, nose/toes horizontally LEFT; c6 NORTHWEST45degree BACK-LEFT, see back cloak and back of hood, torso/toes diagonally UP-LEFT, NO front face; c7 NORTH direct rear, broad back-cloak centered, back of hood only, NO face, toes UP; c8 NORTHEAST45degree BACK-RIGHT, see back-cloak and hood RIGHT side, torso/toes diagonally UP-RIGHT, NO face, clearly facing opposite c6, never copy c6. Use equally separated45degree azimuths, no repeated views. Staff remains held in same anatomical hand with solid visible grip and unbroken shaft every frame. 8 rows: idle breath1, idle breath2, walk left-step, walk passing-step, walk right-step, magic-attack windup, magic-attack CONTACT, magic-attack recovery. All true distinct limb articulation. Free hand performs casting attack while opposite hand holds staff. Row6 free hand curls before chest; row7 free palm fully extends FORWARD along column compass; row8 hand retracts. c3 frontal contact: free palm reaches DOWN toward viewer below sternum; no sideways horizontal reach or extra hand. c7 rear contact: free palm rises UP toward top of sheet beyond shoulder, not sideways. c1 contact to RIGHT, c5 to LEFT, c8 contact diagonallyUP-RIGHT. Keep camera facing same across each column in every phase. No spell projectile or separate cast animation. E/SE and W/SW and NW/NE must be visibly different, genuine independently drawn views. Preserve shabby source orc identity and exact brown/green palette.",
+      "geometry": {
+        "status": "FAIL",
+        "error": "A pose rectangle includes another body; cannot safely crop"
+      },
+      "visual_rejection": "E/SE and W/SW repeat near-identical camera angle, NE repeats rear-left like NW instead of rear-right. Frontal contact also extends mostly sideways. Actual8view completion cannot be claimed."
+    }
+  ],
+  "delivery_note": "Unbound drafts are preserved outside the runtime actor tree so they are not mistaken for shipped PNG imports by the Android resource verifier."
+}

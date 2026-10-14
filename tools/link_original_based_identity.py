@@ -42,7 +42,7 @@ def link(root, source_key, target_keys, apply=False):
         raise ValueError("Source provenance no longer matches its presentation")
     bindings = [source] + [targets[key] for key in target_keys]
     for target in bindings:
-        if sharing_identity(target) != sharing_identity(source):
+        if sharing_identity(target, root=root) != sharing_identity(source, root=root):
             raise ValueError("Original image or rendered presentation differs: " + target["key"])
         reference = target["reference"]
         image = root / reference["path"].removeprefix("res://")

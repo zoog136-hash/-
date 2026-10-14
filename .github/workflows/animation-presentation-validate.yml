@@ -277,12 +277,16 @@ jobs:
           path: test-results/
           if-no-files-found: error
   original-batch:
-    name: Original-based batch15 / shared engine per mode
+    name: Original-based batch${{ matrix.batch }} / shared engine per mode
+    strategy:
+      fail-fast: false
+      matrix:
+        batch: [15, 16]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'
-      TWILIGHT_PR100_BATCH_CONFIG: res://tests/fixtures/pr100_batch15.json
+      TWILIGHT_PR100_BATCH_CONFIG: res://tests/fixtures/pr100_batch${{ matrix.batch }}.json
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
@@ -298,48 +302,48 @@ jobs:
       - name: Import actual TWILIGHT project once
         shell: bash
         env:
-          XDG_DATA_HOME: ${{ runner.temp }}/batch15-import/data
-          XDG_CACHE_HOME: ${{ runner.temp }}/batch15-import/cache
-          XDG_CONFIG_HOME: ${{ runner.temp }}/batch15-import/config
+          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-import/config
         run: |
           set -euo pipefail
-          mkdir -p test-results/batch15 "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 300 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch15/import.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/batch15/import.txt; then exit 1; fi
-      - name: Five production Main cases in one headless engine
+          mkdir -p test-results/batch${{ matrix.batch }} "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout 300 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch${{ matrix.batch }}/import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/batch${{ matrix.batch }}/import.txt; then exit 1; fi
+      - name: Configured production Main cases in one headless engine
         shell: bash
         env:
-          XDG_DATA_HOME: ${{ runner.temp }}/batch15-headless/data
-          XDG_CACHE_HOME: ${{ runner.temp }}/batch15-headless/cache
-          XDG_CONFIG_HOME: ${{ runner.temp }}/batch15-headless/config
-          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch15/headless.json
+          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-headless/config
+          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/headless.json
         run: |
           set -euo pipefail
           mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch15/headless.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch15/headless.txt; then exit 1; fi
-          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch15/headless.txt
-      - name: Five production Main cases in one OpenGL engine
+          timeout 600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch${{ matrix.batch }}/headless.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/headless.txt; then exit 1; fi
+          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch${{ matrix.batch }}/headless.txt
+      - name: Configured production Main cases in one OpenGL engine
         shell: bash
         env:
-          XDG_DATA_HOME: ${{ runner.temp }}/batch15-render/data
-          XDG_CACHE_HOME: ${{ runner.temp }}/batch15-render/cache
-          XDG_CONFIG_HOME: ${{ runner.temp }}/batch15-render/config
-          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch15/render.json
-          TWILIGHT_PR100_BATCH_CAPTURE_DIR: ${{ github.workspace }}/test-results/batch15/render-captures
+          XDG_DATA_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch${{ matrix.batch }}-render/config
+          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/render.json
+          TWILIGHT_PR100_BATCH_CAPTURE_DIR: ${{ github.workspace }}/test-results/batch${{ matrix.batch }}/render-captures
         run: |
           set -euo pipefail
           mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch15/render.txt
-          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch15/render.txt; then exit 1; fi
-          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch15/render.txt
+          timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch${{ matrix.batch }}/render.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/render.txt; then exit 1; fi
+          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch${{ matrix.batch }}/render.txt
       - name: Preserve batch summaries, case reports, captures and generated saves
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: original-based-batch15-${{ github.sha }}
+          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}
           path: |
-            test-results/batch15/
-            ${{ runner.temp }}/batch15-headless/data/**/pr100-batch-preserved/
-            ${{ runner.temp }}/batch15-render/data/**/pr100-batch-preserved/
+            test-results/batch${{ matrix.batch }}/
+            ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-batch-preserved/
+            ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-batch-preserved/
           if-no-files-found: error

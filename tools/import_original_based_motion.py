@@ -21,6 +21,19 @@ import build_animation_expansion as expansion
 DIRECTIONS = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]
 ROLES = {"idle": [0, 1], "walk": [2, 3, 4], "attack": [5, 6, 7], "hit": [8, 9], "death": [10, 11, 12]}
 SECONDS = {"idle": 1.2, "walk": .48, "attack": .42, "hit": .22, "death": .65}
+# PresentationCatalog.configure prefers these reviewed source bodies to the
+# unused fallback atlas body. This is deliberately limited to named records;
+# other bodies, references and presentations retain their existing strictness.
+REVIEWED_BODY_EQUIVALENCES = (
+    {"fallback_bodies": {"monster:하피": "harpy", "monster:블루 하피": "blue_harpy"},
+     "path": "res://assets/external_l1j/monsters/1024.png",
+     "sha256": "2e77475b545a94ffb9ac39a97eed51957fbb9c666867fc5104c1ec8cb2e7d1dd",
+     "rendered_body": "flying", "shared_body": "harpy", "visual_height": 78, "floating": True},
+    {"fallback_bodies": {"monster:질투의 좀비 나이트": "dark_knight", "monster:질투의 좀비 메이드": "zombie"},
+     "path": "res://assets/external_l1j/monsters/5110.png",
+     "sha256": "cec611c763c6b172f8c4e4f5ec8d2c05b451fbd033bdefa4ea171b96ea89ad9f",
+     "rendered_body": "undead", "shared_body": "zombie", "visual_height": 86, "floating": False},
+)
 
 
 def sha(path):
@@ -36,14 +49,15 @@ def candidate_image(root, value):
     return path if path.is_absolute() else root / path
 
 
-def sharing_identity(target):
+def sharing_identity(target, root=None):
     """Ignore only fallback ornament data that production does not render.
 
     MonsterArt.material_for returns no shader for external_l1j portraits, and
     MonsterVisual omits fallback weapons/crests for these existing family
     bindings. Byte-identical portrait files may have distinct names/bindings;
     their SHA, dimensions, body, height, attack style and animation profile
-    must agree. Every bound source is independently checked by import_sheet.
+    must agree, except the explicitly pinned source-body reviews above.
+    Every bound source is independently checked by import_sheet.
     Project atlas artwork (including its selected region) stays strict.
     """
     presentation = json.loads(json.dumps(target["presentation_to_preserve"]))
@@ -54,6 +68,31 @@ def sharing_identity(target):
         presentation["visual"] = {key: value for key, value in visual.items()
                                   if key not in {"atlas", "cell", "variant", "width", "weapon", "crest", "accent"}}
         reference = {key: reference[key] for key in ("kind", "sha256", "image_size")}
+    key = target.get("key", "")
+    for reviewed in REVIEWED_BODY_EQUIVALENCES:
+        if key not in reviewed["fallback_bodies"]:
+            continue
+        expected = {"visual": {"body": reviewed["fallback_bodies"][key]},
+                    "animation_profile": {"motion_style": "slash", "attack_hit_ratio": .44,
+                                          "floating": reviewed["floating"]},
+                    "attack_type": "melee", "visual_height": reviewed["visual_height"]}
+        original = target["reference"]
+        if (target["group"] != "normal_monster" or target.get("name") != key.removeprefix("monster:")
+                or original.get("kind") != "existing_family_portrait" or original.get("path") != reviewed["path"]
+                or original.get("sha256") != reviewed["sha256"] or original.get("image_size") != [82, 123]
+                or presentation != expected):
+            raise ValueError("Reviewed source presentation changed; explicit re-review required: " + key)
+        project = Path(root) if root is not None else Path(__file__).resolve().parents[1]
+        try:
+            source = expansion.read(project / "data/animation_presentation.json")["monster_sources"][reviewed["path"]]
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            raise ValueError("Reviewed source presentation cannot be verified: " + key) from error
+        if source != {"body": reviewed["rendered_body"], "evidence": "installed_source_contact_review",
+                      "sha256": reviewed["sha256"]}:
+            raise ValueError("Reviewed source presentation override changed; explicit re-review required: " + key)
+        # Comparison only: provenance and target profiles keep their own data.
+        presentation["visual"]["body"] = reviewed["shared_body"]
+        break
     return reference, presentation
 
 
@@ -198,8 +237,8 @@ def import_sheet(root, candidate, actor, keys, apply):
     targets = {row["key"]: row for row in plan["targets"]}
     bindings = [targets[key] for key in keys]
     first = bindings[0]
-    identity = sharing_identity(first)
-    if any(sharing_identity(row) != identity for row in bindings):
+    identity = sharing_identity(first, root=root)
+    if any(sharing_identity(row, root=root) != identity for row in bindings):
         raise ValueError("Cannot share an authored sheet across different original images/presentations")
     reference = first["reference"]
     originals = [(root / row["reference"]["path"].removeprefix("res://"), row["reference"]["sha256"])

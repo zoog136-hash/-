@@ -115,6 +115,68 @@ class OriginalBasedImportTest(unittest.TestCase):
         other["reference"]["path"] = "res://assets/different-atlas.png"
         self.assertNotEqual(importer.sharing_identity(atlas), importer.sharing_identity(other))
 
+    def test_named_reviewed_body_aliases_preserve_original_metadata(self):
+        targets = {row["key"]: row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
+        for source_key, alias_key in [("monster:하피", "monster:블루 하피"),
+                                      ("monster:질투의 좀비 메이드", "monster:질투의 좀비 나이트")]:
+            source, alias = targets[source_key], targets[alias_key]
+            before = copy.deepcopy([source, alias])
+            self.assertNotEqual(source["presentation_to_preserve"]["visual"]["body"],
+                                alias["presentation_to_preserve"]["visual"]["body"])
+            self.assertEqual(importer.sharing_identity(source), importer.sharing_identity(alias))
+            self.assertEqual([source, alias], before, "Comparison must retain each target's actual metadata")
+            unreviewed = copy.deepcopy(alias)
+            unreviewed.update(key="monster:unreviewed alias", name="unreviewed alias")
+            self.assertNotEqual(importer.sharing_identity(source), importer.sharing_identity(unreviewed))
+        self.assertEqual(importer.sharing_identity(targets["monster:하피"]),
+                         importer.sharing_identity(targets["monster:풍룡의 둥지 하피"]))
+
+    def test_reviewed_body_aliases_reject_future_reference_and_presentation_changes(self):
+        targets = {row["key"]: row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
+        for reviewed in importer.REVIEWED_BODY_EQUIVALENCES:
+            for key in reviewed["fallback_bodies"]:
+                original = targets[key]
+                changes = [("group", "boss"), ("name", "different name"),
+                           ("reference.sha256", "different source"), ("reference.image_size", [1, 2]),
+                           ("reference.path", "res://assets/external_l1j/monsters/different.png"),
+                           ("presentation_to_preserve.visual.body", "different anatomy"),
+                           ("presentation_to_preserve.visual_height", 1234),
+                           ("presentation_to_preserve.attack_type", "magic"),
+                           ("presentation_to_preserve.animation_profile.floating", not reviewed["floating"])]
+                for field, value in changes:
+                    with self.subTest(key=key, field=field):
+                        changed = copy.deepcopy(original)
+                        node = changed
+                        components = field.split(".")
+                        for component in components[:-1]: node = node[component]
+                        node[components[-1]] = value
+                        with self.assertRaisesRegex(ValueError, "Reviewed source presentation changed"):
+                            importer.sharing_identity(changed)
+
+    def test_reviewed_body_aliases_check_the_selected_roots_live_source_override(self):
+        targets = {row["key"]: row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
+        data = json.loads((ROOT / "data/animation_presentation.json").read_text())
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "data").mkdir()
+            path = root / "data/animation_presentation.json"
+            for reviewed in importer.REVIEWED_BODY_EQUIVALENCES:
+                keys = list(reviewed["fallback_bodies"])
+                for field, value in [("body", "different rendered body"), ("sha256", "different reviewed source")]:
+                    with self.subTest(path=reviewed["path"], field=field):
+                        changed = copy.deepcopy(data)
+                        changed["monster_sources"][reviewed["path"]][field] = value
+                        path.write_text(json.dumps(changed))
+                        for key in keys:
+                            with self.assertRaisesRegex(ValueError, "Reviewed source presentation override changed"):
+                                importer.sharing_identity(targets[key], root=root)
+                path.write_text(json.dumps(data))
+                self.assertEqual(importer.sharing_identity(targets[keys[0]], root=root),
+                                 importer.sharing_identity(targets[keys[1]], root=root))
+            path.unlink()
+            with self.assertRaisesRegex(ValueError, "Reviewed source presentation cannot be verified"):
+                importer.sharing_identity(targets["monster:블루 하피"], root=root)
+
     def test_byte_identical_portrait_alias_checks_each_actual_source_before_writing(self):
         plan = json.loads((ROOT / "data/animation_authoring_sources.json").read_text())
         targets = {row["key"]: row for row in plan["targets"]}

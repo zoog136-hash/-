@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "prompt": "MAIN EXACT PROMPT:\nCreate a production 2D isometric fantasy RPG sprite atlas based ONLY on the attached exact original monster portrait. Preserve this exact small gaunt undead humanoid: pale gray sickly face and scalp with sparse whitish hair, stooped upper back, very thin long arms, ragged dark olive/green and brown tunic and worn brown ragged lower clothing, thin bare lower legs and large pale bare feet, drooping hands. Keep the original silhouette, skin, ragged clothing coverage and muted colors. The creature is the same ordinary shambling zombie in every cell. NO armor, NO weapons, NO helmet, NO maid costume, NO wings, NO horns, NO gore or exposed wounds; non-graphic game monster. Detailed hand-painted small 2D game art, matching the reference rather than redesigning it.\n\nOutput one SQUARE TRANSPARENT RGBA ATLAS, exactly 8 equal COLUMNS x8 equal ROWS =64 full-body individually articulated poses. Each pose is small, centered within its cell with its body and feet inside 55% of cell width and height, leaving generous completely transparent gaps and outside margins. One physically connected complete creature in each cell: hands attached to arms, feet attached to legs, cloth attached to body. NO ground, shadows, effects, loose fragments, stray particles, blood, text, numbers or grid lines. Consistent scale and camera throughout. Both feet ground-contact line remains at the same relative cell height; articulated feet may step but the torso must not slide between cells.\n\nCOMPASS COLUMNS left to right, fixed for ALL8 rows: E true right-facing side profile; SE front-right diagonal; S directly front toward viewer; SW front-left diagonal; W true left-facing side profile; NW rear-left diagonal; N directly rear away from viewer, back of skull/back/shoulders with NO face or chest; NE rear-right diagonal. These must be eight actual distinct views, not duplicate poses. S and N never swap. Facing means head, shoulders, hips and the reach all match the assigned compass.\n\nROW1 idle neutral shambling stand, knees bent and arms hanging.\nROW2 idle second uneven breath: different chest/arms/knees, same contact baseline.\nROW3 WALK first slow dragging step, left leg reaching, opposite arm forward.\nROW4 WALK passing step, both knees shifted, a visibly different body articulation.\nROW5 WALK opposite dragging step, right leg reaching, reversed arm swing.\nROW6 ATTACK windup: both arms drawn back slightly, shoulders hunched, no weapon.\nROW7 ATTACK contact: lunge and reach with BOTH bare hands directly forward along that column compass; E right, SE down-right, S foreshortened toward viewer, SW down-left, W left, NW up-left, N foreshortened away, NE up-right. S/N contact is not a sideways swing.\nROW8 ATTACK recovery: arms lower and weight returns to original stance, clearly different from windup and idle.\n\nProduce64 genuinely different articulated poses, never copies translated/scaled to fake motion. Preserve the same clothing tears and anatomy across all views and phases. Every whole body fits safely within its cell with clear transparent gutters, no clipped extremities and no detached pixels. Final atlas will be sampled directly as animation without repainting or cutting off any body parts.\n\nREACTIONS EXACT PROMPT:\nCreate the HIT and DEFEAT animation companion atlas for the exact original zombie in attachment1, matching the accepted main sprite atlas in attachment2. Preserve this same gaunt undead humanoid with sparse pale/white hair, sickly gray skin, long thin limbs, ragged dark olive-green and brown tunic and ragged brown lower clothing, thin bare lower legs and pale bare feet. Non-graphic fantasy game monster: no blood, exposed wounds, gore or severed parts. No weapons, armor, helmet, maid costume, props or unrelated redesign. Match the precise main-atlas clothing, silhouette, painted detail, proportions, pixel scale and isometric game camera.\n\nOutput ONE landscape TRANSPARENT RGBA ATLAS, EXACTLY8 equal COLUMNS and5 equal ROWS =40 different full-body articulated sprites. Every entire body is small inside its cell with at least25% clear padding around it. Wide clear gutters, no neighboring silhouettes or rectangle bounds overlap. NO floor, shadows, smoke, loose scraps, particles, glow, labels or grid. Every hand, foot, hair and cloth remains connected to that pose's complete body. No clipped appendages. No detached opaque specks outside the complete sprite. Never use scaled, rotated or translated copies as separate motion phases.\n\nCOMPASS COLUMNS left to right, identical on all5 rows: E actual right side profile; SE front-right diagonal; S front directly toward viewer; SW front-left diagonal; W actual left side profile; NW rear-left diagonal; N back directly away from viewer with rear skull/neck/shoulders and NO face or frontal chest; NE rear-right diagonal. Maintain the correct head/shoulder direction throughout damage and falling. Eight genuinely different directional views.\n\nROW1 HIT RECOIL: shoulders rock backward from impact, arms rise defensively, knees buckle, feet stay near their normal ground footprint.\nROW2 HIT RECOVERY: torso pitches slightly forward, arms lower, knees extend differently; visibly distinct from row1 and from main idle.\nROW3 DEATH BEGIN: both knees sharply collapse, torso hunches down, hand reaches floor to break the fall; a complete distinct falling pose.\nROW4 DEATH FALL: the whole body falls sideways/downward to floor, torso almost horizontal with shoulders low, knees and arms bent on floor. Keep head consistent with compass.\nROW5 FINAL CORPSE: absolutely flat limp full body on the floor, head rests down, torso completely horizontal and low, legs and arms fully visible and relaxed. Clearly later and different from row4. Never standing, kneeling or sitting. For S the head projects toward viewer/down and for N it projects away/up; rear corpse remains back-facing with no frontal face suddenly appearing. For E head right; W head left. Corpse remains intact and non-graphic, still clothed.\n\nAll40 frames must have visibly different articulated body pixels, correct source identity and consistent 8direction semantics. Preserve exact original muted palette and ragged attire. Scale whole character consistently even when lying down; do not shrink final poses. Dead frames can be wider and shorter naturally but their complete bodies remain within their individual cells. Transparent empty space everywhere outside each connected full-body pose.",
+  "prompt_record_kind": "exact_prompt",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/jealousy_zombie/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/jealousy_zombie/poses-1.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "display_height_basis": "max_living_frame",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Inspected existing portrait 5110.png and both generated atlases directly. Preserved the same gaunt gray undead humanoid, sparse pale hair, hunched back, ragged olive/brown clothing, long thin bare limbs and pale bare feet. No knight armor, maid costume or invented weapon was introduced. Reviewed all compass columns: E/W profiles differ from SE/SW diagonals; S faces viewer; N shows back of skull/body; NW/NE remain rear diagonals. Main row7 S/N attacks use foreshortened forward/rear two-hand reaches, not sideways swings. Idle breathing and three shambling steps have distinct limb positions; attack has windup/contact/recovery. Reaction rows show recoil/recovery followed by knee buckle, ground fall and intact flat corpse; final S/N bodies are horizontal on ground with head toward/away from viewer. All hands, feet and clothing belong to connected full poses. analyze and require_complete_pose_regions both passed: 64 main plus 40 reaction distinct poses, no clipping or overlapping frame regions, and zero visible alpha pixels omitted. Main canvas256 and proportional reaction canvas336 preserve source bytes. Max-living-frame scaling is selected. The two exact named targets share checked source SHA and the installed undead presentation override while preserving each original fallback body metadata. This is new animation authored from the existing portrait, not recovered original game motion. Production Main gameplay and completion validation remain pending."
+  }
+}

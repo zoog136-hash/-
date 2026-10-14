@@ -1,6 +1,20 @@
 # PR #100 후속 수정 및 검증
 
-## 2026-10-14 재개 · batch15 현재 상태
+## 2026-10-14 안전 인계 · batch16 현재 상태
+
+보존 커밋 `6067ec1e74fbb7a3ae469caf8f75b5ea9e294b6b`에서 재개한 이번 세션은 **9종 추가**, 현재 **355/498종 연결·143종 미완료**다. 변신 **136/180**(44 미완료), 일반 몬스터 **184/258**(74), 보스 **35/60**(25). **83개 native 리소스·47개 원본 기반 디자인·4,840개 실제 고유 자세**를 사용한다. [현재 미완료 ID](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json)와 방향표를 성공한 Main 보고서 **167개**로 갱신했다. 연결 수를 모든 기존 이름의 개별 플레이 완료 수로 바꾸어 해석하지 않는다.
+
+첫 5종은 **`62ad60ae118c28f6f11bfc6facb3d5564e2ba929`**로 같은 PR #100에 푸시했다. 두 번째 계획 5종 중 **블루 하피·질투의 좀비 나이트·질투의 좀비 메이드·불신의 임프 4종**을 실제 Main으로 검증했다. 블루 하피는 기존 하피 그림을 재사용했고, 좀비 두 이름과 임프는 기존 원본에서 2개 디자인/208자세를 새로 그렸다. 각 이름의 원본·fallback body·능력치를 유지한다. 명시한 하피/좀비 대상만 원본 SHA·경로·표시 설정과 실제 source override가 일치할 때 공유할 수 있으며, 다른 body까지 비교를 완화하지 않았다. 실제 Main에서도 `flying`/`undead` 선택을 확인했다.
+
+두 번째 묶음의 Main headless **4종/3,457개**, OpenGL **4종/3,856개**, 실패 0개다. 8방향 실제 AI 추적·공격과 5동작 프레임·지면 접촉·피격·사망·바닥 드랍·수동 습득을 확인했다. 관련 Python **33개**도 통과했다. 9종 전체를 묶음당 모드별 한 엔진으로 검사했고, 한 리소스의 전체 자세 캡처를 같은 묶음에서 중복하지 않았다. 최초 OpenGL 시도는 X11 연결 권한으로 게임 시작 전에 종료됐으며, 진단을 보존하고 표시 연결이 가능한 실행에서 통과했다. [검증·보존 범위](evidence/pr100-direction-fix/original-based/batch16/validation-summary.json), [실제 Main 240초 발췌](evidence/pr100-direction-fix/original-based/batch16/main-batch.mp4), [재현 명령](evidence/pr100-direction-fix/original-based/batch16/replay.txt).
+
+**오크 마법사는 2회 연속 방향 검토 불합격으로 추가 생성을 중단했다.** 두 번째 초안은 인접 몸체가 프레임에 들어가는 문제도 있다. 완료 수량에 넣지 않았고 원본/불합격 PNG와 정확한 프롬프트·실패 원인을 [미완료 기록](evidence/pr100-direction-fix/original-based/batch16/orc-mage-blocked/authoring_blocker.json)에 보존했다. 런타임 에셋으로 잘못 취급하지 않도록 해당 초안은 증거 폴더에 둔다. 사용자가 정한 반복 오류 중단 기준에 따라 현재 묶음 검증·저장을 마치고 인계한다. 다음 세션에서는 같은 전체 시트 재생성을 반복하지 말고 **독립 8방향 회전표부터 검토**한 뒤 동작을 만든다.
+
+첫 푸시 `62ad60a`의 [Android CI](https://github.com/zoog136-hash/-/actions/runs/38520075224)는 빌드·독립 검사·업로드까지 성공했다. **81개 compiled SpriteFrames·3,664트랙·14,952재생 슬롯·319개 PNG 임포트**, SHA·캔버스·ZIP CRC·ARM64·서명·16KB 정렬을 검사했다. APK **867,837,879 bytes**, SHA-256 **`b2d1d2b484a23d7be728fe5665083d1a137b66798b6ec07150a55c311bfa579f`**. [APK 산출물](https://github.com/zoog136-hash/-/actions/runs/38520075224/artifacts/11873753237) · [다운로드한 진단과 범위](evidence/pr100-direction-fix/original-based/batch16/previous-commit-android/scope.json). 이 결과에 마지막 2개 디자인을 포함하지 않는다. **현재 83개 리소스의 정확한 푸시 커밋 CI·Android 결과는 별도로 확인하며, 실제 Android 기기 실행은 미검증**이다.
+
+재개 순서는 PR #100의 최신 head/보존 커밋 확인 → 해당 head의 CI 실패 job만 확인 → 오크 방향표와 기존 6개 시트의 프레임 밖 79픽셀 귀속 검토 → 남은 143종 중 다음 5~10종 선택이다. 알비노 악어는 계속 미연결이며 이전 초안 ZIP도 유지한다. 기존 2D 런타임·원본·정상 PNG/TRES를 보존했고 새 PR이나 main 병합은 수행하지 않았다.
+
+## 이번 세션 첫 묶음 · batch15 기록
 
 GitHub PR #100의 실제 head `feature/twilight-animation-20261013`이 보존 커밋 **`6067ec1e74fbb7a3ae469caf8f75b5ea9e294b6b`**와 정확히 일치하고 작업 트리가 깨끗한 상태에서 이어서 진행했다. 이전 346/498 연결과 미완료 152종, 원본 참조 222건, 이전 PNG/TRES 및 미완성 ZIP을 확인했다. 새 PR·main 병합·기존 기록 삭제 없이 같은 브랜치를 유지한다.
 

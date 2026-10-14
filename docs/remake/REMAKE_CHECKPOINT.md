@@ -1,11 +1,12 @@
-# PR #100 현재 재개 지점 · 2026-10-14 batch15
+# PR #100 현재 재개 지점 · 2026-10-14 batch16 안전 인계
 
 - 기존 브랜치 `feature/twilight-animation-20261013`, 보존 커밋 `6067ec1e74fbb7a3ae469caf8f75b5ea9e294b6b`와 실제 GitHub head 일치를 확인한 뒤 이어서 작업했다. 이 문서를 포함하는 PR head에서 계속한다. 새 PR·main 병합·기록 삭제 금지.
-- 현재 **351/498**, 변신 **136/180**, 일반 **180/258**, 보스 **35/60**. **남은 147종(44/78/25)**의 정확한 목록은 [미완료 ID](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 이전 문단의 수치는 역사 기록이다.
-- batch15: 잔혹한 아시타지오 재사용, 라미아 2종·수중정령 2종 원본 기반 제작. 81개 native 리소스, 45개 신규 디자인, 4,632개 실제 고유 자세. 5종 Main headless 6,194개 / OpenGL 6,450개 모두 통과. [상세 범위와 원시 증거](PR100_COMPLETION_REPORT.md).
+- 현재 **355/498**, 변신 **136/180**, 일반 **184/258**, 보스 **35/60**. **남은 143종(44/74/25)**의 정확한 목록은 [미완료 ID](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 이전 문단의 수치는 역사 기록이다.
+- 이번 세션 **9종 추가**. 첫 batch15는 `62ad60ae118c28f6f11bfc6facb3d5564e2ba929`로 푸시했고, 그 뒤 블루 하피·좀비 2종·임프 4종을 검증했다. 현재 **83개 native 리소스·47개 디자인·4,840개 고유 자세**. 첫5종 Main headless 6,194 / OpenGL 6,450, 다음4종 3,457 / 3,856개 모두 통과. [상세 범위와 원시 증거](PR100_COMPLETION_REPORT.md).
 - 공통 Flare 방향 순서 **W,NW,N,NE,E,SE,S,SW**, 매핑 **[4,5,6,7,0,1,2,3]** 유지. 새 임포트의 누락 조각 거부·단일 큰 캔버스 정규화만 보완했다. 기존 런타임·PNG/TRES 보존.
-- 다음: 원본과 표시 설정이 동등한 연결을 먼저 확인하고 5~10종 단위로 제작·연결 → `tests/run_original_based_batch.gd`와 별도 fixture로 한 엔진당 여러 실제 Main 검사 → 현재 보고서·coverage 갱신 → 같은 브랜치 커밋·푸시. 성공한 각 이름의 Main 보고서만 완료 근거로 사용한다.
-- 알비노 악어 초안은 계속 미연결. 기존 6개 시트의 프레임 외 79픽셀은 시각적 귀속 검토 전이며 임의 수정하지 않는다. 현재 커밋의 전체 CI·Android 내보내기는 푸시 후 확인, 실제 기기 실행은 미검증.
+- 오크 마법사는 두 차례 방향 오류로 **미완료 유지·추가 생성 중단**. 2차는 인접 몸체 포함도 실패. [초안·정확한 프롬프트·원인](evidence/pr100-direction-fix/original-based/batch16/orc-mage-blocked/authoring_blocker.json)을 저장했고 사용자 중단 기준에 따라 현 묶음을 인계한다. 다음에는 동일 전체 시트를 재시도하지 말고 독립8방향 회전표부터 확인한다.
+- 다음: PR 최신 head와 CI 상태 확인(실패 job만 재검사) → 오크 방향표·기존 조각 귀속 검토 → 남은143종 중 다음5~10종 선택 → `tests/run_original_based_batch.gd`와 별도 fixture로 실제 Main 검사 → 현재 보고서·coverage 갱신 → 같은 브랜치 커밋·푸시. 성공한 각 이름의 Main 보고서만 완료 근거로 사용한다.
+- `62ad60a` Android 빌드·독립 검사·업로드 성공(81리소스). 마지막83리소스 커밋의 CI/Android 결과와 혼동하지 않는다. 실제 기기 실행은 미검증. 알비노 악어 초안 및 기존6개 시트의 프레임 외79픽셀은 추가 검토 대상이며 임의 수정하지 않았다.
 
 ## 이전 세션 기록 보존
 

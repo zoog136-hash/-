@@ -23,7 +23,8 @@
   },
   "target_keys": [
     "monster:하피",
-    "monster:풍룡의 둥지 하피"
+    "monster:풍룡의 둥지 하피",
+    "monster:블루 하피"
   ],
   "presentation_to_preserve": {
     "visual": {
@@ -71,6 +72,25 @@
         "body": "harpy",
         "variant": 5,
         "width": 1.024,
+        "weapon": "claws",
+        "crest": 2,
+        "accent": "849bab"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": true
+      },
+      "attack_type": "melee",
+      "visual_height": 78
+    },
+    "monster:블루 하피": {
+      "visual": {
+        "atlas": 5,
+        "cell": 6,
+        "body": "blue_harpy",
+        "variant": 0,
+        "width": 0.946,
         "weapon": "claws",
         "crest": 2,
         "accent": "849bab"
@@ -2513,6 +2533,28 @@
       },
       "source_duration_seconds": 0.65,
       "loop_type": "play_once"
+    }
+  },
+  "target_references": {
+    "monster:블루 하피": {
+      "path": "res://assets/external_l1j/monsters/1024.png",
+      "kind": "existing_family_portrait",
+      "family_binding": {
+        "family_id": "하피",
+        "source_sprite_id": "1024",
+        "path": "res://assets/external_l1j/monsters/1024.png",
+        "source_npc_ids": [
+          "45067"
+        ],
+        "source_name": "계곡 하피",
+        "original_animation": false,
+        "mapping": "explicit same-species regional alias"
+      },
+      "sha256": "2e77475b545a94ffb9ac39a97eed51957fbb9c666867fc5104c1ec8cb2e7d1dd",
+      "image_size": [
+        82,
+        123
+      ]
     }
   }
 }

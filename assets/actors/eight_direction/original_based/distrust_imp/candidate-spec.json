@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "prompt": "MAIN EXACT ACCEPTED PROMPT:\nCorrect the SECOND attached 8x8 imp sprite atlas while keeping the character matched exactly to the FIRST attached original imp reference. Keep the brown short imp, pale large bald head, long pointed ears, bent clawed feet and original round brown patterned equipment. Preserve existing texture and scale. Keep 8 columns x 8 rows of full connected complete sprites on real transparent background, with wide clear space between each sprite and no clipping, fragments, shadows, labels or effects.\n\nThe previous atlas has WRONG ATTACK DIRECTIONS, especially S and N which stretch the arm sideways. This correction must fix that visibly. Each sprite must face its column and attack along that same axis. Columns strictly E, SE, S, SW, W, NW, N, NE from left to right, for all 8 rows. E and W must be TRUE 90-DEGREE SIDE PROFILES (one eye only, nose directly right/left); S is straight frontal (two eyes symmetric); N is straight rear (no face at all, shoulders symmetric). NW and NE rear diagonals must not turn faces toward camera.\n\nROW7, attack contact: Imp attacks using a two-hand short shove with its EXISTING round equipment straight forward. E: arms/equipment extended directly RIGHT. SE: arms/equipment forward/down-right. S: BOTH ARMS FORESHORTEN DIRECTLY TOWARD VIEWER, hands/equipment in FRONT OF CENTER OF BELLY, close together on horizontal centerline, the round piece may occlude the belly, elbows bent symmetrically. No arm or object extended sideways in S. SW: arms/equipment toward lower left. W: extend arms/equipment directly LEFT. NW: extend arms/equipment upper left while body shows back. N: BOTH ARMS FORESHORTEN DIRECTLY AWAY INTO DEPTH, hands and equipment MOSTLY HIDDEN BY BACK/TORSO, shoulders pushed forward symmetrically, strong forward lean, absolutely no arm sticking out right or left. NE: forward upper right, back-facing body. Use depth foreshortening, do not show lateral pointing for axial attacks.\n\nROW6 windup: prepare that equipment shove by pulling both hands/equipment close toward center chest while shifting torso back. ROW8 recovery: both arms relax back toward belly, knees bent and torso settling. Row1 idle A; row2 visibly different idle B; rows3/4/5 three genuinely articulated walking phases with alternating feet and natural supporting arms. Keep all eight directions correct in ALL poses, not only attack. Preserve real different poses rather than copy/translation/mirror. Each head, ear, arm, finger, equipment and foot remains connected. Exactly 64 sprites and no extra marks. This is a corrective drawing for a 2D game and must remain transparent.\n\nREACTIONS EXACT ACCEPTED PROMPT:\nCreate a second, REACTION animation atlas for the EXACT brown imp monster in the attached references. FIRST attachment is its authoritative original portrait; SECOND is accepted MAIN ANIMATION design reference. Match pale tan bald large head, protruding long pointed ears, dark brown hunched small body, bent legs/claw feet and original round brown bronze patterned equipment exactly. The equipment must remain held, lying against body or under hands, not disappear and not float separately. Painted detailed old-school 2D isometric RPG sprite, no extra clothing, horns, wings, weapons or new anatomy.\n\nDeliver ONE LANDSCAPE TRANSPARENT RGBA atlas: EXACTLY 8 COLUMNS and 5 ROWS, 40 complete distinct connected full-body sprites. Equal grid cells and generous transparent gutters. Make every whole imp SMALL within its cell, maximum 58% width/height, with complete ears, feet, fingers, head and equipment, no clipping. No labels, grid lines, shadows, effects, fragments, particles or background. Every visible element must be physically connected to its single creature. One body in each cell only.\n\nCOLUMN ORDER left to right, locked in every row: E true right-facing side profile; SE front-right diagonal; S directly frontal toward viewer; SW front-left diagonal; W true left-facing side profile; NW back-left diagonal; N directly rear facing away (back of head/back, no face); NE back-right diagonal. Consistent isometric camera. Keep the appropriate front or rear side during every recoil and collapse. S and N may NEVER become side profiles; maintain centered axial heads and bodies. E/W head silhouettes must face opposite horizontal directions; NW/NE shoulders and heads show backs.\n\nROWS top to bottom:\n1 HIT A: imp recoils sharply from damage, head jerks back, knees bend, both hands pull the round equipment up defensively in front of torso.\n2 HIT B: distinct recovery after recoil, shoulders slump forward and hands lower equipment, feet settle. Different actual articulation from row1 and idle.\n3 DEATH A: collapse begins, knees buckle, hunched head and torso descending, one connected hand touching the ground, the other holding equipment against body. Not an attack pose.\n4 DEATH B: imp falls fully on the ground, body nearly horizontal, head low, legs folding sideways naturally, hands limp with equipment resting against torso; no upright standing or kneeling creature.\n5 DEATH C: settled defeated imp resting completely flat on ground, head down and arms/legs fully limp, a visibly different later phase from row4. Brown equipment stays physically against hands/torso. For E head points right, W head points left, S head is at the near/front end closest to viewer, N head is away/far at the rear end; diagonal heads follow their corresponding compass. N/NW/NE still show back of head and back, never frontal face. No raised head, raised shoulders, upright torso or proud posture on last row.\n\n40 individually articulated sprites, no duplication, translation tricks or mirroring. Retain the original imp's full proportions and rough brown/cream palette from main sheet, same camera, complete joined parts. Living hit poses use consistent foot-ground contact; collapsed poses naturally low and wider but fully fit their safe cell margins. No blood, gore, props or detached scraps.",
+  "prompt_record_kind": "exact accepted prompts; rejected main v1 retained in generation-record.json and rejected-drafts.zip",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_imp/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_imp/poses-1.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "display_height_basis": "max_living_frame",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Inspected original 13304.png and both generated atlases. Preserved short dark brown imp body, pale tan bald head with pointed ears, clawed feet and original round bronze-brown equipment. Main v1 was rejected for sideways S/N attacks; v2 uses equipment shove: S reaches toward viewer at torso center and N reaches away behind its back, with diagonal views maintaining rear/front orientation. Inspected 8 compass columns for all five roles; idle breathing, three alternating-foot walking poses, windup/contact/recovery, recoil/recovery and progressive ground collapse are distinct. Final death is fully down, S head remains toward viewer and N rear remains away. All ears, hands, feet and equipment fit connected bodies; no particles or cropped pieces. Strengthened analyze accepted 64 main and 40 reaction frames, all pixel-unique with no visible alpha>100 pixels outside regions. Reaction sheet is proportionally normalized without pixel modification. Art is newly generated motion based on a tracked original portrait, not recovered original animation. Atlas review only; production Main validation remains pending."
+  }
+}

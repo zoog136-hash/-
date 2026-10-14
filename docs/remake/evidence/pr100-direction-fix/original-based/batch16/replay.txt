@@ -1,0 +1,28 @@
+Scope: existing TWILIGHT Main, four validated-candidate identities from the planned five.
+Orc mage stays unbound after two failed compass reviews; it is not a passing case.
+Use official Godot 4.7.2; no separate demo or production AI/stat/range changes.
+
+From the repository root, after importing the project:
+
+QA_RUN_DIR=$(mktemp -d /tmp/twilight-pr100-batch16.XXXXXX)
+export TWILIGHT_PR100_BATCH_ISOLATED=1
+export TWILIGHT_PR100_BATCH_CONFIG=res://tests/fixtures/pr100_batch16.json
+export XDG_CACHE_HOME="$QA_RUN_DIR/cache"
+export XDG_CONFIG_HOME="$QA_RUN_DIR/config"
+
+XDG_DATA_HOME="$QA_RUN_DIR/headless-data" \
+TWILIGHT_PR100_BATCH_REPORT="$QA_RUN_DIR/headless.json" \
+godot --headless --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd
+
+XDG_DATA_HOME="$QA_RUN_DIR/render-data" \
+TWILIGHT_PR100_BATCH_REPORT="$QA_RUN_DIR/render.json" \
+TWILIGHT_PR100_BATCH_CAPTURE_DIR="$QA_RUN_DIR/captures" \
+LIBGL_ALWAYS_SOFTWARE=1 \
+xvfb-run -a -s '-screen 0 1280x720x24' godot --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd
+
+Each mode uses one engine and a fresh production Main per identity. Existing user
+saves or a reused case-preservation directory make the runner refuse execution.
+Generated saves remain under each isolated user directory's pr100-batch-preserved.
+Full authored-pose screenshots are taken once per resource; every identity still
+receives all pose assertions and its own eight-direction real AI/lifecycle checks.
+Only successful per-case JSON reports may be supplied to the coverage audit.

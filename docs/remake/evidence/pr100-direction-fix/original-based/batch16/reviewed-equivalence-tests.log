@@ -1,0 +1,14 @@
+Commands: python3 tests/original_based_motion_import_test.py && python3 tests/original_based_identity_link_test.py && git diff --check -- tools/import_original_based_motion.py tools/link_original_based_identity.py tests/original_based_motion_import_test.py tests/original_based_identity_link_test.py
+Exit code: 0
+
+....................
+----------------------------------------------------------------------
+Ran 20 tests in 6.586s
+
+OK
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.118s
+
+OK
+

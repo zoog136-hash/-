@@ -17,6 +17,15 @@ var previous_environment: Dictionary = {}
 func subject_name() -> String: return str(current_case.name)
 func subject_folder() -> String: return str(current_case.folder)
 
+func monster_case() -> void:
+	# Explicit reuse cases must still resolve the reviewed production body.
+	# This assertion is additional to the unchanged pursuit/combat checks.
+	if current_case.has("body_kind"):
+		check(normal.motion.profile.body_kind == str(current_case.body_kind), "shared source resolves the reviewed production body kind")
+		report.setup.reviewed_body_kind = str(current_case.body_kind)
+		report.setup.actual_body_kind = normal.motion.profile.body_kind
+	await super.monster_case()
+
 func safe_component(value: String) -> bool:
 	if value.is_empty(): return false
 	for letter: String in value:
