@@ -1,8 +1,5 @@
 name: Main Debug Audit
 on:
-  push:
-    branches: [validation/main-debug-20261014]
-    paths: ['.github/workflows/main-debug-audit.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -30,18 +27,6 @@ jobs:
           python3 tools/check_resource_integrity.py --root . 2>&1 | tee debug-results/resource-integrity.log
           python3 -m compileall -q tools
           python3 tools/test_project_runner_test.py 2>&1 | tee debug-results/runner-unit.log
-          if [ '${{ matrix.shard }}' = 0 ]; then
-            python3 - <<'PY'
-          import pathlib, subprocess, zipfile
-          paths = subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
-          allowed = {'.gd','.py','.json','.yml','.yaml','.md','.godot','.tscn','.cfg','.tres','.txt','.csv'}
-          with zipfile.ZipFile('debug-results/source-text.zip','w',zipfile.ZIP_DEFLATED) as z:
-              for name in paths:
-                  p=pathlib.Path(name)
-                  if p.is_file() and p.suffix in allowed:
-                      z.write(p,name)
-          PY
-          fi
       - name: Install repository-pinned engine and real software renderer
         shell: bash
         run: |
@@ -77,7 +62,8 @@ jobs:
           print('AUDIT_DISCOVERED',len(all_tests),'SHARD',shard,'SELECTED',len(selected),flush=True)
           for name,extra,visual in checks:
               started=time.monotonic()
-              with tempfile.TemporaryDirectory(prefix='twilight-audit-') as user_data:
+              # Preserve the existing test_project.py save-isolation contract.
+              with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
                   env=os.environ.copy()
                   for key in ('XDG_DATA_HOME','APPDATA','LOCALAPPDATA'):
                       env[key]=user_data
