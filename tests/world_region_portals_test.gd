@@ -55,6 +55,9 @@ func _run() -> void:
 	world._set_map("faith_01",false)
 	check(world.use_field_portal("previous") and world.active_map_id=="albino_04","reverse family boundary")
 	world._set_map("oman_02",false)
+	# AUTO deliberately suppresses proximity portal travel while hunting.
+	# Exercise a manual portal entry after switching AUTO off.
+	world.player.set_auto_enabled(false)
 	world.portal_cooldown=0
 	world.player.global_position=COORD.array_vector(world.field_map.data["portal"][0]["position"])
 	world._update_field_triggers()

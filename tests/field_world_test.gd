@@ -71,10 +71,19 @@ func _run() -> void:
 			var target := Vector2(3670,5160)
 			var screen: Vector2 = COORD.world_to_screen(root,target)
 			check(COORD.screen_to_world(root,screen).distance_to(target)<.02,"screen/world coordinate round trip")
+			# The selection/drag recognizer commits a tap on RELEASE, not press.
+			# Drive the same press -> release lifecycle as a native Android tap.
 			var touch := InputEventScreenTouch.new()
+			touch.index = 0
 			touch.position = screen
 			touch.pressed = true
 			world._unhandled_input(touch)
+			var release := InputEventScreenTouch.new()
+			release.index = 0
+			release.position = screen
+			release.pressed = false
+			world.world_interactions._input(release)
+			check(world.world_interactions.pointer == -2,"Android touch gesture released")
 			check(not world.player.click_path.is_empty() and world.player.click_path[-1].distance_to(target)<1,"Android touch destination after zoom")
 			world.player.clear_click_path()
 	root.size = Vector2i(1280,720)

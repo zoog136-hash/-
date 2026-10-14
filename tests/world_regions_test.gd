@@ -111,10 +111,18 @@ func _run() -> void:
 			var goal: Vector2 = spawn+Vector2(96,0)
 			var screen: Vector2 = COORD.world_to_screen(root,goal)
 			check(COORD.screen_to_world(root,screen).distance_to(goal)<.02,id+" camera/world coordinate round trip")
+			# Native gesture dispatch waits for touch release before moving.
 			var touch := InputEventScreenTouch.new()
+			touch.index = 0
 			touch.position = screen
 			touch.pressed = true
 			world._unhandled_input(touch)
+			var release := InputEventScreenTouch.new()
+			release.index = 0
+			release.position = screen
+			release.pressed = false
+			world.world_interactions._input(release)
+			check(world.world_interactions.pointer == -2,id+" touch gesture released")
 			check(not world.player.click_path.is_empty() and world.player.click_path[-1].distance_to(goal)<1,id+" zoomed Android touch destination")
 			world.player.clear_click_path()
 		world.player.camera.zoom=Vector2.ONE*.78
