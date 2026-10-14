@@ -354,18 +354,62 @@
         "bytes": 51248,
         "sha256": "8aba3e2b71393974a0ca71100cf3c6a13b212a4ab065f26d1a6592f40587c2c2"
       }
+    },
+    "spear_guard": {
+      "assets/actors/eight_direction/original_based/spear_guard/SpriteFrames.tres": {
+        "bytes": 25666,
+        "sha256": "40f503239fcb40fa3f974d74f37edd525804de56a92e181b02296233b9320c06"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/poses-0.png": {
+        "bytes": 476446,
+        "sha256": "6d615eda6883af037402b549577bebfca2654b574ae00992b7eacd2e757dec08"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/poses-1.png": {
+        "bytes": 498807,
+        "sha256": "8ec9986aee4bd46ed7c53e4a8b8ebad1b4eded979b59cfa1e5c4b5c5f1d51ce3"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/poses-2.png": {
+        "bytes": 513603,
+        "sha256": "b7e1644c1236c88485e81f1ffeb7b6d3ddbacabdb3b900253db77824be46985e"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard/provenance.json": {
+        "bytes": 51289,
+        "sha256": "bbea254bb221e3f66369ee17e1b8cef0a515b257f694f7e871df4685b1885cd3"
+      }
+    },
+    "spear_guard_red": {
+      "assets/actors/eight_direction/original_based/spear_guard_red/SpriteFrames.tres": {
+        "bytes": 25773,
+        "sha256": "c66d0bea915cf4d34d2aecc2669bb05aeedabe5e92c71d1fa66ef67e1e6c1f07"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/poses-0.png": {
+        "bytes": 513500,
+        "sha256": "2cc4512038bcddd026085d4801dd0ffc42fb0567cf6ec6512f0899af24f96721"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/poses-1.png": {
+        "bytes": 463422,
+        "sha256": "79747fe7224a188a07f36e8a5ca6b54f93f5a95745b977f4d682636b85de197f"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/poses-2.png": {
+        "bytes": 561343,
+        "sha256": "a3774590279a27b8a43a8c7ca88be111a8e44af3612bbe28853907d3ce1573c5"
+      },
+      "assets/actors/eight_direction/original_based/spear_guard_red/provenance.json": {
+        "bytes": 51565,
+        "sha256": "cf24dcf0ea56936620462f2ee4c3da28286cf59768b764afe83de453d8dd6e01"
+      }
     }
   },
   "remaining": {
-    "hero_plus": 50,
+    "hero_plus": 48,
     "normal_monster": 102,
     "boss": 28
   },
   "not_completed": [
-    "All remaining 180 identities",
+    "All remaining 178 identities",
     "Actual Android device execution",
     "Exact pushed-commit CI requires terminal confirmation"
   ],
   "test_scope": "Production Main and real equipment/input/AI/contact/death/drop/pickup. Each regional alias tested independently. Explicit pose sampling is distinct from real input/AI. Ghost nonlethal recoil uses take_damage(1); reaper incoming/death use controlled production hit/poison callbacks. Level-105 ogre uses the existing catalog execution sword via normal equipment handler, retaining full monster HP/armor/evasion. No combat formulas or drop tables changed.",
-  "latest_batch": "batch7: 3 original-based designs / 304 genuine poses / 4 normal monsters + 1 transformation, tested separately in real Main"
+  "latest_batch": "batch8: 2 original-based guard designs / 208 genuine poses / 2 transformations, each validated in actual Main"
 }

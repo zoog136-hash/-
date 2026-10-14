@@ -1,0 +1,12 @@
+{
+  "before": "PNG compression inside the live corpse loop missed the middle phase for E/W/NE; original failed report retained",
+  "change": "Capture the actual frame into memory; save PNG only after the production VFX clock completes",
+  "preserved": [
+    "production VFX duration and runtime code",
+    "all three-frame assertions",
+    "original pixels",
+    "combat and respawn paths"
+  ],
+  "after": "New guards each pass all eight death directions in headless and OpenGL; existing green guard passes actual OpenGL regression",
+  "interpretation": "QA observation overhead corrected; no production death animation rewritten"
+}

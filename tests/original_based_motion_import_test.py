@@ -70,7 +70,7 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
             expected_poses = 96 if actor in {"reaper_male", "asitagio"} else 104
@@ -113,6 +113,46 @@ class OriginalBasedImportTest(unittest.TestCase):
         self.assertEqual(len(atlases), 3)
         for path, atlas in atlases.items():
             self.assertEqual(importer.sha(ROOT / path.removeprefix("res://")), atlas["sha256"])
+
+    def test_guard_variants_keep_their_own_original_and_distinct_artwork(self):
+        profiles = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]
+        sources = {row["key"]: row["reference"] for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
+        atlas_hashes = set()
+        for actor, key, canvases in [("spear_guard_green", "transform:167", [392, 224, 480]),
+                                     ("spear_guard", "transform:2", [256, 352, 264]),
+                                     ("spear_guard_red", "transform:110", [384, 416, 408])]:
+            folder = ROOT / "assets/actors/eight_direction/original_based" / actor
+            proof = json.loads((folder / "provenance.json").read_text())
+            self.assertEqual(proof["reference"], sources[key])
+            self.assertEqual(proof["target_keys"], [key])
+            self.assertTrue(profiles[key]["frames_path"].endswith(f"/{actor}/SpriteFrames.tres"))
+            for index, phases in enumerate([5, 3, 5]):
+                path = folder / f"poses-{index}.png"
+                digest = importer.sha(path)
+                self.assertNotIn(digest, atlas_hashes, "Distinct original palettes must not share one replacement image")
+                atlas_hashes.add(digest)
+                anchors = [frame["source_anchor"] for frame in proof["frames"] if frame["sheet"] == index]
+                result = importer.analyze(path, phases, reference_rows=[0, 1] if index != 1 else None,
+                                          directions_axis="rows" if index == 1 else "columns",
+                                          canvas_size=canvases[index], source_anchors=anchors)
+                self.assertEqual(result["distinct_pixel_frames"], phases * 8)
+
+    def test_guard_attack_body_size_matches_reviewed_idle_anatomy(self):
+        # Helmet-to-boot landmarks were reviewed in the source sheets and Main.
+        # Include the body, excluding the much longer upright/thrust spear.
+        # The former 280/336 attack canvases enlarged these bodies by >20%.
+        for actor, idle_height, attack_heights in [("spear_guard", 76, (101, 99)),
+                                                   ("spear_guard_red", 82, (91, 89))]:
+            folder = ROOT / "assets/actors/eight_direction/original_based" / actor
+            _, textures, tracks = audit.read_spriteframes(folder / "SpriteFrames.tres")
+            idle = textures[tracks["idle_2"]["frames"][0]["texture"]]
+            idle_canvas = idle["region"][3] + idle["margin"][3]
+            for direction, body_height in zip([2, 6], attack_heights):
+                attack = textures[tracks[f"attack_{direction}"]["frames"][1]["texture"]]
+                attack_canvas = attack["region"][3] + attack["margin"][3]
+                relative_height = (body_height / attack_canvas) / (idle_height / idle_canvas)
+                self.assertGreater(relative_height, .88, actor)
+                self.assertLess(relative_height, 1.12, actor)
 
     def test_guard_first_sheet_normalization_keeps_original_display_height(self):
         folder = ROOT / "assets/actors/eight_direction/original_based/spear_guard_green"
