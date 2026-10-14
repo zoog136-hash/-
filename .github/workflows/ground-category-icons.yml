@@ -1,8 +1,40 @@
 name: Ground Category Icons
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/ground-category-icons.yml'
+      - 'tools/ground_icons/**'
+      - 'scripts/ui/ground_item_icons.gd'
+      - 'scripts/ui/item_visual_resolver.gd'
+      - 'scripts/loot/**'
+      - 'data/ground_item_icons.json'
+      - 'data/catalog_v19.json'
+      - 'data/game_db_v17.json'
+      - 'data/inven_inventory_icons.json'
+      - 'data/visuals/runtime_manifest.json'
+      - 'assets/ground_categories/**'
+      - 'assets/original_items/**'
+      - 'assets/l1j/verified/ground/**'
+      - 'tests/ground_category_probe.gd'
+      - 'tests/capture_ground_categories.gd'
+      - 'tests/inven_inventory_icons_test.gd'
   push:
-    branches: [feature/ground-category-icons-20261015]
-    paths: ['.github/workflows/ground-category-icons.yml', 'tools/ground_icons/**', 'scripts/ui/ground_item_icons.gd', 'tests/ground_category_probe.gd', 'tests/capture_ground_categories.gd']
+    branches: [main]
+    paths:
+      - '.github/workflows/ground-category-icons.yml'
+      - 'tools/ground_icons/**'
+      - 'scripts/ui/ground_item_icons.gd'
+      - 'scripts/ui/item_visual_resolver.gd'
+      - 'scripts/loot/**'
+      - 'data/ground_item_icons.json'
+      - 'data/catalog_v19.json'
+      - 'data/game_db_v17.json'
+      - 'data/inven_inventory_icons.json'
+      - 'assets/ground_categories/**'
+      - 'tests/ground_category_probe.gd'
+      - 'tests/capture_ground_categories.gd'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
@@ -10,70 +42,35 @@ concurrency:
   cancel-in-progress: true
 jobs:
   ground-icons:
-    if: github.ref == 'refs/heads/feature/ground-category-icons-20261015'
     runs-on: ubuntu-latest
-    timeout-minutes: 22
-    permissions:
-      contents: write
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          persist-credentials: true
-      - name: Install pinned renderer and offline PNG tools
+          persist-credentials: false
+      - name: Validate committed source and transparent PNG hashes offline
         run: |
           python3 -m pip install Pillow==12.3.0
+          python3 tools/ground_icons/build.py
+      - name: Install repository-pinned renderer
+        run: |
           sudo apt-get update -qq
           sudo apt-get install -y xvfb xauth libgl1-mesa-dri
           curl --fail --location --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
           unzip -qo /tmp/godot.zip -d /tmp/godot
           chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
-      - name: Capture exact baseline, integrate, compare inventory pixels and validate drops
-        run: python3 tools/ground_icons/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/ground-icons --install
-      - name: Preserve only verified ground presentation changes on the feature branch
-        run: |
-          test "$GITHUB_REF" = refs/heads/feature/ground-category-icons-20261015
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          python3 tools/ground_icons/build.py
-          git diff --exit-code -- scripts/loot scripts/world.gd scripts/player.gd data/catalog_v19.json data/game_db_v17.json data/inven_inventory_icons.json
-          mkdir -p docs/verification/ground_categories_20261015
-          cp /tmp/ground-icons/preservation-proof.json docs/verification/ground_categories_20261015.json
-          cp /tmp/ground-icons/test-summary.json docs/verification/ground_categories_20261015/test-summary.json
-          cp /tmp/ground-icons/after-probe.log docs/verification/ground_categories_20261015/after-probe.log
-          for stage in before after; do
-            mkdir -p docs/verification/ground_categories_20261015/$stage
-            cp /tmp/ground-icons/$stage-captures/equipment.png docs/verification/ground_categories_20261015/$stage/equipment.png
-            cp /tmp/ground-icons/$stage-captures/consumables.png docs/verification/ground_categories_20261015/$stage/consumables.png
-          done
-          git add -- scripts/ui/item_visual_resolver.gd tests/inven_inventory_icons_test.gd data/ground_item_icons.json assets/ground_categories docs/verification/ground_categories_20261015.json docs/verification/ground_categories_20261015
-          if ! git diff --cached --quiet; then
-            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Connect ground item categories with transparent local art; preserve inventory, names and drop effects'
-            git push origin HEAD:refs/heads/feature/ground-category-icons-20261015
-          fi
-          git rev-parse HEAD > /tmp/ground-icons/verified-commit.txt
-      - name: Package source changes, category PNGs and verification
-        if: always()
-        run: |
-          python3 - <<'PY'
-          import pathlib,zipfile
-          out=pathlib.Path('/tmp/ground-icons');out.mkdir(exist_ok=True)
-          paths=['scripts/ui/ground_item_icons.gd','scripts/ui/item_visual_resolver.gd','tests/inven_inventory_icons_test.gd','tests/ground_category_probe.gd','tests/capture_ground_categories.gd','data/ground_item_icons.json','docs/verification/ground_categories_20261015.json']
-          for folder in ['tools/ground_icons','assets/ground_categories','docs/verification/ground_categories_20261015']:
-              if pathlib.Path(folder).exists():paths.extend(str(p) for p in pathlib.Path(folder).rglob('*') if p.is_file() and '__pycache__' not in str(p))
-          with zipfile.ZipFile(out/'ground-patch.zip','w',zipfile.ZIP_DEFLATED) as z:
-              for name in paths:
-                  p=pathlib.Path(name)
-                  if p.is_file():z.write(p,name)
-          PY
+      - name: Verify Main floor art, inventory, names, grade effects and real pickup
+        run: python3 tools/ground_icons/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/ground-icons
+      - name: Verification does not modify game source or assets
+        run: git diff --exit-code -- scripts data assets tools tests
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ground-category-verification
+          name: ground-category-validation-${{ github.sha }}
           path: |
             /tmp/ground-icons/*.json
             /tmp/ground-icons/*.log
-            /tmp/ground-icons/*.txt
-            /tmp/ground-icons/*.zip
-            /tmp/ground-icons/*-captures/
+            /tmp/ground-icons/after-captures/
           retention-days: 14
           if-no-files-found: error
