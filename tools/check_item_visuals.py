@@ -12,7 +12,7 @@ import subprocess
 from PIL import Image
 
 
-STATES = ("original_linked", "original_review_pending", "self_authored_substitute", "image_missing")
+STATES = ("original_linked", "inven_exact_name", "inven_visual_alias", "original_review_pending", "self_authored_substitute", "bundled_ui_art", "image_missing")
 
 
 def sha(path: Path) -> str:
@@ -142,12 +142,17 @@ def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, di
                 if not files[path]["tracked"]: errors.append("untracked runtime image: " + path)
             if group == "catalog" and path != row["pinned_path"]:
                 errors.append("catalog sourceId path substituted: " + str(row["sourceId"]))
+            if info["status"] not in STATES:
+                errors.append("unrecognized visual state: " + str(info["status"]))
             counts[info["status"]] += 1
         sets[group] = {"total":len(rows),"states":{key:counts[key] for key in STATES},"rows":rows}
     if len(runtime.get("catalog", [])) != len(catalog): errors.append("incomplete runtime catalog export")
     errors.extend(runtime.get("failures", []))
     report = {"schema":1,"base_sha":base,"checked_date":"2026-10-12", "engine":runtime.get("engine"),
-              "definitions":{"original_linked":"Exact sourceId/name/image URL and PNG SHA verified against the current item detail data, or an existing manually reviewed L1J pair. This is image identity, not a new redistribution licence.",
+              "definitions":{"inven_exact_name":"Inventory-only exact item name and verified Inven image; no gameplay fields replaced.",
+                             "inven_visual_alias":"Explicit Inven artwork alias for a custom/variant item; not an exact original-item identity match.",
+                             "bundled_ui_art":"Stock UI picture, not an original item identity match.",
+                             "original_linked":"Exact sourceId/name/image URL and PNG SHA verified against the current item detail data, or an existing manually reviewed L1J pair. This is image identity, not a new redistribution licence.",
                              "original_review_pending":"Image displays, but identity evidence is incomplete; excluded from confirmed original count.",
                              "self_authored_substitute":"Explicit TWILIGHT family symbol or existing owned UI icon; not original art.",
                              "image_missing":"No displayable texture; never counted as linked."},
@@ -157,7 +162,7 @@ def audit(root: Path, runtime: dict, sources: dict, base: str) -> tuple[dict, di
               "l1j_candidates":l1j_report,
               "source_evidence_summary":sources.get("summary",{}),
               "notes":["Raw catalog and legacy row counts overlap; runtime is the actually merged active encyclopedia.",
-                       "No source ZIP available, no new third-party image bytes added, no original private pack delivery claimed.",
+                       "Inventory-only source acquisitions and explicit aliases are recorded separately in data/inven_inventory_icons.json; no private pack delivery is claimed.",
                        "Pending candidates and family substitutes remain separate even when every slot has a picture."]}
     return report, {"schema":1,"checked_date":"2026-10-12","records":proofs}
 

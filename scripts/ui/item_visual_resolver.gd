@@ -1,4 +1,5 @@
 extends RefCounted
+const INVEN_INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
 ## One read-only image resolver for every item surface, including physical instances.
 ## New pinned art wins; legacy links are recovery paths, never identity overrides.
 const FALLBACK = preload("res://scripts/ui/item_fallback_art.gd")
@@ -67,6 +68,21 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	return record
 
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
+	# Ground art and all real/unknown source IDs retain the original resolver.
+	if not ground and str(record.get("sourceId", "")).is_empty():
+		_ensure()
+		var inventory_name: String = str(record.get("name", fallback_name))
+		# Catalog names (including ambiguous variants) must never borrow an alias.
+		if not _names.has(inventory_name):
+			var binding: Dictionary = INVEN_INVENTORY.lookup(record, inventory_name)
+			if not binding.is_empty():
+				return {"source_id":"", "name":inventory_name, "path":binding.path,
+					"status":"inven_exact_name" if binding.match_kind == "exact_name" else "inven_visual_alias",
+					"route":"inven_inventory", "family":"", "match_kind":binding.match_kind,
+					"art_source":binding.art_source}
+	return _describe_original(record, fallback_name, images, ground)
+
+static func _describe_original(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
 	var name_value: String = str(record.get("name", fallback_name))
 	var source: Dictionary = _source(record, name_value)
 	var id: String = str(source.get("sourceId", record.get("sourceId", "")))
