@@ -1,0 +1,31 @@
+name: Interaction repair workspace
+on:
+  push:
+    branches: ['feature/input-eight-fixes-20261014']
+    paths: ['.github/workflows/interaction-workspace.yml', 'tools/workspace_input_patch.py']
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate unchanged resource inventory before interaction edits
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Package tracked workspace and exact Godot version for isolated tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/interaction-workspace
+          git rev-parse HEAD > /tmp/interaction-workspace/source-commit.txt
+          git archive HEAD | gzip -1 > /tmp/interaction-workspace/source.tar.gz
+          curl -L --fail --retry 3 -o /tmp/interaction-workspace/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          sha256sum /tmp/interaction-workspace/* > /tmp/interaction-workspace/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: interaction-workspace-${{ github.sha }}
+          path: /tmp/interaction-workspace/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
