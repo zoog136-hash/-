@@ -19,13 +19,37 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/interaction-workspace
           git rev-parse HEAD > /tmp/interaction-workspace/source-commit.txt
-          git archive HEAD | gzip -1 > /tmp/interaction-workspace/source.tar.gz
+          git archive HEAD | gzip -1 | split -b 300M -d - /tmp/interaction-workspace/source.part-
           curl -L --fail --retry 3 -o /tmp/interaction-workspace/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
           sha256sum /tmp/interaction-workspace/* > /tmp/interaction-workspace/SHA256SUMS
       - uses: actions/upload-artifact@v4
         with:
-          name: interaction-workspace-${{ github.sha }}
-          path: /tmp/interaction-workspace/
+          name: interaction-source-0-${{ github.sha }}
+          path: /tmp/interaction-workspace/source.part-00
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: interaction-source-1-${{ github.sha }}
+          path: /tmp/interaction-workspace/source.part-01
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: interaction-source-2-${{ github.sha }}
+          path: /tmp/interaction-workspace/source.part-02
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: interaction-engine-${{ github.sha }}
+          path: |
+            /tmp/interaction-workspace/godot.zip
+            /tmp/interaction-workspace/source-commit.txt
+            /tmp/interaction-workspace/SHA256SUMS
           compression-level: 0
           retention-days: 3
           if-no-files-found: error
