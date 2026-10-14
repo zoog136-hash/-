@@ -40,7 +40,11 @@ def link(root, source_key, target_keys, apply=False):
         raise ValueError("Source provenance no longer matches its reference")
     if proof.get("target_presentations", {}).get(source_key, proof["presentation_to_preserve"]) != source["presentation_to_preserve"]:
         raise ValueError("Source provenance no longer matches its presentation")
-    bindings = [source] + [targets[key] for key in target_keys]
+    # Older authored packs used one shared reference and had no per-target
+    # reference map. Once that map exists, gameplay QA requires every existing
+    # identity to be represented, not only the newly requested aliases.
+    all_keys = list(dict.fromkeys([source_key] + proof["target_keys"] + target_keys))
+    bindings = [targets[key] for key in all_keys]
     for target in bindings:
         if sharing_identity(target, root=root) != sharing_identity(source, root=root):
             raise ValueError("Original image or rendered presentation differs: " + target["key"])
@@ -54,10 +58,15 @@ def link(root, source_key, target_keys, apply=False):
         current_frames = document["profiles"].get(target["key"], {}).get("frames_path", "")
         if current_frames and current_frames != frames_path:
             raise ValueError("Do not replace an existing motion binding: " + target["key"])
+        for field, expected in (("target_references", reference),
+                                ("target_presentations", target["presentation_to_preserve"])):
+            recorded = proof.get(field, {}).get(target["key"])
+            if recorded is not None and recorded != expected:
+                raise ValueError("Existing target provenance changed: " + target["key"])
     before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
               for path in folder.iterdir() if path.suffix in {".png", ".tres"}}
-    for target in bindings[1:]:
-        key = target["key"]
+    for key in target_keys:
+        target = targets[key]
         current = copy.deepcopy(document["profiles"].get(key, {}))
         if "prior_visual_profile" not in current:
             current["prior_visual_profile"] = copy.deepcopy(current) or None
@@ -66,6 +75,8 @@ def link(root, source_key, target_keys, apply=False):
         document["profiles"][key] = current
         if key not in proof["target_keys"]:
             proof["target_keys"].append(key)
+    for target in bindings:
+        key = target["key"]
         proof.setdefault("target_references", {})[key] = target["reference"]
         proof.setdefault("target_presentations", {})[key] = target["presentation_to_preserve"]
     if apply:
@@ -76,6 +87,7 @@ def link(root, source_key, target_keys, apply=False):
     if before != after:
         raise AssertionError("Existing artwork or SpriteFrames changed")
     return {"source_key": source_key, "targets": target_keys, "frames_path": frames_path,
+            "validated_reference_keys": all_keys,
             "applied": apply, "existing_resource_sha256": before,
             "actual_gameplay": "not_run_by_linker"}
 

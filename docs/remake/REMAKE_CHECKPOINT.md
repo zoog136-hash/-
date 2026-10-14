@@ -7,6 +7,7 @@
 - 오크 마법사는 두 차례 방향 오류로 **미완료 유지·추가 생성 중단**. 2차는 인접 몸체 포함도 실패. [초안·정확한 프롬프트·원인](evidence/pr100-direction-fix/original-based/batch16/orc-mage-blocked/authoring_blocker.json)을 저장했고 사용자 중단 기준에 따라 현 묶음을 인계한다. 다음에는 동일 전체 시트를 재시도하지 말고 독립8방향 회전표부터 확인한다.
 - 다음: PR 최신 head와 CI 상태 확인(실패 job만 재검사) → 오크 방향표·기존 조각 귀속 검토 → 남은143종 중 다음5~10종 선택 → `tests/run_original_based_batch.gd`와 별도 fixture로 실제 Main 검사 → 현재 보고서·coverage 갱신 → 같은 브랜치 커밋·푸시. 성공한 각 이름의 Main 보고서만 완료 근거로 사용한다.
 - `62ad60a` Android 빌드·독립 검사·업로드 성공(81리소스). 마지막83리소스 커밋의 CI/Android 결과와 혼동하지 않는다. 실제 기기 실행은 미검증. 알비노 악어 초안 및 기존6개 시트의 프레임 외79픽셀은 추가 검토 대상이며 임의 수정하지 않았다.
+- `ccd8d5f` 뒤 최종 최소 수정: 첫 커밋 CI에서 기존 별칭 출처 목록 누락을 발견해 linker가 모든 기존 연결을 검증·기록하도록 수정했다. 기존 아시타지오/오만한 아시타지오/하피/지역 하피4종 Main 3,886개와 linker9개 통과, 그림·전투 profile 바이트 보존. [CI 원인·수정 증거](evidence/pr100-direction-fix/original-based/batch16/ci-reference-fix/summary.json). 이 마지막 수정 커밋을 재개 기준으로 사용한다.
 
 ## 이전 세션 기록 보존
 

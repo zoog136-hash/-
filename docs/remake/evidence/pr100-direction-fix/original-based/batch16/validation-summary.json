@@ -53,10 +53,15 @@
       "failures": [],
       "screenshots": 344
     },
-    "related_python_tests": 33,
+    "related_python_tests": 35,
     "production_body_kind_assertions": "Both zombie names resolve undead; blue harpy resolves flying in actual Main. Their fallback body metadata remains unchanged.",
     "video": "main-batch.mp4 is a 240-second real Xvfb Main excerpt at 15 FPS, not a complete four-case recording or performance benchmark.",
-    "initial_render_attempt": "X11 connection blocked before gameplay in default sandbox; preserved diagnostic, rerun with display access passed."
+    "initial_render_attempt": "X11 connection blocked before gameplay in default sandbox; preserved diagnostic, rerun with display access passed.",
+    "existing_alias_reference_regression": {
+      "cases": 4,
+      "checks": 3886,
+      "failures": []
+    }
   },
   "preservation": {
     "original_references": 222,
@@ -1795,5 +1800,6 @@
     "Check exact-head CI and Android status; inspect failed jobs only instead of repeating passing full tests.",
     "Resume orc mage from an independently reviewed eight-view turntable; do not condition another full atlas on the same rejected direction draft.",
     "Review old fragment-attribution findings, then select next5–10 identities from current143-item list. Preserve originals and verify each actual name in Main."
-  ]
+  ],
+  "ci_followup": "ci-reference-fix/summary.json"
 }

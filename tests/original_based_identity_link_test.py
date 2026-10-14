@@ -26,13 +26,18 @@ class OriginalIdentityLinkTest(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.folder = Path("assets/actors/eight_direction/original_based") / self.FOLDER
         rows = json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]
-        self.targets = [copy.deepcopy(row) for row in rows if row["key"] in (self.SOURCE, self.TARGET)]
+        existing_keys = json.loads((ROOT / self.folder / "provenance.json").read_text())["target_keys"]
+        self.targets = [copy.deepcopy(row) for row in rows if row["key"] in set(existing_keys + [self.SOURCE, self.TARGET])]
         (self.root / "data").mkdir()
         self.write_targets()
         shutil.copyfile(ROOT / "data/animation_presentation.json", self.root / "data/animation_presentation.json")
-        source_profile = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"][self.SOURCE]
+        actual_profiles = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]
+        source_profile = actual_profiles[self.SOURCE]
         target_name = next(row["name"] for row in self.targets if row["key"] == self.TARGET)
         document = {"schema": 1, "profiles": {self.SOURCE: source_profile, self.TARGET: {"name": target_name, "custom_existing_setting": 17}}}
+        for key in existing_keys:
+            if key not in document["profiles"]:
+                document["profiles"][key] = copy.deepcopy(actual_profiles[key])
         (self.root / "data/combat_animation_profiles.json").write_text(json.dumps(document))
         (self.root / self.folder).mkdir(parents=True)
         for path in (ROOT / self.folder).iterdir():
@@ -83,6 +88,23 @@ class OriginalIdentityLinkTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, self.MISMATCH_ERROR):
             linker.link(self.root, self.SOURCE, [self.TARGET], apply=True)
         self.assertEqual(self.snapshot(), before)
+
+    def test_first_per_target_map_keeps_every_preexisting_alias(self):
+        path = self.root / self.folder / "provenance.json"
+        proof = json.loads(path.read_text())
+        proof.pop("target_references", None)
+        path.write_text(json.dumps(proof))
+        profiles_path = self.root / "data/combat_animation_profiles.json"
+        before = json.loads(profiles_path.read_text())["profiles"]
+        linker.link(self.root, self.SOURCE, [self.TARGET], apply=True)
+        proof = json.loads(path.read_text())
+        self.assertEqual(set(proof["target_references"]), set(proof["target_keys"]))
+        self.assertEqual(set(proof["target_presentations"]), set(proof["target_keys"]))
+        after = json.loads(profiles_path.read_text())["profiles"]
+        for target in self.targets:
+            self.assertEqual(proof["target_references"][target["key"]], target["reference"])
+            if target["key"] != self.TARGET:
+                self.assertEqual(before[target["key"]], after[target["key"]])
 
     def test_independent_alias_source_sha_is_required_without_writes(self):
         target = next(row for row in self.targets if row["key"] == self.TARGET)

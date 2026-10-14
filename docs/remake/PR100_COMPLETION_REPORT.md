@@ -2,7 +2,7 @@
 
 ## 2026-10-14 안전 인계 · batch16 현재 상태
 
-보존 커밋 `6067ec1e74fbb7a3ae469caf8f75b5ea9e294b6b`에서 재개한 이번 세션은 **9종 추가**, 현재 **355/498종 연결·143종 미완료**다. 변신 **136/180**(44 미완료), 일반 몬스터 **184/258**(74), 보스 **35/60**(25). **83개 native 리소스·47개 원본 기반 디자인·4,840개 실제 고유 자세**를 사용한다. [현재 미완료 ID](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json)와 방향표를 성공한 Main 보고서 **167개**로 갱신했다. 연결 수를 모든 기존 이름의 개별 플레이 완료 수로 바꾸어 해석하지 않는다.
+보존 커밋 `6067ec1e74fbb7a3ae469caf8f75b5ea9e294b6b`에서 재개한 이번 세션은 **9종 추가**, 현재 **355/498종 연결·143종 미완료**다. 변신 **136/180**(44 미완료), 일반 몬스터 **184/258**(74), 보스 **35/60**(25). **83개 native 리소스·47개 원본 기반 디자인·4,840개 실제 고유 자세**를 사용한다. [현재 미완료 ID](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json)와 방향표를 성공한 Main 보고서 **171개**로 갱신했다. 연결 수를 모든 기존 이름의 개별 플레이 완료 수로 바꾸어 해석하지 않는다.
 
 첫 5종은 **`62ad60ae118c28f6f11bfc6facb3d5564e2ba929`**로 같은 PR #100에 푸시했다. 두 번째 계획 5종 중 **블루 하피·질투의 좀비 나이트·질투의 좀비 메이드·불신의 임프 4종**을 실제 Main으로 검증했다. 블루 하피는 기존 하피 그림을 재사용했고, 좀비 두 이름과 임프는 기존 원본에서 2개 디자인/208자세를 새로 그렸다. 각 이름의 원본·fallback body·능력치를 유지한다. 명시한 하피/좀비 대상만 원본 SHA·경로·표시 설정과 실제 source override가 일치할 때 공유할 수 있으며, 다른 body까지 비교를 완화하지 않았다. 실제 Main에서도 `flying`/`undead` 선택을 확인했다.
 
@@ -13,6 +13,8 @@
 첫 푸시 `62ad60a`의 [Android CI](https://github.com/zoog136-hash/-/actions/runs/38520075224)는 빌드·독립 검사·업로드까지 성공했다. **81개 compiled SpriteFrames·3,664트랙·14,952재생 슬롯·319개 PNG 임포트**, SHA·캔버스·ZIP CRC·ARM64·서명·16KB 정렬을 검사했다. APK **867,837,879 bytes**, SHA-256 **`b2d1d2b484a23d7be728fe5665083d1a137b66798b6ec07150a55c311bfa579f`**. [APK 산출물](https://github.com/zoog136-hash/-/actions/runs/38520075224/artifacts/11873753237) · [다운로드한 진단과 범위](evidence/pr100-direction-fix/original-based/batch16/previous-commit-android/scope.json). 이 결과에 마지막 2개 디자인을 포함하지 않는다. **현재 83개 리소스의 정확한 푸시 커밋 CI·Android 결과는 별도로 확인하며, 실제 Android 기기 실행은 미검증**이다.
 
 재개 순서는 PR #100의 최신 head/보존 커밋 확인 → 해당 head의 CI 실패 job만 확인 → 오크 방향표와 기존 6개 시트의 프레임 밖 79픽셀 귀속 검토 → 남은 143종 중 다음 5~10종 선택이다. 알비노 악어는 계속 미연결이며 이전 초안 ZIP도 유지한다. 기존 2D 런타임·원본·정상 PNG/TRES를 보존했고 새 PR이나 main 병합은 수행하지 않았다.
+
+마감 확인에서 첫 커밋의 애니메이션 CI가 기존 아시타지오의 출처 단언에서 실패한 것을 발견했다. 재사용 도구가 새 별칭의 `target_references`만 만들면서 기존 별칭을 그 목록에서 누락했다. 모든 기존 연결의 실제 원본 SHA·표시 설정을 먼저 검증하고 전체 출처 목록을 채우도록 수정했다. **아시타지오·오만한 아시타지오·하피·풍룡의 둥지 하피 4종의 실제 Main headless 3,886개**, linker Python **9개**, 전체 리소스의 출처 목록 완전성 검사를 통과했다. PNG/TRES·production profile 바이트는 그대로다. 기존 검사 단언을 약화하지 않았다. [실패 원인·수정·부분 회귀](evidence/pr100-direction-fix/original-based/batch16/ci-reference-fix/summary.json). 이미 알려진 오류가 있는 이 세션의 미종료 CI만 취소하고, 이 수정이 포함된 최종 푸시 커밋에서 전체 회귀·애니메이션·Android를 다시 확인한다. 진행 중 검사를 성공으로 기록하지 않는다.
 
 ## 이번 세션 첫 묶음 · batch15 기록
 
