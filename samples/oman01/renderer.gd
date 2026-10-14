@@ -70,6 +70,7 @@ class SampleChunk extends Node2D:
 			for x: int in range(key.x*32,mini((key.x+1)*32,map.width)):
 				var cell := Vector2i(x,y)
 				if map.value_at(cell,true) == 0:
+					ground.blocked.append(map.cell_to_world(cell))
 					continue
 				var p: Vector2 = map.cell_to_world(cell)
 				ground.cells.append(p)
@@ -99,10 +100,13 @@ class SampleChunk extends Node2D:
 class StoneGround extends Node2D:
 	var texture: Texture2D
 	var cells: Array[Vector2] = []
+	var blocked: Array[Vector2] = []
 	var variations: Array[float] = []
 	var debug: bool = false
 	func _draw() -> void:
 		if texture == null: return
+		for p: Vector2 in blocked:
+			draw_colored_polygon(PackedVector2Array([p+Vector2(-24,0),p+Vector2(0,-12),p+Vector2(24,0),p+Vector2(0,12)]),Color("090d10"))
 		for i: int in range(cells.size()):
 			var p: Vector2 = cells[i]
 			var idx: int = clampi(int(variations[i]*31.0),0,31)
