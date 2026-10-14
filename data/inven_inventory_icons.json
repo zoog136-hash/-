@@ -2,27 +2,14 @@
   "schema": 1,
   "scope": "inventory_only",
   "generated_at": "2026-10-14T13:47:04.990088+00:00",
-  "unresolved": [
-    {
-      "name": "정제된 목재",
-      "reason": "No matching Inven item DB artwork was established; do not substitute an unrelated object."
-    },
-    {
-      "name": "약초",
-      "reason": "No matching Inven item DB artwork was established; do not substitute an unrelated object."
-    },
-    {
-      "name": "드래곤의 용옥",
-      "reason": "No matching Inven item DB artwork was established; do not substitute an unrelated object."
-    }
-  ],
+  "unresolved": [],
   "rights": "Source identity and bytes are verified; public availability is not a redistribution licence. No gameplay identity is replaced by an art-source ID.",
   "summary": {
-    "bindings": 444,
+    "bindings": 447,
     "unique_images": 365,
     "new_images": 39,
     "match_kinds": {
-      "visual_alias": 424,
+      "visual_alias": 427,
       "exact_name": 20
     }
   },
@@ -4024,28 +4011,6 @@
       "match_kind": "visual_alias"
     },
     {
-      "name": "HP 물약",
-      "type": "소모품",
-      "slot": "consumable",
-      "path": "res://assets/inven_inventory/233_6abc322674a34eaa.png",
-      "sha256": "6abc322674a34eaa99557427324ce8d66700927091ec25e3e300bc5458f7fe42",
-      "size": [
-        64,
-        64
-      ],
-      "art_source": {
-        "id": "233",
-        "name": "체력 회복제 (각인)",
-        "url": "https://lineagem.inven.co.kr/db/item/233",
-        "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/red_potion.png",
-        "verification": "detail_id_name_image_bytes_verified",
-        "acquired_now": true,
-        "checked_at": "2026-10-14T13:47:04.990088+00:00",
-        "page_sha256": "8c8e8ad1293a9ff723270de4ab593d4e81e6c608802a46b28216258e01a46e72"
-      },
-      "match_kind": "visual_alias"
-    },
-    {
       "name": "강력 HP 물약",
       "type": "소모품",
       "slot": "consumable",
@@ -4284,6 +4249,28 @@
         "acquired_now": true,
         "checked_at": "2026-10-14T13:47:04.990088+00:00",
         "page_sha256": "733fc743e388202160dba8c2d9f941981a157270cafe947e8d968b2ad2340128"
+      },
+      "match_kind": "visual_alias"
+    },
+    {
+      "name": "HP 물약",
+      "type": "소모품",
+      "slot": "consumable",
+      "path": "res://assets/inven_inventory/233_6abc322674a34eaa.png",
+      "sha256": "6abc322674a34eaa99557427324ce8d66700927091ec25e3e300bc5458f7fe42",
+      "size": [
+        64,
+        64
+      ],
+      "art_source": {
+        "id": "233",
+        "name": "체력 회복제 (각인)",
+        "url": "https://lineagem.inven.co.kr/db/item/233",
+        "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/red_potion.png",
+        "verification": "detail_id_name_image_bytes_verified",
+        "acquired_now": true,
+        "checked_at": "2026-10-14T13:47:04.990088+00:00",
+        "page_sha256": "8c8e8ad1293a9ff723270de4ab593d4e81e6c608802a46b28216258e01a46e72"
       },
       "match_kind": "visual_alias"
     },
@@ -5882,6 +5869,26 @@
       "match_kind": "visual_alias"
     },
     {
+      "name": "약초",
+      "type": "제작재료",
+      "slot": "consumable",
+      "path": "res://assets/catalog/fdb25a49b73b6367a4eb50be.png",
+      "sha256": "ffffae2f2105fe17eb0c98d66ae757028b5b43ff0c5387b64a49751699ce0a84",
+      "size": [
+        64,
+        64
+      ],
+      "art_source": {
+        "id": "3732",
+        "name": "축복의 가루",
+        "url": "https://lineagem.inven.co.kr/db/item/3732",
+        "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/blessing_powder.png",
+        "verification": "existing_id_name_image_bytes_verified",
+        "acquired_now": false
+      },
+      "match_kind": "visual_alias"
+    },
+    {
       "name": "연마석",
       "type": "제작재료",
       "slot": "consumable",
@@ -5918,6 +5925,28 @@
         "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/blessing_powder.png",
         "verification": "existing_id_name_image_bytes_verified",
         "acquired_now": false
+      },
+      "match_kind": "visual_alias"
+    },
+    {
+      "name": "정제된 목재",
+      "type": "제작재료",
+      "slot": "consumable",
+      "path": "res://assets/inven_inventory/366_4a93c489f60e1a47.png",
+      "sha256": "4a93c489f60e1a47b0b8525ac7ca791e2f4f9f17197796c9f5b19854214f6080",
+      "size": [
+        64,
+        64
+      ],
+      "art_source": {
+        "id": "366",
+        "name": "가죽",
+        "url": "https://lineagem.inven.co.kr/db/item/366",
+        "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/fur.png",
+        "verification": "detail_id_name_image_bytes_verified",
+        "acquired_now": true,
+        "checked_at": "2026-10-14T13:47:04.990088+00:00",
+        "page_sha256": "d980214f6df27db91b07c6fa8b16572268317639fa30389f8005d93172e4329d"
       },
       "match_kind": "visual_alias"
     },
@@ -6684,6 +6713,28 @@
         "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/dragonknight_great_sword.png",
         "verification": "existing_id_name_image_bytes_verified",
         "acquired_now": false
+      },
+      "match_kind": "visual_alias"
+    },
+    {
+      "name": "드래곤의 용옥",
+      "type": "축복버프",
+      "slot": "consumable",
+      "path": "res://assets/inven_inventory/549_dd753c7036d2fc2a.png",
+      "sha256": "dd753c7036d2fc2ac736adb3ac2be39b75f88459136f659c5b2d37e687aad4c6",
+      "size": [
+        64,
+        64
+      ],
+      "art_source": {
+        "id": "549",
+        "name": "드래곤의 다이아몬드",
+        "url": "https://lineagem.inven.co.kr/db/item/549",
+        "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/dragon_diamond.png",
+        "verification": "detail_id_name_image_bytes_verified",
+        "acquired_now": true,
+        "checked_at": "2026-10-14T13:47:04.990088+00:00",
+        "page_sha256": "59fc012d1fb665a43daf952504f05c54397cf77740369350b4ba2e7d0efab4fb"
       },
       "match_kind": "visual_alias"
     },
@@ -8724,28 +8775,6 @@
       "match_kind": "visual_alias"
     },
     {
-      "name": "MP 회복 물약",
-      "type": "회복물약",
-      "slot": "consumable",
-      "path": "res://assets/inven_inventory/385_2c2ebb6c0d935003.png",
-      "sha256": "2c2ebb6c0d9350037f274df45cda22d5a8baab2b084635884054e36971a35f70",
-      "size": [
-        64,
-        64
-      ],
-      "art_source": {
-        "id": "385",
-        "name": "마나 회복 물약 (각인)",
-        "url": "https://lineagem.inven.co.kr/db/item/385",
-        "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/potion_of_more_mana_healing.png",
-        "verification": "detail_id_name_image_bytes_verified",
-        "acquired_now": true,
-        "checked_at": "2026-10-14T13:47:04.990088+00:00",
-        "page_sha256": "2819106976b58d6316d827ba5736d6e7ba17e63e12cbd464050bfcacbbd4b99e"
-      },
-      "match_kind": "visual_alias"
-    },
-    {
       "name": "마나 회복 물약",
       "type": "회복물약",
       "slot": "consumable",
@@ -8788,6 +8817,28 @@
         "page_sha256": "b53cdef8f0a292f613281b3ce1995933a882905fa99651918618f552c36ccb63"
       },
       "match_kind": "exact_name"
+    },
+    {
+      "name": "MP 회복 물약",
+      "type": "회복물약",
+      "slot": "consumable",
+      "path": "res://assets/inven_inventory/385_2c2ebb6c0d935003.png",
+      "sha256": "2c2ebb6c0d9350037f274df45cda22d5a8baab2b084635884054e36971a35f70",
+      "size": [
+        64,
+        64
+      ],
+      "art_source": {
+        "id": "385",
+        "name": "마나 회복 물약 (각인)",
+        "url": "https://lineagem.inven.co.kr/db/item/385",
+        "image_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/item/potion_of_more_mana_healing.png",
+        "verification": "detail_id_name_image_bytes_verified",
+        "acquired_now": true,
+        "checked_at": "2026-10-14T13:47:04.990088+00:00",
+        "page_sha256": "2819106976b58d6316d827ba5736d6e7ba17e63e12cbd464050bfcacbbd4b99e"
+      },
+      "match_kind": "visual_alias"
     },
     {
       "name": "민첩의 휘장",

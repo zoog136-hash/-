@@ -1,7 +1,7 @@
 extends SceneTree
 const RESOLVER = preload("res://scripts/ui/item_visual_resolver.gd")
 const INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
-const UNRESOLVED: Array[String] = ["정제된 목재", "약초", "드래곤의 용옥"]
+const UNRESOLVED: Array[String] = []
 var checks: int = 0
 var failures: Array[String] = []
 var counts: Dictionary = {}
@@ -60,6 +60,17 @@ func _run() -> void:
 	check(INVENTORY.lookup(sample, "천상의 활").is_empty(), "wrong item name rejected")
 	check(INVENTORY.lookup({"name":"훈련용 활"}, "훈련용 활").is_empty(), "incomplete identity cannot borrow art")
 	check(RESOLVER.cache_size() <= 256, "texture cache remains bounded")
+	# Explicit visual aliases are inventory-only. These three names remain distinct gameplay items.
+	for variant: Dictionary in [
+		{"name":"정제된 목재", "type":"제작재료", "slot":"consumable"},
+		{"name":"약초", "type":"제작재료", "slot":"consumable"},
+		{"name":"드래곤의 용옥", "type":"축복버프", "slot":"consumable"}
+	]:
+		var alias: Dictionary = INVENTORY.lookup(variant, str(variant["name"]))
+		check(not alias.is_empty() and str(alias.get("match_kind", "")) == "visual_alias", "reviewed visual alias: " + str(variant["name"]))
+		var shown: Dictionary = RESOLVER.describe(variant, str(variant["name"]))
+		check(shown.get("status", "") == "inven_visual_alias", "inventory shows substitute art: " + str(variant["name"]))
+		check(shown.get("path", "") == alias.get("path", ""), "correct substitute image path: " + str(variant["name"]))
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(INVENTORY.MANIFEST))
 	check(manifest.items.size() == int(counts.get("inven_exact_name", 0)) + int(counts.get("inven_visual_alias", 0)), "all explicit inventory bindings exercised")
 	var report: Dictionary = {"checks":checks,"runtime_rows":world.catalog_db.get("아이템", []).size(),"states":counts,"unresolved":UNRESOLVED,"failures":failures}
