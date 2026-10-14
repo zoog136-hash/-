@@ -28,7 +28,7 @@ jobs:
           import hashlib, struct, zlib
           p=Path('/tmp/oman01_flagstones.png')
           raw=p.read_bytes()
-          assert raw[:8]==b'\\x89PNG\\r\\n\\x1a\\n'
+          assert raw[:8]==bytes([137,80,78,71,13,10,26,10])
           w,h=struct.unpack('>II',raw[16:24])
           assert (w,h)==(768,192) and len(raw)>1000
           first=hashlib.sha256(raw).hexdigest()
