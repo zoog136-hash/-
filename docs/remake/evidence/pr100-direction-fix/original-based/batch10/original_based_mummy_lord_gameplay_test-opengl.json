@@ -1,0 +1,915 @@
+{
+	"boss": [
+		{
+			"compass": "E",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(1.0, 0.0)",
+			"facing": 0,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(1.0, 0.0)"
+		},
+		{
+			"compass": "SE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707105, 0.707108)",
+			"facing": 1,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.707105, 0.707108)"
+		},
+		{
+			"compass": "S",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, 1.0)",
+			"facing": 2,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.0, 1.0)"
+		},
+		{
+			"compass": "SW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707105, 0.707108)",
+			"facing": 3,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-0.707105, 0.707108)"
+		},
+		{
+			"compass": "W",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-1.0, 0.0)",
+			"facing": 4,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-1.0, 0.0)"
+		},
+		{
+			"compass": "NW",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(-0.707105, -0.707108)",
+			"facing": 5,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(-0.707105, -0.707108)"
+		},
+		{
+			"compass": "N",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.0, -1.0)",
+			"facing": 6,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.0, -1.0)"
+		},
+		{
+			"compass": "NE",
+			"contacts": 1,
+			"effect": true,
+			"effect_aim": "(0.707105, -0.707108)",
+			"facing": 7,
+			"kind": "nova",
+			"name": "불사의 머미 로드",
+			"player_hp_after": 1739,
+			"player_hp_before": 1832,
+			"summoned": 0,
+			"warning": true,
+			"warning_aim": "(0.707105, -0.707108)"
+		}
+	],
+	"checks": 2383,
+	"failures": [],
+	"flight_physics_observations": {},
+	"lifecycle": {
+		"attempt_limit": 768,
+		"death_callbacks": 1,
+		"death_track": "death_7",
+		"ground_drops": [
+			{
+				"created_at": 1791945167.92201,
+				"expires_at": 1791945767.92201,
+				"grade": "고급",
+				"hunt_batch": "56879a07856d1d1b06e82fd4b168c316",
+				"id": "48b40b0e375dc3fe0c30bd104faa2dd4",
+				"item_name": "강력 HP 물약",
+				"map_id": "aden_world",
+				"position": [
+					15176.0,
+					1680.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			},
+			{
+				"created_at": 1791945167.92565,
+				"expires_at": 1791945767.92565,
+				"grade": "일반",
+				"hunt_batch": "56879a07856d1d1b06e82fd4b168c316",
+				"id": "2e6a5de5945c5ae288b3ed9bd287eea2",
+				"item_name": "철 광석",
+				"map_id": "aden_world",
+				"position": [
+					15214.0,
+					1680.0
+				],
+				"quantity": 1,
+				"state": "ground"
+			}
+		],
+		"hit_pose": true,
+		"hp_end": 0,
+		"hp_start": 25200,
+		"manual_pickup": true,
+		"player_hp": 1922,
+		"weapon_attempts": 330
+	},
+	"monster": [
+		{
+			"attack": true,
+			"compass": "E",
+			"contacts": 1,
+			"facing": 0,
+			"movement": "(84.34766, 0.0)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SE",
+			"contacts": 1,
+			"facing": 1,
+			"movement": "(59.64062, 59.63525)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "S",
+			"contacts": 1,
+			"facing": 2,
+			"movement": "(0.0, 84.33154)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "SW",
+			"contacts": 1,
+			"facing": 3,
+			"movement": "(-59.64062, 59.63525)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "W",
+			"contacts": 1,
+			"facing": 4,
+			"movement": "(-84.34766, 0.0)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NW",
+			"contacts": 1,
+			"facing": 5,
+			"movement": "(-59.64062, -59.63525)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "N",
+			"contacts": 1,
+			"facing": 6,
+			"movement": "(0.0, -84.33154)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		},
+		{
+			"attack": true,
+			"compass": "NE",
+			"contacts": 1,
+			"facing": 7,
+			"movement": "(59.64062, -59.63525)",
+			"name": "불사의 머미 로드",
+			"walk": true
+		}
+	],
+	"monster_contacts": [
+		{
+			"damage": 60,
+			"facing": 0,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 60,
+			"facing": 1,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 60,
+			"facing": 2,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 60,
+			"facing": 3,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 60,
+			"facing": 4,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 60,
+			"facing": 5,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 60,
+			"facing": 6,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 60,
+			"facing": 7,
+			"kind": "melee",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 0,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 1,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 2,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 3,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 4,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 5,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 6,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		},
+		{
+			"damage": 96,
+			"facing": 7,
+			"kind": "magic",
+			"name": "불사의 머미 로드"
+		}
+	],
+	"physics_ticks": 7296,
+	"player": [],
+	"player_strikes": [],
+	"pose_samples": [
+		{
+			"frame": 0,
+			"track": "idle_0"
+		},
+		{
+			"frame": 1,
+			"track": "idle_0"
+		},
+		{
+			"frame": 0,
+			"track": "walk_0"
+		},
+		{
+			"frame": 1,
+			"track": "walk_0"
+		},
+		{
+			"frame": 2,
+			"track": "walk_0"
+		},
+		{
+			"frame": 0,
+			"track": "attack_0"
+		},
+		{
+			"frame": 1,
+			"track": "attack_0"
+		},
+		{
+			"frame": 2,
+			"track": "attack_0"
+		},
+		{
+			"frame": 0,
+			"track": "hit_0"
+		},
+		{
+			"frame": 1,
+			"track": "hit_0"
+		},
+		{
+			"frame": 0,
+			"track": "death_0"
+		},
+		{
+			"frame": 1,
+			"track": "death_0"
+		},
+		{
+			"frame": 2,
+			"track": "death_0"
+		},
+		{
+			"frame": 0,
+			"track": "idle_1"
+		},
+		{
+			"frame": 1,
+			"track": "idle_1"
+		},
+		{
+			"frame": 0,
+			"track": "walk_1"
+		},
+		{
+			"frame": 1,
+			"track": "walk_1"
+		},
+		{
+			"frame": 2,
+			"track": "walk_1"
+		},
+		{
+			"frame": 0,
+			"track": "attack_1"
+		},
+		{
+			"frame": 1,
+			"track": "attack_1"
+		},
+		{
+			"frame": 2,
+			"track": "attack_1"
+		},
+		{
+			"frame": 0,
+			"track": "hit_1"
+		},
+		{
+			"frame": 1,
+			"track": "hit_1"
+		},
+		{
+			"frame": 0,
+			"track": "death_1"
+		},
+		{
+			"frame": 1,
+			"track": "death_1"
+		},
+		{
+			"frame": 2,
+			"track": "death_1"
+		},
+		{
+			"frame": 0,
+			"track": "idle_2"
+		},
+		{
+			"frame": 1,
+			"track": "idle_2"
+		},
+		{
+			"frame": 0,
+			"track": "walk_2"
+		},
+		{
+			"frame": 1,
+			"track": "walk_2"
+		},
+		{
+			"frame": 2,
+			"track": "walk_2"
+		},
+		{
+			"frame": 0,
+			"track": "attack_2"
+		},
+		{
+			"frame": 1,
+			"track": "attack_2"
+		},
+		{
+			"frame": 2,
+			"track": "attack_2"
+		},
+		{
+			"frame": 0,
+			"track": "hit_2"
+		},
+		{
+			"frame": 1,
+			"track": "hit_2"
+		},
+		{
+			"frame": 0,
+			"track": "death_2"
+		},
+		{
+			"frame": 1,
+			"track": "death_2"
+		},
+		{
+			"frame": 2,
+			"track": "death_2"
+		},
+		{
+			"frame": 0,
+			"track": "idle_3"
+		},
+		{
+			"frame": 1,
+			"track": "idle_3"
+		},
+		{
+			"frame": 0,
+			"track": "walk_3"
+		},
+		{
+			"frame": 1,
+			"track": "walk_3"
+		},
+		{
+			"frame": 2,
+			"track": "walk_3"
+		},
+		{
+			"frame": 0,
+			"track": "attack_3"
+		},
+		{
+			"frame": 1,
+			"track": "attack_3"
+		},
+		{
+			"frame": 2,
+			"track": "attack_3"
+		},
+		{
+			"frame": 0,
+			"track": "hit_3"
+		},
+		{
+			"frame": 1,
+			"track": "hit_3"
+		},
+		{
+			"frame": 0,
+			"track": "death_3"
+		},
+		{
+			"frame": 1,
+			"track": "death_3"
+		},
+		{
+			"frame": 2,
+			"track": "death_3"
+		},
+		{
+			"frame": 0,
+			"track": "idle_4"
+		},
+		{
+			"frame": 1,
+			"track": "idle_4"
+		},
+		{
+			"frame": 0,
+			"track": "walk_4"
+		},
+		{
+			"frame": 1,
+			"track": "walk_4"
+		},
+		{
+			"frame": 2,
+			"track": "walk_4"
+		},
+		{
+			"frame": 0,
+			"track": "attack_4"
+		},
+		{
+			"frame": 1,
+			"track": "attack_4"
+		},
+		{
+			"frame": 2,
+			"track": "attack_4"
+		},
+		{
+			"frame": 0,
+			"track": "hit_4"
+		},
+		{
+			"frame": 1,
+			"track": "hit_4"
+		},
+		{
+			"frame": 0,
+			"track": "death_4"
+		},
+		{
+			"frame": 1,
+			"track": "death_4"
+		},
+		{
+			"frame": 2,
+			"track": "death_4"
+		},
+		{
+			"frame": 0,
+			"track": "idle_5"
+		},
+		{
+			"frame": 1,
+			"track": "idle_5"
+		},
+		{
+			"frame": 0,
+			"track": "walk_5"
+		},
+		{
+			"frame": 1,
+			"track": "walk_5"
+		},
+		{
+			"frame": 2,
+			"track": "walk_5"
+		},
+		{
+			"frame": 0,
+			"track": "attack_5"
+		},
+		{
+			"frame": 1,
+			"track": "attack_5"
+		},
+		{
+			"frame": 2,
+			"track": "attack_5"
+		},
+		{
+			"frame": 0,
+			"track": "hit_5"
+		},
+		{
+			"frame": 1,
+			"track": "hit_5"
+		},
+		{
+			"frame": 0,
+			"track": "death_5"
+		},
+		{
+			"frame": 1,
+			"track": "death_5"
+		},
+		{
+			"frame": 2,
+			"track": "death_5"
+		},
+		{
+			"frame": 0,
+			"track": "idle_6"
+		},
+		{
+			"frame": 1,
+			"track": "idle_6"
+		},
+		{
+			"frame": 0,
+			"track": "walk_6"
+		},
+		{
+			"frame": 1,
+			"track": "walk_6"
+		},
+		{
+			"frame": 2,
+			"track": "walk_6"
+		},
+		{
+			"frame": 0,
+			"track": "attack_6"
+		},
+		{
+			"frame": 1,
+			"track": "attack_6"
+		},
+		{
+			"frame": 2,
+			"track": "attack_6"
+		},
+		{
+			"frame": 0,
+			"track": "hit_6"
+		},
+		{
+			"frame": 1,
+			"track": "hit_6"
+		},
+		{
+			"frame": 0,
+			"track": "death_6"
+		},
+		{
+			"frame": 1,
+			"track": "death_6"
+		},
+		{
+			"frame": 2,
+			"track": "death_6"
+		},
+		{
+			"frame": 0,
+			"track": "idle_7"
+		},
+		{
+			"frame": 1,
+			"track": "idle_7"
+		},
+		{
+			"frame": 0,
+			"track": "walk_7"
+		},
+		{
+			"frame": 1,
+			"track": "walk_7"
+		},
+		{
+			"frame": 2,
+			"track": "walk_7"
+		},
+		{
+			"frame": 0,
+			"track": "attack_7"
+		},
+		{
+			"frame": 1,
+			"track": "attack_7"
+		},
+		{
+			"frame": 2,
+			"track": "attack_7"
+		},
+		{
+			"frame": 0,
+			"track": "hit_7"
+		},
+		{
+			"frame": 1,
+			"track": "hit_7"
+		},
+		{
+			"frame": 0,
+			"track": "death_7"
+		},
+		{
+			"frame": 1,
+			"track": "death_7"
+		},
+		{
+			"frame": 2,
+			"track": "death_7"
+		}
+	],
+	"scope": "original-based mummy_lord, actual Main and production AI/combat/lifecycle",
+	"screenshots": [
+		"monster-E.png",
+		"monster-SE.png",
+		"monster-S.png",
+		"monster-SW.png",
+		"monster-W.png",
+		"monster-NW.png",
+		"monster-N.png",
+		"monster-NE.png",
+		"boss-nova-E.png",
+		"boss-nova-SE.png",
+		"boss-nova-S.png",
+		"boss-nova-SW.png",
+		"boss-nova-W.png",
+		"boss-nova-NW.png",
+		"boss-nova-N.png",
+		"boss-nova-NE.png",
+		"authored-E-idle-0.png",
+		"authored-E-idle-1.png",
+		"authored-E-walk-0.png",
+		"authored-E-walk-1.png",
+		"authored-E-walk-2.png",
+		"authored-E-attack-0.png",
+		"authored-E-attack-1.png",
+		"authored-E-attack-2.png",
+		"authored-E-hit-0.png",
+		"authored-E-hit-1.png",
+		"authored-E-death-0.png",
+		"authored-E-death-1.png",
+		"authored-E-death-2.png",
+		"authored-SE-idle-0.png",
+		"authored-SE-idle-1.png",
+		"authored-SE-walk-0.png",
+		"authored-SE-walk-1.png",
+		"authored-SE-walk-2.png",
+		"authored-SE-attack-0.png",
+		"authored-SE-attack-1.png",
+		"authored-SE-attack-2.png",
+		"authored-SE-hit-0.png",
+		"authored-SE-hit-1.png",
+		"authored-SE-death-0.png",
+		"authored-SE-death-1.png",
+		"authored-SE-death-2.png",
+		"authored-S-idle-0.png",
+		"authored-S-idle-1.png",
+		"authored-S-walk-0.png",
+		"authored-S-walk-1.png",
+		"authored-S-walk-2.png",
+		"authored-S-attack-0.png",
+		"authored-S-attack-1.png",
+		"authored-S-attack-2.png",
+		"authored-S-hit-0.png",
+		"authored-S-hit-1.png",
+		"authored-S-death-0.png",
+		"authored-S-death-1.png",
+		"authored-S-death-2.png",
+		"authored-SW-idle-0.png",
+		"authored-SW-idle-1.png",
+		"authored-SW-walk-0.png",
+		"authored-SW-walk-1.png",
+		"authored-SW-walk-2.png",
+		"authored-SW-attack-0.png",
+		"authored-SW-attack-1.png",
+		"authored-SW-attack-2.png",
+		"authored-SW-hit-0.png",
+		"authored-SW-hit-1.png",
+		"authored-SW-death-0.png",
+		"authored-SW-death-1.png",
+		"authored-SW-death-2.png",
+		"authored-W-idle-0.png",
+		"authored-W-idle-1.png",
+		"authored-W-walk-0.png",
+		"authored-W-walk-1.png",
+		"authored-W-walk-2.png",
+		"authored-W-attack-0.png",
+		"authored-W-attack-1.png",
+		"authored-W-attack-2.png",
+		"authored-W-hit-0.png",
+		"authored-W-hit-1.png",
+		"authored-W-death-0.png",
+		"authored-W-death-1.png",
+		"authored-W-death-2.png",
+		"authored-NW-idle-0.png",
+		"authored-NW-idle-1.png",
+		"authored-NW-walk-0.png",
+		"authored-NW-walk-1.png",
+		"authored-NW-walk-2.png",
+		"authored-NW-attack-0.png",
+		"authored-NW-attack-1.png",
+		"authored-NW-attack-2.png",
+		"authored-NW-hit-0.png",
+		"authored-NW-hit-1.png",
+		"authored-NW-death-0.png",
+		"authored-NW-death-1.png",
+		"authored-NW-death-2.png",
+		"authored-N-idle-0.png",
+		"authored-N-idle-1.png",
+		"authored-N-walk-0.png",
+		"authored-N-walk-1.png",
+		"authored-N-walk-2.png",
+		"authored-N-attack-0.png",
+		"authored-N-attack-1.png",
+		"authored-N-attack-2.png",
+		"authored-N-hit-0.png",
+		"authored-N-hit-1.png",
+		"authored-N-death-0.png",
+		"authored-N-death-1.png",
+		"authored-N-death-2.png",
+		"authored-NE-idle-0.png",
+		"authored-NE-idle-1.png",
+		"authored-NE-walk-0.png",
+		"authored-NE-walk-1.png",
+		"authored-NE-walk-2.png",
+		"authored-NE-attack-0.png",
+		"authored-NE-attack-1.png",
+		"authored-NE-attack-2.png",
+		"authored-NE-hit-0.png",
+		"authored-NE-hit-1.png",
+		"authored-NE-death-0.png",
+		"authored-NE-death-1.png",
+		"authored-NE-death-2.png"
+	],
+	"setup": {
+		"background_spawn_slots_paused": true,
+		"drop_rng_seed": 1,
+		"job": "기사",
+		"lifecycle_weapon": "진명황의 집행검",
+		"map": "aden_world",
+		"normal": "불사의 머미 로드",
+		"normal_attack_probe": "Pause only the special cooldown for normal attacks, then exercise the existing special separately",
+		"normal_is_existing_population_actor": false,
+		"pose_review": {
+			"foreground_clear": true,
+			"monster_position": [
+				15160.0,
+				1520.0
+			],
+			"offset": [
+				0.0,
+				-160.0
+			],
+			"repositioned": true,
+			"terrain_hidden_or_modified": false,
+			"walkable": true
+		},
+		"qa_positioning": true,
+		"reference_binding": {
+			"identity_limit": "Existing project artwork, not verified external original game art",
+			"original": "res://assets/monsters/original/atlas_3.png",
+			"reference_kind": "existing_project_atlas",
+			"resolved_portrait": "res://assets/monsters/original/atlas_3.png",
+			"synthetic_fixture": false
+		},
+		"scene": "Main.tscn",
+		"special_probe": "Real production AI special in eight directions; positions and full player healing are QA inputs; boss stats and skill configuration unchanged",
+		"stats_overridden": false,
+		"synthetic_fixture": false
+	},
+	"staff_normal": []
+}

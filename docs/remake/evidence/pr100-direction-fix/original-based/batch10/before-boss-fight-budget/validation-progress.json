@@ -1,0 +1,59 @@
+[
+  {
+    "case": "original_based_mummy_lord_gameplay_test",
+    "mode": "headless",
+    "subject": null,
+    "exit_code": 1,
+    "passed": false,
+    "seconds": 100.308,
+    "checks_in_stdout": 2261,
+    "directions": 8,
+    "boss_directions": 8,
+    "pose_samples": 104,
+    "failures": [
+      "real equipped weapon kills existing field monster",
+      "monster death callback exactly once",
+      "real field corpse plays directional death",
+      "real DB death produces ground drop"
+    ],
+    "log_errors": []
+  },
+  {
+    "case": "original_based_seer_boss_gameplay_test",
+    "mode": "headless",
+    "subject": null,
+    "exit_code": 1,
+    "passed": false,
+    "seconds": 106.11,
+    "checks_in_stdout": 2830,
+    "directions": 8,
+    "boss_directions": 8,
+    "pose_samples": 104,
+    "failures": [
+      "real equipped weapon kills existing field monster",
+      "monster death callback exactly once",
+      "real field corpse plays directional death",
+      "real DB death produces ground drop"
+    ],
+    "log_errors": []
+  },
+  {
+    "case": "original_based_salah_gameplay_test",
+    "mode": "headless",
+    "subject": null,
+    "exit_code": 1,
+    "passed": false,
+    "seconds": 98.901,
+    "checks_in_stdout": 2429,
+    "directions": 8,
+    "boss_directions": 8,
+    "pose_samples": 104,
+    "failures": [
+      "real equipped weapon kills existing field monster",
+      "monster death callback exactly once",
+      "real field corpse plays directional death",
+      "real DB death produces ground drop"
+    ],
+    "log_errors": []
+  }
+]

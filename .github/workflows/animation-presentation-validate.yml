@@ -186,6 +186,15 @@ jobs:
             cases: |
               horn-cerberus|original_based_horn_cerberus_gameplay_test||poses
               horn-cerberus-cruel|original_based_horn_cerberus_gameplay_test|잔혹한 혼 켈베로스|directions
+          - group: mummy-seer-bosses
+            case_timeout: 450
+            cases: |
+              mummy-lord|original_based_mummy_lord_gameplay_test||poses
+              seer-boss|original_based_seer_boss_gameplay_test||poses
+          - group: salah-boss
+            case_timeout: 450
+            cases: |
+              salah|original_based_salah_gameplay_test||poses
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger
@@ -208,18 +217,19 @@ jobs:
         shell: bash
         env:
           ORIGINAL_CASES: ${{ matrix.cases }}
+          ORIGINAL_CASE_TIMEOUT: ${{ matrix.case_timeout || 300 }}
           LIBGL_ALWAYS_SOFTWARE: '1'
         run: |
           set -euo pipefail
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
           while IFS='|' read -r label script subject capture_mode; do
             [ -n "$label" ] || continue
-            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout 300 "$ENGINE" --headless --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-headless.txt"
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-headless.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-headless-user" timeout "$ORIGINAL_CASE_TIMEOUT" "$ENGINE" --headless --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-headless.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-headless.txt"; then exit 1; fi
             grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-headless.txt"
             pose_capture=0
             if [ "$capture_mode" = poses ]; then pose_capture=1; fi
-            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE="$pose_capture" TWILIGHT_PR100_CAPTURE_DIR="${PWD}/test-results/${label}-render" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" timeout 300 xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-render.txt"
+            TWILIGHT_ORIGINAL_SUBJECT="$subject" TWILIGHT_ORIGINAL_POSE_CAPTURE="$pose_capture" TWILIGHT_PR100_CAPTURE_DIR="${PWD}/test-results/${label}-render" TWILIGHT_PR100_REPORT="${PWD}/test-results/${label}-render/gameplay.json" XDG_DATA_HOME="${RUNNER_TEMP}/${label}-render-user" timeout "$ORIGINAL_CASE_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${script}.gd" 2>&1 | tee "test-results/${label}-render.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' "test-results/${label}-render.txt"; then exit 1; fi
             grep -q 'PR100_DIRECTION_GAMEPLAY_OK' "test-results/${label}-render.txt"
           done <<< "$ORIGINAL_CASES"

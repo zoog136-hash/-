@@ -1,0 +1,57 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate a new transparent RGBA 2D game sprite atlas based ONLY on the specified ONE character from the attached existing TWILIGHT project atlas. Preserve that original character identity, equipment, colors, material, proportions, and detailed hand-painted 2D isometric game art style. Do not copy or combine the other characters. The reference portrait remains unchanged; make a separate new motion atlas. EXACTLY 8 equal columns and 8 equal rows, 64 complete independently articulated SMALL poses on a large square canvas. Every whole body AND held weapon must occupy LESS THAN HALF its cell width and height, centered with HUGE fully transparent gutters; no neighboring silhouettes or rectangular frame bounds may overlap. Eight column directions in order E true right-facing side, SE front-right, S front toward viewer/screen down, SW front-left, W true left-facing side, NW rear-left, N full BACK away/screen up, NE rear-right. Show actual complete rear anatomy for N, not a front face merely flipped or turned in place. Rows 1 relaxed idle, 2 distinct breathing idle, 3 walking phase A, 4 walking phase B, 5 walking phase C, 6 attack windup, 7 directional contact/cast release, 8 recovery. All 64 are real distinct organic articulated poses, not repeated/scaled/translated stills. Each silhouette and held weapon stays connected. No ground, shadows, detached particles, glow cloud, text or grid. Select ONLY the round floating eye creature in ROW 3 COLUMN 1: dark reddish brown mottled fleshy spherical body, one large CENTRAL RED EYE, toothy wide mouth below, many thin curling stalks ending in smaller red eyes, and ornate attached gold/bone spines around the body. Preserve its exact fleshy monster shape and attached appendages. NO invented legs, arms, staff, human robes or different colored magical orb. N view clearly displays the mottled round BACK and backs of attached stalks, with NO central front eye or front mouth visible through the body. Side views show actual profile of central eye/front mouth, never the full frontal face pasted sideways. Move by organic rhythmic floating lean and differently bent stalks. Magic attack gathers stalks, aims the central eye and mouth toward the exact compass direction, then releases with organically extended stalks; leave actual detached beam/projectiles to the existing game.\nHIT/DEATH EXACT PROMPT:\nCreate a separate fully transparent RGBA HIT AND DEATH animation atlas based ONLY on the specified one character in the FIRST reference original TWILIGHT atlas. Use the second image for style only. Preserve original identity and all original equipment, palette, material and proportions. Exactly 8 equal direction columns and5 equal phase rows =40 genuine articulated poses. Make every COMPLETE silhouette including held weapons, bandage tips, horns and stalks very SMALL, at most38 percent of its cell width AND height; huge fully clear transparent gutters and safe outer edges. No adjacent rectangles or bodies may overlap. Direction columns E right-facing PROFILE, SE front-right, S front facing viewer/down, SW front-left, W left-facing PROFILE, NW back-left, N completely back away/up, NE back-right. Rows 1 incoming-hit recoil,2 different hit recovery,3 death buckling/sinking,4 death body collapsing,5 fully FLAT terminal corpse resting on the floor. The last row must not stand upright. No ground drawn. Different articulated anatomy in all40 frames, not repeats/scales/translations of a still. The weapon remains held or touching the body. All appendages stay connected, no severed parts. No blood, gore, detached particles, floor shadow, labels, grid, aura or ambient haze; all empty space alpha0. Select ONLY the round floating eye creature in ROW 3 COLUMN 1: dark reddish brown mottled fleshy spherical body, one large CENTRAL RED EYE, toothy wide mouth below, many thin curling stalks ending in smaller red eyes, and ornate attached gold/bone spines around the body. Preserve its exact fleshy monster shape and attached appendages. NO invented legs, arms, staff, human robes or different colored magical orb. N view clearly displays the mottled round BACK and backs of attached stalks, with NO central front eye or front mouth visible through the body. Side views show actual profile of central eye/front mouth, never the full frontal face pasted sideways. Move by organic rhythmic floating lean and differently bent stalks. Magic attack gathers stalks, aims the central eye and mouth toward the exact compass direction, then releases with organically extended stalks; leave actual detached beam/projectiles to the existing game. For the final death, collapse the fleshy orb down into a low flattened body with the stalks draped against the ground, and the central eye closed on front/side views. Do not leave an upright floating sphere or remove the stalks. Back views continue to hide the front eye and mouth.",
+  "prompt_record_kind": "exact final prompts; exact existing project atlas cell authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/seer_boss/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/seer_boss/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared the selected source atlas cell with every main and hit/death column: preserve the existing project design, equipment, palette and anatomy. Select ONLY the round floating eye creature in ROW 3 COLUMN 1: dark reddish brown mottled fleshy spherical body, one large CENTRAL RED EYE, toothy wide mouth below, many thin curling stalks ending in smaller red eyes, and ornate attached gold/bone spines around the body. Preserve its exact fleshy monster shape and attached appendages. NO invented legs, arms, staff, human robes or different colored magical orb. N view clearly displays the mottled round BACK and backs of attached stalks, with NO central front eye or front mouth visible through the body. Side views show actual profile of central eye/front mouth, never the full frontal face pasted sideways. Move by organic rhythmic floating lean and differently bent stalks. Magic attack gathers stalks, aims the central eye and mouth toward the exact compass direction, then releases with organically extended stalks; leave actual detached beam/projectiles to the existing game. Main has 64 articulated poses and hit/death has40; N rear hides the frontal face/eye, E/W profiles and frontal S are distinct. Three walking/attack phases, two recoil phases and three stages ending in a flat complete corpse were visually reviewed. Proportional virtual canvases normalize the two resolutions; all104 frame rectangles are disjoint. Use one uniform maximum-living-pose scale to retain the existing 128px visual-height budget. Existing boss stats and skill metadata must remain unchanged. Actual Main AI, skill, combat/lifecycle and rendered review are still required before counting. Existing project interpretation is the identity source; original Lineage skill/art authenticity is not claimed."
+  }
+}

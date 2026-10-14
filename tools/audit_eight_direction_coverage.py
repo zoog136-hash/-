@@ -205,9 +205,19 @@ def attach_gameplay_evidence(result, rows, paths, output_dir):
                 compass = case.get("compass", "")
                 if compass not in DIRECTIONS or case.get("facing") != DIRECTIONS.index(compass):
                     raise ValueError("Recorded facing differs from compass: " + str(path))
-                exercised = (case.get("attack_visible") is True and case.get("hit_count", 0) > 0 and case.get("hp_after", 0) < case.get("hp_before", 0)) if kind == "player" else (
-                    case.get("walk") is True and case.get("attack") is True and case.get("contacts", 0) > 0) if kind == "monster" else (
-                    case.get("warning") is True and case.get("effect") is True and case.get("contacts", 0) > 0)
+                if kind == "player":
+                    exercised = case.get("attack_visible") is True and case.get("hit_count", 0) > 0 and case.get("hp_after", 0) < case.get("hp_before", 0)
+                elif kind == "monster":
+                    exercised = case.get("walk") is True and case.get("attack") is True and case.get("contacts", 0) > 0
+                else:
+                    resolved = case.get("contacts", 0) > 0
+                    if case.get("kind") == "summon":
+                        # Production summons actors and deliberately deals no
+                        # direct area damage. Require actual spawn evidence;
+                        # a warning/effect or pose sample alone is insufficient.
+                        spawned = case.get("summoned")
+                        resolved = case.get("contacts") == 0 and type(spawned) is int and spawned > 0
+                    exercised = case.get("warning") is True and case.get("effect") is True and resolved
                 if not exercised:
                     raise ValueError("Incomplete recorded gameplay case: " + str(path))
                 row = indexed.get((key, compass))

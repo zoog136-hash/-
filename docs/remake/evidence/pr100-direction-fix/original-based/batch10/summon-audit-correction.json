@@ -1,0 +1,7 @@
+{
+  "cause": "The old coverage collector required direct damage contacts for every boss, rejecting a successful production summon report with zero direct area damage.",
+  "change": "Only kind=summon requires warning, effect, zero direct contacts and a positive integer real-summon count. Other bosses still require positive hit contacts.",
+  "regression_tests": "Six coverage unit tests pass, including rejection of absent/zero/negative/bool spawn counts, missing warning/effect, fake direct damage and a zero-hit nova disguised with a summon count. Eleven original-motion importer tests also pass.",
+  "production_runtime_changed": false,
+  "actual_Main_reports": "Same six successful real gameplay reports; no need to rerun unchanged game code for the collector fix."
+}

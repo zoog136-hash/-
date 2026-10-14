@@ -1,0 +1,57 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate a new transparent RGBA 2D game sprite atlas based ONLY on the specified ONE character from the attached existing TWILIGHT project atlas. Preserve that original character identity, equipment, colors, material, proportions, and detailed hand-painted 2D isometric game art style. Do not copy or combine the other characters. The reference portrait remains unchanged; make a separate new motion atlas. EXACTLY 8 equal columns and 8 equal rows, 64 complete independently articulated SMALL poses on a large square canvas. Every whole body AND held weapon must occupy LESS THAN HALF its cell width and height, centered with HUGE fully transparent gutters; no neighboring silhouettes or rectangular frame bounds may overlap. Eight column directions in order E true right-facing side, SE front-right, S front toward viewer/screen down, SW front-left, W true left-facing side, NW rear-left, N full BACK away/screen up, NE rear-right. Show actual complete rear anatomy for N, not a front face merely flipped or turned in place. Rows 1 relaxed idle, 2 distinct breathing idle, 3 walking phase A, 4 walking phase B, 5 walking phase C, 6 attack windup, 7 directional contact/cast release, 8 recovery. All 64 are real distinct organic articulated poses, not repeated/scaled/translated stills. Each silhouette and held weapon stays connected. No ground, shadows, detached particles, glow cloud, text or grid. Select ONLY the horned skeletal goat demon in ROW 2 COLUMN 1: long beige goat-skull face, two broad curled dark-brown ram horns, exposed ivory rib cage and bones, long thin bony arms and digitigrade hooved legs, ragged dark rusty-red/brown hanging robe strips, and ONE long dark polearm/scythe with the hooked dark metal blade shown in its bony hands. Preserve the actual polearm from the image rather than replacing it with a sword. N rear shows back of horned skull, spine, back robe strips and rear hooves, NOT a skull face staring backward. Walk with articulated alternating hooves. Attack winds back the same held polearm, sweeps its hooked blade forward toward the exact direction on the contact pose, then returns; pole and blade must fit well within every cell and stay held by the original hands.\nHIT/DEATH EXACT PROMPT:\nCreate a separate fully transparent RGBA HIT AND DEATH animation atlas based ONLY on the specified one character in the FIRST reference original TWILIGHT atlas. Use the second image for style only. Preserve original identity and all original equipment, palette, material and proportions. Exactly 8 equal direction columns and5 equal phase rows =40 genuine articulated poses. Make every COMPLETE silhouette including held weapons, bandage tips, horns and stalks very SMALL, at most38 percent of its cell width AND height; huge fully clear transparent gutters and safe outer edges. No adjacent rectangles or bodies may overlap. Direction columns E right-facing PROFILE, SE front-right, S front facing viewer/down, SW front-left, W left-facing PROFILE, NW back-left, N completely back away/up, NE back-right. Rows 1 incoming-hit recoil,2 different hit recovery,3 death buckling/sinking,4 death body collapsing,5 fully FLAT terminal corpse resting on the floor. The last row must not stand upright. No ground drawn. Different articulated anatomy in all40 frames, not repeats/scales/translations of a still. The weapon remains held or touching the body. All appendages stay connected, no severed parts. No blood, gore, detached particles, floor shadow, labels, grid, aura or ambient haze; all empty space alpha0. Select ONLY the horned skeletal goat demon in ROW 2 COLUMN 1: long beige goat-skull face, two broad curled dark-brown ram horns, exposed ivory rib cage and bones, long thin bony arms and digitigrade hooved legs, ragged dark rusty-red/brown hanging robe strips, and ONE long dark polearm/scythe with the hooked dark metal blade shown in its bony hands. Preserve the actual polearm from the image rather than replacing it with a sword. N rear shows back of horned skull, spine, back robe strips and rear hooves, NOT a skull face staring backward. Walk with articulated alternating hooves. Attack winds back the same held polearm, sweeps its hooked blade forward toward the exact direction on the contact pose, then returns; pole and blade must fit well within every cell and stay held by the original hands. Terminal corpse lies fully flat with horned skull, full rib cage, limbs, brown/red rags and the one original long hooked scythe polearm all intact and connected. No standing rib cage or floating pole.",
+  "prompt_record_kind": "exact final prompts; exact existing project atlas cell authoritative",
+  "display_height_basis": "max_living_frame",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/salah/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/salah/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Compared the selected source atlas cell with every main and hit/death column: preserve the existing project design, equipment, palette and anatomy. Select ONLY the horned skeletal goat demon in ROW 2 COLUMN 1: long beige goat-skull face, two broad curled dark-brown ram horns, exposed ivory rib cage and bones, long thin bony arms and digitigrade hooved legs, ragged dark rusty-red/brown hanging robe strips, and ONE long dark polearm/scythe with the hooked dark metal blade shown in its bony hands. Preserve the actual polearm from the image rather than replacing it with a sword. N rear shows back of horned skull, spine, back robe strips and rear hooves, NOT a skull face staring backward. Walk with articulated alternating hooves. Attack winds back the same held polearm, sweeps its hooked blade forward toward the exact direction on the contact pose, then returns; pole and blade must fit well within every cell and stay held by the original hands. Main has 64 articulated poses and hit/death has40; N rear hides the frontal face/eye, E/W profiles and frontal S are distinct. Three walking/attack phases, two recoil phases and three stages ending in a flat complete corpse were visually reviewed. Proportional virtual canvases normalize the two resolutions; all104 frame rectangles are disjoint. Use one uniform maximum-living-pose scale to retain the existing 128px visual-height budget. Existing boss stats and skill metadata must remain unchanged. Actual Main AI, skill, combat/lifecycle and rendered review are still required before counting. Existing project interpretation is the identity source; original Lineage skill/art authenticity is not claimed."
+  }
+}

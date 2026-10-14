@@ -14,6 +14,31 @@ import audit_eight_direction_coverage as audit
 
 
 class CoverageAuditTest(unittest.TestCase):
+    def test_summon_requires_actual_spawn_evidence_without_fake_damage(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "main.json"
+            case = {"name": "summoner", "compass": "N", "facing": 6, "kind": "summon",
+                    "warning": True, "effect": True, "contacts": 0, "summoned": 2}
+
+            def attach(changes):
+                report = {"failures": [], "checks": 10, "setup": {"scene": "Main.tscn"},
+                          "boss": [dict(case, **changes)]}
+                path.write_text(json.dumps(report))
+                result = {"identities": [{"key": "monster:summoner"}]}
+                rows = [{"id": "monster:summoner", "direction": direction, "actual_gameplay": "not_run"}
+                        for direction in audit.DIRECTIONS]
+                audit.attach_gameplay_evidence(result, rows, [path], root)
+                return result, rows
+
+            result, rows = attach({})
+            self.assertEqual(result["identities"][0]["actual_gameplay"], "recorded_Main_1_directions")
+            self.assertEqual(sum(row["actual_gameplay"] == "recorded_Main_sample" for row in rows), 1)
+            for changes in [{"summoned": 0}, {"summoned": -1}, {"summoned": None}, {"summoned": True},
+                            {"warning": False}, {"effect": False}, {"contacts": 1}, {"kind": "nova"}]:
+                with self.subTest(changes=changes), self.assertRaisesRegex(ValueError, "Incomplete recorded gameplay"):
+                    attach(changes)
+
     def test_recorded_main_does_not_promote_untested_aliases_or_pose_samples(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
