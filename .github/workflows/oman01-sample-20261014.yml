@@ -2,12 +2,11 @@ name: Oman 1F isolated sample
 on:
   push:
     branches: ['sample/oman01-a3-remake-20261014']
-    paths:
-      - '.github/workflows/oman01-sample-20261014.yml'
-      - 'samples/oman01/**'
+    paths: ['.github/workflows/oman01-sample-20261014.yml','samples/oman01/**']
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: oman01-sample-${{ github.ref }}
   cancel-in-progress: false
@@ -16,51 +15,72 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
         with:
-          persist-credentials: false
-      - name: Install Godot for existing project
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p .sample_tools
-          curl --fail --location --retry 3 'https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip' -o .sample_tools/godot.zip
-          unzip -q .sample_tools/godot.zip -d .sample_tools
-          mv .sample_tools/Godot_v4.7.2-stable_linux.x86_64 .sample_tools/godot
-          chmod +x .sample_tools/godot
-          .sample_tools/godot --version
-      - name: Prepare reproducible local sampling workspace
-        shell: bash
+          name: oman01-sampling-workspace
+          run-id: 38502318571
+          github-token: ${{ github.token }}
+          path: .workspace
+      - name: Split sampling workspace into bounded transfers
         run: |
           python3 - <<'PY'
-          import pathlib, zipfile
-          roots = ['Main.tscn','project.godot','assets','scripts','scenes','data','addons','tests','tools','.sample_tools/godot']
-          with zipfile.ZipFile('oman01-sampling-workspace.zip','w',zipfile.ZIP_DEFLATED,compresslevel=1) as z:
-              for root in roots:
-                  p=pathlib.Path(root)
-                  if not p.exists(): continue
-                  for f in ([p] if p.is_file() else p.rglob('*')):
-                      if f.is_file() and not f.is_symlink() and '.godot' not in f.parts and '__pycache__' not in f.parts:
-                          z.write(f,str(f))
-          print('WORKSPACE_BYTES',pathlib.Path('oman01-sampling-workspace.zip').stat().st_size)
+          import zipfile, pathlib
+          p=pathlib.Path('.workspace/oman01-sampling-workspace.zip')
+          with zipfile.ZipFile(p) as src:
+              with zipfile.ZipFile('oman01-core.zip','w',zipfile.ZIP_DEFLATED,3) as dst:
+                  for f in src.infolist():
+                      if not f.filename.startswith('assets/'):
+                          dst.writestr(f,src.read(f))
+          with p.open('rb') as f:
+              i=0
+              while data:=f.read(64*1024*1024):
+                  pathlib.Path('workspace-part-%02d.bin'%i).write_bytes(data)
+                  i+=1
+          print('CORE_BYTES',pathlib.Path('oman01-core.zip').stat().st_size,'PARTS',i)
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: oman01-sampling-workspace
-          path: oman01-sampling-workspace.zip
+          name: oman01-core
+          path: oman01-core.zip
           retention-days: 3
-      - name: Run isolated sample when present
-        shell: bash
-        run: |
-          if [ -f samples/oman01/run_ci.sh ]; then
-            bash samples/oman01/run_ci.sh "$PWD/.sample_tools/godot"
-          else
-            echo 'Workspace prepared. No gameplay validation claimed at this checkpoint.'
-          fi
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: oman01-sample-evidence
-          path: samples/oman01/evidence/
+          name: oman01-workspace-part-00
+          path: workspace-part-00.bin
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oman01-workspace-part-01
+          path: workspace-part-01.bin
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oman01-workspace-part-02
+          path: workspace-part-02.bin
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oman01-workspace-part-03
+          path: workspace-part-03.bin
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oman01-workspace-part-04
+          path: workspace-part-04.bin
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oman01-workspace-part-05
+          path: workspace-part-05.bin
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oman01-workspace-part-06
+          path: workspace-part-06.bin
+          retention-days: 3
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oman01-workspace-part-07
+          path: workspace-part-07.bin
           if-no-files-found: ignore
-          retention-days: 7
+          retention-days: 3
