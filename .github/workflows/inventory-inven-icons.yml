@@ -1,86 +1,58 @@
 name: Inventory Inven Icons
 on:
-  push:
-    branches: [feature/inventory-inven-icons-20261014]
-    paths: ['.github/workflows/inventory-inven-icons.yml']
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/inventory-inven-icons.yml'
+      - 'tools/inven_inventory/**'
+      - 'scripts/ui/item_visual_resolver.gd'
+      - 'scripts/ui/inven_inventory_icons.gd'
+      - 'scripts/consumable_rules.gd'
+      - 'data/inven_inventory_icons.json'
+      - 'data/catalog_v19.json'
+      - 'data/game_db_v17.json'
+      - 'data/item_visual_provenance.json'
+      - 'assets/inven_inventory/**'
+      - 'assets/catalog/**'
+      - 'tests/inven_inventory_icons_test.gd'
+      - 'tests/capture_inven_inventory.gd'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
   group: inventory-inven-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  preserve-verified-inventory:
-    if: github.ref == 'refs/heads/feature/inventory-inven-icons-20261014'
+  inventory-icons:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
-    permissions:
-      contents: write
-      actions: read
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          persist-credentials: true
-      - name: Restore the exact already-rendered implementation
-        uses: actions/download-artifact@v4
-        with:
-          name: inventory-inven-implementation
-          run-id: 38574499201
-          github-token: ${{ github.token }}
-          path: /tmp/verified-inventory
-      - name: Verify immutable evidence and copy only reviewed inventory files
+          persist-credentials: false
+      - name: Validate every committed image offline; never fetch new art in PRs
         run: |
-          python3 - <<'PY'
-          import hashlib,json,pathlib,re,zipfile
-          root=pathlib.Path('.'); evidence=pathlib.Path('/tmp/verified-inventory')
-          hashes={
-              'inventory-patch.zip':'c87346e7887eab06b097e273b22f6d5868aab1858f26800072e02687ccb8bb9d',
-              'runtime-verification.json':'6061c76303aebd4b63dea29e9c6f9127af4b47d5e00dcaca27750eaab56819e1',
-              'test-summary.json':'b5206333ba551fe182e06dc75086f4c333b67905191ceeb5fd37c456500345f3'}
-          for name,digest in hashes.items():
-              assert hashlib.sha256((evidence/name).read_bytes()).hexdigest()==digest,name
-          summary=json.loads((evidence/'test-summary.json').read_text())
-          assert len(summary)==8 and all(s['ok'] and s['exit_code']==0 for s in summary)
-          runtime=json.loads((evidence/'runtime-verification.json').read_text())
-          assert runtime['checks']==28077 and not runtime['failures'] and runtime['runtime_rows']==2576
-          unchanged=['scripts/ui/inven_inventory_icons.gd','tests/inven_inventory_icons_test.gd','tests/capture_inven_inventory.gd','tools/inven_inventory/build.py','tools/inven_inventory/verify.py','tools/inven_inventory/policy.json','tools/inven_inventory/install.py']
-          exact={'scripts/ui/item_visual_resolver.gd','tools/check_item_visuals.py','data/inven_inventory_icons.json','docs/verification/inven_inventory_20261014.json'}
-          restored=[]
-          with zipfile.ZipFile(evidence/'inventory-patch.zip') as z:
-              for name in unchanged:
-                  assert (root/name).read_bytes()==z.read(name),'Tested code changed: '+name
-              for name in z.namelist():
-                  if name not in exact and not re.fullmatch(r'assets/inven_inventory/[0-9]+_[0-9a-f]{16}\.png',name):
-                      continue
-                  dest=root/name; dest.parent.mkdir(parents=True,exist_ok=True)
-                  dest.write_bytes(z.read(name));restored.append(name)
-          assert len(restored)==43,restored
-          output=root/'docs/verification/inven_inventory_suites_20261014.json'
-          output.parent.mkdir(parents=True,exist_ok=True)
-          output.write_bytes((evidence/'test-summary.json').read_bytes())
-          (evidence/'restored-files.json').write_text(json.dumps(restored,indent=2))
-          print('VERIFIED_INVENTORY_RESTORED',len(restored),'files; all 8 Godot stages already passed')
-          PY
-          python3 -m pip install Pillow
+          python3 -m pip install Pillow==12.3.0
           python3 tools/inven_inventory/build.py
-          git diff --exit-code -- data/catalog_v19.json data/game_db_v17.json data/catalog_image_index_v19.json scripts/world.gd scripts/player.gd scripts/original_enhancement.gd
-      - name: Commit verified PNGs and inventory bindings without ignored generated UIDs
+      - name: Install repository-pinned Godot and software renderer
         run: |
-          test "$GITHUB_REF" = refs/heads/feature/inventory-inven-icons-20261014
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          git add -- scripts/ui/item_visual_resolver.gd tools/check_item_visuals.py data/inven_inventory_icons.json assets/inven_inventory docs/verification/inven_inventory_20261014.json docs/verification/inven_inventory_suites_20261014.json
-          git diff --cached --stat
-          if ! git diff --cached --quiet; then
-            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Connect 444 inventory items to verified Inven artwork; retain three explicit source gaps'
-            git push origin HEAD:refs/heads/feature/inventory-inven-icons-20261014
-          fi
-          git rev-parse HEAD > /tmp/verified-inventory/verified-commit.txt
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          curl --fail --location --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -qo /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+      - name: Check all runtime pictures, untouched ground art, item interactions and UI captures
+        run: python3 tools/inven_inventory/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/inventory-inven
+      - name: No gameplay, image or source mutation during verification
+        run: git diff --exit-code -- scripts data assets tools tests
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: inventory-inven-preserved
+          name: inventory-inven-validation-${{ github.sha }}
           path: |
-            /tmp/verified-inventory/verified-commit.txt
-            /tmp/verified-inventory/restored-files.json
+            /tmp/inventory-inven/*.log
+            /tmp/inventory-inven/*.json
+            /tmp/inventory-inven/captures/
           retention-days: 14
           if-no-files-found: warn
