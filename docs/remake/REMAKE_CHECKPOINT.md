@@ -1,4 +1,15 @@
-# PR #100 재개 — 상하 방향 수정`8ea63b3`과 기존 `feature/twilight-animation-20261013`에서 이어서 수정했다. 이전 원본 방향 승인(W,SW,S,SE,E,NE,N,NW)은 잘못됐다. 실제 원본 순서는 W,NW,N,NE,E,SE,S,SW이고, 게임 매핑은 [4,5,6,7,0,1,2,3]이다. 36개 기존 외형의 트랙·출처·픽셀 기준을 수정하고 PNG는 보존했다. 상세 검증·재현·남은 정확한 ID는 [후속 보고](PR100_COMPLETION_REPORT.md)와 [전체 방향 검증표](evidence/pr100-direction-fix/coverage/all-identities-eight-directions.csv)에 있다. 남은 변신54·일반139·보스29종의 적합한 원본 확보가 다음 재개 단계다. 전체 원본·실기기 완료를 주장하지 않는다.
+# PR #100 현재 재개 지점 · 2026-10-14 batch15
+
+- 기존 브랜치 `feature/twilight-animation-20261013`, 보존 커밋 `6067ec1e74fbb7a3ae469caf8f75b5ea9e294b6b`와 실제 GitHub head 일치를 확인한 뒤 이어서 작업했다. 이 문서를 포함하는 PR head에서 계속한다. 새 PR·main 병합·기록 삭제 금지.
+- 현재 **351/498**, 변신 **136/180**, 일반 **180/258**, 보스 **35/60**. **남은 147종(44/78/25)**의 정확한 목록은 [미완료 ID](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json). 이전 문단의 수치는 역사 기록이다.
+- batch15: 잔혹한 아시타지오 재사용, 라미아 2종·수중정령 2종 원본 기반 제작. 81개 native 리소스, 45개 신규 디자인, 4,632개 실제 고유 자세. 5종 Main headless 6,194개 / OpenGL 6,450개 모두 통과. [상세 범위와 원시 증거](PR100_COMPLETION_REPORT.md).
+- 공통 Flare 방향 순서 **W,NW,N,NE,E,SE,S,SW**, 매핑 **[4,5,6,7,0,1,2,3]** 유지. 새 임포트의 누락 조각 거부·단일 큰 캔버스 정규화만 보완했다. 기존 런타임·PNG/TRES 보존.
+- 다음: 원본과 표시 설정이 동등한 연결을 먼저 확인하고 5~10종 단위로 제작·연결 → `tests/run_original_based_batch.gd`와 별도 fixture로 한 엔진당 여러 실제 Main 검사 → 현재 보고서·coverage 갱신 → 같은 브랜치 커밋·푸시. 성공한 각 이름의 Main 보고서만 완료 근거로 사용한다.
+- 알비노 악어 초안은 계속 미연결. 기존 6개 시트의 프레임 외 79픽셀은 시각적 귀속 검토 전이며 임의 수정하지 않는다. 현재 커밋의 전체 CI·Android 내보내기는 푸시 후 확인, 실제 기기 실행은 미검증.
+
+## 이전 세션 기록 보존
+
+`8ea63b3`에서 수행한 상하 방향 수정과 이후 이력은 아래에 보존한다. 과거 방향 승인 중 잘못된 원본 순서는 위 현재 기준으로 정정됐으며, 과거 수량·경로를 현재 완료 상태로 사용하지 않는다.
 
 # TWILIGHT 8방향 애니메이션 재구축
 

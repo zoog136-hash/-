@@ -16,6 +16,71 @@ import audit_eight_direction_coverage as audit
 
 
 class OriginalBasedImportTest(unittest.TestCase):
+    def test_single_sheet_nonstandard_canvas_preserves_world_foot(self):
+        path = ROOT / "assets/actors/eight_direction/original_based/werewolf/poses.png"
+        geometry = importer.analyze(path, canvas_size=384)
+        importer.require_complete_pose_regions(path, geometry)
+        resource = importer.spriteframes("res://" + str(path.relative_to(ROOT)), geometry)
+        self.assertTrue("metadata/twilight_canvas_size = Vector2(256, 256)" in resource,
+                        "Nonstandard single-sheet canvases need runtime normalization")
+        # The runtime scales the virtual canvas to 256 before applying the
+        # profile's -32 world-space foot offset. Inspect every actual pose.
+        for frame in geometry["frames"]:
+            region = np.array(frame["region"])
+            margin = np.array(frame["margin"])
+            canvas = region[2:] + margin[2:]
+            local_foot = margin[:2] + np.array(frame["source_anchor"]) - region[:2] - canvas / 2
+            world_foot = np.array([0, -32]) + local_foot * 256 / canvas
+            np.testing.assert_allclose(world_foot, [0, 0], atol=1e-9)
+
+    def test_existing_256_single_sheet_output_is_byte_identical(self):
+        for actor in ("werewolf", "ogre", "succubus", "harpy", "lycanthrope",
+                      "lava_golem", "ice_golem", "cockatrice"):
+            with self.subTest(actor=actor):
+                folder = ROOT / "assets/actors/eight_direction/original_based" / actor
+                proof = json.loads((folder / "provenance.json").read_text())
+                resource = importer.spriteframes("res://" + str((folder / "poses.png").relative_to(ROOT)),
+                                                 {"frames": proof["frames"]})
+                self.assertEqual(resource.encode(), (folder / "SpriteFrames.tres").read_bytes())
+
+    def test_detached_pixels_in_later_sheet_abort_before_any_output(self):
+        target = next(row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]
+                      if row["key"] == "monster:늑대인간")
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "data").mkdir()
+            (root / "data/animation_authoring_sources.json").write_text(json.dumps({"targets": [target]}))
+            (root / "data/combat_animation_profiles.json").write_text(json.dumps({"profiles": {}}))
+            reference = Path(target["reference"]["path"].removeprefix("res://"))
+            (root / reference).parent.mkdir(parents=True)
+            shutil.copyfile(ROOT / reference, root / reference)
+            sheets = []
+            for index, rows in enumerate((8, 5)):
+                pixels = np.zeros((rows * 64, 512, 4), dtype=np.uint8)
+                for row in range(rows):
+                    for direction in range(8):
+                        x, y = direction * 64, row * 64
+                        pixels[y + 20:y + 44, x + 20:x + 36] = [30 + index * 64 + row * 8 + direction, 100, 160, 255]
+                if index == 1:
+                    # A distinct visible piece, outside the main body's crop.
+                    pixels[30:34, 44:48] = [220, 100, 60, 255]
+                path = root / f"synthetic-coverage-{index}.png"
+                Image.fromarray(pixels).save(path)
+                roles = {"idle": [0, 1], "walk": [2, 3, 4], "attack": [5, 6, 7]} if index == 0 else {"hit": [0, 1], "death": [2, 3, 4]}
+                sheets.append({"output_path": str(path), "rows": rows, "roles": roles, "reference_rows": [0, 1]})
+            candidate = {"sheets": sheets, "prompt": "Synthetic coverage guard fixture, never game art",
+                         "review": {"identity_preserved": True, "eight_views": True, "motion_roles": True,
+                                    "no_clipping": True, "notes": "Synthetic test of an incorrectly approved detached piece"}}
+            before = {str(path.relative_to(root)): importer.sha(path) if path.is_file() else None
+                      for path in root.rglob("*")}
+            for apply in (False, True):
+                with self.subTest(apply=apply):
+                    with self.assertRaisesRegex(ValueError, "16 visible pixels outside pose regions"):
+                        importer.import_sheet(root, candidate, "coverage_fixture", [target["key"]], apply)
+                    after = {str(path.relative_to(root)): importer.sha(path) if path.is_file() else None
+                             for path in root.rglob("*")}
+                    self.assertEqual(after, before, "Rejected imports must not create or change any file or directory")
+
     def test_existing_family_aliases_share_only_the_same_rendered_original(self):
         targets = {row["key"]: row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
         for names in [("고스트", "글루디오 던전 유령", "지옥의 고스트"), ("오우거", "기란 평원 오우거", "잊혀진 섬 고대오우거"),

@@ -28,6 +28,7 @@ var flight_observations: Dictionary = {}
 var report := {"player":[],"staff_normal":[],"monster":[],"boss":[],"lifecycle":{},"screenshots":[]}
 var out: String
 var captures: String
+var quit_on_finish: bool = true
 
 func _initialize() -> void: call_deferred("run")
 
@@ -545,4 +546,4 @@ func finish() -> void:
 	await process_frame
 	print("PR100_DIRECTION_GAMEPLAY_RESULT " + JSON.stringify({"scope":report.get("scope","full"),"checks":checks,"failures":failures,"player_rows":report.player.size(),"staff_normal_rows":report.staff_normal.size(),"monster_rows":report.monster.size(),"boss_rows":report.boss.size(),"report":out}))
 	if failures.is_empty(): print("PR100_BOSS_GAMEPLAY_OK" if report.get("scope", "full") == "boss_only" else "PR100_DIRECTION_GAMEPLAY_OK")
-	quit(0 if failures.is_empty() else 1)
+	if quit_on_finish: quit(0 if failures.is_empty() else 1)

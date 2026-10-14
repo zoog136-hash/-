@@ -148,6 +148,19 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 "neutral_height": neutral_height, "canvas_size": [canvas, canvas], "foot": [foot_x, foot_y]}
 
 
+def require_complete_pose_regions(path, geometry):
+    """Reject a new import that would silently drop any visible source piece."""
+    with Image.open(path) as source:
+        visible = np.asarray(source.getchannel("A")) > 100
+    covered = np.zeros(visible.shape, dtype=bool)
+    for frame in geometry["frames"]:
+        x, y, width, height = frame["region"]
+        covered[y:y + height, x:x + width] = True
+    omitted = int(np.count_nonzero(visible & ~covered))
+    if omitted:
+        raise ValueError(f"{path}: {omitted} visible pixels outside pose regions; review/re-author, never discard or guess ownership")
+
+
 def spriteframes(sheet_path, geometry, role_frames=None):
     paths = [sheet_path] if isinstance(sheet_path, str) else sheet_path
     text = [f'[gd_resource type="SpriteFrames" load_steps={len(geometry["frames"])+len(paths)+1} format=3]']
@@ -169,7 +182,13 @@ def spriteframes(sheet_path, geometry, role_frames=None):
             animations.append('{"frames": [%s], "loop": %s, "name": &"%s_%d", "speed": %.9f}' %
                               (frames, str(role in ("idle", "walk")).lower(), role, direction, len(indices) / SECONDS[role]))
     text.extend(['', '[resource]', 'animations = [\n' + ',\n'.join(animations) + '\n]', ''])
-    if len(paths) > 1:
+    # A single reviewed sheet may also use a larger virtual canvas. The
+    # runtime must normalize it to the same 256-pixel world foot convention.
+    # Keep existing one-sheet 256-pixel resources byte-for-byte unchanged.
+    needs_canvas_normalization = any(frame["region"][2] + frame["margin"][2] != 256
+                                     or frame["region"][3] + frame["margin"][3] != 256
+                                     for frame in geometry["frames"])
+    if len(paths) > 1 or needs_canvas_normalization:
         text.append('metadata/twilight_canvas_size = Vector2(256, 256)\n')
     return '\n'.join(text)
 
@@ -203,6 +222,9 @@ def import_sheet(root, candidate, actor, keys, apply):
         reference_height = parsed[0]["neutral_height"] * 256 / parsed[0]["canvas_size"][1] if parsed else None
         part = analyze(source, spec["rows"], spec.get("reference_rows"), reference_height,
                        spec.get("directions_axis", "columns"), spec.get("canvas_size"), spec.get("source_anchors"))
+        # Validate every candidate before creating any output directory/file.
+        # Existing tracked sheets remain untouched; reimports require review.
+        require_complete_pose_regions(source, part)
         offset = len(geometry["frames"])
         if len(sheets) > 1:
             for frame in part["frames"]: frame["sheet"] = index

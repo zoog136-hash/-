@@ -14,8 +14,12 @@ on:
       - 'tools/build_animation_expansion.py'
       - 'tools/build_open_sprite_sample.gd'
       - 'tools/*original_based_motion*'
+      - 'tools/link_original_based_identity.py'
       - 'data/animation_authoring_sources.json'
       - 'tests/original_based*'
+      - 'tests/run_original_based_batch.gd'
+      - 'tests/pr100_direction_gameplay_test.gd'
+      - 'tests/fixtures/pr100_batch*.json'
       - 'tests/*animation*'
       - 'tests/*presentation*'
       - '.github/workflows/animation-presentation-validate.yml'
@@ -53,6 +57,7 @@ jobs:
           python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
           python3 tests/eight_direction_coverage_audit_test.py
           python3 tests/original_based_motion_import_test.py
+          python3 tests/original_based_identity_link_test.py
           python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
           for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
@@ -270,4 +275,71 @@ jobs:
         with:
           name: original-based-${{ matrix.group }}-${{ github.sha }}
           path: test-results/
+          if-no-files-found: error
+  original-batch:
+    name: Original-based batch15 / shared engine per mode
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TWILIGHT_PR100_BATCH_ISOLATED: '1'
+      TWILIGHT_PR100_BATCH_CONFIG: res://tests/fixtures/pr100_batch15.json
+      LIBGL_ALWAYS_SOFTWARE: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify existing resource ledger
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Install pinned Godot and software GL
+        run: |
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+      - name: Import actual TWILIGHT project once
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/batch15-import/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch15-import/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch15-import/config
+        run: |
+          set -euo pipefail
+          mkdir -p test-results/batch15 "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout 300 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import --quit 2>&1 | tee test-results/batch15/import.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:' test-results/batch15/import.txt; then exit 1; fi
+      - name: Five production Main cases in one headless engine
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/batch15-headless/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch15-headless/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch15-headless/config
+          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch15/headless.json
+        run: |
+          set -euo pipefail
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout 600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch15/headless.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch15/headless.txt; then exit 1; fi
+          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch15/headless.txt
+      - name: Five production Main cases in one OpenGL engine
+        shell: bash
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/batch15-render/data
+          XDG_CACHE_HOME: ${{ runner.temp }}/batch15-render/cache
+          XDG_CONFIG_HOME: ${{ runner.temp }}/batch15-render/config
+          TWILIGHT_PR100_BATCH_REPORT: ${{ github.workspace }}/test-results/batch15/render.json
+          TWILIGHT_PR100_BATCH_CAPTURE_DIR: ${{ github.workspace }}/test-results/batch15/render-captures
+        run: |
+          set -euo pipefail
+          mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
+          timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch15/render.txt
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch15/render.txt; then exit 1; fi
+          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch15/render.txt
+      - name: Preserve batch summaries, case reports, captures and generated saves
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-based-batch15-${{ github.sha }}
+          path: |
+            test-results/batch15/
+            ${{ runner.temp }}/batch15-headless/data/**/pr100-batch-preserved/
+            ${{ runner.temp }}/batch15-render/data/**/pr100-batch-preserved/
           if-no-files-found: error

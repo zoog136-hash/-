@@ -8,11 +8,13 @@ func subject_name() -> String: return "서큐버스"
 func subject_folder() -> String: return "succubus"
 
 func monster_start_distance() -> float:
+	if normal.attack_type != "magic": return super.monster_start_distance()
 	# Retain the real magic attack range. Start outside it to exercise pursuit
 	# before the production cast/projectile, without forcing melee behavior.
 	return normal.current_attack_range() + 80.
 
 func prepare_monster_direction(direction: int) -> bool:
+	if normal.attack_type != "magic": return super.prepare_monster_direction(direction)
 	# The melee clearing is not a 400 px unobstructed circle. Select a real
 	# clear approach separately for each long-range cast, retaining map rocks,
 	# original spell range, collision and line-of-sight checks.
@@ -47,6 +49,10 @@ func observe_magic_flights() -> void:
 		magic_flights[facing] = {"compass":COMPASS[facing], "delta":str(delta), "toward_player":true, "kind":str(flight.kind)}
 
 func monster_case() -> void:
+	if normal.attack_type != "magic":
+		await super.monster_case()
+		return
+	magic_flights.clear()
 	# Production deliberately skips visual updates outside the viewport. Keep
 	# both the caster and target visible at the original long magic range.
 	var previous_zoom: Vector2 = world.player.camera.zoom

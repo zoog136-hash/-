@@ -23,7 +23,8 @@
   },
   "target_keys": [
     "monster:아시타지오",
-    "monster:오만한 아시타지오"
+    "monster:오만한 아시타지오",
+    "monster:잔혹한 아시타지오"
   ],
   "presentation_to_preserve": {
     "visual": {
@@ -74,6 +75,25 @@
         "weapon": "sword",
         "crest": 2,
         "accent": "849bab"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    },
+    "monster:잔혹한 아시타지오": {
+      "visual": {
+        "atlas": 1,
+        "cell": 10,
+        "body": "demon",
+        "variant": 12,
+        "width": 1.05,
+        "weapon": "sword",
+        "crest": 0,
+        "accent": "c4aa64"
       },
       "animation_profile": {
         "motion_style": "slash",
@@ -2443,5 +2463,27 @@
     }
   },
   "display_height_basis": "median_idle",
-  "display_reference_height": 98.0
+  "display_reference_height": 98.0,
+  "target_references": {
+    "monster:잔혹한 아시타지오": {
+      "path": "res://assets/external_l1j/monsters/16843.png",
+      "kind": "existing_family_portrait",
+      "family_binding": {
+        "family_id": "잔혹한 아시타지오",
+        "source_sprite_id": "16843",
+        "path": "res://assets/external_l1j/monsters/16843.png",
+        "source_npc_ids": [
+          "7310050"
+        ],
+        "source_name": "잔혹한 아시타지오",
+        "original_animation": false,
+        "mapping": "explicit same-species regional alias"
+      },
+      "sha256": "4c1487c13cbdc8c189f39668151a2c8ce017250077314ec0d4d38da806e6c6ec",
+      "image_size": [
+        82,
+        123
+      ]
+    }
+  }
 }
