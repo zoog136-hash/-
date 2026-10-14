@@ -100,7 +100,7 @@ def write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
-def prepare(root: Path, destination: Path, raw: bytes) -> dict:
+def prepare(root: Path, destination: Path, raw: bytes, a3: Path | None = None) -> dict:
     if destination.exists():
         raise ValueError('Destination must not exist. Existing samples and saves are never overwritten.')
     if destination == root or root in destination.parents:
@@ -132,6 +132,11 @@ def prepare(root: Path, destination: Path, raw: bytes) -> dict:
         raise ValueError('World renderer integration changed. Refusing an unreviewed replacement.')
     text=text.replace(old,'const SOURCE_RENDERER = preload("res://samples/oman01/renderer.gd")',1)
     world.write_text(text,encoding='utf-8')
+    # The art is wholly new and deterministic. No proprietary Lineage artwork is copied.
+    import runpy
+    atlas_path=destination/'samples/oman01/assets/oman01_flagstones.png'
+    runpy.run_path(str(root/'samples/oman01/make_floor.py'))['generate'](atlas_path)
+    if not atlas_path.is_file(): raise ValueError('Dungeon flagstone art generation failed')
     output=destination/'data/original_maps'; output.mkdir(parents=True,exist_ok=True)
     pack=bytearray(); chunks=[]
     for cy in range(3):
@@ -146,18 +151,41 @@ def prepare(root: Path, destination: Path, raw: bytes) -> dict:
     entrance=nearest(masks,(32728,32799))
     guide=nearest(masks,(32800,32800))
     encounter=nearest(masks,(32796,32800))
+    # A3 SQL provides actual PC-series spawn rows; never call temporary M positions original.
+    original_rows=[]
+    orphan_rows=[]
+    source_npc=[]
+    if a3 is not None:
+        sys.path.insert(0,str(root/'tools/l1j'))
+        from extract_a3 import tables
+        with zipfile.ZipFile(a3) as zip_file:
+            db,_=tables(zip_file.read('db/l1remaster.sql').decode('utf-8-sig'),{'spawnlist','spawnlist_npc'})
+        original_rows=[r for r in db['spawnlist'] if int(r['mapid'])==101]
+        source_npc=[r for r in db['spawnlist_npc'] if int(r['mapid'])==101]
+    known_names={row.get('name','') for row in json.loads((root/'data/game_db_v17.json').read_text())['몬스터']}
+    known_names.update(row.get('name','') for row in json.loads((root/'data/monsters/monster_world_catalog.json').read_text())['additions'])
+    name_alias={'왜곡의 옹골리언트':'왜곡의 웅골리언트'}
+    adapted=[]
+    for row in original_rows:
+        original_name=str(row['location'])
+        match=name_alias.get(original_name,original_name)
+        if original_name.startswith('구슬(') or match not in known_names:
+            orphan_rows.append({'source_name':original_name,'source_id':row['id'],
+                 'reason':'orb-not-combat-monster' if original_name.startswith('구슬(') else 'game-record-not-matched'})
+            continue
+        limited=dict(row)
+        limited['count']=min(8,int(row['count']))
+        adapted.append({'twilight_name':match,'source_name':original_name,'source_row':limited,
+             'provenance':'A3_ROW_WITH_LOCAL_RUNTIME_COUNT_CAP_8'})
     definition={'schema':2,'map_id':'l1_101','map_name':'오만의 탑 1층 · A3 리메이크 샘플','source_map_id':101,
-        'source_sha256':GRID_SHA,'playable':True,'layout_revision':1,'origin':list(ORIGIN),'dimensions':[SIZE,SIZE],
+        'source_sha256':GRID_SHA,'playable':True,'layout_revision':2,'origin':list(ORIGIN),'dimensions':[SIZE,SIZE],
         'navigation':{'profile':'A3_STATIC_EDGES','chunks':chunks},'spawn_source':entrance,
         'rules':{'escapable':0,'teleportable':0},'getback':[],'doors':[],'portals':[],'terrain_chunks':[],
-        'npc_spawns':[{'id':'sample_guide','name':'샘플 안내인','role':'guide','source_position':guide,
-          'provenance':'LOCAL_SAMPLE_GUIDE_NOT_ORIGINAL_NPC_RESTORATION'}],
-        'monster_spawns':[], 'sample_encounter_source':encounter}
-    for i,name in enumerate(['왜곡의 라미아','왜곡의 메두사','왜곡의 코카트리스']):
-        definition['monster_spawns'].append({'twilight_name':name,'source_name':name,'source_row':{
-            'id':910101+i,'count':4,'locx':encounter[0],'locy':encounter[1],
-            'locx1':encounter[0]-18,'locy1':encounter[1]-18,'locx2':encounter[0]+18,'locy2':encounter[1]+18,
-            'min_respawn_delay':30,'movement_distance':4}})
+        'npc_spawns':[], 'monster_spawns':adapted, 'sample_encounter_source':encounter,
+        'visuals_provenance':'Original A3 topology and sampled M-style authored 2D art; exact M prop positions unverified.'}
+    # Source NPC (32800,32800) is blocked on this A3 grid. Do not spawn a fake guide.
+    original_reference={'source_spawnlist':original_rows,'source_npc':source_npc,'unmatched':orphan_rows}
+    write_json(destination/'samples/oman01/evidence/a3_101_spawn_reference.json',original_reference)
     write_json(output/'definitions/101.json',definition)
     write_json(output/'catalog.json',{'schema':2,'maps':[{'id':'l1_101','source_map_id':101,'name':definition['map_name'],
         'playable':True,'source_definition':'res://data/original_maps/definitions/101.json'}]})
@@ -165,9 +193,11 @@ def prepare(root: Path, destination: Path, raw: bytes) -> dict:
         'grid':[SIZE,SIZE],'origin':list(ORIGIN),'connected_components':components,'navigation_chunks':9,
         'source_coordinate_issues':{'original_exit_32724_32799_walkable':bool(masks[95*SIZE+20]),
           'original_npc_32800_32800_walkable':bool(masks[96*SIZE+96])},
-        'sample_entry':entrance,'sample_guide':guide,'sample_encounter':encounter,
-        'visuals':'Existing TWILIGHT stone texture plus authored 2D iron rails. Not restored NC tile art.',
-        'spawn_policy':'12 regular slots and one existing Zenith Queen combat record; local test only, not verified M respawn zones/schedule.',
+        'sample_entry':entrance,'sample_guide':None,'sample_encounter':encounter,
+        'source_npc_rows':len(source_npc),'a3_spawn_rows':len(original_rows),
+        'matched_combat_spawn_rows':len(adapted),'unmatched_a3_rows':orphan_rows,
+        'visuals':'New deterministic dark flagstone tiles; grouped stone masonry and oxidized gothic iron. Not restored NC tile art.',
+        'spawn_policy':'Source A3 combat rows with runtime cap 8 where existing TWILIGHT DB identity matches. Unmatched source rows excluded. Zenith Queen in the sample run is a separate test-only override; not a verified M respawn zone/schedule.',
         'edition_status':'A3 PC source topology. Current Lineage M per-object coordinates remain unverified.',
         'source_checkout_unchanged':True,'normal_user_save_untouched':True}
     write_json(destination/'samples/oman01/evidence/source_validation.json',report)
@@ -201,7 +231,7 @@ def main() -> None:
         self_test(); return
     if args.output is None:
         parser.error('--output is required and must be a new sibling directory')
-    report=prepare(args.root.resolve(),args.output.resolve(),load_grid(args.a3,args.attributes))
+    report=prepare(args.root.resolve(),args.output.resolve(),load_grid(args.a3,args.attributes),args.a3)
     print(json.dumps(report,ensure_ascii=False,indent=2))
     print('NEXT: godot --path "'+str(args.output.resolve())+'" --editor --headless --quit')
     print('THEN: godot --path "'+str(args.output.resolve())+'" --script res://samples/oman01/run.gd')
