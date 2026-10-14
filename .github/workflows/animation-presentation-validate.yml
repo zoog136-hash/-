@@ -281,7 +281,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [15, 16, 17]
+        batch: [15, 16, 17, 18]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:

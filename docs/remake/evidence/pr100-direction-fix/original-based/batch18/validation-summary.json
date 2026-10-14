@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "basis_commit": "d03f4c3732b3f112d8f326802a9085e62e3b02e6",
+  "preserved_checkpoint": "1de5363b4fa006ff35ba22d11365c6ce3049264e",
+  "branch": "feature/twilight-animation-20261013",
+  "newly_validated": [
+    "monster:검은숲 나무정령",
+    "monster:화룡의 둥지 불꽃정령",
+    "monster:풍룡의 둥지 폭풍정령"
+  ],
+  "new_resource_appearances": 3,
+  "new_distinct_pixel_poses": 312,
+  "new_base_motion_designs": 1,
+  "palette_material_variants_reusing_base_motion": 2,
+  "validation": {
+    "headless": {
+      "checks": 4783,
+      "failures": [],
+      "engine_processes": 1
+    },
+    "render": {
+      "checks": 5141,
+      "failures": [],
+      "engine_processes": 1
+    }
+  },
+  "core_regression": "Prior batch17 results remain applicable: no engine/runtime/tool changes in batch18. Final exact-commit CI is pending push.",
+  "preservation": {
+    "old_runtime_assets_and_scripts_unchanged": true,
+    "checkpoint_bound_profiles_unchanged": 360,
+    "original_references_sha256_verified": 222,
+    "changed_profiles": [
+      "monster:검은숲 나무정령",
+      "monster:화룡의 둥지 불꽃정령",
+      "monster:풍룡의 둥지 폭풍정령"
+    ]
+  },
+  "manual_review": "Reviewed source sheets plus actual Main N/S attack, idle and death; arch silhouette, eight views, foot anchors and reaction frames preserved. Red haze visible in transparent RGB previews does not appear in actual Main.",
+  "draft_archive": {
+    "bytes": 2444535,
+    "sha256": "a8fe6a16f75b79ae2d89c5a527fd452f4097d743b4535ecbfeab3fb9ad6f1cdc",
+    "crc_and_rejected_member_sha_verified": true
+  },
+  "android_device_execution": "not_run_no_device_attached",
+  "android_and_ci": "Final exact-commit verification pending push; baseline 1de5363 integration, animation and Android workflows all succeeded.",
+  "coverage": {
+    "counts": {
+      "hero_plus:registered": 180,
+      "hero_plus:native_connected": 136,
+      "other_transform:registered": 233,
+      "other_transform:native_connected": 1,
+      "normal_monster:registered": 258,
+      "normal_monster:native_connected": 190,
+      "boss:registered": 60,
+      "boss:native_connected": 35,
+      "class:registered": 4,
+      "class:native_connected": 4
+    },
+    "native_resources": 89,
+    "errors": [],
+    "main_reports": 183,
+    "direction_rows": 5880
+  }
+}

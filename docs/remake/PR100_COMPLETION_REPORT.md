@@ -1,5 +1,17 @@
 # PR #100 후속 수정 및 검증
 
+## 2026-10-14 재개 · batch18 정령 3종과 누적 6종 검증
+
+기존 PR #100 브랜치에서 batch17 보존 커밋 **`d03f4c3732b3f112d8f326802a9085e62e3b02e6`**에 이어 작업했다. 시작 체크포인트 `1de5363`와 기존 완료 355종을 보존했다. **검은숲 나무정령·화룡의 둥지 불꽃정령·풍룡의 둥지 폭풍정령**을 추가해 현재 **361/498종 연결, 137종 미완료**다. 영웅 이상 변신 **136/180**, 일반 몬스터 **190/258**, 보스 **35/60**. 이번 재개 작업의 추가 연결은 누적 **6종**이다.
+
+정령의 실제 기존 원본은 낮은 아치 형태의 광물 몸체다. 이름만 보고 나무나 사람 형태로 바꾸지 않았다. 금색 원본의 동작을 검토한 뒤 불꽃·폭풍 원본에 맞는 재질/색상 변형에 재사용했다. **새 기본 동작 디자인 1개와 색상/재질 변형 2개**이며, 서로 독립적으로 설계한 동작 3개로 세지 않는다. 새 3리소스에는 312개의 서로 다른 픽셀 자세가 있고, 누적 native 리소스는 **89개**, 원본 기반 리소스 외형은 **53개·5,464자세**다. 나무정령의 지상 설정, 불꽃·폭풍정령의 기존 부유 설정, 이름별 원본 SHA·마법 공격·능력치를 보존했다.
+
+실제 Main headless **3종/4,783개**, OpenGL **3종/5,141개**, 실패 0개다. 방향별 실제 AI 추적과 마법 공격, 5동작 104자세, 피격·사망·바닥 드랍·수동 습득을 검사했다. 상하 방향, 공격 접촉 자세, 사망 높이와 발 기준을 실제 화면에서도 검토했다. 이전 묶음에서 통과한 공통 회귀 이후 런타임/도구 코드는 변경하지 않았으며, 최종 커밋의 전체 검사는 CI에서 별도로 실행한다. [검증·보존 범위](evidence/pr100-direction-fix/original-based/batch18/validation-summary.json) · [실제 Main 결과](evidence/pr100-direction-fix/original-based/batch18/render.json) · [선별 N/S 화면](evidence/pr100-direction-fix/original-based/batch18/captures).
+
+기존 Main 보고서 177개에 새 6개를 더해 **183개**와 방향표를 연결했다. 전체 캡처 336장의 해시를 기록하고 대표 N/S 화면 18장을 저장했다. 처음 반응 시트에 잘못 추가된 사람형 몸통/다리는 원본의 아치 구조로 수정한 뒤 적용했으며, 제외한 초안과 정확한 지시문은 [ZIP](evidence/pr100-direction-fix/original-based/batch18/authoring-drafts.zip)에 보존했다. 시작 시 에디터 소켓 권한 오류의 원문도 [별도 로그](evidence/pr100-direction-fix/original-based/batch18/initial-editor-socket-denied.log)에 보존한다. 현재 임포트는 오류 없이 통과했다.
+
+**이 커밋의 Android·전체 CI는 푸시 후 확인한다. Android 기기 실행은 미검증**이다. 시작 체크포인트 `1de5363`의 [전체 통합](https://github.com/zoog136-hash/-/actions/runs/38524065173), [애니메이션](https://github.com/zoog136-hash/-/actions/runs/38524069047), [Android](https://github.com/zoog136-hash/-/actions/runs/38524072066)는 모두 성공 종료했으며 새 커밋의 결과로 사용하지 않는다. 재현 설정은 `res://tests/fixtures/pr100_batch18.json`이고, CI 묶음 행렬에도 batch18을 추가했다. 미완료 137종은 [목록](evidence/pr100-direction-fix/original-based/coverage/missing-native-sources.json)에서 계속 추적한다.
+
 ## 2026-10-14 재개 · batch17 오크 방향 수정과 3종 연결
 
 PR #100의 실제 브랜치 `feature/twilight-animation-20261013`과 원격·로컬 HEAD **`1de5363b4fa006ff35ba22d11365c6ce3049264e`** 일치를 확인하고 깨끗한 체크아웃에서 재개했다. 최신 main `6fd15c82280a3f3dd136abe749ce1b53b31f8261`은 조회만 했으며 기존 PR 브랜치를 유지한다. 기존 완료 355종의 프로필·PNG·SpriteFrames·런타임 코드를 변경하지 않았다.

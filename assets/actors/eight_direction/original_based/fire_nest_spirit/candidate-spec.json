@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "display_height_basis": "max_living_frame",
+  "prompt": "fireSpirit MAIN:\nAdapt FIRST elemental sprite atlas to the exact color/material appearance of SECOND ORIGINAL character portrait. Keep the same low hunched inverted-U stone arch, attached massiveforearms/fists and tinyrearsupports; no new humanoid torso/head/legs. Replace gold earth palette with PALE PINK and vivid crimson/red crystalline stone plates, red inner seams, dark reddish charcoal joints. NO gold/yellow/ochre coloring remains. Match exact red-and-pale-pink original, including bright pale highlights. Retain EVERY source pose, same bodyproportions, same packing, all articulated motions and8directions; this is a faithful material/palette variant of the same stone-elemental anatomy. EXACT8columns8rows64completeposes. Rows idle2,walk3,attack3 windup/forwardcontact/recovery. Column1Erightprofile,2SEfront-right,3Sfrontopenarch,4SWfront-left,5Wleftprofile,6NWbackLEFT,7NfullBACKsolidcurvedplates,8NEbackRIGHT. Preserve these exact different views fromFIRST, especially backdiagonals must pointopposite. Real transparentRGBA background, no exteriorglow, floor, shadow, loose particles/debris, grid orlabels. Clear transparentgaps and outerpadding; do not enlarge or touch neighboring bodies. All wholefigureparts physicallyconnected. Original sourcepalette is authority; no borrowed gold coloration.\n\nfireSpirit REACTIONS:\nAdapt FIRST elemental sprite atlas to the exact color/material appearance of SECOND ORIGINAL character portrait. Keep the same low hunched inverted-U stone arch, attached massiveforearms/fists and tinyrearsupports; no new humanoid torso/head/legs. Replace gold earth palette with PALE PINK and vivid crimson/red crystalline stone plates, red inner seams, dark reddish charcoal joints. NO gold/yellow/ochre coloring remains. Match exact red-and-pale-pink original, including bright pale highlights. Retain EVERY source pose, same bodyproportions, same packing, all articulated motions and8directions; this is a faithful material/palette variant of the same stone-elemental anatomy. EXACT8columns5rows40completeposes. Rows hit2 then death3collapse ending entirelyflat joined corpse; do not substituteattack/standing poses fordeath. Column1Erightprofile,2SEfront-right,3Sfrontopenarch,4SWfront-left,5Wleftprofile,6NWbackLEFT,7NfullBACKsolidcurvedplates,8NEbackRIGHT. Preserve these exact different views fromFIRST, especially backdiagonals must pointopposite. Real transparentRGBA background, no exteriorglow, floor, shadow, loose particles/debris, grid orlabels. Clear transparentgaps and outerpadding; do not enlarge or touch neighboring bodies. All wholefigureparts physicallyconnected. Original sourcepalette is authority; no borrowed gold coloration.",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/fire_nest_spirit/poses-0.png",
+      "rows": 8,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/fire_nest_spirit/poses-1.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "reference_rows": [
+        0,
+        1
+      ]
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Reuses the reviewed stone-elemental physical pose design as an explicitly authored palette/material variant matched to pale pink/crimson plates and red seams of original15664. Not an independently invented movement design or recovered original motion. Same squat stone arch and connected fists/rear supports. All8views and role phases visually retained including Sfront/Nback, opposite side/rear diagonals, forward fist contact, recoil and flat corpse. Geometry and full visible-pixel coverage pass104frames. Original per-target floating/range/stats unchanged; actual Main validation pending."
+  }
+}
