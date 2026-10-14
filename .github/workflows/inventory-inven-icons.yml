@@ -2,14 +2,14 @@ name: Inventory Inven Icons
 on:
   push:
     branches: [feature/inventory-inven-icons-20261014]
-    paths: ['.github/workflows/inventory-inven-icons.yml', 'tools/inven_inventory/**', 'scripts/ui/inven_inventory_icons.gd', 'scripts/ui/item_visual_resolver.gd', 'data/inven_inventory_icons.json']
+    paths: ['.github/workflows/inventory-inven-icons.yml', 'tools/inven_inventory/build.py', 'scripts/ui/inven_inventory_icons.gd', 'scripts/ui/item_visual_resolver.gd', 'data/inven_inventory_icons.json']
   pull_request:
     paths: ['.github/workflows/inventory-inven-icons.yml', 'tools/inven_inventory/**', 'scripts/ui/inven_inventory_icons.gd', 'scripts/ui/item_visual_resolver.gd', 'data/inven_inventory_icons.json']
 permissions:
   contents: read
 concurrency:
   group: inventory-inven-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   inventory-icons:
     runs-on: ubuntu-latest
@@ -19,12 +19,12 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: Collect missing consumable source records
-        run: python3 tools/inven_inventory/collect_consumables.py
+      - name: Inspect public search response
+        run: python3 tools/inven_inventory/probe_search.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: inventory-inven-consumables
+          name: inventory-inven-search-response
           path: /tmp/inventory-inven/
           retention-days: 7
           if-no-files-found: error
