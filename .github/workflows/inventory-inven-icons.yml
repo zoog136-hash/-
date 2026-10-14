@@ -2,7 +2,7 @@ name: Inventory Inven Icons
 on:
   push:
     branches: [feature/inventory-inven-icons-20261014]
-    paths: ['.github/workflows/inventory-inven-icons.yml']
+    paths: ['.github/workflows/inventory-inven-icons.yml', 'tools/inven_inventory/**', 'scripts/ui/inven_inventory_icons.gd', 'tests/inven_inventory_icons_test.gd', 'tests/capture_inven_inventory.gd']
 permissions:
   contents: read
 concurrency:
@@ -10,38 +10,89 @@ concurrency:
   cancel-in-progress: true
 jobs:
   inventory-icons:
+    if: github.ref == 'refs/heads/feature/inventory-inven-icons-20261014'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          persist-credentials: false
-      - run: |
-          python3 -m pip install playwright
-          python3 -m playwright install --with-deps chromium
-      - name: Read final material sources
+          persist-credentials: true
+      - name: Acquire verified inventory images without modifying gameplay data
         run: |
-          mkdir -p /tmp/inventory-inven
+          mkdir -p /tmp/inventory-inven/captures
+          python3 -m pip install Pillow
+          python3 tools/inven_inventory/install.py
+          python3 tools/inven_inventory/build.py --acquire | tee /tmp/inventory-inven/assets.log
+      - name: Install pinned Godot renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          curl --fail --location --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -qo /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import and validate every runtime inventory binding
+        env:
+          GODOT_SILENCE_ROOT_WARNING: '1'
+          TWILIGHT_INVEN_REPORT: /tmp/inventory-inven/runtime-verification.json
+        run: |
+          set -o pipefail
+          GODOT=/tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+          timeout 240 "$GODOT" --headless --path . --editor --import 2>&1 | tee /tmp/inventory-inven/import.log
+          ! grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' /tmp/inventory-inven/import.log
+          status=0
+          for test in inven_inventory_icons_test item_visual_test item_icon_art_smoke_test inventory_item_name_checks ui_stage4_item_instance_test original_skill_warehouse_migration_test; do
+            timeout 180 "$GODOT" --headless --path . --script "res://tests/$test.gd" > "/tmp/inventory-inven/$test.log" 2>&1 || status=1
+            if grep -E 'SCRIPT ERROR|Parse Error|FAIL' "/tmp/inventory-inven/$test.log"; then status=1; fi
+            tail -n 8 "/tmp/inventory-inven/$test.log"
+          done
+          exit "$status"
+      - name: Capture the actual inventory and details UI
+        env:
+          GODOT_SILENCE_ROOT_WARNING: '1'
+          TWILIGHT_INVEN_CAPTURES: /tmp/inventory-inven/captures
+        run: |
+          set -o pipefail
+          timeout 180 xvfb-run -a /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-method gl_compatibility --script res://tests/capture_inven_inventory.gd 2>&1 | tee /tmp/inventory-inven/capture.log
+          ! grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' /tmp/inventory-inven/capture.log
+      - name: Preserve verified results only on the requested feature branch
+        run: |
+          test "$GITHUB_REF" = refs/heads/feature/inventory-inven-icons-20261014
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code -- data/catalog_v19.json data/game_db_v17.json data/catalog_image_index_v19.json scripts/world.gd scripts/player.gd scripts/original_enhancement.gd
+          python3 tools/inven_inventory/build.py
+          mkdir -p docs/verification
+          cp /tmp/inventory-inven/runtime-verification.json docs/verification/inven_inventory_20261014.json
+          git add -- scripts/ui/item_visual_resolver.gd tools/check_item_visuals.py data/inven_inventory_icons.json assets/inven_inventory docs/verification/inven_inventory_20261014.json
+          for file in scripts/ui/inven_inventory_icons.gd.uid tests/inven_inventory_icons_test.gd.uid tests/capture_inven_inventory.gd.uid; do
+            if test -f "$file"; then git add -- "$file"; fi
+          done
+          git diff --cached --stat
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Connect 444 inventory items to verified Inven artwork; preserve three explicit source gaps'
+            git push origin HEAD:refs/heads/feature/inventory-inven-icons-20261014
+          fi
+          git rev-parse HEAD > /tmp/inventory-inven/verified-commit.txt
+      - name: Package implementation, images, and source evidence
+        if: always()
+        run: |
           python3 - <<'PY'
-          import json,pathlib
-          from playwright.sync_api import sync_playwright
-          result={}
-          with sync_playwright() as p:
-              browser=p.chromium.launch(headless=True); page=browser.new_page()
-              page.goto('https://lineagem.inven.co.kr/db/item/',wait_until='domcontentloaded',timeout=60000)
-              page.wait_for_selector('#lineagemDbItem input.search',timeout=30000)
-              for term in ['엔트','미스릴','나무','잎','열매','동','연마','용옥','옥','지혜','용기','녹색','속성','초기화','힘의 엘릭서']:
-                  data=page.evaluate('''async term => {const body=new FormData(); body.append('name',term); return await (await fetch('/db/item/list',{method:'POST',body,credentials:'include'})).json();}''',term)
-                  result[term]=data
-                  print(term,len(data.get('items',[])),flush=True)
-              browser.close()
-          pathlib.Path('/tmp/inventory-inven/final-material-sources.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          import pathlib,zipfile
+          out=pathlib.Path('/tmp/inventory-inven');out.mkdir(exist_ok=True)
+          with zipfile.ZipFile(out/'inventory-patch.zip','w',zipfile.ZIP_DEFLATED) as z:
+              paths=['scripts/ui/item_visual_resolver.gd','scripts/ui/inven_inventory_icons.gd','tools/check_item_visuals.py','data/inven_inventory_icons.json','tests/inven_inventory_icons_test.gd','tests/capture_inven_inventory.gd']
+              for folder in ['tools/inven_inventory','assets/inven_inventory','docs/verification']:
+                  if pathlib.Path(folder).exists(): paths.extend(str(p) for p in pathlib.Path(folder).rglob('*') if p.is_file() and '__pycache__' not in str(p))
+              for name in paths:
+                  p=pathlib.Path(name)
+                  if p.exists():z.write(p,name)
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: inventory-inven-final-materials
+          name: inventory-inven-implementation
           path: /tmp/inventory-inven/
-          retention-days: 7
+          retention-days: 14
           if-no-files-found: error
