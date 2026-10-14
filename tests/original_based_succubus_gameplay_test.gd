@@ -1,4 +1,4 @@
-extends "res://tests/original_based_ogre_gameplay_test.gd"
+extends "res://tests/original_based_pose_review_helper.gd"
 
 # TWILIGHT_OPTIONAL_RENDER_CAPTURE
 # TWILIGHT_OPTIONAL_RENDER_ENV: TWILIGHT_PR100_CAPTURE_DIR

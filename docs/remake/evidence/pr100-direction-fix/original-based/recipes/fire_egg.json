@@ -1,0 +1,57 @@
+{
+  "prompt": "MAIN EXACT PROMPT:\nCreate a new fully transparent RGBA 2D sprite atlas based on the attached ORIGINAL image. The original is the authoritative character design, color, equipment and proportion reference. A LARGE SQUARE CANVAS with EXACTLY8 equal columns and8 equal rows,64 SMALL complete and genuinely articulated poses. Each full body/held object/flame must occupy LESS THAN HALF its cell width and height. Huge empty transparent horizontal and vertical gutters and safe outer borders: no body, tip, leaf or flame can touch or enter the rectangle of any adjacent pose. Direction columns exactly E true right-side view, SE front-right, S front toward viewer/screen down, SW front-left, W true left-side view, NW back-left, N full rear away/screen up, NE back-right. Clearly distinct front, side, diagonal, and rear orientation, never mirror/flip pixels. Rows1 relaxed idle,2 distinct breathing/flickering idle,3 walking/travel phaseA,4 distinct phaseB,5 distinct phaseC,6 attack windup,7 attack contact toward its column direction,8 attack recovery. No extra rows. Every pose is independently articulated, never translated/scaled duplicate stills. Entire silhouette is connected. No floor, cast shadow, black background, labels, grid, card border or detached particles. Preserve the source portrait unchanged and create a separate new atlas. The authoritative original is the SMALL GOLDEN-YELLOW FLAME creature in the center, with a warm orange core, glowing yellow crown tongues, tiny compact rounded ember base and NO eyes, human body, egg shell, weapons or added limbs. Preserve this exact modest flame silhouette and palette. Omit the rectangular card border, black background, spotlight and detached glow. It travels by rhythmic flame lean, squash and rising tongues, not invented walking legs. Its eight direction views are identified by the directional lean and forward emission tongue because the original body is rotationally simple; do not invent a face/back. Idle flickers with genuinely redrawn tongues, travel uses three distinct organic flame phases, and spell attack compacts, releases a forward-directed tongue in the exact compass direction, then recovers. Keep the whole flame connected; leave external projectile/effect drawing to the existing game.\nHIT/DEATH EXACT PROMPT:\nCreate a separate HIT/DEATH atlas for the character in the FIRST attached original portrait, using the SECOND attached main atlas only as a pose style and scale guide. Preserve the original identity, exact equipment, color and proportions. Fully transparent RGBA; clean clear gutters, no ambient glow, fog, detached sparks, text, musical notes, shadow or card background. Exactly8 direction columns and5 phase rows=40 full independently articulated poses, no added rows. Each whole body including leaf/held object/flame occupies LESS THAN HALF of its cell width and height, with huge empty transparent gutters in both axes and clear outer borders. Direction columns E right true side, SE front-right, S front facing down/viewer, SW front-left, W left true side, NW rear-left, N full rear away/up, NE rear-right. Rows1 HIT recoil,2 HIT recovery,3 death buckling,4 death collapse,5 terminal entirely FLAT collapsed corpse/ember. Never leave the last row upright. Preserve all eight views while collapsing. Keep all complete silhouettes and any held objects connected; no touching or overlapping adjacent poses. All forty poses differ through actual articulated anatomy or organic flame shape, not repeated/scaled stills. The authoritative original is the SMALL GOLDEN-YELLOW FLAME creature in the center, with a warm orange core, glowing yellow crown tongues, tiny compact rounded ember base and NO eyes, human body, egg shell, weapons or added limbs. Preserve this exact modest flame silhouette and palette. Omit the rectangular card border, black background, spotlight and detached glow. It travels by rhythmic flame lean, squash and rising tongues, not invented walking legs. Its eight direction views are identified by the directional lean and forward emission tongue because the original body is rotationally simple; do not invent a face/back. Idle flickers with genuinely redrawn tongues, travel uses three distinct organic flame phases, and spell attack compacts, releases a forward-directed tongue in the exact compass direction, then recovers. Keep the whole flame connected; leave external projectile/effect drawing to the existing game. Fire has no invented legs/face. Recoil compresses and bends flame, recovery flickers upright, death sinks the connected flame downward through smaller tongues until final low flat connected dark-orange ember. The final row must be visibly a flat extinguished ember with NO tall upright flame. Keep each frame as ONE tightly bounded painted flame/ember silhouette with ALL outside pixels fully transparent and ZERO detached glow or sparks.",
+  "prompt_record_kind": "exact final prompts, original portrait authoritative",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/fire_egg/poses-0.png",
+      "rows": 8,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ],
+        "attack": [
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/fire_egg/poses-1.png",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      }
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Original portrait bytes are unchanged; atlas was visually reviewed in all eight columns. The authoritative original is the SMALL GOLDEN-YELLOW FLAME creature in the center, with a warm orange core, glowing yellow crown tongues, tiny compact rounded ember base and NO eyes, human body, egg shell, weapons or added limbs. Preserve this exact modest flame silhouette and palette. Omit the rectangular card border, black background, spotlight and detached glow. It travels by rhythmic flame lean, squash and rising tongues, not invented walking legs. Its eight direction views are identified by the directional lean and forward emission tongue because the original body is rotationally simple; do not invent a face/back. Idle flickers with genuinely redrawn tongues, travel uses three distinct organic flame phases, and spell attack compacts, releases a forward-directed tongue in the exact compass direction, then recovers. Keep the whole flame connected; leave external projectile/effect drawing to the existing game. The selected main sheet contains 64 distinct articulated poses, hit/death has 40. Front N/S and side profiles were reviewed; terminal corpses are flat with held objects or flames still connected. Main and hit sheets have different pixel resolutions, so proportional virtual canvases preserve scale. Existing runtime attack type and original statistics are retained. Actual Main gameplay and render review are still required. The original is a rotationally simple faceless flame, so front/back anatomy is not invented: travel lean and actual magic targeting/effects define facing. Final death is an extinguished flat ember, not an upright repeating flame. Actual Main review identified living poses extending above the preserved visual-height/nameplate budget, particularly the directional fire tongue. Use one uniform max-living-frame scale for every direction and role, preserving original art, atlas pixels, aspect ratio, attack geometry and all timings. No per-direction scaling or pixel flip."
+  },
+  "display_height_basis": "max_living_frame"
+}

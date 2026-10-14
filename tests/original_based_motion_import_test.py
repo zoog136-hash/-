@@ -20,11 +20,14 @@ class OriginalBasedImportTest(unittest.TestCase):
         targets = {row["key"]: row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]}
         for names in [("고스트", "글루디오 던전 유령", "지옥의 고스트"), ("오우거", "기란 평원 오우거", "잊혀진 섬 고대오우거"),
                       ("아이언 골렘", "지옥의 아이언골렘"), ("글루디오 던전 구울", "불사의 구울"), ("도마뱀", "알비노 도마뱀"),
-                      ("크랩맨", "에바 왕국 크랩맨"), ("아시타지오", "오만한 아시타지오")]:
+                      ("크랩맨", "에바 왕국 크랩맨"), ("아시타지오", "오만한 아시타지오"),
+                      ("알비노 개구리", "알비노 뿔 개구리"), ("파이어 에그", "공포의 파이어 에그"),
+                      ("혼 켈베로스", "잔혹한 혼 켈베로스")]:
             first = targets["monster:" + names[0]]
             for name in names[1:]:
                 self.assertEqual(importer.sharing_identity(first), importer.sharing_identity(targets["monster:" + name]))
-            for field, value in [("attack_type", "magic"), ("visual_height", 1234), ("animation_profile", {"floating": False})]:
+            other_attack_type = "melee" if first["presentation_to_preserve"]["attack_type"] == "magic" else "magic"
+            for field, value in [("attack_type", other_attack_type), ("visual_height", 1234), ("animation_profile", {"floating": False})]:
                 other = copy.deepcopy(first)
                 other["presentation_to_preserve"][field] = value
                 self.assertNotEqual(importer.sharing_identity(first), importer.sharing_identity(other))
@@ -53,6 +56,9 @@ class OriginalBasedImportTest(unittest.TestCase):
                              "lizard": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "crabman": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "asitagio": [("poses-0.png", 8), ("poses-1.png", 4)],
+                             "albino_frog": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "fire_egg": [("poses-0.png", 8), ("poses-1.png", 5)],
+                             "horn_cerberus": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "lava_golem": [("poses.png", 13)], "ice_golem": [("poses.png", 13)], "cockatrice": [("poses.png", 13)], "ghost": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "reaper_female": [("poses-0.png", 8), ("poses-1.png", 5)],
                              "cyclops": [("poses-0.png", 8), ("poses-1.png", 5)],
@@ -70,7 +76,7 @@ class OriginalBasedImportTest(unittest.TestCase):
                 self.assertEqual(importer.sha(ROOT / atlas["path"].removeprefix("res://")), atlas["sha256"])
 
     def test_runtime_tracks_keep_all_real_frames_and_non_looping_actions(self):
-        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red"):
+        for actor in ("werewolf", "ghost", "reaper_female", "ogre", "lava_golem", "ice_golem", "cockatrice", "cyclops", "spear_captain", "succubus", "harpy", "lycanthrope", "bugbear", "sand_worm", "reaper_male", "iron_golem", "ghoul", "lizard", "crabman", "asitagio", "spear_guard_green", "spear_guard", "spear_guard_red", "albino_frog", "fire_egg", "horn_cerberus"):
             path = ROOT / "assets/actors/eight_direction/original_based" / actor / "SpriteFrames.tres"
             _, frames, tracks = audit.read_spriteframes(path)
             expected_poses = 96 if actor in {"reaper_male", "asitagio"} else 104
@@ -171,36 +177,44 @@ class OriginalBasedImportTest(unittest.TestCase):
                     self.assertGreater(visible, 90)
                     self.assertLess(visible, 110)
 
-    def test_long_lizard_living_poses_fit_the_existing_visual_height(self):
-        folder = ROOT / "assets/actors/eight_direction/original_based/lizard"
-        proof = json.loads((folder / "provenance.json").read_text())
-        self.assertEqual(proof["display_height_basis"], "max_living_frame")
-        profiles = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]
-        scale = profiles["monster:도마뱀"]["pixel_scale"]
-        self.assertEqual(scale, profiles["monster:알비노 도마뱀"]["pixel_scale"])
-        budget = proof["presentation_to_preserve"]["visual_height"]
-        atlases = {atlas["path"]: atlas for track in proof["tracks"].values() for atlas in track["atlas_files"]}
-        pixels = {}
-        for path in atlases:
-            with Image.open(ROOT / path.removeprefix("res://")) as source:
-                pixels[path] = np.asarray(source).copy()
-        measured = []
-        for role, track in proof["tracks"].items():
-            if role == "death":
-                continue
-            atlas = track["atlas_files"][0]
-            sheet = list(atlases).index(atlas["path"])
-            for frame in proof["frames"]:
-                if frame.get("sheet", 0) != sheet or frame["row"] not in track["source_rows"]:
-                    continue
-                x, y, width, height = frame["region"]
-                occupied_rows = np.nonzero(pixels[atlas["path"]][y:y + height, x:x + width, 3] > 100)[0]
-                self.assertGreater(len(occupied_rows), 0)
-                visible_height = (int(occupied_rows.max()) - int(occupied_rows.min()) + 1) * 256 / atlas["canvas_size"][1] * scale
-                self.assertLessEqual(visible_height, budget + .001, (role, frame["direction"]))
-                measured.append(visible_height)
-        self.assertEqual(len(measured), 80)
-        self.assertGreater(max(measured), budget * .93)
+    def test_living_poses_fit_the_existing_visual_height(self):
+        # Long directional bodies and casting flames must fit the existing
+        # nameplate budget with one scale; independently measure real alpha.
+        cases = [("lizard", "monster:도마뱀", "monster:알비노 도마뱀", .93),
+                 ("albino_frog", "monster:알비노 개구리", "monster:알비노 뿔 개구리", .85),
+                 ("fire_egg", "monster:파이어 에그", "monster:공포의 파이어 에그", .85),
+                 ("horn_cerberus", "monster:혼 켈베로스", "monster:잔혹한 혼 켈베로스", .85)]
+        for actor, primary, alias, minimum_visible_ratio in cases:
+            with self.subTest(actor=actor):
+                folder = ROOT / "assets/actors/eight_direction/original_based" / actor
+                proof = json.loads((folder / "provenance.json").read_text())
+                self.assertEqual(proof["display_height_basis"], "max_living_frame")
+                profiles = json.loads((ROOT / "data/combat_animation_profiles.json").read_text())["profiles"]
+                scale = profiles[primary]["pixel_scale"]
+                self.assertEqual(scale, profiles[alias]["pixel_scale"])
+                budget = proof["presentation_to_preserve"]["visual_height"]
+                atlases = {atlas["path"]: atlas for track in proof["tracks"].values() for atlas in track["atlas_files"]}
+                pixels = {}
+                for path in atlases:
+                    with Image.open(ROOT / path.removeprefix("res://")) as source:
+                        pixels[path] = np.asarray(source).copy()
+                measured = []
+                for role, track in proof["tracks"].items():
+                    if role == "death":
+                        continue
+                    atlas = track["atlas_files"][0]
+                    sheet = list(atlases).index(atlas["path"])
+                    for frame in proof["frames"]:
+                        if frame.get("sheet", 0) != sheet or frame["row"] not in track["source_rows"]:
+                            continue
+                        x, y, width, height = frame["region"]
+                        occupied_rows = np.nonzero(pixels[atlas["path"]][y:y + height, x:x + width, 3] > 100)[0]
+                        self.assertGreater(len(occupied_rows), 0)
+                        visible_height = (int(occupied_rows.max()) - int(occupied_rows.min()) + 1) * 256 / atlas["canvas_size"][1] * scale
+                        self.assertLessEqual(visible_height, budget + .001, (role, frame["direction"]))
+                        measured.append(visible_height)
+                self.assertEqual(len(measured), 80)
+                self.assertGreater(max(measured), budget * minimum_visible_ratio)
 
     def test_cannot_substitute_a_different_original_for_shared_output(self):
         with tempfile.TemporaryDirectory() as folder:

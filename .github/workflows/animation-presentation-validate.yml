@@ -176,6 +176,16 @@ jobs:
               spear-guard-green|original_based_spear_guard_green_gameplay_test||poses
               spear-guard|original_based_spear_guard_gameplay_test||poses
               spear-guard-red|original_based_spear_guard_red_gameplay_test||poses
+          - group: frog-fire-egg
+            cases: |
+              albino-frog|original_based_albino_frog_gameplay_test||poses
+              albino-horned-frog|original_based_albino_frog_gameplay_test|알비노 뿔 개구리|directions
+              fire-egg|original_based_fire_egg_gameplay_test||poses
+              fire-egg-fear|original_based_fire_egg_gameplay_test|공포의 파이어 에그|directions
+          - group: horn-cerberus
+            cases: |
+              horn-cerberus|original_based_horn_cerberus_gameplay_test||poses
+              horn-cerberus-cruel|original_based_horn_cerberus_gameplay_test|잔혹한 혼 켈베로스|directions
     steps:
       - uses: actions/checkout@v4
       - name: Verify existing resource ledger
