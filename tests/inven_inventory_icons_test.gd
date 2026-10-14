@@ -31,7 +31,10 @@ func inspect(record: Dictionary, group: String) -> void:
 		check(info.path == record.get("image_path", ""), "catalog path unchanged:" + item_name)
 	var ground: Dictionary = RESOLVER.describe(record, item_name, {}, true)
 	var before_ground: Dictionary = RESOLVER._describe_original(record, item_name, {}, true)
-	check(JSON.stringify(ground) == JSON.stringify(before_ground), "ground unchanged:" + item_name)
+	if before_ground.route in ["reviewed_ground", "l1j_dedicated_ground_candidate"]:
+		check(JSON.stringify(ground) == JSON.stringify(before_ground), "dedicated ground unchanged:" + item_name)
+	else:
+		check(ground.get("route", "") == "ground_category" and ground.get("name", "") == item_name, "independent ground category preserves item name:" + item_name)
 	check(JSON.stringify(record) == original, "gameplay record unchanged:" + item_name)
 	if group == "runtime": counts[info.status] = int(counts.get(info.status, 0)) + 1
 

@@ -1,4 +1,5 @@
 extends RefCounted
+const GROUND_ICONS = preload("res://scripts/ui/ground_item_icons.gd")
 const INVEN_INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
 ## One read-only image resolver for every item surface, including physical instances.
 ## New pinned art wins; legacy links are recovery paths, never identity overrides.
@@ -68,6 +69,23 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	return record
 
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
+	if ground:
+		var original: Dictionary = _describe_original(record, fallback_name, images, true)
+		# Preserve existing dedicated floor pairs and their provenance.
+		if original.route in ["reviewed_ground", "l1j_dedicated_ground_candidate"]:
+			return original
+		var source: Dictionary = _source(record, str(original.name))
+		# A known publisher ID paired with the wrong name remains rejected.
+		if source.is_empty(): return original
+		var choice: Dictionary = GROUND_ICONS.lookup(source, str(original.name))
+		if not choice.is_empty() and _valid(str(choice.path)):
+			original.path = choice.path
+			original.route = "ground_category"
+			original.status = "ground_category_art"
+			original.family = ""
+			original["category"] = choice.category
+			original["art_source"] = choice
+		return original
 	# Ground art and all real/unknown source IDs retain the original resolver.
 	if not ground and str(record.get("sourceId", "")).is_empty():
 		_ensure()
