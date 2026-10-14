@@ -13,18 +13,18 @@ concurrency:
 jobs:
   inventory-icons:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: Collect structured Inven inventory source metadata
-        run: python3 tools/inven_inventory/collect.py
+      - name: Collect missing consumable source records
+        run: python3 tools/inven_inventory/collect_consumables.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: inventory-inven-sources
+          name: inventory-inven-consumables
           path: /tmp/inventory-inven/
           retention-days: 7
           if-no-files-found: error
