@@ -17,9 +17,10 @@ on:
       - 'tools/link_original_based_identity.py'
       - 'data/animation_authoring_sources.json'
       - 'tests/original_based*'
-      - 'tests/run_original_based_batch.gd'
+      - 'tests/run_original_based*batch.gd'
       - 'tests/pr100_direction_gameplay_test.gd'
       - 'tests/fixtures/pr100_batch*.json'
+      - 'tests/fixtures/pr100_transform*.json'
       - 'tests/*animation*'
       - 'tests/*presentation*'
       - '.github/workflows/animation-presentation-validate.yml'
@@ -63,6 +64,9 @@ jobs:
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL' "test-results/${name}.txt"; then exit 1; fi
           done
+          XDG_DATA_HOME="${RUNNER_TEMP}/transform-batch-guards" "$ENGINE" --headless --path . --script res://tests/original_based_transform_batch_test.gd > test-results/transform-batch-guards.txt 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/transform-batch-guards.txt; then exit 1; fi
+          grep -q 'PR100_TRANSFORM_BATCH_GUARD_OK' test-results/transform-batch-guards.txt
           for name in actor_motion_test animation_presentation_test boss_presentation_test authored_state_motion_test animation_restore_test monster_attack_profiles_test combat_timing_test combat_resolution_equivalence_test volley_motion_test hit_feedback_test combat_vfx_test; do
             "$ENGINE" --headless --path . --script "res://tests/${name}.gd" 2>&1 | tee "test-results/${name}.txt"
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:' "test-results/${name}.txt"; then exit 1; fi
@@ -282,11 +286,20 @@ jobs:
       fail-fast: false
       matrix:
         batch: [15, 16, 17, 18, 19, 20]
+        include:
+          - batch: transform-regression
+            config: res://tests/fixtures/pr100_transform_regression.json
+            script: run_original_based_transform_batch
+            marker: PR100_TRANSFORM_BATCH_OK
+            timeout: 1200
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'
-      TWILIGHT_PR100_BATCH_CONFIG: res://tests/fixtures/pr100_batch${{ matrix.batch }}.json
+      TWILIGHT_PR100_BATCH_CONFIG: ${{ matrix.config || format('res://tests/fixtures/pr100_batch{0}.json', matrix.batch) }}
+      BATCH_SCRIPT: ${{ matrix.script || 'run_original_based_batch' }}
+      BATCH_OK_MARKER: ${{ matrix.marker || 'PR100_ORIGINAL_BATCH_OK' }}
+      BATCH_TIMEOUT: ${{ matrix.timeout || 600 }}
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
@@ -320,9 +333,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch${{ matrix.batch }}/headless.txt
+          timeout "$BATCH_TIMEOUT" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/headless.txt 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/headless.txt; then exit 1; fi
-          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch${{ matrix.batch }}/headless.txt
+          grep -q "$BATCH_OK_MARKER" test-results/batch${{ matrix.batch }}/headless.txt
       - name: Configured production Main cases in one OpenGL engine
         shell: bash
         env:
@@ -334,9 +347,9 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch${{ matrix.batch }}/render.txt
+          timeout "$BATCH_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/render.txt 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/render.txt; then exit 1; fi
-          grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch${{ matrix.batch }}/render.txt
+          grep -q "$BATCH_OK_MARKER" test-results/batch${{ matrix.batch }}/render.txt
       - name: Preserve batch summaries, case reports, captures and generated saves
         if: always()
         uses: actions/upload-artifact@v4
@@ -346,4 +359,6 @@ jobs:
             test-results/batch${{ matrix.batch }}/
             ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-batch-preserved/
             ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-batch-preserved/
+            ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-transform-batch-preserved/
+            ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-transform-batch-preserved/
           if-no-files-found: error
