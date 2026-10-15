@@ -1,3 +1,11 @@
+## 2026-10-15 · 방향별 시트 임포터 검증 체크포인트
+
+**완료 374/498 · 미완료 124 · 개별 Main 103종, 신규 완료 0종.** 새 `sheets[].directions` 입력으로 한 방향씩 제작한 시트를 합칠 수 있다. 최종 5역할 모두 8방향·최소2자세·역할별 동일 프레임 수가 모여야 파일/프로필 쓰기를 시작한다. 누락/중복방향/필수역할 간 프레임 재사용/캔버스·크기 검토 누락은 거절한다. subset은 명시 `canvas_size`와 `scale_review_note`가 필요하며 `blocks4x2` subset은 금지한다. 기존 full8 columns/rows/blocks 출력 바이트·좌표·mtime은 유지한다.
+
+Python **46/46 PASS**, 합성104포즈(8개단방향/40개역할방향/혼합)의 기존 coverage 감사 통과 및 실패시 전체 SHA·mtime 불변을 확인했다. 실제 단장 E3시트도 새 API 기하검사만 3고유자세 PASS; 진단 canvas1280은 실제 scale 승인값이 아니다. [검증 요약/API 예](evidence/pr100-direction-fix/original-based/recovery-20261015/subset-importer/verification-summary.json). 이 형식의 실제 Main 적용은 아직 없으며 전체104/발·크기 검토 후 시행한다.
+
+제작용 Python/test 이외 runtime/game data/기존 자산은 ce199와 차이 0이다. Android ce199 성공, 원래 통합 ce199 실패는 보존하고 guard수정031d 통합 재검증은 대기 중이다. 새 helper에 대한 애니메이션 CI는 이 체크포인트 push 후 요청한다. 단장 guide보존 `07bba22cffc983a797a723a1681ca247bbd38287` push/원격 일치 확인.
+
 ## 2026-10-15 · 단장357회전표 WIP 보존
 
 완료374/498·잔여124·개별Main103유지. 단장357의8view회전표만1차통과,독립검토/E한방향보행3phase시험중이다. 짧은puffed바지/빨간두다리/부츠/손의짧은완드와전·옆·후방구분을확인했다. mask세부표정은새작화추론으로원작애니메이션사실로주장하지않는다. [원본/PNG/정확prompt/geometry/SHA](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json). **5역할미완성/미연결/Main미실행/신규0**. 카드최종HOLD보존 `e55d6b4ba1252db9f560aa7f5cb91fa88c80a5a0` push·원격일치확인. subset임포터미커밋WIP테스트중이며최종전체8direction만허용하는보호는통과전사용하지않는다.

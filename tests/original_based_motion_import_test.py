@@ -49,6 +49,353 @@ class OriginalBasedImportTest(unittest.TestCase):
         return {str(path.relative_to(root)): importer.sha(path) if path.is_file() else None
                 for path in root.rglob("*")}
 
+    def prepare_direction_subset_import(self, root, groups=None, axes=None):
+        """Partition 104 synthetic poses; no production artwork is transformed."""
+        candidate, keys, output = self.prepare_synthetic_import(root)
+        source_pixels = []
+        for spec in candidate["sheets"]:
+            with Image.open(spec["output_path"]) as source:
+                source_pixels.append(np.asarray(source).copy())
+        phases = np.concatenate(source_pixels, axis=0)
+        groups = groups or [["E", "SE", "S"], ["SW"], ["W", "NW"], ["N", "NE"]]
+        axes = axes or ["columns" if index % 2 == 0 else "rows" for index in range(len(groups))]
+        sheets = []
+        for index, (directions, axis) in enumerate(zip(groups, axes)):
+            width, height = (13 * 64, len(directions) * 64) if axis == "rows" else (len(directions) * 64, 13 * 64)
+            pixels = np.zeros((height, width, 4), dtype=np.uint8)
+            for phase in range(13):
+                for local, direction in enumerate(directions):
+                    original = importer.DIRECTIONS.index(direction)
+                    cell = phases[phase * 64:(phase + 1) * 64, original * 64:(original + 1) * 64]
+                    x, y = (phase * 64, local * 64) if axis == "rows" else (local * 64, phase * 64)
+                    pixels[y:y + 64, x:x + 64] = cell
+            path = root / f"synthetic-subset-{index}.png"
+            Image.fromarray(pixels).save(path)
+            sheets.append({"output_path": str(path), "rows": 13, "roles": copy.deepcopy(importer.ROLES),
+                           "directions": list(directions), "directions_axis": axis, "reference_rows": [0, 1],
+                           "canvas_size": 256, "scale_review_note": "Synthetic equal-scale fixture; never game art"})
+        candidate["sheets"] = sheets
+        return candidate, keys, output
+
+    def assert_import_rejected_without_writes(self, root, candidate, keys):
+        before = self.import_snapshot(root)
+        mtimes = {str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}
+        for apply in (False, True):
+            with self.subTest(apply=apply):
+                with self.assertRaises(ValueError):
+                    importer.import_sheet(root, candidate, "fixture", keys, apply)
+                self.assertEqual(self.import_snapshot(root), before)
+                self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, mtimes)
+
+    def assert_audited_mandatory_poses_complete(self, audited):
+        self.assertEqual(audited["pixel_integrity"], "verified", audited["errors"])
+        mandatory = {name: track for name, track in audited["tracks"].items()
+                     if name.rpartition("_")[0] in importer.ROLES}
+        self.assertEqual(len(mandatory), 40)
+        for role, rows in importer.ROLES.items():
+            for direction in range(8):
+                track = mandatory[f"{role}_{direction}"]
+                self.assertEqual(track["frames"], len(rows))
+                self.assertEqual(track["distinct_rgba"], len(rows))
+        self.assertEqual(sum(track["distinct_rgba"] for track in mandatory.values()), 104)
+
+    def test_direction_subset_analysis_keeps_physical_packing_canonical_names_and_foot(self):
+        for axis in ("columns", "rows"):
+            with self.subTest(axis=axis), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                selected = ["E", "S", "N"]
+                candidate, _keys, _output = self.prepare_direction_subset_import(root, [selected], [axis])
+                path = Path(candidate["sheets"][0]["output_path"])
+                digest = importer.sha(path)
+                geometry = importer.analyze(path, 13, [0, 1], directions_axis=axis,
+                                            canvas_size=256, directions=selected)
+                importer.require_complete_pose_regions(path, geometry)
+                self.assertEqual(geometry["distinct_pixel_frames"], 39)
+                with Image.open(path) as source:
+                    pixels = np.asarray(source).copy()
+                anchors = []
+                for phase in range(13):
+                    for local, direction in enumerate(selected):
+                        x, y = (phase * 64, local * 64) if axis == "rows" else (local * 64, phase * 64)
+                        frame = geometry["frames"][phase * len(selected) + local]
+                        self.assertEqual((frame["row"], frame["direction"]), (phase, direction))
+                        self.assertEqual(frame["region"], [x + 17, y + 17, 22, 30])
+                        self.assertEqual(frame["source_anchor"], [x + (32 if axis == "rows" else 28), y + 43])
+                        self.assertEqual(frame["rgba_sha256"], hashlib.sha256(pixels[y + 17:y + 47, x + 17:x + 39].tobytes()).hexdigest())
+                        self.assertEqual([frame["margin"][0] + frame["source_anchor"][0] - frame["region"][0],
+                                          frame["margin"][1] + frame["source_anchor"][1] - frame["region"][1]], geometry["foot"])
+                        anchors.append([x + 29, y + 42])
+                anchored = importer.analyze(path, 13, [0, 1], directions_axis=axis, canvas_size=256,
+                                            source_anchors=anchors, directions=selected)
+                self.assertEqual([frame["source_anchor"] for frame in anchored["frames"]], anchors)
+                self.assertEqual(importer.sha(path), digest)
+
+    def test_direction_subsets_merge_all_runtime_tracks_and_complete_per_direction_provenance(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_direction_subset_import(root)
+            candidate["sheets"] = [candidate["sheets"][index] for index in (3, 0, 2, 1)]
+            candidate["sheets"][-1]["roles"] = {role: list(reversed(rows)) for role, rows in importer.ROLES.items()}
+            digests = [importer.sha(Path(spec["output_path"])) for spec in candidate["sheets"]]
+            result = importer.import_sheet(root, candidate, "fixture", keys, True)
+            proof = json.loads((output / "provenance.json").read_text())
+            self.assertEqual(result["poses"], 104)
+            self.assertEqual(proof["distinct_pixel_frames"], 104)
+            paths = ["res://" + str((output / f"poses-{index}.png").relative_to(root)) for index in range(len(candidate["sheets"]))]
+            external, resources, tracks = audit.read_spriteframes(output / "SpriteFrames.tres")
+            self.assertEqual(list(external.values()), paths)
+            self.assertEqual(len(tracks), 40)
+            for role, rows in importer.ROLES.items():
+                track = proof["tracks"][role]
+                self.assertNotIn("source_rows", track, "Split rows must not misleadingly name one atlas")
+                self.assertEqual([atlas["path"] for atlas in track["atlas_files"]], paths)
+                expected_sources = {}
+                for index, spec in enumerate(candidate["sheets"]):
+                    atlas = track["atlas_files"][index]
+                    self.assertEqual(atlas["sha256"], digests[index])
+                    self.assertEqual(atlas["directions"], spec["directions"])
+                    self.assertEqual(atlas["source_direction_indices"], [importer.DIRECTIONS.index(d) for d in spec["directions"]])
+                    self.assertEqual(atlas["scale_review_note"], spec["scale_review_note"])
+                    source_rows = spec["roles"][role]
+                    for direction in spec["directions"]:
+                        expected_sources[direction] = {"atlas_path": paths[index], "source_rows": source_rows}
+                        runtime = tracks[f"{role}_{importer.DIRECTIONS.index(direction)}"]
+                        self.assertEqual(len(runtime["frames"]), len(rows))
+                        self.assertEqual(runtime["loop"], role in ("idle", "walk"))
+                        for row, runtime_frame in zip(source_rows, runtime["frames"]):
+                            source_frame = next(frame for frame in proof["frames"]
+                                                if frame["sheet"] == index and frame["row"] == row and frame["direction"] == direction)
+                            rendered = resources[runtime_frame["texture"]]
+                            self.assertEqual(rendered["path"], paths[index])
+                            self.assertEqual(rendered["region"], tuple(source_frame["region"]))
+                self.assertEqual(track["source_rows_by_direction"], expected_sources)
+                self.assertEqual(track["direction_unique_frames"], dict.fromkeys(importer.DIRECTIONS, len(rows)))
+            for index, spec in enumerate(candidate["sheets"]):
+                self.assertEqual(importer.sha(output / f"poses-{index}.png"), digests[index])
+                self.assertEqual(importer.sha(Path(spec["output_path"])), digests[index])
+            tracked = {str(path.relative_to(root)) for path in root.rglob("*") if path.is_file()}
+            audited = audit.audit_resource(root, "res://" + str((output / "SpriteFrames.tres").relative_to(root)), tracked)
+            self.assert_audited_mandatory_poses_complete(audited)
+            snapshot = self.import_snapshot(root)
+            mtimes = {str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}
+            self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True), result)
+            self.assertEqual(self.import_snapshot(root), snapshot)
+            self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, mtimes)
+
+    def test_eight_single_direction_sheets_make_104_real_poses_and_forty_tracks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_direction_subset_import(root, [[direction] for direction in importer.DIRECTIONS])
+            self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True)["poses"], 104)
+            proof = json.loads((output / "provenance.json").read_text())
+            _external, resources, tracks = audit.read_spriteframes(output / "SpriteFrames.tres")
+            self.assertEqual(len(resources), 104)
+            self.assertEqual(len(tracks), 40)
+            for direction, name in enumerate(importer.DIRECTIONS):
+                self.assertEqual({frame["direction"] for frame in proof["frames"] if frame["sheet"] == direction}, {name})
+                for role, rows in importer.ROLES.items():
+                    self.assertEqual(len(tracks[f"{role}_{direction}"]["frames"]), len(rows))
+                    self.assertEqual(len(proof["tracks"][role]["atlas_files"]), 8)
+            tracked = {str(path.relative_to(root)) for path in root.rglob("*") if path.is_file()}
+            audited = audit.audit_resource(root, "res://" + str((output / "SpriteFrames.tres").relative_to(root)), tracked)
+            self.assert_audited_mandatory_poses_complete(audited)
+
+    def test_split_attack_cast_alias_inherits_all_atlases_and_direction_sources(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_direction_subset_import(root)
+            candidate["action_aliases"] = {"cast": "attack"}
+            candidate["review"]["cast_uses_authored_attack"] = True
+            self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True)["poses"], 104)
+            proof = json.loads((output / "provenance.json").read_text())
+            cast = proof["tracks"]["cast"].copy()
+            self.assertEqual(cast.pop("alias_of"), "attack")
+            self.assertEqual(cast, proof["tracks"]["attack"])
+            _external, _resources, tracks = audit.read_spriteframes(output / "SpriteFrames.tres")
+            for direction in range(8):
+                for field in ("frames", "speed", "loop"):
+                    self.assertEqual(tracks[f"cast_{direction}"][field], tracks[f"attack_{direction}"][field])
+
+    def test_single_e_walk_preview_analyzes_but_incomplete_candidate_cannot_import(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, _output = self.prepare_direction_subset_import(root, [["E"]], ["columns"])
+            spec = candidate["sheets"][0]
+            path = Path(spec["output_path"])
+            with Image.open(path) as source:
+                pixels = np.asarray(source).copy()[2 * 64:5 * 64]
+            Image.fromarray(pixels).save(path)
+            spec.update({"rows": 3, "roles": {"walk": [0, 1, 2]}})
+            geometry = importer.analyze(path, 3, [0, 1], canvas_size=256, directions=["E"])
+            importer.require_complete_pose_regions(path, geometry)
+            self.assertEqual(geometry["distinct_pixel_frames"], 3)
+            self.assertEqual([(frame["direction"], frame["row"]) for frame in geometry["frames"]], [("E", 0), ("E", 1), ("E", 2)])
+            self.assert_import_rejected_without_writes(root, candidate, keys)
+
+    def test_forty_role_direction_sheets_keep_only_each_roles_atlases_and_local_rows(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_direction_subset_import(root, [[direction] for direction in importer.DIRECTIONS])
+            whole_sheets = candidate["sheets"]
+            sheets = []
+            order = (7, 0, 6, 1, 5, 2, 4, 3)
+            for role, rows in importer.ROLES.items():
+                for direction in order:
+                    spec = copy.deepcopy(whole_sheets[direction])
+                    with Image.open(spec["output_path"]) as source:
+                        pixels = np.asarray(source).copy()
+                    if spec["directions_axis"] == "rows":
+                        pixels = np.concatenate([pixels[:, row * 64:(row + 1) * 64] for row in rows], axis=1)
+                    else:
+                        pixels = np.concatenate([pixels[row * 64:(row + 1) * 64] for row in rows], axis=0)
+                    path = root / f"synthetic-role-{role}-{direction}.png"
+                    Image.fromarray(pixels).save(path)
+                    spec.update({"output_path": str(path), "rows": len(rows), "roles": {role: list(range(len(rows)))}})
+                    sheets.append(spec)
+            candidate["sheets"] = sheets
+            candidate["action_aliases"] = {"cast": "attack"}
+            candidate["review"]["cast_uses_authored_attack"] = True
+            self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True)["poses"], 104)
+            proof = json.loads((output / "provenance.json").read_text())
+            external, resources, tracks = audit.read_spriteframes(output / "SpriteFrames.tres")
+            self.assertEqual(len(external), 40)
+            self.assertEqual(len(resources), 104)
+            self.assertEqual(len(tracks), 48)
+            for role_index, (role, rows) in enumerate(importer.ROLES.items()):
+                indices = list(range(role_index * 8, (role_index + 1) * 8))
+                paths = ["res://" + str((output / f"poses-{index}.png").relative_to(root)) for index in indices]
+                track = proof["tracks"][role]
+                self.assertEqual([atlas["path"] for atlas in track["atlas_files"]], paths)
+                self.assertNotIn("source_rows", track)
+                for local, direction in enumerate(order):
+                    name = importer.DIRECTIONS[direction]
+                    self.assertEqual(track["source_rows_by_direction"][name], {"atlas_path": paths[local], "source_rows": list(range(len(rows)))})
+                    runtime = tracks[f"{role}_{direction}"]
+                    self.assertEqual(len(runtime["frames"]), len(rows))
+                    for phase, runtime_frame in enumerate(runtime["frames"]):
+                        frame = next(frame for frame in proof["frames"] if frame["sheet"] == indices[local] and frame["row"] == phase)
+                        self.assertEqual(frame["direction"], name)
+                        self.assertEqual(resources[runtime_frame["texture"]]["path"], paths[local])
+                        self.assertEqual(resources[runtime_frame["texture"]]["region"], tuple(frame["region"]))
+            alias = proof["tracks"]["cast"].copy()
+            self.assertEqual(alias.pop("alias_of"), "attack")
+            self.assertEqual(alias, proof["tracks"]["attack"])
+            tracked = {str(path.relative_to(root)) for path in root.rglob("*") if path.is_file()}
+            audited = audit.audit_resource(root, "res://" + str((output / "SpriteFrames.tres").relative_to(root)), tracked)
+            self.assert_audited_mandatory_poses_complete(audited)
+
+    def test_explicit_full_directions_preserve_legacy_geometry_metadata_and_mtimes(self):
+        for axis in ("columns", "rows", "blocks4x2"):
+            with self.subTest(axis=axis), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, _output = self.prepare_synthetic_import(root)
+                if axis == "blocks4x2":
+                    self.repack_synthetic_candidate_as_blocks4x2(candidate)
+                elif axis == "rows":
+                    for spec in candidate["sheets"]:
+                        with Image.open(spec["output_path"]) as source:
+                            pixels = np.asarray(source).copy()
+                        packed = np.zeros((512, spec["rows"] * 64, 4), dtype=np.uint8)
+                        for phase in range(spec["rows"]):
+                            for direction in range(8):
+                                packed[direction * 64:(direction + 1) * 64, phase * 64:(phase + 1) * 64] = pixels[phase * 64:(phase + 1) * 64, direction * 64:(direction + 1) * 64]
+                        Image.fromarray(packed).save(spec["output_path"])
+                        spec["directions_axis"] = "rows"
+                first = importer.import_sheet(root, candidate, "fixture", keys, True)
+                snapshot = self.import_snapshot(root)
+                mtimes = {str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}
+                for spec in candidate["sheets"]:
+                    default = importer.analyze(Path(spec["output_path"]), spec["rows"], [0, 1], directions_axis=axis)
+                    explicit = importer.analyze(Path(spec["output_path"]), spec["rows"], [0, 1], directions_axis=axis,
+                                                directions=list(importer.DIRECTIONS))
+                    self.assertEqual(explicit, default)
+                    spec["directions"] = list(importer.DIRECTIONS)
+                self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True), first)
+                self.assertEqual(self.import_snapshot(root), snapshot)
+                self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, mtimes)
+
+    def test_invalid_direction_declarations_fail_analysis_and_import_before_writes(self):
+        for invalid in (None, [], "E", [1], ["Q"], ["E", "E"], ["S", "E"], ["NE", "N"]):
+            with self.subTest(directions=invalid), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, _output = self.prepare_synthetic_import(root)
+                spec = candidate["sheets"][-1]
+                spec["directions"] = invalid
+                with self.assertRaises(ValueError):
+                    importer.analyze(Path(spec["output_path"]), spec["rows"], directions=invalid)
+                self.assert_import_rejected_without_writes(root, candidate, keys)
+
+    def test_partial_sheet_requires_explicit_canvas_and_nonempty_string_scale_review(self):
+        for field, value, remove in (("canvas_size", None, True), ("canvas_size", None, False),
+                                     ("scale_review_note", None, True), ("scale_review_note", None, False),
+                                     ("scale_review_note", "", False), ("scale_review_note", " \t", False),
+                                     ("scale_review_note", 123, False), ("scale_review_note", False, False)):
+            with self.subTest(field=field, value=value, remove=remove), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, _output = self.prepare_direction_subset_import(root)
+                if remove:
+                    candidate["sheets"][-1].pop(field)
+                else:
+                    candidate["sheets"][-1][field] = value
+                self.assert_import_rejected_without_writes(root, candidate, keys)
+
+    def test_blocks4x2_rejects_partial_direction_sheets_before_writes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, _output = self.prepare_direction_subset_import(root)
+            candidate["sheets"][-1]["directions_axis"] = "blocks4x2"
+            spec = candidate["sheets"][-1]
+            with self.assertRaises(ValueError):
+                importer.analyze(Path(spec["output_path"]), 13, directions_axis="blocks4x2", directions=spec["directions"])
+            self.assert_import_rejected_without_writes(root, candidate, keys)
+
+    def test_split_roles_reject_missing_overlapping_or_inconsistent_direction_phases(self):
+        for problem in ("missing_directions", "overlapping_directions", "missing_role_direction", "missing_role",
+                        "unequal_phase_count", "one_phase", "repeated_phase", "reused_other_role"):
+            with self.subTest(problem=problem), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, _output = self.prepare_direction_subset_import(root)
+                if problem == "missing_directions":
+                    candidate["sheets"].pop()
+                elif problem == "overlapping_directions":
+                    candidate["sheets"][-1]["directions"] = ["NW", "NE"]
+                elif problem == "missing_role_direction":
+                    candidate["sheets"][-1]["roles"].pop("death")
+                elif problem == "missing_role":
+                    for spec in candidate["sheets"]:
+                        spec["roles"].pop("death")
+                elif problem == "unequal_phase_count":
+                    candidate["sheets"][-1]["roles"]["walk"] = [2, 3]
+                elif problem == "one_phase":
+                    candidate["sheets"][-1]["roles"]["idle"] = [0]
+                elif problem == "repeated_phase":
+                    candidate["sheets"][-1]["roles"]["idle"] = [0, 0]
+                else:
+                    candidate["sheets"][-1]["roles"]["hit"] = [0, 1]
+                self.assert_import_rejected_without_writes(root, candidate, keys)
+
+    def test_later_partial_sheet_pixel_failures_are_atomic_for_import_and_apply(self):
+        for problem in ("global_duplicate", "foreign_crop", "visible_omission"):
+            with self.subTest(problem=problem), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                groups = [["E", "SE"], ["S", "SW"], ["W", "NW"], ["N", "NE"]]
+                candidate, keys, _output = self.prepare_direction_subset_import(root, groups, ["columns"] * 4)
+                spec = candidate["sheets"][-1]
+                path = Path(spec["output_path"])
+                with Image.open(path) as source:
+                    pixels = np.asarray(source).copy()
+                if problem == "global_duplicate":
+                    with Image.open(candidate["sheets"][0]["output_path"]) as source:
+                        pixels[20:44, 20:36] = np.asarray(source)[20:44, 20:36]
+                elif problem == "foreign_crop":
+                    pixels[20:44, :128] = 0
+                    pixels[20:44, 12:63] = [220, 100, 160, 255]
+                    pixels[20:44, 64:112] = [221, 100, 160, 255]
+                else:
+                    pixels[52:56, 52:56] = [220, 100, 160, 255]
+                Image.fromarray(pixels).save(path)
+                self.assert_import_rejected_without_writes(root, candidate, keys)
+
     def blocks4x2_fixture_pixels(self, phases=3):
         pixels = np.zeros((phases * 128, 256, 4), dtype=np.uint8)
         for phase in range(phases):

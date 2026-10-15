@@ -5,6 +5,8 @@ The generated sheet is copied byte-for-byte. Connected-component analysis only
 finds AtlasTexture rectangles; it never generates, mirrors or duplicates poses.
 Only complete, explicitly partitioned role sheets with separated bodies and a
 visual review are accepted. Original reference hashes are checked again.
+Direction-subset sheets need an explicit canvas_size and scale_review_note;
+they are imported only after all five roles cover all eight directions.
 """
 import argparse
 import hashlib
@@ -102,21 +104,39 @@ def sharing_identity(target, root=None):
     return reference, presentation
 
 
+def reviewed_directions(value):
+    """Accept only a nonempty, unique subset in the canonical compass order."""
+    if (not isinstance(value, list) or not value
+            or any(not isinstance(direction, str) or direction not in DIRECTIONS for direction in value)
+            or value != [direction for direction in DIRECTIONS if direction in value]):
+        raise ValueError("directions must be a nonempty unique subset in canonical E,SE,S,SW,W,NW,N,NE order")
+    return value.copy()
+
+
 def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
-            directions_axis="columns", canvas_size=None, source_anchors=None):
+            directions_axis="columns", canvas_size=None, source_anchors=None, directions=DIRECTIONS):
     """Return phase-major metadata, rejecting clipped or repeated poses.
 
     rows_count is the number of logical pose phases. A directions_axis="rows"
-    sheet has eight physical rows and rows_count physical columns. A
+    sheet has len(directions) physical rows and rows_count physical columns. A
     directions_axis="blocks4x2" sheet places E/SE/S/SW in a phase's first
     physical row and W/NW/N/NE in its second row, using four columns.
+    Partial-direction columns/rows sheets need an explicitly reviewed canvas.
     Pixels stay untouched; only the resulting frame indices are normalized.
     """
+    selected = reviewed_directions(directions)
+    direction_count = len(selected)
     if directions_axis not in {"columns", "rows", "blocks4x2"}:
         raise ValueError("Unknown direction axis")
-    if directions_axis == "blocks4x2" and (not isinstance(rows_count, int) or rows_count < 1):
+    if directions_axis == "blocks4x2" and direction_count != 8:
+        raise ValueError("blocks4x2 does not support a direction subset")
+    if directions_axis == "blocks4x2" and (type(rows_count) is not int or rows_count < 1):
         raise ValueError("blocks4x2 requires a positive integer number of logical phases")
-    if canvas_size is not None and (not isinstance(canvas_size, int) or not 64 <= canvas_size <= 2048):
+    if type(rows_count) is not int or rows_count < 1:
+        raise ValueError("A sheet requires a positive integer number of logical phases")
+    if direction_count != 8 and canvas_size is None:
+        raise ValueError("Direction subset sheets require an explicit reviewed canvas_size")
+    if canvas_size is not None and (type(canvas_size) is not int or not 64 <= canvas_size <= 2048):
         raise ValueError("Reviewed canvas size must be an integer from 64 to 2048")
     with Image.open(path) as source:
         if source.mode != "RGBA":
@@ -134,7 +154,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 continue
             y, x = boxes[index]
             bodies.append({"label": index + 1, "box": [x.start, y.start, x.stop, y.stop], "area": int(area)})
-        expected = rows_count * 8
+        expected = rows_count * direction_count
         if len(bodies) != expected:
             raise ValueError(f"Expected exactly {expected} separated poses, found {len(bodies)}; review/re-author, never invent slots")
         # Normalize metadata to phase-major order, without transposing pixels.
@@ -156,12 +176,15 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
         else:
             # Keep the established column/row packing byte-for-byte stable.
             bodies.sort(key=lambda item: item["box"][1])
-            columns = rows_count if directions_axis == "rows" else 8
+            columns = rows_count if directions_axis == "rows" else direction_count
             physical_rows = [sorted(bodies[start:start + columns], key=lambda item: item["box"][0])
                              for start in range(0, expected, columns)]
-            rows = [[physical_rows[direction][phase] for direction in range(8)]
+            rows = [[physical_rows[direction][phase] for direction in range(direction_count)]
                     for phase in range(rows_count)] if directions_axis == "rows" else physical_rows
         neutral_rows = reference_rows if reference_rows is not None else [0, 1]
+        if (not isinstance(neutral_rows, list) or not neutral_rows
+                or any(type(row) is not int or row < 0 or row >= rows_count for row in neutral_rows)):
+            raise ValueError("Reviewed reference_rows must select actual logical phases")
         neutral_height = float(np.median([item["box"][3] - item["box"][1] for index in neutral_rows for item in rows[index]]))
         # Preserve each sheet's actual pixels. Different source resolutions use
         # proportional virtual canvases; the runtime normalizes that canvas.
@@ -169,7 +192,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
         if canvas_size is not None:
             canvas = canvas_size
         foot_x, foot_y = canvas // 2, canvas * 5 // 8
-        column_anchors = [round(float(np.median([(rows[row][direction]["box"][0] + rows[row][direction]["box"][2]) / 2 for row in neutral_rows]))) for direction in range(8)] if reference_rows is not None else [round(source.width / 8 * (direction + .5)) for direction in range(8)]
+        column_anchors = [round(float(np.median([(rows[row][direction]["box"][0] + rows[row][direction]["box"][2]) / 2 for row in neutral_rows]))) for direction in range(direction_count)] if reference_rows is not None else [round(source.width / direction_count * (direction + .5)) for direction in range(direction_count)]
         if directions_axis == "blocks4x2" and reference_rows is None:
             column_anchors = [round(source.width / columns * (direction % columns + .5))
                               for direction in range(8)]
@@ -196,7 +219,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                             if directions_axis == "rows" else column_anchors[direction])
                 anchor_y = item["box"][3] - 1
                 if source_anchors is not None:
-                    anchor = source_anchors[row_index * 8 + direction]
+                    anchor = source_anchors[row_index * direction_count + direction]
                     if (not isinstance(anchor, list) or len(anchor) != 2
                             or any(not isinstance(value, int) for value in anchor)
                             or not x1 <= anchor[0] < x2 or not y1 <= anchor[1] < y2):
@@ -210,7 +233,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 if fingerprint in all_hashes:
                     raise ValueError("A repeated still was used as a different motion pose")
                 all_hashes.add(fingerprint)
-                frames.append({"row": row_index, "direction": DIRECTIONS[direction],
+                frames.append({"row": row_index, "direction": selected[direction],
                                "region": [x1, y1, width, height],
                                "margin": [margin_x, margin_y, canvas - width, canvas - height],
                                "source_anchor": [anchor_x, anchor_y], "rgba_sha256": fingerprint})
@@ -300,29 +323,64 @@ def import_sheet(root, candidate, actor, keys, apply):
     aliases = reviewed_action_aliases(candidate)
     sheets = candidate.get("sheets", [{"output_path": candidate.get("output_path"), "rows": 13, "roles": ROLES}])
     parsed = []
+    sheet_directions = []
     role_frames = {}
+    role_sources = {}
     geometry = {"frames": []}
     for index, spec in enumerate(sheets):
+        selected = reviewed_directions(spec.get("directions", DIRECTIONS))
+        if len(selected) != 8:
+            if spec.get("directions_axis", "columns") == "blocks4x2":
+                raise ValueError("blocks4x2 does not support a direction subset")
+            if spec.get("canvas_size") is None:
+                raise ValueError("Direction subset sheets require an explicit reviewed canvas_size")
+            if (not isinstance(spec.get("scale_review_note"), str)
+                    or not spec["scale_review_note"].strip()):
+                raise ValueError("Direction subset sheets require a nonempty scale_review_note")
         source = candidate_image(root, spec["output_path"])
         reference_height = parsed[0]["neutral_height"] * 256 / parsed[0]["canvas_size"][1] if parsed else None
         part = analyze(source, spec["rows"], spec.get("reference_rows"), reference_height,
-                       spec.get("directions_axis", "columns"), spec.get("canvas_size"), spec.get("source_anchors"))
+                       spec.get("directions_axis", "columns"), spec.get("canvas_size"), spec.get("source_anchors"), selected)
         # Validate every candidate before creating any output directory/file.
         # Existing tracked sheets remain untouched; reimports require review.
         require_complete_pose_regions(source, part)
         offset = len(geometry["frames"])
         if len(sheets) > 1:
             for frame in part["frames"]: frame["sheet"] = index
+        if not isinstance(spec["roles"], dict) or not spec["roles"]:
+            raise ValueError("Each sheet must declare actual authored roles")
         for role, rows in spec["roles"].items():
-            if role in role_frames or role not in ROLES or len(rows) < 2 or any(row < 0 or row >= spec["rows"] for row in rows):
-                raise ValueError("Invalid/duplicate authored role specification: " + role)
-            role_frames[role] = [[offset + row * 8 + direction for row in rows] for direction in range(8)]
+            if (role not in ROLES or not isinstance(rows, list) or len(rows) < 2
+                    or any(type(row) is not int or row < 0 or row >= spec["rows"] for row in rows)
+                    or len(set(rows)) != len(rows)):
+                raise ValueError("Invalid/duplicate authored role specification: " + str(role))
+            groups = role_frames.setdefault(role, [None] * 8)
+            sources = role_sources.setdefault(role, [None] * 8)
+            prior_count = next((len(group) for group in groups if group is not None), len(rows))
+            if prior_count != len(rows):
+                raise ValueError("Inconsistent phase count for authored role: " + role)
+            for local_direction, direction in enumerate(selected):
+                direction_index = DIRECTIONS.index(direction)
+                if groups[direction_index] is not None:
+                    raise ValueError("Duplicate authored role direction: " + role + "/" + direction)
+                groups[direction_index] = [offset + row * len(selected) + local_direction for row in rows]
+                sources[direction_index] = {"sheet": index, "rows": rows.copy()}
         geometry["frames"].extend(part["frames"])
         parsed.append(part)
-    if set(role_frames) != set(ROLES):
-        raise ValueError("Each mandatory role must have actual frames")
+        sheet_directions.append(selected)
+    for role in ROLES:
+        if role not in role_frames or any(group is None for group in role_frames[role]):
+            raise ValueError("Each mandatory role must have actual frames in all eight directions: " + role)
+    used_frames = set()
+    for role in ROLES:
+        for indices in role_frames[role]:
+            for frame in indices:
+                if frame in used_frames:
+                    raise ValueError("Duplicate pose reused across mandatory authored roles")
+                used_frames.add(frame)
     for alias, source_role in aliases.items():
         role_frames[alias] = [indices.copy() for indices in role_frames[source_role]]
+        role_sources[alias] = role_sources[source_role]
     height_basis = candidate.get("display_height_basis", "median_idle")
     if height_basis not in {"median_idle", "max_living_frame"}:
         raise ValueError("Unknown reviewed display-height basis")
@@ -356,6 +414,10 @@ def import_sheet(root, candidate, actor, keys, apply):
                         "canvas_size": parsed[index]["canvas_size"], "foot": parsed[index]["foot"]})
         if spec.get("directions_axis", "columns") != "columns":
             atlases[-1]["directions_axis"] = spec["directions_axis"]
+        if sheet_directions[index] != DIRECTIONS:
+            atlases[-1]["directions"] = sheet_directions[index]
+            atlases[-1]["source_direction_indices"] = [DIRECTIONS.index(direction) for direction in sheet_directions[index]]
+            atlases[-1]["scale_review_note"] = spec["scale_review_note"]
         if spec.get("source_anchors") is not None:
             atlases[-1]["source_anchor_kind"] = "reviewed per-pose foot anchors recorded in frames"
     resource = spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames)
@@ -374,10 +436,20 @@ def import_sheet(root, candidate, actor, keys, apply):
         proof["action_aliases"] = aliases
     for role, directions in role_frames.items():
         count = len(directions[0])
-        sheet_index = geometry["frames"][directions[0][0]].get("sheet", 0)
-        proof["tracks"][role] = {"atlas_files": [atlases[sheet_index]], "source_rows": sheets[sheet_index]["roles"][aliases.get(role, role)], "source_frames_per_direction": count,
-                                  "unique_frames_per_direction": count, "direction_unique_frames": dict.fromkeys(DIRECTIONS, count),
-                                  "source_duration_seconds": SECONDS[role], "loop_type": "loop" if role in ("idle", "walk") else "play_once"}
+        sources = role_sources[role]
+        contributing = sorted({source["sheet"] for source in sources})
+        track = {"atlas_files": [atlases[index] for index in contributing]}
+        if len(contributing) == 1:
+            # Preserve field order and bytes for every established full-eight sheet.
+            track["source_rows"] = sources[0]["rows"]
+        else:
+            track["source_rows_by_direction"] = {
+                direction: {"atlas_path": atlases[source["sheet"]]["path"], "source_rows": source["rows"]}
+                for direction, source in zip(DIRECTIONS, sources)}
+        track.update({"source_frames_per_direction": count,
+                      "unique_frames_per_direction": count, "direction_unique_frames": dict.fromkeys(DIRECTIONS, count),
+                      "source_duration_seconds": SECONDS[role], "loop_type": "loop" if role in ("idle", "walk") else "play_once"})
+        proof["tracks"][role] = track
         if role in aliases:
             proof["tracks"][role]["alias_of"] = aliases[role]
     metadata = [(folder / "SpriteFrames.tres", resource),
