@@ -1,0 +1,433 @@
+{
+  "schema": 1,
+  "review_kind": "Independent source identity and static 2D pose review; does not establish actual Main gameplay",
+  "entities": [
+    {
+      "entity": "albino_horn_frog_transform",
+      "target_keys": [
+        "transform:352"
+      ],
+      "target_name": "알비노 뿔 개구리",
+      "reference": {
+        "path": "res://assets/catalog/0ffb2e6843a5f87f54a2fd76.png",
+        "sha256": "b81b4eca8b25fe5d72ecb074cc6f449ff8a377138721f1a20b682c34c205052f",
+        "expected_sha_match": true,
+        "matches_current_authoring_plan": true
+      },
+      "native_pixel_integrity": "verified",
+      "static_errors": [],
+      "all_source_geometry_matches_provenance": true,
+      "distinct_real_frames": 104,
+      "roles": {
+        "idle": {
+          "direction_count": 8,
+          "frames_per_direction": 2
+        },
+        "walk": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        },
+        "attack": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        },
+        "hit": {
+          "direction_count": 8,
+          "frames_per_direction": 2
+        },
+        "death": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        }
+      },
+      "max_normalized_world_foot_error_px": 0.0,
+      "action_aliases": {},
+      "sheets": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_horn_frog_transform/poses-0.png",
+          "sha256": "e3c16816fe7c22c083bfa24af7036fc4665dcd185a83003db1541c784a0da132",
+          "expected_sha_match": true,
+          "bytes": 2284803,
+          "mode": "RGBA",
+          "size": [
+            1536,
+            1024
+          ],
+          "pose_count": 40,
+          "canvas_size": [
+            448,
+            448
+          ],
+          "directions_axis": "columns",
+          "alpha_zero_fraction": 0.566959,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 26307,
+          "outside_regions_max_alpha": 7,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 1180,
+            "alpha_gt25_pixels": 65,
+            "max_alpha": 89
+          }
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_horn_frog_transform/poses-1.png",
+          "sha256": "4d617544d487780cf2079aadc00d5c476f9f58b44fd6673fe3c3a7b26079a8ca",
+          "expected_sha_match": true,
+          "bytes": 2091968,
+          "mode": "RGBA",
+          "size": [
+            1024,
+            1536
+          ],
+          "pose_count": 24,
+          "canvas_size": [
+            424,
+            424
+          ],
+          "directions_axis": "rows",
+          "alpha_zero_fraction": 0.039216,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 893545,
+          "outside_regions_max_alpha": 54,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 70348,
+            "alpha_gt25_pixels": 13965,
+            "max_alpha": 84
+          }
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_horn_frog_transform/poses-2.png",
+          "sha256": "ce16b16df4b461f5f526e71c4b4c852634ef611ab0a9b402d46ad160523fb02b",
+          "expected_sha_match": true,
+          "bytes": 2186770,
+          "mode": "RGBA",
+          "size": [
+            1536,
+            1024
+          ],
+          "pose_count": 40,
+          "canvas_size": [
+            432,
+            432
+          ],
+          "directions_axis": "columns",
+          "alpha_zero_fraction": 0.593742,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 32702,
+          "outside_regions_max_alpha": 6,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 1032,
+            "alpha_gt25_pixels": 72,
+            "max_alpha": 73
+          }
+        }
+      ],
+      "review_contact_path": "/workspace/twilight-run/recovery/remote-three-contact/albino_horn_frog_transform-all-poses.jpg",
+      "verdict": "hold",
+      "blocking_issue": "Attack atlas retains a broad semi-transparent colored haze outside the opaque creature. Hold runtime acceptance until transparency quality is resolved and re-reviewed; do not alter or silently alpha-threshold the preserved source PNG.",
+      "identity": "Matches the exact portrait: pale mottled spiny frog, dark burgundy dorsal spikes, orange cheek horns, red eyes and red webbed limbs.",
+      "directions": "idle_0/idle_1 all eight: E/W anatomical profiles, S bilateral face/chest, N dorsal spikes and hindquarters with no pasted frontal face; diagonals change occlusion coherently.",
+      "motion_and_contact": "walk_0..2 all eight show changing fore/hind-leg placement with connected joints. attack_1 E/S/NW and all remaining views show the open-mouth/forward forelimb strike in the facing hemisphere. Actual collision/contact timing belongs to the separate Main test.",
+      "hit_death": "hit_0..1 retain facing with compressed recovery. death_0..2 all eight lower torso/head progressively; final death silhouettes are 64.4%..74.7% of idle height, compatible with a low frog corpse.",
+      "transparency": "Attack_1 E/S/NW diagnostic on both white and black shows soft reddish/gray haze. All opaque bodies and frame separation pass, but alpha>100-only checks do not catch this quality issue.",
+      "actual_Main_validation": "Not assessed by this independent static review; separate agent evidence required.",
+      "blocking_pose_example": {
+        "row": 1,
+        "direction": "NW",
+        "region": [
+          413,
+          926,
+          198,
+          161
+        ],
+        "source_anchor": [
+          518,
+          1083
+        ],
+        "sheet": 1
+      },
+      "transparency_diagnostic_path": "/workspace/twilight-run/recovery/remote-three-contact/frog-attack-alpha-on-backgrounds.jpg"
+    },
+    {
+      "entity": "nightmare_jack_transform",
+      "target_keys": [
+        "transform:173"
+      ],
+      "target_name": "악몽의 잭 오 랜턴",
+      "reference": {
+        "path": "res://assets/catalog/0eb12938f27a9aea00efc7f2.png",
+        "sha256": "b0c4a733b1b1a32e7e648f1c8f0175f0bc5e1464dfe220e6a298548febf51436",
+        "expected_sha_match": true,
+        "matches_current_authoring_plan": true
+      },
+      "native_pixel_integrity": "verified",
+      "static_errors": [],
+      "all_source_geometry_matches_provenance": true,
+      "distinct_real_frames": 104,
+      "roles": {
+        "idle": {
+          "direction_count": 8,
+          "frames_per_direction": 2
+        },
+        "walk": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        },
+        "attack": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        },
+        "hit": {
+          "direction_count": 8,
+          "frames_per_direction": 2
+        },
+        "death": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        }
+      },
+      "max_normalized_world_foot_error_px": 0.0,
+      "action_aliases": {
+        "cast": "attack"
+      },
+      "sheets": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nightmare_jack_transform/poses-0.png",
+          "sha256": "01e24ea7301bae91cf1fa5427653e77e3822068f158878d4eb87705d81f2ceac",
+          "expected_sha_match": true,
+          "bytes": 1327720,
+          "mode": "RGBA",
+          "size": [
+            1585,
+            992
+          ],
+          "pose_count": 40,
+          "canvas_size": [
+            448,
+            448
+          ],
+          "directions_axis": "columns",
+          "alpha_zero_fraction": 0.678915,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 14759,
+          "outside_regions_max_alpha": 9,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 375,
+            "alpha_gt25_pixels": 37,
+            "max_alpha": 49
+          }
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nightmare_jack_transform/poses-1.png",
+          "sha256": "8f4ed0fe2e7d99f38fabc5c787e4de6f0b3a800c7760a9aaacb4e46f7bda69d6",
+          "expected_sha_match": true,
+          "bytes": 1742384,
+          "mode": "RGBA",
+          "size": [
+            1024,
+            1536
+          ],
+          "pose_count": 24,
+          "canvas_size": [
+            456,
+            456
+          ],
+          "directions_axis": "rows",
+          "alpha_zero_fraction": 0.772062,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 8839,
+          "outside_regions_max_alpha": 7,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 112,
+            "alpha_gt25_pixels": 13,
+            "max_alpha": 57
+          }
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nightmare_jack_transform/poses-2.png",
+          "sha256": "af3bc3bb88035d71f6c26820b962930219741ec21aec69d36e84bfed5a3a29cf",
+          "expected_sha_match": true,
+          "bytes": 1202216,
+          "mode": "RGBA",
+          "size": [
+            1584,
+            993
+          ],
+          "pose_count": 40,
+          "canvas_size": [
+            424,
+            424
+          ],
+          "directions_axis": "columns",
+          "alpha_zero_fraction": 0.682853,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 37793,
+          "outside_regions_max_alpha": 19,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 518,
+            "alpha_gt25_pixels": 68,
+            "max_alpha": 66
+          }
+        }
+      ],
+      "review_contact_path": "/workspace/twilight-run/recovery/remote-three-contact/nightmare_jack_transform-all-poses.jpg",
+      "verdict": "pass_static",
+      "blocking_issue": null,
+      "identity": "Matches the exact portrait: silver-blue pumpkin head, orange triangular face, narrow white arms/hands and dark ragged spectral robe. The source is legless; no invented legs are required.",
+      "directions": "idle_0/idle_1 all eight preserve side-view pumpkin face placement; N/NW/NE show the rear head and robe rather than a copied frontal face.",
+      "motion_and_contact": "walk_0..2 all eight articulate arms and spectral hem. attack_0 windup / attack_1 extended hands / attack_2 recovery face the respective direction, with the neck/robe/arms remaining connected. Cast is an explicitly reviewed alias of these same attack poses; no extra physical frames are counted. Actual projectile/contact timing remains for the separate Main test.",
+      "hit_death": "hit_0..1 show recoil and recovery. death_0 descends, death_1 slumps, death_2 lies on the ground in all eight views; final height is 45.7%..53.5% of idle height.",
+      "transparency": "RGBA preserved. Minor low-alpha antialias/ghost fringes remain; no broad matte, foreign body, cropped opaque fragment or visible overlapping neighbor was found.",
+      "actual_Main_validation": "Not assessed by this independent static review; separate agent evidence required."
+    },
+    {
+      "entity": "doguri_transform",
+      "target_keys": [
+        "transform:288"
+      ],
+      "target_name": "도구리",
+      "reference": {
+        "path": "res://assets/catalog/103fc704c444ace82ff91235.png",
+        "sha256": "a48d6b0f65498379d0bb8188b2ffceb5dcec38a9e4233abd056e38f1c36ee244",
+        "expected_sha_match": true,
+        "matches_current_authoring_plan": true
+      },
+      "native_pixel_integrity": "verified",
+      "static_errors": [],
+      "all_source_geometry_matches_provenance": true,
+      "distinct_real_frames": 104,
+      "roles": {
+        "idle": {
+          "direction_count": 8,
+          "frames_per_direction": 2
+        },
+        "walk": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        },
+        "attack": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        },
+        "hit": {
+          "direction_count": 8,
+          "frames_per_direction": 2
+        },
+        "death": {
+          "direction_count": 8,
+          "frames_per_direction": 3
+        }
+      },
+      "max_normalized_world_foot_error_px": 0.0,
+      "action_aliases": {},
+      "sheets": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/doguri_transform/poses-0.png",
+          "sha256": "660719183aff57fdd08ea4c1ffd51d58843e32793c87e8e27f306dea8ab8df03",
+          "expected_sha_match": true,
+          "bytes": 1362743,
+          "mode": "RGBA",
+          "size": [
+            1586,
+            992
+          ],
+          "pose_count": 40,
+          "canvas_size": [
+            448,
+            448
+          ],
+          "directions_axis": "columns",
+          "alpha_zero_fraction": 0.614746,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 18950,
+          "outside_regions_max_alpha": 4,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 17,
+            "alpha_gt25_pixels": 0,
+            "max_alpha": 18
+          }
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/doguri_transform/poses-1.png",
+          "sha256": "9a1bf5bad354eba684b04197868edc75d4b729598b1921c7cc0df87ef384d64f",
+          "expected_sha_match": true,
+          "bytes": 1093354,
+          "mode": "RGBA",
+          "size": [
+            1584,
+            993
+          ],
+          "pose_count": 24,
+          "canvas_size": [
+            536,
+            536
+          ],
+          "directions_axis": "columns",
+          "alpha_zero_fraction": 0.662598,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 10693,
+          "outside_regions_max_alpha": 4,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 47,
+            "alpha_gt25_pixels": 0,
+            "max_alpha": 16
+          }
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/doguri_transform/poses-2.png",
+          "sha256": "54a53d1a29d762a7e2d520abe3e6a57b44f25cfdc4c5a07f29679016634bfec9",
+          "expected_sha_match": true,
+          "bytes": 1299418,
+          "mode": "RGBA",
+          "size": [
+            1585,
+            992
+          ],
+          "pose_count": 40,
+          "canvas_size": [
+            440,
+            440
+          ],
+          "directions_axis": "columns",
+          "alpha_zero_fraction": 0.622528,
+          "visible_border_pixels": 0,
+          "omitted_alpha_gt100_pixels": 0,
+          "omitted_any_alpha_pixels": 10457,
+          "outside_regions_max_alpha": 5,
+          "runtime_crop_alpha_noise_farther_than_3px_from_alpha_gt100_body": {
+            "alpha_gt10_pixels": 4,
+            "alpha_gt25_pixels": 0,
+            "max_alpha": 13
+          }
+        }
+      ],
+      "review_contact_path": "/workspace/twilight-run/recovery/remote-three-contact/doguri_transform-all-poses.jpg",
+      "verdict": "pass_static",
+      "blocking_issue": null,
+      "identity": "Matches the exact portrait: round pink raccoon-like body, burgundy eye mask, white eye rims, red apple and green leaf on head, pale striped tail with a green tip.",
+      "directions": "idle_0/idle_1 all eight show proper profile/front/rear occlusion. N is a rear view without frontal eyes; the rear cap color is authored from the single reference, not a claim of recovered original rear artwork.",
+      "motion_and_contact": "walk_0..2 all eight alternate the short feet and arms while tail/head remain connected. attack_0 windup / attack_1 forward paw reach / attack_2 recovery preserve each facing; rear-view paws are partly occluded naturally. Actual attack collision position remains for the separate Main test.",
+      "hit_death": "hit_0..1 compress/close eyes and recover. death_0 sits, death_1 tips over, death_2 lies sideways/back in all eight views, with apple and tail still connected; final height is 58.5%..63.9% of idle height.",
+      "transparency": "RGBA preserved with only very low-alpha antialias fringes. No broad halo/matte, opaque crop loss, neighboring body or silhouette clipping was observed.",
+      "actual_Main_validation": "Not assessed by this independent static review; separate agent evidence required."
+    }
+  ],
+  "summary": {
+    "static_pass": 2,
+    "static_hold": 1,
+    "held_entities": [
+      "albino_horn_frog_transform"
+    ],
+    "new_images_generated": 0,
+    "existing_project_files_modified": 0,
+    "actual_Main_results_included": false
+  }
+}

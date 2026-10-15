@@ -13,6 +13,7 @@ var batch_checks: int = 0
 var batch_report_path: String
 var batch_config_path: String
 var previous_environment: Dictionary = {}
+var batch_metadata: Dictionary = {}
 
 func subject_path() -> String:
 	return "res://assets/actors/eight_direction/original_based/" + str(current_case.folder) + "/SpriteFrames.tres"
@@ -26,7 +27,9 @@ func find_clearing() -> Vector2:
 	if not initial.is_finite(): return initial
 	# Keep untouched terrain and paused background actors out of the portrait
 	# sampling area by selecting an empty real walkable part of the same map.
-	for radius: float in [0., 240., 320., 400., 560., 720.]:
+	# The production map is 48,000 x 25,120 world pixels. The original 720px
+	# search stayed inside a dense spawn cluster; inspect farther real terrain.
+	for radius: float in [0., 240., 320., 400., 560., 720., 960., 1280., 1600., 2000., 2400., 3200.]:
 		for direction: int in range(8):
 			var point: Vector2 = initial + screen_direction(direction) * radius
 			if not route_clear(point, 150.): continue
@@ -49,7 +52,11 @@ func find_clearing() -> Vector2:
 					if bounds.intersects(body):
 						occupied = true
 						break
-			if not occupied: return point
+			if not occupied:
+				report.qa_clearing = {"initial": [initial.x, initial.y], "position": [point.x, point.y],
+					"search_radius": radius, "walkable_radius": 150.0,
+					"other_actors_hidden": false, "terrain_hidden_or_modified": false}
+				return point
 	return Vector2.INF
 
 func incoming_and_death() -> void:
@@ -90,6 +97,16 @@ func validate_cases(config: Variant) -> Array[String]:
 		return errors
 	var slugs: Dictionary = {}
 	var identities: Dictionary = {}
+	var held_identities: Dictionary = {}
+	var held: Variant = config.get("held", [])
+	if not held is Array:
+		errors.append("Quality-HOLD metadata must be an array")
+		return errors
+	for value: Variant in held:
+		if not value is Dictionary or str(value.get("transform_id", "")).is_empty():
+			errors.append("Each Quality-HOLD record needs a transform source ID")
+			continue
+		held_identities[str(value.transform_id)] = true
 	for value: Variant in config.cases:
 		if not value is Dictionary or str(value.get("name", "")).is_empty() or not safe_component(str(value.get("folder", ""))) or not safe_component(str(value.get("slug", ""))):
 			errors.append("Each transform case needs a name and safe folder/slug")
@@ -112,6 +129,7 @@ func validate_cases(config: Variant) -> Array[String]:
 		if slugs.has(value.slug): errors.append("Duplicate case slug: " + str(value.slug))
 		slugs[value.slug] = true
 		var identity := str(spec.get("transform_id", ""))
+		if held_identities.has(identity): errors.append("Quality-HOLD transform must not enter the batch: " + identity)
 		if identities.has(identity): errors.append("Duplicate transform source ID: " + identity)
 		identities[identity] = true
 	return errors
@@ -212,7 +230,7 @@ func finish_batch() -> void:
 		batch_report_path += ".refused-" + str(Time.get_ticks_usec()) + ".json"
 	var summary := {"config": batch_config_path, "engine_processes": 1, "process_id": OS.get_process_id(),
 		"scene_per_case": "Main.tscn", "user_directory": OS.get_user_data_dir(),
-		"checks": batch_checks, "cases": batch_results, "failures": batch_failures}
+		"metadata": batch_metadata, "checks": batch_checks, "cases": batch_results, "failures": batch_failures}
 	var file := FileAccess.open(batch_report_path, FileAccess.WRITE)
 	if file == null: batch_failures.append("Cannot write transform batch evidence: " + batch_report_path)
 	else:
@@ -243,6 +261,8 @@ func run() -> void:
 	var config: Variant = parser.data
 	batch_failures.append_array(validate_cases(config))
 	if not batch_failures.is_empty(): finish_batch(); return
+	for key: String in ["batch", "kind", "scope", "source_fixture", "held"]:
+		if config.has(key): batch_metadata[key] = config[key]
 	for spec: Dictionary in config.cases:
 		if DirAccess.dir_exists_absolute("user://pr100-transform-batch-preserved/" + str(spec.slug)):
 			batch_failures.append("Existing preserved case saves require a fresh isolated user directory: " + str(spec.slug))

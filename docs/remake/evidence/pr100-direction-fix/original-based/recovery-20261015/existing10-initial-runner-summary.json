@@ -1,0 +1,37 @@
+{
+  "scope": "Existing10 authored transforms, original runner before recovered AI/drop additions; regression only; not new completion",
+  "guard_checks": 22,
+  "guard_failures": 0,
+  "existing_save_refusal": "expected exit1, cases0, saved bytes unchanged",
+  "headless": {
+    "cases": 10,
+    "checks": 15158,
+    "failure_count": 0,
+    "player_directions": 80,
+    "incoming_directions": 80,
+    "pose_samples": 1032
+  },
+  "files": {
+    "guard/run.log": {
+      "bytes": 318,
+      "sha256": "588b5affda8ec132e08e520e5dbfa7f3c9885a5404b63f1e0fbecc040283cefb"
+    },
+    "refusal/run.log": {
+      "bytes": 224,
+      "sha256": "91b13151d66e53decd1994f7d306cc9d7f0f9ec531a429a6cc1856107fd79b2e"
+    },
+    "refusal/report.json": {
+      "bytes": 414,
+      "sha256": "a52d678c965b1a94503671d8c8a637889ea3ca113c7194620c1a30e416fcab97"
+    },
+    "headless/run.log": {
+      "bytes": 29378,
+      "sha256": "beb10ff70aa74cda17de6d393c920e1ae635e3c48fe0248d241defacaea692f2"
+    },
+    "headless/report.json": {
+      "bytes": 5306,
+      "sha256": "b3d8d9c6282d77419dd52ed9f37f0b6d37176db09c3c1b581c98fc7fbd93b0a3"
+    }
+  },
+  "initial_runner_sha256": "120a0d790653192763a9f45b155da14050ca91bc0330ab6fd8372ecf18a8a0c1"
+}

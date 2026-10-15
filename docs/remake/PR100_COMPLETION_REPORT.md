@@ -1,3 +1,13 @@
+## 2026-10-15 · 회수 WIP 품질 보류 / 실제 Main 최종 검사 중
+
+동일 브랜치 병합 체크포인트 **`d0b53c484c0500a485ecebf5c8372c6194499014` push 성공**, 로컬·원격 HEAD 일치 확인. 원격 `7cec254`와 로컬 `13676c6`/runner WIP 커밋을 모두 조상으로 보존했다. main은 병합하지 않았다.
+
+- **검증 완료371/498·잔여127·개별 Main100 유지**. 회수5종 중 화염의 엔트407(공격 머리 외형 불일치)·알비노 뿔개구리352(공격 crop 내부 붉은/회색 저알파 haze)는 보류하며 원래3fb 프로필로 복원했다. PNG/TRES/출처와 실패시험은 그대로 보존한다. 신규 완료로 계산하지 않는다.
+- 승인 전 실제 Main 대상은 악어거북349·악몽의 잭173·도구리288 **3종**. source SHA·8방향104실포즈·기하 정적검토 통과, 실제 Main headless/OpenGL 및 수동습득은 진행 중이다. 원래5종 fixture는 남기고 accepted fixture/held 목록을 별도 기록한다. 초기 clearing 실패5개와 품질보류로 중단한130 종료들은 성공이 아니다.
+- QA는 같은 실제 맵의 검색반경만 확장했다. 지형/다른 몬스터를 숨기지 않는다. 임포터 병합 테스트 **30/30**, 리소스SHA·캔버스640·identity9 통과. 기존10종 headless15,158/실패0은 추가 AI/drop 검사가 도입되기 전 회귀범위이며 신규완료 수량이 아니다.
+- 중복 제작8 PNG는 **19,090,877bytes** [초안 ZIP](evidence/pr100-direction-fix/original-based/recovery-20261015/duplicate-authoring-drafts.zip), SHA `14b196d76e99aa2a54731a68c066394b3a495449609fd0f38206a368a27f36c7`, CRC검증으로 보존했다. 런타임에는 연결하지 않았다.
+- [엔트 보류](evidence/pr100-direction-fix/original-based/recovery-20261015/remote-fire-review.json) · [나머지3종 외형검토](evidence/pr100-direction-fix/original-based/recovery-20261015/remote-three-review.json) · [악어거북 검토](evidence/pr100-direction-fix/original-based/recovery-20261015/remote-turtle-review.json) · [실패/중단 이력](evidence/pr100-direction-fix/original-based/recovery-20261015/batch21-failed-and-held-history.json).
+
 ## 2026-10-15 · 동시 원격 체크포인트 복구 중
 
 첫 push 직전 원격이 `7cec25402501fe0672e8f040edb89604d3270606`으로 진전하여 일반 push가 거절됐다. 강제 push 없이 로컬 보호 커밋 `13676c6`과 runner WIP 커밋을 보존하고 **동일 PR 브랜치의 원격 변경만 병합**한다. main 병합은 하지 않는다. 원격에서 이전 세션의 미완성 4파일 및 변신5종 WIP가 회수됐다. 원격 PNG/TRES/출처는 덮어쓰지 않는다. 중복 제작은 중단하고 초안/지시/해시는 별도 보존한다. 아래의 "원격에 없어서 재구현"은 최초3fb 복구 시점 기록이며, 현재는 양쪽 구현을 결합한다.

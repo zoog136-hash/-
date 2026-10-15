@@ -288,6 +288,7 @@ jobs:
         batch: [15, 16, 17, 18, 19, 20, 21]
         include:
           - batch: 21
+            config: res://tests/fixtures/pr100_batch21_accepted.json
             script: run_original_based_transform_batch
             marker: PR100_TRANSFORM_BATCH_OK
             timeout: 1200

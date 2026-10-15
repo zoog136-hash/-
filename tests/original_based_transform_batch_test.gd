@@ -45,6 +45,11 @@ func run() -> void:
 	invalid = fixture()
 	invalid.cases[1].spec.transform_id = invalid.cases[0].spec.transform_id
 	check(not validate_cases(invalid).is_empty(), "duplicate transform source identity is refused")
+	invalid = fixture()
+	invalid.held = [{"transform_id": invalid.cases[0].spec.transform_id}]
+	check(not validate_cases(invalid).is_empty(), "Quality-HOLD identity cannot reenter the validation batch")
+	var accepted: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/pr100_batch21_accepted.json"))
+	check(validate_cases(accepted).is_empty(), "held identities remain separate from accepted candidate cases")
 	var source := "user://twilight_v20_save.json"
 	write_probe(source, "generated-save-probe")
 	var original_hash := FileAccess.get_sha256(source)
