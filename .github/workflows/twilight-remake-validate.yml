@@ -56,3 +56,44 @@ jobs:
         with:
           name: twilight-remake-regression
           path: remake-results
+
+  aden-main-screen:
+    if: github.head_ref == 'feature/aden-source-topology-20261015' || github.ref == 'refs/heads/feature/aden-source-topology-20261015'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install official Godot and virtual GL display
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          curl -fL --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Prove installed source exists, import and photograph real Main.tscn
+        run: |
+          set -o pipefail
+          mkdir -p aden-preview
+          test -s data/map_remake/private/aden/navigation-00.bin
+          test -s data/map_remake/private/aden/definitions/aden_world.json
+          export XDG_DATA_HOME=\"$RUNNER_TEMP/aden-save\" APPDATA=\"$RUNNER_TEMP/aden-save\" LOCALAPPDATA=\"$RUNNER_TEMP/aden-save\" LIBGL_ALWAYS_SOFTWARE=1
+          mkdir -p \"$XDG_DATA_HOME\"
+          /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --editor --import 2>&1 | tee aden-preview/import.log
+          xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tools/map_restore/capture_maps.gd -- --maps=aden_world --output=\"$GITHUB_WORKSPACE/aden-preview\" 2>&1 | tee aden-preview/capture.log
+          test -s aden-preview/aden_world-same-camera-detail.png
+          test -s aden-preview/aden_world-full-map.png
+          python3 - <<'PY'
+          import json
+          with open('aden-preview/captures.json') as f: data=json.load(f)
+          m=data['maps']['aden_world']
+          assert m['remake_topology'] and not m['authored_remake'], m
+          assert not data['failures'], data['failures']
+          print('ADEN_REAL_MAIN_CAPTURE_OK')
+          PY
+      - name: Upload screenshot evidence or failure logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aden-real-main-preview
+          path: aden-preview/
+          if-no-files-found: warn
