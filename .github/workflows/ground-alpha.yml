@@ -2,7 +2,7 @@ name: Ground Alpha Repair
 on:
   push:
     branches: [fix/ground-alpha-20261015]
-    paths: ['.github/workflows/ground-alpha.yml', 'tools/ground_alpha/**', 'scripts/ui/ground_alpha.gd', 'tests/ground_alpha_test.gd']
+    paths: ['.github/workflows/ground-alpha.yml', 'tools/ground_alpha/**', 'tools/ground_icons/alpha.py', 'scripts/ui/ground_alpha.gd', 'tests/ground_alpha_test.gd', 'tests/capture_ground_alpha.gd']
 permissions:
   contents: read
 concurrency:
@@ -10,47 +10,68 @@ concurrency:
   cancel-in-progress: true
 jobs:
   alpha:
+    if: github.ref == 'refs/heads/fix/ground-alpha-20261015'
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 22
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
         with:
-          persist-credentials: false
-      - name: Inspect actual image alpha, not just the transparent canvas corner
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Install repository-pinned test tools
         run: |
           python3 -m pip install Pillow==12.3.0
-          mkdir -p /tmp/ground-alpha
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          curl --fail --location --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -qo /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+      - name: Reproduce, remove white matte, verify real Main and unchanged inventory/effects
+        run: python3 tools/ground_alpha/verify.py --godot /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --output /tmp/ground-alpha --install
+      - name: Publish only tested floor-display changes on the feature branch
+        run: |
+          test "$GITHUB_REF" = refs/heads/fix/ground-alpha-20261015
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code -- scripts/world.gd scripts/player.gd scripts/ui/item_visual_resolver.gd data/catalog_v19.json data/game_db_v17.json data/inven_inventory_icons.json assets/catalog assets/inven_inventory assets/original_items assets/l1j
+          python3 tools/ground_icons/build.py
+          python3 tools/ground_alpha/bake.py
+          mkdir -p docs/verification/ground_alpha_20261015
+          cp /tmp/ground-alpha/preservation.json /tmp/ground-alpha/test-summary.json /tmp/ground-alpha/alpha-result.json docs/verification/ground_alpha_20261015/
+          cp /tmp/ground-alpha/before-all-icons.png /tmp/ground-alpha/after-all-icons.png docs/verification/ground_alpha_20261015/
+          cp /tmp/ground-alpha/before-captures/white-backgrounds.png docs/verification/ground_alpha_20261015/Main-before.png
+          cp /tmp/ground-alpha/after-captures/white-backgrounds.png docs/verification/ground_alpha_20261015/Main-after.png
+          git add -- tools/ground_icons/build.py scripts/loot/drop_visual.gd data/ground_item_icons.json data/ground_alpha.json assets/ground_categories assets/ground_alpha docs/verification/ground_alpha_20261015
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Remove white matte from category and dedicated floor icons; preserve original pixels, inventory and grade effects'
+            git push origin HEAD:refs/heads/fix/ground-alpha-20261015
+          fi
+          git rev-parse HEAD > /tmp/ground-alpha/verified-commit.txt
+      - name: Package proof and floor-only patch
+        if: always()
+        run: |
           python3 - <<'PY'
-          import json,pathlib,collections,zipfile
-          from PIL import Image,ImageDraw
-          out=pathlib.Path('/tmp/ground-alpha'); rows=[]
-          manifest=json.loads(pathlib.Path('data/ground_item_icons.json').read_text())
-          paths={v['path'].removeprefix('res://') for v in manifest['categories'].values()}
-          for folder in ['assets/l1j/verified/ground','assets/original_items/ground']:
-              paths.update(str(p) for p in pathlib.Path(folder).glob('*.png'))
-          for name in sorted(paths):
-              image=Image.open(name).convert('RGBA');w,h=image.size;pixels=list(image.getdata())
-              bbox=image.getchannel('A').getbbox();solid=sum(p[3]>0 for p in pixels)
-              border=[image.getpixel((x,y)) for x,y in ([(x,0) for x in range(w)]+[(x,h-1) for x in range(w)]+[(0,y) for y in range(h)]+[(w-1,y) for y in range(h)])]
-              white=sum(p[3]>0 and min(p[:3])>=245 for p in pixels)
-              row={'path':name,'size':[w,h],'alpha_pixels':solid,'white_pixels':white,'opaque_border':sum(p[3]>0 for p in border),'bbox':bbox,'colors':collections.Counter(p for p in pixels if p[3]>0).most_common(4)}
-              rows.append(row);print(json.dumps(row),flush=True)
-          (out/'alpha-inspection.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2))
-          cols=8; cell=112;sheet=Image.new('RGB',(cols*cell,((len(rows)+cols-1)//cols)*cell),(50,65,70));draw=ImageDraw.Draw(sheet)
-          for i,row in enumerate(rows):
-              x=i%cols*cell;y=i//cols*cell;im=Image.open(row['path']).convert('RGBA');im.thumbnail((88,88),Image.Resampling.NEAREST)
-              sheet.paste(im,(x+12,y+6),im);draw.text((x+2,y+94),pathlib.Path(row['path']).stem[:17],fill='white')
-          sheet.save(out/'all-floor-icons-before.png')
-          with zipfile.ZipFile(out/'floor-inputs.zip','w',zipfile.ZIP_DEFLATED) as z:
-              for name in sorted(paths):z.write(name,name)
-              for entry in manifest['categories'].values():
-                  name=entry['source_path'].removeprefix('res://')
-                  if name not in paths:z.write(name,name);paths.add(name)
-              z.write('data/ground_item_icons.json')
+          from pathlib import Path
+          import zipfile
+          out=Path('/tmp/ground-alpha');out.mkdir(exist_ok=True)
+          names=['tools/ground_icons/build.py','tools/ground_icons/alpha.py','scripts/ui/ground_alpha.gd','scripts/loot/drop_visual.gd','tests/ground_alpha_test.gd','tests/capture_ground_alpha.gd','data/ground_item_icons.json','data/ground_alpha.json']
+          for folder in ['tools/ground_alpha','assets/ground_categories','assets/ground_alpha','docs/verification/ground_alpha_20261015']:
+              names.extend(str(p) for p in Path(folder).rglob('*') if p.is_file() and p.suffix!='.import' and '__pycache__' not in str(p))
+          with zipfile.ZipFile(out/'ground-alpha-patch.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in names:
+                  if Path(name).is_file():z.write(name,name)
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ground-alpha-inspection
-          path: /tmp/ground-alpha/
-          retention-days: 7
+          name: ground-alpha-verification
+          path: |
+            /tmp/ground-alpha/*.json
+            /tmp/ground-alpha/*.log
+            /tmp/ground-alpha/*.txt
+            /tmp/ground-alpha/*.png
+            /tmp/ground-alpha/*.zip
+            /tmp/ground-alpha/*-captures/
+          retention-days: 14
           if-no-files-found: error
