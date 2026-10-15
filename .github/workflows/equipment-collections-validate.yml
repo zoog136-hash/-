@@ -17,11 +17,24 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Resource integrity preflight
         run: python3 tools/check_resource_integrity.py --root .
+      - name: Download pinned project engine
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/collection-engine
+          curl -L --fail --retry 3 -o /tmp/collection-engine/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+      - name: Preserve engine for isolated tests
+        uses: actions/upload-artifact@v4
+        with:
+          name: equipment-collection-test-engine
+          retention-days: 1
+          path: /tmp/collection-engine/godot.zip
       - name: Validate collections when installed
         run: |
           if test -f tools/collections/build_equipment_collections.py; then
@@ -30,29 +43,3 @@ jobs:
           else
             echo 'Source inspection baseline; runtime collection changes not yet installed.'
           fi
-      - name: Source inspection snapshot (no binary artwork or user saves)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: equipment-collection-source-${{ github.sha }}
-          retention-days: 2
-          path: |
-            AGENTS.md
-            TWILIGHT_PROJECT_RULES.md
-            TWILIGHT_VERSION_HISTORY.md
-            README.md
-            project.godot
-            Main.tscn
-            scripts/
-            scenes/
-            data/game_db_v17.json
-            data/catalog_v19.json
-            data/inven*
-            data/catalog_image_index_v19.json
-            data/collections/
-            tools/check_resource_integrity.py
-            tools/test_project.py
-            tools/collections/
-            tests/
-            docs/RESOURCE_INTEGRITY_POLICY.md
-            .github/workflows/equipment-collections-validate.yml
