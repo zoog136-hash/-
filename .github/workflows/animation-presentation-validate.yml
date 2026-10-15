@@ -297,6 +297,7 @@ jobs:
             script: run_original_based_transform_batch
             marker: PR100_TRANSFORM_BATCH_OK
             timeout: 1200
+            render_timeout: 2400
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -305,6 +306,7 @@ jobs:
       BATCH_SCRIPT: ${{ matrix.script || 'run_original_based_batch' }}
       BATCH_OK_MARKER: ${{ matrix.marker || 'PR100_ORIGINAL_BATCH_OK' }}
       BATCH_TIMEOUT: ${{ matrix.timeout || 600 }}
+      BATCH_RENDER_TIMEOUT: ${{ matrix.render_timeout || matrix.timeout || 600 }}
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
@@ -352,18 +354,29 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout "$BATCH_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/render.txt 2>&1
+          timeout "$BATCH_RENDER_TIMEOUT" xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "res://tests/${BATCH_SCRIPT}.gd" > test-results/batch${{ matrix.batch }}/render.txt 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/render.txt; then exit 1; fi
           grep -q "$BATCH_OK_MARKER" test-results/batch${{ matrix.batch }}/render.txt
-      - name: Preserve batch summaries, case reports, captures and generated saves
+      - name: Preserve small batch diagnostics and generated saves
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}
+          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}-diagnostics
           path: |
-            test-results/batch${{ matrix.batch }}/
+            test-results/batch${{ matrix.batch }}/*.json
+            test-results/batch${{ matrix.batch }}/*.jsonl
+            test-results/batch${{ matrix.batch }}/*.txt
+            test-results/batch${{ matrix.batch }}/*.log
+            test-results/batch${{ matrix.batch }}/*-cases/*.json
             ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-batch-preserved/
             ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-batch-preserved/
             ${{ runner.temp }}/batch${{ matrix.batch }}-headless/data/**/pr100-transform-batch-preserved/
             ${{ runner.temp }}/batch${{ matrix.batch }}-render/data/**/pr100-transform-batch-preserved/
           if-no-files-found: error
+      - name: Preserve every batch PNG capture separately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-based-batch${{ matrix.batch }}-${{ github.sha }}-captures
+          path: test-results/batch${{ matrix.batch }}/render-captures/
+          if-no-files-found: ignore

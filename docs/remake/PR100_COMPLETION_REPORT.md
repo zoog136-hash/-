@@ -1,3 +1,11 @@
+## 2026-10-15 · 기존10종 OpenGL CI 시간/진단 보존 수정
+
+**374/498 완료 · 미완료124 · 개별Main103 유지.** 확인된 exit124/1200초 제한에 대응해 **transform-regression 10종의 OpenGL만 2400초**로 늘렸다. headless1200·다른배치600/1200·job60분·모든 게임/단언/PNG저장은 그대로다. 기존 관측 headless7분34초+OpenGL최대40분 후 setup/import/upload 여유 약12분26초다. local 동일10종 전체재현은720초에6종 완료/오류0으로 진행 중이며 전체 성공으로 세지 않는다.
+
+CI는 JSON/txt/log/개별case보고서·생성save를 작은 **diagnostics artifact**, 전체PNG를 별도 **captures artifact**로 보존한다. 2.42GB PNG가 진단파일 접근을 막는 문제를 분리했고 검사나 캡처는 줄이지 않았다. [원인·범위·YAML검증](evidence/pr100-direction-fix/original-based/recovery-20261015/ci-recovery/ci-fix-cause-and-scope.json). 설정검증PASS이며 실제 원격 재실행은 이 commit push 뒤 요청한다. 기존 timeout/통합 실패는 보존한다.
+
+단장357 전체HOLD자료는 `ed3cc5f1866e8c9dbf1ecca1fe339e5cc5aea683` push/원격 일치 확인,추가357생성은중단했다. 신규runtime연결0, 기존 완료 자산·game data는ce199와동일하다.
+
 ## 2026-10-15 · 단장357 최종 HOLD / 모든 작화 보존
 
 **완료 374/498 · 미완료 124 · 개별 실제 Main 103종 · 이번 추가 완료 0종.** 단장은 공격2가 실제 crop 침범48/102px(여백0에서도8/10px)으로 거절되어 전체 HOLD, 모든 새 생성 중단. [최종 인계/PNG·정확prompt·실패ZIP·SHA](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json). 승인된 부분은 idle16+hit16+E보행3=35포즈뿐이며 guide8은 제외한다. W3보행은 교대 미증명, SE/S/SW/NW/N/NE 생성 없음. 사망24의 최종NW 방향, 역할 간 head/torso 크기와 실제 발/사체 접촉 anchor는 미승인이다. 104recipe/런타임 연결/Main 검사/완료 증가 없음.
