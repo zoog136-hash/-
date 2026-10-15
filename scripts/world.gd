@@ -63,6 +63,8 @@ const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
+const AIN_OPTION_RULES = preload("res://scripts/ainhasad_option_rules.gd")
+const EXP_PROGRESSION = preload("res://scripts/experience_progression.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
@@ -2211,7 +2213,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment)
-	ain_service.consume_for_kill(int(monster.exp_reward))
+	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
 	_check_level_up()
 	if player.auto_enabled:
 		_auto_recharge_ain()
@@ -2616,7 +2618,7 @@ func _check_level_up() -> void:
 	while experience >= exp_need:
 		experience -= exp_need
 		level += 1
-		exp_need = int(round(exp_need * 1.14 + 120.0))
+		exp_need = EXP_PROGRESSION.required_for_level(level, exp_need)
 		max_hp += 45
 		max_mp += 9
 		hp = _effective_max_hp()
@@ -3360,7 +3362,9 @@ func _on_ain_auto_changed(enabled: bool) -> void:
 
 func _update_ain_hud() -> void:
 	if hud.has_method("set_ain_state"):
-		hud.call("set_ain_state", ain_service.snapshot(), inventory)
+		var state: Dictionary = ain_service.snapshot()
+		state["blessing_reduction_pct"] = _blessing_consumption_reduction_percent()
+		hud.call("set_ain_state", state, inventory)
 
 func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 	var kind: String = str(spec.get("kind", ""))
@@ -3721,6 +3725,7 @@ func _save_game(quiet: bool) -> void:
 		"level": level,
 		"experience": experience,
 		"exp_need": exp_need,
+		"experience_progression_version": EXP_PROGRESSION.CURVE_VERSION,
 		"hp": hp,
 		"max_hp": max_hp,
 		"mp": mp,
@@ -3823,6 +3828,11 @@ func _load_game(quiet: bool) -> void:
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
 	exp_need = maxi(1, int(data.get("exp_need", exp_need)))
+	var migrated_exp: Dictionary = EXP_PROGRESSION.migrate_progress(
+		level, experience, exp_need, int(data.get("experience_progression_version", 0))
+	)
+	experience = int(migrated_exp["experience"])
+	exp_need = int(migrated_exp["exp_need"])
 	hp = int(data.get("hp", hp))
 	max_hp = maxi(1, int(data.get("max_hp", max_hp)))
 	mp = int(data.get("mp", mp))
@@ -6351,6 +6361,12 @@ func _effective_max_hp() -> int:
 	flat_bonus += float(_active_item_buff_total("hp_flat"))
 	flat_bonus += float(_equipped_bless_bonus("hp"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
+
+func _blessing_consumption_reduction_percent() -> float:
+	var reduction: float = 0.0
+	for record: Dictionary in _all_equipped_records():
+		reduction += AIN_OPTION_RULES.reduction_percent(record)
+	return clampf(reduction, 0.0, 100.0)
 
 func _experience_multiplier() -> float:
 	var bonus: float = 0.0

@@ -78,7 +78,7 @@ func _run() -> void:
 	_check(absf(float(halphas.get("skillCooldownPct",0.0)) - 25.0) < 0.01, "halphas cast-speed => -25 cooldown")
 	_check(VISIBILITY.unresolved("변신","속성 치명타 +2%",sentinel), "elemental crit must display unimplemented")
 	_check(VISIBILITY.unresolved("변신","불 속성 대미지 +2",sentinel), "element-specific damage must display unimplemented")
-	_check(VISIBILITY.unresolved("마법인형","축복 소모량 감소 +25%",linds), "doll blessing consumption remains pending")
+	_check(not VISIBILITY.unresolved("마법인형","축복 소모량 감소 +25%",linds), "doll blessing consumption reduction is now applied")
 	_check(VISIBILITY.unresolved("마법인형","디스펠 면역",demon), "doll dispel immunity remains pending")
 	_check(VISIBILITY.unresolved("성물","일반 ~ 신화 스킬 레벨+1",lineage), "relic skill-level pending")
 	_check(VISIBILITY.unresolved("성물","스킬 쿨타임 감소10%",spell), "relic unverified cooldown remains pending in raw card")
