@@ -1,0 +1,3137 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/external_l1j/monsters/11319.png",
+    "kind": "existing_family_portrait",
+    "family_binding": {
+      "family_id": "댄싱 소드",
+      "source_sprite_id": "11319",
+      "path": "res://assets/external_l1j/monsters/11319.png",
+      "source_npc_ids": [
+        "900064"
+      ],
+      "source_name": "댄싱 소드",
+      "original_animation": false,
+      "mapping": "explicit same-species regional alias"
+    },
+    "sha256": "37b68430cb7bc5d2de057b49bc1d7098fceab34e2c98ee7ca363e8c06c190333",
+    "image_size": [
+      82,
+      123
+    ]
+  },
+  "target_keys": [
+    "monster:불신의 댄싱 소드"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 4,
+      "cell": 1,
+      "body": "living_sword",
+      "variant": 5,
+      "width": 0.972,
+      "weapon": "sword",
+      "crest": 3,
+      "accent": "aa8aaf"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:불신의 댄싱 소드": {
+      "path": "res://assets/external_l1j/monsters/11319.png",
+      "kind": "existing_family_portrait",
+      "family_binding": {
+        "family_id": "댄싱 소드",
+        "source_sprite_id": "11319",
+        "path": "res://assets/external_l1j/monsters/11319.png",
+        "source_npc_ids": [
+          "900064"
+        ],
+        "source_name": "댄싱 소드",
+        "original_animation": false,
+        "mapping": "explicit same-species regional alias"
+      },
+      "sha256": "37b68430cb7bc5d2de057b49bc1d7098fceab34e2c98ee7ca363e8c06c190333",
+      "image_size": [
+        82,
+        123
+      ]
+    }
+  },
+  "target_presentations": {
+    "monster:불신의 댄싱 소드": {
+      "visual": {
+        "atlas": 4,
+        "cell": 1,
+        "body": "living_sword",
+        "variant": 5,
+        "width": 0.972,
+        "weapon": "sword",
+        "crest": 3,
+        "accent": "aa8aaf"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "New2Dreference-basedDancingSwordmotion; full exactprompt history embedded. Notoriginalanimationextraction. Groundedfloatingfalse. IndependentQA/Mainrequired.",
+  "instruction_record_kind": "exact_prompts",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Static visual review of all104 complete alpha-composited weapon poses against exact original11319. Retains one narrow slightly undulating cool silverblue blade/dark spine, agedbronze asymmetric guard, long dark wrapped grip and tiny teal pommel without hands,limbs,carrier,aura,trails or detached parts. Distinct front bevel and dark reverse, opposing profiles, genuine blade/hilt pitch,yaw,flex phases across8directions and all5roles. Focused imagegen corrections replaced24 attack poses after original source blade/grip ratio failure; original six sheets and every correction prompt/raw output preserved. Corrected S/N strike has coherent whole-weapon forward/away perspective, clear down/up blade reach and distinct phase; every attack remains grounded at actual pommel rather than projecting tip. All104 raw/visible hashes unique, all104 mandatory source poses used once, strictanalyze and completevisible guard PASS without threshold,count or pixel changes. No omitted visible pixels; outside alpha max3-9 across sheets. Reviewed canvases512,600,496,488,584,520 use living tip/guard/pommel physical length and blade/grip ratio evidence, never compressed strike/death height. Normalized living profile lengths120.1/121.8/119.4/119.3/119.2/115.0px, manual landmarkuncertainty6sourcepx; actual native86 comparison remains Main gate. All104 actualpommel anchors reviewed; Sstrikebladetip and several diagonal/flat poses extend belowpommel in screenY as projectedgroundplane, not hover. Low whole fallen weapons are nonempty and intact. The reviewer generated the corrective attack artwork, so root must independently inspect these24 corrected poses before production import. Static candidate only: Main8directions5roles, meleecontact,timing,worldsupport,deathdrop/pickup andregressions pending. Preserve originalfloatingfalse,visualheight86,melee/slash andattackhitratioprofile. Root independently viewed correctedfront/rear24 in normalizedall104contact, enlargedfrontwhitecomposite and exacttip/guard/pommellandmarks. The silverbluecurvedblade/agedasymmetricguard/longdarkgrip remains coherent; actualE/Wstrikes faceopposingdirections, Sstrike pitchesdownforeplane andNstrike pitchesawayUP withbodybackedgevisible. IntactlyingterminalS/Nweapons foreshorten inworldgroundplane, notstandingduplicateframes. Perposepommel/bodyrootgroundprojection andsidebladeproportionsapproved foractualMain; noartpixelchanges. RootMain/gameplaynotyetverified."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        131,
+        29,
+        66,
+        249
+      ],
+      "margin": [
+        225,
+        75,
+        446,
+        263
+      ],
+      "source_anchor": [
+        162,
+        274
+      ],
+      "rgba_sha256": "0cc92f000b5d56449c5ac4700cc9b9914a4ebe761c42973a4cafbb4b09d14af7",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        412,
+        37,
+        58,
+        237
+      ],
+      "margin": [
+        239,
+        87,
+        454,
+        275
+      ],
+      "source_anchor": [
+        429,
+        270
+      ],
+      "rgba_sha256": "9962e8a7fe243c0b1102aad707a8126c3667e0a53324a93a15453f43ac6e981e",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        660,
+        24,
+        59,
+        254
+      ],
+      "margin": [
+        228,
+        70,
+        453,
+        258
+      ],
+      "source_anchor": [
+        688,
+        274
+      ],
+      "rgba_sha256": "0ad0d4c0fe58c989e9b3b1516ab71cc4b41d53601468bc93990ca26423164dc7",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        923,
+        37,
+        49,
+        237
+      ],
+      "margin": [
+        223,
+        87,
+        463,
+        275
+      ],
+      "source_anchor": [
+        956,
+        270
+      ],
+      "rgba_sha256": "6b8af986f6d7c95b3e1d199d5f3a1397716b5f7fe80f1f9da8c77f99c5522b41",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        139,
+        303,
+        79,
+        247
+      ],
+      "margin": [
+        243,
+        77,
+        433,
+        265
+      ],
+      "source_anchor": [
+        152,
+        546
+      ],
+      "rgba_sha256": "4273eb351321beed379a8dc4cc8710bd71748070ad4510f34b6fcd39063bbd3d",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        412,
+        302,
+        67,
+        244
+      ],
+      "margin": [
+        244,
+        80,
+        445,
+        268
+      ],
+      "source_anchor": [
+        424,
+        542
+      ],
+      "rgba_sha256": "b01fe4f089184fe594c960481893a256a9706ab8bb4e49d26856a1dbd55fc767",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        662,
+        300,
+        58,
+        249
+      ],
+      "margin": [
+        230,
+        75,
+        454,
+        263
+      ],
+      "source_anchor": [
+        688,
+        545
+      ],
+      "rgba_sha256": "3b7bd130f3255717241a4f87c7a4e38bab8c49f8d97de147c1276a85cddb22b4",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        923,
+        303,
+        62,
+        243
+      ],
+      "margin": [
+        208,
+        81,
+        450,
+        269
+      ],
+      "source_anchor": [
+        971,
+        542
+      ],
+      "rgba_sha256": "4fddf0b441a3b6a34155b5e49fb4db49f8432e706beffb8a13ea4604e90dfb91",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        124,
+        584,
+        115,
+        232
+      ],
+      "margin": [
+        243,
+        92,
+        397,
+        280
+      ],
+      "source_anchor": [
+        137,
+        812
+      ],
+      "rgba_sha256": "53b1825c2a2801cfaac556c59c429e50985af9e793e1af7747d41ec16914fcb4",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        410,
+        580,
+        99,
+        233
+      ],
+      "margin": [
+        244,
+        91,
+        413,
+        279
+      ],
+      "source_anchor": [
+        422,
+        809
+      ],
+      "rgba_sha256": "763db0a2f60dc62ea7092f6bba10e47b47b640350eae4eb86e805bc504cc9f7a",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        662,
+        582,
+        59,
+        238
+      ],
+      "margin": [
+        229,
+        86,
+        453,
+        274
+      ],
+      "source_anchor": [
+        689,
+        816
+      ],
+      "rgba_sha256": "63325c96540d2d93546dce633f65193ce5bc4a7f6529c096b728207279279946",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        917,
+        584,
+        89,
+        229
+      ],
+      "margin": [
+        181,
+        95,
+        423,
+        283
+      ],
+      "source_anchor": [
+        992,
+        809
+      ],
+      "rgba_sha256": "2e37b03958df55c0adb0c16af91a7d79954481df73bff9a4bd513c63cbc8d8b4",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        131,
+        845,
+        67,
+        248
+      ],
+      "margin": [
+        223,
+        76,
+        445,
+        264
+      ],
+      "source_anchor": [
+        164,
+        1089
+      ],
+      "rgba_sha256": "97f0c707cee81e0fa64b24174efc1e20e2abbcb8ae6ac285937e68162e596ea8",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        402,
+        838,
+        66,
+        246
+      ],
+      "margin": [
+        228,
+        78,
+        446,
+        266
+      ],
+      "source_anchor": [
+        430,
+        1080
+      ],
+      "rgba_sha256": "940533e25fbe85819e3c021fc770280a0a0c3d74d081e0f82eb8f264cf5af2e5",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        657,
+        839,
+        60,
+        247
+      ],
+      "margin": [
+        228,
+        77,
+        452,
+        265
+      ],
+      "source_anchor": [
+        685,
+        1082
+      ],
+      "rgba_sha256": "389431d5af40b71c6ebb09cb7601141198872295c834093a7e16b2cdc5748ffc",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        932,
+        842,
+        54,
+        245
+      ],
+      "margin": [
+        225,
+        79,
+        458,
+        267
+      ],
+      "source_anchor": [
+        963,
+        1083
+      ],
+      "rgba_sha256": "64e11f25e062a54e5cfad0d6c70885a61e3a186db7077864ee1f657507b0c18f",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        124,
+        1117,
+        110,
+        233
+      ],
+      "margin": [
+        243,
+        91,
+        402,
+        279
+      ],
+      "source_anchor": [
+        137,
+        1346
+      ],
+      "rgba_sha256": "b16add806143344c0d91fa87d7d188ad39df883ad67cccb7e330bb113a9e5114",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        412,
+        1113,
+        69,
+        236
+      ],
+      "margin": [
+        244,
+        88,
+        443,
+        276
+      ],
+      "source_anchor": [
+        424,
+        1345
+      ],
+      "rgba_sha256": "a260067406af6d1d5e1346d707a1430e162f74c6f83aeb01876ab500014bf288",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        665,
+        1134,
+        58,
+        215
+      ],
+      "margin": [
+        229,
+        109,
+        454,
+        297
+      ],
+      "source_anchor": [
+        692,
+        1345
+      ],
+      "rgba_sha256": "e36cb5341922185de6ff0f137f12b1ae103c8104f9e5f7c4233368538ad0c47a",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        908,
+        1110,
+        85,
+        235
+      ],
+      "margin": [
+        184,
+        89,
+        427,
+        277
+      ],
+      "source_anchor": [
+        980,
+        1341
+      ],
+      "rgba_sha256": "cff3ae146a0e65fd5ca896d762ee5967976ea9b03ac2245a48315ee2f876e6e5",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        136,
+        117,
+        174,
+        256
+      ],
+      "margin": [
+        281,
+        123,
+        426,
+        344
+      ],
+      "source_anchor": [
+        155,
+        369
+      ],
+      "rgba_sha256": "3d760fe40934548f9b46b38d9011e863737f9be5ffc9f27890608b306629e15a",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        548,
+        96,
+        109,
+        276
+      ],
+      "margin": [
+        218,
+        103,
+        491,
+        324
+      ],
+      "source_anchor": [
+        630,
+        368
+      ],
+      "rgba_sha256": "a2ea5d1cc81c9018222e39d0426857672e3d2286c2e5dced5e1530b4c059558f",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        862,
+        96,
+        79,
+        280
+      ],
+      "margin": [
+        268,
+        99,
+        521,
+        320
+      ],
+      "source_anchor": [
+        894,
+        372
+      ],
+      "rgba_sha256": "f4c9531474ddf578fc3ea84e05d2e819116e67c990cc841748955f6eeb03c3ad",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1253,
+        115,
+        145,
+        262
+      ],
+      "margin": [
+        177,
+        117,
+        455,
+        338
+      ],
+      "source_anchor": [
+        1376,
+        373
+      ],
+      "rgba_sha256": "97d53e2235fd572deb599222721f231906a3435e022536ab5f3f833706b93d0a",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        61,
+        529,
+        279,
+        78
+      ],
+      "margin": [
+        281,
+        320,
+        321,
+        522
+      ],
+      "source_anchor": [
+        80,
+        584
+      ],
+      "rgba_sha256": "b59f13e3f660ea54f00097c08ca70114d848ca52056d800762071118b9667929",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        521,
+        492,
+        217,
+        152
+      ],
+      "margin": [
+        283,
+        346,
+        383,
+        448
+      ],
+      "source_anchor": [
+        538,
+        521
+      ],
+      "rgba_sha256": "f045a62ecc8e79116c55546268c6aa7e1f09bfb612ad83583071830e13751acc",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        870,
+        517,
+        85,
+        151
+      ],
+      "margin": [
+        258,
+        354,
+        515,
+        449
+      ],
+      "source_anchor": [
+        912,
+        538
+      ],
+      "rgba_sha256": "2d448051043d08046b61aa7d1807b75cf276deda8ad17a1eb527c974c625872f",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1181,
+        492,
+        218,
+        151
+      ],
+      "margin": [
+        107,
+        341,
+        382,
+        449
+      ],
+      "source_anchor": [
+        1374,
+        526
+      ],
+      "rgba_sha256": "cd34dade516080bed437b1a9a5c225349891e2d03f17cc987685b2811582ed42",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        129,
+        781,
+        182,
+        235
+      ],
+      "margin": [
+        279,
+        144,
+        418,
+        365
+      ],
+      "source_anchor": [
+        150,
+        1012
+      ],
+      "rgba_sha256": "2ca186d7c9dac435dada73f59d32371b4f414d68c8923c5fecd3c966d1e8aeed",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        546,
+        773,
+        132,
+        246
+      ],
+      "margin": [
+        282,
+        133,
+        468,
+        354
+      ],
+      "source_anchor": [
+        564,
+        1015
+      ],
+      "rgba_sha256": "ad0568a1e9ebb880b62fb365efe8c6102e86cdd5cab90b4ccde78237bab1bb59",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        876,
+        766,
+        82,
+        261
+      ],
+      "margin": [
+        260,
+        118,
+        518,
+        339
+      ],
+      "source_anchor": [
+        916,
+        1023
+      ],
+      "rgba_sha256": "6c87673abafc738ccee4f9b3fa00ff52ccf2b8e87a122ca7029295cee80b6e97",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1232,
+        777,
+        164,
+        243
+      ],
+      "margin": [
+        158,
+        136,
+        436,
+        357
+      ],
+      "source_anchor": [
+        1374,
+        1016
+      ],
+      "rgba_sha256": "2bf16df63140aec1ec8d4478973b0171f01aebefcabeff1fff822c2687f1f27d",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        126,
+        68,
+        68,
+        240
+      ],
+      "margin": [
+        236,
+        74,
+        428,
+        256
+      ],
+      "source_anchor": [
+        138,
+        304
+      ],
+      "rgba_sha256": "38bdf09bf210d60465d07261c3c102c500b94ed817e98f1b0062fc690d4ffaaa",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        388,
+        71,
+        77,
+        233
+      ],
+      "margin": [
+        236,
+        81,
+        419,
+        263
+      ],
+      "source_anchor": [
+        400,
+        300
+      ],
+      "rgba_sha256": "3397b1a67e207e2d9e82309a26a408f89ae5af27c5bcb664d19d186469c84e22",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        660,
+        73,
+        66,
+        233
+      ],
+      "margin": [
+        216,
+        81,
+        430,
+        263
+      ],
+      "source_anchor": [
+        692,
+        302
+      ],
+      "rgba_sha256": "2427f11cbd1466a65348ad4b4a95fa563979c5f4fb7d76fe8050e4b5187a3e12",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        931,
+        73,
+        88,
+        229
+      ],
+      "margin": [
+        173,
+        85,
+        408,
+        267
+      ],
+      "source_anchor": [
+        1006,
+        298
+      ],
+      "rgba_sha256": "9bb15f6e89026fb86727a2041c74d69dca6c1d5757f5f92e9c1a0738f0d4d0ac",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        129,
+        355,
+        65,
+        246
+      ],
+      "margin": [
+        229,
+        68,
+        431,
+        250
+      ],
+      "source_anchor": [
+        148,
+        597
+      ],
+      "rgba_sha256": "aa475dfa50ea1af7e41ad8201bdaa3dc4ffcb9d8cf4728768cbaa23da1e73825",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        397,
+        360,
+        61,
+        240
+      ],
+      "margin": [
+        235,
+        74,
+        435,
+        256
+      ],
+      "source_anchor": [
+        410,
+        596
+      ],
+      "rgba_sha256": "5b83c6b2d3942d1741002a96706fb791ede44d9d930c7d25c67ffd71d380e6d3",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        660,
+        359,
+        66,
+        243
+      ],
+      "margin": [
+        216,
+        71,
+        430,
+        253
+      ],
+      "source_anchor": [
+        692,
+        598
+      ],
+      "rgba_sha256": "f4863e9cbb7b66452e6d2c1397a36ff4364181b0a6a37f81db55917f2cec6341",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        947,
+        359,
+        68,
+        237
+      ],
+      "margin": [
+        193,
+        77,
+        428,
+        259
+      ],
+      "source_anchor": [
+        1002,
+        592
+      ],
+      "rgba_sha256": "4bf6e20e0670aceedc3e688e47fe7111901b78454bf1fa5ca32dbb8c818de00b",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        84,
+        681,
+        172,
+        196
+      ],
+      "margin": [
+        236,
+        118,
+        324,
+        300
+      ],
+      "source_anchor": [
+        96,
+        873
+      ],
+      "rgba_sha256": "e7e81ab05b2420e3cff225cec5c20f70b999288394a8616aadb3282aaec0fa70",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        368,
+        698,
+        134,
+        180
+      ],
+      "margin": [
+        235,
+        134,
+        362,
+        316
+      ],
+      "source_anchor": [
+        381,
+        874
+      ],
+      "rgba_sha256": "c6f4a2d6583e3b9c9be581c23af18c1f74bbc2933d207175ddd97e126e506d1e",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        665,
+        698,
+        64,
+        187
+      ],
+      "margin": [
+        223,
+        127,
+        432,
+        309
+      ],
+      "source_anchor": [
+        690,
+        881
+      ],
+      "rgba_sha256": "bf76b2f22c42ccd2096ff5b8d4754a42f8945d3c32a0b6f5c721bd903ff6dd00",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        884,
+        699,
+        160,
+        178
+      ],
+      "margin": [
+        101,
+        136,
+        336,
+        318
+      ],
+      "source_anchor": [
+        1031,
+        873
+      ],
+      "rgba_sha256": "70f3d8c5354c236ff05c3206a5d6eac6ae0335d18c701dd949cfaf089235b8bf",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        56,
+        1013,
+        244,
+        113
+      ],
+      "margin": [
+        235,
+        201,
+        252,
+        383
+      ],
+      "source_anchor": [
+        69,
+        1122
+      ],
+      "rgba_sha256": "8541bf8b5abb2a680639f3b0347a37936f92d280dc02c778a90025f455279369",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        349,
+        1022,
+        209,
+        109
+      ],
+      "margin": [
+        236,
+        205,
+        287,
+        387
+      ],
+      "source_anchor": [
+        361,
+        1127
+      ],
+      "rgba_sha256": "9d59768c6f532c1aa955816f0ec134abcca4438e166d993ae8a7dea58d8b6990",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        661,
+        1028,
+        70,
+        105
+      ],
+      "margin": [
+        235,
+        209,
+        426,
+        391
+      ],
+      "source_anchor": [
+        674,
+        1129
+      ],
+      "rgba_sha256": "037695d00e7d9b08516eaf7a912b8c301b1e74c1ea055282b76899be777904e1",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        884,
+        1018,
+        180,
+        113
+      ],
+      "margin": [
+        80,
+        201,
+        316,
+        383
+      ],
+      "source_anchor": [
+        1052,
+        1127
+      ],
+      "rgba_sha256": "6d92cdd7b23f9ebacb8256686c83d3ee48885b29aefe9a79224cf998311bf3a6",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        44,
+        1270,
+        259,
+        50
+      ],
+      "margin": [
+        235,
+        279,
+        237,
+        446
+      ],
+      "source_anchor": [
+        57,
+        1301
+      ],
+      "rgba_sha256": "7e987e73d98c1ae32c2b17a91be7cffb0aa7dc105cc81ab923983e72cc079a32",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        344,
+        1265,
+        224,
+        48
+      ],
+      "margin": [
+        226,
+        290,
+        272,
+        448
+      ],
+      "source_anchor": [
+        366,
+        1285
+      ],
+      "rgba_sha256": "9b606e764be76805d8ea024da787f3506ff3ce73fd9390f8329a976fe29e65c9",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        659,
+        1265,
+        78,
+        83
+      ],
+      "margin": [
+        209,
+        289,
+        418,
+        413
+      ],
+      "source_anchor": [
+        698,
+        1286
+      ],
+      "rgba_sha256": "f8a72199dc83b71387fe3df5b384ebcb2083b7e57b5fd8049c787b1cafa66f32",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        841,
+        1266,
+        234,
+        51
+      ],
+      "margin": [
+        32,
+        288,
+        262,
+        445
+      ],
+      "source_anchor": [
+        1057,
+        1288
+      ],
+      "rgba_sha256": "164e31e3c4da8e18e91a8102db02cbfbbd8e82cc649276bd2c2e2d10bc8e114e",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        140,
+        29,
+        64,
+        235
+      ],
+      "margin": [
+        224,
+        74,
+        424,
+        253
+      ],
+      "source_anchor": [
+        160,
+        260
+      ],
+      "rgba_sha256": "d1dfeff3a090036dc8b43aff570f74681a925e3a66c9aa589664a2db16796477",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        416,
+        33,
+        52,
+        231
+      ],
+      "margin": [
+        218,
+        78,
+        436,
+        257
+      ],
+      "source_anchor": [
+        442,
+        260
+      ],
+      "rgba_sha256": "0a5aca2d2502559d0e44d97dff51b0a77caf0581a7307f59fdc1f599a9f0a608",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        656,
+        35,
+        65,
+        231
+      ],
+      "margin": [
+        211,
+        78,
+        423,
+        257
+      ],
+      "source_anchor": [
+        689,
+        262
+      ],
+      "rgba_sha256": "51c301fb8a9466e0105ee41ae701dcd59428d4a2062ac2fc996996258cf509d5",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        921,
+        34,
+        53,
+        230
+      ],
+      "margin": [
+        220,
+        79,
+        435,
+        258
+      ],
+      "source_anchor": [
+        945,
+        260
+      ],
+      "rgba_sha256": "abf9de2a9fd836d45386272db7ac9eb6361635b888a17210250a88aeac8c47ff",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        151,
+        300,
+        61,
+        233
+      ],
+      "margin": [
+        231,
+        76,
+        427,
+        255
+      ],
+      "source_anchor": [
+        164,
+        529
+      ],
+      "rgba_sha256": "583d0823c5a120ab2e82bc276113eea2a562065429e5cd95c68b590fdbd6f271",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        416,
+        306,
+        73,
+        225
+      ],
+      "margin": [
+        198,
+        84,
+        415,
+        263
+      ],
+      "source_anchor": [
+        462,
+        527
+      ],
+      "rgba_sha256": "7cd43befedb01372ee615f33577cf8c40a73b74cb688483ff5368d09a5eb5edf",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        664,
+        299,
+        62,
+        235
+      ],
+      "margin": [
+        216,
+        74,
+        426,
+        253
+      ],
+      "source_anchor": [
+        692,
+        530
+      ],
+      "rgba_sha256": "ed43ef59f02410b2ce7b626f685c3ecac438a4abb26f38ed5c114e0c854138be",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        898,
+        303,
+        79,
+        229
+      ],
+      "margin": [
+        208,
+        80,
+        409,
+        259
+      ],
+      "source_anchor": [
+        934,
+        528
+      ],
+      "rgba_sha256": "5f7f14ed41dda338f89ba45dd4a061b4b348afb24eb1b815ef4265de5749641e",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        104,
+        588,
+        115,
+        203
+      ],
+      "margin": [
+        143,
+        106,
+        373,
+        285
+      ],
+      "source_anchor": [
+        205,
+        787
+      ],
+      "rgba_sha256": "502c9e4a4ce9d653dd9dd1b758cbf14bb2e0c92de0a57324a026f6671e3de924",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        386,
+        582,
+        106,
+        209
+      ],
+      "margin": [
+        156,
+        100,
+        382,
+        279
+      ],
+      "source_anchor": [
+        474,
+        787
+      ],
+      "rgba_sha256": "7f56470a60723c45cc096d6c1bda3a4cb098b5b3b516021ae725bf2147e5fca0",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        661,
+        581,
+        71,
+        213
+      ],
+      "margin": [
+        209,
+        96,
+        417,
+        275
+      ],
+      "source_anchor": [
+        696,
+        790
+      ],
+      "rgba_sha256": "201312e8883877506c1cd02f5c1bde492569d183cf14aa88538c961ce9431f8b",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        898,
+        585,
+        95,
+        208
+      ],
+      "margin": [
+        227,
+        101,
+        393,
+        280
+      ],
+      "source_anchor": [
+        915,
+        789
+      ],
+      "rgba_sha256": "2c474c3823accfca9c7f301542530e85b988287eacbaa2b1bd678ff4af4108ab",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        139,
+        822,
+        65,
+        238
+      ],
+      "margin": [
+        223,
+        71,
+        423,
+        250
+      ],
+      "source_anchor": [
+        160,
+        1056
+      ],
+      "rgba_sha256": "7326012f94b290ea0ef0768ba31cd3836d58261575c081169fe86a7e9429e3c2",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        414,
+        822,
+        57,
+        239
+      ],
+      "margin": [
+        227,
+        70,
+        431,
+        249
+      ],
+      "source_anchor": [
+        431,
+        1057
+      ],
+      "rgba_sha256": "78a7cf7facd7a93b3c5d60ee70e0efcf4cdcda3d00a3ad10ab1992c617425054",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        657,
+        823,
+        65,
+        239
+      ],
+      "margin": [
+        208,
+        70,
+        423,
+        249
+      ],
+      "source_anchor": [
+        693,
+        1058
+      ],
+      "rgba_sha256": "639f2acce263cd31f04539116fe8d5d54a2cd650fc977f41dd38f199793500aa",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        921,
+        826,
+        55,
+        233
+      ],
+      "margin": [
+        202,
+        76,
+        433,
+        255
+      ],
+      "source_anchor": [
+        963,
+        1055
+      ],
+      "rgba_sha256": "49bcbff4c7d7a1fa71b1f72f55b05338e97d29b770492f2a373b1dd7de799f29",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        118,
+        1103,
+        107,
+        210
+      ],
+      "margin": [
+        158,
+        99,
+        381,
+        278
+      ],
+      "source_anchor": [
+        204,
+        1309
+      ],
+      "rgba_sha256": "1784406b2a6032b02e1f4143a118e3b704cde6bb464316b868ef7419452cae1a",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        390,
+        1092,
+        100,
+        220
+      ],
+      "margin": [
+        162,
+        89,
+        388,
+        268
+      ],
+      "source_anchor": [
+        472,
+        1308
+      ],
+      "rgba_sha256": "a03c4d53030c7dc7ef85a31d2e71a2c46c13d943998839670089b8c1a940cfc9",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        654,
+        1099,
+        67,
+        216
+      ],
+      "margin": [
+        210,
+        93,
+        421,
+        272
+      ],
+      "source_anchor": [
+        688,
+        1311
+      ],
+      "rgba_sha256": "2db5fadba7e3d22322f96e2b450c74ddf04d09cbbe5f4c3f22d9b950665c1841",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        892,
+        1103,
+        102,
+        210
+      ],
+      "margin": [
+        226,
+        99,
+        386,
+        278
+      ],
+      "source_anchor": [
+        910,
+        1309
+      ],
+      "rgba_sha256": "bd0695aac6eff8b2be7cd3decf3e283c163d3bd7444450c74db1820e9f25d991",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        146,
+        111,
+        142,
+        250
+      ],
+      "margin": [
+        168,
+        119,
+        442,
+        334
+      ],
+      "source_anchor": [
+        270,
+        357
+      ],
+      "rgba_sha256": "6974a9045abd31728a2d2dae3dfb6394ac88f89d36491fa20737f70cf94dd88b",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        494,
+        103,
+        139,
+        262
+      ],
+      "margin": [
+        172,
+        107,
+        445,
+        322
+      ],
+      "source_anchor": [
+        614,
+        361
+      ],
+      "rgba_sha256": "621aba98d1c053711314f8654be401e04f9cebb0c9a7106d6b8f9ffffc10e054",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        869,
+        96,
+        79,
+        270
+      ],
+      "margin": [
+        253,
+        99,
+        505,
+        314
+      ],
+      "source_anchor": [
+        908,
+        362
+      ],
+      "rgba_sha256": "908b4f1ea25d0517b24865e36d169a2b28f2e4a21850dfffe36847de7e1f015f",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1200,
+        111,
+        133,
+        258
+      ],
+      "margin": [
+        272,
+        111,
+        451,
+        326
+      ],
+      "source_anchor": [
+        1220,
+        365
+      ],
+      "rgba_sha256": "41c4b134bdf123bf223c5a3e824708aeeee5f1e8a43853b8a05ccb1b8d4fd2d9",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        94,
+        504,
+        229,
+        162
+      ],
+      "margin": [
+        82,
+        207,
+        355,
+        422
+      ],
+      "source_anchor": [
+        304,
+        662
+      ],
+      "rgba_sha256": "69c16bdbeb286c035e01023d713191799397bc6bde561a4d1969e34e47f38bcd",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        491,
+        462,
+        178,
+        214
+      ],
+      "margin": [
+        133,
+        155,
+        406,
+        370
+      ],
+      "source_anchor": [
+        650,
+        672
+      ],
+      "rgba_sha256": "19fb3929eea328ed0d6873addc31255f97fe8a7ec7a7139e9de12c192e5fd1d4",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        862,
+        450,
+        84,
+        217
+      ],
+      "margin": [
+        252,
+        152,
+        500,
+        367
+      ],
+      "source_anchor": [
+        902,
+        663
+      ],
+      "rgba_sha256": "52ee2c891d7bb5096faa22bcce49505ce5f442c4aa66fd77add2953bea24687d",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1164,
+        499,
+        208,
+        181
+      ],
+      "margin": [
+        274,
+        188,
+        376,
+        403
+      ],
+      "source_anchor": [
+        1182,
+        676
+      ],
+      "rgba_sha256": "ae1587490b94f58c5a294359ddbad52437f127e71e751529ae0f25d9b7f96a4e",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        147,
+        749,
+        140,
+        256
+      ],
+      "margin": [
+        171,
+        113,
+        444,
+        328
+      ],
+      "source_anchor": [
+        268,
+        1001
+      ],
+      "rgba_sha256": "08feb21b2d14cab5952bbc6330d7ec3e702a73185072a06f2663de9c7e2f48d5",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        506,
+        744,
+        132,
+        265
+      ],
+      "margin": [
+        184,
+        104,
+        452,
+        319
+      ],
+      "source_anchor": [
+        614,
+        1005
+      ],
+      "rgba_sha256": "ad505d67c3cf23269112ff4169941a1d65c194d6941a36669aa196493d9c1758",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        866,
+        749,
+        81,
+        268
+      ],
+      "margin": [
+        252,
+        101,
+        503,
+        316
+      ],
+      "source_anchor": [
+        906,
+        1013
+      ],
+      "rgba_sha256": "6c4ffb2cb31adf02638ec841a0aa75550f20cc8c59824baf9087fda5f10d7515",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1207,
+        758,
+        140,
+        251
+      ],
+      "margin": [
+        272,
+        118,
+        444,
+        333
+      ],
+      "source_anchor": [
+        1227,
+        1005
+      ],
+      "rgba_sha256": "0ad7c4932f2beef14f3572d1112285ec2b9922cc06d30bc19257ebbab198167c",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        131,
+        37,
+        66,
+        242
+      ],
+      "margin": [
+        231,
+        87,
+        454,
+        278
+      ],
+      "source_anchor": [
+        160,
+        275
+      ],
+      "rgba_sha256": "74d2b8cc26213eccd7edf0702389473da3a48fb8f77d4f4e40b585e86ff11963",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        369,
+        38,
+        90,
+        238
+      ],
+      "margin": [
+        182,
+        91,
+        430,
+        282
+      ],
+      "source_anchor": [
+        447,
+        272
+      ],
+      "rgba_sha256": "5cb3628aef8ef762495340b67eef490f94148a8460a501cd310593226c18bd0c",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        655,
+        38,
+        39,
+        241
+      ],
+      "margin": [
+        238,
+        88,
+        481,
+        279
+      ],
+      "source_anchor": [
+        677,
+        275
+      ],
+      "rgba_sha256": "d180b43aba654e84d5dd0b601f3c244cb9757bbcc5551aab1a254ac7c32db034",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        930,
+        42,
+        74,
+        234
+      ],
+      "margin": [
+        248,
+        95,
+        446,
+        286
+      ],
+      "source_anchor": [
+        942,
+        272
+      ],
+      "rgba_sha256": "b2683f89298d628eb7eb6bf7fc866dd93959083418b7aded66f270eb378289fd",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        132,
+        329,
+        69,
+        247
+      ],
+      "margin": [
+        223,
+        82,
+        451,
+        273
+      ],
+      "source_anchor": [
+        169,
+        572
+      ],
+      "rgba_sha256": "237be67b48166267fddf0bf8235ed408a7da6ce25bf42d66989646a2f7213364",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        394,
+        338,
+        74,
+        238
+      ],
+      "margin": [
+        200,
+        91,
+        446,
+        282
+      ],
+      "source_anchor": [
+        454,
+        572
+      ],
+      "rgba_sha256": "e89b4b336456ab3e7331868acd39b513823f96bd5c97ede5c8b87c193919842e",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        657,
+        337,
+        38,
+        239
+      ],
+      "margin": [
+        239,
+        90,
+        482,
+        281
+      ],
+      "source_anchor": [
+        678,
+        572
+      ],
+      "rgba_sha256": "ef671f3e50af16750a2313049d9a7ab9cff9c7cf8e3a3e4a4be505bebea55c3e",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        930,
+        337,
+        75,
+        236
+      ],
+      "margin": [
+        248,
+        93,
+        445,
+        284
+      ],
+      "source_anchor": [
+        942,
+        569
+      ],
+      "rgba_sha256": "201afedb4eddbdd435d62900b90a2ea17a75fb0f044dbf538fc2c5575c2e16ed",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        48,
+        655,
+        155,
+        208
+      ],
+      "margin": [
+        118,
+        121,
+        365,
+        312
+      ],
+      "source_anchor": [
+        190,
+        859
+      ],
+      "rgba_sha256": "64a0a078599f67000ec88403579639b0636ab731bd3116c8593a2df4d00d8673",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        358,
+        657,
+        130,
+        208
+      ],
+      "margin": [
+        143,
+        121,
+        390,
+        312
+      ],
+      "source_anchor": [
+        475,
+        861
+      ],
+      "rgba_sha256": "28e0a44f045060e367f77872e17e2eea1791e276f677d118e002ebceee15c842",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        670,
+        656,
+        49,
+        209
+      ],
+      "margin": [
+        224,
+        120,
+        471,
+        311
+      ],
+      "source_anchor": [
+        706,
+        861
+      ],
+      "rgba_sha256": "fd565080069d08bbb5b76d2e43f61b6f166e6471eea6a473556adf4a804a0c4f",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        918,
+        658,
+        157,
+        201
+      ],
+      "margin": [
+        249,
+        128,
+        363,
+        319
+      ],
+      "source_anchor": [
+        929,
+        855
+      ],
+      "rgba_sha256": "dcbac4cc34f935a09d679a12029f4ee54326de21f2be282ffd8e18d9c007af95",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        20,
+        999,
+        240,
+        128
+      ],
+      "margin": [
+        33,
+        201,
+        280,
+        392
+      ],
+      "source_anchor": [
+        247,
+        1123
+      ],
+      "rgba_sha256": "5d0529e1437316de5b04a91dadfb0a3af1acea30da14eb7c0758947eb4a98772",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        306,
+        982,
+        219,
+        147
+      ],
+      "margin": [
+        54,
+        182,
+        301,
+        373
+      ],
+      "source_anchor": [
+        512,
+        1125
+      ],
+      "rgba_sha256": "4954d2bc1946bc6b26e8d8275bf66b80708659af594837db2124ca82f3258642",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        616,
+        974,
+        124,
+        161
+      ],
+      "margin": [
+        148,
+        168,
+        396,
+        359
+      ],
+      "source_anchor": [
+        728,
+        1131
+      ],
+      "rgba_sha256": "33bc1c0ba2492afcc1bcdc17250288eae917a2902d8cbb7efb35954829916736",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        878,
+        1001,
+        229,
+        127
+      ],
+      "margin": [
+        247,
+        202,
+        291,
+        393
+      ],
+      "source_anchor": [
+        891,
+        1124
+      ],
+      "rgba_sha256": "f99d25890922cabc753a6461372ada1d02003a19ed0364caa70ffa79983b1b6f",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        23,
+        1292,
+        259,
+        45
+      ],
+      "margin": [
+        20,
+        291,
+        261,
+        475
+      ],
+      "source_anchor": [
+        263,
+        1326
+      ],
+      "rgba_sha256": "858cda51c3184e3891a4cc2987d65aea06ff8998e44f32fd0e61d0a28b913077",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        318,
+        1282,
+        256,
+        51
+      ],
+      "margin": [
+        20,
+        278,
+        264,
+        469
+      ],
+      "source_anchor": [
+        558,
+        1329
+      ],
+      "rgba_sha256": "b49190a5d28378a5602a387604b481ec4f3cd63716e157f53dd758a19d8ef3e6",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        669,
+        1249,
+        55,
+        108
+      ],
+      "margin": [
+        231,
+        221,
+        465,
+        412
+      ],
+      "source_anchor": [
+        698,
+        1353
+      ],
+      "rgba_sha256": "ce188df0e76964c98f5de63fc01420be91018d54dfa706ccd9379071de58f43e",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        822,
+        1286,
+        272,
+        48
+      ],
+      "margin": [
+        245,
+        281,
+        248,
+        472
+      ],
+      "source_anchor": [
+        837,
+        1330
+      ],
+      "rgba_sha256": "6cd19818f07f7fe220a15989a91391b06c7035c0c4e602980e68732a92933e11",
+      "sheet": 5
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "sha256": "145f185fd17538ed2fc1481f807010bf0be7be76ff6b06b7856d78c82b43aaed",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.450, whole-axis length 240.1px (+/-6px landmark uncertainty), normalized 120.1px with canvas512. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "sha256": "fd4cac93e42466d8e9de08b7eae32c7df567ec3eac31ceb9d8f0a582c204cb56",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            488,
+            488
+          ],
+          "foot": [
+            244,
+            305
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.384, whole-axis length 227.5px (+/-6px landmark uncertainty), normalized 119.3px with canvas488. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "sha256": "145f185fd17538ed2fc1481f807010bf0be7be76ff6b06b7856d78c82b43aaed",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.450, whole-axis length 240.1px (+/-6px landmark uncertainty), normalized 120.1px with canvas512. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "sha256": "fd4cac93e42466d8e9de08b7eae32c7df567ec3eac31ceb9d8f0a582c204cb56",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            488,
+            488
+          ],
+          "foot": [
+            244,
+            305
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.384, whole-axis length 227.5px (+/-6px landmark uncertainty), normalized 119.3px with canvas488. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-1.png",
+          "sha256": "590401c7899fb83df9209d3d0924be957b48186618f7e06704a46f31c6bb95fb",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            600,
+            600
+          ],
+          "foot": [
+            300,
+            375
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.645, whole-axis length 285.4px (+/-6px landmark uncertainty), normalized 121.8px with canvas600. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-4.png",
+          "sha256": "6f747fedd8a9300cc2ecd542877fea6fa1e5b571256abb6b391d54e44b9dadea",
+          "size": [
+            1448,
+            1086
+          ],
+          "canvas_size": [
+            584,
+            584
+          ],
+          "foot": [
+            292,
+            365
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.558, whole-axis length 272.0px (+/-6px landmark uncertainty), normalized 119.2px with canvas584. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-1.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-1.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-1.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-1.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "sha256": "214d0cd8067e5155f7647d5ac168552fdfa2dd06c4ac510a174cdf5967232cf2",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            496,
+            496
+          ],
+          "foot": [
+            248,
+            310
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.413, whole-axis length 231.4px (+/-6px landmark uncertainty), normalized 119.4px with canvas496. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "sha256": "1364f35d4ee5f7a12d21243023d24599d1260b3d2d190db55a165c6b688da42d",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            520,
+            520
+          ],
+          "foot": [
+            260,
+            325
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.624, whole-axis length 233.6px (+/-6px landmark uncertainty), normalized 115.0px with canvas520. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "sha256": "214d0cd8067e5155f7647d5ac168552fdfa2dd06c4ac510a174cdf5967232cf2",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            496,
+            496
+          ],
+          "foot": [
+            248,
+            310
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.413, whole-axis length 231.4px (+/-6px landmark uncertainty), normalized 119.4px with canvas496. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "sha256": "1364f35d4ee5f7a12d21243023d24599d1260b3d2d190db55a165c6b688da42d",
+          "size": [
+            1122,
+            1402
+          ],
+          "canvas_size": [
+            520,
+            520
+          ],
+          "foot": [
+            260,
+            325
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.624, whole-axis length 233.6px (+/-6px landmark uncertainty), normalized 115.0px with canvas520. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "median_idle",
+  "display_reference_height": 119.75
+}

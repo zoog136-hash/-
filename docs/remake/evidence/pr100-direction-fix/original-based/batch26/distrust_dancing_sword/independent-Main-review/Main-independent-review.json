@@ -1,0 +1,40 @@
+{
+  "observed_at_utc": "2026-10-15T17:01:56.570761+00:00",
+  "reviewer": "ROOT independent of author and correcting reviewer",
+  "status": "APPROVED",
+  "automatic_gate": {
+    "headless_checks": 927,
+    "OpenGL_checks": 1041,
+    "failures": 0
+  },
+  "actual_Main_visual_gate": {
+    "all_authored_pose_samples_reviewed": 104,
+    "actual_AI_direction_full_viewports_reviewed": 8,
+    "roles": [
+      "idle",
+      "walk",
+      "attack",
+      "hit",
+      "death"
+    ],
+    "headings": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "findings": {
+      "identity": "Exact source slender curved silverblue blade, bronze guard, long dark grip and small teal pommel retained. Corrected24 attack anatomy independently reviewed; 8direction genuine yaw, N away/up strike and S forward foreshortening.",
+      "ground": "Pommel pivot stays grounded through idle/travel/windup/contact; blade tip projection is not support. Complete rigid connected falling weapon lies on same terrain, no independent fragments.",
+      "motion": "Distinct pitch/yaw/flex perphase; no translated duplicate or invented limbs. All104 actualMain poses approved."
+    }
+  },
+  "source_and_quality_comparison": "Individually compared originalcontext + authorednormalizedposes; establishedPR100seer/ghost attack/death quality references independently inspected thisresumption. No existinggoodasset/map/gamechange.",
+  "scope_precision": "All104 actual production Main pose samples and8realAIwalk/attack captures reviewed; not a separate realtime8directionhit/deathmovie. Realweaponhit/death/drop/manualpickup validated through unchanged fullMain probes.",
+  "art_provenance": "New authored2D source-reference-based motion; not original animation extraction.",
+  "HOLD": false
+}

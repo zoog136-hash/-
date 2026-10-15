@@ -1,0 +1,665 @@
+{
+  "key": "monster:불신의 댄싱 소드",
+  "prompt_record_kind": "exact_prompts",
+  "prompt": "New2Dreference-basedDancingSwordmotion; full exactprompt history embedded. Notoriginalanimationextraction. Groundedfloatingfalse. IndependentQA/Mainrequired.",
+  "exact_prompts": [
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/idle-walk-front-half.prompt.txt",
+      "text": "Create NEW 2D painted RPG animation artwork based on the exact sword in the supplied references. This is the existing project monster Dancing Sword, not extracted original animation. Preserve EXACT identity: ONE slender upright slightly undulating/curved silver-white blade with an icy pale-blue edge, narrow tapering pointed tip, dark blade spine, asymmetrical small ornate aged-bronze/gold crossguard, long slim dark green/brown wrapped grip, tiny dark teal/bronze pommel. The complete original sword is very SLENDER, width roughly one quarter of height including crossguard; do not turn it into a huge broad fantasy broadsword. Keep blade length, shape, guard silhouette, grip length and material ratios consistent in every pose. The original black rectangle/shadow is only source background and must NOT be copied.\nNo hands, limbs, humanoid carrier, eyes, face, skull, armor, wings, ribbons, extra blades, new gems, magic orb, particles, motion trails, aura, fire or detached pieces. No3Dsystem asset: paint complete independent2D sprite views of the same weapon.\n\nRuntime requirement: this particular sword is GROUNDED, floatingFALSE. It does NOT hover, hop or levitate. The pommel at the bottom of its grip is its standing contact pivot. Alive idle/travel/attack rock and pivot in contact at that local ground point; no vertical bob or hover gap. No ground/shadow is drawn in the transparent art itself. Do not use translation of one still to fake motion. Show real distinct pitch/yaw, blade flex and hilt rotation, preserving a solid connected weapon. Draw each camera view independently, not by mirroring. Materials remain identical.\n\nOutput actual clean RGBA cutouts. All non-sword background pixels alphaZERO; no low-alpha colored glow or spray, no painted checkerboard, no border/grid, no letters/numbers, no labels, no pedestal/floor/ground/shadow. Each isolated figure must have huge transparent margins and at least60px separation from neighbors. Slender swords can fit small: full sprite no more than40-45%cell width/height, long horizontal attacks/deaths still entirely inside their own cell. Never clip a tip or pommel. Keep same anatomy/material scale throughout the sheet.\n\nEXACTLY FOUR COLUMNS by FIVE ROWS =TWENTY complete isolated sword sprites, portrait4:5 uniform-grid sheet.\nFive chronological phases:\nRow1 IDLE_A: tall poised sword, blade nearly upright with very small lean toward own heading, pommel rests at contact pivot.\nRow2 IDLE_B: slight counter-rock and changed yaw/guard angle around the same pommel contact; mild elastic blade tension but no melting. Not a moved copy of row1.\nRow3 TRAVEL_A: grounded locomotion power phase, weapon leans about20degrees toward its heading, pommel maintains the contact pivot, grip/guard yaw a little forward, subtle blade flex along its physical curve.\nRow4 TRAVEL_B: transition through nearly upright, distinctly different blade pitch/guard orientation and straightened flex, pommel contact maintained.\nRow5 TRAVEL_C: opposite counterbalance phase, sword rocks about10-15degrees backward while still FACING ITS OWN HEADING; hilt countertwists and blade flex reverses subtly, contact remains at pommel. Do not flip heading or duplicate row3. A small backwardlean is not an opposite-facing yaw.\nAll20 are new physically different rigid-body/pitch/flex drawings, not translated stills or texture variants.\nEXACT FOUR COLUMNS left-to-right:\n1 E: own heading SCREENRIGHT. Side of blade/guard is a genuine rightward yaw, intrinsic curved cutting edge aims right, forward strike extends RIGHT.\n2 SE: own heading diagonally down-right toward viewer, front-right three-quarter sword surfaces.\n3 S: own heading toward viewer/downscreen. Front beveled blade and front bronze guard detail visible, frontward strike is foreshortened toward viewer.\n4 SW: own heading diagonally down-left toward viewer, front-left three-quarter.\nAllfive/three rows keep those same headings; a recoil/recovery may change pitch without turning to the opposite heading. Do not return every column to the same upright frontal drawing.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/attack-front-half.prompt.txt",
+      "text": "Create NEW 2D painted RPG animation artwork based on the exact sword in the supplied references. This is the existing project monster Dancing Sword, not extracted original animation. Preserve EXACT identity: ONE slender upright slightly undulating/curved silver-white blade with an icy pale-blue edge, narrow tapering pointed tip, dark blade spine, asymmetrical small ornate aged-bronze/gold crossguard, long slim dark green/brown wrapped grip, tiny dark teal/bronze pommel. The complete original sword is very SLENDER, width roughly one quarter of height including crossguard; do not turn it into a huge broad fantasy broadsword. Keep blade length, shape, guard silhouette, grip length and material ratios consistent in every pose. The original black rectangle/shadow is only source background and must NOT be copied.\nNo hands, limbs, humanoid carrier, eyes, face, skull, armor, wings, ribbons, extra blades, new gems, magic orb, particles, motion trails, aura, fire or detached pieces. No3Dsystem asset: paint complete independent2D sprite views of the same weapon.\n\nRuntime requirement: this particular sword is GROUNDED, floatingFALSE. It does NOT hover, hop or levitate. The pommel at the bottom of its grip is its standing contact pivot. Alive idle/travel/attack rock and pivot in contact at that local ground point; no vertical bob or hover gap. No ground/shadow is drawn in the transparent art itself. Do not use translation of one still to fake motion. Show real distinct pitch/yaw, blade flex and hilt rotation, preserving a solid connected weapon. Draw each camera view independently, not by mirroring. Materials remain identical.\n\nOutput actual clean RGBA cutouts. All non-sword background pixels alphaZERO; no low-alpha colored glow or spray, no painted checkerboard, no border/grid, no letters/numbers, no labels, no pedestal/floor/ground/shadow. Each isolated figure must have huge transparent margins and at least60px separation from neighbors. Slender swords can fit small: full sprite no more than40-45%cell width/height, long horizontal attacks/deaths still entirely inside their own cell. Never clip a tip or pommel. Keep same anatomy/material scale throughout the sheet.\n\nEXACTLY FOUR COLUMNS by THREE ROWS =TWELVE complete isolated sword sprites, landscape4:3 uniform-grid sheet. Three phases of a real melee SLASH:\nRow1 WINDUP: rotate blade backward away from its own target direction, lower grip/pommel retains ground/contact pivot, guard turns under tension.\nRow2 STRIKE: complete blade pivots/lunges in a long low cutting arc TOWARD ITS OWN HEADING. E extends bladeRIGHT, W extendsLEFT, diagonals aim correspondingly, S cuts toward viewer/downscreen and N away/up-screen. Actual steel blade tip and cutting edge provide hit position. Keep blade/guard/grip continuous; no detached duplicate blade/trail. The weapon stays grounded through its pivot, not a levitating projectile.\nRow3 RECOVERY: blade lifts partway back from the target at a distinct angle and guard yaw untwists; same heading, same connected anatomy, contact maintained. Not an identical idle or windup.\nThe long reach may span more of a cell but NEVER enters its neighbor. No magical projectile, swing ribbon, spark or aura drawn.\nEXACT FOUR COLUMNS left-to-right:\n1 E: own heading SCREENRIGHT. Side of blade/guard is a genuine rightward yaw, intrinsic curved cutting edge aims right, forward strike extends RIGHT.\n2 SE: own heading diagonally down-right toward viewer, front-right three-quarter sword surfaces.\n3 S: own heading toward viewer/downscreen. Front beveled blade and front bronze guard detail visible, frontward strike is foreshortened toward viewer.\n4 SW: own heading diagonally down-left toward viewer, front-left three-quarter.\nAllfive/three rows keep those same headings; a recoil/recovery may change pitch without turning to the opposite heading. Do not return every column to the same upright frontal drawing.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/hit-death-front-half.prompt.txt",
+      "text": "Create NEW 2D painted RPG animation artwork based on the exact sword in the supplied references. This is the existing project monster Dancing Sword, not extracted original animation. Preserve EXACT identity: ONE slender upright slightly undulating/curved silver-white blade with an icy pale-blue edge, narrow tapering pointed tip, dark blade spine, asymmetrical small ornate aged-bronze/gold crossguard, long slim dark green/brown wrapped grip, tiny dark teal/bronze pommel. The complete original sword is very SLENDER, width roughly one quarter of height including crossguard; do not turn it into a huge broad fantasy broadsword. Keep blade length, shape, guard silhouette, grip length and material ratios consistent in every pose. The original black rectangle/shadow is only source background and must NOT be copied.\nNo hands, limbs, humanoid carrier, eyes, face, skull, armor, wings, ribbons, extra blades, new gems, magic orb, particles, motion trails, aura, fire or detached pieces. No3Dsystem asset: paint complete independent2D sprite views of the same weapon.\n\nRuntime requirement: this particular sword is GROUNDED, floatingFALSE. It does NOT hover, hop or levitate. The pommel at the bottom of its grip is its standing contact pivot. Alive idle/travel/attack rock and pivot in contact at that local ground point; no vertical bob or hover gap. No ground/shadow is drawn in the transparent art itself. Do not use translation of one still to fake motion. Show real distinct pitch/yaw, blade flex and hilt rotation, preserving a solid connected weapon. Draw each camera view independently, not by mirroring. Materials remain identical.\n\nOutput actual clean RGBA cutouts. All non-sword background pixels alphaZERO; no low-alpha colored glow or spray, no painted checkerboard, no border/grid, no letters/numbers, no labels, no pedestal/floor/ground/shadow. Each isolated figure must have huge transparent margins and at least60px separation from neighbors. Slender swords can fit small: full sprite no more than40-45%cell width/height, long horizontal attacks/deaths still entirely inside their own cell. Never clip a tip or pommel. Keep same anatomy/material scale throughout the sheet.\n\nEXACTLY FOUR COLUMNS by FIVE ROWS =TWENTY complete isolated sword sprites, portrait4:5 uniform-grid sheet.\nFive phases:\nRow1 HIT_A: upper blade recoils about20degrees away from incoming strike, slight elastic bow, guard jolts, pommel contact remains.\nRow2 HIT_B: distinct settling counter-recoil at another pitch/yaw, blade bow relaxes; no duplicate of row1.\nRow3 DEATH_A: losing balance, entire connected sword tips toabout35degrees toward its own heading around pommel/base contact.\nRow4 DEATH_B: nearly fallen, sword is low atabout65degrees, guard andblade approach groundplane; continuous original blade/guard/grip remain.\nRow5 DEATH_C: complete sword lies flat ON the groundplane along its own heading, stillfullyvisible andcoherent, correct isometric foreshortening forS/N. No floating gap, no blankframe, no fading/shrinking/extinction, no brokenblade or scattered fragments. The whole original blade and grip remain present. Maintain scale; lowheight comes fromrotation onto ground, not miniaturization.\nNo ground itself is drawn, only the fallen sword. Allfive phases genuinely differ in blade/hilt angle and perspective.\nEXACT FOUR COLUMNS left-to-right:\n1 E: own heading SCREENRIGHT. Side of blade/guard is a genuine rightward yaw, intrinsic curved cutting edge aims right, forward strike extends RIGHT.\n2 SE: own heading diagonally down-right toward viewer, front-right three-quarter sword surfaces.\n3 S: own heading toward viewer/downscreen. Front beveled blade and front bronze guard detail visible, frontward strike is foreshortened toward viewer.\n4 SW: own heading diagonally down-left toward viewer, front-left three-quarter.\nAllfive/three rows keep those same headings; a recoil/recovery may change pitch without turning to the opposite heading. Do not return every column to the same upright frontal drawing.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/idle-walk-rear-half.prompt.txt",
+      "text": "Create NEW 2D painted RPG animation artwork based on the exact sword in the supplied references. This is the existing project monster Dancing Sword, not extracted original animation. Preserve EXACT identity: ONE slender upright slightly undulating/curved silver-white blade with an icy pale-blue edge, narrow tapering pointed tip, dark blade spine, asymmetrical small ornate aged-bronze/gold crossguard, long slim dark green/brown wrapped grip, tiny dark teal/bronze pommel. The complete original sword is very SLENDER, width roughly one quarter of height including crossguard; do not turn it into a huge broad fantasy broadsword. Keep blade length, shape, guard silhouette, grip length and material ratios consistent in every pose. The original black rectangle/shadow is only source background and must NOT be copied.\nNo hands, limbs, humanoid carrier, eyes, face, skull, armor, wings, ribbons, extra blades, new gems, magic orb, particles, motion trails, aura, fire or detached pieces. No3Dsystem asset: paint complete independent2D sprite views of the same weapon.\n\nRuntime requirement: this particular sword is GROUNDED, floatingFALSE. It does NOT hover, hop or levitate. The pommel at the bottom of its grip is its standing contact pivot. Alive idle/travel/attack rock and pivot in contact at that local ground point; no vertical bob or hover gap. No ground/shadow is drawn in the transparent art itself. Do not use translation of one still to fake motion. Show real distinct pitch/yaw, blade flex and hilt rotation, preserving a solid connected weapon. Draw each camera view independently, not by mirroring. Materials remain identical.\n\nOutput actual clean RGBA cutouts. All non-sword background pixels alphaZERO; no low-alpha colored glow or spray, no painted checkerboard, no border/grid, no letters/numbers, no labels, no pedestal/floor/ground/shadow. Each isolated figure must have huge transparent margins and at least60px separation from neighbors. Slender swords can fit small: full sprite no more than40-45%cell width/height, long horizontal attacks/deaths still entirely inside their own cell. Never clip a tip or pommel. Keep same anatomy/material scale throughout the sheet.\n\nEXACTLY FOUR COLUMNS by FIVE ROWS =TWENTY complete isolated sword sprites, portrait4:5 uniform-grid sheet.\nFive chronological phases:\nRow1 IDLE_A: tall poised sword, blade nearly upright with very small lean toward own heading, pommel rests at contact pivot.\nRow2 IDLE_B: slight counter-rock and changed yaw/guard angle around the same pommel contact; mild elastic blade tension but no melting. Not a moved copy of row1.\nRow3 TRAVEL_A: grounded locomotion power phase, weapon leans about20degrees toward its heading, pommel maintains the contact pivot, grip/guard yaw a little forward, subtle blade flex along its physical curve.\nRow4 TRAVEL_B: transition through nearly upright, distinctly different blade pitch/guard orientation and straightened flex, pommel contact maintained.\nRow5 TRAVEL_C: opposite counterbalance phase, sword rocks about10-15degrees backward while still FACING ITS OWN HEADING; hilt countertwists and blade flex reverses subtly, contact remains at pommel. Do not flip heading or duplicate row3. A small backwardlean is not an opposite-facing yaw.\nAll20 are new physically different rigid-body/pitch/flex drawings, not translated stills or texture variants.\nEXACT FOUR COLUMNS left-to-right:\n1 W: own heading SCREENLEFT. Genuine left-facing yaw of blade/guard, curved cutting edge aims left, strike extends LEFT.\n2 NW: own heading diagonally up-left away from viewer, REAR-left blade/guard surfaces.\n3 N: own heading straight away/up-screen. Show BACK blade/guard surfaces, darker plain reverse of the front bevel/bronze ornament. Strike away from viewer is appropriately foreshortened.\n4 NE: own heading diagonally up-right away from viewer, REAR-right sword surfaces.\nAllfive/three rows keep those same headings; a recoil/recovery may change pitch without turning to opposite heading. Genuine back/rear views differ from front surfaces by thickness/guard depth, not just recolor or mirror.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/attack-rear-half.prompt.txt",
+      "text": "Create NEW 2D painted RPG animation artwork based on the exact sword in the supplied references. This is the existing project monster Dancing Sword, not extracted original animation. Preserve EXACT identity: ONE slender upright slightly undulating/curved silver-white blade with an icy pale-blue edge, narrow tapering pointed tip, dark blade spine, asymmetrical small ornate aged-bronze/gold crossguard, long slim dark green/brown wrapped grip, tiny dark teal/bronze pommel. The complete original sword is very SLENDER, width roughly one quarter of height including crossguard; do not turn it into a huge broad fantasy broadsword. Keep blade length, shape, guard silhouette, grip length and material ratios consistent in every pose. The original black rectangle/shadow is only source background and must NOT be copied.\nNo hands, limbs, humanoid carrier, eyes, face, skull, armor, wings, ribbons, extra blades, new gems, magic orb, particles, motion trails, aura, fire or detached pieces. No3Dsystem asset: paint complete independent2D sprite views of the same weapon.\n\nRuntime requirement: this particular sword is GROUNDED, floatingFALSE. It does NOT hover, hop or levitate. The pommel at the bottom of its grip is its standing contact pivot. Alive idle/travel/attack rock and pivot in contact at that local ground point; no vertical bob or hover gap. No ground/shadow is drawn in the transparent art itself. Do not use translation of one still to fake motion. Show real distinct pitch/yaw, blade flex and hilt rotation, preserving a solid connected weapon. Draw each camera view independently, not by mirroring. Materials remain identical.\n\nOutput actual clean RGBA cutouts. All non-sword background pixels alphaZERO; no low-alpha colored glow or spray, no painted checkerboard, no border/grid, no letters/numbers, no labels, no pedestal/floor/ground/shadow. Each isolated figure must have huge transparent margins and at least60px separation from neighbors. Slender swords can fit small: full sprite no more than40-45%cell width/height, long horizontal attacks/deaths still entirely inside their own cell. Never clip a tip or pommel. Keep same anatomy/material scale throughout the sheet.\n\nEXACTLY FOUR COLUMNS by THREE ROWS =TWELVE complete isolated sword sprites, landscape4:3 uniform-grid sheet. Three phases of a real melee SLASH:\nRow1 WINDUP: rotate blade backward away from its own target direction, lower grip/pommel retains ground/contact pivot, guard turns under tension.\nRow2 STRIKE: complete blade pivots/lunges in a long low cutting arc TOWARD ITS OWN HEADING. E extends bladeRIGHT, W extendsLEFT, diagonals aim correspondingly, S cuts toward viewer/downscreen and N away/up-screen. Actual steel blade tip and cutting edge provide hit position. Keep blade/guard/grip continuous; no detached duplicate blade/trail. The weapon stays grounded through its pivot, not a levitating projectile.\nRow3 RECOVERY: blade lifts partway back from the target at a distinct angle and guard yaw untwists; same heading, same connected anatomy, contact maintained. Not an identical idle or windup.\nThe long reach may span more of a cell but NEVER enters its neighbor. No magical projectile, swing ribbon, spark or aura drawn.\nEXACT FOUR COLUMNS left-to-right:\n1 W: own heading SCREENLEFT. Genuine left-facing yaw of blade/guard, curved cutting edge aims left, strike extends LEFT.\n2 NW: own heading diagonally up-left away from viewer, REAR-left blade/guard surfaces.\n3 N: own heading straight away/up-screen. Show BACK blade/guard surfaces, darker plain reverse of the front bevel/bronze ornament. Strike away from viewer is appropriately foreshortened.\n4 NE: own heading diagonally up-right away from viewer, REAR-right sword surfaces.\nAllfive/three rows keep those same headings; a recoil/recovery may change pitch without turning to opposite heading. Genuine back/rear views differ from front surfaces by thickness/guard depth, not just recolor or mirror.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/hit-death-rear-half.prompt.txt",
+      "text": "Create NEW 2D painted RPG animation artwork based on the exact sword in the supplied references. This is the existing project monster Dancing Sword, not extracted original animation. Preserve EXACT identity: ONE slender upright slightly undulating/curved silver-white blade with an icy pale-blue edge, narrow tapering pointed tip, dark blade spine, asymmetrical small ornate aged-bronze/gold crossguard, long slim dark green/brown wrapped grip, tiny dark teal/bronze pommel. The complete original sword is very SLENDER, width roughly one quarter of height including crossguard; do not turn it into a huge broad fantasy broadsword. Keep blade length, shape, guard silhouette, grip length and material ratios consistent in every pose. The original black rectangle/shadow is only source background and must NOT be copied.\nNo hands, limbs, humanoid carrier, eyes, face, skull, armor, wings, ribbons, extra blades, new gems, magic orb, particles, motion trails, aura, fire or detached pieces. No3Dsystem asset: paint complete independent2D sprite views of the same weapon.\n\nRuntime requirement: this particular sword is GROUNDED, floatingFALSE. It does NOT hover, hop or levitate. The pommel at the bottom of its grip is its standing contact pivot. Alive idle/travel/attack rock and pivot in contact at that local ground point; no vertical bob or hover gap. No ground/shadow is drawn in the transparent art itself. Do not use translation of one still to fake motion. Show real distinct pitch/yaw, blade flex and hilt rotation, preserving a solid connected weapon. Draw each camera view independently, not by mirroring. Materials remain identical.\n\nOutput actual clean RGBA cutouts. All non-sword background pixels alphaZERO; no low-alpha colored glow or spray, no painted checkerboard, no border/grid, no letters/numbers, no labels, no pedestal/floor/ground/shadow. Each isolated figure must have huge transparent margins and at least60px separation from neighbors. Slender swords can fit small: full sprite no more than40-45%cell width/height, long horizontal attacks/deaths still entirely inside their own cell. Never clip a tip or pommel. Keep same anatomy/material scale throughout the sheet.\n\nEXACTLY FOUR COLUMNS by FIVE ROWS =TWENTY complete isolated sword sprites, portrait4:5 uniform-grid sheet.\nFive phases:\nRow1 HIT_A: upper blade recoils about20degrees away from incoming strike, slight elastic bow, guard jolts, pommel contact remains.\nRow2 HIT_B: distinct settling counter-recoil at another pitch/yaw, blade bow relaxes; no duplicate of row1.\nRow3 DEATH_A: losing balance, entire connected sword tips toabout35degrees toward its own heading around pommel/base contact.\nRow4 DEATH_B: nearly fallen, sword is low atabout65degrees, guard andblade approach groundplane; continuous original blade/guard/grip remain.\nRow5 DEATH_C: complete sword lies flat ON the groundplane along its own heading, stillfullyvisible andcoherent, correct isometric foreshortening forS/N. No floating gap, no blankframe, no fading/shrinking/extinction, no brokenblade or scattered fragments. The whole original blade and grip remain present. Maintain scale; lowheight comes fromrotation onto ground, not miniaturization.\nNo ground itself is drawn, only the fallen sword. Allfive phases genuinely differ in blade/hilt angle and perspective.\nEXACT FOUR COLUMNS left-to-right:\n1 W: own heading SCREENLEFT. Genuine left-facing yaw of blade/guard, curved cutting edge aims left, strike extends LEFT.\n2 NW: own heading diagonally up-left away from viewer, REAR-left blade/guard surfaces.\n3 N: own heading straight away/up-screen. Show BACK blade/guard surfaces, darker plain reverse of the front bevel/bronze ornament. Strike away from viewer is appropriately foreshortened.\n4 NE: own heading diagonally up-right away from viewer, REAR-right sword surfaces.\nAllfive/three rows keep those same headings; a recoil/recovery may change pitch without turning to opposite heading. Genuine back/rear views differ from front surfaces by thickness/guard depth, not just recolor or mirror.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-front-S-grip-correction-attempt3.prompt.txt",
+      "text": "Surgical edit to the third reference 4-column3-row sword ATTACK atlas: change ONLY the center third-column sword, S STRIKE. Preserve allother11 sprites exactly and the transparent grid layout. First image is exact original,second approved idle.\n\nThe center S STRIKE must have a LONGER DARK GRIP. Its blue blade is currently more than twice the length of its dark handle; this is the wrong sword anatomy. Keep the complete silverblue curved blade around100pixels from bronze guard to tip. LENGTHEN the darkwrapped handle on the opposite/UPSCREEN side of the guard until guard-to-teal-pommel measuresabout70pixels, so blade:handle ratio is100:70,about1.45, matching original/idle. This is a long handled sword, not a short dagger handle. Keep bronze guard aroundy540 and blade tiparoundy640,then extend the darkhandle straight UP fromguard towardpommel atabouty465–470. Preserve tiny darkteal pommel atthatnewouterend. The complete sword is about170–180pixels long projected, with continuous blade→guard→longdarkgrip→pommel. S faces viewer andbladecutsDOWN; reverse grip extendsUP; no separate piece, no mirror, no trail, no hand. Alloriginal steel,bronze,darkwrappedgrip,tealpommel materials unchanged. Guard remains small and asymmetric. Native groundedfloatingFALSE pivot is actualpommel; perspective screenY is notworldheight.\n\nNo changes to anyother11 poses, no broadbroadsword, no clippedtip, no duplicateblade, no magic. Exact12 sprites,eachinsideowncell,cleantransparent separation,non-swordalphaZERO,no background,floor,shadow,labels,grid,particles. Return complete12-pose correctedatlas.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-front-S-projection-correction-attempt4.prompt.txt",
+      "text": "Edit the THIRD reference sheet surgically. Keep exact4columns x3rows =12 isolated complete sword sprites. Keep ALL other11 swords unchanged. Change ONLY center-row third-column S STRIKE, the downward-pointing sword. Firstreference exact original sword and secondreference idle anatomy remain authoritative.\n\nThe S STRIKE is a sword cutting toward the camera, DOWN-SCREEN, low into the isometric groundplane. Its current depiction is much too long on screen and hangs vertically; it must be strongly FORESHORTENED along its WHOLE rigid length. REDRAW that complete center sword with only55–60percent of its current projected pommel-to-tip image length. Keep the blade:darkgrip anatomical proportion SAME as this current center sword (about1.4–1.5), so BOTH blade and long dark grip get shortened TOGETHER byperspective, rather than shrinking the handle alone. Show more TOP/front surface of the small bronze guard to communicate low forward pitch. The entire projected sword should be about130–145sourcepixels long instead of240. Its teal pommel stays near(904,465), guard near(904,520), and blade tip near(906,600). These coordinates are important: DO NOT keep a blade tip near y690. It pointsDOWN toward viewer, front silverblue bladeface visible, continuous narrow curved blade+smallguard+darklonggrip+tealpommel all joined. The pommel is the grounded local support pivot; allparts preserved,no croppedblade,no movingstill,no extra hand or secondweapon.\n\nEvery other11 sprite preserves its existing material,slender geometry,heading,phase,scale,position. All12 remainisolatedinsideowncells with huge cleantransparentmargins. NativeRGBA,non-swordalphaZERO,no drawnshadow/floor/ground/background,labels,grid,particles,glow,trail. Return completecorrected12-posefrontattackatlas.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-front-S-strike-correction-attempt2.prompt.txt",
+      "text": "Surgical edit of the THIRD reference attack atlas. Preserve FOUR COLUMNS by THREE ROWS =12 isolated RGBA swords. FIRST reference is exact original sword identity, SECOND is approved front idle anatomy. Preserve all existing E/SE/SW sprites and S windup/recovery, with their narrow silverblue slightly undulating blade,dark LONG wrapped grip,small agedbronze asymmetric crossguard,tiny tealpommel and independent genuine phases/headings.\n\nChange ONLY the middle-row THIRD-column sword, S STRIKE. It cuts TOWARD the viewer, DOWN-SCREEN, and must have coherent whole-sword perspective shortening. Its current blade remains too long compared to its grip. Keep teal pommel around(914,492) and bronze guard intersection around(918,540), with projected grip length about48px. The connected blade from that guard should project DOWN-SCREEN about70–75px and finish its visible tip near(920,612), NOT nearcurrenty665. This means full projected sword length about120–125sourcepx; both grip and blade are shortened coherently from perspective and blade:grip ratio remains around1.5, same anatomical sword as idle. Draw the blade's front beveled pale silverblue surface, preserving the slim curved cutting edge and darkspine, and the guard's authentic asymmetry. No reversed N/up-screen strike, no giant blade, no shrunken toy handle. Keep all four weapon parts continuously connected, fully visible, low forward cutting pitch, actual pommel local grounded pivot. Do NOT translate/crop a still or add a second blade,trails,particles,hands or carrier.\n\nAll other11 sprites retain correct geometry,material,phase,direction,scale and spacing. Each complete sword stays inside its own cell with at least60px transparent separation. RGBA non-sword pixels alphaZERO; no labels,grid,floor,shadow,background,aura. Return only the complete corrected12-pose front attack atlas.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-front-anatomy-correction-attempt1.prompt.txt",
+      "text": "Edit only the ATTACK sprite sheet supplied as the third reference image. Preserve its exact FOUR COLUMNS by THREE ROWS =12 isolated complete poses and the existing E,SE,S,SW column headings and windup,strike,recovery rows. This is new painted 2D RPG art, not original extracted animation.\n\nThe first reference is the exact original project monster sword. The second reference is the approved same sword idle/travel atlas and is the anatomical authority. The attack atlas has a specific anatomy defect: its silver-blue blade has grown too long relative to the dark grip, especially E/SE windup and E/SE/S/SW strike. Correct the whole connected weapon in all12 attack poses to match the first two references. The approved idle E has tip-to-crossguard axis length about142 units and crossguard-to-pommel length99 units, ratio1.44. The original ratio is around1.5. The defective attack E windup is about209units versus110units, ratio1.9. Simply changing overall sprite size cannot fix this. Restore blade:grip length ratio about1.45–1.55 in the sword's own anatomy, with coherent perspective shortening of BOTH segments. Keep the distinctly LONG dark wrapped grip. Shorten the overlong blade, retain the modest small aged bronze asymmetric crossguard, and retain the tiny dark teal pommel. Preserve original slim slightly undulating blade shape and silver-white/icy-pale-blue steel with dark spine. No giant blade, broad fantasy broadsword, or shortened toy grip.\n\nPreserve genuine distinct rigid pitch, yaw, hilt twist and mild physical blade flex in each phase. Row1 windup points away from own target; row2 complete connected blade slashes TOWARD own heading: E blade pointsRIGHT,SE down-right,S towardviewer/downscreen with true whole-weapon perspective shortening,SW down-left. Row3 recovers without reversing heading. E and W are not in this sheet; never mirror poses. The grounded floatingFALSE creature pivots at its actual teal pommel: no levitation, no separate projectile, no hand or carrier. For S/diagonal strike the blade tip may project below the pommel on screen; this is allowed perspective and the pommel remains the local support pivot. Every pose must retain all blade,guard,grip,pommel continuously joined.\n\nKeep every sprite comfortably within its OWN grid cell, with at least60px clean transparent separation. No source crop, no clipping tips, no overlap or neighboring fragments. Keep stable painted material scale across all12 poses. Native RGBA transparency: all non-sword pixels alphaZERO, no background, floor, shadow, labels, border, checkerboard, aura, spray, trails or particles. Do not alter idle/travel or source reference images. Return only the corrected12-pose ATTACK sheet.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-rear-N-blade-ratio-correction-attempt3.prompt.txt",
+      "text": "Surgical edit of FOURTH reference atlas. Preserve exact4columns x3rows=12 isolated complete transparent swords. First reference is originalidentity,second rearidle,third correctedfrontattack showing the correct sword anatomy in its foreshortened center S STRIKE. Edit only the center-row third-column N STRIKE in the fourthreference. Everyother11sword staysunchanged.\n\nThe current center N STRIKE has a blueblade SHORTER than its darkhandle, which is wrong. Its blade must be about1.5times the darkgrip length, matching original/idle/oppositeSstrike. Keep it stronglyforeshortened as it cutsAWAY/UPSCREEN into the groundplane, with darkBACK blade surface and reversebronze asymmetricguard. Make centerNstrike blade tipto guard about85–90sourcepixels, and guardto tealpommel about55–60pixels. Concrete positions: tinytealpommel near(902,660),bronze guardintersection near(904,600),slim connected darksilverbluebladetip near(909,510). Thus fulllengthabout150px and blade:gripabout1.5; Nstrike stillmuchlower/shorterprojectedthan250pxuprightneighbors. This is one connected rigid weapon with originalbladecurve,smallexactguard,LONGdarkwrappedgrip,tinytealpommel. No miniaturizedblade or exaggeratedhandle, noS/downscreenflip, no moving/croppingofstill,no extrablade,trails,hands,carrier. Actualpommelgroundedlocalpivot,floatingFALSE.\n\nEveryother11pose preserves correctslenderweapon,phase,heading,material,scale,position. All12stayinsideowncells with hugecleantransparentseparation. NativeRGBA non-swordalphaZERO,no floor,shadow,background,labels,grid,particles,aura. Returncompletecorrected12-poserearattackatlas.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-rear-N-strike-correction-attempt2.prompt.txt",
+      "text": "Surgical sprite atlas edit. The THIRD reference is the current attack atlas to edit. Preserve its FOUR COLUMNS by THREE ROWS =12 isolated RGBA swords. Preserve every W/NW/NE sprite and the N windup/recovery anatomy/material identity. Preserve no-extra-parts, genuine separately drawn views, narrow silverblue blade,dark LONG wrapped grip,small agedbronze asymmetric crossguard,tiny tealpommel. The FIRST image is exact source identity and SECOND is approved rear idle anatomy.\n\nChange ONLY the middle-row THIRD-column sprite: N STRIKE. It is incorrectly almost upright like its windup/recovery. This sword is cutting AWAY from the viewer, toward UP-SCREEN, at the low forward point of a melee slash. Draw the complete sword pitched LOW INTO THE GROUND PLANE away from camera. Its blade still points upscreen but its projected tip-to-pommel whole-sword length should be about120–135 source pixels rather than the neighboring upright swords'240–250pixels: visibly much more foreshortened. Shorten BOTH its rigid blade and grip coherently from perspective, retaining anatomical blade:grip ratio near1.5. Rotate the bronze guard into a low, foreshortened horizontal back/top view, and show the blade's darker BACK surface, not a frontal face. Keep the tiny teal pommel at this same local cell's grounded pivot near screen(918,660), and project the connected grip→guard→blade→tip towardscreenUP to abouty530. Thus the new N STRIKE must be visibly a low away-thrust/cut, quite different from a tall upright windup or recovery. Do NOT rotate the sword towardS/downscreen, do not simply translate/crop an upright still, do not add a motion trail or second blade. All4 original materials and complete physical weapon parts remain joined and visible.\n\nAll other11 sprites should keep their existing correct slender geometry,phase,direction and scale. No overlap or clipped tip, at least60px transparent separation, no labels/grid/floor/shadow/background/aura/particles. Native RGBA cutouts and non-sword pixels exactly alphaZERO. Return only complete corrected12-pose attack atlas.\n"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-rear-anatomy-correction-attempt1.prompt.txt",
+      "text": "Edit only the ATTACK sprite sheet supplied as the third reference image. Preserve its exact FOUR COLUMNS by THREE ROWS =12 isolated complete poses and existing W,NW,N,NE column headings and windup,strike,recovery rows. This is new painted2D RPG art, not original extracted animation.\n\nThe first reference is the exact original project monster sword. The second reference is the approved same sword rear idle/travel atlas and is the anatomical authority. The attack atlas has a specific anatomy defect: the silver-blue blade has grown too long relative to the dark grip, especially oblique W/NW/NE windup and strikes. Correct all12 attack poses to match the first two references. Approved upright W neutral has tip-to-crossguard length about140units and crossguard-to-pommel92units, ratio1.52; the defective attack W windup is about211units versus114units,ratio1.85. Simply changing overall sprite size cannot fix this. Restore blade:grip length ratio about1.45–1.55 in the sword's own anatomy, with coherent perspective shortening of BOTH segments. Keep the distinctly LONG dark wrapped grip. Shorten overlong blades,retain the modest small agedbronze asymmetric crossguard,and tiny darkteal pommel. Preserve original slim slightly undulating silver-white/icy-pale-blue steel blade with dark spine. N is the darker plain BACK of the blade and reverse guard surfaces; NW/NE show real rear three-quarter construction. No giant blade, broadsword or shortened toy grip.\n\nPreserve genuine distinct rigid pitch,yaw,hilt twist and mild physical blade flex in each phase. Row1 windup loads away from target, row2 complete connected blade slashes TOWARD own heading: WLEFT,NWup-left,Naway/UPSCREEN with true whole-weapon perspective shortening,NEup-right. For the N strike make a clear away/up-screen low cutting pitch, with same whole sword blade:grip proportion; do not leave this strike almost identical to upright windup/recovery. Row3 recovers without reversing heading. No mirrors. Grounded floatingFALSE creature pivots at its actual teal pommel: no levitation, no separate projectile,no hand or carrier. A projected blade-tip screenY is not the support; pommel is the local ground pivot. All blade,guard,grip,pommel remain continuously joined.\n\nEvery sprite stays comfortably within its OWN cell, with at least60px clean transparent separation. No source crop,no clipping tips,no overlap or neighboring fragments. Keep stable painted material scale across all12 poses. Native RGBA transparency: all non-sword pixels alphaZERO, no background,floor,shadow,labels,border,checkerboard,aura,spray,trails,particles. Do not alter idle/travel or original source reference. Return only the corrected12-pose ATTACK sheet.\n"
+    }
+  ],
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-0.png",
+      "rows": 5,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "canvas_size": 512,
+      "source_anchors": [
+        [
+          162,
+          274
+        ],
+        [
+          429,
+          270
+        ],
+        [
+          688,
+          274
+        ],
+        [
+          956,
+          270
+        ],
+        [
+          152,
+          546
+        ],
+        [
+          424,
+          542
+        ],
+        [
+          688,
+          545
+        ],
+        [
+          971,
+          542
+        ],
+        [
+          137,
+          812
+        ],
+        [
+          422,
+          809
+        ],
+        [
+          689,
+          816
+        ],
+        [
+          992,
+          809
+        ],
+        [
+          164,
+          1089
+        ],
+        [
+          430,
+          1080
+        ],
+        [
+          685,
+          1082
+        ],
+        [
+          963,
+          1083
+        ],
+        [
+          137,
+          1346
+        ],
+        [
+          424,
+          1345
+        ],
+        [
+          692,
+          1345
+        ],
+        [
+          980,
+          1341
+        ]
+      ],
+      "source_anchors_manually_approved": true,
+      "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.450, whole-axis length 240.1px (+/-6px landmark uncertainty), normalized 120.1px with canvas512. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+      "sha256": "145f185fd17538ed2fc1481f807010bf0be7be76ff6b06b7856d78c82b43aaed",
+      "exact_prompt_path": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/idle-walk-front-half.prompt.txt",
+      "source_anchors_approved": true
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-1.png",
+      "rows": 3,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "canvas_size": 600,
+      "source_anchors": [
+        [
+          155,
+          369
+        ],
+        [
+          630,
+          368
+        ],
+        [
+          894,
+          372
+        ],
+        [
+          1376,
+          373
+        ],
+        [
+          80,
+          584
+        ],
+        [
+          538,
+          521
+        ],
+        [
+          912,
+          538
+        ],
+        [
+          1374,
+          526
+        ],
+        [
+          150,
+          1012
+        ],
+        [
+          564,
+          1015
+        ],
+        [
+          916,
+          1023
+        ],
+        [
+          1374,
+          1016
+        ]
+      ],
+      "source_anchors_manually_approved": true,
+      "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.645, whole-axis length 285.4px (+/-6px landmark uncertainty), normalized 121.8px with canvas600. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+      "sha256": "590401c7899fb83df9209d3d0924be957b48186618f7e06704a46f31c6bb95fb",
+      "exact_prompt_path": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-front-S-projection-correction-attempt4.prompt.txt",
+      "source_anchors_approved": true
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-2.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "directions": [
+        "E",
+        "SE",
+        "S",
+        "SW"
+      ],
+      "canvas_size": 496,
+      "source_anchors": [
+        [
+          138,
+          304
+        ],
+        [
+          400,
+          300
+        ],
+        [
+          692,
+          302
+        ],
+        [
+          1006,
+          298
+        ],
+        [
+          148,
+          597
+        ],
+        [
+          410,
+          596
+        ],
+        [
+          692,
+          598
+        ],
+        [
+          1002,
+          592
+        ],
+        [
+          96,
+          873
+        ],
+        [
+          381,
+          874
+        ],
+        [
+          690,
+          881
+        ],
+        [
+          1031,
+          873
+        ],
+        [
+          69,
+          1122
+        ],
+        [
+          361,
+          1127
+        ],
+        [
+          674,
+          1129
+        ],
+        [
+          1052,
+          1127
+        ],
+        [
+          57,
+          1301
+        ],
+        [
+          366,
+          1285
+        ],
+        [
+          698,
+          1286
+        ],
+        [
+          1057,
+          1288
+        ]
+      ],
+      "source_anchors_manually_approved": true,
+      "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.413, whole-axis length 231.4px (+/-6px landmark uncertainty), normalized 119.4px with canvas496. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+      "sha256": "214d0cd8067e5155f7647d5ac168552fdfa2dd06c4ac510a174cdf5967232cf2",
+      "exact_prompt_path": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/hit-death-front-half.prompt.txt",
+      "source_anchors_approved": true
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-3.png",
+      "rows": 5,
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 488,
+      "source_anchors": [
+        [
+          160,
+          260
+        ],
+        [
+          442,
+          260
+        ],
+        [
+          689,
+          262
+        ],
+        [
+          945,
+          260
+        ],
+        [
+          164,
+          529
+        ],
+        [
+          462,
+          527
+        ],
+        [
+          692,
+          530
+        ],
+        [
+          934,
+          528
+        ],
+        [
+          205,
+          787
+        ],
+        [
+          474,
+          787
+        ],
+        [
+          696,
+          790
+        ],
+        [
+          915,
+          789
+        ],
+        [
+          160,
+          1056
+        ],
+        [
+          431,
+          1057
+        ],
+        [
+          693,
+          1058
+        ],
+        [
+          963,
+          1055
+        ],
+        [
+          204,
+          1309
+        ],
+        [
+          472,
+          1308
+        ],
+        [
+          688,
+          1311
+        ],
+        [
+          910,
+          1309
+        ]
+      ],
+      "source_anchors_manually_approved": true,
+      "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.384, whole-axis length 227.5px (+/-6px landmark uncertainty), normalized 119.3px with canvas488. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+      "sha256": "fd4cac93e42466d8e9de08b7eae32c7df567ec3eac31ceb9d8f0a582c204cb56",
+      "exact_prompt_path": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/idle-walk-rear-half.prompt.txt",
+      "source_anchors_approved": true
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-4.png",
+      "rows": 3,
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "directions_axis": "columns",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 584,
+      "source_anchors": [
+        [
+          270,
+          357
+        ],
+        [
+          614,
+          361
+        ],
+        [
+          908,
+          362
+        ],
+        [
+          1220,
+          365
+        ],
+        [
+          304,
+          662
+        ],
+        [
+          650,
+          672
+        ],
+        [
+          902,
+          663
+        ],
+        [
+          1182,
+          676
+        ],
+        [
+          268,
+          1001
+        ],
+        [
+          614,
+          1005
+        ],
+        [
+          906,
+          1013
+        ],
+        [
+          1227,
+          1005
+        ]
+      ],
+      "source_anchors_manually_approved": true,
+      "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.558, whole-axis length 272.0px (+/-6px landmark uncertainty), normalized 119.2px with canvas584. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+      "sha256": "6f747fedd8a9300cc2ecd542877fea6fa1e5b571256abb6b391d54e44b9dadea",
+      "exact_prompt_path": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent/attack-rear-N-blade-ratio-correction-attempt3.prompt.txt",
+      "source_anchors_approved": true
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/distrust_dancing_sword/poses-5.png",
+      "rows": 5,
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "directions_axis": "columns",
+      "directions": [
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "canvas_size": 520,
+      "source_anchors": [
+        [
+          160,
+          275
+        ],
+        [
+          447,
+          272
+        ],
+        [
+          677,
+          275
+        ],
+        [
+          942,
+          272
+        ],
+        [
+          169,
+          572
+        ],
+        [
+          454,
+          572
+        ],
+        [
+          678,
+          572
+        ],
+        [
+          942,
+          569
+        ],
+        [
+          190,
+          859
+        ],
+        [
+          475,
+          861
+        ],
+        [
+          706,
+          861
+        ],
+        [
+          929,
+          855
+        ],
+        [
+          247,
+          1123
+        ],
+        [
+          512,
+          1125
+        ],
+        [
+          728,
+          1131
+        ],
+        [
+          891,
+          1124
+        ],
+        [
+          263,
+          1326
+        ],
+        [
+          558,
+          1329
+        ],
+        [
+          698,
+          1353
+        ],
+        [
+          837,
+          1330
+        ]
+      ],
+      "source_anchors_manually_approved": true,
+      "scale_review_note": "Actual living sword tip/guard/pommel landmarks along blade and grip axes; source blade/grip ratio 1.624, whole-axis length 233.6px (+/-6px landmark uncertainty), normalized 115.0px with canvas520. Primary reference120.1px. Not strike bounding-box height or lying-corpse height. Six source-scale anatomy comparisons and normalized104 viewed. Rear hit/death canvas520 retains complete NE corpse from actual pommel support; living ratio115.0 vs120.1px acknowledged. Every pose anchor follows actual teal pommel contact, with explicit semantic pommel ROIs for projected strikes and flat deaths, never blade-tip support or full-bbox X recentering. Source PNG bytes untouched. Actual Main native86 grounded/melee/slash comparison required.",
+      "sha256": "1364f35d4ee5f7a12d21243023d24599d1260b3d2d190db55a165c6b688da42d",
+      "exact_prompt_path": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/hit-death-rear-half.prompt.txt",
+      "source_anchors_approved": true
+    }
+  ],
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Static visual review of all104 complete alpha-composited weapon poses against exact original11319. Retains one narrow slightly undulating cool silverblue blade/dark spine, agedbronze asymmetric guard, long dark wrapped grip and tiny teal pommel without hands,limbs,carrier,aura,trails or detached parts. Distinct front bevel and dark reverse, opposing profiles, genuine blade/hilt pitch,yaw,flex phases across8directions and all5roles. Focused imagegen corrections replaced24 attack poses after original source blade/grip ratio failure; original six sheets and every correction prompt/raw output preserved. Corrected S/N strike has coherent whole-weapon forward/away perspective, clear down/up blade reach and distinct phase; every attack remains grounded at actual pommel rather than projecting tip. All104 raw/visible hashes unique, all104 mandatory source poses used once, strictanalyze and completevisible guard PASS without threshold,count or pixel changes. No omitted visible pixels; outside alpha max3-9 across sheets. Reviewed canvases512,600,496,488,584,520 use living tip/guard/pommel physical length and blade/grip ratio evidence, never compressed strike/death height. Normalized living profile lengths120.1/121.8/119.4/119.3/119.2/115.0px, manual landmarkuncertainty6sourcepx; actual native86 comparison remains Main gate. All104 actualpommel anchors reviewed; Sstrikebladetip and several diagonal/flat poses extend belowpommel in screenY as projectedgroundplane, not hover. Low whole fallen weapons are nonempty and intact. The reviewer generated the corrective attack artwork, so root must independently inspect these24 corrected poses before production import. Static candidate only: Main8directions5roles, meleecontact,timing,worldsupport,deathdrop/pickup andregressions pending. Preserve originalfloatingfalse,visualheight86,melee/slash andattackhitratioprofile. Root independently viewed correctedfront/rear24 in normalizedall104contact, enlargedfrontwhitecomposite and exacttip/guard/pommellandmarks. The silverbluecurvedblade/agedasymmetricguard/longdarkgrip remains coherent; actualE/Wstrikes faceopposingdirections, Sstrike pitchesdownforeplane andNstrike pitchesawayUP withbodybackedgevisible. IntactlyingterminalS/Nweapons foreshorten inworldgroundplane, notstandingduplicateframes. Perposepommel/bodyrootgroundprojection andsidebladeproportionsapproved foractualMain; noartpixelchanges. RootMain/gameplaynotyetverified."
+  },
+  "status": "STATIC_QA_PASS_ROOT_CORRECTION_REVIEW_AND_MAIN_PENDING",
+  "Main": "not_run",
+  "production_imported": false,
+  "completed_added": 0,
+  "source_anchors_independently_approved": true,
+  "independent_review_path": "/workspace/scratch/pr100-continuation/dancing-sword-authoring/independent-review.json",
+  "corrective_art_generated_by_reviewer": true,
+  "root_independent_correction_review": "APPROVED_STATIC_CORRECTED24_AND104_REGISTRATION_READY_FOR_MAIN",
+  "source_anchors_reviewed": true
+}

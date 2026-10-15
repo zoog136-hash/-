@@ -1,3 +1,9 @@
+## 최신 진행 · 2026-10-15 · batch26 신규3종 추가
+
+**382 → 385/498(77.3%) · 잔여113 · 인계374종 이후 신규11 · 개별Main8방향114종.** 소드·크랩·레버넌트 각104자세, 실제Main headless2,674/OpenGL3,016검사 실패0와 별도312자세/24실제AI화면 전수검토 승인. 원래HP에 실제무기 피격·사망·드랍·수동습득 PASS. 기존235보고서SHA보존+6(canonical241). [배치26 증거와 정확한 판정 범위](evidence/pr100-direction-fix/original-based/batch26/README.md). 기존정상프로필/자산/게임코드/맵 교체0. 크랩기존transform351은 보호검사로 보존하고 새몬스터폴더에 연결했다.
+
+**f2fc204(380종)** 전체애니메이션·Godot·리소스·Android빌드/정적검사 모두 SUCCESS([최종관측JSON](evidence/pr100-direction-fix/original-based/batch26/checkpoint24-ci-runs-final.json)). 이CI를 최신385종 성공으로 쓰지 않는다. Android실기기 미검증, main충돌 미해결/미병합. 다음보스Main과 328/미완료/HOLD교정을 계속하며 다음주요checkpoint에서 최신SHA전체검사를 한다.
+
 ## 최신 진행 · 2026-10-15 · batch25 신규2종 추가
 
 **380 → 382/498(76.7%) · 잔여116 · 이번재개누적신규8 · 개별Main8방향111종.** 텐타클·플라워 각104자세, 실제Main headless2,183/OpenGL2,411검사 실패0와별도독립시각검토 승인. 실제AI8방향·원래HP/무기 피격·사망·드랍·수동습득 PASS. 기존231보고서SHA보존+4(canonical235). [batch25증거·정확한판정범위](evidence/pr100-direction-fix/original-based/batch25/README.md). 기존자산/완료프로필/맵/게임코드교체0. 224실제캡처중12대표+전수표Git, 전체본문로컬만/전체SHA전달.
