@@ -1,0 +1,85 @@
+name: PR100 Merge Audit
+on:
+  push:
+    branches: ['feature/twilight-animation-20261013']
+    paths: ['.github/workflows/pr100-merge-audit.yml']
+permissions:
+  contents: read
+concurrency:
+  group: pr100-merge-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            .github
+            assets
+            data
+            scripts
+            tests
+            tools
+      - name: Preflight resource integrity without modifying game files
+        run: |
+          mkdir -p "$RUNNER_TEMP/pr100-merge-audit"
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee "$RUNNER_TEMP/pr100-merge-audit/resource-preflight.txt"
+      - name: Read-only three-way merge audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config core.quotepath false
+          git fetch --filter=blob:none origin main
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, subprocess
+          out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'pr100-merge-audit'
+          def git(*args):
+              return subprocess.check_output(['git', *args])
+          pr = git('rev-parse', 'HEAD').decode().strip()
+          main = git('rev-parse', 'refs/remotes/origin/main').decode().strip()
+          base = git('merge-base', pr, main).decode().strip()
+          proc = subprocess.run(['git', 'merge-tree', '--write-tree', '--name-only', '--messages', pr, main], capture_output=True)
+          (out / 'merge-tree.txt').write_bytes(proc.stdout + b'\nSTDERR\n' + proc.stderr)
+          if proc.returncode not in (0, 1):
+              raise RuntimeError(proc.stderr.decode(errors='replace'))
+          lines = proc.stdout.decode().splitlines()
+          tree = lines[0]
+          conflicts = []
+          for line in lines[1:]:
+              if not line:
+                  break
+              conflicts.append(line)
+          def changed(rev):
+              return set(git('diff', '--name-only', '-z', base, rev).decode().rstrip('\0').split('\0')) - {''}
+          overlap = sorted(changed(pr) & changed(main))
+          summary = dict(pr_sha=pr, main_sha=main, merge_base=base, merge_tree=tree, merge_exit=proc.returncode, conflicts=conflicts, overlapping_paths=overlap, snapshots=[])
+          for label, rev in [('base', base), ('pr', pr), ('main', main), ('tentative', tree)]:
+              (out / (label + '-tree.txt')).write_bytes(git('ls-tree', '-r', rev))
+              for name in sorted(set(overlap + conflicts)):
+                  path = pathlib.PurePosixPath(name)
+                  if path.is_absolute() or '..' in path.parts:
+                      raise RuntimeError('Unsafe repository path')
+                  result = subprocess.run(['git', 'show', rev + ':' + name], capture_output=True)
+                  row = dict(side=label, path=name, exists=result.returncode == 0)
+                  if result.returncode == 0:
+                      dest = out / 'snapshots' / label / name
+                      dest.parent.mkdir(parents=True, exist_ok=True)
+                      dest.write_bytes(result.stdout)
+                      row.update(bytes=len(result.stdout), sha256=hashlib.sha256(result.stdout).hexdigest())
+                  summary['snapshots'].append(row)
+          (out / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
+          print(json.dumps({k:v for k,v in summary.items() if k != 'snapshots'}, ensure_ascii=False, indent=2))
+          print('READ_ONLY_AUDIT_COMPLETE; no branch or game files modified')
+          PY
+      - name: Preserve audit and conflict snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr100-merge-audit-${{ github.sha }}
+          path: ${{ runner.temp }}/pr100-merge-audit/
+          if-no-files-found: error
+          retention-days: 14
