@@ -5,6 +5,16 @@ const ROOT: String = "res://data/map_remake/private/"
 const FIELD = preload("res://scripts/maps/remake_field.gd")
 const READ = preload("res://scripts/maps/source_travel.gd")
 const ARCHIVE_SHA: String = "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20"
+const AUTHORED = preload("res://scripts/maps/authored_remake_field.gd")
+
+static func authored_field(definition: Dictionary) -> PlayableField:
+	var profiles: Dictionary=READ.read_object("res://data/maps/remake_render_profiles.json").get("maps",{})
+	var id: String=str(definition.get("map_id",""))
+	if "--legacy-map-layouts" in OS.get_cmdline_user_args() or not profiles.has(id):
+		var existing:=PlayableField.new();existing.configure(definition);return existing
+	var field: AuthoredRemakeField=AUTHORED.new()
+	field.configure_remake(definition,profiles[id])
+	return field
 
 static func installed(map_id: String) -> bool:
 	if "--legacy-map-layouts" in OS.get_cmdline_user_args(): return false

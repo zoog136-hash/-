@@ -47,7 +47,7 @@ func run() -> void:
 		var field: PlayableField=world.field_map
 		if field==null: failures.append(id+" missing field");continue
 		var entry: Vector2=world.player.global_position
-		reports[id]={"remake_topology":field is RemakePlayableField,"images":[],
+		reports[id]={"remake_topology":field is RemakePlayableField,"authored_remake":field is AuthoredRemakeField,"images":[],
 			"layout_revision":int(field.data.get("layout_revision",0)),
 			"technical_complete":false,"faithful_complete":false,"diagnostic_only":true,
 			"entry":[entry.x,entry.y],"comparison_alignment":"SAME_CANVAS_PIXELS_NOT_CURRENT_M_CALIBRATION"}
@@ -70,7 +70,7 @@ func run() -> void:
 		world.player.global_position=camera_point;world.player.camera.zoom=Vector2.ONE
 		world.player.show();world.monsters_root.show();world.hud.show();world.field_minimap.show()
 		await capture(id,"same-camera-detail")
-		print("MAP_CAPTURED ",id," ","A3_PRIVATE_PROVISIONAL" if field is RemakePlayableField else "EXISTING_UNREMADE")
+		print("MAP_CAPTURED ",id," ","A3_PRIVATE_PROVISIONAL" if field is RemakePlayableField else ("AUTHORED_PROVISIONAL_REMAKE" if field is AuthoredRemakeField else "EXISTING_UNREMADE"))
 	var file:=FileAccess.open(output+"/captures.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify({"maps":reports,"failures":failures,"display":DisplayServer.get_name(),"android":"NOT_RUN"},"\t"));file.close()
 	world.queue_free();await frames(3)

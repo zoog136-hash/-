@@ -1199,8 +1199,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			player.camera.limit_right = ceili(field_map.bounds.end.x)
 			player.camera.limit_bottom = ceili(field_map.bounds.end.y)
 		else:
-			field_map = FIELD_SCRIPT.new()
-			field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
+			field_map = REMAKE_REGISTRY.authored_field(MONSTER_CATALOG.apply_map(requested_field))
 		astar = field_map.astar
 		field_physics = field_map.build_physics(self)
 		map_background.texture = null
@@ -1238,6 +1237,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.clear_target()
 	if field_map != null:
 		if field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
+		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
 		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
