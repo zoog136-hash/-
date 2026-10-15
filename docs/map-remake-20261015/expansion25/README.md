@@ -25,7 +25,7 @@
 | 충돌·사냥 경로 회귀 | 초기 원거리 미로딩 도형을 즉시 조회하던 검사 실패를 보존했다. 청크를 방문한 뒤 **모든 기존 장애물과 우회/이동 조건을 유지**하여 hunting_paths **14,603개 실패 0**, 아덴 건물/지형 재검사 PASS. 제한 시간이나 조건을 완화하지 않았다. |
 | 실제 화면 | 새 PNG **129장**, SHA·PNG CRC 확인: [매니페스트](PNG_MANIFEST.json). 게임 플레이/충돌/전투 69장과 정지 진단 60장을 구분한다. [동일 카메라 비교 15쌍](COMPARISON.md). 오만 10층의 이전 전체 지도/배치/비교는 재생성하지 않고 재사용한다. |
 | 원본 자료 | 신규 A3 복구 없음. 기존 1,000맵 카탈로그·10층 v2 팩·아트 SHA를 유지. 나머지 15개는 기존 TWILIGHT 지형이다. 아덴 A3 4의 2048×1536 지형 적용과 S32 의미 복원은 미완료다. |
-| 전체 회귀 | [원본 161개](full-regression/summary.json): **151 PASS / 7 FAIL / 3 SKIP / NOT_RUN 0**. 구현 관련 4개 실패는 대상 재검사를 통과했다. [검사명별 최신 상태](REGRESSION_STATUS.json)는 **155 PASS / 원본 리소스 누락 3 FAIL / 3 SKIP**이며 단일 전체 실행 PASS가 아니다. |
+| 전체 회귀 | [원본 161개](full-regression/summary.json): **151 PASS / 7 FAIL / 3 SKIP / NOT_RUN 0**. 구현 관련 4개 실패는 대상 재검사를 통과했다. [대상 재검사와 범위](REGRESSION_STATUS.json): 전체 테스트 3개 재검사 PASS, source runtime은 실패한 9층 830개만 재검사 PASS. 다른 9층의 성공 결과를 보존하며 변경한 QA 순서로 10층 전체를 재실행하지 않았다. 원본 리소스 누락 3개는 FAIL이며 단일 전체 실행 PASS가 아니다. |
 | 새 15맵 성능 | [원본 측정](performance/authored-streaming.json): 청크 예산/해제/재방문 15맵 실패 0, 동시에 실행한 다른 Godot 없음. 진입 **111–1,732ms**, 실제 draw 간격 중앙값 **21.8–41.7ms**, static memory **270–332MiB**, 실제 바닥 청크 최대 9. llvmpipe의 정지/QA 좌표 이동 측정이며 전투·실보행·Android 성능 합격이 아니다. |
 
 지역 프로필의 맵 이름을 메뉴와 진입 안내에도 연결했다. [실제 알비노 1구역 진입 화면](diagnostic/albino_01-same-camera-detail.png)은 이 수정 이후 캡처다.

@@ -24,20 +24,6 @@
     "hunting_paths_test",
     "remake_source_runtime_test"
   ],
-  "latest_by_test_name": {
-    "passed": 155,
-    "failed": [
-      "l1j_map_grid_test",
-      "l1j_png_load_test",
-      "l1j_spx_frames_test"
-    ],
-    "skipped": [
-      "original_map_catalog_test",
-      "original_world_runtime_test",
-      "source_first_map_test"
-    ],
-    "not_run": []
-  },
   "aggregation_warning": "Latest per-test outcomes from separate runs; not one clean full-suite pass",
   "source_boss_recheck": {
     "map": "oman_09",
@@ -45,5 +31,25 @@
     "failures": []
   },
   "unresolved_actual_render_error": "aden_world impact_visuals.gd:80; PR100 area not modified",
-  "android": "NOT_RUN"
+  "android": "NOT_RUN",
+  "targeted_recheck_scopes": {
+    "aden_building_test": "FULL_TEST",
+    "aden_terrain_polish_test": "FULL_TEST",
+    "hunting_paths_test": "FULL_TEST",
+    "remake_source_runtime_test": "ONLY_oman_09_830_CHECKS"
+  },
+  "recheck_status": {
+    "whole_tests_pass": [
+      "aden_building_test",
+      "aden_terrain_polish_test",
+      "hunting_paths_test"
+    ],
+    "source_runtime_scope": "ONLY_FAILING_oman_09_830_CHECKS_PASS_OTHER_NINE_FLOORS_NOT_REPEATED",
+    "remaining_missing_original_tests": [
+      "l1j_map_grid_test",
+      "l1j_png_load_test",
+      "l1j_spx_frames_test"
+    ],
+    "single_clean_full_suite_pass": false
+  }
 }
