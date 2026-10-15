@@ -3362,7 +3362,9 @@ func _on_ain_auto_changed(enabled: bool) -> void:
 
 func _update_ain_hud() -> void:
 	if hud.has_method("set_ain_state"):
-		hud.call("set_ain_state", ain_service.snapshot(), inventory)
+		var state: Dictionary = ain_service.snapshot()
+		state["blessing_reduction_pct"] = _blessing_consumption_reduction_percent()
+		hud.call("set_ain_state", state, inventory)
 
 func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 	var kind: String = str(spec.get("kind", ""))
