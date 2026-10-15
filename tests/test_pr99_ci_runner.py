@@ -60,7 +60,12 @@ class CIResultRegressionTests(unittest.TestCase):
 
     def test_only_exhaustive_audits_receive_extended_budget(self):
         self.assertEqual(timeout_budget('import', 150, 900), 900)
-        for name in ('world_regions_test', 'original_skill_learning_conditions_test'):
+        # main already runs five independently bounded 360s family shards.
+        # Preserve that exact aggregate budget; this change adds no extra time.
+        self.assertEqual(timeout_budget('world_regions_test', 150, 900), 1860)
+        self.assertEqual(timeout_budget('world_regions_test', 600, 900), 1860)
+        self.assertEqual(timeout_budget('world_regions_test', 2000, 900), 2000)
+        for name in ('original_skill_learning_conditions_test',):
             with self.subTest(name=name):
                 self.assertEqual(timeout_budget(name, 150, 900), 540)
                 self.assertEqual(timeout_budget(name, 600, 900), 600)

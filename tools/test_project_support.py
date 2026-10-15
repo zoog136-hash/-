@@ -18,6 +18,13 @@ ERROR = re.compile(
 REPORT = re.compile(r'\b[A-Z][A-Z0-9_]*_RESULT\s+(.+)$')
 SUCCESS = re.compile(r'\b[A-Z][A-Z0-9_]*_OK\b')
 SKIP = re.compile(r'\b[A-Z][A-Z0-9_]*_SKIP:')
+# Fixed, existing TWILIGHT geometry contracts; not source-grid acceptance.
+# Do not add generic gameplay tests here to hide source regressions.
+LEGACY_GEOMETRY_TESTS = frozenset({
+    'reference_object_placement_test', 'road_surface_render_test',
+    'terrain_surface_render_test', 'world_region_portals_test',
+    'world_regions_test', 'world_structure_test', 'world_terrain_coverage_test',
+})
 # This existing producer writes a counted summary rather than an _OK marker.
 # Accept only its exact, positive-check, zero-failure report, for that test only.
 RENEWED_SPAWN_SUMMARY = re.compile(
@@ -34,6 +41,11 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         # Five isolated family shards (360 seconds each by default), not one
         # 540-second timer shared by all 24 maps. The child enforces deadlines.
         return max(requested, 1860)
+    if name == 'remake_source_runtime_test':
+        # Ten live boss/save lifecycles plus 50 real portal transitions and
+        # rendered captures. Keep every floor and assertion in the private-pack
+        # audit; installations without that pack still explicitly SKIP it.
+        return max(requested, 480)
     if name == 'original_skill_learning_conditions_test':
         return max(requested, 540)
     if name == 'eight_interactions_test':

@@ -1,0 +1,539 @@
+{
+  "schema": 1,
+  "atlas": "res://assets/maps/reference_expansion_v2/terrain.png",
+  "props": "res://assets/maps/reference_expansion_v2/props.png",
+  "atlas_grid": 4,
+  "maps": {
+    "oman_01": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        4,
+        7
+      ],
+      "art_status": "PR108_AUTHORED_FLOOR_REUSED_BOUNDARIES_STILL_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.83,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false,
+      "floor_style": "pr108_cracked_flagstones",
+      "floor_atlas": "res://assets/maps/remake/pr108_oman01_flagstones.png",
+      "floor_atlas_grid": [
+        8,
+        4
+      ]
+    },
+    "oman_02": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        4,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_03": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        4,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_04": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        4,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_05": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        4,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_06": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        5,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_07": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        5,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_08": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        5,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_09": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        5,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "oman_10": {
+      "family": "oman",
+      "materials": [
+        4,
+        5,
+        5,
+        7
+      ],
+      "art_status": "AUTHORED_REFERENCE_V2",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "unclassified_boundary_height": 12,
+      "boundary_status": "provisional_low_stone_no_semantic_source",
+      "calibrated_lineagem_objects": false
+    },
+    "domination_summit": {
+      "family": "domination",
+      "materials": [
+        6,
+        5,
+        6,
+        7
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0
+    },
+    "escaros_01": {
+      "family": "escaros",
+      "materials": [
+        8,
+        5,
+        14,
+        7
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0
+    },
+    "escaros_02": {
+      "family": "escaros",
+      "materials": [
+        9,
+        1,
+        14,
+        3
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0
+    },
+    "escaros_03": {
+      "family": "escaros",
+      "materials": [
+        8,
+        5,
+        14,
+        7
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0
+    },
+    "escaros_04": {
+      "family": "escaros",
+      "materials": [
+        8,
+        15,
+        14,
+        7
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0
+    },
+    "escaros_05": {
+      "family": "escaros",
+      "materials": [
+        8,
+        15,
+        14,
+        7
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0
+    },
+    "albino_01": {
+      "family": "albino",
+      "materials": [
+        9,
+        1,
+        9,
+        3
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 5,
+      "display_name": "알비노 분지 1구역 · 늪지",
+      "prop_replacements": {
+        "crystal": "marsh_root"
+      },
+      "environment_evidence": "PUBLIC_SWAMP_THEME_GEOMETRY_NOT_VERIFIED",
+      "render_style": {
+        "wall_tint": "4f5b50",
+        "prop_tint": "82917e"
+      }
+    },
+    "albino_02": {
+      "family": "albino",
+      "materials": [
+        9,
+        1,
+        11,
+        3
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0,
+      "display_name": "알비노 분지 2구역 · 폭포",
+      "environment_evidence": "PUBLIC_WATERFALL_THEME_WATERFALL_POSITIONS_UNVERIFIED"
+    },
+    "albino_03": {
+      "family": "albino",
+      "materials": [
+        10,
+        1,
+        10,
+        3
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 6,
+      "display_name": "알비노 분지 3구역 · 유황",
+      "prop_replacements": {
+        "crystal": "sulfur_chimney"
+      },
+      "environment_evidence": "PUBLIC_SULFUR_THEME_GEOMETRY_NOT_VERIFIED",
+      "render_style": {
+        "wall_tint": "706d4f",
+        "prop_tint": "a09a75"
+      }
+    },
+    "albino_04": {
+      "family": "albino",
+      "materials": [
+        9,
+        1,
+        11,
+        3
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0,
+      "display_name": "알비노 분지 4구역",
+      "environment_evidence": "UNVERIFIED_EXISTING_TWILIGHT_THEME"
+    },
+    "faith_01": {
+      "family": "faith",
+      "materials": [
+        4,
+        5,
+        4,
+        7
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 1,
+      "display_name": "신념의 탑 1층",
+      "prop_replacements": {
+        "pillar": "deus_pillar"
+      },
+      "reference_url": "https://lineagem-jp.com/guides/lm/guides/dungeon_TowerofBelief",
+      "reference_edition": "OFFICIAL_JP_KR_ALIGNMENT_UNVERIFIED",
+      "render_style": {
+        "wall_tint": "41434d",
+        "prop_tint": "777984",
+        "brightness_lift": 0.015,
+        "saturation": 0.78,
+        "palette": "b1b5bf"
+      }
+    },
+    "faith_02": {
+      "family": "faith",
+      "materials": [
+        9,
+        1,
+        9,
+        3
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 2,
+      "display_name": "신념의 탑 2층",
+      "prop_replacements": {
+        "pillar": "beliel_pillar"
+      },
+      "reference_url": "https://lineagem-jp.com/guides/lm/guides/dungeon_TowerofBelief",
+      "reference_edition": "OFFICIAL_JP_KR_ALIGNMENT_UNVERIFIED",
+      "render_style": {
+        "wall_tint": "4c5845",
+        "prop_tint": "7b8971",
+        "brightness_lift": 0.015,
+        "saturation": 0.78,
+        "palette": "9aa98e"
+      }
+    },
+    "faith_03": {
+      "family": "faith",
+      "materials": [
+        12,
+        13,
+        12,
+        14
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 3,
+      "display_name": "신념의 탑 3층",
+      "prop_replacements": {
+        "pillar": "izabel_pillar"
+      },
+      "reference_url": "https://lineagem-jp.com/guides/lm/guides/dungeon_TowerofBelief",
+      "reference_edition": "OFFICIAL_JP_KR_ALIGNMENT_UNVERIFIED",
+      "render_style": {
+        "wall_tint": "7e7486",
+        "prop_tint": "ada4bb",
+        "brightness_lift": 0.015,
+        "saturation": 0.78,
+        "palette": "c0b6cb"
+      }
+    },
+    "faith_04": {
+      "family": "faith",
+      "materials": [
+        12,
+        13,
+        12,
+        14
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 4,
+      "display_name": "신념의 탑 4층",
+      "prop_replacements": {
+        "pillar": "razel_pillar"
+      },
+      "reference_url": "https://lineagem-jp.com/guides/lm/guides/dungeon_TowerofBelief",
+      "reference_edition": "OFFICIAL_JP_KR_ALIGNMENT_UNVERIFIED",
+      "render_style": {
+        "wall_tint": "666055",
+        "prop_tint": "a99b80",
+        "brightness_lift": 0.015,
+        "saturation": 0.78,
+        "palette": "bcb0a1"
+      },
+      "road_strength": 18
+    },
+    "aden_world": {
+      "family": "aden",
+      "materials": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "art_status": "AUTHORED_REMAKE_PUBLIC_REFERENCE_PROVISIONAL",
+      "original_restored": false,
+      "floor_light": 0.78,
+      "boundary_status": "EXPLICIT_AUTHORED_WALL_TYPES_CURRENT_M_MATCH_UNVERIFIED",
+      "calibrated_lineagem_objects": false,
+      "geometry_source": "TWILIGHT_AUTHORED_POLYGONS",
+      "current_M_geometry": "UNVERIFIED",
+      "placement_status": "EXISTING_TWILIGHT_PROVISIONAL",
+      "collision_policy": "EXACT_EXISTING_SHAPES_STREAMED",
+      "wall_policy": "EXPLICIT_AUTHORED_WALL_KINDS_ONLY",
+      "surface_pattern": 0
+    }
+  }
+}

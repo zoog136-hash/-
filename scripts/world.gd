@@ -17,6 +17,8 @@ const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const SOURCE_FIELD = preload("res://scripts/maps/source_field.gd")
 const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
+const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
+const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
 const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
@@ -419,9 +421,11 @@ func _load_data() -> void:
 					if str(maps[index].get("id", "")) == str(entry["map_id"]):
 						maps[index] = {"id":entry["map_id"],"name":entry["map_name"],"field_path":entry["path"],
 							"width":int(entry["bounds"][2])/32,"height":int(entry["bounds"][3])/32,"tile_size_world":32}
+	var remake_names: Dictionary = REMAKE_REGISTRY.display_names()
 	for map_value: Variant in maps:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
+			if remake_names.has(str(map_data.get("id", ""))): map_data["name"] = remake_names[str(map_data.id)]
 			maps_by_id[str(map_data.get("id", ""))] = map_data
 	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
 		original_maps.append(record)
@@ -1145,7 +1149,12 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			return
 		requested_field = loaded_field as Dictionary
 	var requested_original: OriginalPlayableField = null
-	if requested_map.has("source_definition"):
+	if REMAKE_REGISTRY.installed(map_id):
+		requested_original = REMAKE_REGISTRY.load_field(map_id)
+		if requested_original == null:
+			hud.show_message("리메이크 지도 데이터가 손상되어 현재 맵을 유지합니다")
+			return
+	elif requested_map.has("source_definition"):
 		requested_original = SOURCE_TRAVEL.load_field(requested_map)
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
@@ -1154,7 +1163,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		world_interactions.cancel_gesture()
 		world_interactions.clear_selection()
 	field_population.configure(self, null)
-	field_population = original_population if requested_original != null else legacy_population
+	field_population = original_population if requested_original != null and not requested_original is RemakePlayableField else legacy_population
 	if field_map is OriginalPlayableField: (field_map as OriginalPlayableField).close()
 	if is_instance_valid(return_gate):
 		remove_child(return_gate)
@@ -1187,11 +1196,12 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original != null:
 			field_map = requested_original
 			world_size = field_map.bounds.size
-			player.camera.limit_right = int(world_size.x)
-			player.camera.limit_bottom = int(world_size.y)
+			player.camera.limit_left = floori(field_map.bounds.position.x)
+			player.camera.limit_top = floori(field_map.bounds.position.y)
+			player.camera.limit_right = ceili(field_map.bounds.end.x)
+			player.camera.limit_bottom = ceili(field_map.bounds.end.y)
 		else:
-			field_map = FIELD_SCRIPT.new()
-			field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
+			field_map = REMAKE_REGISTRY.authored_field(MONSTER_CATALOG.apply_map(requested_field))
 		astar = field_map.astar
 		field_physics = field_map.build_physics(self)
 		map_background.texture = null
@@ -1218,6 +1228,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	if not keep_position or not _is_walkable_world(player.global_position):
 		player.global_position = _spawn_position()
 	player.velocity = Vector2.ZERO
+	preload("res://scripts/maps/source_body_profile.gd").apply(player,field_map is RemakePlayableField)
 	player.set_touch_vector(Vector2.ZERO)
 	player.camera.reset_smoothing()
 	player.camera.force_update_scroll()
@@ -1227,7 +1238,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
+		if field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
+		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
+		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
@@ -1443,7 +1456,7 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_crafting")
 				elif str(npc["role"]) == "buyback":
 					hud.call("open_item_sell")
-				elif field_map is OriginalPlayableField:
+				elif field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules():
 					hud.show_message(str(npc.name)+" · 원본 대화 기능 미매핑")
 				elif str(npc["role"]) == "guide":
 					hud.call("open_npc_dialogue",str(npc.get("id","")))
@@ -3807,8 +3820,8 @@ func _load_game(quiet: bool) -> void:
 		return
 	var data: Dictionary = value as Dictionary
 	var saved_map_id: String = str(data.get("map_id", ""))
-	if saved_map_id.begins_with("l1_"):
-		var saved_field: OriginalPlayableField = SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
+	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
+		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
 		if saved_field == null:
 			source_save_blocked = true
 			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
@@ -5217,7 +5230,7 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
-	if field_map is OriginalPlayableField and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
+	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
 		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
 		return false
 	for _attempt: int in range(100):
@@ -6444,16 +6457,18 @@ func use_field_portal(portal_id: String) -> bool:
 		if not maps_by_id.has(target_map):
 			return false
 		player.clear_click_path()
-		player.clear_click_path()
 		player.velocity = Vector2.ZERO
 		player.set_touch_vector(Vector2.ZERO)
 		selected_monster = null
 		auto_target = null
 		if target_map != active_map_id:
 			_set_map(target_map,false)
+			if active_map_id != target_map: return false
 			if field_map == null:
 				_place_return_gate()
-			elif portal.has("target_position"):
+			elif portal.has("target_position") and (not field_map is RemakePlayableField or int(portal.get("target_layout_revision",-1))==int(field_map.data.layout_revision)):
+				# Old pixel destinations belong to the old layout. A source remake
+				# uses its validated entry unless a calibrated target revision matches.
 				var landing: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
 				if landing.x >= 0:
 					player.global_position = field_map.cell_to_world(landing)

@@ -59,6 +59,7 @@ def main() -> int:
     parser.add_argument("--path", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--logs", type=Path, default=Path("test-results/world-region-shards"))
     parser.add_argument("--timeout", type=int, default=360, help="Seconds for each individual family shard")
+    parser.add_argument("--legacy-map-layouts", action="store_true", help="Use the historical geometry fixture; does not validate private A3 layouts")
     args = parser.parse_args()
     root = args.path.resolve()
     args.logs.mkdir(parents=True, exist_ok=True)
@@ -80,6 +81,8 @@ def main() -> int:
                 env[key] = user_data
             cmd = [args.godot, "--headless", "--path", str(root), "--script",
                    "res://tests/world_regions_test.gd", "--", f"--prefix={prefix}"]
+            if args.legacy_map_layouts:
+                cmd.append("--legacy-map-layouts")
             try:
                 result = run_isolated(cmd, env=env, timeout=args.timeout, cwd=str(root))
                 output = result.stdout + result.stderr

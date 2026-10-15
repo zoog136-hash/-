@@ -1,0 +1,16 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+WARNING: TWILIGHT_DROP_UNMAPPED_GRADE: 공포의 뱀파이어:영웅 — skipped; no arbitrary substitution
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _missing (res://scripts/loot_drop.gd:182)
+         [1] _pick_equipment_entry (res://scripts/loot_drop.gd:267)
+         [2] roll_detailed (res://scripts/loot_drop.gd:318)
+         [3] _roll_drop (res://scripts/world.gd:2316)
+         [4] _on_monster_died (res://scripts/world.gd:2228)
+         [5] take_damage (res://scripts/monster.gd:750)
+         [6] combat (res://tests/remake_source_runtime_test.gd:90)
+         [7] shot (res://tests/remake_source_runtime_test.gd:25)

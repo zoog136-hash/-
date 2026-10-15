@@ -1,0 +1,71 @@
+name: Oman 1F sample code validation
+on:
+  push:
+    branches: ['sample/oman01-a3-remake-20261014']
+    paths: ['.github/workflows/oman01-sample-20261014.yml','samples/oman01/**']
+permissions:
+  contents: read
+concurrency:
+  group: oman01-sample-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  code-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Check Python utility and missing-source refusal
+        run: |
+          python3 -m py_compile samples/oman01/build_sample.py
+          python3 samples/oman01/build_sample.py --self-test
+      - name: Validate authored 2D dungeon atlas
+        run: |
+          python3 samples/oman01/make_floor.py /tmp/oman01_flagstones.png
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, struct, zlib
+          p=Path('/tmp/oman01_flagstones.png')
+          raw=p.read_bytes()
+          assert raw[:8]==bytes([137,80,78,71,13,10,26,10])
+          w,h=struct.unpack('>II',raw[16:24])
+          assert (w,h)==(768,192) and len(raw)>1000
+          first=hashlib.sha256(raw).hexdigest()
+          import subprocess,sys
+          subprocess.run([sys.executable,'samples/oman01/make_floor.py',str(p)],check=True)
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==first
+          print('ORIGINAL_2D_ART_VALIDATED',len(raw),first)
+          PY
+      - name: Install the project's engine
+        run: |
+          mkdir -p /tmp/oman01-godot
+          curl --fail --location --retry 3 'https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip' -o /tmp/oman01-godot/godot.zip
+          unzip -q /tmp/oman01-godot/godot.zip -d /tmp/oman01-godot
+          chmod +x /tmp/oman01-godot/Godot_v4.7.2-stable_linux.x86_64
+      - name: Import actual project and parse optional sample scripts
+        run: |
+          set -o pipefail
+          mkdir -p samples/oman01/evidence
+          /tmp/oman01-godot/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path . --quit 2>&1 | tee samples/oman01/evidence/engine-import.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' samples/oman01/evidence/engine-import.log; then exit 1; fi
+          /tmp/oman01-godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://samples/oman01/run.gd --check-only 2>&1 | tee samples/oman01/evidence/sample-parse.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script' samples/oman01/evidence/sample-parse.log; then exit 1; fi
+      - name: Record source/runtime status without fabricating evidence
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,zipfile
+          out=pathlib.Path('samples/oman01/evidence');out.mkdir(parents=True,exist_ok=True)
+          (out/'CI_SCOPE.json').write_text(json.dumps({'scope':'CODE_IMPORT_AND_UTILITY_ONLY','original_grid_available_on_runner':False,'real_map_render':'NOT_RUN','movement_combat':'NOT_RUN','android':'NOT_RUN','main_merged':False},indent=2))
+          with zipfile.ZipFile(out/'TWILIGHT_oman01_sample_source.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for p in pathlib.Path('samples/oman01').iterdir():
+                  if p.is_file() and p.suffix in ('.py','.gd','.md'):
+                      z.write(p,str(p))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oman01-sample-code-and-validation
+          path: samples/oman01/evidence/
+          retention-days: 7

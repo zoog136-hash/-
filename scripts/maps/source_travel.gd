@@ -84,4 +84,4 @@ static func restore_position(world: Node, record: Dictionary) -> Array:
 	var source: Array = record.get("source",[])
 	if source.size() != 2: return []
 	var p: Vector2 = field.coordinates.components_to_world(source)
-	return [p.x,p.y] if p.is_finite() and field.walkable(p) else []
+	return [p.x,p.y] if p.is_finite() and field.walkable(p) and field.point_clear(p) else []

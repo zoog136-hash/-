@@ -130,6 +130,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if monster.get_parent() != null: monster.reparent(world.monsters_root,false)
 	else: world.monsters_root.add_child(monster)
 	monster.global_position = p
+	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField)
 	monster.setup(record,world.player,world,world._monster_texture(record))
 	monster.attack_cooldown = world.rng.randf_range(0.,monster.attack_interval*.7)
 	if not monster.died.is_connected(world._on_monster_died): monster.died.connect(world._on_monster_died)
@@ -170,6 +171,8 @@ func destination_allowed(monster: TwilightMonster, point: Vector2) -> bool:
 	var id: int = int(monster.get_meta("field_slot",-1))
 	if id < 0 or id >= slots.size(): return true
 	var region: Dictionary = slots[id].region
+	if field is RemakePlayableField:
+		return (field as RemakePlayableField).remake_region_contains(str(region.id),point)
 	var patrol: Dictionary = region.get("patrol_region",{})
 	return patrol.is_empty() or field.REGION_GEOMETRY.contains(patrol,point)
 

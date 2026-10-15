@@ -1,0 +1,44 @@
+{
+  "android": "NOT_RUN",
+  "boss_combat": [
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "분노의 주시자 라즈엘",
+      "boss_hp_after": 26454,
+      "boss_hp_before": 26500,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "faith_04",
+      "observation": "STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
+      "player_hp_after": 999938,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    }
+  ],
+  "checks": 526,
+  "display": "X11",
+  "failures": [],
+  "maps": [
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 95,
+        "collision_unloaded_buckets": 46,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 327,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 156.861,
+      "map": "faith_04",
+      "memory_static_bytes": 290365738,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    }
+  ],
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

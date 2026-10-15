@@ -1,3 +1,6 @@
 # Preserve actual Godot logs byte-for-byte, including their trailing blank lines.
 docs/world-structure-20261011/evidence/validation-logs/*.txt -whitespace
 docs/object-placement-20261011/evidence/validation-logs/*.txt -whitespace
+# Archived verification output is data; retain the original log bytes.
+docs/map-remake-20261015/expansion25/**/*.log -whitespace
+docs/map-remake-20261015/expansion25/**/validation-logs/*.txt -whitespace
