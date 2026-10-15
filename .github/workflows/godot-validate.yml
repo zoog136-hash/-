@@ -80,6 +80,17 @@ jobs:
           fi
           grep -q "AINHASAD_SMOKE_OK" godot-ainhasad-smoke.log
 
+      - name: Ainhasad consumption and level XP progression
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-ain-exp"
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/ain_exp_progression_test.gd 2>&1 | tee godot-ain-exp-progression.log
+          if grep -E "SCRIPT ERROR:|ERROR:|AIN_EXP_PROGRESSION_FAIL:|AIN_EXP_PROGRESSION_FAILED" godot-ain-exp-progression.log; then
+            exit 1
+          fi
+          grep -q "AIN_EXP_PROGRESSION_OK" godot-ain-exp-progression.log
+
       - name: Mythic job smoke test
         shell: bash
         run: |
