@@ -24,9 +24,9 @@ NPC 9개, 포털 3개, 사냥/보스 구역 18개의 ID·서비스 역할·몬�
 
 `VALIDATION.json`, `python-tests.log`, `drive-roundtrip.json`은 데이터 검증 증거다. 이 환경에는 Godot 실행기가 없었으므로 **GDScript 컴파일/실행, 실제 Main 화면, 충돌 물리, NPC 거래, 포털 왕복, 보스 전투·재출현, 저장/재접속, Android 성능을 통과로 표시하지 않는다.**
 
-## 비공개 팩 복원
+## 아덴 팩 복원 및 PR #120 업로드 (2026-10-15)
 
-기존 원본 보관 폴더에 저장했고 새 공개 공유 권한을 만들지 않았다.
+원본 ZIP은 기존 Drive 보관 위치에 유지한다. 2026-10-15 사용자가 이 공개 저장소에 대한 재배포 권리를 확인하고 PR #120의 기존 브랜치에 리소스 커밋을 요청했다. ZIP 원본 5개를 바이트 변경 없이 추적 대상으로 추가한다. 원 라이선스 문서는 ZIP에 없으며, 확인 범위와 출처는 `data/map_remake/private/aden/NOTICE.md`에 기록한다. 이를 별도 오픈소스 라이선스 부여로 해석하지 않는다.
 
 - 파일: `TWILIGHT-aden-remake-private-20261015-v1.zip`
 - 크기: **1,343,001바이트**
@@ -34,7 +34,7 @@ NPC 9개, 포털 3개, 사냥/보스 구역 18개의 ID·서비스 역할·몬�
 - [비공개 Drive 팩](https://drive.google.com/file/d/1B4TM2IbNMslFcoUxcemvbeB2G7teahZe/view)
 - 위치: `data/map_remake/private/aden/` (기존 오만 `private/index.json`과 분리)
 
-이 브랜치의 코드를 먼저 적용하고, ZIP 해시를 확인한 후 프로젝트 루트에 해제한다. `aden/`이 이미 있으면 덮어쓰지 말고 백업·비교한다. ZIP에는 원본 데이터와 생성에 사용한 `effective_layouts_build.json`이 포함되므로 공개 Git에 추가하지 않는다. 일반 Git 동기화만으로 비공개 팩이 설치되는 것은 아니다.
+이 커밋부터 `data/map_remake/private/aden/`의 5개 파일과 고지가 Git 동기화에 포함된다. 파일별 크기·SHA-256은 `upload-manifest.json`에 있다. ZIP을 별도로 복원하는 경우 ZIP 해시를 확인하고, `aden/`이 이미 있으면 덮어쓰지 말고 백업·비교한다. 기존 오만 팩과 다른 private 리소스의 제외 규칙은 유지한다.
 
 Python 3.11 이상과 NumPy가 필요하다. 기존 `tools/map_restore/formats.py`를 그대로 사용한다.
 
