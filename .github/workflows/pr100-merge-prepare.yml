@@ -30,14 +30,32 @@ jobs:
           test "$(git rev-parse origin/feature/twilight-animation-20261013)" = "$GITHUB_SHA"
           git merge-base --is-ancestor 668db3fc60a02493e209a1f6367f81bcc4cc93c2 HEAD
           test "$(git diff --name-only 668db3fc60a02493e209a1f6367f81bcc4cc93c2 HEAD)" = .github/workflows/pr100-merge-prepare.yml
+          # Recover every main-tip blob in one bounded shallow object store.
+          # Do not rewrite the primary repository's history/shallow boundaries.
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.https://github.com/.extraheader GIT_CONFIG_VALUE_0="$(git config --get http.https://github.com/.extraheader)" git clone --bare --depth=1 --single-branch --branch=main --no-tags https://github.com/zoog136-hash/- "$RUNNER_TEMP/pr100-main-tip.git"
+          test "$(git --git-dir="$RUNNER_TEMP/pr100-main-tip.git" rev-parse HEAD)" = e2119c37293a783e93b421ee0055d1318271b071
+          mkdir -p .git/objects/info
+          printf '%s\n' "$RUNNER_TEMP/pr100-main-tip.git/objects" >> .git/objects/info/alternates
+          git cat-file -e origin/main:.github/workflows/consumable-validate.yml
           set +e
           git merge --no-commit --no-ff origin/main > "$RUNNER_TEMP/pr100-prepared/merge.txt" 2>&1
           result=$?
           set -e
+          cat "$RUNNER_TEMP/pr100-prepared/merge.txt"
           test "$result" = 1
           python3 tools/resolve_pr100_merge_20261016.py | tee "$RUNNER_TEMP/pr100-prepared/resolution.txt"
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('tools/test_project_runner_test.py')
+          text=path.read_text()
+          old="        self.assertEqual(summary['passed'], 3)\n        self.assertIn('--headless', self.case_engine_args())"
+          new="        self.assertEqual(summary['passed'], 4)\n        self.assertIn('--headless', self.case_engine_args())"
+          assert text.count(old)==1,'optional-capture unit expectation drift'
+          path.write_text(text.replace(old,new,1))
+          PY
+          git add -- tools/test_project_runner_test.py
           git rm -- .github/workflows/pr100-merge-audit.yml .github/workflows/pr100-merge-prepare.yml
-          git diff --cached --check
+          git diff --cached --check origin/main
           git diff --cached --stat > "$RUNNER_TEMP/pr100-prepared/stat.txt"
       - name: Verify retained asset, map and independent-change objects
         shell: bash
@@ -45,35 +63,32 @@ jobs:
           set -euo pipefail
           python3 - <<'PY'
           import json, os, pathlib, subprocess
-          out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'pr100-prepared'
-          def git(*args): return subprocess.check_output(['git', *args])
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'pr100-prepared'
+          def git(*args):return subprocess.check_output(['git',*args])
           def tree(ref):
-              result = {}
+              result={}
               for row in git('ls-tree','-rz',ref).split(b'\0'):
-                  if not row: continue
-                  info, path = row.split(b'\t',1)
-                  result[path.decode()] = info.decode()
+                  if row:
+                      info,path=row.split(b'\t',1);result[path.decode()]=info.decode()
               return result
-          pr, main, base = os.environ['GITHUB_SHA'], 'e2119c37293a783e93b421ee0055d1318271b071', '02842fdd123bf14db46bed91a3cb68c36fa8b9b1'
-          merged_sha = git('write-tree').decode().strip()
-          trees = {label:tree(ref) for label,ref in [('pr',pr),('main',main),('base',base),('merged',merged_sha)]}
-          p,m,b,t = [trees[k] for k in ['pr','main','base','merged']]
-          main_only = {x for x in set(m)|set(b) if m.get(x)!=b.get(x) and p.get(x)==b.get(x)}
-          lost = [x for x in sorted(main_only) if t.get(x)!=m.get(x)]
-          assert not lost, ('main-only changes lost',lost)
-          checks = {}
+          pr,main,base=os.environ['GITHUB_SHA'],'e2119c37293a783e93b421ee0055d1318271b071','02842fdd123bf14db46bed91a3cb68c36fa8b9b1'
+          merged_sha=git('write-tree').decode().strip()
+          p,m,b,t=[tree(ref) for ref in [pr,main,base,merged_sha]]
+          main_only={x for x in set(m)|set(b) if m.get(x)!=b.get(x) and p.get(x)==b.get(x)}
+          lost=[x for x in sorted(main_only) if t.get(x)!=m.get(x)]
+          assert not lost,('main-only changes lost',lost)
+          checks={}
           for label,expected,prefixes in [('main_maps',m,('assets/maps/','data/maps/','data/map_remake/')),('accepted_animation_and_evidence',p,('assets/actors/eight_direction/','scripts/animation/','docs/remake/evidence/'))]:
-              names = [x for x in expected if x.startswith(prefixes)]
-              bad = [x for x in names if t.get(x)!=expected[x]]
+              names=[x for x in expected if x.startswith(prefixes)]
+              bad=[x for x in names if t.get(x)!=expected[x]]
               assert not bad,(label,bad)
-              checks[label] = len(names)
+              checks[label]=len(names)
           for name in ['data/animation_presentation.json','data/combat_animation_profiles.json']:
               assert t.get(name)==p.get(name),name
-          coverage = json.loads(pathlib.Path('docs/remake/evidence/pr100-direction-fix/original-based/coverage/coverage.json').read_text())
-          counts = coverage['counts']
-          accepted = sum(counts[k+':native_connected'] for k in ['hero_plus','normal_monster','boss'])
-          assert accepted == 392,accepted
-          summary = dict(pr_parent=pr,main_parent=main,merge_base=base,preliminary_tree=merged_sha,independent_main_changes_preserved=len(main_only),checks=checks,accepted=accepted,remaining=498-accepted,individual_Main_scope='121 identities; not all392 individually replayed',full_integration_CI='pending',main_ref_written=False)
+          coverage=json.loads(pathlib.Path('docs/remake/evidence/pr100-direction-fix/original-based/coverage/coverage.json').read_text())
+          accepted=sum(coverage['counts'][k+':native_connected'] for k in ['hero_plus','normal_monster','boss'])
+          assert accepted==392,accepted
+          summary=dict(pr_parent=pr,main_parent=main,merge_base=base,preliminary_tree=merged_sha,independent_main_changes_preserved=len(main_only),checks=checks,accepted=accepted,remaining=498-accepted,individual_Main_scope='121 identities; not all392 individually replayed',full_integration_CI='pending',main_ref_written=False)
           (out/'preservation.json').write_text(json.dumps(summary,indent=2)+'\n')
           print(json.dumps(summary,indent=2))
           PY
@@ -90,21 +105,19 @@ jobs:
             python3 "$script" 2>&1 | tee "$RUNNER_TEMP/pr100-prepared/$(basename "$script").txt"
           done
           python3 - <<'PY'
-          import pathlib, yaml, sys
+          import pathlib,yaml,sys
           sys.path.insert(0,'tools')
-          from test_project_support import timeout_budget, requires_renderer
+          from test_project_support import timeout_budget,requires_renderer
           for name in ['original_based_mummy_lord_gameplay_test','original_based_seer_boss_gameplay_test','original_based_salah_gameplay_test']:
               assert timeout_budget(name,150,900)>=450,name
           assert timeout_budget('world_regions_test',150,900)>=1860
           assert requires_renderer('await RenderingServer.frame_post_draw',{})
           assert not requires_renderer('# TWILIGHT_OPTIONAL_RENDER_ENV: CAPTURE\nawait RenderingServer.frame_post_draw',{})
-          path=pathlib.Path('.github/workflows/animation-presentation-validate.yml')
-          document=yaml.safe_load(path.read_text())
-          matrix=document['jobs']['original-batch']['strategy']['matrix']
+          matrix=yaml.safe_load(pathlib.Path('.github/workflows/animation-presentation-validate.yml').read_text())['jobs']['original-batch']['strategy']['matrix']
           assert 29 in matrix['batch']
           assert any(row.get('batch')==29 and row.get('script')=='run_original_based_boss_batch' for row in matrix['include'])
           assert pathlib.Path('tests/fixtures/pr100_batch29.json').is_file()
-          for path in pathlib.Path('.github/workflows').glob('*.yml'): yaml.safe_load(path.read_text())
+          for path in pathlib.Path('.github/workflows').glob('*.yml'):yaml.safe_load(path.read_text())
           print('MERGE_CONTRACTS_OK; existing gates retained; batch29 added')
           PY
       - name: Install pinned Godot and check merged import and boot
@@ -129,23 +142,22 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import base64, json, os, pathlib, subprocess, urllib.request
+          import base64,json,os,pathlib,subprocess,urllib.request
           out=pathlib.Path(os.environ['RUNNER_TEMP'])/'pr100-prepared'
-          def git(*args): return subprocess.check_output(['git',*args])
-          pr=os.environ['GITHUB_SHA']; main='e2119c37293a783e93b421ee0055d1318271b071'
+          def git(*args):return subprocess.check_output(['git',*args])
+          pr=os.environ['GITHUB_SHA'];main='e2119c37293a783e93b421ee0055d1318271b071'
           subprocess.run(['git','fetch','--filter=blob:none','origin','main','feature/twilight-animation-20261013'],check=True)
           assert git('rev-parse','origin/main').decode().strip()==main,'main moved'
           assert git('rev-parse','origin/feature/twilight-animation-20261013').decode().strip()==pr,'PR moved'
           review=pathlib.Path('docs/remake/PR100_MERGE_REVIEW_20261016.md')
-          review.write_text('# PR100 중간 완성본 통합 검토\n\n'+
-            f'- PR 부모: `{pr}`\n- main 부모: `{main}`\n'+
-            '- 충돌 39개 해결: 최신 main 길찾기26개 유지, 검사/설정13개 양쪽 요구 통합.\n'+
+          review.write_text('# PR100 중간 완성본 통합 검토\n\n'+f'- PR 부모: `{pr}`\n- main 부모: `{main}`\n'+
+            '- 충돌39개 해결: 최신 main 길찾기26개 유지, 검사/설정13개 양쪽 요구 통합.\n'+
             '- main 독립 변경, 기존 맵, PR100 승인 애니메이션/증거 Git 객체 보존 검사 PASS.\n'+
             '- 392/498 연결, 잔여106. Main 개별 증거121종이며 392종 전부의 새 개별 검증을 의미하지 않음.\n'+
-            '- 지옥의 쿠거 batch29를 기존 보스 통합 CI 행렬에 추가. 기존 테스트/임계값 축소 없음.\n'+
-            '- 리소스723시트/41442프레임 SHA, Python 검사 실행기/작화 임포터 회귀, Godot4.7.2 import/boot PASS.\n'+
-            '- 최종 전체 CI 및 병합: 아직 대기. 이전391종 CI 성공을 이 커밋의 성공으로 대체하지 않음.\n'+
-            '- Android 실기기 및 외부 원본 전체 전달: 미검증/미완료 상태 유지.\n'+
+            '- 지옥의 쿠거 batch29 통합 CI 추가. 기존 테스트/임계값 축소 없음. 검사 실행기 기대값은 길찾기 준비 포함4개로 수정.\n'+
+            '- 리소스723시트/41442프레임 SHA, Python 실행기/작화 임포터 회귀, Godot4.7.2 import/boot PASS.\n'+
+            '- 최종 전체 CI 및 병합: 아직 대기. 이전391종 CI 결과로 최신 성공을 대체하지 않음.\n'+
+            '- Android 실기기 및 외부 원본 전체 전달: 미검증/미완료 유지.\n'+
             '- 백업: `backup/pr100-before-merge-20261016-f99fab0`, `backup/main-before-pr100-20261016-e2119c3`.\n'+
             f'- 준비 검사: https://github.com/zoog136-hash/-/actions/runs/{os.environ["GITHUB_RUN_ID"]}\n',encoding='utf-8')
           subprocess.run(['git','add','--',str(review)],check=True)
@@ -161,7 +173,7 @@ jobs:
           def post(endpoint,data):
               req=urllib.request.Request('https://api.github.com/repos/zoog136-hash/-/git/'+endpoint,data=json.dumps(data).encode(),method='POST',headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'})
               with urllib.request.urlopen(req,timeout=60) as resp:return json.load(resp)
-          entries=[]; uploaded=0
+          entries=[];uploaded=0
           for name in sorted(set(p)|set(t)):
               if p.get(name)==t.get(name):continue
               if name not in t:
