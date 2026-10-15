@@ -1,3 +1,11 @@
+## 2026-10-15 · 피쉬맨 idle WIP 보존
+
+**완료374/498·잔여124·개별Main103 유지.** 알비노피쉬맨은8방향회전표와idle16실포즈만정적통과(1/5동작), **미연결/실제Main미실행/신규완료0**이다. 나머지walk·attack·hit·death를같은blocks4x2여백구조로시험중이다. idle1차는추가3px여백에이웃픽셀이들어가거절했고 원본PNG/정확프롬프트/진단을ZIP보존했다. idle2차는몸체침범·누락·경계잘림0이며512virtualcanvas에서통과했다.
+
+복구어려운승인idle/회전표·원본참조가이드·SHA는 [WIP checkpoint](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json)로보존한다. partial sheet를런타임에연결하거나완료로세지않는다. 파이프라인검증34/34 및기존출력불변은이전push **`dce5048f17712c6c6d7a7ce97414e2f45e6756a4`** 에있다.
+
+현재CI: ce199통합실행중/APK대기, ce199애니메이션은최신helper검사로대체되어cancelled(실패/성공아님). 새 [dce5048 애니메이션38725467814](https://github.com/zoog136-hash/-/actions/runs/38725467814)는queued. runtime/game data는ce199와동일하다. CI관측시점이후상태는GitHub에서해당SHA/run으로확인한다.
+
 ## 2026-10-15 · Batch22 경량검사 / 제작 파이프라인 체크포인트
 
 완료 수량은 **374/498·잔여124·개별Main103**으로 유지한다. 완료3종 증거 커밋 **`53e17aee7371e0aac6eb6a7ab84ae3ff9681fb39` push 성공**, local/remote 일치 확인.
