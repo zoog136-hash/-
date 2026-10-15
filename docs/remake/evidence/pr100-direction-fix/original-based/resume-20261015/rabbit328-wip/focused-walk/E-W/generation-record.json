@@ -1,0 +1,43 @@
+{
+  "entity": "transform:328",
+  "scope": "E/W six-pose gait repair pilot only",
+  "generation_call_limit": 1,
+  "generation_calls_used": 1,
+  "references": [
+    {
+      "path": "/workspace/scratch/pr100-resume/transform328-source.png",
+      "bytes": 11928,
+      "sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db"
+    },
+    {
+      "path": "/workspace/generated_images/exec-715ba4a8-2acd-463c-b27c-54f0367e93ce.png",
+      "bytes": 2017060,
+      "sha256": "081769ef2a777d352a670ce1cf04efc83493d8aa16d92cdf47f20cb7dd8cc62d"
+    }
+  ],
+  "exact_prompt": "/workspace/scratch/pr100-resume/focused-walk/E-W/exact-prompt.txt",
+  "prompt_sha256": "07687f120df663f20c0d40d9b0ccf575026b7d9ccd352baf5abd5a3e4d51a0bf",
+  "production_changes": false,
+  "actual_Main": false,
+  "completed_added": 0,
+  "candidate": {
+    "generator_path": "/workspace/generated_images/exec-cd342a5f-ce5a-4042-a4fa-57b3b7530889.png",
+    "preserved_copy": "/workspace/scratch/pr100-resume/focused-walk/E-W/generated-E-W-walk.png",
+    "bytes": 1803334,
+    "sha256": "97bda06aef6a6f094644d0cfec748166fbb7aeaee046d04a9b75eb000a8d7a76",
+    "copied_sha256": "97bda06aef6a6f094644d0cfec748166fbb7aeaee046d04a9b75eb000a8d7a76",
+    "bytes_unchanged": true
+  },
+  "reference_SHA_rechecks": [
+    {
+      "path": "/workspace/scratch/pr100-resume/transform328-source.png",
+      "sha256_after": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/generated_images/exec-715ba4a8-2acd-463c-b27c-54f0367e93ce.png",
+      "sha256_after": "081769ef2a777d352a670ce1cf04efc83493d8aa16d92cdf47f20cb7dd8cc62d",
+      "unchanged": true
+    }
+  ]
+}

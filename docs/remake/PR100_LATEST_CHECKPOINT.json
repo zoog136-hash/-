@@ -1,5 +1,5 @@
 {
-  "observed_at_utc": "2026-10-15T13:37:06.254522+00:00",
+  "observed_at_utc": "2026-10-15T13:46:23.977097+00:00",
   "repository": "zoog136-hash/-",
   "pr": 100,
   "branch": "feature/twilight-animation-20261013",
@@ -22,7 +22,8 @@
       60
     ],
     "individual_Main_eight_direction": 103,
-    "durable_Main_reports": 219
+    "durable_Main_reports": 219,
+    "supplemental_existing3_Main_reports_this_resume": 6
   },
   "new_completed": [
     "transform:349 알비노 악어거북",
@@ -39,8 +40,15 @@
     "original_reference_SHA_checks": 222,
     "resumed_importer_and_coverage_tests_passed": 56,
     "resumed_existing3_headless_checks": 7631,
-    "resumed_existing3_OpenGL": "in_progress",
-    "transform328_actual_Main": "not_run"
+    "resumed_existing3_OpenGL": "success",
+    "transform328_actual_Main": "not_run_incomplete_unlinked",
+    "resumed_existing3_OpenGL_checks": 6650,
+    "resumed_existing3_Main_failures": 0,
+    "resumed_existing3_Main_captured_PNGs": 480,
+    "resumed_existing3_Main_Git_representative_PNGs": 18,
+    "resumed_all480_PNG_bodies_inGit": false,
+    "transform376_actual_Main": "not_run_incomplete_unlinked",
+    "resumed_production_map_diff_files": 0
   },
   "new_WIP_HOLD": [
     "말하는 섬 들개",
@@ -48,7 +56,8 @@
     "알비노 피쉬맨",
     "서커스단 카드 마술사360",
     "서커스단 단장357",
-    "검은 토끼 소녀328"
+    "검은 토끼 소녀328",
+    "베테랑 낚시꾼 폴376"
   ],
   "previous_HOLD": [
     "화염의 엔트407",
@@ -65,21 +74,29 @@
     "animation": {
       "run": 38737764970,
       "sha": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
-      "status": "queued_overall_batch21_success"
+      "status": "queued_overall_2success_2inprogress_26queued"
     },
     "Android": {
       "run": 38722918015,
       "sha": "ce19943619ba8ea0874446e6eee72ee3926bf739",
       "status": "success",
       "device_tested": false
-    }
+    },
+    "observed_at_utc": "2026-10-15T13:41:42Z"
   },
   "main_conflict_unresolved": true,
-  "next": "Independent review of one focused2direction walk repair cycle for328, still HOLD; complete all8/5roles+Main before linking. Then376 small trial if328 remains HOLD. Do not regenerate previous HOLD actors.",
+  "next": "Read latestremoteHEAD/CI. Do not bulk-repeat328/376 or partially import. First obtain and independently verify a single opposite support/occlusion keypose; then registeredplayback, all8directions and all5roles, then actualMain before any completion. Prior HOLDactors unchanged.",
   "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
   "remote_snapshot_bytes": 13916,
   "remote_snapshot_sha256": "5959dacc572e4d20f01001c99aa48891cbe9b193e9706d619f4d5064e2e81cd5",
   "session_base_head": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
   "observed_main_head": "e2119c37293a783e93b421ee0055d1318271b071",
-  "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json"
+  "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
+  "last_pushed_checkpoint": "b6ba7ba73d7c5fae24051db1e719193c74b681fb",
+  "current_WIPs": [
+    "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
+    "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/fisherman376-wip/checkpoint.json"
+  ],
+  "resumed_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015",
+  "resumed_blocker": "Newly drawn multi-pose sheets pass distinctpixels/components but repeat same support leg. 328 focusedS onlypartialpass; remaining7directions/5roles and376E fail visualgate. No new runtimeconnections."
 }

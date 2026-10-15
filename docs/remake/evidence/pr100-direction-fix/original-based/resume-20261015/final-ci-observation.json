@@ -1,0 +1,282 @@
+{
+  "observed_at_utc": "2026-10-15T13:41:42Z",
+  "repository": "zoog136-hash/-",
+  "documentation_checkpoint_sha": "b6ba7ba73d7c5fae24051db1e719193c74b681fb",
+  "checkpoint_checks": {
+    "check_runs": 0,
+    "check_run_details": [],
+    "commit_statuses": []
+  },
+  "runs": [
+    {
+      "id": 38731518098,
+      "name": "TWILIGHT Integration Validate",
+      "url": "https://github.com/zoog136-hash/-/actions/runs/38731518098",
+      "head_sha": "031d747d34ab0df2e28361b0236e7c4ac79e2f0e",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "workflow_dispatch",
+      "updated_at": "2026-10-15T13:32:49Z",
+      "job_status_counts": {
+        "success": 1
+      },
+      "actual_failures": [],
+      "jobs": [
+        {
+          "id": 116410183066,
+          "name": "godot-integration",
+          "status": "completed",
+          "conclusion": "success",
+          "active_steps": []
+        }
+      ]
+    },
+    {
+      "id": 38737764970,
+      "name": "Animation Presentation Validate",
+      "url": "https://github.com/zoog136-hash/-/actions/runs/38737764970",
+      "head_sha": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
+      "status": "queued",
+      "conclusion": null,
+      "event": "workflow_dispatch",
+      "updated_at": "2026-10-15T12:50:45Z",
+      "job_status_counts": {
+        "queued": 26,
+        "in_progress": 2,
+        "success": 2
+      },
+      "actual_failures": [],
+      "jobs": [
+        {
+          "id": 116431345142,
+          "name": "Original-based batch20 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345291,
+          "name": "presentation",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345322,
+          "name": "Original-based batchtransform-regression / shared engine per mode",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_steps": [
+            {
+              "name": "Import actual TWILIGHT project once",
+              "status": "in_progress",
+              "conclusion": null
+            }
+          ]
+        },
+        {
+          "id": 116431345357,
+          "name": "Original-based batch18 / shared engine per mode",
+          "status": "in_progress",
+          "conclusion": null,
+          "active_steps": [
+            {
+              "name": "Configured production Main cases in one OpenGL engine",
+              "status": "in_progress",
+              "conclusion": null
+            }
+          ]
+        },
+        {
+          "id": 116431345383,
+          "name": "Original-based batch16 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345438,
+          "name": "Original-based batch21 / shared engine per mode",
+          "status": "completed",
+          "conclusion": "success",
+          "active_steps": []
+        },
+        {
+          "id": 116431345507,
+          "name": "Original-based batch15 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345557,
+          "name": "Original-based batch19 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345645,
+          "name": "Original-based Main / ogre-reaper",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345679,
+          "name": "Original-based batch17 / shared engine per mode",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345698,
+          "name": "Original-based Main / cockatrice-spear",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345757,
+          "name": "Original-based Main / bugbear-sand-worm-reaper",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345791,
+          "name": "Original-based Main / succubus-field",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345808,
+          "name": "Original-based Main / succubus-regional",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345811,
+          "name": "Original-based Main / iron-golem-ghoul",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345839,
+          "name": "Original-based Main / king-bugbear-ettin",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345855,
+          "name": "Original-based Main / penguin-pan-transform",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345972,
+          "name": "Original-based Main / crabman-asitagio",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431345983,
+          "name": "Original-based Main / snowman-yeti",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346032,
+          "name": "Original-based Main / spear-guards",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346037,
+          "name": "Original-based Main / golems-cyclops",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346046,
+          "name": "Original-based Main / lizard-regional",
+          "status": "completed",
+          "conclusion": "success",
+          "active_steps": []
+        },
+        {
+          "id": 116431346072,
+          "name": "Original-based Main / frog-fire-egg",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346103,
+          "name": "Original-based Main / horn-cerberus",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346105,
+          "name": "Original-based Main / werewolf-ghost",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346151,
+          "name": "Original-based Main / bone-dragons",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346158,
+          "name": "Original-based Main / crab-kraken-transform",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346191,
+          "name": "Original-based Main / wolf-tiger-basilisk",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346224,
+          "name": "Original-based Main / harpy-lycanthrope",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        },
+        {
+          "id": 116431346236,
+          "name": "Original-based Main / salah-boss",
+          "status": "queued",
+          "conclusion": null,
+          "active_steps": []
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "Integration run has terminal success on its recorded implementation SHA.",
+    "Full animation workflow has no terminal verdict; keep full animation revalidation unverified.",
+    "No actual failed jobs at observation, therefore no failure logs to inspect.",
+    "Documentation checkpoint itself has no check-runs or commit statuses; older workflow_dispatch successes must not be labeled as runs on this SHA.",
+    "No PR, repository, workflow mutations or waits performed."
+  ]
+}

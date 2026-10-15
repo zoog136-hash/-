@@ -4,7 +4,7 @@
   "base_head": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
   "source": "assets/catalog/96c155500a24fa3048b0f5d0.png",
   "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
-  "status": "HOLD_NOT_RUNTIME_CONNECTED",
+  "status": "HOLD: focused repair cycle finished; seven directions still fail alternate-leg visual proof",
   "completed_added": 0,
   "main_validation": "not_run_for328",
   "claim": "New catalog-reference-based2D art; no recovered original animation claim",
@@ -15,7 +15,7 @@
   "E_walk2": "Registered diagnostic passes fixedline support/body alignment; band continuity/gameplay naturalness not approved",
   "all5roles8directions_complete": false,
   "preserve_all_failed_images": true,
-  "next": "One focused repair cycle: four independent two-direction/three-phase sheets. Remain HOLD until all8direction animation+scale+Main passes.",
+  "next": "Do not batch-expand328. Obtain a genuinely opposite support/occlusion keypose before further8direction authoring. Preserve S-only static endpoint success; all other directions remain HOLD.",
   "files": [
     {
       "path": "E-walk1.png",
@@ -41,6 +41,136 @@
       "path": "eight-direction-walk1.png",
       "bytes": 1419981,
       "sha256": "2e9d414ea9121abe8a9bcef297dc5a05e16609ef7085ca71480a0308091705ba"
+    },
+    {
+      "path": "focused-walk/E-W/exact-prompt.txt",
+      "bytes": 3929,
+      "sha256": "07687f120df663f20c0d40d9b0ccf575026b7d9ccd352baf5abd5a3e4d51a0bf"
+    },
+    {
+      "path": "focused-walk/E-W/generated-E-W-walk.png",
+      "bytes": 1803334,
+      "sha256": "97bda06aef6a6f094644d0cfec748166fbb7aeaee046d04a9b75eb000a8d7a76"
+    },
+    {
+      "path": "focused-walk/E-W/generation-record.json",
+      "bytes": 1710,
+      "sha256": "98df2cd5f49326b2200db313d67ccfbddee17b556bfb422095460e2d8c1ad5e4"
+    },
+    {
+      "path": "focused-walk/E-W/geometry.json",
+      "bytes": 2334,
+      "sha256": "9b37d7236db0aea32cd3a84e6a78cf24ddb6931fe7731a7ca2a9291e5442591e"
+    },
+    {
+      "path": "focused-walk/E-W/static-review.json",
+      "bytes": 2563,
+      "sha256": "b80bd536d7b4d84d2bd9e71a36334a378aafb2fb1ccac02e37d199fbf7adfa19"
+    },
+    {
+      "path": "focused-walk/S-N/author-review.json",
+      "bytes": 2507,
+      "sha256": "4d8d882caefe339cb362dc6e65de9e41fbdaf7be51f6a4874c4183b38cd4c180"
+    },
+    {
+      "path": "focused-walk/S-N/candidate.png",
+      "bytes": 1927322,
+      "sha256": "128e68918a0a55de5f75716fa4401df4664d169a1ddb3778babb7e9fa1926f85"
+    },
+    {
+      "path": "focused-walk/S-N/geometry.json",
+      "bytes": 2336,
+      "sha256": "74d610785b38ab94a33637fb3b0f01597482838159fba609ed9084343c5990b3"
+    },
+    {
+      "path": "focused-walk/S-N/prompt.txt",
+      "bytes": 4422,
+      "sha256": "579c183efa192d278be8f89c231c65cffb4e788cbe331ead58b30dcf25ca8868"
+    },
+    {
+      "path": "focused-walk/S-N/validation.json",
+      "bytes": 2675,
+      "sha256": "c49d02cfcaf65b859f7747ee6d5270aaca4d15e5b9ca7cf2c0416419b5492459"
+    },
+    {
+      "path": "focused-walk/SE-NW/diagnostic.json",
+      "bytes": 3888,
+      "sha256": "c804c5e2fdebb0ea9190dd4dac114b1fc2e9ae1648067c29519f43ae6e1ac29a"
+    },
+    {
+      "path": "focused-walk/SE-NW/generated.png",
+      "bytes": 1823480,
+      "sha256": "a6d301208a795b71c9aae7ebb928fa83c87a7c1b35090406d521966f65b7bb4c"
+    },
+    {
+      "path": "focused-walk/SE-NW/prompt.txt",
+      "bytes": 3945,
+      "sha256": "4eaaa626ca149c0f27ea53ca602182f83b63ea3eb9b99a705a0745c2f2152682"
+    },
+    {
+      "path": "focused-walk/SW-NE/diagnostic.json",
+      "bytes": 4816,
+      "sha256": "630857c23d107b62b4d6974344ab64cf7d2752a49be271a7b87227ca9abf8bc3"
+    },
+    {
+      "path": "focused-walk/SW-NE/generated-walk-SW-NE.png",
+      "bytes": 1858676,
+      "sha256": "b3fff60b6b2259a7866378f85a1a3319070f5392cea566de9270174805345726"
+    },
+    {
+      "path": "focused-walk/SW-NE/prompt.txt",
+      "bytes": 3919,
+      "sha256": "c430ada89bfc7d4b30f6c6e6bb4e56c7351b3f57096bbd9a119ce4699bc11a1b"
+    },
+    {
+      "path": "focused-walk/independent-geometry.json",
+      "bytes": 1911,
+      "sha256": "56f7b687b53f2a0099609dadf88ce292bd524d8fa946c5472624c47cf3628fcd"
+    },
+    {
+      "path": "focused-walk/independent-review.json",
+      "bytes": 9099,
+      "sha256": "df1b525236d7c40ea33298face7436aaebd6775bee6c3927b9d6649543fa3411"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/N-c1-legs.png",
+      "bytes": 42432,
+      "sha256": "dd6ec4fbc713914a2d79780168b0fc3f5ccb7e6adab08a5b61213d29e20491cd"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/N-c3-legs.png",
+      "bytes": 43147,
+      "sha256": "9f4fb44cdb38251f331df5ed26c3d31cfdba9307e615811e5900aed2e79a6684"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/NW-c1-legs.png",
+      "bytes": 72188,
+      "sha256": "4f6320bac41feb4642f9061e409edaeab6299026e936728f9297ff2f09565cae"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/NW-c3-legs.png",
+      "bytes": 77006,
+      "sha256": "ea45bcf1122565790d620fae39b781c8fd54abfd97652d9f49312ac5df9cbf4b"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/S-c1-legs.png",
+      "bytes": 39003,
+      "sha256": "e297c57087f9b9012014a746c1bdce692b7031fc63c1577383e8c1bf39e24dfd"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/S-c3-legs.png",
+      "bytes": 41449,
+      "sha256": "d9ce66620487a9b93e2d080815eaed7776dfbb5f92fe266a0081e8bdf5e865c4"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/SE-c1-legs.png",
+      "bytes": 64229,
+      "sha256": "67705f7b6c3f06a63bb471669eddc9e2dee2fe991a828155922476ad0155acd7"
+    },
+    {
+      "path": "focused-walk/independent-validation-crops/SE-c3-legs.png",
+      "bytes": 64913,
+      "sha256": "592abac2eab6999fd8ea322ef7ac4c7f5820b0710cc064f1b59c04a21e64084d"
     },
     {
       "path": "guide1.png",
@@ -213,5 +343,15 @@
       "sha256": "081769ef2a777d352a670ce1cf04efc83493d8aa16d92cdf47f20cb7dd8cc62d"
     }
   ],
-  "eight_direction_walk1": "HOLD: seven actual rows/21 drawn figures; only19 separated components; strict24pose failure; Wmissing, sameleg endpoints, inconsistentscale"
+  "eight_direction_walk1": "HOLD: seven actual rows/21 drawn figures; only19 separated components; strict24pose failure; Wmissing, sameleg endpoints, inconsistentscale",
+  "focused_walk": {
+    "sheets": 4,
+    "drawn_poses": 24,
+    "geometry": "All four sheets strict6separated/complete-visible-region PASS, no threshold relaxation",
+    "independent_visual": "S static endpoint switch PASS; E/SE/SW/W/NW/N/NE HOLD",
+    "full_8direction_animation_passed": false,
+    "all5roles_complete": false,
+    "actual_Main": "not_run",
+    "completed_added": 0
+  }
 }

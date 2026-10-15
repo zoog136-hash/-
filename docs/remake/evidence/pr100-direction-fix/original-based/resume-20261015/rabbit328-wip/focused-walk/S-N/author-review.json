@@ -1,0 +1,35 @@
+{
+  "status": "HOLD",
+  "character": "transform:328",
+  "scope": "Single S/N focused three-phase walking study only",
+  "image_generation_calls": 1,
+  "candidate_png": "/workspace/scratch/pr100-resume/focused-walk/S-N/candidate.png",
+  "unchanged_generation_png": "/workspace/generated_images/exec-29cdfb6c-9fd2-4a32-a2f4-7cc1869ef668.png",
+  "prompt": "/workspace/scratch/pr100-resume/focused-walk/S-N/prompt.txt",
+  "validation": "/workspace/scratch/pr100-resume/focused-walk/S-N/validation.json",
+  "automatic_geometry": {
+    "strict_analyze": "PASS",
+    "distinct_frames": 6,
+    "complete_pose_regions": "PASS",
+    "thresholds_relaxed": false,
+    "diagnostic_canvas": [
+      1024,
+      1024
+    ]
+  },
+  "visual_review": {
+    "front_back": "PASS: top row is direct front with both eyes/chest; bottom row is direct back with face hidden and rear bow.",
+    "identity_proportions": "Broadly matches guide3 rounded silver bob, large head, compact torso, sleeves/cuffs, dark bodice, pleated gold-hem skirt and small rear bow. No prop. Not a final game-scale approval.",
+    "S_gait": "FAIL requested phase-side mapping: column1 shows screen-RIGHT foot/knee leading toward viewer, while column3 shows screen-LEFT leading. Contact feet do alternate, but requested anatomical right-contact then passing then left-contact ordering is not met. Center passing raises screen-RIGHT knee with screen-LEFT support.",
+    "N_gait": "FAIL: columns1 and3 both keep the prominent screen-RIGHT lower leg/shoe down toward viewer and screen-LEFT shoe higher/smaller; clear opposite-leg thigh/knee/ankle depth reversal is not established. Center passing lifts screen-RIGHT shoe with screen-LEFT support, opposite the requested anatomical support.",
+    "leg_attachment": "No obvious detached torso or limbs; six whole connected silhouettes confirmed by importer.",
+    "margins": "FAIL requested 15% vertical safety margin. Alpha>100 bounds reach y16 for top-row poses and y516 for bottom-center pose, only 3.1% and 0.8% of row height from cell top. N contact bottoms vary1006/993/1001, so common baseline is also not exact.",
+    "distinctness_note": "Six distinct visible frames and no omitted visible pixels do not prove correct leg alternation."
+  },
+  "no_runtime_import": true,
+  "no_profile_change": true,
+  "no_repository_change": true,
+  "no_Main_run": true,
+  "no_completion_claim": true,
+  "next_action": "Parent independent QA. No second generation made; preserve as HOLD, not approved walk animation."
+}

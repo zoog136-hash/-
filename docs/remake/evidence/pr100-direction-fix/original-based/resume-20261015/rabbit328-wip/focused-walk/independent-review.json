@@ -1,0 +1,113 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_focused_direction_pair_walk_visual_qa",
+  "source_reference": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_reference_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "overall_verdict": "HOLD",
+  "completed_added": 0,
+  "full_eight_direction_animation_approved": false,
+  "partial_import_approved": false,
+  "review_method": "Direct independent inspection of all four unmodified sheets and exact-pixel validation crops. Author verdicts were not used to infer leg support. Direction, visible endpoint anatomy, costume continuity, geometry and runtime approval are separate checks.",
+  "per_direction": {
+    "E": {
+      "sheet": "E-W/generated-E-W-walk.png",
+      "sha256": "97bda06aef6a6f094644d0cfec748166fbb7aeaee046d04a9b75eb000a8d7a76",
+      "physical_row": 1,
+      "compass": "pass_E_profile",
+      "gait_verdict": "HOLD_REPEATED_SUPPORT_ENDPOINT",
+      "column1": "The prominent banded leg emerges on the right/forward side below the skirt and extends down-right to the forward shoe. The plain leg sweeps back-left.",
+      "column3": "The banded leg still occupies the right/forward side and the plain leg still sweeps back-left. The forward shoe lifts/rotates slightly, but the thigh/ankle topology does not reverse.",
+      "passing": "Column 2 is a readable bent-knee passing pose, insufficient to establish alternate endpoints.",
+      "partial_success": "Correct profile, connected legs, readable passing pose and consistent broad identity."
+    },
+    "W": {
+      "sheet": "E-W/generated-E-W-walk.png",
+      "physical_row": 2,
+      "compass": "pass_W_profile",
+      "gait_verdict": "HOLD_REPEATED_SUPPORT_ENDPOINT",
+      "column1": "Banded thigh extends down-left to the forward left-pointing shoe; the other thigh and shoe extend back-right.",
+      "column3": "Banded thigh and forward shoe remain down-left and the other leg remains back-right. Changes in ankle angle and skirt do not reverse which thigh leads.",
+      "partial_success": "Correct W is present, unlike the prior crowded seven-row sheet; six figures are safely separated."
+    },
+    "SE": {
+      "sheet": "SE-NW/generated.png",
+      "sha256": "a6d301208a795b71c9aae7ebb928fa83c87a7c1b35090406d521966f65b7bb4c",
+      "physical_row": 1,
+      "compass": "pass_SE",
+      "gait_verdict": "HOLD_REPEATED_SUPPORT_ENDPOINT",
+      "column1": "The dark-band thigh is the large foreground leg angling down-right toward the forward shoe; the smaller plain leg angles back-left to the lifted shoe.",
+      "column3": "The dark-band thigh remains the large down-right foreground leg and the plain thigh still angles back-left. The front shoe changes pitch but the same banded thigh is still forward. No near-forward to near-back reversal is visible.",
+      "evidence_crops": ["independent-validation-crops/SE-c1-legs.png","independent-validation-crops/SE-c3-legs.png"],
+      "partial_success": "Correct diagonal identity and clean six-pose packing; the apparent band movement does not establish opposite anatomical support."
+    },
+    "NW": {
+      "sheet": "SE-NW/generated.png",
+      "physical_row": 2,
+      "compass": "pass_NW",
+      "gait_verdict": "HOLD_REPEATED_SUPPORT_ENDPOINT",
+      "column1": "The smaller banded thigh angles down-left from the hem to the left/leading shoe. The larger plain thigh angles down-right to the right/rear shoe with a lifted heel.",
+      "column3": "The smaller banded thigh still angles down-left to the same leading shoe; the larger plain thigh still angles down-right to the rear shoe. The rear shoe becomes flatter and the skirt shifts, but the physical thigh paths and ankle ordering do not swap.",
+      "evidence_crops": ["independent-validation-crops/NW-c1-legs.png","independent-validation-crops/NW-c3-legs.png"],
+      "partial_success": "A true back-left view is preserved, with distinct passing artwork and no detached legs."
+    },
+    "S": {
+      "sheet": "S-N/candidate.png",
+      "sha256": "128e68918a0a55de5f75716fa4401df4664d169a1ddb3778babb7e9fa1926f85",
+      "physical_row": 1,
+      "compass": "pass_S",
+      "gait_verdict": "PASS_STATIC_OPPOSITE_ENDPOINT_SWAP_ONLY",
+      "column1": "The viewer-right leg extends toward the viewer and its shoe reaches the lower baseline. The viewer-left leg/shoe is shorter and raised behind.",
+      "column3": "The viewer-left leg now extends toward the viewer and reaches the lower baseline, while the viewer-right leg/shoe is raised behind. The hip-side extension actually swaps; this is a real visible partial success rather than the same-leading-leg failure seen in the other focused directions.",
+      "passing": "Column 2 has the viewer-left support foot down and viewer-right knee lifted. It is a genuine distinct high-knee stance.",
+      "costume_continuity": "The low dark band visible on the forward viewer-right knee in column 1 is not at an invariant knee-relative location in the other phases. Preserve the endpoint success, but resolve stocking-band continuity rather than treating it as final animation approval.",
+      "evidence_crops": ["independent-validation-crops/S-c1-legs.png","independent-validation-crops/S-c3-legs.png"],
+      "partial_success": "Retain the S endpoint alternation as a useful pilot result. Registration, natural loop timing, ground placement, band continuity and actual Main scale still require validation."
+    },
+    "N": {
+      "sheet": "S-N/candidate.png",
+      "physical_row": 2,
+      "compass": "pass_N",
+      "gait_verdict": "HOLD_REPEATED_SUPPORT_ENDPOINT",
+      "column1": "The viewer-right leg is larger and extends down to the lower rear heel; the viewer-left leg/shoe remains higher behind.",
+      "column3": "The viewer-right leg again extends down to the lower heel and the viewer-left foot stays higher. The band disappears from the large leg and appears higher on the smaller leg, but costume changes cannot be counted as an anatomical swap when the thigh paths repeat.",
+      "evidence_crops": ["independent-validation-crops/N-c1-legs.png","independent-validation-crops/N-c3-legs.png"],
+      "partial_success": "Correct back direction and readable middle raised-sole pose; it does not preserve the S row's successful endpoint swap."
+    },
+    "SW": {
+      "sheet": "SW-NE/generated-walk-SW-NE.png",
+      "sha256": "b3fff60b6b2259a7866378f85a1a3319070f5392cea566de9270174805345726",
+      "physical_row": 1,
+      "compass": "pass_SW",
+      "gait_verdict": "HOLD_REPEATED_SUPPORT_ENDPOINT",
+      "column1": "The down-left leg/shoe leads and is planted; the other leg sweeps back-right with its heel lifted.",
+      "column3": "The same down-left thigh/shoe leads and the other leg remains swept back-right. The visible band position and arm swing vary, but there is no reversed thigh/ankle overlap.",
+      "partial_success": "Correct front-left direction and separated readable phases, including a distinct bent-knee passing pose."
+    },
+    "NE": {
+      "sheet": "SW-NE/generated-walk-SW-NE.png",
+      "physical_row": 2,
+      "compass": "pass_NE",
+      "gait_verdict": "HOLD_REPEATED_SUPPORT_ENDPOINT",
+      "column1": "The large near thigh angles down-left to the rear/lower-left shoe; the other leg points up-right toward the leading shoe.",
+      "column3": "The same large near thigh remains down-left and the other leg stays directed toward the up-right shoe. Pose 3 changes the rear shoe pitch but does not exchange near and far thigh paths.",
+      "partial_success": "Correct rear-right direction, compact back bow and clean sheet packing."
+    }
+  },
+  "geometry": {
+    "report": "independent-geometry.json",
+    "all_four_sheets": "PASS six separated poses and complete pose regions each using existing alpha/component thresholds",
+    "analysis_configuration": "rows_count=3, directions_axis='rows', the actual canonical direction pair, reference_rows=[0,1,2], canvas_size=1024",
+    "canvas": "diagnostic fit only, no final scale approval",
+    "meaning": "Geometry passes do not establish leg alternation, anatomical costume continuity, floor contact or motion quality."
+  },
+  "shared_observations": [
+    "All eight intended compass directions are now represented across the four sheets; the former missing-W and merged-region failures are improved.",
+    "Major hair/cap, sleeves, bodice, skirt, cuffs and shoes remain recognizable and no giant tail/loops or new weapon appear.",
+    "No obvious disconnected torso/leg, extra limb or cropped body was found in these static figures.",
+    "One of eight directions has a clear static endpoint swap; zero directions receive full runtime motion approval here.",
+    "No registered playback, actual Main validation, gameplay scale approval or comparison against an approved completed actor was performed in this independent focused-sheet review."
+  ],
+  "source_pixels_modified": false,
+  "validation_crops": "Exact source-pixel crops for inspection only; no resizing, recoloring, new poses or production import.",
+  "counts_as_completed_entity": false
+}
