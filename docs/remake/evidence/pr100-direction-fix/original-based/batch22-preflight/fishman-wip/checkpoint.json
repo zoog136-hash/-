@@ -4,10 +4,10 @@
   "roles_passed": [
     "idle",
     "walk",
-    "attack"
+    "attack",
+    "hit"
   ],
   "roles_remaining": [
-    "hit",
     "death"
   ],
   "validated_idle_unique_poses": 16,
@@ -95,6 +95,26 @@
       "path": "attack-v2.visual-review.json",
       "bytes": 588,
       "sha256": "f36fa26fe03ab73b192007b15716f937dca630881e66f450196ec72d772df392"
+    },
+    {
+      "path": "hit-v1.png",
+      "bytes": 2208266,
+      "sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0"
+    },
+    {
+      "path": "hit-v1.prompt.txt",
+      "bytes": 3220,
+      "sha256": "cbed3581abbc5ceb2d7b8b439586526a1f142dd9c9fae398a5d3a11ec5abc2a4"
+    },
+    {
+      "path": "hit-v1.geometry.json",
+      "bytes": 283,
+      "sha256": "0ba1245c23ad334a15e23e4723cfa019e0606cfe645e57ef5816bae280eb11b9"
+    },
+    {
+      "path": "hit-v1.visual-review.json",
+      "bytes": 472,
+      "sha256": "2f61454dd2fa40bb3f61f2d18acd999d81ca186b9444cbde34749c2d3ed8f78b"
     }
   ],
   "rejected_archive": {
@@ -103,7 +123,7 @@
     "sha256": "bfb993ea072c80961d83828a82485d2d84510e88b62a4d398001bebc9c71d2e2",
     "crc_ok": true
   },
-  "validated_unique_poses_so_far": 64,
+  "validated_unique_poses_so_far": 80,
   "normalization_note": "Walk source art is larger than idle; importer proportional virtual canvas is required, not a forced common512 canvas",
   "walk_rejected_archive": {
     "path": "walk-v1-rejected.zip",
@@ -119,5 +139,13 @@
     "sha256": "9b1a3dff2431bc974513db914f54c0d41474351eac14dcaade0269c50053e0a6",
     "crc_ok": true,
     "reason": "First spear contact poses intruded into neighboring crop regions"
+  },
+  "hit_normalization_note": "Expected proportional canvas536: neutral body96px matches idle95.75px; explicit weapon-independent foot anchors still required.",
+  "death_rejected_archive": {
+    "path": "death-v1-rejected.zip",
+    "bytes": 2170730,
+    "sha256": "23a697a02926d70ea4a52e2ba8e4f9646566f83a85e28c3fbfac138d38438cde",
+    "crc_ok": true,
+    "reason": "Only20 of24 required bodies; no duplicate frames or guessed mapping accepted."
   }
 }

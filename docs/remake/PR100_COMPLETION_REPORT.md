@@ -1,3 +1,9 @@
+## 2026-10-15 · Android 통과 / 피쉬맨 피격 WIP 보존
+
+완료 **374/498·잔여124·개별Main103 유지**. 피쉬맨은4/5동작80실포즈 정적검토통과, 사망1차는24필요중20만생성되어거절/ZIP보존했다. **미연결·Main미실행·신규완료0**. 마지막사망재시도와실제발anchor검토후에만Main으로진행한다. 공격S창끝을ground로쓰지않도록per-pose발기준점을검토한다. [WIP](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json). 공격보존 `baf264c0ed09139f2dc437b7093167e42d44be03` push·원격일치확인.
+
+[ce199 Android38722918015](https://github.com/zoog136-hash/-/actions/runs/38722918015) **SUCCESS**, verifier passed=true/ARM64/failures0. workflow APK SHA256 `08fb065357e0e7774203b76f61ee16dd40462b893cf0b70a97509639c286f8b2`, artifact11969130086(948719355bytes ZIP). [메타데이터](evidence/pr100-direction-fix/original-based/batch21-completed/ci-android-ce199-success.json). APK본체를별도다운로드/독립해시검사하지않았고Android실기기미검증이다. 현재까지runtime/game data는ce199와동일해완료374범위에해당한다. 통합ce199실행중·애니메이션dce5048대기중이며성공으로세지않는다.
+
 ## 2026-10-15 · 피쉬맨 공격 WIP 보존
 
 피쉬맨 **3/5동작(idle/walk/attack),64실포즈정적승인**. 공격수정본24포즈는8방향windup/전방창찌르기/recovery와창·그물·손연결,침범/누락/경계0을확인했다. 피격·사망미완성/런타임미연결/Main미실행이므로완료374/498·잔여124유지. 독립투명도/외형재검토도Main전에진행한다. PNG/SHA/정확prompt와공격1차거절ZIP을[WIP](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json)에보존한다. 이전이동보존 `603fd3d228ef4b2288992951247ada7b84fe3bde` push·원격일치확인.
