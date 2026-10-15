@@ -1,0 +1,400 @@
+{
+  "observed_at": "2026-10-15T12:52:13.337044+00:00",
+  "repository": "zoog136-hash/-",
+  "pr_number": 100,
+  "branch": "feature/twilight-animation-20261013",
+  "expected_code_checkpoint": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
+  "current_runtime_scope": {
+    "connected": 374,
+    "target": 498,
+    "remaining": 124,
+    "main_verified_subjects": 103,
+    "runtime_equivalent_to": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+    "integration_scope_checkpoint": "031d747d34ab0df2e28361b0236e7c4ac79e2f0e",
+    "latest_animation_scope_checkpoint": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3"
+  },
+  "observations": {
+    "run_38731518098": {
+      "conclusion": null,
+      "created_at": "2026-10-15T12:01:16Z",
+      "event": "workflow_dispatch",
+      "head_sha": "031d747d34ab0df2e28361b0236e7c4ac79e2f0e",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38731518098",
+      "id": 38731518098,
+      "name": "TWILIGHT Integration Validate",
+      "path": ".github/workflows/twilight-integration-validate.yml",
+      "run_started_at": "2026-10-15T12:01:16Z",
+      "status": "in_progress",
+      "updated_at": "2026-10-15T12:27:28Z"
+    },
+    "run_38737764970": {
+      "conclusion": null,
+      "created_at": "2026-10-15T12:50:41Z",
+      "event": "workflow_dispatch",
+      "head_sha": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38737764970",
+      "id": 38737764970,
+      "name": "Animation Presentation Validate",
+      "path": ".github/workflows/animation-presentation-validate.yml",
+      "run_started_at": "2026-10-15T12:50:41Z",
+      "status": "queued",
+      "updated_at": "2026-10-15T12:50:45Z"
+    },
+    "run_38722918015": {
+      "conclusion": "success",
+      "created_at": "2026-10-15T10:48:55Z",
+      "event": "workflow_dispatch",
+      "head_sha": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38722918015",
+      "id": 38722918015,
+      "name": "TWILIGHT Android ARM64 APK Playtest",
+      "path": ".github/workflows/twilight-android-playtest-apk.yml",
+      "run_started_at": "2026-10-15T10:48:55Z",
+      "status": "completed",
+      "updated_at": "2026-10-15T11:27:41Z"
+    },
+    "run_38722879756": {
+      "conclusion": "failure",
+      "created_at": "2026-10-15T10:48:35Z",
+      "event": "workflow_dispatch",
+      "head_sha": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38722879756",
+      "id": 38722879756,
+      "name": "TWILIGHT Integration Validate",
+      "path": ".github/workflows/twilight-integration-validate.yml",
+      "run_started_at": "2026-10-15T10:48:35Z",
+      "status": "completed",
+      "updated_at": "2026-10-15T11:57:13Z"
+    },
+    "run_38725467814": {
+      "conclusion": "cancelled",
+      "created_at": "2026-10-15T11:10:36Z",
+      "event": "workflow_dispatch",
+      "head_sha": "dce5048f17712c6c6d7a7ce97414e2f45e6756a4",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38725467814",
+      "id": 38725467814,
+      "name": "Animation Presentation Validate",
+      "path": ".github/workflows/animation-presentation-validate.yml",
+      "run_started_at": "2026-10-15T11:10:36Z",
+      "status": "completed",
+      "updated_at": "2026-10-15T12:16:26Z"
+    },
+    "run_38733313019": {
+      "conclusion": "cancelled",
+      "created_at": "2026-10-15T12:15:49Z",
+      "event": "workflow_dispatch",
+      "head_sha": "dead8bbe758d7772047c89c588112cf5bfa6a38a",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38733313019",
+      "id": 38733313019,
+      "name": "Animation Presentation Validate",
+      "path": ".github/workflows/animation-presentation-validate.yml",
+      "run_started_at": "2026-10-15T12:15:49Z",
+      "status": "completed",
+      "updated_at": "2026-10-15T12:34:21Z"
+    },
+    "run_38735655399": {
+      "conclusion": "cancelled",
+      "created_at": "2026-10-15T12:34:18Z",
+      "event": "workflow_dispatch",
+      "head_sha": "042e9dd294d168ae71e112392a3227592fc18f0a",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38735655399",
+      "id": 38735655399,
+      "name": "Animation Presentation Validate",
+      "path": ".github/workflows/animation-presentation-validate.yml",
+      "run_started_at": "2026-10-15T12:34:18Z",
+      "status": "completed",
+      "updated_at": "2026-10-15T12:50:51Z"
+    },
+    "run_38722899266": {
+      "conclusion": "cancelled",
+      "created_at": "2026-10-15T10:48:45Z",
+      "event": "workflow_dispatch",
+      "head_sha": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+      "html_url": "https://github.com/zoog136-hash/-/actions/runs/38722899266",
+      "id": 38722899266,
+      "name": "Animation Presentation Validate",
+      "path": ".github/workflows/animation-presentation-validate.yml",
+      "run_started_at": "2026-10-15T10:48:45Z",
+      "status": "completed",
+      "updated_at": "2026-10-15T11:10:55Z"
+    },
+    "jobs_38731518098": {
+      "active": [
+        {
+          "id": 116410183066,
+          "name": "godot-integration",
+          "started_at": "2026-10-15T12:27:27Z",
+          "steps": [
+            {
+              "name": "Full project regression, import, boot and all smoke tests",
+              "started_at": "2026-10-15T12:29:06Z"
+            }
+          ]
+        }
+      ],
+      "conclusion_counts": [
+        {
+          "conclusion": null,
+          "count": 1
+        }
+      ],
+      "failures": [],
+      "status_counts": [
+        {
+          "count": 1,
+          "status": "in_progress"
+        }
+      ],
+      "total_count": 1
+    },
+    "jobs_38737764970": {
+      "active": [],
+      "conclusion_counts": [
+        {
+          "conclusion": null,
+          "count": 32
+        }
+      ],
+      "failures": [],
+      "status_counts": [
+        {
+          "count": 32,
+          "status": "queued"
+        }
+      ],
+      "total_count": 32
+    },
+    "jobs_38725467814": {
+      "active": [],
+      "conclusion_counts": [
+        {
+          "conclusion": "cancelled",
+          "count": 13
+        },
+        {
+          "conclusion": "failure",
+          "count": 1
+        },
+        {
+          "conclusion": "success",
+          "count": 18
+        }
+      ],
+      "failures": [
+        {
+          "completed_at": "2026-10-15T11:57:46Z",
+          "id": 116390206661,
+          "name": "Original-based batchtransform-regression / shared engine per mode",
+          "started_at": "2026-10-15T11:24:43Z",
+          "steps": [
+            {
+              "completed_at": "2026-10-15T11:56:33Z",
+              "name": "Configured production Main cases in one OpenGL engine",
+              "started_at": "2026-10-15T11:36:33Z"
+            }
+          ]
+        }
+      ],
+      "status_counts": [
+        {
+          "count": 32,
+          "status": "completed"
+        }
+      ],
+      "total_count": 32
+    },
+    "jobs_38733313019": {
+      "active": [],
+      "conclusion_counts": [
+        {
+          "conclusion": "cancelled",
+          "count": 32
+        }
+      ],
+      "failures": [],
+      "status_counts": [
+        {
+          "count": 32,
+          "status": "completed"
+        }
+      ],
+      "total_count": 32
+    },
+    "jobs_38735655399": {
+      "active": [],
+      "conclusion_counts": [
+        {
+          "conclusion": "cancelled",
+          "count": 32
+        }
+      ],
+      "failures": [],
+      "status_counts": [
+        {
+          "count": 32,
+          "status": "completed"
+        }
+      ],
+      "total_count": 32
+    },
+    "pr": {
+      "base": {
+        "ref": "main",
+        "sha": "02842fdd123bf14db46bed91a3cb68c36fa8b9b1"
+      },
+      "draft": true,
+      "head": {
+        "ref": "feature/twilight-animation-20261013",
+        "sha": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3"
+      },
+      "html_url": "https://github.com/zoog136-hash/-/pull/100",
+      "mergeable": false,
+      "mergeable_state": "dirty",
+      "merged": false,
+      "number": 100,
+      "state": "open",
+      "updated_at": "2026-10-15T12:50:17Z"
+    },
+    "branch": {
+      "ref": "refs/heads/feature/twilight-animation-20261013",
+      "sha": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3"
+    }
+  },
+  "apk_success_evidence": {
+    "run_id": 38722918015,
+    "checkpoint": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+    "validation_summary": {
+      "passed": true,
+      "apk_sha256": "08fb065357e0e7774203b76f61ee16dd40462b893cf0b70a97509639c286f8b2",
+      "architectures": [
+        "arm64-v8a"
+      ],
+      "failures": []
+    },
+    "artifacts_metadata": {
+      "artifacts": [
+        {
+          "archive_download_url": "https://api.github.com/repos/zoog136-hash/-/actions/artifacts/11969130086/zip",
+          "created_at": "2026-10-15T11:27:37Z",
+          "digest": "sha256:79fb366d373ef0845b93b260cc7745aa7c66173b6a70d938fd5bd86a827c0c6f",
+          "expired": false,
+          "expires_at": "2027-01-13T10:48:56Z",
+          "id": 11969130086,
+          "name": "TWILIGHT_ANDROID_APK_ce19943619ba8ea0874446e6eee72ee3926bf739",
+          "size_in_bytes": 948719355
+        },
+        {
+          "archive_download_url": "https://api.github.com/repos/zoog136-hash/-/actions/artifacts/11969005203/zip",
+          "created_at": "2026-10-15T11:27:38Z",
+          "digest": "sha256:794d7b927b5472001e1ab3cee992d9aa9ddd21aaab183baaaf44d1e8ab3452bf",
+          "expired": false,
+          "expires_at": "2027-01-13T10:48:56Z",
+          "id": 11969005203,
+          "name": "TWILIGHT_ANDROID_EXPORT_LOGS",
+          "size_in_bytes": 1090392
+        }
+      ],
+      "total_count": 2
+    },
+    "apk_downloaded": false
+  },
+  "preserved_integration_failure": {
+    "run_id": 38722879756,
+    "checkpoint": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+    "conclusion": "failure",
+    "passed": 194,
+    "total": 198,
+    "skipped_count": 3,
+    "not_run_count": 0,
+    "skipped": [
+      "original_map_catalog_test",
+      "original_world_runtime_test",
+      "source_first_map_test"
+    ],
+    "failed": [
+      "original_based_transform_batch_test"
+    ],
+    "failed_step": "Full project regression, import, boot and all smoke tests",
+    "cause": "Guard RESULT JSON omitted failures array required by fail-closed classify_result; exit0 and _OK do not override this malformed report.",
+    "minimum_fix": "Add failures: failures to the actual guard RESULT object; retain parser strictness and real failure checks.",
+    "artifacts_metadata": {
+      "artifacts": [
+        {
+          "digest": "sha256:e7fde041ccce8923d64c90f5fa110b0bed27c006d30b9e1a186209992917cba2",
+          "expired": false,
+          "id": 11969809875,
+          "name": "twilight-integration-check-ce19943619ba8ea0874446e6eee72ee3926bf739",
+          "size_in_bytes": 255321
+        }
+      ],
+      "total_count": 1
+    },
+    "log_path": "/workspace/twilight-run/recovery/ci-38722879756-failed.log",
+    "log_bytes": 30008,
+    "artifact_downloaded": false
+  },
+  "preserved_individual_opengl_timeout": {
+    "run_id": 38725467814,
+    "job_id": 116390206661,
+    "head_sha": "dce5048f17712c6c6d7a7ce97414e2f45e6756a4",
+    "conclusion": "failure",
+    "confirmed_cause": "OpenGL command exceeded timeout 1200 seconds; process exit code 124",
+    "headless_step": "success",
+    "overall_run_conclusion": "cancelled; superseded later by dead8bb",
+    "job_failed_at": "2026-10-15T11:56:33.6868789Z",
+    "log_source": "GitHub connector fetch_workflow_job_logs, 1353577 characters; direct CLI log redirect unavailable",
+    "bounded_log_excerpt": [
+      "2026-10-15T11:25:36.1658140Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+      "2026-10-15T11:25:36.1658499Z   BATCH_TIMEOUT: 1200",
+      "2026-10-15T11:25:36.6296320Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+      "2026-10-15T11:25:36.6296595Z   BATCH_TIMEOUT: 1200",
+      "2026-10-15T11:25:43.2869684Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+      "2026-10-15T11:25:43.2869974Z   BATCH_TIMEOUT: 1200",
+      "2026-10-15T11:28:59.3303719Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+      "2026-10-15T11:28:59.3303986Z   BATCH_TIMEOUT: 1200",
+      "2026-10-15T11:36:33.6736965Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+      "2026-10-15T11:36:33.6737238Z   BATCH_TIMEOUT: 1200",
+      "2026-10-15T11:56:33.6868789Z ##[error]Process completed with exit code 124.",
+      "2026-10-15T11:56:33.6990840Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+      "2026-10-15T11:56:33.6991445Z   BATCH_TIMEOUT: 1200"
+    ],
+    "artifact": {
+      "id": 11970610314,
+      "name": "original-based-batchtransform-regression-dce5048f17712c6c6d7a7ce97414e2f45e6756a4",
+      "zip_bytes": 2419916993,
+      "downloaded": false
+    },
+    "capture_report_paths": [
+      "test-results/batchtransform-regression/render.txt",
+      "test-results/batchtransform-regression/render.json",
+      "test-results/batchtransform-regression/render-cases/"
+    ],
+    "artifact_access": {
+      "attempted": true,
+      "downloaded": false,
+      "tool_limit_bytes": 536870912,
+      "result": "InvalidInputException: artifact exceeds max size; no file reference returned"
+    }
+  },
+  "supersession_history": [
+    {
+      "cancelled_run": 38722899266,
+      "replacement_run": 38725467814,
+      "failure_jobs": "not_reclassified_as_pass"
+    },
+    {
+      "cancelled_run": 38725467814,
+      "replacement_run": 38733313019,
+      "earlier_individual_failure_retained": 116390206661
+    },
+    {
+      "cancelled_run": 38733313019,
+      "replacement_run": 38735655399
+    },
+    {
+      "cancelled_run": 38735655399,
+      "replacement_run": 38737764970
+    }
+  ],
+  "counting_policy": "queued/in_progress/cancelled/superseded are not successful validation; prior actual failures remain failures; private-original-map SKIP3 remains separate; no new dispatch/cancellation/branch/PR/merge performed by snapshot"
+}

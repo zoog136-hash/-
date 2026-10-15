@@ -1,0 +1,77 @@
+{
+  "observed_at_utc": "2026-10-15T12:54:15.982942+00:00",
+  "repository": "zoog136-hash/-",
+  "pr": 100,
+  "branch": "feature/twilight-animation-20261013",
+  "verified_code_checkpoint": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
+  "runtime_assets_checkpoint": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+  "counts": {
+    "target": 498,
+    "completed": 374,
+    "remaining": 124,
+    "hero_plus": [
+      139,
+      180
+    ],
+    "normal_monster": [
+      200,
+      258
+    ],
+    "boss": [
+      35,
+      60
+    ],
+    "individual_Main_eight_direction": 103,
+    "durable_Main_reports": 219
+  },
+  "new_completed": [
+    "transform:349 알비노 악어거북",
+    "transform:173 악몽의 잭 오 랜턴",
+    "transform:288 도구리"
+  ],
+  "validation": {
+    "importer_tests_passed": 50,
+    "batch21_headless_checks": 7819,
+    "batch21_OpenGL_checks": 7142,
+    "existing10_OpenGL_checks": 21673,
+    "existing10_OpenGL_seconds": 1185.2,
+    "local_failures": 0,
+    "original_reference_SHA_checks": 222
+  },
+  "new_WIP_HOLD": [
+    "말하는 섬 들개",
+    "검은숲 늑대",
+    "알비노 피쉬맨",
+    "서커스단 카드 마술사360",
+    "서커스단 단장357"
+  ],
+  "previous_HOLD": [
+    "화염의 엔트407",
+    "알비노 뿔개구리352",
+    "바포메트7"
+  ],
+  "all_new_WIP_runtime_connected": false,
+  "CI": {
+    "integration": {
+      "run": 38731518098,
+      "sha": "031d747d34ab0df2e28361b0236e7c4ac79e2f0e",
+      "status": "in_progress"
+    },
+    "animation": {
+      "run": 38737764970,
+      "sha": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
+      "status": "queued"
+    },
+    "Android": {
+      "run": 38722918015,
+      "sha": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+      "status": "success",
+      "device_tested": false
+    }
+  },
+  "main_conflict_unresolved": true,
+  "next": "Read live CI conclusions first; fix actual failures; then source-recheck transform328 and use small direction-specific trials. Do not start third attempts for HOLD actors.",
+  "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
+  "remote_snapshot_bytes": 13916,
+  "remote_snapshot_sha256": "5959dacc572e4d20f01001c99aa48891cbe9b193e9706d619f4d5064e2e81cd5"
+}

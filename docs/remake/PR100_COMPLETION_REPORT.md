@@ -1,3 +1,21 @@
+## 최신 인계 · 2026-10-15 · PR #100 유지
+
+**완료 374/498 (75.1%) · 미완료 124 · 실제 Main 개별8방향 103종.** 영웅이상139/180·일반200/258·보스35/60. 신규완료는 **알비노 악어거북349·악몽의 잭 오 랜턴173·도구리288, 3종**이다. 아래 과거 일지보다 이 인계와 [기계용 체크포인트](PR100_LATEST_CHECKPOINT.json)를 우선한다. 최신 원격 HEAD와 CI 결과는 재개할 때 다시 조회한다.
+
+- 기존 PR #100 / `feature/twilight-animation-20261013`에서만 작업했다. 마지막 검증 코드 **`166abe6b1b13fd15449d58b8e4762a6ecf42fcd3` push/원격일치 확인**. 원격회수7cec와 로컬13676c를 모두 조상으로 보존했다. main 충돌은 **미해결**, PR open/draft·미병합이다.
+- 신규3종 실제 Main: headless7,819 / OpenGL7,142 검사 실패0. 기존10종 OpenGL 회귀도21,673 검사/실패0·1185.20초 완주. player8방향80·피격/사망/respawn80·AI80·수동습득10 포함. 이번10종은 이미103종에 포함되어 새 개체수로 더하지 않는다. canonical coverage는기존209+회귀10=**219보고서**, 모든 경로/SHA 재검증했다.
+- 임포터 **50/50 PASS**. 기존완성파일 덮어쓰기 방지·원자적preflight·동일입력bytes/mtime 유지. `directions` subset은 최종5동작 모두8방향이 모여야 적용하며 explicitcanvas/scale note 필수. 숨은alpha0 RGB/투명여백만 다른 동일visible포즈도 원본수정 없이 거절한다. 실제동작 품질은 별도 시각검토가 필요하다.
+- **WIP5종 HOLD/미연결**: 들개·늑대(crop), 피쉬맨(사망20/24 반복), 카드360(방향/카드손), 단장357(공격2 crop). 부분승인/실패PNG·정확prompt·검사·ZIP/SHA는각checkpoint에보존했다. 단장승인35포즈는완료가아니다. 기존엔트407·뿔개구리352는3fb프로필 유지, 바포메트7도보류다. 추가세번째제작을시작하지않는다.
+- 원본참조222 SHA/크기/영역 및 기존완성자산·게임기능/Main 보호감사 PASS. 런타임프로필 변경은승인3종뿐이다. 현재game data/assets/scripts/Main은 **ce199와 동일**하다.
+
+**CI 관측 상태:** [통합031 / 38731518098](https://github.com/zoog136-hash/-/actions/runs/38731518098) 실행 중, [최종코드166 애니메이션38737764970](https://github.com/zoog136-hash/-/actions/runs/38737764970) 대기 중. 성공으로 세지 않는다. [Android ce199 / 38722918015](https://github.com/zoog136-hash/-/actions/runs/38722918015)는 ARM64 verifier성공이며 현재동일런타임374범위다. APK본문 별도다운로드/독립해시·실기기 검증은하지않았다.
+
+과거통합은194PASS+3SKIP(비공개맵)+1FAIL이며 actualfailures배열누락을031에서수정했다. 이전10종OpenGL은1200초 timeout/exit124로실패했고 042에서해당render만2400초로수정했다. 모든검사·PNG캡처는그대로, 작은diagnostics artifact와 전체PNG artifact만분리했다. 취소된이전run과실제실패는구별해보존했다. [원격스냅샷](evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json).
+
+**재개 순서:** 최신HEAD/CI결론 확인→실제실패수정→예비후보 **328 검은 토끼 소녀** 원본SHA/전신재검→한방향 소형동작시험→방향별시트 확장→전체5동작8방향·크기/발검토→배치 실제Main 양모드/드랍·수동습득→즉시commit/push/HEAD대조. Godot4.7.2와분리된writableXDG를사용한다. 원본팩 회수로주장하지말고 catalog/project참조기반새2D작화로기록한다.
+
+메시지에는요약/경로/크기/SHA만출력한다. 보고서상단만먼저읽고 coverage는필요aggregate만파싱한다. 전체diff/JSON/로그/Base64/ZIP/이미지데이터출력금지, 도구출력16KB이하. 신규3종대표18PNG는Git에보존되어있다. 기존10종의1,592PNG(2.49GB)본문은Git에추가하지않았고 JSON/로그·SHA목록/격리테스트save는보존했다. 실패를삭제하거나완료수량에더하지않는다.
+
 ## 2026-10-15 · 최종 도구검증50 / 기존10종 Main OpenGL 회귀 완료
 
 **완료374/498 (75.1%) · 미완료124 · 영웅이상139/180·일반200/258·보스35/60 · 개별Main103종 유지.** 신규 완료는 Batch21의 악어거북349·악몽의잭173·도구리288 **3종**이며 이후 WIP는 완료로 세지 않는다.
