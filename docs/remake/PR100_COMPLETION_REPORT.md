@@ -1,3 +1,11 @@
+## 2026-10-15 · 단장357 최종 HOLD / 모든 작화 보존
+
+**완료 374/498 · 미완료 124 · 개별 실제 Main 103종 · 이번 추가 완료 0종.** 단장은 공격2가 실제 crop 침범48/102px(여백0에서도8/10px)으로 거절되어 전체 HOLD, 모든 새 생성 중단. [최종 인계/PNG·정확prompt·실패ZIP·SHA](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json). 승인된 부분은 idle16+hit16+E보행3=35포즈뿐이며 guide8은 제외한다. W3보행은 교대 미증명, SE/S/SW/NW/N/NE 생성 없음. 사망24의 최종NW 방향, 역할 간 head/torso 크기와 실제 발/사체 접촉 anchor는 미승인이다. 104recipe/런타임 연결/Main 검사/완료 증가 없음.
+
+idle2의 자주색 영역은 alpha0 아래 숨은RGB여서 properwhite/black/checker합성은 깨끗했다(원거리alpha>25=0). 원본·PNG·임계값 수정 없이 독립 결과를 보존했다. [독립 종합 판정](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/independent-final-HOLD-review.json). 마지막 중간보존 `024f0c6d9519b1ec5ac7b411b5380b0854d75557` push/원격 일치 확인.
+
+우선 작업은 기존10종 OpenGL 회귀의20분 timeout 수정/검증이다. local 전체재현은 진행 중이며 통과한 일부를 전체 성공으로 세지 않는다. 이후 다음 후보328은 방향별 소형시트로 위험시험하고 기존HOLD 개체의 세 번째 제작은 진행하지 않는다.
+
 ## 2026-10-15 · 단장 중간작화 보존 / CI timeout 원인 확인
 
 **완료374/498 · 미완료124 · 개별Main103 · 신규완료0.** 단장 idle2/hit2/death2 기하후보 및 idle1/hit1/death1 crop실패·attack1 N접촉실패 원본/정확prompt/판정을[WIP](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json)로보존했다. 독립동작/방향/alpha·최종idle비례scale/발anchor 승인전이다. idle2의넓은검은영역이투명viewer배경인지실제lowalpha matte인지독립확인중이며, 현재생성중이던SE/W만저장하고다른보행생성은일시중단했다. 판정실패면idle2회실패로전체357HOLD한다. 실제pixel삭제/threshold완화없음·runtime미연결.

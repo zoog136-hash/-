@@ -1,0 +1,19 @@
+{
+  "target_key": "transform:357",
+  "direction_subset": [
+    "SE",
+    "S",
+    "SW"
+  ],
+  "status": "NOT_GENERATED_ACTOR_HOLD_BEFORE_TOOL_CALL",
+  "prepared_reference_crops": [
+    "SE-approved-view-reference.png",
+    "S-approved-view-reference.png",
+    "SW-approved-view-reference.png"
+  ],
+  "prepared_unused_prompt": "SE-walk-v1.prompt.txt",
+  "actual_image_generation_calls_for_these_directions": 0,
+  "raw_walk_images_for_these_directions": [],
+  "reason": "Root declared actorHOLD after attack second/finalfailure; imagegen had not started when stoparrived. No inflight results to collect.",
+  "completion_increment": 0
+}

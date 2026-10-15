@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "target_key": "transform:357",
+  "decision": "ACTOR_REVIEW_HOLD",
+  "blocking_reason": "Attack attempt1 has an independently confirmed wrongN contact projection. Final attempt2 failed strict crop separation; two attempts exhausted and generation stopped.",
+  "partial_valid_evidence": [
+    "8view rotation guide",
+    "E-only3phase gait pilot with identified near/far overlap reversal",
+    "16idle poses static and correctRGBA alpha",
+    "16hit poses static"
+  ],
+  "role_results": [
+    {
+      "role": "idle",
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2.png",
+      "sha256": "f4a7a3c5b7fc494786be00a5a580f116bea7c0070f7bbd5c01a248dd93fc2854",
+      "bytes": 1868826,
+      "source_unchanged": true,
+      "real_poses": 16,
+      "geometry": "pass",
+      "opaque_crop_loss_pixels": 0,
+      "foreign_crop_check": "pass with unchanged3px margin",
+      "image_border_pixels": 0,
+      "whole_sheet_far3_alpha_gt25_pixels": 0,
+      "whole_sheet_far3_max_alpha": 21,
+      "fit_canvas_only": 640,
+      "runtime_scale_approved": false,
+      "inspection_panel": "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-idle-v2-independent.jpg",
+      "decision": "PASS_STATIC_IDLE_ONLY",
+      "motion": "Two distinct breathing/rest poses across8views: shoulder/chest settling, elbow/wand angle and folds change while boots retain a braced rest stance.",
+      "facing_hand_anatomy": "Clear E/W profiles, S face and N back, coherent diagonals; same anatomical wand side, connected mask/ruff/torso/breeches/two legs/shoes and full orb.",
+      "alpha_review": "/workspace/twilight-run/recovery/ringmaster-idle-v2-alpha-independent-review.json",
+      "alpha_interpretation": "Colored RGB underalpha0 is invisible; proper white/black/checker composites have no broad matte. Sparse low-alpha antialiasing was preserved, not removed."
+    },
+    {
+      "role": "hit",
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/hit-v2.png",
+      "sha256": "ea75b44d447df7d835f462bdf25ef38468575db956f15f02258234fcc29d89a4",
+      "bytes": 1406040,
+      "source_unchanged": true,
+      "real_poses": 16,
+      "geometry": "pass",
+      "opaque_crop_loss_pixels": 0,
+      "foreign_crop_check": "pass with unchanged3px margin",
+      "image_border_pixels": 0,
+      "whole_sheet_far3_alpha_gt25_pixels": 1,
+      "whole_sheet_far3_max_alpha": 27,
+      "fit_canvas_only": 512,
+      "runtime_scale_approved": false,
+      "inspection_panel": "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-hit-v2-independent.jpg",
+      "decision": "PASS_STATIC_HIT_ONLY",
+      "motion": "Phase0 shows backward head/chest recoil and knee bracing; phase1 returns toward an upright chest/neck with different knee flexion. Changes are articulated rather than translated stills.",
+      "facing_hand_anatomy": "All8body views retain source mask/costume and same anatomical gripping hand. No hand transfer, detached forearm/wand/orb, extra limb or opaque crop loss found.",
+      "grounding_limit": "Visible support boots and braced posture reviewed. The shared actual Main ground plane and cross-role foot root are not established by these PNGs."
+    },
+    {
+      "role": "death",
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/death-v2.png",
+      "sha256": "1b37a0e89564fe6aa079c3a1f437f29e4ee6712c88ca7ca7fed9fad54ce7ed6e",
+      "bytes": 1297876,
+      "source_unchanged": true,
+      "real_poses": 24,
+      "geometry": "pass",
+      "opaque_crop_loss_pixels": 0,
+      "foreign_crop_check": "pass with unchanged3px margin",
+      "image_border_pixels": 0,
+      "whole_sheet_far3_alpha_gt25_pixels": 0,
+      "whole_sheet_far3_max_alpha": 24,
+      "fit_canvas_only": 832,
+      "runtime_scale_approved": false,
+      "inspection_panel": "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-death-v2-independent.jpg",
+      "decision": "GEOMETRY_AND_COLLAPSE_PASS_FINAL_VIEW_PENDING",
+      "motion": "Buckle→low seated/side collapse→fully horizontal corpse is visible in24 distinct poses; body median bboxheights236→148.5→77 document actual lowering and must not be normalized back to standing height.",
+      "facing_hand_anatomy": "First2phases retain8body views and source side. Corpse body/equipment remains connected; N is visibly prone/back, S supine/front.",
+      "pending_issue": "FinalNW corpse back-diagonal orientation is not sufficiently resolved in this review; no full8-direction death approval is claimed.",
+      "grounding_limit": "No independent body-only contact anchors have been approved. The lowest visible pixel may belong to wand/shoe rather than the desired corpse root; preserve source pixels and leave placement pending."
+    }
+  ],
+  "attack_final_attempt": {
+    "path": "/workspace/twilight-artwork/batch22/ringmaster/attack-v2.png",
+    "sha256": "adc57a2d8cfbf1ab89f947d5cc7c5c7c401d3bfe583744eeb17cac2621c54102",
+    "source_unchanged": true,
+    "independent_rechecks": [
+      {
+        "fit_canvas": 512,
+        "result": "rejected",
+        "reason": "A pose rectangle includes another body; cannot safely crop"
+      },
+      {
+        "fit_canvas": 832,
+        "result": "rejected",
+        "reason": "A pose rectangle includes another body; cannot safely crop"
+      }
+    ]
+  },
+  "scale_and_ground_anchor_status": {
+    "status": "PENDING_NOT_APPROVED",
+    "idle_reference": {
+      "source_body_median_height_px": 264,
+      "fit_canvas": 640,
+      "virtual256_total_height_reference": 105.6,
+      "head_torso_measurements": "Not completed/approved; total height alone is not an anatomical scale proof."
+    },
+    "explicit_cross_role_canvas_proposals": null,
+    "E_walk_hit_death_scale_approved": false,
+    "death_warning": "Do not derive a small corpse canvas by matching its77px bbox to264px standing height. No frame rescaling or per-pose pixel edits.",
+    "author_idle_foot_file": {
+      "status": "author file exists; independent anatomical/ground validation pending",
+      "path": "/workspace/twilight-artwork/batch22/ringmaster/idle-v2-foot-anchors.json",
+      "bytes": 8424,
+      "sha256": "ccfffdcad411519d599d7a9c9142ba3432f7769e3fe976def843609702984770"
+    },
+    "independent_runtime_foot_or_corpse_contact_anchors": null,
+    "E_pilot_source_support_sole_y": [
+      733,
+      726,
+      705
+    ],
+    "E_pilot_limit": "Observed sole rows only, not a production source_anchors table."
+  },
+  "overall_limits": [
+    "No104pose final actor approval.",
+    "No partial production import, runtime profile edit or actual Main run.",
+    "Attack failure is preserved; no padding/threshold relaxation, body-piece discard or failed-test removal.",
+    "Other walk direction pilots, if produced, remain separate worker evidence and are not approved by this report."
+  ],
+  "production_changes": false,
+  "source_PNGs_modified": 0,
+  "image_generation_performed": false,
+  "completed_count_increment": 0,
+  "partial_motion_pose_counts": {
+    "idle": 16,
+    "hit": 16,
+    "E_only_walk_pilot": 3,
+    "total_static_approved_partial_motion_poses": 35,
+    "rotation_guide_views_excluded_from_motion_count": 8,
+    "death_poses_reviewed_but_not_fully_approved": 24,
+    "runtime_connected_new_actors": 0
+  },
+  "material_claim": "New2D authored source art based on an existing external-origin catalog portrait. No recovered original material, original game animation or full character delivery is claimed."
+}
