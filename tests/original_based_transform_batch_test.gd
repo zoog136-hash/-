@@ -67,6 +67,6 @@ func run() -> void:
 	batch_failures.clear()
 	check(preserve_case_saves("guard-unexpected").is_empty() and not batch_failures.is_empty(), "unexpected save blocks the whole move")
 	check(FileAccess.get_sha256(source) == new_hash and FileAccess.get_file_as_string("user://twilight_unrecognized_save.json") == "unexpected-save-probe", "all source saves survive a refused preservation")
-	print("PR100_TRANSFORM_BATCH_GUARD_RESULT " + JSON.stringify({"checks": checks, "failure_count": failures.size(), "user_directory": OS.get_user_data_dir()}))
+	print("PR100_TRANSFORM_BATCH_GUARD_RESULT " + JSON.stringify({"checks": checks, "failures": failures.duplicate(), "failure_count": failures.size(), "user_directory": OS.get_user_data_dir()}))
 	if failures.is_empty(): print("PR100_TRANSFORM_BATCH_GUARD_OK")
 	quit(0 if failures.is_empty() else 1)

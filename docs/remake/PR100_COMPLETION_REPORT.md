@@ -1,3 +1,15 @@
+## 2026-10-15 · 통합CI실패 원인수정 / 재검증대기
+
+완료374/498·잔여124·개별Main103 유지. ce199 [통합38722879756](https://github.com/zoog136-hash/-/actions/runs/38722879756)은 **FAIL: 194PASS+3SKIP(비공개맵)+1FAIL** 이다. guard24검사가실패한것이아니라 RESULT에actual `failures`배열이없어상위fail-closed파서가거절했다. guard출력에실제 `failures.duplicate()`를추가했고검사/파서는완화하지않았다. Godot4.7.2실제guard24/실패0,같은상위파서PASS, subprocess runner회귀20/20PASS를[로그/실패원문/원인](evidence/pr100-direction-fix/original-based/recovery-20261015/ci-recovery)에보존한다. **원격통합재실행전으로성공주장없음**. Androidce199성공및runtime범위374는동일.
+
+카드walk2독립검토에서S는반대다리교대가확인되어기존author의전방향보행실패추정을정정한다. E/W는가림으로교대미증명이고, **NE앞뒤방향전환·NW/N카드손변경** 으로HOLD는유지한다. 원본author판정은기록보존하고독립정정자료를추가한다. 새후보357은짧은바지/빨간두다리/짧은완드의명확한실루엣으로 E한방향3phase보행을먼저시험중이다. subset임포터구현은미검증WIP이며이수정커밋에포함하지않는다.
+
+## 2026-10-15 · 카드 마술사walk2 HOLD / 방향별 작은시험으로전환
+
+완료374/498·잔여124·개별Main103·신규완료0유지. 카드360은walk2도다리교대불명확/NE앞뒤방향·NW카드손변경으로반복실패해 **HOLD/추가제작중단** 한다. 승인idle16+rotation8 및양쪽실패원본/정확prompt/geometryPASS/시각FAIL을[WIP보존](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json)한다. 104recipe없음·미연결·Main미실행. 이전idle독립판정/실패1보존 `c1a1724c1e72f2f195321f67ed450062dc47213e` push/원격일치확인.
+
+새후보는한방향3phase보행을먼저작게시험한다. 제작임포터의방향subset입력은구현/검증중이며 **최종5역할모두8방향이모이지않으면preflight실패/파일·profile변경0** 을보장하는테스트후에만사용한다. 기존실패검사완화/held재시도/누락복제없음.
+
 ## 2026-10-15 · 카드 마술사idle독립통과 / walk1거절
 
 완료374/498·잔여124·개별Main103·신규완료0유지. rotation8/idle16독립검토PASS: E는발/코끝동쪽+상체휴식twist로SE복제/가짜반전이아님을확인했다. 원거리alpha>25 잔상0/침범0. **walk1은24고유프레임이어도실제반대다리교대가없어거절**했고, 원본/정확prompt/시각FAIL/geometryPASS를ZIP보존한다. 마지막walk2시도중,5동작/실제Main승인전연결없음. [독립판정/실패보존](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json). 이전idle보존 `f1b41f4955f555da7e34ea85c11129f14481d105` push/원격일치확인.
