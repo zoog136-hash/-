@@ -7,6 +7,14 @@ const READ = preload("res://scripts/maps/source_travel.gd")
 const ARCHIVE_SHA: String = "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20"
 const AUTHORED = preload("res://scripts/maps/authored_remake_field.gd")
 
+static func display_names() -> Dictionary:
+	var names: Dictionary={}
+	if "--legacy-map-layouts" in OS.get_cmdline_user_args(): return names
+	var profiles: Dictionary=READ.read_object("res://data/maps/remake_render_profiles.json").get("maps",{})
+	for id: String in profiles:
+		if profiles[id].has("display_name"): names[id]=profiles[id].display_name
+	return names
+
 static func authored_field(definition: Dictionary) -> PlayableField:
 	var profiles: Dictionary=READ.read_object("res://data/maps/remake_render_profiles.json").get("maps",{})
 	var id: String=str(definition.get("map_id",""))

@@ -421,9 +421,11 @@ func _load_data() -> void:
 					if str(maps[index].get("id", "")) == str(entry["map_id"]):
 						maps[index] = {"id":entry["map_id"],"name":entry["map_name"],"field_path":entry["path"],
 							"width":int(entry["bounds"][2])/32,"height":int(entry["bounds"][3])/32,"tile_size_world":32}
+	var remake_names: Dictionary = REMAKE_REGISTRY.display_names()
 	for map_value: Variant in maps:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
+			if remake_names.has(str(map_data.get("id", ""))): map_data["name"] = remake_names[str(map_data.id)]
 			maps_by_id[str(map_data.get("id", ""))] = map_data
 	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
 		original_maps.append(record)
