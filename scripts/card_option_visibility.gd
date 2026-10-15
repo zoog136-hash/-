@@ -2,6 +2,7 @@ extends RefCounted
 class_name TwilightCardOptionVisibility
 
 const SKILL = preload("res://scripts/transform_skill_options.gd")
+const AIN_OPTIONS = preload("res://scripts/ainhasad_option_rules.gd")
 
 # Only distinct unresolved mechanics are tagged; working generic stats remain
 # unmarked. Unknown unique procs have already been removed from game catalog.
@@ -13,7 +14,7 @@ static func unresolved(category: String, option: String, card: Dictionary) -> bo
 				(s.begins_with("불 속성 대미지") or s.begins_with("물 속성 대미지") or
 				 s.begins_with("바람 속성 대미지") or s.begins_with("땅 속성 대미지")))
 		"마법인형":
-			return s.contains("축복 소모") or s == "디스펠 면역" or (
+			return (s.contains("축복 소모") and AIN_OPTIONS.option_percent(s) < 0.0) or s == "디스펠 면역" or (
 				s.contains("절대회복") or s.contains("회복(틱)") or
 				s.contains("회복 (틱)") or s.begins_with("MP회복") or
 				s == "HP 흡수" or s.contains("회복율") or s.contains("회피율"))
