@@ -10,6 +10,8 @@ func check(ok: bool, label: String) -> void:
 	if not ok: failures.append(label); printerr("GROUND_ALPHA_FAIL ",label)
 func _run() -> void:
 	var manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(ALPHA.MANIFEST))
+	var fixture_data: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/l1j/live_visual_bindings.json"))
+	var synthetic_fixture_only: bool = fixture_data is Dictionary and bool((fixture_data as Dictionary).get("synthetic_fixture_only", false))
 	for key: String in manifest.images:
 		var entry: Dictionary = manifest.images[key]
 		var source: Texture2D = load(key) as Texture2D
@@ -52,7 +54,16 @@ func _run() -> void:
 		check(view.rank == maxi(0,DROP.GRADES.find(str(record.get("grade","일반")))),"grade effect unchanged:"+name_value)
 		if floor_info.route in ["reviewed_ground","l1j_dedicated_ground_candidate"]:
 			dedicated += 1
-			check(view.texture.resource_path.begins_with("res://assets/ground_alpha/"),"renderer bypasses opaque original:"+name_value)
+			var floor_path: String = floor.resource_path if floor != null else ""
+			# The L1J CI fixture deliberately binds synthetic images outside the
+			# audited originals. An alpha cutout is *not* valid for those bytes.
+			# Reject fixture leakage into production; keep real source checks strict.
+			if floor_path.begins_with("res://assets/l1j/verified/ground/_ci_fixture/"):
+				check(synthetic_fixture_only,"synthetic ground path requires fixture manifest:"+name_value)
+				check(not manifest.images.has(floor_path),"synthetic ground cannot be audited as original:"+name_value)
+				check(view.texture == floor,"synthetic ground must preserve original fixture:"+name_value)
+			else:
+				check(view.texture != null and view.texture.resource_path.begins_with("res://assets/ground_alpha/"),"renderer bypasses opaque original:"+name_value)
 		else:
 			check(view.texture == floor,"category image is not replaced:"+name_value)
 		var inventory: Texture2D = RESOLVER.texture(record,name_value)
