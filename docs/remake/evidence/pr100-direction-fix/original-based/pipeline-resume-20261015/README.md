@@ -4,7 +4,7 @@
 
 `pose_files_v1`은 104/112개 개별 원본 PNG, `mixed_sources_v1`은 온전한 다중 자세 시트와 개별 PNG를 함께 연결한다. 두 방식 모두 PNG 바이트를 그대로 복사하고 AtlasTexture 영역·가상 캔버스·검토된 발 기준점만 기록한다. PNG 합성·리사이즈·잘라낸 새 PNG는 만들지 않는다. 전체8방향/5역할, 최소2/3/3/2/3자세, 전체104/112 고유 자세, 모든 선택 PNG의 모든 몸체를 정확히 한 번 사용하도록 제한한다. 보이는 픽셀 중복·잘린 몸체·무시한 행·빈 프레임·미사용 개별 PNG를 거부한다. 기존 입력의 parser/2행 이상 검사/기하 검사/출력 방식은 유지한다. 실제 작화·기준점·비율·방향·Main 검토는 별도 필수다.
 
-읽기 전용 검사는 `python3 tools/import_original_based_motion.py --root . --validate-candidate CANDIDATE.json --actor FOLDER --key TARGET`로 실행한다. 새 optional mode의 성공 후 명시적인 `--candidate ... --apply`만 적용한다. 기존 legacy CLI는 `--apply` 없이도 에셋을 쓰므로 읽기 전용 확인에는 새 `--validate-candidate`를 사용한다. optional parser에는 제외 영역/미사용 행/phase offset 도피 인터페이스가 없다. 시트 역할은 해당 방향의 전역 phase 수 전체를 제공해야 한다.
+읽기 전용 검사는 `python3 tools/import_original_based_motion.py --root . --validate-candidate CANDIDATE.json --actor FOLDER --key TARGET`로 실행한다. 새 optional mode의 성공 후 명시적인 `--candidate ... --apply`만 적용한다. `--validate-candidate`는 두 optional 입력 방식에만 지원한다. 기존 legacy CLI는 `--apply` 없이도 에셋을 쓰므로 legacy 후보의 읽기 전용 검사는 각 원본의 analyze/전체 영역 검사를 별도로 수행한다. optional parser에는 제외 영역/미사용 행/phase offset 도피 인터페이스가 없다. 시트 역할은 해당 방향의 전역 phase 수 전체를 제공해야 한다.
 
 독립 리뷰에서 발견한 링크 중 catalog 갱신 손실과 링크/최종 replace 직후 KeyboardInterrupt를 수정했다. catalog 마지막 SHA 재확인은 비협조적 동시 writer에 대한 완전한 CAS는 아니다. 최종 catalog 상태가 불명확하면 참조 중일 수 있는 새 에셋을 보존하고 오류를 반환한다. 기존50개+신규29개 검사 통과; 4개 새 경계 상황은 두 입력 방식 모두 검사한다. 기존 정상 파일은 교체하지 않고, 임시 staging·배타적 링크 후 catalog를 마지막에 갱신한다.
 

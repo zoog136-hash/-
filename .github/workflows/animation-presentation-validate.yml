@@ -292,7 +292,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28]
+        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27, 28, 30]
         include:
           - batch: 27
             script: run_original_based_boss_batch

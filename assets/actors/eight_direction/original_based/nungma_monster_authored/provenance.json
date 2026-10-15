@@ -1,0 +1,3532 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_0.png",
+    "region": [
+      0,
+      619,
+      317,
+      310
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 0,
+    "cell": 8,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+    "image_size": [
+      1269,
+      1239
+    ],
+    "region_rgba_sha256": "d7be30fc549fe52a771f69fd9289c708c5157616c627e8e4b1f8361c497ec1d4"
+  },
+  "target_keys": [
+    "monster:넝마"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 0,
+      "cell": 8,
+      "body": "ghost",
+      "variant": 6,
+      "width": 1.076,
+      "weapon": "sword",
+      "crest": 0,
+      "accent": "c4aa64"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": true
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:넝마": {
+      "path": "res://assets/monsters/original/atlas_0.png",
+      "region": [
+        0,
+        619,
+        317,
+        310
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 0,
+      "cell": 8,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+      "image_size": [
+        1269,
+        1239
+      ],
+      "region_rgba_sha256": "d7be30fc549fe52a771f69fd9289c708c5157616c627e8e4b1f8361c497ec1d4"
+    }
+  },
+  "target_presentations": {
+    "monster:넝마": {
+      "visual": {
+        "atlas": 0,
+        "cell": 8,
+        "body": "ghost",
+        "variant": 6,
+        "width": 1.076,
+        "weapon": "sword",
+        "crest": 0,
+        "accent": "c4aa64"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": true
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "All exact issued prompts are retained alongside immutable generated originals. New authored artwork from this actor own existing project ghost source, not extracted original animation.",
+  "instruction_record_kind": "Exact per-call prompt and request JSON retained, failed outputs not selected.",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Rootdirectlyviewed all8same-heading13posefixed-rootmatrices104and ownexactneutralbodycontext. Greyhoodskull/twoattachedbonyhands/continuouscloth/notlegsorheldsword; trueSface/Nclosedback; actualarmextension/recoil/deathgroundfullpile. W/N palettecorrections reviewedagainstownidle; approximatehomologoushoodscale acceptedforactualMaintrialonly. Originalnative86floating/meleeslash.44/variant6 preserved. No originalmotionextractionclaim/noimagesfromcompletedactors. FinalactualMain8directions5roles/AI/weapondeath/drop/manualpickup/temporal/palette/groundreviewmandatory beforecompletion. Authorflagsfalsecandidatepreserved."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        15,
+        48,
+        365,
+        463
+      ],
+      "margin": [
+        257,
+        181,
+        659,
+        561
+      ],
+      "source_anchor": [
+        270,
+        507
+      ],
+      "rgba_sha256": "17d4a258980bc275964649655f2ec30fdabfd5da81754f676ee39beb6badd3b5",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        407,
+        50,
+        391,
+        462
+      ],
+      "margin": [
+        269,
+        182,
+        633,
+        562
+      ],
+      "source_anchor": [
+        650,
+        508
+      ],
+      "rgba_sha256": "d02092088c76a9aa09826416184030417421df539193bd24b73c87d10974fcdb",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        812,
+        51,
+        333,
+        461
+      ],
+      "margin": [
+        330,
+        183,
+        691,
+        563
+      ],
+      "source_anchor": [
+        994,
+        508
+      ],
+      "rgba_sha256": "2586f89e6ab2a350407c9d55eee6b4c82751d1c7aa8643e42c2afd07bfa9a543",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1163,
+        51,
+        359,
+        461
+      ],
+      "margin": [
+        345,
+        183,
+        665,
+        563
+      ],
+      "source_anchor": [
+        1330,
+        508
+      ],
+      "rgba_sha256": "ad21ed238cffe3cb6877463b8e08fba46189746c75f5314189528b8ac91c45af",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        33,
+        546,
+        332,
+        443
+      ],
+      "margin": [
+        275,
+        201,
+        692,
+        581
+      ],
+      "source_anchor": [
+        270,
+        985
+      ],
+      "rgba_sha256": "59f23378db81e1f3d4773780be84658532422bec576a80fbbedbad49df7e0b3a",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        430,
+        551,
+        328,
+        430
+      ],
+      "margin": [
+        292,
+        214,
+        696,
+        594
+      ],
+      "source_anchor": [
+        650,
+        977
+      ],
+      "rgba_sha256": "eff94d1f2c970dd7ff7a487f98965a768046ac05e1fb209061dce5dbcef28495",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        841,
+        551,
+        282,
+        439
+      ],
+      "margin": [
+        359,
+        205,
+        742,
+        585
+      ],
+      "source_anchor": [
+        994,
+        986
+      ],
+      "rgba_sha256": "4c484d10849be5a7d9382d62b131003acf2bd1e3c82dcbdf8c8a6444afb67592",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1194,
+        551,
+        310,
+        433
+      ],
+      "margin": [
+        376,
+        211,
+        714,
+        591
+      ],
+      "source_anchor": [
+        1330,
+        980
+      ],
+      "rgba_sha256": "8cc2dd49cfafb0dd54bf076899189fd8807276d0e2abe78bbef036cc21897e4d",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        16,
+        57,
+        370,
+        440
+      ],
+      "margin": [
+        368,
+        204,
+        654,
+        584
+      ],
+      "source_anchor": [
+        160,
+        493
+      ],
+      "rgba_sha256": "92bb86b569dc411e18386b8e83c3f194a727ad102cbddc66e50e06cc5a6da56b",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        401,
+        60,
+        365,
+        437
+      ],
+      "margin": [
+        359,
+        207,
+        659,
+        587
+      ],
+      "source_anchor": [
+        554,
+        493
+      ],
+      "rgba_sha256": "83e1bf8dd4c98ddbf5bbe5025443bc297ecd3ff2320b83aa0bb294799a4be71a",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        795,
+        60,
+        315,
+        440
+      ],
+      "margin": [
+        356,
+        204,
+        709,
+        584
+      ],
+      "source_anchor": [
+        951,
+        496
+      ],
+      "rgba_sha256": "fc3b92bf60aa73ba43b459aa67dc980acdd5d51a21982186fbb875b468ecf67e",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1154,
+        63,
+        358,
+        438
+      ],
+      "margin": [
+        316,
+        206,
+        666,
+        586
+      ],
+      "source_anchor": [
+        1350,
+        497
+      ],
+      "rgba_sha256": "d6ae5f6511f426c4615eabeb46134a2b9c4c2624b70edfd0383a7ecdb88624dd",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        50,
+        556,
+        305,
+        423
+      ],
+      "margin": [
+        402,
+        221,
+        719,
+        601
+      ],
+      "source_anchor": [
+        160,
+        975
+      ],
+      "rgba_sha256": "2c560fa16d50ab993d57c95ed223c203cb8a69f1a171931fd77af03d2946d52b",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        435,
+        561,
+        316,
+        416
+      ],
+      "margin": [
+        393,
+        228,
+        708,
+        608
+      ],
+      "source_anchor": [
+        554,
+        973
+      ],
+      "rgba_sha256": "10eab0d8881dccf51d245256813c08cedbad0df16fe942987ba6a67fc781db10",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        815,
+        560,
+        291,
+        427
+      ],
+      "margin": [
+        376,
+        217,
+        733,
+        597
+      ],
+      "source_anchor": [
+        951,
+        983
+      ],
+      "rgba_sha256": "b33e2abcbc72c8e221ad37709b4305708c496c305a0a5a8af649a72d3843db26",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1197,
+        565,
+        285,
+        412
+      ],
+      "margin": [
+        359,
+        232,
+        739,
+        612
+      ],
+      "source_anchor": [
+        1350,
+        973
+      ],
+      "rgba_sha256": "05ee2c74d4353b4011ea6925910f43fdc3d79e373d8d702901d8dd9de63ddf2b",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        26,
+        62,
+        347,
+        441
+      ],
+      "margin": [
+        268,
+        203,
+        677,
+        583
+      ],
+      "source_anchor": [
+        270,
+        499
+      ],
+      "rgba_sha256": "e92c3566f76f5bc7bf08140de0037e84fae0523cd4931b0b468fe51fe5b8c78d",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        430,
+        39,
+        337,
+        465
+      ],
+      "margin": [
+        292,
+        179,
+        687,
+        559
+      ],
+      "source_anchor": [
+        650,
+        500
+      ],
+      "rgba_sha256": "6b2458e0a272e37f4e68ff4ae794c86a97b3991529df215d8f7b1c786b7d62aa",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        808,
+        48,
+        319,
+        452
+      ],
+      "margin": [
+        326,
+        192,
+        705,
+        572
+      ],
+      "source_anchor": [
+        994,
+        496
+      ],
+      "rgba_sha256": "82178c33827012f1e56f41643116523258638bde825e5474bde5bebdb353f949",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        1185,
+        39,
+        326,
+        463
+      ],
+      "margin": [
+        367,
+        181,
+        698,
+        561
+      ],
+      "source_anchor": [
+        1330,
+        498
+      ],
+      "rgba_sha256": "12d11962ee7ddd0fd8e3946ae61a0ed994d8b1cd704092ac2dadc19bf3ec3320",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        34,
+        535,
+        371,
+        449
+      ],
+      "margin": [
+        276,
+        195,
+        653,
+        575
+      ],
+      "source_anchor": [
+        270,
+        980
+      ],
+      "rgba_sha256": "f27567440030edd2ffdb0cbfb6f46c7c11076015f7777ca444168c752fc4cac5",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        443,
+        536,
+        343,
+        449
+      ],
+      "margin": [
+        305,
+        195,
+        681,
+        575
+      ],
+      "source_anchor": [
+        650,
+        981
+      ],
+      "rgba_sha256": "23722f57a5de95a4d96c6fba26ac127ec7bde2d99d1ea32a49acf8fe209ae2a6",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        832,
+        536,
+        308,
+        460
+      ],
+      "margin": [
+        350,
+        184,
+        716,
+        564
+      ],
+      "source_anchor": [
+        994,
+        992
+      ],
+      "rgba_sha256": "f428d467ddb0e6b4babfa1cbe8c725382c559cd4d73a3784e981e4d9770e7ac6",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        1191,
+        536,
+        321,
+        447
+      ],
+      "margin": [
+        373,
+        197,
+        703,
+        577
+      ],
+      "source_anchor": [
+        1330,
+        979
+      ],
+      "rgba_sha256": "00ce501eed2c63168db3c703698071441b2070ee62a5395f2e81c4df9a9d34fa",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        50,
+        59,
+        364,
+        446
+      ],
+      "margin": [
+        402,
+        198,
+        660,
+        578
+      ],
+      "source_anchor": [
+        160,
+        501
+      ],
+      "rgba_sha256": "5c092fead44c4830650e29d2fcb9cca72a776975aa52ac7cbe7adff0112f3630",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        445,
+        42,
+        346,
+        457
+      ],
+      "margin": [
+        403,
+        187,
+        678,
+        567
+      ],
+      "source_anchor": [
+        554,
+        495
+      ],
+      "rgba_sha256": "f1963fc408ba04212b4d7fb4b82bfc19d04f69119cede654123800c6d4ae21cd",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        833,
+        29,
+        314,
+        484
+      ],
+      "margin": [
+        394,
+        160,
+        710,
+        540
+      ],
+      "source_anchor": [
+        951,
+        509
+      ],
+      "rgba_sha256": "789fa80b4ef3aa109340826dd323281940db106772d7a4b0efb41dfd5193bd75",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1179,
+        58,
+        323,
+        443
+      ],
+      "margin": [
+        341,
+        201,
+        701,
+        581
+      ],
+      "source_anchor": [
+        1350,
+        497
+      ],
+      "rgba_sha256": "d5d4c5ffc69b3c7537d5d42a6f185962f47a8c7e0b005f7b485655079c5413ad",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        44,
+        558,
+        366,
+        438
+      ],
+      "margin": [
+        396,
+        206,
+        658,
+        586
+      ],
+      "source_anchor": [
+        160,
+        992
+      ],
+      "rgba_sha256": "fc70008167c1676df275610159aa31c8e964162652b833af737c1f777c174304",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        461,
+        559,
+        328,
+        417
+      ],
+      "margin": [
+        419,
+        227,
+        696,
+        607
+      ],
+      "source_anchor": [
+        554,
+        972
+      ],
+      "rgba_sha256": "5363b961381a84020f4d4b4fb5243ae2a39348901ba930df9db0a72495868061",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        811,
+        557,
+        314,
+        440
+      ],
+      "margin": [
+        372,
+        204,
+        710,
+        584
+      ],
+      "source_anchor": [
+        951,
+        993
+      ],
+      "rgba_sha256": "3b7f7675cf070d95018bf86bb8ac43a30af8808e84b290939a24e94c7bd5b845",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1169,
+        559,
+        321,
+        437
+      ],
+      "margin": [
+        331,
+        207,
+        703,
+        587
+      ],
+      "source_anchor": [
+        1350,
+        992
+      ],
+      "rgba_sha256": "e737b44f6c47fdcd544660321941c4f903ecaf824671ed3b1203a21679fa03cb",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        131,
+        36,
+        838,
+        497
+      ],
+      "margin": [
+        120,
+        287,
+        410,
+        751
+      ],
+      "source_anchor": [
+        635,
+        529
+      ],
+      "rgba_sha256": "14017a399ed739258ea545585aa670b2d57455592b321512a83b24ef03e74bde",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        246,
+        556,
+        513,
+        447
+      ],
+      "margin": [
+        235,
+        337,
+        735,
+        801
+      ],
+      "source_anchor": [
+        635,
+        999
+      ],
+      "rgba_sha256": "c6a7e8f47377558aa0491d555e3f16c79485c076f0a85408b630bba7e6fe424d",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        102,
+        1049,
+        851,
+        464
+      ],
+      "margin": [
+        91,
+        320,
+        397,
+        784
+      ],
+      "source_anchor": [
+        635,
+        1509
+      ],
+      "rgba_sha256": "1c7121aa6ee5b8cd2fc5bf2007a245b39b747918efa541a8b2b6deb32c93de57",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        168,
+        33,
+        693,
+        512
+      ],
+      "margin": [
+        274,
+        347,
+        675,
+        856
+      ],
+      "source_anchor": [
+        578,
+        541
+      ],
+      "rgba_sha256": "d0695f4ca8fe0cadef82c2731c15b0ffd7c6af68604d31122b0a708a0ac74a6a",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        246,
+        573,
+        462,
+        463
+      ],
+      "margin": [
+        352,
+        396,
+        906,
+        905
+      ],
+      "source_anchor": [
+        578,
+        1032
+      ],
+      "rgba_sha256": "d2ba3471603be1f8ad1c3faf8ab9c180df42f161263a5a4f8dc5182800d2733d",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        164,
+        1062,
+        705,
+        456
+      ],
+      "margin": [
+        270,
+        403,
+        663,
+        912
+      ],
+      "source_anchor": [
+        578,
+        1514
+      ],
+      "rgba_sha256": "e26849c53cd577b2225e480e372f115ce43ebc83e3e0744bb02163ca6119ed17",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        14,
+        200,
+        503,
+        667
+      ],
+      "margin": [
+        398,
+        282,
+        1009,
+        845
+      ],
+      "source_anchor": [
+        372,
+        863
+      ],
+      "rgba_sha256": "955c24f9aaf404e5231443ec53d33a3c0f367893548a338a6a22e69a7176544e",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        564,
+        198,
+        395,
+        645
+      ],
+      "margin": [
+        539,
+        304,
+        1117,
+        867
+      ],
+      "source_anchor": [
+        781,
+        839
+      ],
+      "rgba_sha256": "ae897c2dc7551c1351d8f16677d146f711db668b5d0c0bdc8165d3b4e86c650a",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        990,
+        201,
+        535,
+        680
+      ],
+      "margin": [
+        544,
+        269,
+        977,
+        832
+      ],
+      "source_anchor": [
+        1202,
+        877
+      ],
+      "rgba_sha256": "03a8b9797d4eb41935068c5397afa50b1ac07e69df4f52bb9223204036d98b3c",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        104,
+        31,
+        817,
+        515
+      ],
+      "margin": [
+        396,
+        399,
+        639,
+        941
+      ],
+      "source_anchor": [
+        436,
+        542
+      ],
+      "rgba_sha256": "62adb8ebb6d52991d26fe681b1543f76741ccd728ba63f9cb8cbf80d378661df",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        280,
+        572,
+        552,
+        447
+      ],
+      "margin": [
+        572,
+        467,
+        904,
+        1009
+      ],
+      "source_anchor": [
+        436,
+        1015
+      ],
+      "rgba_sha256": "7e9b5566918dde467d44f30dc950d4d8c9ea80aa1e0fb6a8f6cde34c3a1e599d",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        98,
+        1040,
+        829,
+        484
+      ],
+      "margin": [
+        390,
+        430,
+        627,
+        972
+      ],
+      "source_anchor": [
+        436,
+        1520
+      ],
+      "rgba_sha256": "37821a3a284fec068ae2786c54c580e5a43ffa85af3760bee60ca77723afc03f",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        78,
+        71,
+        870,
+        460
+      ],
+      "margin": [
+        299,
+        289,
+        322,
+        732
+      ],
+      "source_anchor": [
+        375,
+        527
+      ],
+      "rgba_sha256": "07f7afdb7889b22ac9d7ddc4c5f93b6aa35e119d07369bd5dbe0e310a9e9a5ab",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        295,
+        589,
+        487,
+        431
+      ],
+      "margin": [
+        516,
+        318,
+        705,
+        761
+      ],
+      "source_anchor": [
+        375,
+        1016
+      ],
+      "rgba_sha256": "70475f7d444d92e98f3cb384971fc58ce3882082d33c218a854c66e24fc1efaa",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        125,
+        1047,
+        819,
+        431
+      ],
+      "margin": [
+        346,
+        318,
+        373,
+        761
+      ],
+      "source_anchor": [
+        375,
+        1474
+      ],
+      "rgba_sha256": "af8f1dff2493537fb96ca8d7e2467682566ed5e3370dd81ebd350e3ff466e832",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        169,
+        63,
+        720,
+        482
+      ],
+      "margin": [
+        398,
+        377,
+        648,
+        886
+      ],
+      "source_anchor": [
+        455,
+        541
+      ],
+      "rgba_sha256": "b3ebbb671d07662680b568b134c9c43393b59fbf727624020ba2802e0db87249",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        335,
+        566,
+        497,
+        423
+      ],
+      "margin": [
+        564,
+        436,
+        871,
+        945
+      ],
+      "source_anchor": [
+        455,
+        985
+      ],
+      "rgba_sha256": "5d1c631b2f26e9b7bee220f095dea1977124a14a21b928215b3c7f11518a95c4",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        163,
+        1019,
+        731,
+        478
+      ],
+      "margin": [
+        392,
+        381,
+        637,
+        890
+      ],
+      "source_anchor": [
+        455,
+        1493
+      ],
+      "rgba_sha256": "2b6b2bbf8d62602583a936c1acebffcb5e85368cdf2c293d28e36d7762cbdc9f",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        216,
+        18,
+        618,
+        536
+      ],
+      "margin": [
+        368,
+        308,
+        726,
+        808
+      ],
+      "source_anchor": [
+        520,
+        550
+      ],
+      "rgba_sha256": "6ca0317aa15e7d8dde47fe1adc241714781cdba29fe899e8909e7089268b212d",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        349,
+        551,
+        332,
+        459
+      ],
+      "margin": [
+        501,
+        385,
+        1012,
+        885
+      ],
+      "source_anchor": [
+        520,
+        1006
+      ],
+      "rgba_sha256": "fcd1a38fa786811bb738220a7ed92f025983db695454e33101d399f94e338218",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        164,
+        1029,
+        685,
+        496
+      ],
+      "margin": [
+        316,
+        348,
+        659,
+        848
+      ],
+      "source_anchor": [
+        520,
+        1521
+      ],
+      "rgba_sha256": "eafa7ba90ab34d2397981e7c555ef0af158fe94370067a468fc8bb287f7e21fd",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        202,
+        17,
+        730,
+        550
+      ],
+      "margin": [
+        369,
+        369,
+        734,
+        914
+      ],
+      "source_anchor": [
+        565,
+        563
+      ],
+      "rgba_sha256": "66c54d3cffa14afb7d681b0862c2b85436297d288004c7fac7de79ff12067713",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        261,
+        566,
+        446,
+        440
+      ],
+      "margin": [
+        428,
+        479,
+        1018,
+        1024
+      ],
+      "source_anchor": [
+        565,
+        1002
+      ],
+      "rgba_sha256": "76cafd38cebd46b97a90dd11ab63607d9f63449528594e5150c3bd3a14f2b909",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        185,
+        1023,
+        709,
+        503
+      ],
+      "margin": [
+        352,
+        416,
+        755,
+        961
+      ],
+      "source_anchor": [
+        565,
+        1522
+      ],
+      "rgba_sha256": "b9ad87c350b2f40ec41cbc6f25f6ed2ba4ffa2b2f9bc2119c597624aa2396083",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        191,
+        39,
+        503,
+        498
+      ],
+      "margin": [
+        251,
+        306,
+        777,
+        782
+      ],
+      "source_anchor": [
+        580,
+        533
+      ],
+      "rgba_sha256": "381c40c5937b0d70065890ce8932eca98ed26fafef89a2c5f0890c365c7510bf",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        82,
+        554,
+        901,
+        480
+      ],
+      "margin": [
+        142,
+        324,
+        379,
+        800
+      ],
+      "source_anchor": [
+        580,
+        1030
+      ],
+      "rgba_sha256": "0196fdb8f3cbd785d256e76aafda0b1411425e7fd6408b43aa0ff12cd7cd8d34",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        109,
+        1052,
+        636,
+        473
+      ],
+      "margin": [
+        169,
+        331,
+        644,
+        807
+      ],
+      "source_anchor": [
+        580,
+        1521
+      ],
+      "rgba_sha256": "493f0f3c725f1e5ad53a058e1e06f6387cac32536301f25dd05bfe0df225e3cb",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        308,
+        135,
+        368,
+        343
+      ],
+      "margin": [
+        170,
+        166,
+        440,
+        465
+      ],
+      "source_anchor": [
+        542,
+        474
+      ],
+      "rgba_sha256": "817859e093d8b543bb84c247211c7df090507799502ff7d81b392d5da383f9c8",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        271,
+        631,
+        517,
+        332
+      ],
+      "margin": [
+        133,
+        177,
+        291,
+        476
+      ],
+      "source_anchor": [
+        542,
+        959
+      ],
+      "rgba_sha256": "9887a0c8a3067ece45d0843721dc743000d631b810cc13d34c1d790f401f6c37",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        309,
+        1100,
+        420,
+        315
+      ],
+      "margin": [
+        171,
+        194,
+        388,
+        493
+      ],
+      "source_anchor": [
+        542,
+        1411
+      ],
+      "rgba_sha256": "69c9a818f69d846a216ca64104123db1b84465cf3f56ae06b204de7b130cc356",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        288,
+        26,
+        447,
+        490
+      ],
+      "margin": [
+        374,
+        259,
+        745,
+        702
+      ],
+      "source_anchor": [
+        510,
+        512
+      ],
+      "rgba_sha256": "f2b210e64435614f120a57950c1999e34e8e5eee41b60b898dc41ab6e609054c",
+      "sheet": 14
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        237,
+        536,
+        551,
+        494
+      ],
+      "margin": [
+        323,
+        255,
+        641,
+        698
+      ],
+      "source_anchor": [
+        510,
+        1026
+      ],
+      "rgba_sha256": "e0e399d1497d9db90702d6d5cedd91e97b270b64ff01ab9bac87488fd8d1a3f1",
+      "sheet": 14
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        261,
+        1036,
+        507,
+        484
+      ],
+      "margin": [
+        347,
+        265,
+        685,
+        708
+      ],
+      "source_anchor": [
+        510,
+        1516
+      ],
+      "rgba_sha256": "4202b96b0aa062fa15f0db3571fcf4c225641310499911ba3319044aea6f9e71",
+      "sheet": 14
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        328,
+        136,
+        438,
+        387
+      ],
+      "margin": [
+        371,
+        227,
+        538,
+        589
+      ],
+      "source_anchor": [
+        445,
+        519
+      ],
+      "rgba_sha256": "f3cb9da3b644ea9bceae243b69b72a826cb250dd6e89c802d6f8bcf01584fe10",
+      "sheet": 15
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        182,
+        634,
+        666,
+        376
+      ],
+      "margin": [
+        225,
+        238,
+        310,
+        600
+      ],
+      "source_anchor": [
+        445,
+        1006
+      ],
+      "rgba_sha256": "4c39d46565b9997fbcd62bb519b80404c2ebc37ee751bcfb61b0b1d53755f13f",
+      "sheet": 15
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        317,
+        1078,
+        485,
+        391
+      ],
+      "margin": [
+        360,
+        223,
+        491,
+        585
+      ],
+      "source_anchor": [
+        445,
+        1465
+      ],
+      "rgba_sha256": "b1362842c26b35e0ec35eb4cecc98c3fba035248d1b21d7fba16cf721906e2fb",
+      "sheet": 15
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        300,
+        44,
+        487,
+        463
+      ],
+      "margin": [
+        498,
+        376,
+        849,
+        873
+      ],
+      "source_anchor": [
+        470,
+        503
+      ],
+      "rgba_sha256": "2a939be959ca9d3f5e922a7dbd9b6127ab8dab13cb61d05979d2a308b5b4cb26",
+      "sheet": 16
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        84,
+        540,
+        722,
+        458
+      ],
+      "margin": [
+        282,
+        381,
+        614,
+        878
+      ],
+      "source_anchor": [
+        470,
+        994
+      ],
+      "rgba_sha256": "5d98e4ed4f1a54ba649d401b5fe6fb96e444499315d4d1912de98910ec860ba3",
+      "sheet": 16
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        279,
+        1029,
+        529,
+        486
+      ],
+      "margin": [
+        477,
+        353,
+        807,
+        850
+      ],
+      "source_anchor": [
+        470,
+        1511
+      ],
+      "rgba_sha256": "f9cf5b95170c6996d8a9d47b2d691f0a16d1bafcd44e29295bf057b0292a6f41",
+      "sheet": 16
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        335,
+        119,
+        419,
+        387
+      ],
+      "margin": [
+        497,
+        392,
+        821,
+        853
+      ],
+      "source_anchor": [
+        458,
+        502
+      ],
+      "rgba_sha256": "9ddb8bb0c32f5c34af55b74dc56f6468b99e1117ba5df95505bc6b2d7de498aa",
+      "sheet": 17
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        223,
+        634,
+        618,
+        399
+      ],
+      "margin": [
+        385,
+        380,
+        622,
+        841
+      ],
+      "source_anchor": [
+        458,
+        1029
+      ],
+      "rgba_sha256": "d3b7f130c53fc36a248f41323d7b5490831624252f8b077467ee1ddf82a0df0a",
+      "sheet": 17
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        316,
+        1109,
+        468,
+        381
+      ],
+      "margin": [
+        478,
+        398,
+        772,
+        859
+      ],
+      "source_anchor": [
+        458,
+        1486
+      ],
+      "rgba_sha256": "cdff35b1ffaa3e7e7c24dd2f9cc4322e88895430645ad0f2fa27d17b79bff18d",
+      "sheet": 17
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        368,
+        47,
+        354,
+        442
+      ],
+      "margin": [
+        437,
+        292,
+        814,
+        726
+      ],
+      "source_anchor": [
+        515,
+        485
+      ],
+      "rgba_sha256": "81cc5bd013bac0c15e10fadeb82fdf0e9fa47bfd1876bdc4a30667aadd9fdd15",
+      "sheet": 18
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        348,
+        511,
+        410,
+        518
+      ],
+      "margin": [
+        417,
+        216,
+        758,
+        650
+      ],
+      "source_anchor": [
+        515,
+        1025
+      ],
+      "rgba_sha256": "9942096972804a21aae6daf1f7c63a87f93b3203ac5705f096c6dc7be0d3fa5a",
+      "sheet": 18
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        387,
+        1073,
+        373,
+        442
+      ],
+      "margin": [
+        456,
+        292,
+        795,
+        726
+      ],
+      "source_anchor": [
+        515,
+        1511
+      ],
+      "rgba_sha256": "4074f4a39b12ef91fd8613d4b72ed17f4404726d7aed98ded38a3c82ebb6dd70",
+      "sheet": 18
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        243,
+        37,
+        460,
+        485
+      ],
+      "margin": [
+        387,
+        399,
+        948,
+        923
+      ],
+      "source_anchor": [
+        560,
+        518
+      ],
+      "rgba_sha256": "34cbd4d6e3c3d6f2e21c8f60cf25d706f9e5035d4ce1604b106a09bdd344b3e8",
+      "sheet": 19
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        140,
+        546,
+        742,
+        479
+      ],
+      "margin": [
+        284,
+        405,
+        666,
+        929
+      ],
+      "source_anchor": [
+        560,
+        1021
+      ],
+      "rgba_sha256": "259a667ad8f0d8c22e206613f2198765e304efb5dd5ce00d3ccb90518de91d5f",
+      "sheet": 19
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        246,
+        1039,
+        504,
+        481
+      ],
+      "margin": [
+        390,
+        403,
+        904,
+        927
+      ],
+      "source_anchor": [
+        560,
+        1516
+      ],
+      "rgba_sha256": "62c1d1db14dd05af30d68758a3ddcf472592d0fb4dd8a8b51b451fc9a07a4dd0",
+      "sheet": 19
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        185,
+        87,
+        630,
+        594
+      ],
+      "margin": [
+        293,
+        370,
+        906,
+        942
+      ],
+      "source_anchor": [
+        660,
+        677
+      ],
+      "rgba_sha256": "f09d42e39f793711ebd033c6fa2313b10d996dde7e9f3192619810fe4dbdc307",
+      "sheet": 20
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        51,
+        837,
+        868,
+        254
+      ],
+      "margin": [
+        159,
+        710,
+        668,
+        1282
+      ],
+      "source_anchor": [
+        660,
+        1087
+      ],
+      "rgba_sha256": "2e392981fddb2d7a5f8647624e343d63d69d5d9e6e572eaad3f995bc83623cae",
+      "sheet": 20
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        25,
+        1266,
+        981,
+        199
+      ],
+      "margin": [
+        133,
+        765,
+        555,
+        1337
+      ],
+      "source_anchor": [
+        660,
+        1461
+      ],
+      "rgba_sha256": "9505da712a2990a32d1cc34c1cb0446a783870a906c68f75498ffc213a8a51ed",
+      "sheet": 20
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        186,
+        141,
+        707,
+        550
+      ],
+      "margin": [
+        324,
+        414,
+        829,
+        986
+      ],
+      "source_anchor": [
+        630,
+        687
+      ],
+      "rgba_sha256": "127045eb85cc2f335d328566c4a9afb50e9bda3985807b97dcacb0b47038d6f0",
+      "sheet": 21
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        29,
+        828,
+        965,
+        306
+      ],
+      "margin": [
+        167,
+        658,
+        571,
+        1230
+      ],
+      "source_anchor": [
+        630,
+        1130
+      ],
+      "rgba_sha256": "7800492536f59fbd2338a0b4a94282c73a3c30671c7e220561c9f35fceeee7dd",
+      "sheet": 21
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        25,
+        1231,
+        955,
+        243
+      ],
+      "margin": [
+        163,
+        721,
+        581,
+        1293
+      ],
+      "source_anchor": [
+        630,
+        1470
+      ],
+      "rgba_sha256": "30f558a044763f83c72529ae7cd41a609cdf41c7047a9abc940900fa004c5f59",
+      "sheet": 21
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        226,
+        64,
+        596,
+        621
+      ],
+      "margin": [
+        444,
+        343,
+        940,
+        915
+      ],
+      "source_anchor": [
+        550,
+        681
+      ],
+      "rgba_sha256": "2c23b2663b571561874b863d614d2e1fc4ae426fe13798c0b6e727dd4ff3bbab",
+      "sheet": 22
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        35,
+        794,
+        958,
+        310
+      ],
+      "margin": [
+        253,
+        654,
+        578,
+        1226
+      ],
+      "source_anchor": [
+        550,
+        1100
+      ],
+      "rgba_sha256": "d16285ab046ac35a69eb50ac5aface352072122538c57fd90492e586f401a62c",
+      "sheet": 22
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        31,
+        1232,
+        965,
+        243
+      ],
+      "margin": [
+        249,
+        721,
+        571,
+        1293
+      ],
+      "source_anchor": [
+        550,
+        1471
+      ],
+      "rgba_sha256": "8e390f150983f2af3dd2be6da9d6e42f853fcdeada7b442ab447ca74ddf2a5bb",
+      "sheet": 22
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        172,
+        115,
+        745,
+        548
+      ],
+      "margin": [
+        540,
+        416,
+        791,
+        988
+      ],
+      "source_anchor": [
+        400,
+        659
+      ],
+      "rgba_sha256": "6c89d23d0a917adbc839da5438bc35cb8393ff1eeffdacf682fd1c7ad88a0ed9",
+      "sheet": 23
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        92,
+        778,
+        898,
+        323
+      ],
+      "margin": [
+        460,
+        641,
+        638,
+        1213
+      ],
+      "source_anchor": [
+        400,
+        1097
+      ],
+      "rgba_sha256": "fb1dfe34a4d6ed2ad3113f79cd27b0daf63ebb3e661f9b7bd4c287319a7496b7",
+      "sheet": 23
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        65,
+        1217,
+        915,
+        278
+      ],
+      "margin": [
+        433,
+        686,
+        621,
+        1258
+      ],
+      "source_anchor": [
+        400,
+        1491
+      ],
+      "rgba_sha256": "ea2de75a9e8c9e4b177a1f27c4c90db9e6ba4589d0a088d97186298141d65f83",
+      "sheet": 23
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        158,
+        123,
+        726,
+        626
+      ],
+      "margin": [
+        626,
+        338,
+        810,
+        910
+      ],
+      "source_anchor": [
+        300,
+        745
+      ],
+      "rgba_sha256": "a1aa2225f5d1acbfc4d33bce21df94a5c2165477d73c5e7e76265a5a9cf60cc0",
+      "sheet": 24
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        59,
+        894,
+        926,
+        278
+      ],
+      "margin": [
+        527,
+        686,
+        610,
+        1258
+      ],
+      "source_anchor": [
+        300,
+        1168
+      ],
+      "rgba_sha256": "9cf9beecad19e4200b6cad38c70a4ff0adaea03e7582d3d06cb378b15e88ba9f",
+      "sheet": 24
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        52,
+        1265,
+        943,
+        199
+      ],
+      "margin": [
+        520,
+        765,
+        593,
+        1337
+      ],
+      "source_anchor": [
+        300,
+        1460
+      ],
+      "rgba_sha256": "a947b838df872785eb21b3362ac927d3f4de52247ba75e53eb4ee43cb11ed710",
+      "sheet": 24
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        200,
+        48,
+        649,
+        693
+      ],
+      "margin": [
+        671,
+        431,
+        1143,
+        1099
+      ],
+      "source_anchor": [
+        425,
+        737
+      ],
+      "rgba_sha256": "bf9aefd24df143f45d20b4dc8f4f1e6132b82f303b9c2af5202af48bcaaacc77",
+      "sheet": 25
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        78,
+        786,
+        882,
+        345
+      ],
+      "margin": [
+        549,
+        779,
+        910,
+        1447
+      ],
+      "source_anchor": [
+        425,
+        1127
+      ],
+      "rgba_sha256": "e73c7f0f13b9e994ed2e1c446ecbba428f435cceae6ea48f6fafda87cd40ef29",
+      "sheet": 25
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        56,
+        1195,
+        929,
+        297
+      ],
+      "margin": [
+        527,
+        827,
+        863,
+        1495
+      ],
+      "source_anchor": [
+        425,
+        1488
+      ],
+      "rgba_sha256": "db63254fa295a12a645b0bd78839098dff16f17c328d9971ebacf2aa715764ec",
+      "sheet": 25
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        233,
+        54,
+        610,
+        655
+      ],
+      "margin": [
+        837,
+        629,
+        1438,
+        1393
+      ],
+      "source_anchor": [
+        420,
+        705
+      ],
+      "rgba_sha256": "39cb3fc4ea922a06631a2b2ef2563cfe95d4bd580e62c3e463e24134c119a032",
+      "sheet": 26
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        64,
+        791,
+        897,
+        369
+      ],
+      "margin": [
+        668,
+        915,
+        1151,
+        1679
+      ],
+      "source_anchor": [
+        420,
+        1156
+      ],
+      "rgba_sha256": "0a8b20a63160d3c8e13d4cd2938cdb850bfa07c7817e942885889306ddbbac9c",
+      "sheet": 26
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        17,
+        1231,
+        991,
+        271
+      ],
+      "margin": [
+        621,
+        1013,
+        1057,
+        1777
+      ],
+      "source_anchor": [
+        420,
+        1498
+      ],
+      "rgba_sha256": "c87566874920dd3b7d2e6142eb92fda4457a812bc104645d82b54e59f8af9210",
+      "sheet": 26
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        171,
+        67,
+        626,
+        662
+      ],
+      "margin": [
+        487,
+        462,
+        1166,
+        1130
+      ],
+      "source_anchor": [
+        580,
+        725
+      ],
+      "rgba_sha256": "231b699fb1e7478157b92238f8a93778d56b7e9c4a77f3cf317cc9d27ab55b70",
+      "sheet": 27
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        52,
+        771,
+        912,
+        397
+      ],
+      "margin": [
+        368,
+        727,
+        880,
+        1395
+      ],
+      "source_anchor": [
+        580,
+        1164
+      ],
+      "rgba_sha256": "d42d3a2c98d1e6c5a2732772c038e102bc2eb70a9f2421aa9a7783a9c282678a",
+      "sheet": 27
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        44,
+        1236,
+        956,
+        243
+      ],
+      "margin": [
+        360,
+        881,
+        836,
+        1549
+      ],
+      "source_anchor": [
+        580,
+        1475
+      ],
+      "rgba_sha256": "46beb8145c57022dbe3aa4859237bb9eb9d716f4089481f4ea464349317e4932",
+      "sheet": 27
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-0.png",
+          "sha256": "710439c73935d54b5af0b6bc4160c6112b9f395b696ce7c5464578b2902f26ce",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-1.png",
+          "sha256": "adfcec69ac7deebc9b13f01d65f83250cae08bdf98d547aa45bc68775138fa11",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-2.png",
+          "sha256": "2482751c3b2dafcc295ea96937073543b1080440291b04cc4c44c30ee413fae8",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-3.png",
+          "sha256": "29630be22d679d09d33f0dee1463d38216f9d474c735cda85910be608634e631",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-4.png",
+          "sha256": "d4bfb778cb120681f485042f06dd52a7e595930409911529846d1ab0af359230",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1248,
+            1248
+          ],
+          "foot": [
+            624,
+            780
+          ],
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-5.png",
+          "sha256": "0589699f084f7b2e61df0c811271d11eb2f188ba1d49fd176ef1a1e942d63b95",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1368,
+            1368
+          ],
+          "foot": [
+            684,
+            855
+          ],
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-6.png",
+          "sha256": "1e4939b0c8ad13217900f3e0dc520ed8488b2f23df5ecfe40ac989dab5857cf0",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            1512,
+            1512
+          ],
+          "foot": [
+            756,
+            945
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-7.png",
+          "sha256": "63e08beb8e16f8866bbc126f73f4c96fb432d190de11aae391c1ea6f3cee0f22",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1456,
+            1456
+          ],
+          "foot": [
+            728,
+            910
+          ],
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-8.png",
+          "sha256": "69e7b44ff39dd8e04b95b50750bc46292d7c15a86754f24642cec48994307b89",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1192,
+            1192
+          ],
+          "foot": [
+            596,
+            745
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-9.png",
+          "sha256": "cd021ac23294ec639ae7bc9269c9b3d296f1781cb8411c2977d7ba938c6b8496",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1368,
+            1368
+          ],
+          "foot": [
+            684,
+            855
+          ],
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-10.png",
+          "sha256": "708b58a1ec259200d17c49c34e29e5520c677cd547c9e7eec982af449089498b",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1344,
+            1344
+          ],
+          "foot": [
+            672,
+            840
+          ],
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-11.png",
+          "sha256": "632246156b5a260d2508ec6175fb378bcc2ee3538596a5eb3e65eade3960a731",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1464,
+            1464
+          ],
+          "foot": [
+            732,
+            915
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-8.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-9.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-10.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-11.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-12.png",
+          "sha256": "2c31a84600715bfb00c31e2be2648e57a7be6d6e0d406f039e3c3ac3a8c9126e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1280,
+            1280
+          ],
+          "foot": [
+            640,
+            800
+          ],
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-13.png",
+          "sha256": "6cc359f5e13a3693bc91ad9f6e01a3a38fe00a78d7c733abf234726726edd983",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            808,
+            808
+          ],
+          "foot": [
+            404,
+            505
+          ],
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-14.png",
+          "sha256": "01ed4482ddb61a96b4be66bf2a6c8a3b3510e54f8774d04c994a002708a97e46",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1192,
+            1192
+          ],
+          "foot": [
+            596,
+            745
+          ],
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-15.png",
+          "sha256": "800bfe1ce9c7bfbc333e1f6ffb22e6094f7b5c32de155e327b7f4b7caf1b0624",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            976,
+            976
+          ],
+          "foot": [
+            488,
+            610
+          ],
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-16.png",
+          "sha256": "871961517184552dff53a65816bf95d86847c49ddc437163c0420ba39d4a0302",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1336,
+            1336
+          ],
+          "foot": [
+            668,
+            835
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-17.png",
+          "sha256": "cbed93b4d5a97c662a12c2c162d6cb8f11cee25a871813f6a839ce149eafddc6",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1240,
+            1240
+          ],
+          "foot": [
+            620,
+            775
+          ],
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-18.png",
+          "sha256": "59c4d9052c24b4ba99b675cc68964fa9f5409c8201abf55c83bde42b1ae90970",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1168,
+            1168
+          ],
+          "foot": [
+            584,
+            730
+          ],
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-19.png",
+          "sha256": "f54e9e5aa187096dd58bff7c26d19e8df4088995bdfbb71f43823c41544f3b3b",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1408,
+            1408
+          ],
+          "foot": [
+            704,
+            880
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-12.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-13.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-14.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-15.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-16.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-17.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-18.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-19.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-20.png",
+          "sha256": "b91688398f06911a96caeed0e3c1d667f6776d845934f3fe42b7506eb137d9dc",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1536,
+            1536
+          ],
+          "foot": [
+            768,
+            960
+          ],
+          "directions": [
+            "E"
+          ],
+          "source_direction_indices": [
+            0
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-21.png",
+          "sha256": "c3f1eb2bac90d1d5b308a8f2dfda3f77f530193c4ab8b1e0bed488357a5eee69",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1536,
+            1536
+          ],
+          "foot": [
+            768,
+            960
+          ],
+          "directions": [
+            "SE"
+          ],
+          "source_direction_indices": [
+            1
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-22.png",
+          "sha256": "c6c47f29e79dd7ee312c5bc24095b6035550d652b610873b61d22ca48a04af22",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1536,
+            1536
+          ],
+          "foot": [
+            768,
+            960
+          ],
+          "directions": [
+            "S"
+          ],
+          "source_direction_indices": [
+            2
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-23.png",
+          "sha256": "02ba15292ce6bc011855092cdeb8b703a4507dbaeca92613945cec6bc607125f",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1536,
+            1536
+          ],
+          "foot": [
+            768,
+            960
+          ],
+          "directions": [
+            "SW"
+          ],
+          "source_direction_indices": [
+            3
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-24.png",
+          "sha256": "84f25453a2b60e272fadcca39e2bd7c471d3dba20c5a8c2886cbdc8ce6455655",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1536,
+            1536
+          ],
+          "foot": [
+            768,
+            960
+          ],
+          "directions": [
+            "W"
+          ],
+          "source_direction_indices": [
+            4
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-25.png",
+          "sha256": "b43d568244eb1b29b90e17bfc2003d2dd0beae25657b745bda3c69122380c660",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1792,
+            1792
+          ],
+          "foot": [
+            896,
+            1120
+          ],
+          "directions": [
+            "NW"
+          ],
+          "source_direction_indices": [
+            5
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-26.png",
+          "sha256": "c398f23a8180df0bce4bab83d6588757ad6c1ce20a395a7ef5ff0e08ba544f25",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            2048,
+            2048
+          ],
+          "foot": [
+            1024,
+            1280
+          ],
+          "directions": [
+            "N"
+          ],
+          "source_direction_indices": [
+            6
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-27.png",
+          "sha256": "242eff0747a333605f9ff3c9e67e54601a9de38db0c291d0953d780176738de3",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1792,
+            1792
+          ],
+          "foot": [
+            896,
+            1120
+          ],
+          "directions": [
+            "NE"
+          ],
+          "source_direction_indices": [
+            7
+          ],
+          "scale_review_note": "TRIAL ONLY: manual homologous hood/crown-to-chin or rear hood-cap comparison against same-heading idle. This provisional canvas is not approved; body-height fitting was not used. Need independent whole13-phase visual review and Main.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-20.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-21.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-22.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-23.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-24.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-25.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-26.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/nungma_monster_authored/poses-27.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "median_idle",
+  "display_reference_height": 113.875
+}

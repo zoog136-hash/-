@@ -1,0 +1,903 @@
+{
+  "status": "ROOT_VISUALLY_REVIEWED_ALL8_STORYBOARDS104PHASES_PASS",
+  "scope": "ActualMain120HzQAcontrollersteps, separate fromoriginalrealAI/weaponlifecycle; noperformanceclaim/noextracompletedcount",
+  "summary": {
+    "capture_root": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures",
+    "cases": [
+      {
+        "name": "넝마",
+        "native_phases": 104,
+        "reference_binding": {
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "original": "res://assets/monsters/original/atlas_0.png",
+          "reference_kind": "existing_project_atlas",
+          "resolved_portrait": "res://assets/monsters/original/atlas_0.png",
+          "synthetic_fixture": false
+        },
+        "rendered_native_phases": 104,
+        "report": "/workspace/scratch/pr100-continuation/temporal-batch30-render/summary-cases/nungma-monster-authored.json",
+        "report_sha256": "b7687f1334d8a54d8d3fcf9f1061a9de6d2026febc6325f2b25d32594d0b81ec",
+        "roles": 40,
+        "slug": "nungma-monster-authored"
+      }
+    ],
+    "checks": 40364,
+    "clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+    "completed_added": 0,
+    "direct_texture_assignment": false,
+    "failures": [],
+    "production_game_or_guard_changes": false,
+    "rendered": true,
+    "scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+    "simulation_step_seconds": 0.00833333333333333,
+    "user_directory": "/workspace/scratch/pr100-continuation/temporal-batch30-render/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+    "wall_microseconds": 77191247,
+    "wall_time_performance_claim": false
+  },
+  "validator_sha256": "9ad26fd81375788bacd4fc9f90b67fe0555a3f3f0a2dc1b7d42afb8b3772c19c",
+  "archive_parts": [
+    {
+      "file": "controller-main-evidence-part01.zip",
+      "sha256": "98dc298b6134817987f211d50d222b7f60ff153ba08b1f326b9b78fe9e5fe4e0",
+      "bytes": 79119196,
+      "members": [
+        "run/summary.json",
+        "run/invocation.json",
+        "run/validator.gd",
+        "run/engine.log",
+        "run/summary-cases/nungma-monster-authored.json",
+        "run/captures/nungma-monster-authored/viewport-S-death-2.png",
+        "run/captures/nungma-monster-authored/SW-attack-1.png",
+        "run/captures/nungma-monster-authored/SW-attack-2.png",
+        "run/captures/nungma-monster-authored/SW-walk-0.png",
+        "run/captures/nungma-monster-authored/W-walk-2.png",
+        "run/captures/nungma-monster-authored/NE-hit-0.png",
+        "run/captures/nungma-monster-authored/SW-death-2.png",
+        "run/captures/nungma-monster-authored/W-death-2.png",
+        "run/captures/nungma-monster-authored/SE-walk-0.png",
+        "run/captures/nungma-monster-authored/SW-idle-1.png",
+        "run/captures/nungma-monster-authored/N-walk-0.png",
+        "run/captures/nungma-monster-authored/NE-walk-1.png",
+        "run/captures/nungma-monster-authored/W-attack-2.png",
+        "run/captures/nungma-monster-authored/W-attack-1.png",
+        "run/captures/nungma-monster-authored/SW-walk-1.png",
+        "run/captures/nungma-monster-authored/E-attack-1.png",
+        "run/captures/nungma-monster-authored/N-idle-0.png",
+        "run/captures/nungma-monster-authored/NW-death-0.png",
+        "run/captures/nungma-monster-authored/NW-idle-0.png",
+        "run/captures/nungma-monster-authored/E-attack-2.png",
+        "run/captures/nungma-monster-authored/E-idle-0.png",
+        "run/captures/nungma-monster-authored/NE-walk-2.png",
+        "run/captures/nungma-monster-authored/SW-hit-1.png",
+        "run/captures/nungma-monster-authored/E-death-1.png",
+        "run/captures/nungma-monster-authored/NW-death-1.png",
+        "run/captures/nungma-monster-authored/S-walk-2.png",
+        "run/captures/nungma-monster-authored/NW-attack-1.png",
+        "run/captures/nungma-monster-authored/viewport-S-idle-0.png",
+        "run/captures/nungma-monster-authored/E-idle-1.png",
+        "run/captures/nungma-monster-authored/S-hit-0.png",
+        "run/captures/nungma-monster-authored/SE-death-2.png",
+        "run/captures/nungma-monster-authored/E-walk-2.png",
+        "run/captures/nungma-monster-authored/SE-hit-0.png",
+        "run/captures/nungma-monster-authored/NW-attack-0.png",
+        "run/captures/nungma-monster-authored/E-hit-1.png",
+        "run/captures/nungma-monster-authored/S-death-1.png",
+        "run/captures/nungma-monster-authored/W-death-0.png",
+        "run/captures/nungma-monster-authored/S-death-2.png",
+        "run/captures/nungma-monster-authored/NW-idle-1.png",
+        "run/captures/nungma-monster-authored/SE-attack-0.png",
+        "run/captures/nungma-monster-authored/S-walk-0.png",
+        "run/captures/nungma-monster-authored/NE-death-0.png",
+        "run/captures/nungma-monster-authored/W-hit-0.png",
+        "run/captures/nungma-monster-authored/W-walk-1.png",
+        "run/captures/nungma-monster-authored/N-death-0.png",
+        "run/captures/nungma-monster-authored/NE-death-2.png",
+        "run/captures/nungma-monster-authored/SW-attack-0.png",
+        "run/captures/nungma-monster-authored/NE-walk-0.png",
+        "run/captures/nungma-monster-authored/E-walk-1.png",
+        "run/captures/nungma-monster-authored/SW-hit-0.png",
+        "run/captures/nungma-monster-authored/E-walk-0.png",
+        "run/captures/nungma-monster-authored/NE-hit-1.png",
+        "run/captures/nungma-monster-authored/N-hit-0.png",
+        "run/captures/nungma-monster-authored/N-attack-1.png",
+        "run/captures/nungma-monster-authored/W-attack-0.png",
+        "run/captures/nungma-monster-authored/NE-idle-1.png",
+        "run/captures/nungma-monster-authored/S-death-0.png",
+        "run/captures/nungma-monster-authored/NW-walk-0.png",
+        "run/captures/nungma-monster-authored/N-idle-1.png",
+        "run/captures/nungma-monster-authored/N-death-2.png",
+        "run/captures/nungma-monster-authored/S-hit-1.png",
+        "run/captures/nungma-monster-authored/SW-idle-0.png",
+        "run/captures/nungma-monster-authored/SE-attack-2.png",
+        "run/captures/nungma-monster-authored/S-idle-0.png",
+        "run/captures/nungma-monster-authored/SE-death-1.png",
+        "run/captures/nungma-monster-authored/E-attack-0.png",
+        "run/captures/nungma-monster-authored/SE-death-0.png",
+        "run/captures/nungma-monster-authored/NW-attack-2.png",
+        "run/captures/nungma-monster-authored/E-death-2.png",
+        "run/captures/nungma-monster-authored/N-walk-2.png",
+        "run/captures/nungma-monster-authored/NE-idle-0.png",
+        "run/captures/nungma-monster-authored/NW-walk-2.png",
+        "run/captures/nungma-monster-authored/NW-hit-1.png",
+        "run/captures/nungma-monster-authored/W-walk-0.png",
+        "run/captures/nungma-monster-authored/viewport-S-attack-1.png",
+        "run/captures/nungma-monster-authored/S-walk-1.png",
+        "run/captures/nungma-monster-authored/SE-hit-1.png",
+        "run/captures/nungma-monster-authored/NE-death-1.png",
+        "run/captures/nungma-monster-authored/E-hit-0.png",
+        "run/captures/nungma-monster-authored/N-hit-1.png",
+        "run/captures/nungma-monster-authored/SW-walk-2.png",
+        "run/captures/nungma-monster-authored/NW-walk-1.png",
+        "run/captures/nungma-monster-authored/NW-hit-0.png",
+        "run/captures/nungma-monster-authored/NE-attack-0.png",
+        "run/captures/nungma-monster-authored/S-attack-1.png",
+        "run/captures/nungma-monster-authored/W-idle-0.png",
+        "run/captures/nungma-monster-authored/SE-attack-1.png",
+        "run/captures/nungma-monster-authored/NE-attack-1.png",
+        "run/captures/nungma-monster-authored/SW-death-1.png",
+        "run/captures/nungma-monster-authored/SW-death-0.png",
+        "run/captures/nungma-monster-authored/NE-attack-2.png",
+        "run/captures/nungma-monster-authored/W-idle-1.png",
+        "run/captures/nungma-monster-authored/NW-death-2.png",
+        "run/captures/nungma-monster-authored/S-attack-0.png",
+        "run/captures/nungma-monster-authored/N-death-1.png",
+        "run/captures/nungma-monster-authored/N-attack-2.png"
+      ]
+    },
+    {
+      "file": "controller-main-evidence-part02.zip",
+      "sha256": "22c2beba689a4ad92318318167a04febde8edd48a1933e56daab29888e14587c",
+      "bytes": 18782314,
+      "members": [
+        "run/captures/nungma-monster-authored/S-idle-1.png",
+        "run/captures/nungma-monster-authored/W-hit-1.png",
+        "run/captures/nungma-monster-authored/N-walk-1.png",
+        "run/captures/nungma-monster-authored/S-attack-2.png",
+        "run/captures/nungma-monster-authored/SE-idle-0.png",
+        "run/captures/nungma-monster-authored/W-death-1.png",
+        "run/captures/nungma-monster-authored/SE-walk-1.png",
+        "run/captures/nungma-monster-authored/SE-idle-1.png",
+        "run/captures/nungma-monster-authored/SE-walk-2.png",
+        "run/captures/nungma-monster-authored/E-death-0.png",
+        "run/captures/nungma-monster-authored/N-attack-0.png",
+        "contacts/temporal-contact-manifest.json",
+        "contacts/nungma-monster-authored/SE-temporal-contact.png",
+        "contacts/nungma-monster-authored/NE-temporal-contact.png",
+        "contacts/nungma-monster-authored/W-temporal-contact.png",
+        "contacts/nungma-monster-authored/E-temporal-contact.png",
+        "contacts/nungma-monster-authored/NW-temporal-contact.png",
+        "contacts/nungma-monster-authored/N-temporal-contact.png",
+        "contacts/nungma-monster-authored/S-temporal-contact.png",
+        "contacts/nungma-monster-authored/SW-temporal-contact.png"
+      ]
+    }
+  ],
+  "members": [
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/summary.json",
+      "archive": "run/summary.json",
+      "sha256": "98deb6f47fb4c7ebc8b940ca4ebe1fdd36ba29522f4976de7a29c4e427d394eb",
+      "bytes": 1543
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/invocation.json",
+      "archive": "run/invocation.json",
+      "sha256": "dd3ba2db1439525e3850673edd6fce80c6c3f9efff882deda46fc6946f759a91",
+      "bytes": 2432
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/validator.gd",
+      "archive": "run/validator.gd",
+      "sha256": "9ad26fd81375788bacd4fc9f90b67fe0555a3f3f0a2dc1b7d42afb8b3772c19c",
+      "bytes": 32433
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/engine.log",
+      "archive": "run/engine.log",
+      "sha256": "7f3d774630c6d170386fa0c2bdfb3a133f6da837dbb6e5ec907fa9336563cc62",
+      "bytes": 1187
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/summary-cases/nungma-monster-authored.json",
+      "archive": "run/summary-cases/nungma-monster-authored.json",
+      "sha256": "b7687f1334d8a54d8d3fcf9f1061a9de6d2026febc6325f2b25d32594d0b81ec",
+      "bytes": 2924882
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/viewport-S-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/viewport-S-death-2.png",
+      "sha256": "b8bc57456c817e92e94b272cd0906cd6ed466492cb61658b8de72ef033443530",
+      "bytes": 1511513
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/SW-attack-1.png",
+      "sha256": "5eed9cb2da151c7028092809af6039124f3d4357420fb236f26f19e9f5290719",
+      "bytes": 802567
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/SW-attack-2.png",
+      "sha256": "19f75b4f30eb317807aace3881fbc7edc867b01fac756f6cd1fe3cccf387ab88",
+      "bytes": 799144
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/SW-walk-0.png",
+      "sha256": "b031f3964fc75ed453c5c08f3b33ebad5cd1c2966e48e1f8dbaea1efb6803150",
+      "bytes": 781652
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/W-walk-2.png",
+      "sha256": "4ff366d309927573955e0830c70164ac6f5c507acdb8293cc4772dbf88b80e83",
+      "bytes": 793440
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/NE-hit-0.png",
+      "sha256": "66659d6df04eef25a1f2e8cc9e9b1d47f2e7e126189b875f387e0a22f23cc1e3",
+      "bytes": 803890
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/SW-death-2.png",
+      "sha256": "cc370c21908b7ba86c3f9ae89d9fb3f108de2990bd808bcdf806383563daa7a7",
+      "bytes": 798708
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/W-death-2.png",
+      "sha256": "9531e16fcc5cc3bd9f777b200c5dd61896c7b5767a8330175b750adff03bd47d",
+      "bytes": 797261
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/SE-walk-0.png",
+      "sha256": "de9213428695018ac85662aa95c49155d1778adf9ed76a8283769c2cb889b96b",
+      "bytes": 808329
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/SW-idle-1.png",
+      "sha256": "99c4e5902e6633df7a7903461942cf96a53c970f22c541f8e155078fdc0b5e8d",
+      "bytes": 797179
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/N-walk-0.png",
+      "sha256": "7aff129bac358908f6d7021c69c8fabafde7ff1df9add3e2fa85114792bf7023",
+      "bytes": 796225
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/NE-walk-1.png",
+      "sha256": "062e93872973075e6759c4c1d75469fec411100758b5ed409f6bca50ac3e2253",
+      "bytes": 798768
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/W-attack-2.png",
+      "sha256": "eeab9e30892df704a85149f89976b312ac8534ccde4236b2f60719e5d8251ee6",
+      "bytes": 794038
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/W-attack-1.png",
+      "sha256": "4fd1720fa7e5667517354e41a97e3d0bda7ba0b11d06c9609d2097f6aa80878b",
+      "bytes": 794424
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/SW-walk-1.png",
+      "sha256": "ab6a6177ea5c319d51e79f875e90e16d12d7d611c93dc939eb7cfca132df0ec3",
+      "bytes": 783972
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/E-attack-1.png",
+      "sha256": "5724ddba46fc233978a708348eb1f2ee2817ebe7661ddf468e8cb144b7b03c91",
+      "bytes": 814696
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/N-idle-0.png",
+      "sha256": "e7babee1c7eed63cdd4b45a76cf9412bee248cf89a503c9f6ca9258e4d7152cf",
+      "bytes": 797840
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/NW-death-0.png",
+      "sha256": "1d6bda10a26481a56e34602f975d30f84ace005b3f42047928cc48d886c3f0d9",
+      "bytes": 795565
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/NW-idle-0.png",
+      "sha256": "bf9b0fac0063e209d9c9381f5dc149ec66082d4897d6192d5ae87ed38cad1507",
+      "bytes": 791213
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/E-attack-2.png",
+      "sha256": "c9e94db7751e692c1f3997f950a59fb833e769dbabcb83eaa1ee7f42c66bbbad",
+      "bytes": 811210
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/E-idle-0.png",
+      "sha256": "72686ff31ed34bcdffcd0262985b312265a41d946bd42aa035a64b281b2babb5",
+      "bytes": 805066
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/NE-walk-2.png",
+      "sha256": "97ced2819ace4d61d786ef21a6a57f3c528e788d1647ff9168650b614a500798",
+      "bytes": 805426
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/SW-hit-1.png",
+      "sha256": "7f6bd6b8f1a932cf9c3d08f79aac529f93b0a663ad75d02a30640ff8e3d08c45",
+      "bytes": 800832
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/E-death-1.png",
+      "sha256": "e3ae50d9392e95f5100a99311d5535bb4c0edf6b5927e23e95df6c8fa409b076",
+      "bytes": 799114
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/NW-death-1.png",
+      "sha256": "dc190891a46f5f43f236000659cd7e5aae206cdfcccdfadb73edd9d120c6ea84",
+      "bytes": 794105
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/S-walk-2.png",
+      "sha256": "c5cda5435a61f6e9b5c8e6336fc9e18af75049af7354af0685e841077d423396",
+      "bytes": 804498
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/NW-attack-1.png",
+      "sha256": "be28b7aa0a64b2b2cffd0e8ef32b09431e4f93613a8ba21144f366d87e2a82b1",
+      "bytes": 795403
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/viewport-S-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/viewport-S-idle-0.png",
+      "sha256": "da514a4cfe350f48ca927afb9b46d5003b97bbfa40b995db802bf69d1775b690",
+      "bytes": 1515513
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/E-idle-1.png",
+      "sha256": "f78e13afabf4aa5a4942d8c2501df973593f522dc666e9a33c2829a8f25f4695",
+      "bytes": 802599
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/S-hit-0.png",
+      "sha256": "8cb517073fac9206adae396db3e6416a21a574935a3ce47d393c9a1108a451d9",
+      "bytes": 805839
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/SE-death-2.png",
+      "sha256": "0559cc3e34243d92db3a23502d88529dfb1b3f42ff09b3dd4264c059e458a0b1",
+      "bytes": 800019
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/E-walk-2.png",
+      "sha256": "4206fc5334cdd73059688f9e69fc590aa370f39d281554676df6e03d2dd2f203",
+      "bytes": 812471
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/SE-hit-0.png",
+      "sha256": "c65d44c419a133c1a3da63eab130efc2677ba83279f51a70b6d3123bd9fa82cc",
+      "bytes": 809980
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/NW-attack-0.png",
+      "sha256": "a6a171c65b6da215bc817e81147ded04822e154b8d894110299b5e00712060e8",
+      "bytes": 793843
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/E-hit-1.png",
+      "sha256": "6ba546e9c58cf83451da966a46b0c03656f07f73d42b630967b72d1e20b6edc4",
+      "bytes": 810180
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/S-death-1.png",
+      "sha256": "93698a6d14c0ace87ae7e71e91be217371f071c205967ff2b9116455690807fa",
+      "bytes": 802745
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/W-death-0.png",
+      "sha256": "818f2f0ca1941ece049ff93215fb189a5bbd0a484f13860fe1bf58a4d9db0bba",
+      "bytes": 801374
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/S-death-2.png",
+      "sha256": "d3de6e481d1251481f43ca05c4a19613995a8432178d2f1bb03788e4aea4ae91",
+      "bytes": 799850
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/NW-idle-1.png",
+      "sha256": "06414bf9ce5bbc1d261339583ad40e6297b75ba08ffe8c953e1cf0b3fdc98955",
+      "bytes": 793252
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/SE-attack-0.png",
+      "sha256": "b8844d6c1fbc528bcb36e93d538bb43d1d8e49746ff3126d42899929f2c78c02",
+      "bytes": 810646
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/S-walk-0.png",
+      "sha256": "10f7c761ae8e16de6f1f587274ae707da96c945eca4cc16e77d23c2363f76aad",
+      "bytes": 809367
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/NE-death-0.png",
+      "sha256": "dfd102b37fd3fec2aa9d33762c3f8b019db84e98dc441e12ec0bf22a8cde2540",
+      "bytes": 805798
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/W-hit-0.png",
+      "sha256": "f0ac56e659edf1aa87ead05befcfdfa223b7c6c4b819e0ca70e78a511690479f",
+      "bytes": 796976
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/W-walk-1.png",
+      "sha256": "630e0c2dc58d326c742adbd4d576cc36cba5a65e05e0eabaf5f6790e34465069",
+      "bytes": 773104
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/N-death-0.png",
+      "sha256": "70ca6315b26cd1598523ff1f7592f0ae87ab2710f8959494ea78b36405900ea6",
+      "bytes": 793674
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/NE-death-2.png",
+      "sha256": "2b9982d78334d8cee9a2273f330c36eec83a62a204e4020d35085008b1676525",
+      "bytes": 797087
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/SW-attack-0.png",
+      "sha256": "5747176df78e098ef40ecdc10682b92b4cc8bc4fd57828e1173c2c8e143e1727",
+      "bytes": 796792
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/NE-walk-0.png",
+      "sha256": "a12069668a3807530fea6e53773b6c4b18bc078ab39db283f26456d58cb08bc5",
+      "bytes": 801932
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/E-walk-1.png",
+      "sha256": "c2b94b7a0a794a984a1acf6f39ff7374da539f70db4daa0a29090fe64f7933cd",
+      "bytes": 801883
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/SW-hit-0.png",
+      "sha256": "3144b29d98e04a01e414f953aa5945680704285d939b941b5400479e48b8e816",
+      "bytes": 800494
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/E-walk-0.png",
+      "sha256": "2099f6049de3505f6c492598e137437fa65d980ffba01934abedc2f67f0db5f4",
+      "bytes": 808366
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/NE-hit-1.png",
+      "sha256": "5bdd111d8e7898b72a19d782f7259406822cbe5d1ea682ae2995949f3b0f319e",
+      "bytes": 801932
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/N-hit-0.png",
+      "sha256": "e41ebbff311a6a4e544af9963085845410fec05b43cecefea3d5234b9b891b01",
+      "bytes": 798871
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/N-attack-1.png",
+      "sha256": "ce3dd4fa6e157f6d1777326b962fd1a7d7e03eb5e8c86b62c5a72197638a625e",
+      "bytes": 794363
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/W-attack-0.png",
+      "sha256": "51f27593671ea1b0fcac6383d5bca468e8034efc91ee0444c2b047133f9753f2",
+      "bytes": 793313
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/NE-idle-1.png",
+      "sha256": "8b6d8c6fdb326523e2c6bff2dbde780ad61f6d37ccc41284c8de9d9eb69faa3b",
+      "bytes": 798793
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/S-death-0.png",
+      "sha256": "d63a9f9590149f649647cb907f3c4b0fb4e0746115dbcd0505527a0dc601edd2",
+      "bytes": 807315
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/NW-walk-0.png",
+      "sha256": "a65159e837248d1ab17ab3f44707b009c5e0b0b8bbafbe65ad7f87d004013970",
+      "bytes": 771615
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/N-idle-1.png",
+      "sha256": "7547e2b66adc72d3f8620dcb1b5d2fb311259780ba8c5a1fcec33c0e52f19fcc",
+      "bytes": 796189
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/N-death-2.png",
+      "sha256": "2820ed4e2565dc39fbc621fc7975f76598d1f9060b5cbd30df1e781a0125ab91",
+      "bytes": 792348
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/S-hit-1.png",
+      "sha256": "918630ea5683890133388b7ad1126989e714b65f5c0a1b7f466ba0e206f181ed",
+      "bytes": 804786
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/SW-idle-0.png",
+      "sha256": "f63d29a3f318b1f8809cceba95e06546b782539f8ba7ddab3136b2c04665704f",
+      "bytes": 798573
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/SE-attack-2.png",
+      "sha256": "aa14d5272557b2386472c62e5132667c2dac005d42e914166f13a27c6d8e8291",
+      "bytes": 810690
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/S-idle-0.png",
+      "sha256": "bfa66e96a8af90e7bccb69ac76a69ed81b299985147ac5eabf0450fb26c5252e",
+      "bytes": 803700
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/SE-death-1.png",
+      "sha256": "dc154b3846791791ef0ccf78f47405ad877cc7285908da7676c52daf1166d5d4",
+      "bytes": 802479
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/E-attack-0.png",
+      "sha256": "4abb3463ecfdf59c80420ad4e63522c294e0242cd78af59a2326ba7ee24ffe22",
+      "bytes": 808753
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/SE-death-0.png",
+      "sha256": "76049f53d7b1ac067303a2c90cd865291901482ccd838fe56ed2672f08967a91",
+      "bytes": 811774
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/NW-attack-2.png",
+      "sha256": "403e0b3b7132ee74ed0a6c1851db7261aa269cf5bca6155e45cc1980c72c4a18",
+      "bytes": 794134
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/E-death-2.png",
+      "sha256": "dc319045868819c2b6bca65eaf4311238683672ba369672ad85d4fb5a3abd419",
+      "bytes": 797005
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/N-walk-2.png",
+      "sha256": "409d23c1a00e1150d55fa890d9e381550e91aae569eba14dc6142a610ef5a9ef",
+      "bytes": 796828
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/NE-idle-0.png",
+      "sha256": "6eafe4732cf38f0a2e177c96868da6eb08b854c6ccc1a8884e099f4b08ba9c7c",
+      "bytes": 801262
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/NW-walk-2.png",
+      "sha256": "1dfb85b7065f156edaba7d1ba581298a64ea6d3c4bdc284efde206658583173d",
+      "bytes": 793133
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/NW-hit-1.png",
+      "sha256": "043f9590998bd2fa535619074caf6d7e02cf9cd74c66dee067d990b7f64885a9",
+      "bytes": 793446
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-walk-0.png",
+      "archive": "run/captures/nungma-monster-authored/W-walk-0.png",
+      "sha256": "8c53e1a7be20bd291cbe3d7051b97a6c557776ff83e0cfd8fa9e55b7a0c8f35f",
+      "bytes": 773740
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/viewport-S-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/viewport-S-attack-1.png",
+      "sha256": "f8711401d3c53fdaae06695c9a2eac4c12bcdb96a90ea2fa796d22767e38586c",
+      "bytes": 1527371
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/S-walk-1.png",
+      "sha256": "9dab22c892ef714779b209c12078d501eee5937770510497cd014e536f743e8c",
+      "bytes": 800976
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/SE-hit-1.png",
+      "sha256": "c4183362c96fd9de3ccfcd00a04ed3b44343b41bac28c5491753223e9fd77955",
+      "bytes": 809463
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/NE-death-1.png",
+      "sha256": "c9000de26ee28146147e4c7b400c0fdc81a8ca829d59efbfb3884b50fea33177",
+      "bytes": 801829
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/E-hit-0.png",
+      "sha256": "ca52a1b458296c2202393165e0301629871b174aedcbac43448cf5d3f64e005b",
+      "bytes": 808810
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/N-hit-1.png",
+      "sha256": "3c12d49b6c6a306e773888a382a56ae9788b335e1a79c1e84cbb015ac9ef426c",
+      "bytes": 798367
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/SW-walk-2.png",
+      "sha256": "164dfbe446b52e004419fc5cad7fb0441462ddc2989e5ea3860c9fa82ace38de",
+      "bytes": 794704
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/NW-walk-1.png",
+      "sha256": "acfdf3c6eeebd8452c1a98a1dedbcc540bfa7cb007d150db6333bb866bf565df",
+      "bytes": 783355
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-hit-0.png",
+      "archive": "run/captures/nungma-monster-authored/NW-hit-0.png",
+      "sha256": "b7b994b782c2a827a601d59debc13e126a7f17e5079d705303773b179bbfa02a",
+      "bytes": 793367
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/NE-attack-0.png",
+      "sha256": "f6f88e961cf9dab1a35e950fc391e386aea0b535554083b35670ebadb5a93124",
+      "bytes": 802294
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/S-attack-1.png",
+      "sha256": "628ce96ee49b7783f9f4ea9ef1e8b0c67b98504ba0a15502177015c5d90f73d6",
+      "bytes": 814946
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/W-idle-0.png",
+      "sha256": "a5c3ca4ebf634347194635ab12a3a44a0b042717b9298d5be0dbe9b0c90baf00",
+      "bytes": 795375
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/SE-attack-1.png",
+      "sha256": "f4538bf87b0243b40d1c6bfeb0364c7c4f8ac8e8414318b2f6aee4892adfd3e3",
+      "bytes": 813490
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-attack-1.png",
+      "archive": "run/captures/nungma-monster-authored/NE-attack-1.png",
+      "sha256": "358c53a0ad5860c896b6a76675cb3ed2a216e4a42789924e915bc11fe1a42481",
+      "bytes": 805503
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/SW-death-1.png",
+      "sha256": "2d0bd1138878fd79597218faa18d9cdd4d0ae9a5025a159750313fb06bfa3838",
+      "bytes": 798816
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SW-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/SW-death-0.png",
+      "sha256": "c3f5de8ca66cbec31e5bb26968e88cfa3ced92a56efd7a454d73fbcfb21fc72d",
+      "bytes": 801257
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NE-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/NE-attack-2.png",
+      "sha256": "5fa69645ef8e60ac05ef895a7d14cddefba8d7c52bdc23fac45ef5f734b1fd15",
+      "bytes": 801784
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/W-idle-1.png",
+      "sha256": "175b467fdd9f20f33b6da804164ffb871b0a37acb0b4063c577a633bf26ce796",
+      "bytes": 797554
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/NW-death-2.png",
+      "archive": "run/captures/nungma-monster-authored/NW-death-2.png",
+      "sha256": "65b522f2b8fa5fa3ae6316f123648806033cb5c847d11c882e28a9a63fe9f31e",
+      "bytes": 795608
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/S-attack-0.png",
+      "sha256": "404147ddf2d227535c629897f6561338598601596559d1144baba30a9c9c272e",
+      "bytes": 808337
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/N-death-1.png",
+      "sha256": "14b8ebea0e7a5e70f3a8465517d8385bb8950e144b4cbf5b66d56999b986e36d",
+      "bytes": 793191
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/N-attack-2.png",
+      "sha256": "3aa08314751edbb04855dedeca4a7672f544d078ae172fd238c0f3b652d3dbfb",
+      "bytes": 793816
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/S-idle-1.png",
+      "sha256": "c521728cd7f6be7d4cb906562c1992a65bab24b543a18a583eaed925d3638000",
+      "bytes": 801717
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-hit-1.png",
+      "archive": "run/captures/nungma-monster-authored/W-hit-1.png",
+      "sha256": "71210099a8224c112e068369b168ad161ee36a7e91fe4255153f5d352bfeb6a4",
+      "bytes": 797597
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/N-walk-1.png",
+      "sha256": "99da17bc2a003e8c417a2ba6cd508c091029edefda7847e380ab97f1dbf288d2",
+      "bytes": 794174
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/S-attack-2.png",
+      "archive": "run/captures/nungma-monster-authored/S-attack-2.png",
+      "sha256": "20a0835c9acd3ed9549dc0e961f18a30028909423d68f7e6a3058276834e5107",
+      "bytes": 807274
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-idle-0.png",
+      "archive": "run/captures/nungma-monster-authored/SE-idle-0.png",
+      "sha256": "c6b2953032016869fbdee10baa9be0c9401b68ee8a914db9a8915a12bff0bb36",
+      "bytes": 806537
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/W-death-1.png",
+      "archive": "run/captures/nungma-monster-authored/W-death-1.png",
+      "sha256": "9373b7db7dbf2c974583b39278a3f06ae8c4bcf83842c11f23b759f7d1a6326e",
+      "bytes": 798383
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-walk-1.png",
+      "archive": "run/captures/nungma-monster-authored/SE-walk-1.png",
+      "sha256": "99de90b5d1c38e418b274d9167219bcd7db103af7568d96c1e5a9049a253face",
+      "bytes": 806410
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-idle-1.png",
+      "archive": "run/captures/nungma-monster-authored/SE-idle-1.png",
+      "sha256": "f50e528fb9b0d982b5811e17fb00c086470af7f696131dc797b999333e06a561",
+      "bytes": 803160
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/SE-walk-2.png",
+      "archive": "run/captures/nungma-monster-authored/SE-walk-2.png",
+      "sha256": "21937f4dcf35b5e730c30489412d34864b662e2e2b3b0198b1e1638837d80eca",
+      "bytes": 810432
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/E-death-0.png",
+      "archive": "run/captures/nungma-monster-authored/E-death-0.png",
+      "sha256": "645dbf5a145bbff8e1d9669cd6cfd53f62499e16e23fc0522a791ed7e6626f8e",
+      "bytes": 807581
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-render/captures/nungma-monster-authored/N-attack-0.png",
+      "archive": "run/captures/nungma-monster-authored/N-attack-0.png",
+      "sha256": "52ba87376e471aa5ea17cd626588ea3105a5a64a97afe39614bfd2e4a877c507",
+      "bytes": 795023
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/temporal-contact-manifest.json",
+      "archive": "contacts/temporal-contact-manifest.json",
+      "sha256": "cef45e8154e128628c46a8b682b95dc3abacc6ff52f6ad3537ab9e1b0508303f",
+      "bytes": 65265
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/SE-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/SE-temporal-contact.png",
+      "sha256": "519546387255baac1d63ea60ba9cc5d9b13fa4786bb0c59443aeb62e4b74ed6b",
+      "bytes": 1054864
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/NE-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/NE-temporal-contact.png",
+      "sha256": "a294db958e125d04ac1aa229cc6d2793854f326bd4f99e7749ec720080c4b409",
+      "bytes": 1174249
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/W-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/W-temporal-contact.png",
+      "sha256": "45e70acb63f03dc069ddc3791e609d0d5af94c9f685cdb86a260df47eee86c05",
+      "bytes": 1204170
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/E-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/E-temporal-contact.png",
+      "sha256": "32b7387bf906a9870447332022bea14967146860d22576c8a735af529d5074dd",
+      "bytes": 1564342
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/NW-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/NW-temporal-contact.png",
+      "sha256": "9811db71d005bb8c49965e2c94154bef4016f659a307c27f7432295dc8f36f67",
+      "bytes": 1350842
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/N-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/N-temporal-contact.png",
+      "sha256": "451d5c06253f30e44593191d03b6c52bc099d36072f17bec0803b081d30e0b6a",
+      "bytes": 1338177
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/S-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/S-temporal-contact.png",
+      "sha256": "cf2370d2fad6299b92e37e989710047c70d8a6e4d0815d9342fef188b3f16e7e",
+      "bytes": 984481
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/temporal-batch30-contacts/nungma-monster-authored/SW-temporal-contact.png",
+      "archive": "contacts/nungma-monster-authored/SW-temporal-contact.png",
+      "sha256": "161bc05b3952eeb5888288dbbc91f783efc4423ad00b8076de63530f6fc10b94",
+      "bytes": 1391326
+    }
+  ]
+}
