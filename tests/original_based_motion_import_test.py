@@ -49,6 +49,104 @@ class OriginalBasedImportTest(unittest.TestCase):
         return {str(path.relative_to(root)): importer.sha(path) if path.is_file() else None
                 for path in root.rglob("*")}
 
+    def duplicate_synthetic_visible_pose_with_hidden_rgb(self, candidate, target_sheet=0, target_row=1):
+        """Copy a test rectangle with a transparent hole, never game art."""
+        source_path = Path(candidate["sheets"][0]["output_path"])
+        target_path = Path(candidate["sheets"][target_sheet]["output_path"])
+        with Image.open(source_path) as image:
+            source = np.asarray(image).copy()
+        source[28:30, 26:28] = [80, 33, 45, 0]
+        cell = source[:64, :64].copy()
+        cell[cell[:, :, 3] == 0] = [17, 23, 47, 0]
+        if target_path == source_path:
+            target = source
+        else:
+            with Image.open(target_path) as image:
+                target = np.asarray(image).copy()
+        target[target_row * 64:(target_row + 1) * 64, :64] = cell
+        Image.fromarray(source).save(source_path)
+        if target_path != source_path:
+            Image.fromarray(target).save(target_path)
+
+    def test_invisible_rgb_cannot_disguise_repeated_visible_pose_in_analysis_or_import(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, _output = self.prepare_synthetic_import(root)
+            self.duplicate_synthetic_visible_pose_with_hidden_rgb(candidate)
+            path = Path(candidate["sheets"][0]["output_path"])
+            with Image.open(path) as image:
+                pixels = np.asarray(image)
+            self.assertNotEqual(hashlib.sha256(pixels[17:47, 17:39].tobytes()).hexdigest(),
+                                hashlib.sha256(pixels[81:111, 17:39].tobytes()).hexdigest(),
+                                "The old raw-RGBA guard must be bypassed by this regression fixture")
+            with self.assertRaisesRegex(ValueError, "repeated visible pose"):
+                importer.analyze(path, 8, reference_rows=[0, 1])
+            self.assert_import_rejected_without_writes(root, candidate, keys)
+
+    def test_invisible_rgb_cannot_disguise_global_idle_hit_duplicate_before_writes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, _output = self.prepare_synthetic_import(root)
+            self.duplicate_synthetic_visible_pose_with_hidden_rgb(candidate, target_sheet=1, target_row=0)
+            parts = [importer.analyze(Path(spec["output_path"]), spec["rows"], reference_rows=[0, 1])
+                     for spec in candidate["sheets"]]
+            self.assertNotEqual(parts[0]["frames"][0]["rgba_sha256"], parts[1]["frames"][0]["rgba_sha256"])
+            before = self.import_snapshot(root)
+            mtimes = {str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}
+            for apply in (False, True):
+                with self.subTest(apply=apply), self.assertRaisesRegex(ValueError, "Duplicate visible pose across source sheets"):
+                    importer.import_sheet(root, candidate, "fixture", keys, apply)
+                self.assertEqual(self.import_snapshot(root), before)
+                self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, mtimes)
+
+    def test_different_transparent_border_widths_cannot_disguise_visible_duplicates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, _output = self.prepare_synthetic_import(root)
+            self.duplicate_synthetic_visible_pose_with_hidden_rgb(candidate)
+            path = Path(candidate["sheets"][0]["output_path"])
+            with Image.open(path) as image:
+                pixels = np.asarray(image).copy()
+            body = pixels[20:44, 20:36].copy()
+            pixels[:64, :64] = 0
+            pixels[20:44, 1:17] = body
+            Image.fromarray(pixels).save(path)
+            # The leftmost body's3px crop clamps at x0, leaving a different
+            # transparent border width but exactly the same rendered body.
+            with self.assertRaisesRegex(ValueError, "repeated visible pose"):
+                importer.analyze(path, 8, reference_rows=[0, 1])
+            self.assert_import_rejected_without_writes(root, candidate, keys)
+
+    def test_visible_motion_and_nonzero_alpha_changes_keep_raw_provenance_and_rerun(self):
+        for change in ("articulated_arm", "alpha_one"):
+            with self.subTest(change=change), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, output = self.prepare_synthetic_import(root)
+                self.duplicate_synthetic_visible_pose_with_hidden_rgb(candidate)
+                path = Path(candidate["sheets"][0]["output_path"])
+                with Image.open(path) as image:
+                    pixels = np.asarray(image).copy()
+                if change == "articulated_arm":
+                    pixels[94:98, 36:44] = [30, 100, 160, 255]
+                else:
+                    pixels[92, 26] = [17, 23, 47, 1]
+                Image.fromarray(pixels).save(path)
+                result = importer.import_sheet(root, candidate, "fixture", keys, True)
+                proof = json.loads((output / "provenance.json").read_text())
+                self.assertEqual(result["poses"], 104)
+                self.assertEqual((output / "poses-0.png").read_bytes(), path.read_bytes())
+                for frame in proof["frames"]:
+                    if frame.get("sheet", 0) != 0:
+                        continue
+                    x, y, width, height = frame["region"]
+                    self.assertEqual(frame["rgba_sha256"], hashlib.sha256(pixels[y:y + height, x:x + width].tobytes()).hexdigest())
+                    self.assertEqual(set(frame), {"row", "direction", "region", "margin", "source_anchor", "rgba_sha256", "sheet"})
+                before = self.import_snapshot(root)
+                mtimes = {str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}
+                self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True), result)
+                self.assertEqual(self.import_snapshot(root), before)
+                self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, mtimes)
+
     def prepare_direction_subset_import(self, root, groups=None, axes=None):
         """Partition 104 synthetic poses; no production artwork is transformed."""
         candidate, keys, output = self.prepare_synthetic_import(root)

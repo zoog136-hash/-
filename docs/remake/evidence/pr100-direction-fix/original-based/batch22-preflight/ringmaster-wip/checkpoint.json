@@ -7,7 +7,7 @@
     "hit"
   ],
   "single_direction_trial": "E3phase gait independently passed hip/thigh occlusion reversal; phase1 hidden limb ID not inferred",
-  "unique_motion_poses": 3,
+  "unique_motion_poses": 35,
   "completed_added": 0,
   "runtime_connected": false,
   "main_validation": "not_run",
@@ -181,13 +181,11 @@
   ],
   "source_anchors_status": "Final role-to-role head/torso scale and per-pose ground anchors unapproved",
   "full_roles_remaining": [
-    "idle",
     "walk7directions",
     "attack",
-    "hit",
-    "death"
+    "death-final-view-and-scale-review"
   ],
-  "new_art_authoring": "idle/attack/hit/death in progress, immutable prefix paths, not runtime",
+  "new_art_authoring": "STOPPED after attack2 failed; all357 producers stopped; no further images requested",
   "candidate_roles": {
     "idle": "independent16+alphaPASS; hidden RGB under alpha0 is transparent",
     "hit": "independent16PASS",
@@ -271,5 +269,6 @@
       "sha256": "2baad68eacb1a813c341b3aaff2cadee2e89ac366a057fa83d9f32fe54ad90a3",
       "crc_ok": true
     }
-  ]
+  ],
+  "E_only_approved_motion_poses": 3
 }

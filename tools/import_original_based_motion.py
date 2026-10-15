@@ -42,6 +42,19 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _visible_pose_fingerprint(crop):
+    """Compare rendered pixels only; never change source/provenance bytes.
+
+    Fully transparent RGB and transparent border widths cannot distinguish
+    poses. Every nonzero alpha value, including antialiasing, stays exact.
+    """
+    ys, xs = np.nonzero(crop[:, :, 3] > 0)
+    visible = crop[ys.min():ys.max() + 1, xs.min():xs.max() + 1].copy()
+    visible[visible[:, :, 3] == 0] = 0
+    dimensions = f"{visible.shape[1]}x{visible.shape[0]}:".encode("ascii")
+    return hashlib.sha256(dimensions + visible.tobytes()).hexdigest()
+
+
 def require_preserved_output(path, expected_sha):
     """Preflight every immutable output before creating any import artifact."""
     if path.is_symlink() or (path.exists() and (not path.is_file() or sha(path) != expected_sha)):
@@ -199,6 +212,7 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
         if source_anchors is not None and len(source_anchors) != expected:
             raise ValueError("Every reviewed pose must have its own source anchor")
         all_hashes = set()
+        visible_hashes = set()
         frames = []
         for row_index, row in enumerate(rows):
             for direction, item in enumerate(row):
@@ -233,6 +247,10 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 if fingerprint in all_hashes:
                     raise ValueError("A repeated still was used as a different motion pose")
                 all_hashes.add(fingerprint)
+                visible_fingerprint = _visible_pose_fingerprint(crop)
+                if visible_fingerprint in visible_hashes:
+                    raise ValueError("A repeated visible pose was disguised by transparent pixels")
+                visible_hashes.add(visible_fingerprint)
                 frames.append({"row": row_index, "direction": selected[direction],
                                "region": [x1, y1, width, height],
                                "margin": [margin_x, margin_y, canvas - width, canvas - height],
@@ -327,6 +345,7 @@ def import_sheet(root, candidate, actor, keys, apply):
     role_frames = {}
     role_sources = {}
     geometry = {"frames": []}
+    visible_hashes = []
     for index, spec in enumerate(sheets):
         selected = reviewed_directions(spec.get("directions", DIRECTIONS))
         if len(selected) != 8:
@@ -344,6 +363,14 @@ def import_sheet(root, candidate, actor, keys, apply):
         # Validate every candidate before creating any output directory/file.
         # Existing tracked sheets remain untouched; reimports require review.
         require_complete_pose_regions(source, part)
+        # Keep this check private: raw rgba_sha256 and all serialized legacy
+        # geometry remain unchanged. Aliases reuse indices, never new poses.
+        with Image.open(source) as image:
+            pixels = np.asarray(image)
+            for frame in part["frames"]:
+                x, y, width, height = frame["region"]
+                fingerprint = _visible_pose_fingerprint(pixels[y:y + height, x:x + width])
+                visible_hashes.append(fingerprint)
         offset = len(geometry["frames"])
         if len(sheets) > 1:
             for frame in part["frames"]: frame["sheet"] = index
@@ -398,6 +425,8 @@ def import_sheet(root, candidate, actor, keys, apply):
     geometry["distinct_pixel_frames"] = len({frame["rgba_sha256"] for frame in geometry["frames"]})
     if geometry["distinct_pixel_frames"] != len(geometry["frames"]):
         raise ValueError("Duplicate pose across source sheets")
+    if len(set(visible_hashes)) != len(visible_hashes):
+        raise ValueError("Duplicate visible pose across source sheets")
     if not actor or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for char in actor):
         raise ValueError("Use a bounded ASCII actor folder name")
     folder = root / "assets/actors/eight_direction/original_based" / actor

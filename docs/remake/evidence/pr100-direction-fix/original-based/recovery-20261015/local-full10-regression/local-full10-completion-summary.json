@@ -1,0 +1,57 @@
+{
+  "verdict": "Local full10 PASS; old GitHub run remains a timeout failure",
+  "failed_ci": {
+    "run": 38725467814,
+    "job": 116390206661,
+    "exit_code": 124,
+    "time_limit_seconds": 1200,
+    "old_artifact_case_count": "unavailable because2.4GB exceeds connector512MiB; not inferred"
+  },
+  "local_full10": {
+    "exit_code": 0,
+    "elapsed_seconds": 1185.2,
+    "old_limit_headroom_seconds": 14.8,
+    "checks": 21673,
+    "failures": 0,
+    "cases": 10,
+    "player_directions": 80,
+    "incoming_death_respawn_directions": 80,
+    "actual_AI_directions": 80,
+    "manual_pickups": 10,
+    "pose_samples": 1032,
+    "screenshots": 1592,
+    "capture_bytes": 2491288737,
+    "same_failed_CI_runner_fixture_profiles": true,
+    "all_capture_writes_and_game_assertions_retained": true
+  },
+  "new_actor_connections": 0,
+  "root_owns_capture_inventory_SHA_and_representative_selection": true,
+  "files": {
+    "run.log": {
+      "bytes": 29946,
+      "sha256": "e328d399d9c25c19709f4c2e651633c1880d7511a8ee0586f587a7b3c52af2a1"
+    },
+    "report.json": {
+      "bytes": 13198,
+      "sha256": "83a4645914d58a755f7636b513f3f91cfccd765ecaa01deded8abb75b7871bae"
+    },
+    "minute-progress.jsonl": {
+      "bytes": 6782,
+      "sha256": "4aebfdb2f30ce770ba5e48eba3908b8e6074b78ba99f6ee05984d2fe1825e06e"
+    },
+    "input-state.json": {
+      "bytes": 989,
+      "sha256": "04d8a381a65d42d3c1a80be5069dbeb3905440891b404a358abc93af8476bb5c"
+    },
+    "failed-ci-input-comparison.json": {
+      "bytes": 829,
+      "sha256": "2c2600112780251fedf15260c347e3b8fb81d680b2ea69e8d3d3f90f316477be"
+    },
+    "final-summary.json": {
+      "bytes": 807,
+      "sha256": "0c2bfdc18a8c8b06aaac661540cdc7d2ab434c68bddf160a270d03d2ecc1ad99"
+    }
+  },
+  "small_diagnostic_json_files": 14,
+  "small_diagnostic_json_bytes": 245284
+}

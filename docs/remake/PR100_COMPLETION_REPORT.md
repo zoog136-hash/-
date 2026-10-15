@@ -1,3 +1,14 @@
+## 2026-10-15 · 최종 도구검증50 / 기존10종 Main OpenGL 회귀 완료
+
+**완료374/498 (75.1%) · 미완료124 · 영웅이상139/180·일반200/258·보스35/60 · 개별Main103종 유지.** 신규 완료는 Batch21의 악어거북349·악몽의잭173·도구리288 **3종**이며 이후 WIP는 완료로 세지 않는다.
+
+- 기존10종 전체 실제 Main OpenGL: **21,673 checks / 실패0 / engine오류0**,1185.20초. player8방향80·피격/사망/respawn80·실제AI80·수동습득10·pose1032를 확인했고1,592PNG(2,491,288,737bytes)를 모두 생성했다. [완주/실패시간비교/로그/case10/캡처SHA/분리테스트save](evidence/pr100-direction-fix/original-based/recovery-20261015/local-full10-regression/local-full10-completion-summary.json). 이1,592PNG본문은Git미전달·로컬외부보관이며 SHA목록만보존한다. 기존신규3종대표18PNG는계속Git에있다.
+- canonical coverage에 기존209+회귀10=**219개 실제Main보고서**를보존했다. 이번10종은기존103에포함되어새Main개체수증가0. 모든219경로/SHA재검증,원본222건보존감사PASS.
+- 임포터는 **50/50 tests PASS**(기존46+신규4). 단일/여러시트에서 완전투명RGB·투명여백만다른 동일visible포즈를 preflight거절한다. 검사복사배열만정규화하고 원본PNG·raw rgba_sha256·provenance/TRES/기존bytes·mtime은바꾸지않는다. 수정전동일신규4테스트FAIL 재현을별도보존했다. [검증/회귀](evidence/pr100-direction-fix/original-based/recovery-20261015/visible-pose-guard/visible-pose-guard-verification.json).
+- 042e9dd는10종OpenGL만2400초/작은diagnostics와전체PNG artifact분리이며모든실제검사·캡처는유지한다. 이전20분timeout은실패그대로보존,local완주는기존20분에14.8초여유만있었다. 원격전체재검증은아직성공미확인이다.
+
+게임/Main/기존자산/data는ce199와차이0. [독립보존감사](evidence/pr100-direction-fix/original-based/recovery-20261015/local-full10-regression/preservation-audit-precheckpoint.json)의당시clean FAIL은root의최종메타정규화미커밋때문이며원본보존실패는0이다. 해당메타를이번체크포인트에포함하고최종push후clean/원격HEAD일치를다시확인한다.
+
 ## 2026-10-15 · 기존10종 OpenGL CI 시간/진단 보존 수정
 
 **374/498 완료 · 미완료124 · 개별Main103 유지.** 확인된 exit124/1200초 제한에 대응해 **transform-regression 10종의 OpenGL만 2400초**로 늘렸다. headless1200·다른배치600/1200·job60분·모든 게임/단언/PNG저장은 그대로다. 기존 관측 headless7분34초+OpenGL최대40분 후 setup/import/upload 여유 약12분26초다. local 동일10종 전체재현은720초에6종 완료/오류0으로 진행 중이며 전체 성공으로 세지 않는다.

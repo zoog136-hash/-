@@ -1,0 +1,272 @@
+{
+  "schema": 1,
+  "audit_kind": "Independent read-only final preservation audit",
+  "audited_HEAD": "042e9dd294d168ae71e112392a3227592fc18f0a",
+  "HEAD_at_end": "042e9dd294d168ae71e112392a3227592fc18f0a",
+  "HEAD_stable_during_audit": true,
+  "branch": "feature/twilight-animation-20261013",
+  "timestamp_utc": "2026-10-15T12:41:26.413010+00:00",
+  "passed": false,
+  "ancestor_preservation": {
+    "3fbdea4e6a9632e8858c0d6e16ce670acff4138a": {
+      "commit": "3fbdea4e6a9632e8858c0d6e16ce670acff4138a",
+      "ancestor_of_audited_HEAD": true
+    },
+    "7cec25402501fe0672e8f040edb89604d3270606": {
+      "commit": "7cec25402501fe0672e8f040edb89604d3270606",
+      "ancestor_of_audited_HEAD": true
+    },
+    "13676c": {
+      "commit": "13676c6e0699cb8736806411af88da9e26e7ac41",
+      "ancestor_of_audited_HEAD": true
+    }
+  },
+  "git_worktree_clean": false,
+  "uncommitted_change_count": 1,
+  "baseline_protection": {
+    "base_commit": "3fbdea4e6a9632e8858c0d6e16ce670acff4138a",
+    "existing_completed_pack_count": 63,
+    "existing_completed_PNG_TRES_files_checked": 196,
+    "existing_completed_PNG_TRES_changed": [],
+    "all_baseline_asset_PNG_files_checked": 3124,
+    "all_baseline_asset_PNG_changed": [],
+    "remote7cec_asset_PNG_files_checked": 3139,
+    "remote7cec_asset_PNG_changed": [],
+    "baseline_files_deleted": [],
+    "Main_scene_paths": [
+      "Main.tscn"
+    ],
+    "Main_scene_changed": [],
+    "production_game_code_or_project_changed": [],
+    "data_changed_paths": [
+      "data/combat_animation_profiles.json"
+    ]
+  },
+  "combat_profiles": {
+    "changed_keys_vs3fb": [
+      "transform:173",
+      "transform:288",
+      "transform:349"
+    ],
+    "expected_changed_keys": [
+      "transform:173",
+      "transform:288",
+      "transform:349"
+    ],
+    "deferred407_352_equal_to3fb": {
+      "transform:407": true,
+      "transform:352": true
+    }
+  },
+  "canonical_coverage": {
+    "path": "docs/remake/evidence/pr100-direction-fix/original-based/coverage/coverage.json",
+    "counts": {
+      "target": 498,
+      "connected": 374,
+      "remaining": 124,
+      "individual_Main_8directions": 103,
+      "hero_plus": 139,
+      "normal_monster": 200,
+      "boss": 35
+    },
+    "expected": {
+      "target": 498,
+      "connected": 374,
+      "remaining": 124,
+      "individual_Main_8directions": 103,
+      "hero_plus": 139,
+      "normal_monster": 200,
+      "boss": 35
+    },
+    "coverage_error_count": 0,
+    "missing_identity_count": 124,
+    "missing_counts": {
+      "hero_plus": 41,
+      "boss": 25,
+      "normal_monster": 58
+    },
+    "completion_report_current_header": "**374/498 완료 · 미완료124 · 개별Main103 유지.** 확인된 exit124/1200초 제한에 대응해 **transform-regression 10종의 OpenGL만 2400초**로 늘렸다. headless1200·다른배치600/1200·job60분·모든 게임/단언/PNG저장은 그대로다. 기존 관측 headless7분34초+OpenGL최대40분 후 setup/import/upload 여유 약12분26초다. local 동일10종 전체재현은720초에6종 완료/오류0으로 진행 중이며 전체 성공으로 세지 않는다.",
+    "scope_limit": "103 is recordedMain8direction evidence, not375newtests run bythisaudit.374isconnectedcoverage; compass semantics remain source_metadata_only and are not independently redrawn."
+  },
+  "original_references": {
+    "targets_checked": 222,
+    "unique_image_files_checked": 117,
+    "method": "Existing planner/importer SHA256bytes+PILdimensions+exactRGBAregionSHA rules; no image regeneration/editing",
+    "error_count": 0,
+    "errors": []
+  },
+  "WIP_runtime_protection": {
+    "keys": {
+      "monster:말하는 섬 들개": {
+        "frames_path": "",
+        "native_original_based_bound": false,
+        "unchanged_from_3fb_profile": true
+      },
+      "monster:검은숲 늑대": {
+        "frames_path": "",
+        "native_original_based_bound": false,
+        "unchanged_from_3fb_profile": true
+      },
+      "monster:알비노 피쉬맨": {
+        "frames_path": "",
+        "native_original_based_bound": false,
+        "unchanged_from_3fb_profile": true
+      },
+      "transform:360": {
+        "frames_path": "",
+        "native_original_based_bound": false,
+        "unchanged_from_3fb_profile": true
+      },
+      "transform:357": {
+        "frames_path": "",
+        "native_original_based_bound": false,
+        "unchanged_from_3fb_profile": true
+      }
+    },
+    "runtime_document_WIP_references": [],
+    "production_binding_changes": false
+  },
+  "checkpoint_archives": {
+    "scope": "Currentbatch22-preflight checkpoint.json inventories and allZIPs inbatch22-preflight plusrecovery-20261015; olderbatch14-21 archives outside thisscope not rerun",
+    "checkpoint_paths": [
+      "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json",
+      "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json",
+      "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json"
+    ],
+    "inventoried_path_SHA_records_verified": 86,
+    "inventoried_archives_verified": 14,
+    "ZIPs_CRC_verified": 17,
+    "ZIPs": [
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/walk-v1-rejected.zip",
+        "bytes": 2206727,
+        "sha256": "19b492ea36e886cf008c16e0dfbedc0be8e0a28d446f7ab14c647bba0a2bb01b",
+        "members": 4,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/walk-v2-rejected.zip",
+        "bytes": 2189990,
+        "sha256": "ee363e9d3da7ac08b6065703f50da9fece8a82c5c41647b0175a40f0c3c4c265",
+        "members": 4,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/dog-held-authoring.zip",
+        "bytes": 6428698,
+        "sha256": "48b5265daa04287d79ef234a745adbe2d8a9b70d0fb7800d165da8109f602138",
+        "members": 15,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/attack-v1-rejected.zip",
+        "bytes": 2424388,
+        "sha256": "9b1a3dff2431bc974513db914f54c0d41474351eac14dcaade0269c50053e0a6",
+        "members": 4,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/death-v1-rejected.zip",
+        "bytes": 2170730,
+        "sha256": "23a697a02926d70ea4a52e2ba8e4f9646566f83a85e28c3fbfac138d38438cde",
+        "members": 4,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/death-v2-rejected.zip",
+        "bytes": 2654215,
+        "sha256": "5c2f5199bb42c1079ddacc422f886dd69f976ef5f011dbda23106e1e51659255",
+        "members": 3,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/idle-v1-rejected.zip",
+        "bytes": 2522351,
+        "sha256": "bfb993ea072c80961d83828a82485d2d84510e88b62a4d398001bebc9c71d2e2",
+        "members": 4,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/walk-v1-rejected.zip",
+        "bytes": 2625489,
+        "sha256": "9adb3421fe6da54376621001e9216423a12e45bbe4b0bb90e49a583b56ce308d",
+        "members": 5,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/W-walk-v1-unproven.zip",
+        "bytes": 812935,
+        "sha256": "66c3723dec0042028f94f5ae30f81da557be5f1590dbb49d63b645941f0d7d3a",
+        "members": 5,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/attack-v1-rejected.zip",
+        "bytes": 4263153,
+        "sha256": "ff762da285bd31b360e2a4d0931c451fac10dbf6970ee602d8b81b3b4b11d07a",
+        "members": 7,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/attack-v2-rejected.zip",
+        "bytes": 4127059,
+        "sha256": "f888c18d5fcf878b2eab993b56b5b59c80b0902c16ba143097fa67b17c169a59",
+        "members": 7,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/authoring-extra-records.zip",
+        "bytes": 530476,
+        "sha256": "b91d42d0dd5354faa82c1b39e132f4bc8b430cfd22aac9032497b801afd70d11",
+        "members": 12,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/death-v1-rejected.zip",
+        "bytes": 1712476,
+        "sha256": "8580f02ad720b1e9afaff81b83c06fbcfff898b1dfadc32c8ff3f7d570598500",
+        "members": 4,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/hit-v1-rejected.zip",
+        "bytes": 1705044,
+        "sha256": "cae3fa3fb8e67e7bccb0712b8b56e3702930ec2dc302750d9c214abec664e3da",
+        "members": 5,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/idle-v1-rejected.zip",
+        "bytes": 2290232,
+        "sha256": "2baad68eacb1a813c341b3aaff2cadee2e89ac366a057fa83d9f32fe54ad90a3",
+        "members": 4,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/wolf-held-authoring.zip",
+        "bytes": 6377076,
+        "sha256": "6155d435ed23aeb11863072f3bdebccb5bbbf6ef5486dca6497eb5ba7299144b",
+        "members": 13,
+        "CRC_pass": true
+      },
+      {
+        "path": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/duplicate-authoring-drafts.zip",
+        "bytes": 19090877,
+        "sha256": "14b196d76e99aa2a54731a68c066394b3a495449609fd0f38206a368a27f36c7",
+        "members": 19,
+        "CRC_pass": true
+      }
+    ],
+    "errors": []
+  },
+  "verification_scope_limits": [
+    "No production files, sourcePNG, gameplay code, metadata orGit refs modified bythisaudit; only thisexternalJSONwritten",
+    "No Godot/Main/CI/Android rerun; historical evidence counts and resource/file integrity only",
+    "No remoteGitHubHEAD/main/merge/conflict/CI status re-query; parent/root tracks those separately",
+    "No approval of partialWIP animations or104pose recipes, no completion increment"
+  ],
+  "errors": [
+    "Repository has uncommitted changes at auditend"
+  ],
+  "warnings": []
+}
