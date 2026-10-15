@@ -1,0 +1,45 @@
+name: Ground full-matte audit
+on:
+  push:
+    branches: [fix/ground-full-matte-20261015]
+    paths: ['.github/workflows/ground-full-matte.yml', 'tools/ground_matte/**']
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Preserve current floor assets and source evidence
+        run: |
+          mkdir -p /tmp/ground-matte
+          python3 - <<'PY'
+          import pathlib,zipfile,json
+          p=pathlib.Path('.');out=pathlib.Path('/tmp/ground-matte')
+          names=[]
+          for folder in ['assets/ground_categories','assets/ground_alpha','assets/l1j/verified/ground','assets/original_items/ground']:
+              names.extend(str(x) for x in (p/folder).rglob('*.png'))
+          manifest=json.loads((p/'data/ground_item_icons.json').read_text())
+          for e in manifest['categories'].values():
+              names.append(e['source_path'].removeprefix('res://'))
+          with zipfile.ZipFile(out/'input-images.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for path in sorted(set(names)):
+                  if (p/path).exists():z.write(p/path,path)
+              for name in ['data/ground_item_icons.json','data/ground_alpha.json',
+                           'tools/ground_icons/alpha.py','tools/ground_icons/build.py',
+                           'tools/ground_alpha/bake.py','scripts/ui/ground_item_icons.gd',
+                           'scripts/loot/drop_visual.gd','scripts/ui/ground_alpha.gd']:
+                  z.write(p/name,name)
+          print('SOURCE_ARCHIVE_READY',len(set(names)))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ground-full-matte-original
+          path: /tmp/ground-matte/
+          retention-days: 7
+          if-no-files-found: error
