@@ -10,6 +10,7 @@ var floor_material: ShaderMaterial
 var stream_build_usec: int = 0
 var built_chunks: int = 0
 var freed_chunks: int = 0
+var rendered_door_states: Dictionary = {}
 
 func configure(value: PlayableField, actor: Node2D) -> void:
 	field = value
@@ -37,6 +38,12 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 
 func refresh_visible() -> void:
 	if source == null or not is_instance_valid(player): return
+	# A door changes both its visible boundary and the physical segment stream.
+	# Source bytes stay immutable; only these derived visible batches are rebuilt.
+	if rendered_door_states != source.source_doors.opened:
+		rendered_door_states=source.source_doors.opened.duplicate()
+		for chunk: Node in chunks.values(): remove_child(chunk);chunk.queue_free();freed_chunks+=1
+		chunks.clear()
 	var rect: Rect2 = get_viewport_rect()
 	var transform: Transform2D = get_canvas_transform().affine_inverse()
 	var needed: Dictionary = {}

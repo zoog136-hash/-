@@ -21,6 +21,7 @@ parser.add_argument('--render-visual-tests',action='store_true',help='Compatibil
 parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; regional map audits run in five independently timed shards')
 parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
 parser.add_argument('--region-shard-timeout',type=int,default=360,help='Seconds per world family; all five families mandatory')
+parser.add_argument('--only',default='',help='Comma-separated exact test names for targeted rechecks; omitted runs the full suite')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 # CI checkouts intentionally omit third-party visuals; install tiny, original
@@ -47,6 +48,11 @@ tests=[('import',['--import']),
        ('bake_navigation',['--script','res://tools/bake_hunting_navigation.gd']),
        ('boot',['--quit-after','60'])]
 tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'tests').glob('*test.gd')))
+if args.only:
+    selected=set(args.only.split(','))
+    unknown=selected-{name for name,_ in tests}
+    if unknown: parser.error('Unknown tests: '+', '.join(sorted(unknown)))
+    tests=[test for test in tests if test[0] in selected]
 failed=[]
 skipped=[]
 executed=[]
@@ -114,5 +120,5 @@ passed=len(executed)-len(failed)-len(skipped)
 print(f'{passed}/{len(tests)} checks passed; {len(skipped)} skipped; {len(not_run)} not run',flush=True)
 (logs/'summary.json').write_text(json.dumps({'total':len(tests),'passed':passed,
     'failed':failed,'skipped':skipped,'not_run':not_run,'checks':[name for name,_ in tests],
-    'validation_scopes':scopes},indent=2)+'\n',encoding='utf-8')
+    'validation_scopes':scopes,'selection':args.only or 'FULL_SUITE'},indent=2)+'\n',encoding='utf-8')
 raise SystemExit(bool(failed or not_run))
