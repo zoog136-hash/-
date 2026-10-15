@@ -1,0 +1,65 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_unified_static_direction_guide_visual_qa",
+  "source": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "candidate": "/workspace/generated_images/exec-715ba4a8-2acd-463c-b27c-54f0367e93ce.png",
+  "candidate_sha256": "081769ef2a777d352a670ce1cf04efc83493d8aa16d92cdf47f20cb7dd8cc62d",
+  "comparison_walk": "/workspace/generated_images/exec-f2797d6d-75e1-4d4f-80e4-5a23518c2b99.png",
+  "verdict": "HOLD_MISSING_SW",
+  "concept_verdict": "SEVEN_DISTINCT_DIRECTIONS_USABLE_AS_STATIC_GUIDE_AFTER_CORRECT_METADATA_REMAP",
+  "direction_slots": [
+    {"slot": 1, "intended": "S", "observed": "S", "evidence": "Front-facing face, chest and both shoes."},
+    {"slot": 2, "intended": "SW", "observed": "SE", "evidence": "Front-right three-quarter face/chest and lower-right shoe direction."},
+    {"slot": 3, "intended": "W", "observed": "E", "evidence": "Right-facing nose and profile, both shoe toes right."},
+    {"slot": 4, "intended": "NW", "observed": "NW", "evidence": "Back-left three-quarter torso, left-facing cheek/nose edge and leftward shoes."},
+    {"slot": 5, "intended": "N", "observed": "N", "evidence": "Cap/hair/bodice back and rear shoe heels."},
+    {"slot": 6, "intended": "NE", "observed": "NE", "evidence": "Back-right torso with right-facing cheek edge and upper-right feet."},
+    {"slot": 7, "intended": "E", "observed": "W", "evidence": "Left-facing nose and profile, both shoe toes left."},
+    {"slot": 8, "intended": "SE", "observed": "SE", "evidence": "Front-right three-quarter view; repeats the direction of slot 2, not SW."}
+  ],
+  "distinct_visual_directions": ["E","SE","S","W","NW","N","NE"],
+  "missing_directions": ["SW"],
+  "usable_canonical_mapping": {
+    "E": 3,
+    "SE": 2,
+    "S": 1,
+    "SW": "needs_separately_drawn_replacement",
+    "W": 7,
+    "NW": 4,
+    "N": 5,
+    "NE": 6
+  },
+  "remapping": "Incorrect intended slot labels do not require discarding the seven distinct directions. Select one SE view, record the actual mapping, and separately draw a matching SW replacement. Do not mirror an SE view or count both SE views as different directions.",
+  "internal_identity_and_style": {
+    "status": "pass_static_guide_with_detail_review_needed",
+    "observation": "The sheet is much more internally consistent than mixing guide1 with guide2. Rounded short pale bob, compact rabbit-ear cap, purple puff sleeves, black bodice, light cuffs, pale pleated gold-edged skirt, compact rear bow and dark shoes stay recognizable. The former long giant rear loops are absent. Head/body scale and rendering are closely matched across the sheet.",
+    "limitations": "Stocking-band and small cap/buckle continuity still require review through motion; the small original does not establish every newly resolved detail."
+  },
+  "source_and_walk2_compatibility": {
+    "status": "recognizable_shared_design_not_pixel_exact_match",
+    "source": "Core rabbit-girl identity and major costume colors/forms remain recognizable. This remains new reference-based guide art, not extracted original poses.",
+    "walk2": "Uses the same general puff-sleeve/bodice/cap/shoe design as E-walk2. Guide3 has a rounder, larger-looking head and more compact chibi proportions with crisper cartoon outlining; E-walk2 appears somewhat longer and more painterly. It can guide consistent future direction work, but exact production-scale/proportion compatibility is not approved from these static sheets alone."
+  },
+  "body_and_crop": {
+    "status": "pass_static",
+    "observation": "All eight bodies have two connected legs, visible feet and complete ears. No obvious detached limbs or extra weapons. Figures are uncropped, although vertical padding is tight."
+  },
+  "automation": {
+    "geometry_report": "/workspace/scratch/pr100-resume/rabbit328-unified-guide3-geometry.json",
+    "image_size": [1536,1024],
+    "separated_poses": 8,
+    "distinct_pixel_frames": 8,
+    "distinct_visual_directions": 7,
+    "complete_pose_regions": "pass",
+    "canvas_size": 1024,
+    "canvas_review_status": "diagnostic_only_not_approved",
+    "warning": "The geometry analyzer's default compass labels reflect the assumed packing, not the observed directions. Use this review's explicit actual mapping."
+  },
+  "required_next": [
+    "Produce one separately drawn SW view matching this unified design; preserve the useful seven existing orientations.",
+    "Use actual direction mapping and review consistent proportion/scale against the walk pilot before producing all role sheets.",
+    "Verify motion, floor contact and Main separately before entity completion."
+  ],
+  "counts_as_completed_entity": false
+}

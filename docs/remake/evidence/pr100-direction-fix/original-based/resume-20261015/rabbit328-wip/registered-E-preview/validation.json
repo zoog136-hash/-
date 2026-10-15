@@ -1,0 +1,119 @@
+{
+  "entity": "transform:328",
+  "status": "DIAGNOSTIC_PREVIEW_RENDERED_NOT_ANIMATION_APPROVAL",
+  "source_image": "/workspace/generated_images/exec-f2797d6d-75e1-4d4f-80e4-5a23518c2b99.png",
+  "source_sha256_before": "837728a3b14397cdaa5edb1d37e87943de9b212764a4a154f0f40b798225e5d7",
+  "source_sha256_after": "837728a3b14397cdaa5edb1d37e87943de9b212764a4a154f0f40b798225e5d7",
+  "source_pixels_unchanged": true,
+  "source_size": [
+    2172,
+    724
+  ],
+  "reviewed_preview_anchors": [
+    [
+      446,
+      662
+    ],
+    [
+      1086,
+      663
+    ],
+    [
+      1751,
+      661
+    ]
+  ],
+  "diagnostic_canvas": [
+    1024,
+    1024
+  ],
+  "preview_scale": 0.65,
+  "canvas_and_scale_final_approval": false,
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "render_exit_code": 0,
+  "engine_errors": [],
+  "nonfatal_driver_warning": "VSync mode unsupported by graphics driver",
+  "geometry_unique_poses": 3,
+  "registered_PNG_count": 3,
+  "actual_Godot_loop_capture_count": 90,
+  "short_video": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-loop.mp4",
+  "animated_GIF": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-loop.gif",
+  "video_timing": "Actual capture walltime used via ffconcat, no motion interpolation",
+  "scope": "Actual Godot4.7.2 AnimatedSprite2D/SpriteFrames in scratch scene; fixed footline and centered metadata anchors. Not actual Main and not gameplay scale validation.",
+  "observations_for_parent_review": [
+    "All three registered shoes visibly reach fixed y440 line. Gross head-centered horizontal drift removed by metadata anchors.",
+    "Passing frame has pronounced raised knee; loop naturalness and anatomical opposite-leg interpretation still require independent approval.",
+    "Stocking bands are not proven invariant; no completion claim."
+  ],
+  "actual_Main": false,
+  "production_files_modified": false,
+  "completed_added": 0,
+  "file_hashes": [
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/geometry.json",
+      "bytes": 1688,
+      "sha256": "81f459e0df903b82f6b4db71fef285b88e46088328e0d551199e7f50dbe22a93"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/godot-preview.json",
+      "bytes": 10589,
+      "sha256": "15603313b099ee086f0245f75c781ea920161a4beb7807da2936fbe17bd89247"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/godot-preview.log",
+      "bytes": 434,
+      "sha256": "3a90d0d8bdd57c8b73d7e68a50e46d2059a4445cc311afb785de632720fc5a87"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/loop.ffconcat",
+      "bytes": 4098,
+      "sha256": "8ec11e2aa80c6fcc6d18f3fdb635cf24fdfead5c739298cf640c5a4bf8568f3b"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/preview.gd",
+      "bytes": 4807,
+      "sha256": "bdce8008b1da989f8db253fc5ccd885516f9ae8821940359213e063723ceb8f8"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/project.godot",
+      "bytes": 397,
+      "sha256": "1811af5982347525d8b30e5e913c2ba8063337cefc6bdef3e65be6b85a20833d"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-loop.gif",
+      "bytes": 979907,
+      "sha256": "333ba593bbcf9757163a923d88ef636634addd51bfc42e39c5c9fb2f0a0e5168"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-loop.mp4",
+      "bytes": 193955,
+      "sha256": "6aef09d6108edc4f152d5a469fda8f321721be6a7095df4bdd8d551f41c02ac4"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-pose-0.png",
+      "bytes": 126843,
+      "sha256": "22ee17f7723869cad31496afb3d4bc191781b8a13f2a81547dce5f9c88dcde98"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-pose-1.png",
+      "bytes": 119022,
+      "sha256": "7cfe04662e78352396e604c550c9cb026fbc43789f14d1dbfeb387163856ef6c"
+    },
+    {
+      "path": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-preview/registered-pose-2.png",
+      "bytes": 125316,
+      "sha256": "077e4deeb3b90dd2a2ff9ef90a6392d8d9393e59d30ef349a5dd1db009af2c04"
+    }
+  ]
+}

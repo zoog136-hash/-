@@ -1,0 +1,35 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_three_pose_east_gait_visual_qa",
+  "source": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "candidate": "/workspace/generated_images/exec-174ca0fe-868d-49e9-a7b0-e503f1abe39d.png",
+  "candidate_sha256": "666cc5c4823d4fad28fd825b420560672cc5159698c302b52e4815375017bc79",
+  "verdict": "HOLD",
+  "reason": "Opposite anatomical support legs are not established. Frames 1 and 3 retain essentially the same forward planted leg/back swept leg appearance and the same visible thigh/garter/ankle overlap cues. Pixel differences do not demonstrate a reversed step.",
+  "checks": {
+    "east_direction": {"status": "pass", "observation": "All three faces and shoes point screen-right."},
+    "opposite_anatomical_support": {"status": "fail", "observation": "The overlap ordering does not visibly reverse from frame 1 to frame 3. Cannot identify an anatomical left leg taking over from an anatomical right leg."},
+    "passing_pose": {"status": "partial", "observation": "Frame 2 has a planted foot approximately below the hip and a bent raised forward knee. It is a readable high-knee passing pose, but its limb identity cannot be traced into an opposite frame-3 support step."},
+    "hip_attachment": {"status": "pass_static", "observation": "Both legs emerge continuously from beneath the skirt in all three images. No obvious detached shin, torso/leg gap or extra limb."},
+    "ground_contact": {"status": "partial", "observation": "At least one shoe appears planted in each pose; rear heels appear lifted in frames 1 and 3. The detected lowest opaque pixels are y=658,658,657, consistent within one pixel. This does not prove animation support continuity or Main ground contact."},
+    "source_identity": {"status": "partial", "observation": "Pale short hair, dark bent rabbit ears/cap, black-purple bodice, pale pleated gold-edged skirt, short light cuffs and chunky dark shoes are recognizable. Fine cap/glove/garter/bow details are newly inferred rather than verified original animation details. No new held weapon or giant rear loops."},
+    "full_body_and_crop": {"status": "pass", "observation": "All ears and shoes are inside the sheet; three separated connected body regions."},
+    "registration": {"status": "needs_review", "observation": "Frame 3 is shifted left within its equal-width cell relative to frames 1 and 2. With unreviewed cell-center anchors, region center offsets are approximately +34,+10,-49.5 pixels; a stable reviewed body/support anchor is needed before any animation preview."}
+  },
+  "automation": {
+    "geometry_report": "/workspace/scratch/pr100-resume/rabbit328-E-walk1-geometry.json",
+    "importer": "tools/import_original_based_motion.py analyze(... rows_count=3, directions_axis='rows', directions=['E'], canvas_size=1024)",
+    "three_connected_poses": true,
+    "complete_pose_regions": "pass",
+    "distinct_pixel_frames": 3,
+    "caveat": "Three unique pixel frames establish no anatomical gait alternation. The 1024 canvas is a diagnostic fit only; scale, anchors and runtime use are not approved."
+  },
+  "not_tested": ["actual loop playback", "all eight directions", "attack/hit/death roles", "actual Main screen", "runtime scale", "comparison against approved completed actor in Main"],
+  "required_before_passing": [
+    "Re-author the third pose with clearly opposite anatomical support and readable reversal of overlap cues; preserve a consistent near/far-leg identity through the passing pose.",
+    "Verify a smooth loop with consistent torso registration and shoe-to-floor contacts after assigning reviewed anchors.",
+    "Verify all required directions and roles in actual Main before counting this entity complete."
+  ],
+  "counts_as_completed_entity": false
+}

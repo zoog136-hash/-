@@ -1,3 +1,14 @@
+## 재개 체크포인트 · 2026-10-15 · 328 소형 시험 HOLD
+
+**완료 374/498 (75.1%) · 미완료 124 · 실제 Main 개별8방향 103종 유지. 신규완료 0.** 기존 브랜치/PR #100을 재개했고 기준 HEAD는 `f7a0c751192012437af5b2cb0fa4eb2901b7ba84`, 관측 최신 main은 `e2119c37293a783e93b421ee0055d1318271b071`이다. main 병합/새 브랜치/새 PR/맵 수정 없음.
+
+- [124종 목록·원본 전수 SHA](evidence/pr100-direction-fix/original-based/resume-20261015/pending124-source-proof.json): hero_plus41·일반58·보스25, 모두 참조 파일 존재/Git추적/SHA일치. 완료 수량과 구조감사만으로 실제 모션 성공을 주장하지 않는다.
+- **328 검은 토끼 소녀 HOLD/미연결.** 원본 SHA 일치. E 보행2의 반대 다리 구도와 개별 앵커 Godot 진단 재생은 부분 확인했지만 스타킹/자연스러움/최종크기 미승인이다. 새8방향 보행은 7행21그림·분리19개로 필수24개 실패, W누락·동일다리 반복·행별 비율 문제. 전체5역할/실제Main 미완료. [PNG·정확prompt·독립판정·GIF/MP4/SHA](evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json). 실패픽셀/임계값/원본을 수정하지 않았다. 현재 작은2방향씩의 한 차례 보완시험 중이며 HOLD는 유지한다.
+- Godot 공식 **4.7.2** checksum 및 OpenGL llvmpipe 준비, 네트워크 허용 재임포트 exit0/엔진오류0. 최초 제한환경 TCP소켓 오류 로그는 별도 보존한다. Python 임포터50+coverage6=**56/56 PASS**, 리소스723/41,442프레임 SHA검사 PASS. 기존완료3종 실제Main headless **7,631검사/실패0**, OpenGL은 진행 중이므로 전체성공으로 세지 않는다.
+- [CI 실측 13:33UTC](evidence/pr100-direction-fix/original-based/resume-20261015/ci-observation-latest.json): 통합38731518098 **SUCCESS**(`031d747`), 애니메이션38737764970 전체미완료(`166abe6`; batch21성공). Android38722918015 성공(`ce199`)·실기기 미검증. 정확한 새문서체크포인트의 CI와 구별한다.
+
+재개 위치: [328 체크포인트](evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json)의 focused-walk 보완 결과를 독립검토한다. 전체8방향 통과 전 런타임 임포트/완료집계 금지. [다음 후보](evidence/pr100-direction-fix/original-based/resume-20261015/next-candidates.json)는376 베테랑 낚시꾼 폴이며 참조/준비만 완료했다. 기존HOLD357/360/407/352/7/들개/늑대/피쉬맨을 임의로 교체하지 않는다.
+
 ## 최신 인계 · 2026-10-15 · PR #100 유지
 
 **완료 374/498 (75.1%) · 미완료 124 · 실제 Main 개별8방향 103종.** 영웅이상139/180·일반200/258·보스35/60. 신규완료는 **알비노 악어거북349·악몽의 잭 오 랜턴173·도구리288, 3종**이다. 아래 과거 일지보다 이 인계와 [기계용 체크포인트](PR100_LATEST_CHECKPOINT.json)를 우선한다. 최신 원격 HEAD와 CI 결과는 재개할 때 다시 조회한다.

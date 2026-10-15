@@ -1,0 +1,68 @@
+{
+  "entity_id": 328,
+  "review_type": "independent_corrected_three_pose_east_gait_visual_qa",
+  "source": "/workspace/scratch/pr100-resume/transform328-source.png",
+  "source_sha256": "f4ddb1e1084a79c371a2bd647bfa91a07dce4e9cd6a465b2dea407f84e1735db",
+  "candidate": "/workspace/generated_images/exec-f2797d6d-75e1-4d4f-80e4-5a23518c2b99.png",
+  "candidate_sha256": "837728a3b14397cdaa5edb1d37e87943de9b212764a4a154f0f40b798225e5d7",
+  "verdict": "HOLD",
+  "risk_pilot": {
+    "static_opposite_stride_concept": "PASS_WITH_RESERVATIONS",
+    "registered_three_pose_animation": "HOLD_UNTIL_PREVIEW",
+    "all_required_animation": "NOT_REVIEWED"
+  },
+  "checks": {
+    "opposite_stride": {
+      "status": "pass_static_concept",
+      "observation": "Frame 1 has a visible dark horizontal band on the forward/right leg. Frame 3 places a band on the rear/left thigh, while the forward/right leg is plain. The banded thigh angles down-left in frame 3 rather than down-right. This is a materially clearer opposite-leg contact cue than walk1, rather than mere pixel variation.",
+      "limitation": "The skirt hides the hip crossover and there is no direct overlap crossing below its hem, so the persistent near/far anatomical identity is supported by the band and pose interpretation rather than fully exposed anatomy."
+    },
+    "garter_continuity": {
+      "status": "needs_review",
+      "observation": "Frame 1 also shows an upper band on the rear leg, while its forward band sits lower near the knee. Frame 2/3 bands appear higher under the hem. The band is not a perfectly invariant single marker through the sequence; accessory placement should be checked during playback rather than claiming the marker alone proves complete anatomical continuity."
+    },
+    "passing_pose": {
+      "status": "pass_static",
+      "observation": "Frame 2 has one grounded leg under the torso and the other knee bent forward with its shoe raised clear of the ground. It is a high-knee passing pose; natural loop timing remains untested."
+    },
+    "attachment": {
+      "status": "pass_static",
+      "observation": "Two legs remain connected beneath the skirt in all three poses. No obvious disconnected shin, twisted extra knee, extra limb or torso/leg gap."
+    },
+    "upper_body_uniformity": {
+      "status": "pass_visual_shape",
+      "observation": "Head, ear cap, face, sleeves, bodice and compact held hands have closely matching size and design across the three poses. Their positions inside equal cells are inconsistent."
+    },
+    "direction": {"status": "pass", "observation": "All three faces and shoe toes retain the east/right-facing orientation."},
+    "ground": {
+      "status": "partial_static",
+      "observation": "A forward or under-hip shoe appears planted in every image, and the rear shoe heels are lifted in frames 1 and 3. Lowest detected opaque y coordinates are 662, 663, 661. Actual support/contact continuity and Main floor alignment remain unverified."
+    },
+    "source_identity": {
+      "status": "partial",
+      "observation": "Original pale short hair, dark bent rabbit-ear cap, dark bodice, pale pleated gold-edged skirt, light cuffs and dark shoes remain recognizable. No new weapon or large tail appears. Fine cap buckle, glove fittings, stocking bands and rear bow construction remain newly interpreted costume details rather than verified extracted source animation."
+    },
+    "registration": {
+      "status": "fail_cell_center_anchors",
+      "observation": "The requested equal-cell hip alignment was not achieved. At image row 200, head silhouette centers are x=445.5,1086,1751, versus equal-cell centers 362,1086,1810. This produces offsets +83.5,0,-59 and about 142.5 pixels of horizontal drift from frame 1 to frame 3 with cell-center anchors.",
+      "diagnostic_anchor_suggestion": [[446,662],[1086,663],[1751,661]],
+      "anchor_suggestion_status": "Unapproved diagnostic values only; review hip/support alignment and loop after applying metadata anchors without changing image pixels."
+    }
+  },
+  "automation": {
+    "geometry_report": "/workspace/scratch/pr100-resume/rabbit328-E-walk2-geometry.json",
+    "image_size": [2172,724],
+    "separated_poses": 3,
+    "distinct_pixel_frames": 3,
+    "complete_pose_regions": "pass",
+    "canvas_size": 1024,
+    "canvas_review_status": "diagnostic_only_not_approved",
+    "caveat": "Geometry and unique pixels are separate from motion, identity and source fidelity review."
+  },
+  "required_before_risk_pilot_pass": [
+    "Preview the actual three-pose loop using independently reviewed per-pose body/ground anchors and inspect for sliding, high-knee popping and leg identity changes.",
+    "Check stocking-band continuity and ensure newly interpreted costume details stay fixed across the eventual animation."
+  ],
+  "not_tested": ["registered playback", "other seven directions", "idle/attack/hit/death roles", "actual Main screen", "runtime scale", "comparison with an approved completed actor in Main"],
+  "counts_as_completed_entity": false
+}

@@ -1,0 +1,26 @@
+{
+  "godot": "/workspace/scratch/bin/Godot_v4.7.2-stable_linux.x86_64",
+  "version": "4.7.2.stable.official.ed1daf0bf",
+  "sha256": "8d106cbe6144c2dc7e881d61d2429c1a8a76e6b22ef48bd5e48dcf934953f71e",
+  "wrapper": "/workspace/scratch/bin/godot-pr100",
+  "display": ":99",
+  "xorg_pid": 777,
+  "xorg_session": 71485,
+  "xorg_config": "/workspace/scratch/display/xorg.conf",
+  "xorg_log": "/workspace/scratch/display/Xorg.99.log",
+  "renderer": "OpenGL 4.5 Mesa 25.0.7-2+deb13u1 llvmpipe LLVM 19.1.7",
+  "render_probe": "/workspace/scratch/godot-probe/render-probe.png",
+  "render_probe_exit": 0,
+  "render_probe_size": [
+    1152,
+    648
+  ],
+  "official_zip_sha512": "9aa00f7a605200940bce3027a567b782f49bd8e940dd06ae9e987bd65aee1b1467edd56ed84fcdcbdd44354bf613bdbb4e5d2913e925850368e150c59ed54c65",
+  "notes": [
+    "Binary checksum matches godotengine/godot-builds 4.7.2-stable SHA512-SUMS.txt used by repository workflows.",
+    "with_additional_permissions network enabled needed for X socket access.",
+    "Pass --audio-driver Dummy.",
+    "Xvfb unavailable; existing Xorg dummy driver used without system package installs.",
+    "No repository files or game runtime mutated."
+  ]
+}
