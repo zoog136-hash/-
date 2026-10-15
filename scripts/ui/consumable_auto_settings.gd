@@ -15,7 +15,7 @@ func configure(controller: Node) -> void:
 	settings = POLICY.normalize(world.call("get_consumable_auto_settings") if world != null and world.has_method("get_consumable_auto_settings") else {})
 	add_theme_constant_override("separation", 10)
 	add_child(UI.label("소모품 자동 사용", 18, UI.GOLD))
-	add_child(UI.section("AUTO로 등록한 퀵슬롯에만 적용됩니다. HP 회복을 먼저 사용하며 수동 사용 조건은 바꾸지 않습니다.", 12))
+	add_child(UI.section("AUTO 등록 퀵슬롯에만 자동사용됩니다. HP 물약은 수동·자동 공통 1초 재사용 대기이며 HP 회복을 우선합니다.", 12))
 	_add_control("hp", "HP 회복제", "AutoHP")
 	_add_control("mp", "즉시 MP 회복제", "AutoMP")
 	_add_control("long_mp", "긴 재사용 MP 회복제 · 마녀의 마력 회복제", "AutoLongMP")
