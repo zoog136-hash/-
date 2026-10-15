@@ -1,0 +1,26 @@
+{
+  "total": 7,
+  "passed": 7,
+  "failed": [],
+  "skipped": [],
+  "not_run": [],
+  "checks": [
+    "reference_object_placement_test",
+    "road_surface_render_test",
+    "terrain_surface_render_test",
+    "world_region_portals_test",
+    "world_regions_test",
+    "world_structure_test",
+    "world_terrain_coverage_test"
+  ],
+  "validation_scopes": {
+    "reference_object_placement_test": "EXISTING_TWILIGHT_GEOMETRY",
+    "road_surface_render_test": "EXISTING_TWILIGHT_GEOMETRY",
+    "terrain_surface_render_test": "EXISTING_TWILIGHT_GEOMETRY",
+    "world_region_portals_test": "EXISTING_TWILIGHT_GEOMETRY",
+    "world_regions_test": "EXISTING_TWILIGHT_GEOMETRY",
+    "world_structure_test": "EXISTING_TWILIGHT_GEOMETRY",
+    "world_terrain_coverage_test": "EXISTING_TWILIGHT_GEOMETRY"
+  },
+  "selection": "reference_object_placement_test,road_surface_render_test,terrain_surface_render_test,world_region_portals_test,world_regions_test,world_structure_test,world_terrain_coverage_test"
+}

@@ -41,6 +41,11 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         # Five isolated family shards (360 seconds each by default), not one
         # 540-second timer shared by all 24 maps. The child enforces deadlines.
         return max(requested, 1860)
+    if name == 'remake_source_runtime_test':
+        # Ten live boss/save lifecycles plus 50 real portal transitions and
+        # rendered captures. Keep every floor and assertion in the private-pack
+        # audit; installations without that pack still explicitly SKIP it.
+        return max(requested, 480)
     if name == 'original_skill_learning_conditions_test':
         return max(requested, 540)
     if name == 'eight_interactions_test':

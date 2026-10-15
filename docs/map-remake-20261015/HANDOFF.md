@@ -9,7 +9,8 @@
 - A3 정확한 분할 ZIP 폴더: https://drive.google.com/drive/folders/1KQ42RjHIfL3eMUhietgzQ8lru4smFoW0
 - 기존 manifest Drive ID: `1RwcV6ZydFhbUw6IMlUKKRmnMs8Gvv0p0`. 분할 파일과 결합 ZIP 해시를 확인하고 재사용한다.
 - 이번 환경의 A3: `/workspace/sources/a3.zip`. 다음 Work에도 남는다고 가정하지 않는다.
-- 원본 격자와 임시 배치가 들어간 런타임 팩은 `data/map_remake/private`이며 공개 Git에 포함하지 않는다. **팩 외부 전송은 자동 승인 검토에 거절되어 승인 대기/미전달**이다. 원본 전체 아트 납품 장부를 완료로 바꾸지 않는다.
+- 원본 격자와 임시 배치가 들어간 런타임 팩은 `data/map_remake/private`이며 공개 Git에 포함하지 않는다. 사용자가 기존 자료 폴더에 비공개 업로드를 승인하여 [수정된 v2 팩](https://drive.google.com/file/d/1Iwn4v9dJIne1UBrHJAe-jVX6lur7OlGu/view)을 보관했다. 공개 공유 설정을 생성하지 않았다.
+- `TWILIGHT-map-remake-private-20261015-v2.zip`: **1,413,515바이트**, SHA-256 `9123660429fc06a9e88a3f7719f2121401f53dc57d71e1da543b085caa399708`. 업로드 후 재다운로드하여 SHA·ZIP CRC·10층 격자/배치를 독립 검증했다. 이미지 0개, 15개 엔트리, 배치 버전 `2026101502`. 초기 v1은 폭젠 반경 수정 전이므로 사용하지 않는다. 원본 전체 아트 납품 장부를 완료로 바꾸지 않는다.
 
 ## 복원 명령
 
@@ -19,7 +20,16 @@ Godot는 공식 4.7.2를 사용한다. 실제 사용자 저장 경로와 다른 
 git switch feature/twilight-map-remake-20261015
 git fetch origin
 python3 tools/check_resource_integrity.py --root .
+# 위 Drive v2 ZIP의 SHA를 확인한 뒤 저장소 루트에 압축 해제한다.
+# 기존 팩이 있다면 해시를 비교하고 백업한 뒤 설치한다.
+# ZIP에는 data/map_remake/private, effective_layouts.json, DELIVERY_MANIFEST.json이 있다.
+python3 tools/map_restore/verify_remake.py --pack data/map_remake/private --layouts effective_layouts.json --report /workspace/private-validation.json
 "$GODOT" --headless --path . --import
+```
+
+팩을 복원한 경우 아래 변환을 반복할 필요가 없다. 원본에서 다시 만들어야 할 때만 실행한다.
+
+```bash
 "$GODOT" --headless --path . --script res://tools/map_restore/export_current_layouts.gd -- /workspace/effective-layouts.json
 python3 tools/map_restore/build_remake.py --a3 /workspace/sources/a3.zip --layouts /workspace/effective-layouts.json --output data/map_remake/private
 python3 tools/map_restore/verify_remake.py --pack data/map_remake/private --layouts /workspace/effective-layouts.json --report /workspace/private-validation.json
@@ -40,6 +50,10 @@ python3 -m unittest discover -s tools/map_restore -p 'test_*.py'
 
 ## 진행 상태와 남은 검증
 
+- 현재 PR: https://github.com/zoog136-hash/-/pull/119 (Draft). Sol 6.1 전환 시 기존 `f7c0b3b`까지의 구현과 미커밋 진단·문서를 같은 브랜치에서 보존했다. 과거 경로에 생성된 282개 검사 산출물은 `evidence/regression-generated`에 원래 경로·SHA와 함께 옮겼으며 기존 날짜의 추적 증거는 복원했다.
+- 성공 결과는 `evidence/checkpoint-logs`에 보존했다. 초기 전체 검사 `142 PASS / 15 FAIL / 3 SKIP`과 이후 대상별 수정 검사를 함께 남긴다. 이미 성공한 검사를 다시 처음부터 수행하지 않는다.
+- **우선 처리할 실패:** 배치 `2026101502`의 실제 플레이 검사는 오만 10층 전투·저장·서비스·포털 검사 후 아덴 복귀 첫 물리 프레임에서 정지한다. `oman-final.log`, `oman10-headless.log`, `trace-runtime-v4.log` 참조. 렌더 없이도 재현되며 플레이어의 물리/시각 함수는 반환한다. 보고서가 기록되지 않은 실행은 PASS가 아니다. 이전 `5841` 성공은 수정 전 배치의 결과이며 현재 배치의 완료 근거로 대체하지 않는다.
+- 진단용 `/workspace/twilight-baseline`은 `dc787a9`에 그대로 있고 추적 출력용 미커밋 코드가 있다. 이 워크트리의 actor/animation 진단 편집을 제품 브랜치로 복사하거나 checkout/reset으로 지우지 않는다. 제품 브랜치의 PR100 애니메이션 파일은 수정하지 않았다.
 - 10층 모두 개별 원본 격자와 해시가 있다. 25개 게임 ID는 그대로이며 추가 1,000개 맵을 게임 메뉴에 등록하지 않는다.
 - 오만 위치/보스방은 provisional. 현재 M 기준점·원본 S32·층별 구조물 의미/아트가 미확정이다. 25개 완료 집계는 0이다.
 - 수정 전 실패한 검사 로그와 수정 후의 로그를 구분한다. 합성 CI fixture 검사는 원본 이미지 통합 검증이 아니다.

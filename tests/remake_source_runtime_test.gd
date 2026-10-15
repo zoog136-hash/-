@@ -94,12 +94,15 @@ func combat(id: String) -> void:
 	var deadline: float = director.states[key].ready_at
 	check(str(director.states[key].phase)=="cooldown" and deadline>Time.get_unix_time_from_system(),id+" death cooldown")
 	check(int(slot.region.respawn_time)==86400,id+" existing 24h boss respawn preserved")
+	print("REMAKE_STAGE ",id," dead_boss_restore_begin rng_state=",world.rng.state)
 	world._save_game(true);world._load_game(true)
+	print("REMAKE_STAGE ",id," dead_boss_restore_end rng_state=",world.rng.state)
 	slot=boss_slot();director=world.field_population.boss_director
 	field=world.field_map
 	check(not is_instance_valid(slot.monster) and director.states[key].ready_at==deadline,id+" dead boss deadline survives reload")
 	director.states[key].ready_at=Time.get_unix_time_from_system()-1
 	world.field_population._process(0.5)
+	print("REMAKE_STAGE ",id," boss_respawn_end")
 	check(is_instance_valid(slot.monster) and slot.monster.hp==slot.monster.max_hp,id+" deadline respawns boss once")
 	if is_instance_valid(slot.monster):
 		check(field.remake_region_contains(str(slot.region.id),slot.monster.home_position),id+" boss respawn stays in arena")
@@ -115,6 +118,7 @@ func services_and_travel(id: String) -> void:
 	var portals: Array=world.field_map.data.portal.duplicate(true)
 	var arrivals: Array=[]
 	for portal: Dictionary in portals:
+		print("REMAKE_STAGE ",id," portal_begin ",portal.id)
 		world._set_map(id,false)
 		world.player.global_position=Vector2(portal.position[0],portal.position[1])
 		world.player.set_auto_enabled(false)
@@ -125,6 +129,7 @@ func services_and_travel(id: String) -> void:
 		check(world.active_map_id==str(portal.target_map),id+" actual portal trigger "+str(portal.id))
 		check(world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position),id+" destination foot clearance "+str(portal.id))
 		arrivals.append({"portal":portal.id,"expected":portal.target_map,"actual":world.active_map_id})
+		print("REMAKE_STAGE ",id," portal_end ",portal.id)
 	service_reports.append({"map":id,"portals":arrivals,"npc_action":"EXISTING_GUIDE_DIALOGUE"})
 
 func run() -> void:
@@ -220,12 +225,17 @@ func run() -> void:
 			"max_chunk_build_usec":world.field_renderer.stream_build_usec,"memory_static_bytes":OS.get_static_memory_usage(),
 			"source_hash":field.definition.source_sha256,"edition":"A3_PC_CURRENT_M_UNVERIFIED"})
 		await services_and_travel(id)
+		print("REMAKE_FLOOR_CHECKED ",id," checks=",checks)
+	print("REMAKE_STAGE legacy_return_begin")
 	world._set_map("aden_world",false)
+	print("REMAKE_STAGE legacy_return_set")
 	await frames(2)
+	print("REMAKE_STAGE legacy_return_frames")
 	check(world.player.get_node("CollisionShape2D").shape is CapsuleShape2D,"legacy foot collider restored")
 	var report: Dictionary = {"checks":checks,"failures":failures,"maps":reports,"display":DisplayServer.get_name(),
 		"renderer":RenderingServer.get_video_adapter_name(),"android":"NOT_RUN","boss_combat":combat_reports,"services_and_travel":service_reports}
 	var file := FileAccess.open(output+"/runtime.json",FileAccess.WRITE)
+	print("REMAKE_STAGE report_write")
 	file.store_string(JSON.stringify(report,"\t"));file.close()
 	print("REMAKE_RUNTIME_RESULT "+JSON.stringify(report))
 	world.queue_free();await frames(2)

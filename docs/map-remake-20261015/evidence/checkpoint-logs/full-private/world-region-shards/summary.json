@@ -1,0 +1,105 @@
+{
+  "expected_regions": 24,
+  "completed_regions": 14,
+  "total_checks": 3498,
+  "families": [
+    {
+      "family": "oman",
+      "expected_maps": [
+        "oman_01",
+        "oman_02",
+        "oman_03",
+        "oman_04",
+        "oman_05",
+        "oman_06",
+        "oman_07",
+        "oman_08",
+        "oman_09",
+        "oman_10"
+      ],
+      "completed_maps": [],
+      "checks": 0,
+      "passed": false,
+      "reason": "shard timed out after 360s",
+      "timed_out": true,
+      "exit_code": -1
+    },
+    {
+      "family": "domination",
+      "expected_maps": [
+        "domination_summit"
+      ],
+      "completed_maps": [
+        "domination_summit"
+      ],
+      "checks": 182,
+      "passed": true,
+      "reason": "passed",
+      "timed_out": false,
+      "exit_code": 0
+    },
+    {
+      "family": "escaros",
+      "expected_maps": [
+        "escaros_01",
+        "escaros_02",
+        "escaros_03",
+        "escaros_04",
+        "escaros_05"
+      ],
+      "completed_maps": [
+        "escaros_01",
+        "escaros_02",
+        "escaros_03",
+        "escaros_04",
+        "escaros_05"
+      ],
+      "checks": 1021,
+      "passed": true,
+      "reason": "passed",
+      "timed_out": false,
+      "exit_code": 0
+    },
+    {
+      "family": "albino",
+      "expected_maps": [
+        "albino_01",
+        "albino_02",
+        "albino_03",
+        "albino_04"
+      ],
+      "completed_maps": [
+        "albino_01",
+        "albino_02",
+        "albino_03",
+        "albino_04"
+      ],
+      "checks": 1281,
+      "passed": true,
+      "reason": "passed",
+      "timed_out": false,
+      "exit_code": 0
+    },
+    {
+      "family": "faith",
+      "expected_maps": [
+        "faith_01",
+        "faith_02",
+        "faith_03",
+        "faith_04"
+      ],
+      "completed_maps": [
+        "faith_01",
+        "faith_02",
+        "faith_03",
+        "faith_04"
+      ],
+      "checks": 1014,
+      "passed": true,
+      "reason": "passed",
+      "timed_out": false,
+      "exit_code": 0
+    }
+  ],
+  "passed": false
+}
