@@ -59,6 +59,8 @@ var presentation_settings: Dictionary = {"impact_intensity":0.85, "reduced_motio
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
 const CONSUMABLE_AUTO = preload("res://scripts/consumable_auto_policy.gd")
+const HP_POTION_COOLDOWN_SECONDS: float = 1.0
+const HP_POTION_COOLDOWN_KEY: String = "__hp_potion_shared__"
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
@@ -3632,7 +3634,12 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	if hp >= effective_max_hp:
 		hud.show_message("HP가 가득 찼습니다")
 		return
+	var cooldown_left: float = float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0))
+	if cooldown_left > 0.0:
+		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
+		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
+	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
@@ -4445,6 +4452,8 @@ func _run_auto_item_quickslots(delta: float) -> void:
 			continue
 		seen[item] = true
 		var record: Dictionary = _find_catalog_item_record(item)
+		if int(record.get("heal", 0)) > 0 and float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0:
+			continue
 		var spec: Dictionary = CONSUMABLE_RULES.definition(item)
 		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, _effective_max_hp(), mp, _effective_max_mp(), job_class, active_item_buffs):
 			continue
