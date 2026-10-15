@@ -10,6 +10,7 @@ from collections import deque
 from pathlib import Path
 from PIL import Image
 from alpha import clear_white_border
+from foreground import cleanup
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT/'data/ground_item_icons.json'
@@ -60,11 +61,11 @@ def sources():
         result[category]={'source_path':path,'source_name':name,'source_kind':kind,'art_reference_id':identity}
     return result
 
-def prepare(raw: bytes):
+def prepare(raw: bytes, category: str):
     with Image.open(io.BytesIO(raw)) as opened:
         if not 1<=opened.width<=512 or not 1<=opened.height<=512: raise ValueError('invalid source size')
         image=opened.convert('RGBA')
-    image=clear_white_border(image)
+    image=cleanup(clear_white_border(image),category)
     width,height=image.size; pixels=image.load()
     corners=[pixels[0,0],pixels[width-1,0],pixels[0,height-1],pixels[width-1,height-1]]
     white=sum(min(p[:3])>=250 for p in corners)>=3
@@ -99,7 +100,7 @@ def build(write=False):
     for key,source in sources().items():
         relative=source['source_path'].removeprefix('res://')
         if '..' in Path(relative).parts or not relative.startswith('assets/'): raise ValueError('unsafe source')
-        raw=(ROOT/relative).read_bytes(); png,bounds,extent=prepare(raw)
+        raw=(ROOT/relative).read_bytes(); png,bounds,extent=prepare(raw,key)
         path='assets/ground_categories/'+key+'.png'
         entry={**source,'path':'res://'+path,'source_sha256':digest(raw),'sha256':digest(png),'size':[64,64],'source_crop':bounds,'draw_extent':extent}
         entries[key]=entry
