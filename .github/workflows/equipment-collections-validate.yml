@@ -1,0 +1,58 @@
+name: Equipment collection validation
+on:
+  push:
+    branches: [feature/permanent-equipment-collections-20261015]
+  pull_request:
+    paths:
+      - 'scripts/collections/**'
+      - 'data/collections/**'
+      - 'tools/collections/**'
+      - 'tests/collections/**'
+      - '.github/workflows/equipment-collections-validate.yml'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Resource integrity preflight
+        run: python3 tools/check_resource_integrity.py --root .
+      - name: Validate collections when installed
+        run: |
+          if test -f tools/collections/build_equipment_collections.py; then
+            python3 tools/collections/build_equipment_collections.py --root . --check
+            python3 -m unittest discover -s tests/collections -v
+          else
+            echo 'Source inspection baseline; runtime collection changes not yet installed.'
+          fi
+      - name: Source inspection snapshot (no binary artwork or user saves)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: equipment-collection-source-${{ github.sha }}
+          retention-days: 2
+          path: |
+            AGENTS.md
+            TWILIGHT_PROJECT_RULES.md
+            TWILIGHT_VERSION_HISTORY.md
+            README.md
+            project.godot
+            Main.tscn
+            scripts/
+            scenes/
+            data/game_db_v17.json
+            data/catalog_v19.json
+            data/inven*
+            data/catalog_image_index_v19.json
+            data/collections/
+            tools/check_resource_integrity.py
+            tools/test_project.py
+            tools/collections/
+            tests/
+            docs/RESOURCE_INTEGRITY_POLICY.md
+            .github/workflows/equipment-collections-validate.yml
