@@ -2,7 +2,7 @@
 
 기존 Main.tscn의 **25/25 맵에 공통 리메이크 경로를 연결했다**. 오만 10층은 검증한 독립 A3 격자 팩을 재사용한다. 아덴·지배·에스카로스 5·알비노 4·신념 4는 서로 다른 기존 TWILIGHT 폴리곤 지형을 유지하는 `AuthoredRemakeField`를 사용한다. **12개 완료 조건 충족 0/25, 현재 리니지M 정확 복원 0/25**다. 원본 대응이 없는 15개를 A3 원본 복원으로 계산하지 않는다.
 
-제품 코드: `0ad57d2` → `4dbc58f`. 브랜치 `feature/twilight-map-remake-20261015`, [Draft PR #119](https://github.com/zoog136-hash/-/pull/119). main `8cc6dc6`은 변경하지 않았다. PR100은 확인 시 `07bba22`로 진행 중이며 그 브랜치와 player/monster/animation 파일은 수정하지 않았다. 해당 최신 PR100과의 결합 검사는 미실시다.
+제품 코드: `0ad57d2` → `4dbc58f`, 지역명 표시 수정 `e85fc7b`. 브랜치 `feature/twilight-map-remake-20261015`, [Draft PR #119](https://github.com/zoog136-hash/-/pull/119). main `8cc6dc6`은 변경하지 않았다. PR100은 확인 시 `07bba22`로 진행 중이며 그 브랜치와 player/monster/animation 파일은 수정하지 않았다. 해당 최신 PR100과의 결합 검사는 미실시다.
 
 ## 실제 구현
 
@@ -26,6 +26,8 @@
 | 실제 화면 | 새 PNG **128장**, SHA·PNG CRC 확인: [매니페스트](PNG_MANIFEST.json). 게임 플레이/충돌/전투 68장과 정지 진단 60장을 구분한다. [동일 카메라 비교 15쌍](COMPARISON.md). 오만 10층의 이전 전체 지도/배치/비교는 재생성하지 않고 재사용한다. |
 | 원본 자료 | 신규 A3 복구 없음. 기존 1,000맵 카탈로그·10층 v2 팩·아트 SHA를 유지. 나머지 15개는 기존 TWILIGHT 지형이다. 아덴 A3 4의 2048×1536 지형 적용과 S32 의미 복원은 미완료다. |
 | 전체 회귀/성능 | 실행 중. 최종 결과를 별도 JSON/로그로 추가하며 완료 전 PASS로 표시하지 않는다. Android는 NOT_RUN. |
+
+지역 프로필의 맵 이름을 메뉴와 진입 안내에도 연결했다. [실제 알비노 1구역 진입 화면](diagnostic/albino_01-same-camera-detail.png)은 이 수정 이후 캡처다.
 
 ## 남은 실패와 한계
 
