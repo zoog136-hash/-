@@ -134,7 +134,35 @@ jobs:
           if grep -E 'SCRIPT ERROR:|ERROR:' "$RUNNER_TEMP/pr100-prepared/godot-import.txt"; then exit 1; fi
           "$ENGINE" --headless --path . --quit-after 60 2>&1 | tee "$RUNNER_TEMP/pr100-prepared/godot-boot.txt"
           if grep -E 'SCRIPT ERROR:|ERROR:' "$RUNNER_TEMP/pr100-prepared/godot-boot.txt"; then exit 1; fi
+          # The repository tracks generated editor caches. Archive their changes;
+          # restore only the disposable runner's worktree from the MERGED index.
+          # Any source, map, asset, or unexpected path mutation still fails closed.
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'pr100-prepared'
+          def git(*args):return subprocess.check_output(['git',*args])
+          before_tree=git('write-tree').decode().strip()
+          paths=[p for p in git('diff','--name-only','-z').decode().split('\0') if p]
+          allowed_prefixes=('.godot/editor/','.godot/imported/','.godot/shader_cache/')
+          allowed_files={'.godot/global_script_class_cache.cfg','.godot/uid_cache.bin','.godot/scene_groups_cache.cfg'}
+          unexpected=[p for p in paths if not (p.startswith(allowed_prefixes) or p in allowed_files)]
+          patch=git('diff','--binary')
+          (out/'generated-cache-before-restore.patch').write_bytes(patch)
+          record=dict(changed_paths=paths,unexpected_paths=unexpected,patch_sha256=hashlib.sha256(patch).hexdigest(),merged_index_tree=before_tree,restore_source='index, not HEAD',restored=False)
+          report=out/'generated-cache-review.json'
+          report.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+          print('GENERATED_CACHE_AUDIT '+json.dumps(record,ensure_ascii=False))
+          if unexpected:raise SystemExit('Unexpected tracked mutations; no files restored')
+          for offset in range(0,len(paths),100):
+              subprocess.run(['git','restore','--worktree','--',*paths[offset:offset+100]],check=True)
+          assert git('write-tree').decode().strip()==before_tree,'Staged merge tree changed'
+          subprocess.run(['git','diff','--exit-code'],check=True)
+          record['restored']=True
+          report.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n')
+          print('GENERATED_CACHE_RESTORED '+str(len(paths))+'; source/assets/maps untouched; staged merge unchanged')
+          PY
           git diff --exit-code
+          python3 tools/check_resource_integrity.py --root . | tee "$RUNNER_TEMP/pr100-prepared/resource-after-boot.txt"
       - name: Create inspected commit objects without updating any branch
         shell: bash
         env:
@@ -156,6 +184,7 @@ jobs:
             '- 392/498 연결, 잔여106. Main 개별 증거121종이며 392종 전부의 새 개별 검증을 의미하지 않음.\n'+
             '- 지옥의 쿠거 batch29 통합 CI 추가. 기존 테스트/임계값 축소 없음. 검사 실행기 기대값은 길찾기 준비 포함4개로 수정.\n'+
             '- 리소스723시트/41442프레임 SHA, Python 실행기/작화 임포터 회귀, Godot4.7.2 import/boot PASS.\n'+
+            '- Godot 생성 캐시 변경은 patch/SHA/경로로 보존 후 병합 index 기준 복원. 소스·맵·자산 및 staged tree 무변경 검사는 유지.\n'+
             '- 최종 전체 CI 및 병합: 아직 대기. 이전391종 CI 결과로 최신 성공을 대체하지 않음.\n'+
             '- Android 실기기 및 외부 원본 전체 전달: 미검증/미완료 유지.\n'+
             '- 백업: `backup/pr100-before-merge-20261016-f99fab0`, `backup/main-before-pr100-20261016-e2119c3`.\n'+
