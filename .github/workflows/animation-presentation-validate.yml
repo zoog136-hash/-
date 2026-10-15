@@ -17,10 +17,12 @@ on:
       - 'tools/link_original_based_identity.py'
       - 'data/animation_authoring_sources.json'
       - 'tests/original_based*'
+      - 'tests/test_original_based_pose_files.py'
       - 'tests/run_original_based*batch.gd'
       - 'tests/pr100_direction_gameplay_test.gd'
       - 'tests/fixtures/pr100_batch*.json'
       - 'tests/fixtures/pr100_transform*.json'
+      - 'tests/fixtures/pr100_temporal*.json'
       - 'tests/*animation*'
       - 'tests/*presentation*'
       - '.github/workflows/animation-presentation-validate.yml'
@@ -58,6 +60,7 @@ jobs:
           python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
           python3 tests/eight_direction_coverage_audit_test.py
           python3 tests/original_based_motion_import_test.py
+          python3 tests/test_original_based_pose_files.py
           python3 tests/original_based_identity_link_test.py
           python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
           for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do

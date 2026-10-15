@@ -11,7 +11,9 @@ they are imported only after all five roles cover all eight directions.
 import argparse
 import hashlib
 import json
+import os
 import shutil
+import tempfile
 from pathlib import Path
 
 import numpy as np
@@ -319,6 +321,14 @@ def reviewed_action_aliases(candidate):
 
 
 def import_sheet(root, candidate, actor, keys, apply):
+    # Optional representation only. Keep the established sheet parser,
+    # per-sheet temporal guard and serialized legacy outputs unchanged.
+    if candidate.get("input_mode") == "pose_files_v1":
+        return import_pose_files(root, candidate, actor, keys, apply)
+    if candidate.get("input_mode") == "mixed_sources_v1":
+        return import_mixed_sources(root, candidate, actor, keys, apply)
+    if candidate.get("input_mode") is not None:
+        raise ValueError("Unknown input_mode")
     plan = expansion.read(root / "data/animation_authoring_sources.json")
     targets = {row["key"]: row for row in plan["targets"]}
     bindings = [targets[key] for key in keys]
@@ -542,16 +552,660 @@ def import_sheet(root, candidate, actor, keys, apply):
     return {"resource": str(folder), "identities": keys, "poses": geometry["distinct_pixel_frames"], "original_unchanged": True, "applied": apply}
 
 
+def _pose_file_source(root, value):
+    """A whole standalone PNG, never a selected region in a multipose PNG."""
+    if not isinstance(value, str) or not value or ".." in Path(value).parts:
+        raise ValueError("Unsafe pose file path")
+    path = candidate_image(root, value)
+    if path.suffix.lower() != ".png" or not path.is_file():
+        raise ValueError("Pose source must be an existing PNG file: " + str(path))
+    if any(part.is_symlink() for part in (path, *path.parents)):
+        raise ValueError("Pose source and its parents must not be symlinks: " + str(path))
+    return path
+
+
+def _pose_file_profiles(root, targets, keys, first, folder, reference_height, walk_count, aliases):
+    """Prepare, but never write, the same production profile convention."""
+    path = root / "data/combat_animation_profiles.json"
+    if path.is_symlink():
+        raise ValueError("Runtime profile catalog must not be a symlink")
+    document = expansion.read(path)
+    if not isinstance(document, dict) or not isinstance(document.get("profiles"), dict):
+        raise ValueError("Runtime animation profiles must contain a profiles object")
+    prior = json.dumps(document, ensure_ascii=False)
+    for key in keys:
+        previous = document["profiles"].get(key, {})
+        if not isinstance(previous, dict):
+            raise ValueError("Runtime animation profile must be an object: " + key)
+        profile = previous.copy()
+        if "prior_visual_profile" not in profile:
+            profile["prior_visual_profile"] = profile.copy() or None
+        scale = round(float(first["presentation_to_preserve"].get("visual_height", 100)) / reference_height, 6)
+        profile.update({"name": targets[key]["name"],
+                        "frames_path": "res://" + str((folder / "SpriteFrames.tres").relative_to(root)),
+                        "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff",
+                        "sprite_offset": [0, round(-32 * scale, 6)], "embedded_shadow": False,
+                        "authored_motion_weight": 0, "hit_recoil": 0,
+                        "action_hit_frames": {"attack": 1, **{alias: 1 for alias in aliases}},
+                        "attack_hit_frame": 1, "death_duration": SECONDS["death"],
+                        "movement_fps": walk_count / SECONDS["walk"],
+                        "authoring_reference": targets[key]["reference"]["path"]})
+        previous_frames = str(previous.get("frames_path", ""))
+        native = (previous_frames.startswith("res://assets/actors/eight_direction/")
+                  and previous_frames.endswith("/SpriteFrames.tres")
+                  and previous.get("layout") in {"sequential8", "directional8"})
+        if ((native or previous_frames.startswith("res://assets/actors/eight_direction/original_based/"))
+                and previous != profile):
+            raise ValueError("Existing authored runtime profile differs; explicit re-review required: " + key)
+        document["profiles"][key] = profile
+    return path, document, json.dumps(document, ensure_ascii=False) != prior, sha(path)
+
+
+def _prepare_pose_files(root, candidate, actor, keys, apply):
+    """Read-only complete preflight. No directories, cache or files are created.
+
+    Temporal minima belong to the entire candidate in this representation.
+    Every source is nevertheless checked as one complete whole-PNG body by the
+    unchanged analyzer and complete-region guard, not a region-selection escape.
+    """
+    root = Path(root).resolve()
+    allowed = {"input_mode", "texture_binding", "key", "prompt", "prompt_record_kind", "review",
+               "phase_counts", "expected_distinct_poses", "poses", "display_height_basis",
+               "action_aliases", "source_claim", "status", "actual_Main", "completed_added"}
+    if not isinstance(candidate, dict) or candidate.get("input_mode") != "pose_files_v1":
+        raise ValueError("Read-only pose-file validation requires input_mode=pose_files_v1")
+    if set(candidate) - allowed or candidate.get("texture_binding") != "individual_png_metadata":
+        raise ValueError("pose_files_v1 accepts only individual_png_metadata and explicit pose-file fields")
+    if (not isinstance(actor, str) or not 1 <= len(actor) <= 80
+            or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for char in actor)):
+        raise ValueError("Use a bounded ASCII actor folder name")
+    if (not isinstance(keys, list) or not keys or any(not isinstance(key, str) for key in keys)
+            or len(set(keys)) != len(keys)):
+        raise ValueError("Supply nonempty unique target keys")
+    if candidate.get("key", keys[0]) != keys[0]:
+        raise ValueError("Candidate key must match the primary target key")
+    if not isinstance(candidate.get("prompt"), str) or not candidate["prompt"].strip():
+        raise ValueError("Record the exact authoring prompt/instructions")
+    review = candidate.get("review", {})
+    if not isinstance(review, dict):
+        raise ValueError("Record explicit visual review")
+    for flag in ("identity_preserved", "eight_views", "motion_roles", "no_clipping"):
+        if review.get(flag) is not True:
+            raise ValueError("Missing explicit visual review: " + flag)
+    if not isinstance(review.get("notes"), str) or not review["notes"].strip():
+        raise ValueError("Record what was visually reviewed")
+    aliases = reviewed_action_aliases(candidate)
+    counts = candidate.get("phase_counts")
+    if (not isinstance(counts, dict) or set(counts) != set(ROLES)
+            or any(type(counts[role]) is not int or counts[role] < len(ROLES[role]) for role in ROLES)):
+        raise ValueError("Global role minima are idle2/walk3/attack3/hit2/death3")
+    expected = sum(counts.values()) * len(DIRECTIONS)
+    if (expected not in (104, 112) or type(candidate.get("expected_distinct_poses")) is not int
+            or candidate["expected_distinct_poses"] != expected):
+        raise ValueError("An explicit complete 104 or 112 distinct-pose matrix is required")
+    poses = candidate.get("poses")
+    if not isinstance(poses, list) or len(poses) != expected:
+        raise ValueError("Every global role/direction/phase slot needs exactly one pose file")
+    slots, pose_ids, source_paths, pinned_hashes = {}, set(), set(), set()
+    required = {"id", "role", "direction", "phase", "output_path", "source_sha256",
+                "canvas_size", "source_anchor", "scale_review_note"}
+    for spec in poses:
+        if not isinstance(spec, dict) or not required <= set(spec) or set(spec) - required - {"independent_review_id"}:
+            raise ValueError("Each pose needs explicit identity, role/direction/phase, PNG SHA, canvas, anchor and scale note")
+        pose_id = spec["id"]
+        if not isinstance(pose_id, str) or not pose_id.strip() or len(pose_id) > 120 or pose_id in pose_ids:
+            raise ValueError("Pose IDs must be nonempty and unique")
+        pose_ids.add(pose_id)
+        role, direction, phase = spec["role"], spec["direction"], spec["phase"]
+        if (not isinstance(role, str) or role not in ROLES or direction not in DIRECTIONS
+                or type(phase) is not int or not 0 <= phase < counts[role]):
+            raise ValueError("Invalid global role/direction/phase slot")
+        slot = role, direction, phase
+        if slot in slots:
+            raise ValueError("Duplicate global role/direction/phase slot")
+        anchor = spec["source_anchor"]
+        if (not isinstance(anchor, list) or len(anchor) != 2 or any(type(value) is not int for value in anchor)
+                or type(spec["canvas_size"]) is not int or not 64 <= spec["canvas_size"] <= 2048
+                or not isinstance(spec["scale_review_note"], str) or not spec["scale_review_note"].strip()):
+            raise ValueError("Every pose requires a reviewed bounded canvas, integer anchor and nonempty scale note")
+        digest = spec["source_sha256"]
+        if not isinstance(digest, str) or len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+            raise ValueError("Pin each unchanged PNG SHA-256")
+        source = _pose_file_source(root, spec["output_path"])
+        if source.resolve() in source_paths or digest in pinned_hashes:
+            raise ValueError("A source pose/file cannot be reused across mandatory slots")
+        source_paths.add(source.resolve())
+        pinned_hashes.add(digest)
+        if sha(source) != digest:
+            raise ValueError("Pose PNG SHA-256 differs: " + str(source))
+        slots[slot] = spec, source
+    ordered_slots = [(role, direction, phase) for role in ROLES for direction in DIRECTIONS for phase in range(counts[role])]
+    if set(slots) != set(ordered_slots):
+        raise ValueError("Missing/noncontiguous global role/direction/phase slots")
+    targets = {row["key"]: row for row in expansion.read(root / "data/animation_authoring_sources.json")["targets"]}
+    if any(key not in targets for key in keys):
+        raise ValueError("Unknown target key")
+    bindings = [targets[key] for key in keys]
+    first = bindings[0]
+    identity = sharing_identity(first, root=root)
+    if any(sharing_identity(row, root=root) != identity for row in bindings):
+        raise ValueError("Cannot share authored poses across different original images/presentations")
+    originals = [(root / row["reference"]["path"].removeprefix("res://"), row["reference"]["sha256"]) for row in bindings]
+    for original, digest in originals:
+        if sha(original) != digest:
+            raise ValueError("Original reference bytes changed: " + str(original))
+    folder = root / "assets/actors/eight_direction/original_based" / actor
+    for parent in (folder, *folder.parents):
+        if parent.is_symlink() or (parent.exists() and not parent.is_dir()):
+            raise ValueError("Authored output directory is not a regular directory: " + str(parent))
+        if parent == root:
+            break
+    geometry, parsed, atlases, copies, pose_records = {"frames": []}, [], [], [], []
+    role_frames = {role: [[] for _ in DIRECTIONS] for role in ROLES}
+    raw_hashes, visible_hashes = set(), set()
+    texel_bytes = 0
+    for index, slot in enumerate(ordered_slots):
+        role, direction, phase = slot
+        spec, source = slots[slot]
+        part = analyze(source, rows_count=1, reference_rows=[0], directions=[direction],
+                       canvas_size=spec["canvas_size"], source_anchors=[spec["source_anchor"]])
+        require_complete_pose_regions(source, part)
+        with Image.open(source) as image:
+            if image.format != "PNG":
+                raise ValueError("Pose source must be a real PNG")
+            pixels = np.asarray(image)
+            # Stronger standalone-body check: even small opaque islands inside
+            # the bounding rectangle cannot masquerade as one connected pose.
+            _, connected = ndimage.label(pixels[:, :, 3] > 100, structure=np.ones((3, 3), dtype=int))
+            if connected != 1:
+                raise ValueError("Standalone PNG must contain one connected visible body")
+            frame = part["frames"][0]
+            x, y, width, height = frame["region"]
+            visible = _visible_pose_fingerprint(pixels[y:y + height, x:x + width])
+        if frame["rgba_sha256"] in raw_hashes or visible in visible_hashes:
+            raise ValueError("Duplicate raw or visible pose across source files")
+        raw_hashes.add(frame["rgba_sha256"])
+        visible_hashes.add(visible)
+        frame.update({"sheet": index, "pose_id": spec["id"], "role": role, "phase": phase})
+        geometry["frames"].append(frame)
+        role_frames[role][DIRECTIONS.index(direction)].append(index)
+        parsed.append(part)
+        destination = folder / ("pose-%03d-%s-%s-%d.png" % (index, role, direction.lower(), phase))
+        copies.append((source, destination, spec["source_sha256"]))
+        atlas = {"path": "res://" + str(destination.relative_to(root)), "sha256": spec["source_sha256"],
+                 "size": part["image_size"], "canvas_size": part["canvas_size"], "foot": part["foot"],
+                 "directions": [direction], "source_direction_indices": [DIRECTIONS.index(direction)],
+                 "scale_review_note": spec["scale_review_note"], "source_anchor_kind": "reviewed per-pose foot anchor"}
+        atlases.append(atlas)
+        pose_records.append({"id": spec["id"], "role": role, "direction": direction, "phase": phase,
+                             "file": atlas["path"], "source_sha256": spec["source_sha256"],
+                             "source_anchor": spec["source_anchor"], "canvas_size": spec["canvas_size"],
+                             "scale_review_note": spec["scale_review_note"], "rgba_sha256": frame["rgba_sha256"],
+                             "visible_sha256": visible, "entire_png_complete": True,
+                             **({"independent_review_id": spec["independent_review_id"]} if "independent_review_id" in spec else {})})
+        texel_bytes += part["image_size"][0] * part["image_size"][1] * 4
+    used = [index for role in ROLES for group in role_frames[role] for index in group]
+    if len(used) != len(set(used)) or set(used) != set(range(expected)):
+        raise ValueError("Every selected source pose must be used exactly once")
+    for alias, source_role in aliases.items():
+        role_frames[alias] = [group.copy() for group in role_frames[source_role]]
+    height_basis = candidate.get("display_height_basis", "max_living_frame")
+    if height_basis not in {"median_idle", "max_living_frame"}:
+        raise ValueError("Unknown reviewed display-height basis")
+    if height_basis == "max_living_frame":
+        reference_height = max(frame["region"][3] * 256 / parsed[index]["canvas_size"][1]
+                               for index, frame in enumerate(geometry["frames"]) if frame["role"] != "death")
+    else:
+        reference_height = float(np.median([part["neutral_height"] * 256 / part["canvas_size"][1]
+                                           for part, frame in zip(parsed, geometry["frames"]) if frame["role"] == "idle"]))
+    geometry["distinct_pixel_frames"] = expected
+    resource = spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames)
+    proof = {"schema": 1, "input_representation": "pose_files_v1", "texture_binding": "individual_png_metadata",
+             "source": "Newly authored from the existing target image; not recovered original animation",
+             "reference": first["reference"], "target_keys": keys,
+             "presentation_to_preserve": first["presentation_to_preserve"],
+             "target_references": {row["key"]: row["reference"] for row in bindings},
+             "target_presentations": {row["key"]: row["presentation_to_preserve"] for row in bindings},
+             "sharing_rule": "Unchanged strict original reference and rendered presentation identity",
+             "authoring_instructions": candidate["prompt"], "instruction_record_kind": candidate.get("prompt_record_kind", "exact_prompt"),
+             "visual_review": review, "directions": DIRECTIONS, "source_directions": DIRECTIONS,
+             "source_direction_indices": list(range(8)), "cell": [256, 256], "foot": [128, 160],
+             "packing": "Unchanged standalone PNG files with AtlasTexture region/margin metadata; no PNG assembly or rewriting",
+             "distinct_pixel_frames": expected, "phase_counts": {role: counts[role] for role in ROLES},
+             "frames": geometry["frames"], "pose_files": pose_records, "tracks": {},
+             "display_height_basis": height_basis, "display_reference_height": reference_height,
+             "all_selected_poses_used_once": True, "source_png_logical_rgba_bytes": texel_bytes,
+             "actual_Main": "not_run", "completed_added": 0}
+    if aliases:
+        proof["action_aliases"] = aliases
+    for role, directions in role_frames.items():
+        contributing = sorted({index for group in directions for index in group})
+        proof["tracks"][role] = {"atlas_files": [atlases[index] for index in contributing],
+                                 "source_poses_by_direction": {direction: [pose_records[index]["id"] for index in group]
+                                                               for direction, group in zip(DIRECTIONS, directions)},
+                                 "source_frames_per_direction": len(directions[0]), "unique_frames_per_direction": len(directions[0]),
+                                 "direction_unique_frames": dict.fromkeys(DIRECTIONS, len(directions[0])),
+                                 "source_duration_seconds": SECONDS[role], "loop_type": "loop" if role in ("idle", "walk") else "play_once"}
+        if role in aliases:
+            proof["tracks"][role]["alias_of"] = aliases[role]
+    metadata = [(folder / "SpriteFrames.tres", resource), (folder / "provenance.json", json.dumps(proof, ensure_ascii=False, indent=2) + "\n")]
+    profile_plan = _pose_file_profiles(root, targets, keys, first, folder, reference_height, counts["walk"], aliases) if apply else None
+    for _, destination, digest in copies:
+        require_preserved_output(destination, digest)
+    for path, content in metadata:
+        require_preserved_output(path, hashlib.sha256(content.encode()).hexdigest())
+    result = {"resource": str(folder), "identities": keys, "poses": expected, "original_unchanged": True,
+              "applied": apply, "input_mode": "pose_files_v1", "source_png_logical_rgba_bytes": texel_bytes,
+              "actual_Main": "not_run", "completed_added": 0}
+    return {"root": root, "folder": folder, "originals": originals, "copies": copies, "metadata": metadata,
+            "profile_plan": profile_plan, "result": result}
+
+
+def validate_pose_files(root, candidate, actor, keys, apply=True):
+    """True read-only API, including output/profile-conflict checks by default.
+
+    apply means validate the prospective runtime-profile update too; this API
+    never applies it or creates output/staging directories.
+    """
+    plan = _prepare_pose_files(root, candidate, actor, keys, apply)
+    return {**plan["result"], "applied": False, "read_only": True, "profiles_checked": bool(apply),
+            "output_files": [str(destination) for _, destination, _ in plan["copies"]]
+                            + [str(path) for path, _ in plan["metadata"]]}
+
+
+def import_pose_files(root, candidate, actor, keys, apply=False):
+    """Install only a fully preflighted optional pose-file candidate."""
+    plan = _prepare_pose_files(root, candidate, actor, keys, apply)
+    return _install_optional_plan(plan)
+
+
+def _install_optional_plan(plan):
+    """Shared transaction for optional representations; legacy install is unchanged."""
+    pending = [(source, destination, digest) for source, destination, digest in plan["copies"] if not destination.exists()]
+    metadata = [(path, content) for path, content in plan["metadata"] if not path.exists()]
+    profile_plan = plan["profile_plan"]
+    if not pending and not metadata and not (profile_plan and profile_plan[2]):
+        return plan["result"]
+    created, directories = [], []
+    # Staging stays on the destination filesystem; no PNG is decoded/saved.
+    # A failed copy/source recheck cannot leave an earlier production asset.
+    with tempfile.TemporaryDirectory(prefix=".pose-files-stage-", dir=plan["root"]) as temporary:
+        staging = Path(temporary)
+        staged = []
+        for index, (source, destination, digest) in enumerate(pending):
+            path = staging / ("png-%03d" % index)
+            shutil.copyfile(source, path)
+            if sha(path) != digest:
+                raise ValueError("Staged pose PNG differs from pinned source")
+            staged.append((path, destination, digest))
+        for index, (destination, content) in enumerate(metadata):
+            path = staging / ("metadata-%03d" % index)
+            path.write_text(content)
+            staged.append((path, destination, hashlib.sha256(content.encode()).hexdigest()))
+        profile_staged = None
+        profile_staged_sha = None
+        if profile_plan and profile_plan[2]:
+            profile_staged = staging / "profiles.json"
+            expansion.save_profiles(profile_staged, profile_plan[1])
+            profile_staged_sha = sha(profile_staged)
+        for source, _, digest in plan["copies"]:
+            if sha(source) != digest:
+                raise ValueError("Pose source changed during preflight/copy")
+        for source, digest in plan["originals"]:
+            if sha(source) != digest:
+                raise ValueError("Original reference changed during preflight/copy")
+        # Recheck destinations/catalog immediately before committing new files.
+        for _, destination, digest in plan["copies"]:
+            require_preserved_output(destination, digest)
+        for destination, content in plan["metadata"]:
+            require_preserved_output(destination, hashlib.sha256(content.encode()).hexdigest())
+        if profile_plan and sha(profile_plan[0]) != profile_plan[3]:
+            raise ValueError("Runtime profile catalog changed during preflight")
+        profile_commit_attempted = False
+        try:
+            missing = []
+            parent = plan["folder"]
+            while not parent.exists():
+                missing.append(parent)
+                parent = parent.parent
+            for directory in reversed(missing):
+                directory.mkdir()
+                directories.append(directory)
+            for source, destination, digest in staged:
+                # An exclusive link cannot overwrite a file created by another
+                # writer after preflight. Removing staging leaves plain files.
+                try:
+                    os.link(source, destination)
+                    created.append(destination)
+                except FileExistsError:
+                    require_preserved_output(destination, digest)
+                except BaseException:
+                    # A signal can arrive after link succeeded but before its
+                    # destination was recorded. Track only our staged inode;
+                    # a pre-existing or concurrent writer's file is not ours.
+                    try:
+                        if destination not in created and os.path.samefile(source, destination):
+                            created.append(destination)
+                    except OSError:
+                        pass
+                    raise
+            if profile_staged is not None:
+                # Linking all sources can take time. Detect a catalog writer
+                # during those links before replacing its update. This is a
+                # last-moment recheck, not a CAS against uncooperative writers.
+                if sha(profile_plan[0]) != profile_plan[3]:
+                    raise ValueError("Runtime profile catalog changed during asset installation")
+                profile_commit_attempted = True
+                os.replace(profile_staged, profile_plan[0])
+        except BaseException as error:
+            if profile_commit_attempted:
+                # A signal may arrive after replace succeeded but before it
+                # returned to Python. Never remove assets now referenced by
+                # the committed catalog. An unknown external state must also
+                # retain them rather than risk creating dangling references.
+                try:
+                    current_profile_sha = sha(profile_plan[0])
+                except OSError:
+                    current_profile_sha = None
+                if current_profile_sha == profile_staged_sha:
+                    raise
+                if current_profile_sha != profile_plan[3]:
+                    raise RuntimeError(
+                        "Profile commit was interrupted and the catalog state is uncertain; "
+                        "new authored assets were preserved to avoid broken references"
+                    ) from error
+            for path in reversed(created):
+                path.unlink()
+            for directory in reversed(directories):
+                directory.rmdir()
+            raise
+    return plan["result"]
+
+
+def _prepare_mixed_sources(root, candidate, actor, keys, apply):
+    """Strict complete-sheet + standalone-PNG union, with no source exclusions.
+
+    This parser is intentionally separate from the legacy sheet parser. A
+    sheet contributes complete role tracks and retains the >=2-row guard;
+    every analyzed source body must be used exactly once in the global matrix.
+    """
+    root = Path(root).resolve()
+    allowed = {"input_mode", "texture_binding", "key", "prompt", "prompt_record_kind", "review",
+               "phase_counts", "expected_distinct_poses", "sheets", "pose_files", "display_height_basis",
+               "action_aliases", "source_claim", "status", "actual_Main", "completed_added"}
+    if (not isinstance(candidate, dict) or candidate.get("input_mode") != "mixed_sources_v1"
+            or candidate.get("texture_binding") != "unchanged_png_metadata" or set(candidate) - allowed):
+        raise ValueError("mixed_sources_v1 requires unchanged_png_metadata and explicit mixed-source fields")
+    if (not isinstance(actor, str) or not 1 <= len(actor) <= 80
+            or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for char in actor)):
+        raise ValueError("Use a bounded ASCII actor folder name")
+    if (not isinstance(keys, list) or not keys or any(not isinstance(key, str) for key in keys)
+            or len(set(keys)) != len(keys) or candidate.get("key", keys[0]) != keys[0]):
+        raise ValueError("Supply unique target keys matching the candidate primary key")
+    if not isinstance(candidate.get("prompt"), str) or not candidate["prompt"].strip():
+        raise ValueError("Record the exact authoring prompt/instructions")
+    review = candidate.get("review")
+    if (not isinstance(review, dict) or any(review.get(flag) is not True for flag in
+            ("identity_preserved", "eight_views", "motion_roles", "no_clipping"))
+            or not isinstance(review.get("notes"), str) or not review["notes"].strip()):
+        raise ValueError("Record explicit identity/eight-view/motion/clipping review and notes")
+    aliases = reviewed_action_aliases(candidate)
+    counts = candidate.get("phase_counts")
+    if (not isinstance(counts, dict) or set(counts) != set(ROLES)
+            or any(type(counts[role]) is not int or counts[role] < len(ROLES[role]) for role in ROLES)):
+        raise ValueError("Global role minima are idle2/walk3/attack3/hit2/death3")
+    expected = sum(counts.values()) * len(DIRECTIONS)
+    if (expected not in (104, 112) or type(candidate.get("expected_distinct_poses")) is not int
+            or candidate["expected_distinct_poses"] != expected):
+        raise ValueError("An explicit complete 104 or 112 distinct-pose matrix is required")
+    sheets, poses = candidate.get("sheets"), candidate.get("pose_files")
+    if not isinstance(sheets, list) or not sheets or not isinstance(poses, list) or not poses:
+        raise ValueError("Mixed mode needs both nonempty sheets and pose_files lists")
+    if len(sheets) + len(poses) > expected:
+        raise ValueError("Too many selected mixed PNG sources")
+    source_ids, source_paths, pinned_hashes = set(), set(), set()
+
+    def source_for(spec):
+        source_id = spec["id"]
+        if (not isinstance(source_id, str) or not source_id.strip()
+                or len(source_id) > 120 or source_id in source_ids):
+            raise ValueError("Source IDs must be nonempty and globally unique")
+        source_ids.add(source_id)
+        if (type(spec["canvas_size"]) is not int or not 64 <= spec["canvas_size"] <= 2048
+                or not isinstance(spec["scale_review_note"], str) or not spec["scale_review_note"].strip()):
+            raise ValueError("Every mixed PNG requires a bounded canvas and nonempty scale review note")
+        digest = spec["source_sha256"]
+        if not isinstance(digest, str) or len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+            raise ValueError("Pin every selected whole PNG SHA-256")
+        source = _pose_file_source(root, spec["output_path"])
+        if source.resolve() in source_paths or digest in pinned_hashes:
+            raise ValueError("A selected PNG cannot be repeated within or across source kinds")
+        source_paths.add(source.resolve())
+        pinned_hashes.add(digest)
+        if sha(source) != digest:
+            raise ValueError("Mixed source PNG SHA-256 differs: " + str(source))
+        return source
+
+    sheet_fields = {"id", "output_path", "source_sha256", "rows", "directions", "roles",
+                    "canvas_size", "source_anchors", "scale_review_note"}
+    pose_fields = {"id", "output_path", "source_sha256", "role", "direction", "phase",
+                   "canvas_size", "source_anchor", "scale_review_note"}
+    prepared = []
+    for spec in sheets:
+        if (not isinstance(spec, dict) or not sheet_fields <= set(spec)
+                or set(spec) - sheet_fields - {"directions_axis", "reference_rows", "independent_review_id"}):
+            raise ValueError("Each mixed sheet needs explicit layout, roles, SHA, canvas and per-pose anchors")
+        selected = reviewed_directions(spec["directions"])
+        rows, roles, anchors = spec["rows"], spec["roles"], spec["source_anchors"]
+        if type(rows) is not int or rows < 2 or not isinstance(roles, dict) or not roles:
+            raise ValueError("Mixed sheets retain the at-least-two-row temporal guard")
+        used_rows = []
+        for role, indices in roles.items():
+            if (role not in ROLES or not isinstance(indices, list) or len(indices) < 2
+                    or len(indices) != counts[role]
+                    or any(type(row) is not int or not 0 <= row < rows for row in indices)
+                    or len(set(indices)) != len(indices)):
+                raise ValueError("Each sheet role must provide its complete global phase count, with >=2 unique rows")
+            used_rows.extend(indices)
+        if len(used_rows) != len(set(used_rows)) or set(used_rows) != set(range(rows)):
+            raise ValueError("Every analyzed whole-sheet row/body must be used exactly once")
+        if (not isinstance(anchors, list) or len(anchors) != rows * len(selected)
+                or any(not isinstance(anchor, list) or len(anchor) != 2
+                       or any(type(value) is not int for value in anchor) for anchor in anchors)):
+            raise ValueError("Every mixed sheet body needs its reviewed integer source anchor")
+        prepared.append(("whole_sheet", spec, source_for(spec), selected))
+    for spec in poses:
+        if (not isinstance(spec, dict) or not pose_fields <= set(spec)
+                or set(spec) - pose_fields - {"independent_review_id"}):
+            raise ValueError("Standalone mixed sources require strict pose-file metadata")
+        role, direction, phase = spec["role"], spec["direction"], spec["phase"]
+        if (not isinstance(role, str) or role not in ROLES or direction not in DIRECTIONS
+                or type(phase) is not int or not 0 <= phase < counts[role]):
+            raise ValueError("Invalid standalone global role/direction/phase slot")
+        anchor = spec["source_anchor"]
+        if not isinstance(anchor, list) or len(anchor) != 2 or any(type(value) is not int for value in anchor):
+            raise ValueError("Every standalone PNG requires its reviewed integer source anchor")
+        prepared.append(("pose_file", spec, source_for(spec), [direction]))
+    # Source-ID sorting makes both input-list orders immaterial to output bytes.
+    prepared.sort(key=lambda item: (item[0] != "whole_sheet", item[1]["id"]))
+    targets = {row["key"]: row for row in expansion.read(root / "data/animation_authoring_sources.json")["targets"]}
+    if any(key not in targets for key in keys):
+        raise ValueError("Unknown target key")
+    bindings = [targets[key] for key in keys]
+    first = bindings[0]
+    identity = sharing_identity(first, root=root)
+    if any(sharing_identity(row, root=root) != identity for row in bindings):
+        raise ValueError("Cannot share mixed sources across different original images/presentations")
+    originals = [(root / row["reference"]["path"].removeprefix("res://"), row["reference"]["sha256"]) for row in bindings]
+    for source, digest in originals:
+        if sha(source) != digest:
+            raise ValueError("Original reference bytes changed: " + str(source))
+    folder = root / "assets/actors/eight_direction/original_based" / actor
+    for parent in (folder, *folder.parents):
+        if parent.is_symlink() or (parent.exists() and not parent.is_dir()):
+            raise ValueError("Authored output directory is not a regular directory: " + str(parent))
+        if parent == root:
+            break
+    geometry, atlases, copies, records, source_records = {"frames": []}, [], [], [], []
+    raw_hashes, visible_hashes, pose_ids, slots = set(), set(), set(), {}
+    texel_bytes = 0
+    for source_index, (kind, spec, source, selected) in enumerate(prepared):
+        if kind == "whole_sheet":
+            part = analyze(source, spec["rows"], spec.get("reference_rows"), None,
+                           spec.get("directions_axis", "columns"), spec["canvas_size"],
+                           spec["source_anchors"], selected)
+            local_slots = {}
+            for role in ROLES:
+                for phase, row in enumerate(spec["roles"].get(role, [])):
+                    for local_direction, direction in enumerate(selected):
+                        local_slots[row * len(selected) + local_direction] = role, direction, phase
+        else:
+            part = analyze(source, rows_count=1, reference_rows=[0], directions=selected,
+                           canvas_size=spec["canvas_size"], source_anchors=[spec["source_anchor"]])
+            local_slots = {0: (spec["role"], spec["direction"], spec["phase"])}
+        require_complete_pose_regions(source, part)
+        if set(local_slots) != set(range(len(part["frames"]))):
+            raise ValueError("Every analyzed whole-PNG body must map to exactly one mandatory slot")
+        destination = folder / ("source-%03d-%s.png" % (source_index, kind.replace("_", "-")))
+        atlas = {"path": "res://" + str(destination.relative_to(root)), "sha256": spec["source_sha256"],
+                 "size": part["image_size"], "canvas_size": part["canvas_size"], "foot": part["foot"],
+                 "source_kind": kind, "source_id": spec["id"], "directions": selected,
+                 "source_direction_indices": [DIRECTIONS.index(direction) for direction in selected],
+                 "scale_review_note": spec["scale_review_note"],
+                 "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"}
+        if kind == "whole_sheet":
+            atlas["directions_axis"] = spec.get("directions_axis", "columns")
+        atlases.append(atlas)
+        copies.append((source, destination, spec["source_sha256"]))
+        with Image.open(source) as image:
+            if image.format != "PNG":
+                raise ValueError("Mixed source must be a real PNG")
+            pixels = np.asarray(image)
+            if kind == "pose_file":
+                _, connected = ndimage.label(pixels[:, :, 3] > 100, structure=np.ones((3, 3), dtype=int))
+                if connected != 1:
+                    raise ValueError("Standalone PNG must contain one connected visible body")
+            for local_index, frame in enumerate(part["frames"]):
+                role, direction, phase = local_slots[local_index]
+                slot = role, direction, phase
+                if slot in slots:
+                    raise ValueError("Overlapping mixed global role/direction/phase slot")
+                x, y, width, height = frame["region"]
+                visible = _visible_pose_fingerprint(pixels[y:y + height, x:x + width])
+                if frame["rgba_sha256"] in raw_hashes or visible in visible_hashes:
+                    raise ValueError("Duplicate raw or visible pose across mixed source kinds")
+                raw_hashes.add(frame["rgba_sha256"])
+                visible_hashes.add(visible)
+                frame_index = len(geometry["frames"])
+                pose_id = spec["id"] if kind == "pose_file" else f"{spec['id']}:{role}:{direction}:{phase}"
+                if pose_id in pose_ids:
+                    raise ValueError("Derived sheet pose IDs and standalone pose IDs must be globally unique")
+                pose_ids.add(pose_id)
+                frame.update({"sheet": source_index, "pose_id": pose_id, "role": role, "phase": phase})
+                geometry["frames"].append(frame)
+                slots[slot] = frame_index
+                records.append({"id": pose_id, "source_id": spec["id"], "source_kind": kind,
+                                "source_frame": local_index, "role": role, "direction": direction, "phase": phase,
+                                "file": atlas["path"], "source_sha256": spec["source_sha256"],
+                                "source_anchor": frame["source_anchor"], "canvas_size": spec["canvas_size"],
+                                "scale_review_note": spec["scale_review_note"], "rgba_sha256": frame["rgba_sha256"],
+                                "visible_sha256": visible,
+                                **({"independent_review_id": spec["independent_review_id"]} if "independent_review_id" in spec else {})})
+        source_records.append({**atlas, "analyzed_body_count": len(part["frames"]),
+                               "mandatory_usage_count": len(local_slots), "entire_png_complete": True,
+                               "every_analyzed_body_used_once": True})
+        texel_bytes += part["image_size"][0] * part["image_size"][1] * 4
+    required_slots = {(role, direction, phase) for role in ROLES for direction in DIRECTIONS for phase in range(counts[role])}
+    if set(slots) != required_slots or len(geometry["frames"]) != expected:
+        raise ValueError("Missing/noncontiguous global mixed role/direction/phase slots")
+    role_frames = {role: [[slots[(role, direction, phase)] for phase in range(counts[role])]
+                         for direction in DIRECTIONS] for role in ROLES}
+    used = [index for role in ROLES for group in role_frames[role] for index in group]
+    if len(used) != len(set(used)) or set(used) != set(range(expected)):
+        raise ValueError("Every selected source body must be used exactly once")
+    for alias, source_role in aliases.items():
+        role_frames[alias] = [group.copy() for group in role_frames[source_role]]
+    height_basis = candidate.get("display_height_basis", "max_living_frame")
+    if height_basis not in {"median_idle", "max_living_frame"}:
+        raise ValueError("Unknown reviewed display-height basis")
+    heights = [frame["region"][3] * 256 / atlases[frame["sheet"]]["canvas_size"][1]
+               for frame in geometry["frames"]
+               if frame["role"] == "idle" or (height_basis == "max_living_frame" and frame["role"] != "death")]
+    reference_height = max(heights) if height_basis == "max_living_frame" else float(np.median(heights))
+    geometry["distinct_pixel_frames"] = expected
+    resource = spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames)
+    proof = {"schema": 1, "input_representation": "mixed_sources_v1", "texture_binding": "unchanged_png_metadata",
+             "source": "Newly authored from the existing target image; not recovered original animation",
+             "reference": first["reference"], "target_keys": keys,
+             "presentation_to_preserve": first["presentation_to_preserve"],
+             "target_references": {row["key"]: row["reference"] for row in bindings},
+             "target_presentations": {row["key"]: row["presentation_to_preserve"] for row in bindings},
+             "sharing_rule": "Unchanged strict original reference and rendered presentation identity",
+             "authoring_instructions": candidate["prompt"], "instruction_record_kind": candidate.get("prompt_record_kind", "exact_prompt"),
+             "visual_review": review, "directions": DIRECTIONS, "source_directions": DIRECTIONS,
+             "source_direction_indices": list(range(8)), "cell": [256, 256], "foot": [128, 160],
+             "packing": "Unchanged whole-sheet and standalone PNGs with AtlasTexture metadata; no PNG assembly or rewriting",
+             "distinct_pixel_frames": expected, "phase_counts": {role: counts[role] for role in ROLES},
+             "frames": geometry["frames"], "source_files": source_records, "source_poses": records, "tracks": {},
+             "display_height_basis": height_basis, "display_reference_height": reference_height,
+             "all_selected_poses_used_once": True, "source_png_logical_rgba_bytes": texel_bytes,
+             "actual_Main": "not_run", "completed_added": 0}
+    if aliases:
+        proof["action_aliases"] = aliases
+    for role, directions in role_frames.items():
+        contributing = sorted({geometry["frames"][index]["sheet"] for group in directions for index in group})
+        proof["tracks"][role] = {"atlas_files": [atlases[index] for index in contributing],
+                                 "source_poses_by_direction": {direction: [records[index]["id"] for index in group]
+                                                               for direction, group in zip(DIRECTIONS, directions)},
+                                 "source_frames_per_direction": len(directions[0]), "unique_frames_per_direction": len(directions[0]),
+                                 "direction_unique_frames": dict.fromkeys(DIRECTIONS, len(directions[0])),
+                                 "source_duration_seconds": SECONDS[role], "loop_type": "loop" if role in ("idle", "walk") else "play_once"}
+        if role in aliases:
+            proof["tracks"][role]["alias_of"] = aliases[role]
+    metadata = [(folder / "SpriteFrames.tres", resource), (folder / "provenance.json", json.dumps(proof, ensure_ascii=False, indent=2) + "\n")]
+    profile_plan = _pose_file_profiles(root, targets, keys, first, folder, reference_height, counts["walk"], aliases) if apply else None
+    for _, destination, digest in copies:
+        require_preserved_output(destination, digest)
+    for path, content in metadata:
+        require_preserved_output(path, hashlib.sha256(content.encode()).hexdigest())
+    result = {"resource": str(folder), "identities": keys, "poses": expected, "original_unchanged": True,
+              "applied": apply, "input_mode": "mixed_sources_v1", "source_png_logical_rgba_bytes": texel_bytes,
+              "actual_Main": "not_run", "completed_added": 0}
+    return {"root": root, "folder": folder, "originals": originals, "copies": copies, "metadata": metadata,
+            "profile_plan": profile_plan, "result": result}
+
+
+def validate_mixed_sources(root, candidate, actor, keys, apply=True):
+    """Read-only mixed-source preflight, including prospective profiles by default."""
+    plan = _prepare_mixed_sources(root, candidate, actor, keys, apply)
+    return {**plan["result"], "applied": False, "read_only": True, "profiles_checked": bool(apply),
+            "output_files": [str(destination) for _, destination, _ in plan["copies"]]
+                            + [str(path) for path, _ in plan["metadata"]]}
+
+
+def import_mixed_sources(root, candidate, actor, keys, apply=False):
+    """Install only a completely validated mixed-source union."""
+    return _install_optional_plan(_prepare_mixed_sources(root, candidate, actor, keys, apply))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("."))
     parser.add_argument("--analyze", type=Path)
     parser.add_argument("--candidate", type=Path)
+    parser.add_argument("--validate-candidate", type=Path,
+                        help="Read-only optional-input preflight, including prospective profile/output conflicts; writes nothing")
     parser.add_argument("--actor")
     parser.add_argument("--key", action="append")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
-    if args.analyze:
+    if args.validate_candidate:
+        if args.analyze or args.candidate or not args.actor or not args.key:
+            parser.error("--validate-candidate requires --actor/--key and excludes --candidate/--analyze")
+        candidate = expansion.read(args.validate_candidate)
+        validate = validate_mixed_sources if candidate.get("input_mode") == "mixed_sources_v1" else validate_pose_files
+        print(json.dumps(validate(args.root.resolve(), candidate, args.actor, args.key), ensure_ascii=False))
+    elif args.analyze:
         result = analyze(args.analyze)
         print(json.dumps({key: result[key] for key in ("image_size", "distinct_pixel_frames")}))
     else:

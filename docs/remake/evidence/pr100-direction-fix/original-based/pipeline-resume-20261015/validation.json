@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "scope": "Tooling and regression repair only; completed remains389/498, Main118/canonical249. No real optional-mode source applied; rabbit328/Main/HOLD unchanged.",
+  "base_head": "b6c760b126657c077329900f8121c2893883af4f",
+  "code": {
+    "tools/import_original_based_motion.py": {
+      "sha256": "13305d36098abed5e3a4ee25d7c18d9fd8523458fdf33f3084b026f5878aef9c",
+      "bytes": 80604
+    },
+    "tests/test_original_based_pose_files.py": {
+      "sha256": "acdf24580ed439d26eec8162e6a259e1f4fe876a8c146dd446ec143d9b8a21ab",
+      "bytes": 44401
+    },
+    "tests/boss_presentation_test.gd": {
+      "sha256": "cdd16f8ad1fb2228aec2886a61d6dcf1398bf37fe831dbc06175efab49d0f599",
+      "bytes": 10946
+    },
+    ".github/workflows/animation-presentation-validate.yml": {
+      "sha256": "814c34d071de74402e326a6cc475aac501a786dd23175546723410203a4d6fe9",
+      "bytes": 23968
+    }
+  },
+  "validation": {
+    "legacy_importer_tests": 50,
+    "optional_importer_tests": 29,
+    "boss_before": "60bosses713checks, Waring+unqualifiedHell fail negativeX assertion",
+    "boss_after": "60bosses728checks PASS, legacynegativeX retained; trueWframe/distinctE/unmirrored/snapshottexturetransform/frozenrecoveryworldanchor strengthened",
+    "independent_review": "independent/ci-native-charge-review.json"
+  },
+  "rabbit_memory": {
+    "scope": "Isolated actual48 rawPNG selected for112poses; all48 loaded simultaneously, noMain/noqualityapproval/noAndroiddevice",
+    "source_png_bytes_unchanged": true,
+    "logical_and_physical_dimensions_48_preserved": true,
+    "gpu_delta_bytes": 402480552,
+    "gpu_delta_MiB": 383.83536529541016,
+    "reported_load_seconds": 11.553817,
+    "wall_seconds": 22.077561192996654,
+    "peak_RSS_KiB": 528760,
+    "adapter": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "production_import_settings_changed": false,
+    "compression_approval": "HOLD; priorisolatedBPTC edge degradation unapproved; noresize"
+  },
+  "CI_86b49b1": {
+    "animation": "FAILED onlypresentation nativeWoldnegativeXtest;37otherjobsSUCCESS",
+    "Godot": "SUCCESS38791980064",
+    "resource": "SUCCESS38791984730",
+    "Android_build_static": "SUCCESS38791988124",
+    "Android_real_device": "UNVERIFIED"
+  },
+  "transaction_limit": "Catalog SHA rechecked after exclusive source links immediately before replace; not a compare-and-swap guarantee against an uncooperative writer in that final window. Interrupted/uncertain committed catalogs preserve possibly referenced assets and raise explicit errors.",
+  "artifacts": {
+    "optional-importer-root-final29.log": {
+      "sha256": "15810a29ec696110549eb19c15864baf780c945a5b23f3dbe476045808a0240e",
+      "bytes": 129
+    },
+    "optional-importer-root-legacy50.log": {
+      "sha256": "7494aad743e27041f161476abc9cbc31e2847cc1fec85ddeffa146a940fc4f5a",
+      "bytes": 150
+    },
+    "ci27-boss-repro.log": {
+      "sha256": "e20f5ec5233168c7251c74700f01834591480956bffac727df2491f00cd6a627",
+      "bytes": 255
+    },
+    "ci27-boss-fixed.log": {
+      "sha256": "7df9aa4971d6f4be20b905b7957f6145e518d7f10d4b6036579e9bafc01d67b9",
+      "bytes": 115
+    },
+    "ci27-boss-fixed-final.log": {
+      "sha256": "5f24c94d5405911ebea94555e8e124be2193f4a2146afc432d7ffa2310328fb3",
+      "bytes": 115
+    },
+    "ci27-failed-presentation.log": {
+      "sha256": "391ab8705acf114ae515add05e47369befd2419828c38eb4e4d0359b76c17ca2",
+      "bytes": 1363455
+    },
+    "ci27-animation-final-status.json": {
+      "sha256": "2886e193ff686fae57dca19e56634d9e269cd5d8cf22a652f99ead81d923fd46",
+      "bytes": 47136
+    },
+    "independent/code-review.json": {
+      "sha256": "3da860e0d1274c35d98d471523c32f8cb86189493ad3e401a49de8ce29cc410c",
+      "bytes": 5805
+    },
+    "independent/tests-result.json": {
+      "sha256": "2a372d0f1fcfca573157d9fe97a6c40af74bbceffe384e8a39dc2df64eea6539",
+      "bytes": 548
+    },
+    "independent/patch-scope-immutability.json": {
+      "sha256": "e6f92de6de703bd92989c9a4db3e1dea1d312b8441f35dc7369d98aea1e064df",
+      "bytes": 1173
+    },
+    "independent/atomic-probes.json": {
+      "sha256": "4b96a5c5dfaa65fd20484408e462d9353fd4ac35819f62e57bdc95d63e99d34b",
+      "bytes": 905
+    },
+    "independent/rabbit112-actual-source-memory.json": {
+      "sha256": "82e3a0f38584bbd427eef6b5b3a428eae6ed14451ba525e129a9597f09df683f",
+      "bytes": 23887
+    },
+    "independent/ci-native-charge-review.json": {
+      "sha256": "206274a7c18319548c65a5ee4e11eba5d2ce1d7c0f4705001c8f061ed9d2376b",
+      "bytes": 848
+    },
+    "rabbit112-lossless-memory/gl48-with-display.time.json": {
+      "sha256": "19cb15663f3ac80543b8b7af9f7502c5cea973c0b7629b2c3b5c8b57e5752cac",
+      "bytes": 606
+    },
+    "rabbit112-lossless-memory/import.time.json": {
+      "sha256": "c1dc0b5cf7d70c13f0209074bb3865f497a6acd5f9c28ce0d2ea2ccd17b4e721",
+      "bytes": 408
+    },
+    "rabbit112-lossless-memory/source-manifest.json": {
+      "sha256": "05247b536e40a8bc07938820526e9948e1ef2542036f643437b7559c4ec2afc1",
+      "bytes": 14882
+    },
+    "rabbit112-lossless-memory/gl48.stdout.log": {
+      "sha256": "adda1e828343d48af69ceeae2f0839af3c4ae88f2e07dc954b059b10fa9c0264",
+      "bytes": 1015
+    },
+    "rabbit112-lossless-memory/headless48.time.json": {
+      "sha256": "adb76c9ca792b1e7146919cf8d48a9e7b165265f53d89946cda1bb2b7b81e71f",
+      "bytes": 539
+    },
+    "rabbit112-lossless-memory/gl48.time.json": {
+      "sha256": "218268aa6b6bf950568cb741d181097702d1797a6873677a337b49d083eee3d6",
+      "bytes": 600
+    },
+    "rabbit112-lossless-memory/gl48-with-display.stdout.log": {
+      "sha256": "0b4617fa4a3df2c903ce2f8a87ba98208597274cb1a664ecaf376d39a1ee86a5",
+      "bytes": 521
+    },
+    "rabbit112-lossless-memory/gl48-with-display.json": {
+      "sha256": "5178fd02f262f8a5442852ce6056f3e13535177a1d04f7fcf1d3a049cdbc6982",
+      "bytes": 17248
+    },
+    "rabbit112-lossless-memory/headless48.json": {
+      "sha256": "91d07df26516a4e701180504c1f04a852d4a5f03e00ae1231dcdb8082f05ea79",
+      "bytes": 17163
+    },
+    "rabbit112-lossless-memory/headless48.stdout.log": {
+      "sha256": "5496a67a781d3746b664a6bd4d7f926c0c57399cd00f44515acb64dfc761b807",
+      "bytes": 215
+    },
+    "rabbit112-lossless-memory/import.stdout.log": {
+      "sha256": "07ef1a27f04ec86f151d31cb011c822abfe299ab5962548dd12a49512638fb20",
+      "bytes": 11726
+    },
+    "rabbit112-lossless-memory/project/probe.gd": {
+      "sha256": "ded4c9c4f617e9dba03b224d7fbf58507055d735cdea51c3872095bfb432cbb4",
+      "bytes": 3651
+    },
+    "rabbit112-lossless-memory/project/probe-data.json": {
+      "sha256": "05247b536e40a8bc07938820526e9948e1ef2542036f643437b7559c4ec2afc1",
+      "bytes": 14882
+    },
+    "rabbit112-lossless-memory/project/project.godot": {
+      "sha256": "d14c7d39ef07bf669b0f6f0a54f0a4541d98bd89cbd11fbeecf76f60f45d49ab",
+      "bytes": 315
+    }
+  }
+}
