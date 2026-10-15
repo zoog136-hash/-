@@ -156,5 +156,28 @@
     "crc_ok": true,
     "reason": "Second authoring again20/24; no copy/predicted missing poses allowed."
   },
-  "source_anchors_status": "Actual per-pose foot anchors still require review before any future import; southern attack spear tip must not be ground anchor."
+  "source_anchors_status": "Actual per-pose foot anchors still require review before any future import; southern attack spear tip must not be ground anchor.",
+  "hold_supporting_records": [
+    {
+      "path": "independent-static-review-hold.json",
+      "bytes": 11354,
+      "sha256": "0c4c1ad249cf732251e59a476adf849f91b14f524826eccbb19012b049efeca7"
+    },
+    {
+      "path": "foot-anchor-drafts.json",
+      "bytes": 28525,
+      "sha256": "27cf2869cb3220954ccc7bfc49c0e82962e4bfa63ca8b8afb86de21415caacda"
+    },
+    {
+      "path": "future-main-plan-not-run.json",
+      "bytes": 6996,
+      "sha256": "cc6df151db0ca313b6f869bce092856869d9086352f61b7f2e9cc171389cbf46"
+    },
+    {
+      "path": "authoring-hold-report.json",
+      "bytes": 9871,
+      "sha256": "fdcd2a4c112234357fa0e86fe73a6a10dafbf4dfb91cdc0a07e0caf075e37a30"
+    }
+  ],
+  "recovery_note": "Absolute external workspace paths in source records are historical. Accepted PNG bytes and rejected ZIP contents are archived in this directory; use their SHA256 to map after fresh checkout. Draft foot anchors are not reviewed import approval."
 }

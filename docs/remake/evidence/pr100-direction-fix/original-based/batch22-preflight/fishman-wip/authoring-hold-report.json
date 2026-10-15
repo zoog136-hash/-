@@ -1,0 +1,246 @@
+{
+  "target_key": "monster:알비노 피쉬맨",
+  "status": "HOLD_AFTER_TWO_DEATH_LAYOUT_FAILURES",
+  "approved_static_roles": {
+    "idle": "idle-v2.png",
+    "walk": "walk-v2.png",
+    "attack": "attack-v2.png",
+    "hit": "hit-v1.png"
+  },
+  "approved_static_pose_count": 80,
+  "mandatory_role_missing": "death",
+  "failed_death_attempts": [
+    {
+      "file": "death-v1.png",
+      "expected": 24,
+      "actual": 20,
+      "reason": "Only5physicalrows instead6; missing actual four direction poses"
+    },
+    {
+      "file": "death-v2.png",
+      "expected": 24,
+      "actual": 20,
+      "reason": "Only5physicalrows instead6 despite explicit count/direction request; no frame fabrication/duplication/mapping attempted"
+    }
+  ],
+  "full_candidate_recipe": "NOT_CREATED;104actual required poses unavailable",
+  "Main_validation": "NOT_RUN",
+  "completion_increment": 0,
+  "source_sha_at_stop": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+  "source_unchanged": true,
+  "production_changes": false,
+  "source_claim": "Generated motion based on existing TWILIGHT project atlas, not recovered original game art/animation",
+  "scale_anchor_pending": [
+    "Standing-role scales need proportional virtual canvases relative to idle",
+    "Death-only canvas must derive anatomical head/torso pixel scale, not lower corpse height",
+    "Attack source_anchors need anatomical feet; S contact spear point falls below feet, so default lowest-pixel anchor is invalid"
+  ],
+  "stop_instruction": "No further fishman generation. Preserve approved80and failed images/provenance/prompts separately as WIP. Do not connect incomplete roles or count completion.",
+  "files": [
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v1.geometry.json",
+      "bytes": 273,
+      "sha256": "8d294264f244a4af5dd762749997af40b1076c76556409ec097db23a6a7cae56"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v1.png",
+      "bytes": 2433486,
+      "sha256": "8b0a121632975d49cda70794b137c1cee2d015ec91236590d1873974e94f66f2"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v1.prompt.txt",
+      "bytes": 3756,
+      "sha256": "3b8d1dd6379ce8a2615369c01e1b216827509396a8f892bed4d9c6d25dc75df2"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v1.visual-review.json",
+      "bytes": 375,
+      "sha256": "de567656258b5b6b68f8a092be0fff9b3cc3b58a9eb3f04e6ccbdf53b3128ecb"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v2.geometry.json",
+      "bytes": 286,
+      "sha256": "131a7795129ee974f3a09c313b7a2645a23a36dc31a27f19582b809f4d27ade2"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v2.png",
+      "bytes": 2281806,
+      "sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v2.prompt.txt",
+      "bytes": 1996,
+      "sha256": "12f8281eb32305f64b5360ff0b744f37ba3f468f5527556603ea3bb05818bce1"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/attack-v2.visual-review.json",
+      "bytes": 588,
+      "sha256": "f36fa26fe03ab73b192007b15716f937dca630881e66f450196ec72d772df392"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/authoring-reference-context.png",
+      "bytes": 141531,
+      "sha256": "c799b99abe338b1d7c43e1056f6abe6554682d6793e53c61560526bd0cba6da9"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v1.geometry.json",
+      "bytes": 297,
+      "sha256": "440f1b6c5f7ea63bdbde82d55086fb2dd8c7826d31466db7e0249ec73a71df7f"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v1.png",
+      "bytes": 2180613,
+      "sha256": "3c69f14d6b0df16b08a8955c3399543737610bff15736d5b7ac1bddaf525156d"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v1.prompt.txt",
+      "bytes": 4160,
+      "sha256": "03b25e9ea3eb219693162caab4825e44cb5a03cfd9bdbb8e50f03cb1de309660"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v1.visual-review.json",
+      "bytes": 343,
+      "sha256": "87d4e908e3f0181cf6aeb8c58d02ab5f79fb67c4ea13c23969bc48cd2de3ee90"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v2.geometry.json",
+      "bytes": 297,
+      "sha256": "0d84265f8e0d3b2f60631ca1c05df5590274f9ed73081151f454582c4a7f1088"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v2.png",
+      "bytes": 2664170,
+      "sha256": "e4f3aad1d528de89acb749ef9765fb7932df97b5b49a8818d995fe2438c8b6e8"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/death-v2.prompt.txt",
+      "bytes": 2452,
+      "sha256": "60cdd1c02e9337a19897eeae6b52616b2829846804d5ca37aef2680f9b75ee5d"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/hit-v1.geometry.json",
+      "bytes": 283,
+      "sha256": "0ba1245c23ad334a15e23e4723cfa019e0606cfe645e57ef5816bae280eb11b9"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/hit-v1.png",
+      "bytes": 2208266,
+      "sha256": "95a37da2b5467eea7f36c1bb3a99bd30b90393d1c3e721b2a4add38b5c7b2fb0"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/hit-v1.prompt.txt",
+      "bytes": 3220,
+      "sha256": "cbed3581abbc5ceb2d7b8b439586526a1f142dd9c9fae398a5d3a11ec5abc2a4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/hit-v1.visual-review.json",
+      "bytes": 472,
+      "sha256": "2f61454dd2fa40bb3f61f2d18acd999d81ca186b9444cbde34749c2d3ed8f78b"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v1-foreign-diagnostic.json",
+      "bytes": 444,
+      "sha256": "bb3d3f0809b390c7232be02756bd3bdca7a57729c3c7f65af9c9ee08d0fff22e"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v1.geometry.json",
+      "bytes": 271,
+      "sha256": "daa3e260a37c7148b883601b1bd1d13b20979cb3bc7ea4429fea8e86f7b58eb5"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v1.png",
+      "bytes": 2531992,
+      "sha256": "b1be640f8d9fadbc817b073bc566508e001146f370d947e116ebbbfe211d5242"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v1.prompt.txt",
+      "bytes": 2632,
+      "sha256": "5cf529b57b998a937b53e6ff52a856a2db42384769fe2a054a6b6f6f73a36746"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v2.geometry.json",
+      "bytes": 284,
+      "sha256": "813d8043429ae9cf4410c9b672b0dc9e7176fadc26a12bc56047d18c78e73111"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v2.png",
+      "bytes": 2086101,
+      "sha256": "e3e139c73125dd8ea25fdec58cfb6be70cc9f67065f32119a70aa833bf51e411"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v2.prompt.txt",
+      "bytes": 3585,
+      "sha256": "b59eb6bf50179b4509c68a7dca6e0c3fbec484d091d2f98521986699d1111169"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/idle-v2.visual-review.json",
+      "bytes": 548,
+      "sha256": "891178677ae221a34c95af825dd289308c088c68bfca0fcecec79cfad6ac1e02"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/reference-proof.json",
+      "bytes": 2176,
+      "sha256": "ef773428a45b4a368505399313ab0a15f11d35893bf4d16a9d060893b63a77d0"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/rotation-v1.png",
+      "bytes": 2735037,
+      "sha256": "e426454926d2dea308830330adb9f7417a4415d3198ca4f5c3739681d8988517"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/rotation-v1.prompt.txt",
+      "bytes": 2333,
+      "sha256": "ac7faac7b3bddc7b393a1c031d3d412ac26a1c72170d952d43a1f80c680318f4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/rotation-v1.review.json",
+      "bytes": 641,
+      "sha256": "c573820c99dd8946ed8a9ca5645921e9877cc6df47094f44f8fe8039a4240a07"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v1-E-motion-review.png",
+      "bytes": 176116,
+      "sha256": "6c86f69fcf4b421a23bbdd6f82253d07f5decd0d3d594126ee1e357be0ae9945"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v1.geometry.json",
+      "bytes": 284,
+      "sha256": "625a1b8984bfe9984dc121f9a0a273b0842a8b27923c253d41c76c0a935a6379"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v1.png",
+      "bytes": 2460407,
+      "sha256": "12843985d7003a32de24bdc0837673fdedf31105b4997094190e5541c66ca78d"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v1.prompt.txt",
+      "bytes": 3122,
+      "sha256": "d860111e2cad89c3e64df4c19ccb3d232ee3cf27f29649b158652f6e59066db5"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v1.visual-review.json",
+      "bytes": 443,
+      "sha256": "9c3c7ac5aa6c7f4b0f7296e9913384f223fb43e98e24e71f715d9cc0245c5d74"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v2.geometry.json",
+      "bytes": 284,
+      "sha256": "4b55089a16315dfbe6fc2bc75a993a594340f2ad5f97076749cadbf184a43cc8"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v2.png",
+      "bytes": 2906377,
+      "sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v2.prompt.txt",
+      "bytes": 2576,
+      "sha256": "cd6a934f78c1f031e86174ccbd702a25bed44032fcffb37df62b99d608e0de3f"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/fishman/walk-v2.visual-review.json",
+      "bytes": 558,
+      "sha256": "09dee6c6b43759cd34756121ca81ef05aaad3faddd7dc51b91f04e3afff7f584"
+    }
+  ]
+}
