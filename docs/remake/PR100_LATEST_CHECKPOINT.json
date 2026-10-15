@@ -1,31 +1,35 @@
 {
-  "observed_at_utc": "2026-10-15T13:46:23.977097+00:00",
+  "observed_at_utc": "2026-10-15T15:21:16.346173+00:00",
   "repository": "zoog136-hash/-",
   "pr": 100,
   "branch": "feature/twilight-animation-20261013",
   "verified_code_checkpoint": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
-  "runtime_assets_checkpoint": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+  "runtime_assets_checkpoint": "batch23 commit containing this checkpoint; exact SHA recorded after commit",
   "counts": {
     "target": 498,
-    "completed": 374,
-    "remaining": 124,
+    "completed": 377,
+    "remaining": 121,
     "hero_plus": [
       139,
       180
     ],
     "normal_monster": [
-      200,
+      202,
       258
     ],
     "boss": [
-      35,
+      36,
       60
     ],
-    "individual_Main_eight_direction": 103,
-    "durable_Main_reports": 219,
+    "individual_Main_eight_direction": 106,
+    "durable_Main_reports": 225,
     "supplemental_existing3_Main_reports_this_resume": 6
   },
-  "new_completed": [],
+  "new_completed": [
+    "분노의 주시자 라즈엘",
+    "질투의 감시자 알비온",
+    "풍룡의 둥지 태풍수호자"
+  ],
   "validation": {
     "importer_tests_passed": 50,
     "batch21_headless_checks": 7819,
@@ -44,7 +48,47 @@
     "resumed_existing3_Main_Git_representative_PNGs": 18,
     "resumed_all480_PNG_bodies_inGit": false,
     "transform376_actual_Main": "not_run_incomplete_unlinked",
-    "resumed_production_map_diff_files": 0
+    "resumed_production_map_diff_files": 0,
+    "batch23": {
+      "observed_at_utc": "2026-10-15T15:21:16.346173+00:00",
+      "status": "completed_after_separate_static_and_actual_Main_visual_reviews",
+      "previous_completed": 374,
+      "new_completed": [
+        "분노의 주시자 라즈엘",
+        "질투의 감시자 알비온",
+        "풍룡의 둥지 태풍수호자"
+      ],
+      "new_completed_count": 3,
+      "completed": 377,
+      "total": 498,
+      "percent": 75.7,
+      "remaining": 121,
+      "individual_Main_eight_direction": 106,
+      "canonical_Main_reports": 225,
+      "headless_engine_checks": 5729,
+      "OpenGL_engine_checks": 6095,
+      "engine_failures": 0,
+      "authored_unique_poses": 312,
+      "actual_Main_captured_PNGs": 344,
+      "original_full_viewport_representatives_in_Git": 18,
+      "all_capture_bodies_in_Git": false,
+      "independent_visual_reviews": "approved individually; complete104poses peractor plus8AI, and8additionalrealbeamdirections forRaziel",
+      "failed_attempts_preserved": "Initial cast alias caused320 exact-key assertions per mode. Same immutable artwork reimported without optional alias; unchanged existing attack_N fallback, game and checks. Failed reports and metadata retained.",
+      "HOLD_not_counted": [
+        "검은 토끼 소녀328",
+        "베테랑 낚시꾼 폴376",
+        "earlierHOLDtargetsremainpending"
+      ],
+      "CI_for_this_checkpoint": "awaiting push; previous166abe6 animation success14/running3/queued13/failure0 at recorded observation, not success for newHEAD",
+      "Android_new_APK": "not_yet_built",
+      "Android_real_device": "unverified",
+      "main_merge": "not_performed; conflict remains",
+      "next_batch": [
+        "수룡의 둥지 파도수호자",
+        "시커",
+        "화룡의 둥지 화염전사"
+      ]
+    }
   },
   "new_WIP_HOLD": [
     "말하는 섬 들개",
@@ -78,27 +122,35 @@
       "status": "success",
       "device_tested": false
     },
-    "observed_at_utc": "2026-10-15T13:41:42Z"
+    "observed_at_utc": "2026-10-15T13:41:42Z",
+    "batch23": "not_started_before_push"
   },
   "main_conflict_unresolved": true,
-  "next": "Read latestremoteHEAD/CI. Do not bulk-repeat328/376 or partially import. First obtain and independently verify a single opposite support/occlusion keypose; then registeredplayback, all8directions and all5roles, then actualMain before any completion. Prior HOLDactors unchanged.",
+  "next": [
+    "Continue batch24 checkpoint after separate visual gate; do not stop for CI",
+    "Run Main batch25 tentacle/flower and independently approved next candidates",
+    "Keep authoring124goal, preserve HOLD and allfailedproofs; no map edits/newbranch/newPR/mainmerge"
+  ],
   "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
   "remote_snapshot_bytes": 13916,
   "remote_snapshot_sha256": "5959dacc572e4d20f01001c99aa48891cbe9b193e9706d619f4d5064e2e81cd5",
   "session_base_head": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
   "observed_main_head": "e2119c37293a783e93b421ee0055d1318271b071",
   "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
-  "last_pushed_checkpoint": "4692897003c81c73514f374a2c805a607e085e7c",
   "current_WIPs": [
-    "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
-    "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/fisherman376-wip/checkpoint.json"
+    "batch24 water/seeker/fire: both Main modes passed, independent visual evidence being finalized, not in this checkpoint profiles",
+    "tentacle/flower: static approved; Main pending",
+    "earth/sword: full104 candidates; independent static QA pending",
+    "phoenix/albino unicorn/albino giant crab/328 repair: scratch authoring active"
   ],
   "resumed_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015",
-  "resumed_blocker": "Newly drawn multi-pose sheets pass distinctpixels/components but repeat same support leg. 328 focusedS onlypartialpass; remaining7directions/5roles and376E fail visualgate. No new runtimeconnections.",
+  "resumed_blocker": null,
   "prior_batch21_new_completed": [
     "transform:349 알비노 악어거북",
     "transform:173 악몽의 잭 오 랜턴",
     "transform:288 도구리"
   ],
-  "resumed_new_completed_count": 0
+  "resumed_new_completed_count": 3,
+  "previous_pushed_checkpoint": "4692897003c81c73514f374a2c805a607e085e7c",
+  "batch23_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch23"
 }

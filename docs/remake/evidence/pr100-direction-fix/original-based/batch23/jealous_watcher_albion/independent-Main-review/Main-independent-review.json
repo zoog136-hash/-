@@ -1,0 +1,554 @@
+{
+  "target": "monster:질투의 감시자 알비온",
+  "status": "PASS_ACTUAL_MAIN_INDEPENDENT_VISUAL_AND_RUNTIME_REVIEW",
+  "reviewer_independent_of_author": true,
+  "scope": "Independent review of existing actual Main.tscn runtime reports and all104 rendered authored pose captures, plus8AI overviewcaptures. No new execution or edited assets claimed by this review.",
+  "Main_reports": {
+    "normal-render": {
+      "path": "/workspace/scratch/pr100-continuation/main-batch23/normal-render/report-cases/jealous-watcher-albion.json",
+      "sha256": "ff0a3bfdfa47ca7bfaab6f7f7c4a9e1d61a7a091018c7579744202e9df009903",
+      "checks": 1549,
+      "failures": [],
+      "actualMain": true,
+      "pose_samples": 104,
+      "AI_directions": [
+        {
+          "attack": true,
+          "compass": "E",
+          "contacts": 1,
+          "facing": 0,
+          "movement": "(88.94531, 0.0)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "SE",
+          "contacts": 1,
+          "facing": 1,
+          "movement": "(60.83203, 60.83203)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "S",
+          "contacts": 1,
+          "facing": 2,
+          "movement": "(0.0, 86.03711)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "SW",
+          "contacts": 1,
+          "facing": 3,
+          "movement": "(-60.83203, 60.83203)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "W",
+          "contacts": 1,
+          "facing": 4,
+          "movement": "(-85.98047, 0.0)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "NW",
+          "contacts": 1,
+          "facing": 5,
+          "movement": "(-60.83203, -60.83203)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "N",
+          "contacts": 1,
+          "facing": 6,
+          "movement": "(0.0, -86.03711)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "NE",
+          "contacts": 1,
+          "facing": 7,
+          "movement": "(60.83203, -60.83203)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        }
+      ],
+      "magic_contacts": [
+        {
+          "damage": 35,
+          "facing": 0,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 1,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 2,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 3,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 4,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 5,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 6,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 7,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        }
+      ],
+      "projectiles": [
+        {
+          "compass": "E",
+          "delta": "(13.33398, -0.087891)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "SE",
+          "delta": "(9.470703, 9.384766)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "S",
+          "delta": "(0.0, 13.33301)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "SW",
+          "delta": "(-9.470703, 9.384766)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "W",
+          "delta": "(-13.33398, -0.085938)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "NW",
+          "delta": "(-9.384766, -9.47168)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "N",
+          "delta": "(0.0, -13.33301)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "NE",
+          "delta": "(9.384766, -9.47168)",
+          "kind": "magic",
+          "toward_player": true
+        }
+      ],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792075581.43802,
+            "expires_at": 1792076181.43802,
+            "grade": "일반",
+            "hunt_batch": "c06382c064a4b9df9578ce575dc990a2",
+            "id": "207fa7532c900a243ca511de86dc4693",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              29704.0,
+              14688.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1920,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 31
+      },
+      "setup": {
+        "background_spawn_slots_paused": true,
+        "drop_rng_seed": 1,
+        "job": "기사",
+        "lifecycle_weapon": "진명황의 집행검",
+        "map": "aden_world",
+        "normal": "질투의 감시자 알비온",
+        "normal_is_existing_population_actor": false,
+        "pose_review": {
+          "foreground_clear": true,
+          "monster_position": [
+            29448.0,
+            14688.0
+          ],
+          "offset": [
+            -240.0,
+            0.0
+          ],
+          "other_actor_clear": true,
+          "repositioned": true,
+          "terrain_hidden_or_modified": false,
+          "walkable": true
+        },
+        "qa_positioning": true,
+        "reference_binding": {
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "original": "res://assets/monsters/original/atlas_3.png",
+          "reference_kind": "existing_project_atlas",
+          "resolved_portrait": "res://assets/monsters/original/atlas_3.png",
+          "synthetic_fixture": false
+        },
+        "scene": "Main.tscn",
+        "stats_overridden": false,
+        "synthetic_fixture": false
+      }
+    },
+    "normal-headless": {
+      "path": "/workspace/scratch/pr100-continuation/main-batch23/normal-headless/report-cases/jealous-watcher-albion.json",
+      "sha256": "2ddec6baf92719119ea33852a60d0dda988408f089e91fd48f438191afb4c74f",
+      "checks": 1419,
+      "failures": [],
+      "actualMain": true,
+      "pose_samples": 104,
+      "AI_directions": [
+        {
+          "attack": true,
+          "compass": "E",
+          "contacts": 1,
+          "facing": 0,
+          "movement": "(83.01562, 0.0)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "SE",
+          "contacts": 1,
+          "facing": 1,
+          "movement": "(56.63672, 56.63672)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "S",
+          "contacts": 1,
+          "facing": 2,
+          "movement": "(0.0, 80.10352)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "SW",
+          "contacts": 1,
+          "facing": 3,
+          "movement": "(-56.63672, 56.63672)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "W",
+          "contacts": 1,
+          "facing": 4,
+          "movement": "(-80.05078, 0.0)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "NW",
+          "contacts": 1,
+          "facing": 5,
+          "movement": "(-62.92969, -62.92969)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "N",
+          "contacts": 1,
+          "facing": 6,
+          "movement": "(0.0, -80.10352)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        },
+        {
+          "attack": true,
+          "compass": "NE",
+          "contacts": 1,
+          "facing": 7,
+          "movement": "(62.92969, -62.92969)",
+          "name": "질투의 감시자 알비온",
+          "walk": true
+        }
+      ],
+      "magic_contacts": [
+        {
+          "damage": 35,
+          "facing": 0,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 1,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 2,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 3,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 4,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 5,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 6,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        },
+        {
+          "damage": 35,
+          "facing": 7,
+          "kind": "magic",
+          "name": "질투의 감시자 알비온"
+        }
+      ],
+      "projectiles": [
+        {
+          "compass": "E",
+          "delta": "(13.33398, -0.086914)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "SE",
+          "delta": "(9.470703, 9.384766)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "S",
+          "delta": "(0.0, 13.33301)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "SW",
+          "delta": "(-9.470703, 9.384766)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "W",
+          "delta": "(-13.33398, -0.085938)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "NW",
+          "delta": "(-9.382812, -9.472656)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "N",
+          "delta": "(0.0, -13.33301)",
+          "kind": "magic",
+          "toward_player": true
+        },
+        {
+          "compass": "NE",
+          "delta": "(9.382812, -9.472656)",
+          "kind": "magic",
+          "toward_player": true
+        }
+      ],
+      "lifecycle": {
+        "attempt_limit": 200,
+        "death_callbacks": 1,
+        "death_track": "death_7",
+        "ground_drops": [
+          {
+            "created_at": 1792075167.89702,
+            "expires_at": 1792075767.89702,
+            "grade": "일반",
+            "hunt_batch": "8fee00a8ea482b93f1bdc18d99a9f2b8",
+            "id": "f11448740b430d7e5b8788800b0557a3",
+            "item_name": "HP 물약",
+            "map_id": "aden_world",
+            "position": [
+              29704.0,
+              14688.0
+            ],
+            "quantity": 1,
+            "state": "ground"
+          }
+        ],
+        "hit_pose": true,
+        "hp_end": 0,
+        "hp_start": 1920,
+        "manual_pickup": true,
+        "player_hp": 1922,
+        "weapon_attempts": 31
+      },
+      "setup": {
+        "background_spawn_slots_paused": true,
+        "drop_rng_seed": 1,
+        "job": "기사",
+        "lifecycle_weapon": "진명황의 집행검",
+        "map": "aden_world",
+        "normal": "질투의 감시자 알비온",
+        "normal_is_existing_population_actor": false,
+        "qa_positioning": true,
+        "reference_binding": {
+          "identity_limit": "Existing project artwork, not verified external original game art",
+          "original": "res://assets/monsters/original/atlas_3.png",
+          "reference_kind": "existing_project_atlas",
+          "resolved_portrait": "res://assets/monsters/original/atlas_3.png",
+          "synthetic_fixture": false
+        },
+        "scene": "Main.tscn",
+        "stats_overridden": false,
+        "synthetic_fixture": false
+      }
+    }
+  },
+  "visual_evidence": {
+    "capture_dir": "/workspace/scratch/pr100-continuation/main-batch23/normal-render/captures/jealous-watcher-albion",
+    "total_actualMain_PNGs": 112,
+    "authored_pose_count": 104,
+    "directions": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "roles_and_phases": {
+      "idle": 2,
+      "walk": 3,
+      "attack": 3,
+      "hit": 2,
+      "death": 3
+    },
+    "all104_fixed_viewport_crops_reviewed": true,
+    "all104_crop_hashes_unique": true,
+    "manifest": "/workspace/scratch/pr100-continuation/albion-authoring/Main-independent/capture-manifest.json",
+    "contact": "/workspace/scratch/pr100-continuation/albion-authoring/Main-independent/actualMain-all104-contact.png",
+    "crop_xyxy": [
+      550,
+      220,
+      850,
+      490
+    ],
+    "original_PNGs_unchanged": true,
+    "AI8_overview_contact": "/workspace/scratch/pr100-continuation/albion-authoring/Main-independent/actualMain-AI8-overviews.png"
+  },
+  "visual_findings": {
+    "identity": "Original white/ivory lavender organic mantle, gold-rimmed small eyes and single magenta/turquoise frontal eye retained. No humanoid body/legs, detached appendages or texture fragmentation.",
+    "headings": "All8 camera views reviewed. E/W have true opposite-profile depth and frontal eye at leading edge; S has frontal central eye. N/NW/NE show rear mantle without pasted central frontal eye.",
+    "articulation": "Two mantle/tendril breathing phases, three distinct organic locomotion tendril bends/body leans, directional eye/tendril gather/release/recovery attack, two distinct recoil bends and three-stage ground collapse are visibly distinct. No translated duplicate or mirror-only substitution observed.",
+    "ground_support": "Living inherent float retained with coherent attached lower tendrils above the terrain. Death folds/sinks into a low coherent attached nonempty body lying on terrain in all8directions, no detached upright terminal levitation observed.",
+    "scale_contact": "Body scale remains consistent across idle/walk/hit and directional views. Attack extends organically toward the facing direction; release/extension matches the projectile headings recorded in actualMain. Allfullbodies and lower tips visible on unchanged existingterrain.",
+    "Main_AI_capture_limit": "Some naturalAI overviewscreenshots have foliage/scene occlusion or distant actor framing. The separately repositioned actualMain104posecaptures are foregroundclear and do not hide/modify terrain. Therefore detailed body/compass visual assertions rely on those104captures; actualAI damage/projectile contacts rely on independent runtime records.",
+    "lifecycle_limit": "Death/drop/manualpickup are exercised through the actualMain test harness; manual_pickup denotes the manual-pickup game action invoked by that harness, not a human device interaction."
+  },
+  "comparison_with_existing_completed": {
+    "images": [
+      {
+        "path": "/workspace/scratch/pr100-resume/baseline/main-render-representative/doguri_transform/authored-S-idle-0.png",
+        "sha256": "d4543449a22fcdee6ff48fa67dfe5f5e176a561f99d7ef1f63944b0c78d22684"
+      },
+      {
+        "path": "/workspace/scratch/pr100-resume/baseline/main-render-representative/albino-snapping-turtle-transform/authored-S-idle-0.png",
+        "sha256": "301146fb18ade90ccdac59aecee488e9dff9b021e0d86b608c529889c7c3b8bf"
+      }
+    ],
+    "finding": "Compared with previously completed Doguri and Albino Snapping Turtle actualMain captures: newAlbion preserves readable original-reference identity, continuous complete anatomy, coherent terrain placement and full dimensional sprite detail. No material visual quality regression observed. Character-specific palette/style differences are original-reference based."
+  },
+  "production_binding_reviewed": {
+    "frames_path": "res://assets/actors/eight_direction/original_based/jealous_watcher_albion/SpriteFrames.tres",
+    "SpriteFrames_sha256": "b29d7c40696058a6d8715dd84bed12c58b2837c9f0bdaf57422a954ab4219533",
+    "provenance_sha256": "8f97dde6712eaaecf6078505f90f0a5bce1c69ca1c9e93681aa54e7c1828a533",
+    "layout": "directional8",
+    "pixel_scale": 1.351257
+  },
+  "Android_real_device": "not_verified",
+  "map_modifications_by_reviewer": false,
+  "production_modifications_by_reviewer": false,
+  "remaining_for_root": [
+    "CI/commit checkpoint reconciliation",
+    "Retain Android real-device unverified label",
+    "No main merge without user approval"
+  ]
+}

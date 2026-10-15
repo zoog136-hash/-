@@ -200,6 +200,10 @@ jobs:
             cases: |
               mummy-lord|original_based_mummy_lord_gameplay_test||poses
               seer-boss|original_based_seer_boss_gameplay_test||poses
+          - group: raziel-watcher-boss
+            case_timeout: 450
+            cases: |
+              raziel-watcher|original_based_raziel_watcher_gameplay_test||poses
           - group: salah-boss
             case_timeout: 450
             cases: |
@@ -285,7 +289,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [15, 16, 17, 18, 19, 20, 21]
+        batch: [15, 16, 17, 18, 19, 20, 21, 23]
         include:
           - batch: 21
             config: res://tests/fixtures/pr100_batch21_accepted.json
