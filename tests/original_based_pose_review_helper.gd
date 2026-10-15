@@ -28,6 +28,18 @@ func _position_visible_pose_review() -> bool:
 			# and all reviewed collapse poses. Inspect actual streamed prop rects.
 			var body := Rect2(actor_point + Vector2(-128, -160), Vector2(256, 176))
 			var covered: bool = false
+			# A paused production monster may still render behind the subject.
+			# Magic approach selection can start at that monster's spawn point.
+			# Keep all actors visible and unchanged; select an empty nearby
+			# pose-review position instead of masking an overlapping body.
+			for actor: Node in world.monsters_root.get_children():
+				if actor == normal or not actor is Node2D: continue
+				var other := actor as Node2D
+				if not other.is_visible_in_tree(): continue
+				if actor_point.distance_squared_to(other.position) < 192.0 * 192.0:
+					covered = true
+					break
+			if covered: continue
 			for prop: Node2D in world.field_renderer.faded:
 				if prop is Sprite2D and prop.global_position.y + 16.0 > actor_point.y:
 					var bounds: Rect2 = prop.global_transform * (prop as Sprite2D).get_rect()
@@ -37,7 +49,8 @@ func _position_visible_pose_review() -> bool:
 			if not covered:
 				report.setup.pose_review = {"repositioned": radius > 0.0,
 					"offset": [offset.x, offset.y], "monster_position": [actor_point.x, actor_point.y],
-					"walkable": true, "foreground_clear": true, "terrain_hidden_or_modified": false}
+					"walkable": true, "foreground_clear": true, "other_actor_clear": true,
+					"terrain_hidden_or_modified": false}
 				return true
 	world.player.position = original_player
 	normal.position = original_monster

@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "basis_commit": "8b93a700f7e2bf0cbe99299b1b6751aab9db9c63",
+  "branch": "feature/twilight-animation-20261013",
+  "newly_validated": [
+    "monster:공포의 이프리트",
+    "monster:기란 평원 도마뱀전사",
+    "monster:독침 킬러비",
+    "monster:사악한 셸로브",
+    "monster:왜곡의 웅골리언트"
+  ],
+  "new_resource_appearances": 5,
+  "new_distinct_pixel_poses": 520,
+  "new_base_motion_designs": 4,
+  "appearance_variants_reusing_motion_design": 1,
+  "validation": {
+    "headless": {
+      "checks": 5414,
+      "failures": [],
+      "engine_processes": 1
+    },
+    "initial_render_batch": {
+      "checks": 5946,
+      "failures": [],
+      "engine_processes": 1,
+      "visual_limitation": "Paused background actor overlapped ifrit pose captures; superseded by targeted run"
+    },
+    "ifrit_clear_render": {
+      "checks": 1630,
+      "failures": [],
+      "engine_processes": 1,
+      "pose_review": {
+        "foreground_clear": true,
+        "monster_position": [
+          29448.0,
+          14688.0
+        ],
+        "offset": [
+          -240.0,
+          0.0
+        ],
+        "other_actor_clear": true,
+        "repositioned": true,
+        "terrain_hidden_or_modified": false,
+        "walkable": true
+      }
+    },
+    "main_direction_regression": 7703,
+    "native_expansion_assertions": 35742,
+    "canvas_assertions": 640,
+    "python_tests": 35,
+    "godot_import": "passed 4.7.2",
+    "actual_Main_boot": "passed OpenGL 4.5 llvmpipe"
+  },
+  "preservation": {
+    "original_reference_sha256_verified": 222,
+    "unchanged_bound_profiles": 366,
+    "unchanged_tracked_assets_runtime_references": 4550,
+    "changed_profiles": [
+      "monster:공포의 이프리트",
+      "monster:기란 평원 도마뱀전사",
+      "monster:독침 킬러비",
+      "monster:사악한 셸로브",
+      "monster:왜곡의 웅골리언트"
+    ],
+    "production_scripts_unchanged": true
+  },
+  "coverage": {
+    "counts": {
+      "hero_plus:registered": 180,
+      "hero_plus:native_connected": 136,
+      "other_transform:registered": 233,
+      "other_transform:native_connected": 1,
+      "normal_monster:registered": 258,
+      "normal_monster:native_connected": 195,
+      "boss:registered": 60,
+      "boss:native_connected": 35,
+      "class:registered": 4,
+      "class:native_connected": 4
+    },
+    "total_target_connected": 366,
+    "target_total": 498,
+    "remaining": 132,
+    "native_resources": 94,
+    "original_based_appearances": 58,
+    "original_based_distinct_pixel_poses": 5984,
+    "individual_Main_headless_and_render_8directions": 95,
+    "recorded_Main_reports": 193,
+    "direction_rows": 5880,
+    "errors": []
+  },
+  "manual_review": "Reviewed all source sheets and actual Main front/back, attack/contact, low terminal collapse, attached bodies, original identity and normalized floor anchors. Source-specific floating traits retained. Clear ifrit recapture moves only QA subject/player to empty walkable location; no terrain or actor hiding.",
+  "blocked_targets": {
+    "monster:사라만다": "NW walk rows remain SE after two direction attempts",
+    "monster:불신의 댄싱 소드": "SE/SW facing semantics inconsistent after two direction attempts"
+  },
+  "draft_archive": {
+    "path": "authoring-drafts.zip",
+    "bytes": 11422362,
+    "sha256": "be46bb094477887cc400bd19f1484101960c7999d30e435ad9407366730fa2a9",
+    "crc_and_member_sha_verified": true
+  },
+  "ci": "pending exact pushed HEAD workflow_dispatch; prior SHA success is not claimed for this content",
+  "android_apk": "pending exact pushed HEAD CI",
+  "android_device_execution": "not_run_no_device_attached",
+  "next_batch": [
+    "공포의 레서 데몬",
+    "공포의 나이트메어",
+    "왜곡의 메두사",
+    "오만한 아스모데우스",
+    "오만한 레비아탄"
+  ]
+}
