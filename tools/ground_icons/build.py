@@ -9,6 +9,7 @@ import argparse, hashlib, io, json
 from collections import deque
 from pathlib import Path
 from PIL import Image
+from alpha import clear_white_border
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST = ROOT/'data/ground_item_icons.json'
@@ -63,6 +64,7 @@ def prepare(raw: bytes):
     with Image.open(io.BytesIO(raw)) as opened:
         if not 1<=opened.width<=512 or not 1<=opened.height<=512: raise ValueError('invalid source size')
         image=opened.convert('RGBA')
+    image=clear_white_border(image)
     width,height=image.size; pixels=image.load()
     corners=[pixels[0,0],pixels[width-1,0],pixels[0,height-1],pixels[width-1,height-1]]
     white=sum(min(p[:3])>=250 for p in corners)>=3
