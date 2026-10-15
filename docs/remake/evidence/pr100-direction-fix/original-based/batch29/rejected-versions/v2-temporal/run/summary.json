@@ -1,0 +1,33 @@
+{
+	"capture_root": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures",
+	"cases": [
+		{
+			"name": "지옥의 쿠거",
+			"native_phases": 104,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_0.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_0.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 104,
+			"report": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/summary-cases/hell-cougar-monster-boss.json",
+			"report_sha256": "71e016bbe8efd07a84181a90bea26a2c699ce4db9d24b2b9c0dd81355b08f3eb",
+			"roles": 40,
+			"slug": "hell-cougar-monster-boss"
+		}
+	],
+	"checks": 40364,
+	"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 80428798,
+	"wall_time_performance_claim": false
+}

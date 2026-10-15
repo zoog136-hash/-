@@ -1,3 +1,7 @@
+## 사용자 지시로 제작 중단 · 최종392/498종
+
+**392/498(78.7%) · 잔여106 · 영웅이상140/180·일반212/258·보스40/60 · Main개별121종/canonical255.** 중단전에최종통과한쿠거v3만391에서+1, 이구아나/아그니는자동검사PASS이나최종Main시각검토미완료로HOLD. [최종인계문](PR100_FINAL_HANDOFF.md), [전체106목록/원본·실패·재개보존](evidence/pr100-direction-fix/original-based/final-handoff-20261015/remaining106.json), [쿠거검증](evidence/pr100-direction-fix/original-based/batch29/README.md). 신규제작·이미지생성·엔진검사를중단했다. 원격반영확인후이대화제작종료. 새PR/브랜치생성·main병합·reset/clean/forcepush 없음.
+
 ## 최신 진행 · batch31 검은 토끼 소녀328 신규1종
 
 **390 → 391/498(78.5%) · 잔여107 · 인계374 이후 신규17 · Main개별120종/canonical253보고서.** 112자세·48원본PNG를 연결하고 실제Main headless2,402/OpenGL2,024검사, 추가시간진행Main OpenGL61,539검사(204.471초), 별도112정지+56게임화면+112시간진행자세 전수시각검토 PASS. 기존251보고서SHA전부보존. 실제입력/장착/무기타격/HP피격/실제시간사망VFX/AI/지면드랍/수동습득 PASS. HUD가림을 첫실행에서거부하고 실제알림자연만료 후 재검증했다. [배치31 원본·실행·검토 증거](evidence/pr100-direction-fix/original-based/batch31/README.md).

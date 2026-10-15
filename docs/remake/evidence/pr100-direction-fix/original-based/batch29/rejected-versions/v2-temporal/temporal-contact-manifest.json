@@ -1,0 +1,1112 @@
+{
+  "source_summary": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/summary.json",
+  "source_summary_sha256": "4ebce16067123c8a64ed3b7884f85a7a48a58e753906a837d082fe11d5285e19",
+  "scope": "Diagnostic contacts from actual Main frame_post_draw readbacks, production controller selected textures; QA-clocked sim timestamps; no AI/combat/performance claim",
+  "uniform_resize": "704x640 actual viewport crop to352x320; exact uniform1/2 eachpose; no alpha extraction, atlas assembly or perpose scaling",
+  "contacts": [
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "E",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/E-temporal-contact.png",
+      "sha256": "23df1f6a50f1376e646ede9fbb01a18a9210b2a4297ae42ce2300e37aa475dd9",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-idle-0.png",
+          "sha256": "595d9482bde1bba9f3a5f2a48db6e39f7652813c30d03b8be5a89d9e6735251c",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 23914757,
+          "render_frame": 0,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-0.png|[P: (254.0, 110.0), S: (525.0, 225.0)]|[P: (127.0, 265.0), S: (253.0, 553.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-idle-1.png",
+          "sha256": "18c4c10d88f4c932668becdf89feede8659a26bae74025f9788c990d534cf576",
+          "simulation_seconds": 0.691666666666667,
+          "wall_microseconds": 24502034,
+          "render_frame": 1,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-0.png|[P: (252.0, 395.0), S: (528.0, 226.0)]|[P: (125.0, 264.0), S: (250.0, 552.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-walk-0.png",
+          "sha256": "3a83e24481c90670c0100954a527663be8454ca8cea2951966e07d07d0d9135f",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 25217665,
+          "render_frame": 6,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-0.png|[P: (235.0, 694.0), S: (573.0, 228.0)]|[P: (108.0, 262.0), S: (205.0, 550.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-walk-1.png",
+          "sha256": "8f2a28f85c8dc919a0a2b2ff2fe028aed803b189dad55463d4848e1b71e19d89",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 25650014,
+          "render_frame": 7,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-0.png|[P: (252.0, 980.0), S: (543.0, 226.0)]|[P: (125.0, 264.0), S: (235.0, 552.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-walk-2.png",
+          "sha256": "f00a891965b1d88a459b51e0a957a4b18c54d94d4a392d7058adce0d6c006113",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 26157570,
+          "render_frame": 8,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-0.png|[P: (244.0, 1257.0), S: (572.0, 220.0)]|[P: (117.0, 270.0), S: (206.0, 558.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-attack-0.png",
+          "sha256": "c299e82f6cf02a11b347f68ef53411d590905af842aefb796459cda0c4b520e4",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 27116996,
+          "render_frame": 14,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (17.0, 154.0), S: (306.0, 166.0)]|[P: (152.0, 220.0), S: (306.0, 446.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-attack-1.png",
+          "sha256": "5795daff7a9aa02ecdf2942c6a677386879cd4b9165822e57ee085572bee63ad",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 27762010,
+          "render_frame": 15,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (341.0, 157.0), S: (362.0, 171.0)]|[P: (135.0, 215.0), S: (250.0, 441.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-attack-2.png",
+          "sha256": "ec3f393746a394a8016ba04c084b3cb2526cfd45dcd587cace7b587a8989d83a",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 28283498,
+          "render_frame": 16,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (705.0, 151.0), S: (299.0, 188.0)]|[P: (158.0, 198.0), S: (313.0, 424.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-hit-0.png",
+          "sha256": "afdc931fc632f91eaa76e8cdb4788bc4c21b4320afb7e788974a9783f52203c3",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 28947221,
+          "render_frame": 19,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (40.0, 210.0), S: (379.0, 239.0)]|[P: (130.0, 170.0), S: (269.0, 409.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-hit-1.png",
+          "sha256": "4e2a4bfe34316c917883c3337e12e396493ec03fb79851d711cbed7044c08066",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 29580892,
+          "render_frame": 20,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (36.0, 676.0), S: (405.0, 215.0)]|[P: (126.0, 194.0), S: (243.0, 433.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-death-0.png",
+          "sha256": "e1dcc320cf1c5e47e872e06153c92655e8d6a715e014071eb9e313ae1ee02d92",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 30159900,
+          "render_frame": 23,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (10.0, 671.0), S: (284.0, 136.0)]|[P: (123.0, 201.0), S: (249.0, 397.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-death-1.png",
+          "sha256": "c78ad59dcbae767993c0b70c8f4817766bcd805ef07cc3999e079b624f0410a8",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 30545231,
+          "render_frame": 24,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (6.0, 1029.0), S: (295.0, 101.0)]|[P: (119.0, 236.0), S: (238.0, 432.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/E-death-2.png",
+          "sha256": "7dbdc370b4e7f8712a9a6ab5eb7156465c7c66ab4b3b31f9104b6c50701ac036",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 30989980,
+          "render_frame": 25,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (9.0, 1362.0), S: (295.0, 85.0)]|[P: (122.0, 252.0), S: (238.0, 448.0)]"
+        }
+      ]
+    },
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "SE",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/SE-temporal-contact.png",
+      "sha256": "12f14f34dd22ac1d03ce59f3e22afee1682ae6233d8fe5f038edceb256318c85",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-idle-0.png",
+          "sha256": "813db4dc7fd2578e8e46d66df47ef4a3a0946b44373e4c594fcc7aae4227b72b",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 31507230,
+          "render_frame": 27,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-1.png|[P: (31.0, 94.0), S: (472.0, 392.0)]|[P: (345.0, 340.0), S: (694.0, 774.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-idle-1.png",
+          "sha256": "963b4825d872924b69a116d7c6e3b26983750cdd78c32ec7c1768df9a463d53c",
+          "simulation_seconds": 0.691666666666667,
+          "wall_microseconds": 31927296,
+          "render_frame": 28,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-1.png|[P: (32.0, 565.0), S: (479.0, 393.0)]|[P: (346.0, 339.0), S: (687.0, 773.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-walk-0.png",
+          "sha256": "52a7386c43ca0a0f5d2052b446570dc3da7efb094eb71fcc6011deeface6b3b1",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 32596842,
+          "render_frame": 33,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-2.png|[P: (36.0, 325.0), S: (461.0, 398.0)]|[P: (363.0, 334.0), S: (705.0, 768.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-walk-1.png",
+          "sha256": "104337bff73b47b928f650bbcb978da8a59d0c7f2aee67a3d8f6844498a34a3e",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 33001538,
+          "render_frame": 34,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-2.png|[P: (569.0, 327.0), S: (424.0, 388.0)]|[P: (384.0, 344.0), S: (742.0, 778.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-walk-2.png",
+          "sha256": "2825af3e7e1036cecde4751e80375ddc24061e710e9efa1a8f22fc9d3795c0e4",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 33419744,
+          "render_frame": 35,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-2.png|[P: (1045.0, 331.0), S: (459.0, 397.0)]|[P: (348.0, 335.0), S: (707.0, 769.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-attack-0.png",
+          "sha256": "8e9c0ec9f11be24ed20d86e8db55241e91578694a3e8af034cfeb50aa1baa828",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 34086860,
+          "render_frame": 41,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (29.0, 465.0), S: (276.0, 220.0)]|[P: (164.0, 166.0), S: (336.0, 392.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-attack-1.png",
+          "sha256": "4789a3b167510da18e291ce0462b01df31c30a2fd327ddacb59527fe847327b3",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 34460674,
+          "render_frame": 42,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (353.0, 469.0), S: (329.0, 238.0)]|[P: (147.0, 148.0), S: (283.0, 374.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-attack-2.png",
+          "sha256": "0fbd3208362b1f01c235a916ad212e720f6ba06f2bb70ee6284cadafbdb966a3",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 34852704,
+          "render_frame": 43,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (715.0, 469.0), S: (271.0, 240.0)]|[P: (168.0, 146.0), S: (341.0, 372.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-hit-0.png",
+          "sha256": "1a9626975ed23e6de8cb94abfcb90591849ec146bf0fd194d5ac765da24d28f2",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 35422364,
+          "render_frame": 46,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (465.0, 205.0), S: (305.0, 244.0)]|[P: (166.0, 165.0), S: (343.0, 404.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-hit-1.png",
+          "sha256": "40034359e0b5295d7d92ae775df47cbe1cb7e462797d9a3f0561c877e16d3729",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 35813374,
+          "render_frame": 47,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (492.0, 673.0), S: (273.0, 227.0)]|[P: (193.0, 182.0), S: (375.0, 421.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-death-0.png",
+          "sha256": "8809a593d2091090be4b9cee2b1dad9529559147c26689444b1b3e2fc4aa527e",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 36310005,
+          "render_frame": 50,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (303.0, 664.0), S: (227.0, 161.0)]|[P: (149.0, 176.0), S: (306.0, 372.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-death-1.png",
+          "sha256": "ac30f8def7415db9b3fbdcf905f5a9c5682988c0e74dc97b1300bcf811914169",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 36799525,
+          "render_frame": 51,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (308.0, 1029.0), S: (229.0, 109.0)]|[P: (154.0, 228.0), S: (304.0, 424.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SE-death-2.png",
+          "sha256": "27e1520545649113a402d91f8aeabc43f4a6860d7d3d3781f5a37798aaa47709",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 37449293,
+          "render_frame": 52,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (314.0, 1363.0), S: (222.0, 93.0)]|[P: (160.0, 244.0), S: (311.0, 440.0)]"
+        }
+      ]
+    },
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "S",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/S-temporal-contact.png",
+      "sha256": "78ac0d7f85552cc82a7889f32ce8839fe79fead9f30daca193ac3f36d09f7916",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-idle-0.png",
+          "sha256": "ad8e2bed0265641fc1c67765faaaedfb96be9d70c25a3d695f80b06b2783b1dc",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 37995700,
+          "render_frame": 54,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-1.png|[P: (602.0, 95.0), S: (305.0, 387.0)]|[P: (429.0, 345.0), S: (861.0, 779.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-idle-1.png",
+          "sha256": "d0dffd57a3485360a6645bac61352a66a88c75481b54faa446ca03f0c66343b8",
+          "simulation_seconds": 0.6,
+          "wall_microseconds": 39039174,
+          "render_frame": 55,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-1.png|[P: (606.0, 559.0), S: (301.0, 399.0)]|[P: (433.0, 333.0), S: (865.0, 767.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-walk-0.png",
+          "sha256": "8061656635533720963d0aad7d0773e81a227d44d494300a7a5f2e82c1ae295a",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 39818147,
+          "render_frame": 60,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-3.png|[P: (54.0, 234.0), S: (390.0, 571.0)]|[P: (633.0, 476.0), S: (1280.0, 1099.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-walk-1.png",
+          "sha256": "289f45a639174831b846407d9788f4854267eb171d7bf098471f51f9281937da",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 40210097,
+          "render_frame": 61,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-3.png|[P: (540.0, 230.0), S: (384.0, 569.0)]|[P: (607.0, 478.0), S: (1286.0, 1101.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-walk-2.png",
+          "sha256": "96dda35146049e77517f04cacb67c94fb54a49e484060dd83adeb5161978bf94",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 40588361,
+          "render_frame": 62,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-3.png|[P: (1076.0, 231.0), S: (380.0, 572.0)]|[P: (631.0, 475.0), S: (1290.0, 1098.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-attack-0.png",
+          "sha256": "0caeef38ee06c26b6c59e3b7846017852588ecdd9ba9f9c08a181818bb9bde61",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 41275317,
+          "render_frame": 68,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (78.0, 813.0), S: (212.0, 246.0)]|[P: (213.0, 140.0), S: (400.0, 366.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-attack-1.png",
+          "sha256": "798490eb76c1555bc5ba5c0ddc40df16c99d2742883bad61eed2fb07b7b40c22",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 41831646,
+          "render_frame": 69,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (399.0, 813.0), S: (211.0, 266.0)]|[P: (193.0, 120.0), S: (401.0, 346.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-attack-2.png",
+          "sha256": "14377dfa8a14acd617d08d05c090e951f3003a696f4d59bb6fe94b47cfbc0590",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 43040933,
+          "render_frame": 70,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (731.0, 815.0), S: (211.0, 246.0)]|[P: (184.0, 140.0), S: (401.0, 366.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-hit-0.png",
+          "sha256": "11ad7790483d8c6c8bee086c2b8aef75bcd044aa2d198be817f4bbc6da975886",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 43874685,
+          "render_frame": 73,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (815.0, 195.0), S: (232.0, 265.0)]|[P: (192.0, 144.0), S: (416.0, 383.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-hit-1.png",
+          "sha256": "e61162662482c317821cec639ad3b43db73d8f871bb4b7f6d6694390a7c8abfb",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 44303102,
+          "render_frame": 74,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (850.0, 656.0), S: (225.0, 253.0)]|[P: (227.0, 156.0), S: (423.0, 395.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-death-0.png",
+          "sha256": "74b2d77820c436fac03ea4c0108cb1d68cb86f310256788b290b323bc41a8d33",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 44798044,
+          "render_frame": 77,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (555.0, 658.0), S: (184.0, 166.0)]|[P: (177.0, 171.0), S: (349.0, 367.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-death-1.png",
+          "sha256": "24a9b76fe04fd8cd6e38cc7137ee9ccbaaa9d5f29482ec1826ed608c89250629",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 45314532,
+          "render_frame": 78,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (548.0, 1022.0), S: (188.0, 118.0)]|[P: (170.0, 219.0), S: (345.0, 415.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/S-death-2.png",
+          "sha256": "1e33c6640231e65771aed210e5f718de6f4d2a0d6222a6d67b0ace3f37f4d55b",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 45870259,
+          "render_frame": 79,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (548.0, 1358.0), S: (193.0, 101.0)]|[P: (170.0, 236.0), S: (340.0, 432.0)]"
+        }
+      ]
+    },
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "SW",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/SW-temporal-contact.png",
+      "sha256": "1f90405b9472803c4882494720c11295fbbed9f7cad68b8a5c861e02fe0e3d54",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-idle-0.png",
+          "sha256": "73dc606bba0cd34820f5d000038f2f51de9679bdba9486a27dcbf62002b92d51",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 47496582,
+          "render_frame": 81,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-1.png|[P: (1041.0, 95.0), S: (463.0, 388.0)]|[P: (355.0, 344.0), S: (703.0, 778.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-idle-1.png",
+          "sha256": "5b0ff0f0431c23ac0634957385bff797dc80fc65d2337c3f6d04f544a127585b",
+          "simulation_seconds": 0.691666666666667,
+          "wall_microseconds": 47897640,
+          "render_frame": 82,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-1.png|[P: (1040.0, 565.0), S: (451.0, 394.0)]|[P: (354.0, 338.0), S: (715.0, 772.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-walk-0.png",
+          "sha256": "bcda29ab5957e2471575ae5baace3c96a478a169b94c79bc8fab441f40611506",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 49097576,
+          "render_frame": 87,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-4.png|[P: (35.0, 362.0), S: (460.0, 352.0)]|[P: (362.0, 380.0), S: (706.0, 814.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-walk-1.png",
+          "sha256": "03a8ecf095bb00fe30ff1be590011812b7473bc5580c2c34637c0e72448d55f0",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 49488340,
+          "render_frame": 88,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-4.png|[P: (582.0, 365.0), S: (423.0, 337.0)]|[P: (397.0, 395.0), S: (743.0, 829.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-walk-2.png",
+          "sha256": "f612bfe226756e9816448ce1aeaf351f3fc2509b69aadc0944c02e0c436b7977",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 49898726,
+          "render_frame": 89,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-4.png|[P: (1056.0, 363.0), S: (433.0, 351.0)]|[P: (359.0, 381.0), S: (733.0, 815.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-attack-0.png",
+          "sha256": "9cc94a350757ab0defcfe071390d0b99ad3fe6f3a91ab7d8cad4f0725093b792",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 50781739,
+          "render_frame": 95,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (37.0, 1175.0), S: (305.0, 215.0)]|[P: (172.0, 171.0), S: (307.0, 397.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-attack-1.png",
+          "sha256": "8634c5fb57896085af8718fcaef0c7e1aacc43a0ce426855ff1f7f0da491fb81",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 51279895,
+          "render_frame": 96,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (343.0, 1183.0), S: (349.0, 237.0)]|[P: (137.0, 149.0), S: (263.0, 375.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-attack-2.png",
+          "sha256": "6928d9a461037016d78bdddefc783bea76a14bcb444dae9260f2b59f1d11a82d",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 51786562,
+          "render_frame": 97,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-10.png|[P: (725.0, 1175.0), S: (279.0, 242.0)]|[P: (178.0, 144.0), S: (333.0, 370.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-hit-0.png",
+          "sha256": "95c37d074fa9e4ccce614afe2c05920ec47c1f3f96f79f0f786b3ea1fa7cc784",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 52383099,
+          "render_frame": 100,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (1169.0, 211.0), S: (321.0, 248.0)]|[P: (169.0, 161.0), S: (327.0, 400.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-hit-1.png",
+          "sha256": "04d72d26d97b428d7fdf3d10c35cf0c515dd8ca52fbb3100a27cb9778ad63ccc",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 52756076,
+          "render_frame": 101,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-12.png|[P: (1146.0, 680.0), S: (344.0, 232.0)]|[P: (146.0, 177.0), S: (304.0, 416.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-death-0.png",
+          "sha256": "30ab4bfe342b26ed689b0f6df99aa677f92633604adbe8a134fb7a5530982083",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 53258202,
+          "render_frame": 104,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (762.0, 663.0), S: (251.0, 162.0)]|[P: (141.0, 175.0), S: (282.0, 371.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-death-1.png",
+          "sha256": "91da93bd1de82dc1b3f3941fe4a10184ece4b621ec437f6d219ea9e67fe1a591",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 53644721,
+          "render_frame": 105,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (758.0, 1022.0), S: (257.0, 117.0)]|[P: (137.0, 220.0), S: (276.0, 416.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/SW-death-2.png",
+          "sha256": "a7aff0efcb900e20afbe21ec5bf04e3b005a9113b0fc0946c84a651752c92b07",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 54043522,
+          "render_frame": 106,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-14.png|[P: (761.0, 1361.0), S: (254.0, 96.0)]|[P: (140.0, 241.0), S: (279.0, 437.0)]"
+        }
+      ]
+    },
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "W",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/W-temporal-contact.png",
+      "sha256": "008df235a0f8c5e1f436e341ce278a9a3ccd8d972f20cb6470004aed0133d720",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-idle-0.png",
+          "sha256": "9c2d94c816440627deed8fe547fc779de0bf235d652bd14c058f971449b075bf",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 54474907,
+          "render_frame": 108,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-5.png|[P: (242.0, 110.0), S: (591.0, 227.0)]|[P: (93.0, 263.0), S: (187.0, 551.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-idle-1.png",
+          "sha256": "be3c5dba9855404ba22bed94d42d5046554f49cdbfb8942761efeff5779791b2",
+          "simulation_seconds": 0.691666666666667,
+          "wall_microseconds": 54882530,
+          "render_frame": 109,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-5.png|[P: (241.0, 399.0), S: (593.0, 228.0)]|[P: (92.0, 262.0), S: (185.0, 550.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-walk-0.png",
+          "sha256": "bd9ae18099de67178ee43eb17e4bcfd27fcb9ff83935db2520cb52dcf0ea116f",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 55541118,
+          "render_frame": 114,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-5.png|[P: (211.0, 689.0), S: (642.0, 229.0)]|[P: (62.0, 261.0), S: (136.0, 549.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-walk-1.png",
+          "sha256": "a16b2d350d9e05be187d6101f8f4fba50dea146c525bc7502a9d10f0d323082e",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 55893158,
+          "render_frame": 115,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-5.png|[P: (243.0, 973.0), S: (604.0, 226.0)]|[P: (94.0, 264.0), S: (174.0, 552.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-walk-2.png",
+          "sha256": "652bce26b0e8bf8c29b9cfcf0f7b4570ea8efe2ab4de82738a583aea17b3c543",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 56263044,
+          "render_frame": 116,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-5.png|[P: (220.0, 1244.0), S: (617.0, 230.0)]|[P: (71.0, 260.0), S: (161.0, 548.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-attack-0.png",
+          "sha256": "c71356ed229566d0c8eaa957eca875aa7d66afb03ee1aeb551a8131fce9501ed",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 56900555,
+          "render_frame": 122,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (25.0, 149.0), S: (313.0, 168.0)]|[P: (160.0, 218.0), S: (299.0, 444.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-attack-1.png",
+          "sha256": "20f1763dc0ebb4a939edb494cf48f865642cc2ad1b0d5dde399a4280f0ff556e",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 57292216,
+          "render_frame": 123,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (341.0, 146.0), S: (340.0, 163.0)]|[P: (135.0, 223.0), S: (272.0, 449.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-attack-2.png",
+          "sha256": "b8400fa3b15dad661ac1fd82088680726f977b8e879e310ab15692a67bfb34e5",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 57679629,
+          "render_frame": 124,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (714.0, 144.0), S: (301.0, 188.0)]|[P: (167.0, 198.0), S: (311.0, 424.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-hit-0.png",
+          "sha256": "1194d19d5943c4f82214195e6d6fd0572fade7db568e4b1cf01b0cc09fd7ec0c",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 58242698,
+          "render_frame": 127,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (26.0, 231.0), S: (421.0, 237.0)]|[P: (140.0, 198.0), S: (270.0, 454.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-hit-1.png",
+          "sha256": "c2df2f516b60624df33ccdf3889832b54d5608d6bd692568c053257996be93c0",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 58668251,
+          "render_frame": 128,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (27.0, 654.0), S: (396.0, 239.0)]|[P: (141.0, 196.0), S: (295.0, 452.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-death-0.png",
+          "sha256": "9fafcef11d984728949f13ed408a2e80893040d54e3706e8e9bfffe583061b09",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 59175175,
+          "render_frame": 131,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (39.0, 144.0), S: (372.0, 192.0)]|[P: (173.0, 262.0), S: (348.0, 528.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-death-1.png",
+          "sha256": "c4f64b490f67fec5f12d1bbf1bb80a27263aa35e3f2d16f95d36ec087c3cda54",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 59560893,
+          "render_frame": 132,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (38.0, 466.0), S: (379.0, 171.0)]|[P: (172.0, 283.0), S: (341.0, 549.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/W-death-2.png",
+          "sha256": "44119e784f3dd8182dd19be1b8d0a7dee50d37181e4034b77d30a65a7b892542",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 60020505,
+          "render_frame": 133,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (23.0, 773.0), S: (410.0, 155.0)]|[P: (157.0, 299.0), S: (310.0, 565.0)]"
+        }
+      ]
+    },
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "NW",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/NW-temporal-contact.png",
+      "sha256": "86fa5af3fa473ba00d9a7fbcdc9f4eb493af2e29878a5de12a67b77e336d9770",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-idle-0.png",
+          "sha256": "2a82c6035e5b44c38124aa7b23679902d135a0671ad74b4af1d04671d3283c06",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 60624497,
+          "render_frame": 135,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-6.png|[P: (84.0, 95.0), S: (449.0, 393.0)]|[P: (347.0, 339.0), S: (717.0, 773.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-idle-1.png",
+          "sha256": "3828f5eaf85929d5e122cce41c2f6a0c9f44380f0394d425183ca2649fae3730",
+          "simulation_seconds": 0.691666666666667,
+          "wall_microseconds": 61116774,
+          "render_frame": 136,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-6.png|[P: (81.0, 561.0), S: (502.0, 401.0)]|[P: (344.0, 331.0), S: (664.0, 765.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-walk-0.png",
+          "sha256": "6a5cefa75946494caee711982496d53974c5df38a458c8f655422a14f4a63a9f",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 61743329,
+          "render_frame": 141,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-7.png|[P: (31.0, 292.0), S: (490.0, 423.0)]|[P: (358.0, 309.0), S: (676.0, 743.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-walk-1.png",
+          "sha256": "eff116a224c3b435abc5eb4dac9a0a8bc6bbd6d6fa406315c90925ec6ab60437",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 62067943,
+          "render_frame": 142,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-7.png|[P: (564.0, 295.0), S: (461.0, 382.0)]|[P: (379.0, 350.0), S: (705.0, 784.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-walk-2.png",
+          "sha256": "f00cfa0c5d0520dbd2d78749b687a63f014406b49fed3935e530f6fb886cbebb",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 62416044,
+          "render_frame": 143,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-7.png|[P: (1062.0, 293.0), S: (454.0, 409.0)]|[P: (365.0, 323.0), S: (712.0, 757.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-attack-0.png",
+          "sha256": "407f963958c30014f0f5a11c6d982bdf026dabe10c5f1a285fec88f55c4d2442",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 63039252,
+          "render_frame": 149,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (55.0, 455.0), S: (298.0, 266.0)]|[P: (190.0, 120.0), S: (314.0, 346.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-attack-1.png",
+          "sha256": "4491c4c8c4793d37e194804226b8cef684392f562786c95ddcd5952433622c39",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 63405134,
+          "render_frame": 150,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (354.0, 449.0), S: (350.0, 274.0)]|[P: (148.0, 112.0), S: (262.0, 338.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-attack-2.png",
+          "sha256": "7dd4fac8f1745d04f95f4feaf43d1cf4fcc0e07883dca23f346aac36ece3834f",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 63792377,
+          "render_frame": 151,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (736.0, 456.0), S: (280.0, 267.0)]|[P: (189.0, 119.0), S: (332.0, 345.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-hit-0.png",
+          "sha256": "0cf039b1a452f679a919b2dbfe6c05d246143179a9865dd9347d8a3a1419364d",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 64302518,
+          "render_frame": 154,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (513.0, 202.0), S: (328.0, 279.0)]|[P: (192.0, 156.0), S: (363.0, 412.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-hit-1.png",
+          "sha256": "e36c870b7ea17d396e05fde14226d75b571665ef5c096edcb92e990c49080fb8",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 64711697,
+          "render_frame": 155,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (470.0, 633.0), S: (372.0, 272.0)]|[P: (149.0, 163.0), S: (319.0, 419.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-death-0.png",
+          "sha256": "ba42229c05eedecd4570364f4eec93fd3a8e7461d2e4426420441fbc9a6eb57c",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 65178117,
+          "render_frame": 158,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (468.0, 110.0), S: (319.0, 247.0)]|[P: (204.0, 207.0), S: (401.0, 473.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-death-1.png",
+          "sha256": "56b16c417f8c81169a6fa541d03ae63c0f2004e5f7f49c4d7c47b1ae38a75aa2",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 65532147,
+          "render_frame": 159,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (446.0, 442.0), S: (350.0, 229.0)]|[P: (182.0, 225.0), S: (370.0, 491.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NW-death-2.png",
+          "sha256": "825a224e28e46ce5aa37b686c02096cede833e8c190d8404a88f1863959c9018",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 65908501,
+          "render_frame": 160,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (455.0, 765.0), S: (328.0, 186.0)]|[P: (191.0, 268.0), S: (392.0, 534.0)]"
+        }
+      ]
+    },
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "N",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/N-temporal-contact.png",
+      "sha256": "7b70ee2e530ef164bc0b1bc922da882f1d3b44b9e36dbebc4fc8e881b030a513",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-idle-0.png",
+          "sha256": "ade44465e3f6a1d521a9fb0935eec9c75d1d4d9763c6c659d910b96ac7f8f04f",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 66322312,
+          "render_frame": 162,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-6.png|[P: (661.0, 93.0), S: (255.0, 392.0)]|[P: (447.0, 340.0), S: (911.0, 774.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-idle-1.png",
+          "sha256": "63e548d7e0a13a8e194ad1222c1f763f4ddbbe8f570891802d19f43c504ac7c1",
+          "simulation_seconds": 0.691666666666667,
+          "wall_microseconds": 66731613,
+          "render_frame": 163,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-6.png|[P: (667.0, 563.0), S: (278.0, 386.0)]|[P: (453.0, 346.0), S: (888.0, 780.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-walk-0.png",
+          "sha256": "7eed3287a9a9bbd5992aa418b8e2b544d3e91ba4ce8db618caeb8d5fa40396d3",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 67320476,
+          "render_frame": 168,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-8.png|[P: (10.0, 191.0), S: (481.0, 696.0)]|[P: (734.0, 588.0), S: (1567.0, 1352.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-walk-1.png",
+          "sha256": "37feb63f79ffa443ccdca554b30ac90fa1dc9e763ecc4a7d592e64487ab3730e",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 67733693,
+          "render_frame": 169,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-8.png|[P: (583.0, 190.0), S: (427.0, 697.0)]|[P: (809.0, 587.0), S: (1621.0, 1351.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-walk-2.png",
+          "sha256": "10eba6b119f37a76121c92f53b93c609ffdec8fec0647d7b8ab96c64cf05525d",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 68136628,
+          "render_frame": 170,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-8.png|[P: (1048.0, 190.0), S: (479.0, 699.0)]|[P: (832.0, 585.0), S: (1569.0, 1349.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-attack-0.png",
+          "sha256": "b542e3c66f224a7ff343f22e638ce26cbfb29b6775cef2be3f96a4aa3f1aedb1",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 68815429,
+          "render_frame": 176,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (72.0, 831.0), S: (215.0, 283.0)]|[P: (207.0, 103.0), S: (397.0, 329.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-attack-1.png",
+          "sha256": "d554c5ca2488668a87e8d9bd33e74836c6402d61131d519d3b67482084a5a131",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 69208949,
+          "render_frame": 177,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (416.0, 814.0), S: (236.0, 306.0)]|[P: (210.0, 80.0), S: (376.0, 306.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-attack-2.png",
+          "sha256": "b57c692556a214939767c0ee2c7fc06c39b27fba3ef260a91d6a7c7f2884db59",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 69640272,
+          "render_frame": 178,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (748.0, 834.0), S: (240.0, 288.0)]|[P: (201.0, 98.0), S: (372.0, 324.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-hit-0.png",
+          "sha256": "ec7f7c90bb95453ad99ce05c20d1a3b36ffc154434f1e84dacb522ff88ebd6f0",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 70187167,
+          "render_frame": 181,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (883.0, 205.0), S: (224.0, 274.0)]|[P: (228.0, 161.0), S: (467.0, 417.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-hit-1.png",
+          "sha256": "4c9dd58166fd64ff55b5e2d0f7f545f8f56cec6e42aaef9828d05c5f3116b0e5",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 70794466,
+          "render_frame": 182,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (901.0, 636.0), S: (206.0, 278.0)]|[P: (246.0, 157.0), S: (485.0, 413.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-death-0.png",
+          "sha256": "2444b2195fe7cc78fb77b0e88ead5ea6913f15de8ba8d4c5d331ad6a0b8bfe48",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 71584725,
+          "render_frame": 185,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (861.0, 112.0), S: (211.0, 254.0)]|[P: (252.0, 200.0), S: (509.0, 466.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-death-1.png",
+          "sha256": "1c5efa3343127369c31efb5d1bc24c86f1cec563fa718f6b41324a1a0625d255",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 72152767,
+          "render_frame": 186,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (847.0, 416.0), S: (248.0, 262.0)]|[P: (238.0, 192.0), S: (472.0, 458.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/N-death-2.png",
+          "sha256": "b3d590d0e12bf1b6a16622cad66b27f9e3a8d518b2babc96680c5af54bc47c38",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 72603435,
+          "render_frame": 187,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (826.0, 757.0), S: (273.0, 204.0)]|[P: (217.0, 250.0), S: (447.0, 516.0)]"
+        }
+      ]
+    },
+    {
+      "case": "hell-cougar-monster-boss",
+      "direction": "NE",
+      "path": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-contacts/hell-cougar-monster-boss/NE-temporal-contact.png",
+      "sha256": "a93d6669e3602f8de15bfb07eb5c6666119d5e332c20b2f7f46a2e51324ac95a",
+      "sources": [
+        {
+          "role": "idle",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-idle-0.png",
+          "sha256": "7dba4416f3e679ff39a235f689e679434c507324f3d4171032734c0fd4b1f321",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 73200163,
+          "render_frame": 189,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-6.png|[P: (1015.0, 97.0), S: (445.0, 390.0)]|[P: (354.0, 342.0), S: (721.0, 776.0)]"
+        },
+        {
+          "role": "idle",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-idle-1.png",
+          "sha256": "04f7613bd35c2d9b1fe862c9fc69982afaf4bf2a76c4f359b52d58beaedf6d12",
+          "simulation_seconds": 0.691666666666667,
+          "wall_microseconds": 73652830,
+          "render_frame": 190,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-6.png|[P: (1034.0, 564.0), S: (432.0, 395.0)]|[P: (373.0, 337.0), S: (734.0, 771.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-walk-0.png",
+          "sha256": "1dcb22220228ce27e8cb45e7adea235c7fefa0fa832d0b135af366ee9f086d48",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 74324323,
+          "render_frame": 195,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-9.png|[P: (177.0, 94.0), S: (702.0, 456.0)]|[P: (269.0, 448.0), S: (738.0, 984.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-walk-1.png",
+          "sha256": "edfcdfe75ad6fbef07c7acf161d2359e270ca21d72c649073987f6eb295cdd1b",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 74700805,
+          "render_frame": 196,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-9.png|[P: (179.0, 596.0), S: (680.0, 420.0)]|[P: (267.0, 484.0), S: (760.0, 1020.0)]"
+        },
+        {
+          "role": "walk",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-walk-2.png",
+          "sha256": "b5cb6ac74e24acfabd02a714008920fe3c639a230d7293426bf489b162e044e1",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 75086860,
+          "render_frame": 197,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-9.png|[P: (180.0, 1079.0), S: (669.0, 413.0)]|[P: (272.0, 491.0), S: (771.0, 1027.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-attack-0.png",
+          "sha256": "11a75489fb6c8ee7de709f936fbc94274e74bae12299e0d073f782ebffcbb8e2",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 75726816,
+          "render_frame": 203,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (18.0, 1216.0), S: (295.0, 253.0)]|[P: (153.0, 133.0), S: (317.0, 359.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-attack-1.png",
+          "sha256": "24fd550f165cda12b0c0c324dbd14aa5d3eaa90ef9800491d597e5bd81b71196",
+          "simulation_seconds": 0.3,
+          "wall_microseconds": 76167863,
+          "render_frame": 204,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (354.0, 1210.0), S: (350.0, 251.0)]|[P: (148.0, 135.0), S: (262.0, 361.0)]"
+        },
+        {
+          "role": "attack",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-attack-2.png",
+          "sha256": "2736cea0a93c0c53c78fe61839074493b9b30d4fd1523510d5763f2983e0ced0",
+          "simulation_seconds": 0.491666666666667,
+          "wall_microseconds": 76618741,
+          "render_frame": 205,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-11.png|[P: (712.0, 1213.0), S: (297.0, 258.0)]|[P: (165.0, 128.0), S: (315.0, 354.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-hit-0.png",
+          "sha256": "406c5c90303213dae1875ada9ef8a3ac65938bc0d3a963bbb87cdad50ca24ef5",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 77200874,
+          "render_frame": 208,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (1169.0, 201.0), S: (332.0, 287.0)]|[P: (179.0, 148.0), S: (359.0, 404.0)]"
+        },
+        {
+          "role": "hit",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-hit-1.png",
+          "sha256": "72227ded73029578e04a3acaf2d58111a5e8de28cc13f0865a7864cbba0ac8b0",
+          "simulation_seconds": 0.05,
+          "wall_microseconds": 77662381,
+          "render_frame": 209,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-13.png|[P: (1156.0, 648.0), S: (358.0, 267.0)]|[P: (166.0, 168.0), S: (333.0, 424.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 0,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-death-0.png",
+          "sha256": "ef98d05225229fbeb65d4d73b6e299c94f787ed6f9e2c5843f43075f596515ec",
+          "simulation_seconds": 0.0,
+          "wall_microseconds": 78149256,
+          "render_frame": 212,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (1169.0, 112.0), S: (315.0, 243.0)]|[P: (201.0, 211.0), S: (405.0, 477.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 1,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-death-1.png",
+          "sha256": "ddd21cbe6b8262b035ed22da40603191b929a132a33e5384388f27e0ba78d4b8",
+          "simulation_seconds": 0.216666666666667,
+          "wall_microseconds": 78547477,
+          "render_frame": 213,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (1172.0, 448.0), S: (314.0, 209.0)]|[P: (204.0, 245.0), S: (406.0, 511.0)]"
+        },
+        {
+          "role": "death",
+          "phase": 2,
+          "capture": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures/hell-cougar-monster-boss/NE-death-2.png",
+          "sha256": "4180ebb15fb9752b64f15e24e8c92060c6535e021d843cc97dc300cf90f598ca",
+          "simulation_seconds": 0.433333333333334,
+          "wall_microseconds": 78987129,
+          "render_frame": 214,
+          "frame_token": "res://assets/actors/eight_direction/original_based/hell_cougar_monster_boss_v2/poses-15.png|[P: (1153.0, 764.0), S: (348.0, 196.0)]|[P: (185.0, 258.0), S: (372.0, 524.0)]"
+        }
+      ]
+    }
+  ]
+}

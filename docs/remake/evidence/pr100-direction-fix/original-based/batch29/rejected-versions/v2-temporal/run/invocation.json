@@ -1,0 +1,54 @@
+{
+  "command": [
+    "/workspace/scratch/bin/godot-pr100",
+    "--path",
+    "/workspace/twilight",
+    "--script",
+    "res://tests/original_based_temporal_main_test.gd",
+    "--audio-driver",
+    "Dummy",
+    "--display-driver",
+    "x11",
+    "--rendering-method",
+    "gl_compatibility"
+  ],
+  "explicit_environment": {
+    "XDG_DATA_HOME": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/data",
+    "XDG_CONFIG_HOME": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/config",
+    "XDG_CACHE_HOME": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/cache",
+    "XDG_RUNTIME_DIR": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/runtime",
+    "TWILIGHT_PR100_TEMPORAL_ISOLATED": "1",
+    "TWILIGHT_PR100_TEMPORAL_REPORT": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/summary.json",
+    "TWILIGHT_PR100_TEMPORAL_CONFIGS": "/workspace/twilight/tests/fixtures/pr100_batch29.json",
+    "TWILIGHT_PR100_TEMPORAL_CAPTURE_DIR": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/captures",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "DISPLAY": ":99"
+  },
+  "validator_sha256": "9ad26fd81375788bacd4fc9f90b67fe0555a3f3f0a2dc1b7d42afb8b3772c19c",
+  "clock": "120Hz QA simulation; every step checked/logged; native texture changes captured at actual frame_post_draw. No real-time performance/AI/combat/weapon-death claim.",
+  "started_wall_ns": 1792096797165818290,
+  "rendered": true,
+  "finished_wall_ns": 1792096891462133623,
+  "returncode": 0,
+  "validator_unchanged_during_run": true,
+  "failures": [],
+  "cases": [
+    {
+      "name": "\uc9c0\uc625\uc758 \ucfe0\uac70",
+      "native_phases": 104,
+      "reference_binding": {
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "original": "res://assets/monsters/original/atlas_0.png",
+        "reference_kind": "existing_project_atlas",
+        "resolved_portrait": "res://assets/monsters/original/atlas_0.png",
+        "synthetic_fixture": false
+      },
+      "rendered_native_phases": 104,
+      "report": "/workspace/scratch/pr100-continuation/temporal-batch29-v2-render/summary-cases/hell-cougar-monster-boss.json",
+      "report_sha256": "71e016bbe8efd07a84181a90bea26a2c699ce4db9d24b2b9c0dd81355b08f3eb",
+      "roles": 40,
+      "slug": "hell-cougar-monster-boss"
+    }
+  ],
+  "summary_sha256": "4ebce16067123c8a64ed3b7884f85a7a48a58e753906a837d082fe11d5285e19"
+}

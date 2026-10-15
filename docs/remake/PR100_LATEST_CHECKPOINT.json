@@ -1,17 +1,18 @@
 {
-  "observed_at_utc": "2026-10-15T21:42:01.048219+00:00",
+  "observed_at_utc": "2026-10-15T22:31:18.022274+00:00",
   "repository": "zoog136-hash/-",
   "pr": 100,
   "branch": "feature/twilight-animation-20261013",
   "verified_code_checkpoint": "3cf3ab221c5072d228584fd94bdc1501ed10bfef",
   "runtime_assets_checkpoint": {
-    "batch": 31,
-    "resolution": "git log -1 --format=%H -- docs/remake/evidence/pr100-direction-fix/original-based/batch31/summary.json"
+    "batch": 29,
+    "version": "v3",
+    "resolution": "git log -1 --format=%H -- docs/remake/evidence/pr100-direction-fix/original-based/batch29/summary.json"
   },
   "counts": {
     "target": 498,
-    "completed": 391,
-    "remaining": 107,
+    "completed": 392,
+    "remaining": 106,
     "hero_plus": [
       140,
       180
@@ -21,15 +22,15 @@
       258
     ],
     "boss": [
-      39,
+      40,
       60
     ],
-    "individual_Main_eight_direction": 120,
-    "durable_Main_reports": 253,
+    "individual_Main_eight_direction": 121,
+    "durable_Main_reports": 255,
     "supplemental_existing3_Main_reports_this_resume": 6
   },
   "new_completed": [
-    "검은 토끼 소녀328"
+    "지옥의 쿠거"
   ],
   "validation": {
     "importer_tests_passed": 50,
@@ -526,7 +527,60 @@
         "MaidAnna276physicalpilot",
         "Guardianironphysicalpilot"
       ]
-    }
+    },
+    "batch29": {
+      "previous_completed": 391,
+      "new_completed": [
+        "지옥의 쿠거"
+      ],
+      "new_completed_count": 1,
+      "completed": 392,
+      "target": 498,
+      "percent": 78.7,
+      "remaining": 106,
+      "hero_plus": [
+        140,
+        180
+      ],
+      "normal_monster": [
+        212,
+        258
+      ],
+      "boss": [
+        40,
+        60
+      ],
+      "individual_Main_eight_direction": 121,
+      "canonical_Main_reports": 255,
+      "old253_report_SHA_preserved": true,
+      "resumed_new_completed_count": 18,
+      "headless_checks": 2312,
+      "headless_seconds": 147.802,
+      "OpenGL_checks": 2434,
+      "OpenGL_seconds": 264.977,
+      "temporal_checks": 40364,
+      "temporal_native_phases": 104,
+      "temporal_scope": "QAclockedpublicproductioncontroller inactualMain; separaterealAI/charge/combat/lifecycle",
+      "failures": 0,
+      "visual": "Rootall104base+8AI+8charge; rootchanged4rear13phasematrices andnon-authorindependentall8/104temporalPASS. Rearcoregrowthcorrectedwithnewwhole20poses; other84sourceSHAunchanged.",
+      "lifecycle": {
+        "original_HP": 25100,
+        "real_weapon_attempts": 328,
+        "death_callbacks": 1,
+        "ground_drop_manual_pickup": true
+      },
+      "qualified_profile_changes": [
+        "monster:지옥의 쿠거"
+      ],
+      "existing_good_assets_or_maps_or_game_code_replaced": 0,
+      "mandatory_guard_relaxations": 0,
+      "CI": "Latest391437680cAndroid/resource/GodotSUCCESS; Animationinprogressasofremote-observation. New392fullCI notrun becauseuserSTOP.",
+      "Android_actual_device": "UNVERIFIED",
+      "main_merge": "NOT_PERFORMED;conflict remains",
+      "user_stop": "All new production/imagegen/engines stopped; onlyfinalpreservation/doc/Git operationscontinue."
+    },
+    "batch32": "AUTOMATICPASS2515headless/2765GL/80793QAclock216phases BUT finalactualMainvisualUNREVIEWED_HOLD_notcounted",
+    "unicorn33": "READONLYpreflightFAILEDoneconnectedbody;noimport/noMain"
   },
   "new_WIP_HOLD": [
     "말하는 섬 들개",
@@ -638,14 +692,64 @@
       ],
       "sha": "f2fc2046998d647db332babf674f605008f1749c"
     },
-    "latest": "Exact389checkpoint5e6565fAnimation39jobsSUCCESS;391full4workflowsdispatchafterthispush;notyetverified."
+    "latest": {
+      "observed_utc": "2026-10-15T22:22:00.386051+00:00",
+      "CI_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+      "runs": [
+        {
+          "id": 38812389847,
+          "name": "TWILIGHT Android ARM64 APK Playtest",
+          "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812389847"
+        },
+        {
+          "id": 38812386688,
+          "name": "TWILIGHT resource integrity (no silent missing assets)",
+          "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812386688"
+        },
+        {
+          "id": 38812382354,
+          "name": "Godot Validate",
+          "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812382354"
+        },
+        {
+          "id": 38812374975,
+          "name": "Animation Presentation Validate",
+          "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812374975"
+        }
+      ],
+      "PR": {
+        "number": 100,
+        "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+        "head_ref": "feature/twilight-animation-20261013",
+        "state": "open",
+        "draft": true,
+        "merged": false,
+        "mergeable": false,
+        "mergeable_state": "dirty",
+        "html_url": "https://github.com/zoog136-hash/-/pull/100"
+      },
+      "main_head": "e2119c37293a783e93b421ee0055d1318271b071",
+      "CI_restart_performed_after_stop": false
+    }
   },
   "main_conflict_unresolved": true,
   "next": [
-    "Checkpoint391pushanddispatchfour existing fullCI; continueproductionwhileCIruns",
-    "Hellv3whole104 actualMain2312/2434PASS; finish104temporalvisualthenqualifyboss40onlyifpass",
-    "IguanaShead/corecalibration112 andUnicornSE/SWcamera/newgaitsourcebeforeMain",
-    "Agni/DeathServant/Hero269/Wolf/Anna/Guardianandall107remaining; noMainmerge"
+    "USERSTOP:doNOTstartproduction/newPRinthisconversation",
+    "Futureworkerread docs/remake/PR100_FINAL_HANDOFF.md andremaining106.json",
+    "Restorearchivestoseparateemptyfolder; reviewexistingMain32capturesbeforenewgeneration",
+    "OnlyfutureauthorizednewPRmayresume; mainmergeforbiddenwithoutapproval"
   ],
   "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
   "remote_snapshot_bytes": 13916,
@@ -654,15 +758,17 @@
   "observed_main_head": "e2119c37293a783e93b421ee0055d1318271b071",
   "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/batch31/root-independent-Main-review.json",
   "current_WIPs": [
-    "Hellcougarv3actualMain2312/2434automaticPASS;104temporal/rootvisualpending",
-    "Iguana112sameheadingSscale",
-    "Unicorn104SE/SWtrueprojectionwalkrepair",
-    "Agni104rootvisual/Main",
-    "DeathServant104N/NEcorpseheadingrepair",
-    "Hero269112anchors/core",
-    "Wolf104realgait",
-    "MaidAnna276physicalpilot",
-    "Guardianironphysicalpilot"
+    "transform:276:HOLD_외형보행파일럿",
+    "transform:269:HOLD_앵커외형수정",
+    "monster:공포의 아그니:HOLD_시각검토대기",
+    "monster:말하는 섬 들개:HOLD_보행소형시험",
+    "monster:검은숲 늑대:HOLD_보행제작중",
+    "monster:가디언:HOLD_소스파일럿",
+    "monster:분노의 데스 서번트:HOLD_소스최종검토대기",
+    "monster:알비노 드라이어드:HOLD_생성도구차단",
+    "monster:알비노 유니콘:HOLD_임포터실패",
+    "monster:알비노 이구아나:HOLD_시각검토대기",
+    "monster:커스번:HOLD_초기소스시험"
   ],
   "resumed_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015",
   "resumed_blocker": null,
@@ -671,7 +777,7 @@
     "transform:173 악몽의 잭 오 랜턴",
     "transform:288 도구리"
   ],
-  "resumed_new_completed_count": 17,
+  "resumed_new_completed_count": 18,
   "previous_pushed_checkpoint": "3cf3ab221c5072d228584fd94bdc1501ed10bfef",
   "batch23_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch23",
   "batch24_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch24",
@@ -681,5 +787,10 @@
   "batch28_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch28",
   "pipeline_resume_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/pipeline-resume-20261015",
   "batch30_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch30",
-  "batch31_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch31"
+  "batch31_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch31",
+  "status": "STOPPED_BY_USER_FINAL_HANDOFF",
+  "final_handoff_document": "docs/remake/PR100_FINAL_HANDOFF.md",
+  "final_preservation_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/final-handoff-20261015",
+  "unqualified_live_profiles_archived_and_parked": true,
+  "batch29_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch29"
 }
