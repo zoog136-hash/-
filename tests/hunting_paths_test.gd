@@ -47,7 +47,7 @@ func run() -> void:
 		check(paths.get("version",0)==1,id+" actual pathway data active")
 		check(paths.get("verification","")=="reference_style_local_approximation",id+" source precision explicit")
 		check(field.navigable_polygons.size()>0,id+" nonrectangular floor controls walking")
-		check(world.field_physics.get_child_count()==field.blockers.size(),id+" every blocker becomes actual physics")
+		check(preload("res://tests/streamed_field_physics.gd").intact(world),id+" every blocker retains its exact physical footprint and active coverage")
 		check(world.field_minimap.field==field,id+" minimap shares actual obstacles")
 		check(field.walkable(spawn) and field.point_clear(spawn),id+" entry remains clear")
 		for point: Array in field.data.route_checks:
@@ -74,6 +74,15 @@ func run() -> void:
 			var p: Vector2=vector(prop.position)
 			check(footprints.has(str(prop.id)) and vector(footprints[str(prop.id)].center)==p,id+" object and collision share footprint")
 			check(not field.point_clear(p,0),id+" object blocks navigation")
+			if field is AuthoredRemakeField:
+				# Distant objects are deliberately absent from the physics server.
+				# Visit each required bucket before querying every original object;
+				# keep the exact collision/navigation assertions for all objects.
+				var key:=Vector2i((p/float(field.data.streaming.chunk_size)).floor())
+				if not field.collision_stream.chunks.has(key):
+					world.player.global_position=p
+					field.collision_stream.refresh()
+					await physics_frame;await physics_frame
 			query.position=p
 			check(not world.get_world_2d().direct_space_state.intersect_point(query).is_empty(),id+" object blocks actual physics")
 		var selected: Dictionary={}
@@ -103,6 +112,9 @@ func run() -> void:
 			var b: Vector2=vector(selected.to)
 			world.player.global_position=a
 			world.player.clear_click_path()
+			if field is AuthoredRemakeField:
+				field.collision_stream.refresh()
+				await physics_frame;await physics_frame
 			world.player.set_physics_process(true)
 			world.player.set_touch_vector(a.direction_to(b))
 			Engine.time_scale=3.0

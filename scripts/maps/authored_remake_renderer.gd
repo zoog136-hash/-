@@ -26,6 +26,12 @@ func _ground_material(index: int, alpha: float = 1.0, edge: bool = false) -> Sha
 	result.set_shader_parameter("remake_surface",int(profile.get("surface_pattern",0)))
 	return result
 
+func _road_material(index: int) -> ShaderMaterial:
+	var result: ShaderMaterial=super._road_material(index)
+	var profile: Dictionary=(field as AuthoredRemakeField).remake_profile
+	if profile.has("road_strength"): result.set_shader_parameter("road_strength",float(profile.road_strength))
+	return result
+
 func _build_reference_ground() -> void:
 	var outside:=Polygon2D.new();outside.name="OutsideWorld"
 	outside.polygon=_box_points(field.bounds)

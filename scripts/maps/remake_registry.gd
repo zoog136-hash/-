@@ -10,7 +10,7 @@ const AUTHORED = preload("res://scripts/maps/authored_remake_field.gd")
 static func authored_field(definition: Dictionary) -> PlayableField:
 	var profiles: Dictionary=READ.read_object("res://data/maps/remake_render_profiles.json").get("maps",{})
 	var id: String=str(definition.get("map_id",""))
-	if "--legacy-map-layouts" in OS.get_cmdline_user_args() or not profiles.has(id):
+	if "--legacy-map-layouts" in OS.get_cmdline_user_args() or not profiles.has(id) or not definition.has("world_geometry"):
 		var existing:=PlayableField.new();existing.configure(definition);return existing
 	var field: AuthoredRemakeField=AUTHORED.new()
 	field.configure_remake(definition,profiles[id])

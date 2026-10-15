@@ -9,6 +9,8 @@ var checks: int=0
 var reports: Array=[]
 var boss_reports: Array=[]
 var combat_enabled: bool=true
+var travel_only: bool=false
+var travel_reports: Array=[]
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool,label: String) -> void:
@@ -43,6 +45,7 @@ func collision_equivalence(field: AuthoredRemakeField, id: String, entry: Vector
 		world.player.global_position=p;world.field_renderer.refresh_visible()
 		await frames(2)
 		check(field.collision_stream.active_shape_count<=field.collision_stream.total_shape_count,id+" no duplicated physical shapes")
+		check(preload("res://tests/streamed_field_physics.gd").intact(world),id+" exact original shapes and actual loaded Godot shapes")
 		for key: Vector2i in field.collision_stream.buckets:
 			var relevant: bool=(field.collision_stream.bucket_bounds[key] as Rect2).intersects(field.collision_stream.required_bounds(),true)
 			check(field.collision_stream.chunks.has(key)==relevant,id+" full awake-area coverage "+str(key))
@@ -78,8 +81,9 @@ func combat(id: String, slot: Dictionary) -> void:
 	var boss: TwilightMonster=slot.monster
 	var field: PlayableField=world.field_map
 	var landing:=Vector2.INF
+	var distance: float=maxf(64,minf(boss.current_attack_range()*.75,float(boss.ai.get("retreat_distance",0))+64))
 	for i: int in range(16):
-		var p: Vector2=boss.global_position+Vector2.from_angle(TAU*i/16)*64
+		var p: Vector2=boss.global_position+Vector2.from_angle(TAU*i/16)*distance
 		if field.point_clear(p) and not field.is_safe(p) and field.line_clear(p,boss.global_position): landing=p;break
 	check(landing.is_finite(),id+" boss approach "+str(slot.region.id))
 	if not landing.is_finite(): return
@@ -90,6 +94,12 @@ func combat(id: String, slot: Dictionary) -> void:
 	world.max_hp=1000000;world.hp=world.max_hp;world._update_hud()
 	var hp: int=boss.hp;var player_hp: int=world.hp;var markers: Array=[0]
 	boss.player_hit.connect(func(_who: TwilightMonster,_damage: int,_kind: String) -> void: markers[0]+=1)
+	# Observe the existing AI first. Continual AUTO pursuit can keep a ranged
+	# boss retreating, and a weak boss can die before its first attack marker.
+	world.selected_monster=null;world.auto_target=null;world.player.set_auto_enabled(false)
+	for i: int in range(600):
+		await frames(1)
+		if markers[0]>0 and world.hp<player_hp: break
 	world.selected_monster=boss;world.auto_target=boss;world.player.set_auto_enabled(true)
 	for i: int in range(16):
 		world._attack();await frames(24)
@@ -104,6 +114,7 @@ func combat(id: String, slot: Dictionary) -> void:
 	await shot(id+"-boss-"+str(slot.region.id))
 	boss_reports.append({"map":id,"region":slot.region.id,"boss":boss.monster_name,"boss_hp_before":hp,"boss_hp_after":boss.hp,
 		"player_hp_before":player_hp,"player_hp_after":world.hp,"real_attack_markers":markers[0],
+		"observation":"STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
 		"arena_arrival":"QA_TELEPORT_AFTER_PATH_CHECK","player_test_hp":1000000,"damage":"ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI"})
 	# Boss state serialization must keep live HP and deadlines. Full death/drop
 	# lifecycle has a separate existing regression suite; no fake screenshot.
@@ -112,11 +123,43 @@ func combat(id: String, slot: Dictionary) -> void:
 	var key: String=director.key(id,slot.region)
 	check(int(director.states[key].hp)==boss.hp,id+" existing boss persistence HP "+str(slot.region.id))
 
+func services_and_travel(id: String) -> void:
+	await process_frame;world._set_map(id,false);world.portal_cooldown=1000
+	world.player.set_auto_enabled(false)
+	var npc_results: Array=[]
+	for npc: Dictionary in world.field_map.data.npc_spawn:
+		world.player.global_position=Vector2(npc.position[0],npc.position[1])
+		world._set_click_destination(world.player.global_position)
+		check(world.hud.workspace.visible,id+" real NPC service opens "+str(npc.id))
+		var sections: Dictionary={"guide":"dialogue","shop":"npc_shop","warehouse":"warehouse","teleport":"teleport","craft":"crafting","buyback":"sell"}
+		check(world.hud.active_section==str(sections.get(str(npc.role),"")),id+" correct NPC service "+str(npc.id))
+		npc_results.append({"npc":npc.id,"service":npc.role,"actual_section":world.hud.active_section})
+		world.hud._close_workspace()
+	var portals: Array=world.field_map.data.portal.duplicate(true)
+	var arrivals: Array=[]
+	for portal: Dictionary in portals:
+		await process_frame;world._set_map(id,false)
+		var director: TwilightBossDirector=world.field_population.boss_director
+		world.field_population._capture_bosses()
+		var saved: Dictionary=director.states.duplicate(true)
+		world.player.global_position=Vector2(portal.position[0],portal.position[1])
+		world.player.clear_click_path();world.player.velocity=Vector2.ZERO
+		world.field_renderer.refresh_visible();world.portal_cooldown=0
+		world._update_field_triggers();await frames(3)
+		check(world.active_map_id==str(portal.target_map),id+" actual proximity portal "+str(portal.id))
+		check(world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position),id+" portal arrival foot clearance "+str(portal.id))
+		for key: String in saved:
+			check(director.states.has(key) and director.states[key].phase==saved[key].phase and director.states[key].ready_at==saved[key].ready_at,id+" boss phase/deadline retained "+key)
+		arrivals.append({"portal":portal.id,"expected":portal.target_map,"actual":world.active_map_id})
+	travel_reports.append({"map":id,"npc_services":npc_results,"actual_portal_arrivals":arrivals})
+	print("ALL_MAP_TRAVEL_CHECKED ",id)
+
 func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output=arg.trim_prefix("--output=")
 		if arg.begins_with("--map="): only=arg.trim_prefix("--map=")
 		if arg=="--no-combat": combat_enabled=false
+		if arg=="--travel-only": travel_only=true
 	DirAccess.make_dir_recursive_absolute(output)
 	world=load("res://Main.tscn").instantiate();root.add_child(world);await frames(3)
 	world.hud.complete_class_selection();world.hud._close_workspace();world.save_timer=-100000
@@ -127,6 +170,9 @@ func run() -> void:
 	for record: Dictionary in world.maps:
 		var id: String=record.id
 		if not only.is_empty() and id!=only: continue
+		if travel_only:
+			if not id.begins_with("oman_"): await services_and_travel(id)
+			continue
 		print("ALL_MAP_BEGIN ",id)
 		await process_frame
 		var started: int=Time.get_ticks_usec();world._set_map(id,false)
@@ -176,7 +222,7 @@ func run() -> void:
 			"load_ms":load_ms,"live_monsters":live,"boss_zones":boss_slots.size(),"collision":physics,
 			"memory_static_bytes":OS.get_static_memory_usage()})
 		print("ALL_MAP_CHECKED ",id," checks=",checks)
-	var report: Dictionary={"maps":reports,"checks":checks,"failures":failures,"boss_combat":boss_reports,
+	var report: Dictionary={"maps":reports,"checks":checks,"failures":failures,"boss_combat":boss_reports,"services_and_travel":travel_reports,
 		"display":DisplayServer.get_name(),"renderer":RenderingServer.get_video_adapter_name(),"android":"NOT_RUN"}
 	var file:=FileAccess.open(output+"/runtime.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t"));file.close()
