@@ -1,3 +1,7 @@
+## 2026-10-15 · 피쉬맨 공격 WIP 보존
+
+피쉬맨 **3/5동작(idle/walk/attack),64실포즈정적승인**. 공격수정본24포즈는8방향windup/전방창찌르기/recovery와창·그물·손연결,침범/누락/경계0을확인했다. 피격·사망미완성/런타임미연결/Main미실행이므로완료374/498·잔여124유지. 독립투명도/외형재검토도Main전에진행한다. PNG/SHA/정확prompt와공격1차거절ZIP을[WIP](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json)에보존한다. 이전이동보존 `603fd3d228ef4b2288992951247ada7b84fe3bde` push·원격일치확인.
+
 ## 2026-10-15 · 피쉬맨 이동 WIP 보존
 
 완료374/498·잔여124 유지. 피쉬맨 **idle16+walk24=40실포즈,2/5동작정적승인**, 미연결/Main미검사다. walk1은geometry가맞아도실제좌우교대보행이없어거절했고, walk2는8방향모두전진발→passing→반대발이확인됐다. 이크기차이를512canvas에강제로맞추지말고임포터비례정규화를사용한다. [WIP](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json). idle보존commit `c5ea60d204760a88f737570fff2463a3442594f1` push/원격일치확인. 공격·피격·사망을계속제작중이며신규완료0.

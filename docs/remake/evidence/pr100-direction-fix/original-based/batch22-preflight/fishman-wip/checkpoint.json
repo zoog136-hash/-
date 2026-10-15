@@ -3,10 +3,10 @@
   "target": "monster:알비노 피쉬맨",
   "roles_passed": [
     "idle",
-    "walk"
+    "walk",
+    "attack"
   ],
   "roles_remaining": [
-    "attack",
     "hit",
     "death"
   ],
@@ -75,6 +75,26 @@
       "path": "walk-v2.geometry.json",
       "bytes": 284,
       "sha256": "4b55089a16315dfbe6fc2bc75a993a594340f2ad5f97076749cadbf184a43cc8"
+    },
+    {
+      "path": "attack-v2.geometry.json",
+      "bytes": 286,
+      "sha256": "131a7795129ee974f3a09c313b7a2645a23a36dc31a27f19582b809f4d27ade2"
+    },
+    {
+      "path": "attack-v2.png",
+      "bytes": 2281806,
+      "sha256": "f99d86d3330a17e5c3bfd5feef968540a87a08ed5f6613ad3822c430868841d4"
+    },
+    {
+      "path": "attack-v2.prompt.txt",
+      "bytes": 1996,
+      "sha256": "12f8281eb32305f64b5360ff0b744f37ba3f468f5527556603ea3bb05818bce1"
+    },
+    {
+      "path": "attack-v2.visual-review.json",
+      "bytes": 588,
+      "sha256": "f36fa26fe03ab73b192007b15716f937dca630881e66f450196ec72d772df392"
     }
   ],
   "rejected_archive": {
@@ -83,7 +103,7 @@
     "sha256": "bfb993ea072c80961d83828a82485d2d84510e88b62a4d398001bebc9c71d2e2",
     "crc_ok": true
   },
-  "validated_unique_poses_so_far": 40,
+  "validated_unique_poses_so_far": 64,
   "normalization_note": "Walk source art is larger than idle; importer proportional virtual canvas is required, not a forced common512 canvas",
   "walk_rejected_archive": {
     "path": "walk-v1-rejected.zip",
@@ -91,5 +111,13 @@
     "sha256": "9adb3421fe6da54376621001e9216423a12e45bbe4b0bb90e49a583b56ce308d",
     "crc_ok": true,
     "reason": "Geometry passed but three leg phases did not show real alternating gait"
+  },
+  "attack_normalization_note": "Scale source proportionally to first idle; expected virtual canvas424, preserving PNG pixels",
+  "attack_rejected_archive": {
+    "path": "attack-v1-rejected.zip",
+    "bytes": 2424388,
+    "sha256": "9b1a3dff2431bc974513db914f54c0d41474351eac14dcaade0269c50053e0a6",
+    "crc_ok": true,
+    "reason": "First spear contact poses intruded into neighboring crop regions"
   }
 }
