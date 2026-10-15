@@ -1,0 +1,6595 @@
+{
+  "schema": 1,
+  "scope": 25,
+  "maps": {
+    "aden_world": {
+      "layout_revision": 3.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "warden",
+          "name": "순찰대장",
+          "position_world_pixels": [
+            10870.0,
+            16140.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "merchant",
+          "name": "변경 상인",
+          "position_world_pixels": [
+            10800.0,
+            16060.0
+          ],
+          "service": "shop",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "warehouse_keeper",
+          "name": "아덴 창고지기",
+          "position_world_pixels": [
+            10460.0,
+            16100.0
+          ],
+          "service": "warehouse",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "teleport_guide",
+          "name": "아덴 텔레포트 안내인",
+          "position_world_pixels": [
+            10830.0,
+            16460.0
+          ],
+          "service": "teleport",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "craft_artisan",
+          "name": "아덴 제작 장인",
+          "position_world_pixels": [
+            10650.0,
+            16600.0
+          ],
+          "service": "craft",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "buyback_trader",
+          "name": "아덴 아이템 매입상",
+          "position_world_pixels": [
+            11290.0,
+            16060.0
+          ],
+          "service": "buyback",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "giran_shop",
+          "name": "기란 잡화 상인",
+          "position_world_pixels": [
+            25610.0,
+            9070.0
+          ],
+          "service": "shop",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "giran_warehouse",
+          "name": "기란 창고지기",
+          "position_world_pixels": [
+            26070.0,
+            9090.0
+          ],
+          "service": "warehouse",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "giran_teleport",
+          "name": "기란 이동 안내인",
+          "position_world_pixels": [
+            26040.0,
+            9440.0
+          ],
+          "service": "teleport",
+          "movement": "EXISTING_GAME_SETTING",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "town_waystone",
+          "position_world_pixels": [
+            11050.0,
+            16540.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": [
+            25840.0,
+            9940.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "ruin_waystone",
+          "position_world_pixels": [
+            26540.0,
+            9540.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": [
+            11250.0,
+            16320.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "oman_gate",
+          "position_world_pixels": [
+            45440.0,
+            6240.0
+          ],
+          "target_map": "oman_01",
+          "target_position_world_pixels": null,
+          "radius": 68.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "meadow",
+          "mode": "normal",
+          "monster_types": [
+            "말하는 섬 고블린",
+            "오크",
+            "말하는 섬 들개"
+          ],
+          "max_count": 27,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            28200.0,
+            14600.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "forest",
+          "mode": "normal",
+          "monster_types": [
+            "오크",
+            "오크 마법사",
+            "오크 궁수"
+          ],
+          "max_count": 30,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            5480.0,
+            6920.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "riverbank",
+          "mode": "normal",
+          "monster_types": [
+            "도마뱀",
+            "라미아",
+            "크랩맨",
+            "사악한 셸로브"
+          ],
+          "max_count": 27,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            37640.0,
+            12040.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "ruins",
+          "mode": "normal",
+          "monster_types": [
+            "글루디오 던전 좀비",
+            "글루디오 던전 스켈레톤",
+            "글루디오 던전 구울"
+          ],
+          "max_count": 30,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            10400.0,
+            12800.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "east",
+          "mode": "normal",
+          "monster_types": [
+            "오크",
+            "오크 마법사",
+            "오크 궁수"
+          ],
+          "max_count": 27,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            32600.0,
+            7120.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "desert",
+          "mode": "normal",
+          "monster_types": [
+            "개미굴 일개미",
+            "개미굴 병정개미",
+            "스콜피온",
+            "거대 개미"
+          ],
+          "max_count": 33,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            18600.0,
+            16240.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "bandits",
+          "mode": "normal",
+          "monster_types": [
+            "산적 행동대장",
+            "산적",
+            "산적 저격수"
+          ],
+          "max_count": 30,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            13800.0,
+            10280.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "dragon_valley",
+          "mode": "normal",
+          "monster_types": [
+            "오우거",
+            "해골 근위병",
+            "코카트리스",
+            "해골 저격병"
+          ],
+          "max_count": 33,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            14000.0,
+            2120.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "oren",
+          "mode": "normal",
+          "monster_types": [
+            "에티",
+            "아이스 골렘",
+            "아이언 골렘",
+            "눈사람",
+            "아이스 맨",
+            "샤벨 타이거"
+          ],
+          "max_count": 30,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            28840.0,
+            200.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "fire_land",
+          "mode": "normal",
+          "monster_types": [
+            "라바 골렘",
+            "사라만다",
+            "파이어 에그",
+            "혼 켈베로스",
+            "불타는 궁수"
+          ],
+          "max_count": 33,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            21120.0,
+            2160.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "wind_land",
+          "mode": "normal",
+          "monster_types": [
+            "놀",
+            "하피",
+            "독침 킬러비",
+            "블루 하피",
+            "유니 드래곤",
+            "테라 드래곤"
+          ],
+          "max_count": 30,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 120.0,
+          "bounds_world_pixels": [
+            11760.0,
+            3080.0,
+            2100.0,
+            2000.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "western_approach",
+          "mode": "normal",
+          "monster_types": [
+            "말하는 섬 고블린",
+            "오크",
+            "말하는 섬 들개"
+          ],
+          "max_count": 24,
+          "respawn_seconds": 24.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            3072.0,
+            3380.0,
+            2016.0,
+            2100.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "드레이크"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 28800,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 90.0,
+          "bounds_world_pixels": [
+            14200.0,
+            2800.0,
+            840.0,
+            800.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "desert_boss",
+          "mode": "boss",
+          "monster_types": [
+            "샌드 웜"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 28800,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 90.0,
+          "bounds_world_pixels": [
+            19880.0,
+            17160.0,
+            840.0,
+            800.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "fire_boss",
+          "mode": "boss",
+          "monster_types": [
+            "피닉스"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 28800,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 90.0,
+          "bounds_world_pixels": [
+            21920.0,
+            2640.0,
+            840.0,
+            800.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "dragon_dense",
+          "mode": "dense",
+          "monster_types": [
+            "코카트리스",
+            "오우거",
+            "해골 저격병",
+            "해골 근위병"
+          ],
+          "max_count": 24.0,
+          "respawn_seconds": 7.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 70.0,
+          "bounds_world_pixels": [
+            15080.0,
+            2680.0,
+            672.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "dark_elder_encounter",
+          "mode": "boss",
+          "monster_types": [
+            "흑장로"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 28800,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 120,
+          "bounds_world_pixels": [
+            15502.0,
+            3600.0,
+            440.0,
+            440.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "death_knight_encounter",
+          "mode": "boss",
+          "monster_types": [
+            "데스나이트"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 28800,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 120,
+          "bounds_world_pixels": [
+            11778.0,
+            14100.0,
+            520.0,
+            520.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 383,
+      "boss_target": 5,
+      "dense_target": 24,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "albino_01": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "escaros_05",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1568.0
+          ],
+          "target_map": "albino_02",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "albino_01",
+          "target_position_world_pixels": [
+            5632.0,
+            3456.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5376.0,
+            3616.0
+          ],
+          "target_map": "albino_01",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 플라워",
+            "알비노 도마뱀",
+            "알비노 몽크"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 도마뱀",
+            "알비노 몽크",
+            "알비노 디어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            4992.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 플라워",
+            "알비노 도마뱀",
+            "알비노 몽크"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1152.0,
+            3200.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 도마뱀",
+            "알비노 몽크",
+            "알비노 디어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3328.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 몽크",
+            "알비노 디어",
+            "알비노 드라이어드"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            3072.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 도마뱀",
+            "알비노 몽크",
+            "알비노 디어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1024.0,
+            1280.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 몽크",
+            "알비노 디어",
+            "알비노 드라이어드"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3200.0,
+            896.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "알비노 유니콘"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            1088.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "albino_02": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "albino_01",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1312.0
+          ],
+          "target_map": "albino_03",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "albino_02",
+          "target_position_world_pixels": [
+            5632.0,
+            3200.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5376.0,
+            3360.0
+          ],
+          "target_map": "albino_02",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 악어",
+            "알비노 이구아나",
+            "알비노 개구리"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            5248.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 이구아나",
+            "알비노 개구리",
+            "알비노 심해어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            4992.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 악어",
+            "알비노 이구아나",
+            "알비노 개구리"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1152.0,
+            2688.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 이구아나",
+            "알비노 개구리",
+            "알비노 심해어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3200.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 개구리",
+            "알비노 심해어",
+            "알비노 사냥꾼"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            2816.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 이구아나",
+            "알비노 개구리",
+            "알비노 심해어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1152.0,
+            896.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 개구리",
+            "알비노 심해어",
+            "알비노 사냥꾼"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3200.0,
+            1152.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "알비노 피닉스"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            832.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "albino_03": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "albino_02",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1568.0
+          ],
+          "target_map": "albino_04",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "albino_03",
+          "target_position_world_pixels": [
+            5632.0,
+            3456.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5376.0,
+            3616.0
+          ],
+          "target_map": "albino_03",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 변이된 골렘",
+            "알비노 뿔 개구리",
+            "알비노 악어거북"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            4992.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 악어거북",
+            "알비노 자이언트 크랩"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 변이된 골렘",
+            "알비노 뿔 개구리",
+            "알비노 악어거북"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1152.0,
+            3072.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 악어거북",
+            "알비노 자이언트 크랩"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 악어거북",
+            "알비노 자이언트 크랩",
+            "알비노 피쉬맨"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            3072.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 악어거북",
+            "알비노 자이언트 크랩"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1152.0,
+            1024.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 악어거북",
+            "알비노 자이언트 크랩",
+            "알비노 피쉬맨"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            896.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "알비노 데몬"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            1088.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "albino_04": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "albino_03",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1568.0
+          ],
+          "target_map": "faith_01",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "albino_04",
+          "target_position_world_pixels": [
+            5504.0,
+            3456.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5248.0,
+            3616.0
+          ],
+          "target_map": "albino_04",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 플라워",
+            "알비노 도마뱀",
+            "알비노 악어"
+          ],
+          "max_count": 4,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            4992.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 뿔 개구리",
+            "알비노 심해어",
+            "알비노 악어거북"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 악어",
+            "알비노 몽크",
+            "알비노 이구아나"
+          ],
+          "max_count": 4,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1024.0,
+            2816.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 몽크",
+            "알비노 이구아나",
+            "알비노 변이된 골렘"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            3072.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 악어거북",
+            "알비노 자이언트 크랩",
+            "알비노 디어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5120.0,
+            3072.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 변이된 골렘",
+            "알비노 개구리",
+            "알비노 뿔 개구리"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1152.0,
+            1024.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 자이언트 크랩",
+            "알비노 디어",
+            "알비노 피쉬맨"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "normal",
+          "monster_types": [
+            "알비노 피쉬맨",
+            "알비노 사냥꾼",
+            "알비노 드라이어드"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            1088.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 42,
+      "boss_target": 0,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "domination_summit": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            2240.0,
+            6368.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1792.0,
+            6048.0
+          ],
+          "target_map": "oman_10",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            6080.0,
+            1440.0
+          ],
+          "target_map": "escaros_01",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1792.0,
+            6304.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            2432.0,
+            6080.0
+          ],
+          "target_map": "domination_summit",
+          "target_position_world_pixels": [
+            4096.0,
+            4864.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            3840.0,
+            5024.0
+          ],
+          "target_map": "domination_summit",
+          "target_position_world_pixels": [
+            2048.0,
+            6144.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "bastion_0",
+          "mode": "normal",
+          "monster_types": [
+            "정예 다크엘프",
+            "지룡의 정예병"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            928.0,
+            1824.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "bastion_1",
+          "mode": "normal",
+          "monster_types": [
+            "정예 다크엘프",
+            "지룡의 정예병"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5408.0,
+            1952.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "bastion_2",
+          "mode": "normal",
+          "monster_types": [
+            "정예 다크엘프",
+            "지룡의 정예병"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3616.0,
+            4384.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "bastion_3",
+          "mode": "normal",
+          "monster_types": [
+            "정예 다크엘프",
+            "지룡의 정예병"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5920.0,
+            5152.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "그림 리퍼"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5504.0,
+            960.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 25,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "escaros_01": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "domination_summit",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            7808.0,
+            6304.0
+          ],
+          "target_map": "escaros_02",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "escaros_01",
+          "target_position_world_pixels": [
+            6912.0,
+            1856.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            6656.0,
+            2016.0
+          ],
+          "target_map": "escaros_01",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "field_0",
+          "mode": "normal",
+          "monster_types": [
+            "에스카로스 어쌔신",
+            "에스카로스 솔져",
+            "에스카로스 나이트"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2464.0,
+            4000.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_1",
+          "mode": "normal",
+          "monster_types": [
+            "에스카로스 솔져",
+            "에스카로스 나이트",
+            "에스카로스 치프"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2976.0,
+            1056.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_2",
+          "mode": "normal",
+          "monster_types": [
+            "에스카로스 나이트",
+            "에스카로스 치프",
+            "에스카로스 매지션"
+          ],
+          "max_count": 10,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6432.0,
+            1376.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_3",
+          "mode": "normal",
+          "monster_types": [
+            "에스카로스 솔져",
+            "에스카로스 나이트",
+            "에스카로스 치프"
+          ],
+          "max_count": 9,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            7072.0,
+            4256.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "웨링"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            7232.0,
+            5824.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 33,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "escaros_02": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1440.0,
+            1472.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1760.0,
+            1024.0
+          ],
+          "target_map": "escaros_01",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            864.0,
+            7808.0
+          ],
+          "target_map": "escaros_03",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1504.0,
+            1024.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1728.0,
+            1664.0
+          ],
+          "target_map": "escaros_02",
+          "target_position_world_pixels": [
+            5312.0,
+            6912.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5152.0,
+            6656.0
+          ],
+          "target_map": "escaros_02",
+          "target_position_world_pixels": [
+            1664.0,
+            1280.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "field_0",
+          "mode": "normal",
+          "monster_types": [
+            "넝마",
+            "스파이더",
+            "그리미"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2208.0,
+            2464.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_1",
+          "mode": "normal",
+          "monster_types": [
+            "스파이더",
+            "그리미",
+            "커스번"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5152.0,
+            2976.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_2",
+          "mode": "normal",
+          "monster_types": [
+            "커스번",
+            "톱니",
+            "시커"
+          ],
+          "max_count": 10,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            4832.0,
+            6432.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_3",
+          "mode": "normal",
+          "monster_types": [
+            "그리미",
+            "커스번",
+            "톱니"
+          ],
+          "max_count": 9,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1952.0,
+            7072.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "듀페리온"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            704.0,
+            7232.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 33,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "escaros_03": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "escaros_02",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            7808.0,
+            6304.0
+          ],
+          "target_map": "escaros_04",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "escaros_03",
+          "target_position_world_pixels": [
+            6912.0,
+            1856.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            6656.0,
+            2016.0
+          ],
+          "target_map": "escaros_03",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "field_0",
+          "mode": "normal",
+          "monster_types": [
+            "가디언",
+            "패트롤",
+            "로머"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2464.0,
+            4000.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_1",
+          "mode": "normal",
+          "monster_types": [
+            "가디언",
+            "패트롤",
+            "로머"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2976.0,
+            1056.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_2",
+          "mode": "normal",
+          "monster_types": [
+            "가디언",
+            "패트롤",
+            "로머"
+          ],
+          "max_count": 10,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6432.0,
+            1376.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_3",
+          "mode": "normal",
+          "monster_types": [
+            "가디언",
+            "패트롤",
+            "로머"
+          ],
+          "max_count": 9,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            7072.0,
+            4256.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "욥니르"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            7232.0,
+            5824.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 33,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "escaros_04": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "escaros_03",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            7808.0,
+            6304.0
+          ],
+          "target_map": "escaros_05",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "escaros_04",
+          "target_position_world_pixels": [
+            6912.0,
+            1856.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            6656.0,
+            2016.0
+          ],
+          "target_map": "escaros_04",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "field_0",
+          "mode": "normal",
+          "monster_types": [
+            "커터",
+            "소울러"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2464.0,
+            4000.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_1",
+          "mode": "normal",
+          "monster_types": [
+            "커터",
+            "소울러"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2976.0,
+            1056.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_2",
+          "mode": "normal",
+          "monster_types": [
+            "커터",
+            "소울러"
+          ],
+          "max_count": 10,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6432.0,
+            1376.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_3",
+          "mode": "normal",
+          "monster_types": [
+            "커터",
+            "소울러"
+          ],
+          "max_count": 9,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            7072.0,
+            4256.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "살라흐"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            7232.0,
+            5824.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 33,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "escaros_05": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "escaros_04",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            7808.0,
+            6304.0
+          ],
+          "target_map": "albino_01",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "escaros_05",
+          "target_position_world_pixels": [
+            6912.0,
+            1856.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            6656.0,
+            2016.0
+          ],
+          "target_map": "escaros_05",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "field_0",
+          "mode": "normal",
+          "monster_types": [
+            "하이드",
+            "테이너",
+            "퍼포"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2464.0,
+            4000.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_1",
+          "mode": "normal",
+          "monster_types": [
+            "하이드",
+            "테이너",
+            "퍼포"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2976.0,
+            1056.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_2",
+          "mode": "normal",
+          "monster_types": [
+            "하이드",
+            "테이너",
+            "퍼포"
+          ],
+          "max_count": 10,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6432.0,
+            1376.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "field_3",
+          "mode": "normal",
+          "monster_types": [
+            "하이드",
+            "테이너",
+            "퍼포"
+          ],
+          "max_count": 9,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            7072.0,
+            4256.0,
+            960.0,
+            960.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "그라디움"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            7232.0,
+            5824.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 33,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "faith_01": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "albino_04",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1312.0
+          ],
+          "target_map": "faith_02",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "faith_01",
+          "target_position_world_pixels": [
+            5632.0,
+            3328.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5376.0,
+            3488.0
+          ],
+          "target_map": "faith_01",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "교만의 레버넌트",
+            "교만의 제노사이더",
+            "교만의 킬 하운드"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "교만의 제노사이더",
+            "교만의 킬 하운드",
+            "교만의 네르갈"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "교만의 레버넌트",
+            "교만의 제노사이더",
+            "교만의 킬 하운드"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "교만의 제노사이더",
+            "교만의 킬 하운드",
+            "교만의 네르갈"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "교만의 킬 하운드",
+            "교만의 네르갈",
+            "교만의 제라키엘"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "교만의 제노사이더",
+            "교만의 킬 하운드",
+            "교만의 네르갈"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "교만의 킬 하운드",
+            "교만의 네르갈",
+            "교만의 제라키엘"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "교만의 왕자 데우스"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            832.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "faith_02": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "faith_01",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1312.0
+          ],
+          "target_map": "faith_03",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "faith_02",
+          "target_position_world_pixels": [
+            5632.0,
+            3328.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5376.0,
+            3488.0
+          ],
+          "target_map": "faith_02",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "탐욕의 코아쿡",
+            "탐욕의 그럽",
+            "탐욕의 만토디아"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "탐욕의 그럽",
+            "탐욕의 만토디아",
+            "탐욕의 텐타클"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "탐욕의 코아쿡",
+            "탐욕의 그럽",
+            "탐욕의 만토디아"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "탐욕의 그럽",
+            "탐욕의 만토디아",
+            "탐욕의 텐타클"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "탐욕의 만토디아",
+            "탐욕의 텐타클",
+            "탐욕의 엔트키아"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "탐욕의 그럽",
+            "탐욕의 만토디아",
+            "탐욕의 텐타클"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "탐욕의 만토디아",
+            "탐욕의 텐타클",
+            "탐욕의 엔트키아"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "탐욕의 여왕 벨리엘"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            832.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "faith_03": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "faith_02",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1312.0
+          ],
+          "target_map": "faith_04",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "faith_03",
+          "target_position_world_pixels": [
+            5632.0,
+            3328.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5376.0,
+            3488.0
+          ],
+          "target_map": "faith_03",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "질투의 로가리우스",
+            "질투의 좀비 메이드",
+            "질투의 스켈레톤 윙"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "질투의 스켈레톤 윙",
+            "질투의 아타바크",
+            "질투의 좀비 나이트"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "질투의 좀비 메이드",
+            "질투의 스켈레톤 윙",
+            "질투의 아타바크"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "질투의 좀비 메이드",
+            "질투의 스켈레톤 윙",
+            "질투의 아타바크"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "질투의 아타바크",
+            "질투의 좀비 나이트",
+            "질투의 감시자 알비온"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "질투의 스켈레톤 윙",
+            "질투의 아타바크",
+            "질투의 좀비 나이트"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "질투의 아타바크",
+            "질투의 좀비 나이트",
+            "질투의 감시자 알비온"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "질투의 공주 이자벨"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            832.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "faith_04": {
+      "layout_revision": 2.0,
+      "remake_applied": false,
+      "placement_status": "EXISTING_TWILIGHT_UNCHANGED",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            1472.0,
+            5728.0
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            1024.0,
+            5408.0
+          ],
+          "target_map": "faith_03",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5888.0,
+            1312.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            1024.0,
+            5664.0
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            1664.0,
+            5440.0
+          ],
+          "target_map": "faith_04",
+          "target_position_world_pixels": [
+            5632.0,
+            3328.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5376.0,
+            3488.0
+          ],
+          "target_map": "faith_04",
+          "target_position_world_pixels": [
+            1280.0,
+            5504.0
+          ],
+          "radius": 56.0,
+          "placement_status": "EXISTING_TWILIGHT"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "분노의 데스 키퍼",
+            "분노의 데스 서번트",
+            "분노의 데스 리퍼"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "분노의 데스 리퍼",
+            "분노의 데스 라이더",
+            "분노의 데스 워리어"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            5120.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "분노의 데스 서번트",
+            "분노의 데스 리퍼",
+            "분노의 데스 라이더"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "분노의 데스 서번트",
+            "분노의 데스 리퍼",
+            "분노의 데스 라이더"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "분노의 데스 라이더",
+            "분노의 데스 워리어",
+            "분노의 데스 헌터"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5248.0,
+            2944.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "분노의 데스 라이더",
+            "분노의 데스 워리어",
+            "분노의 데스 헌터"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            896.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "분노의 데스 워리어",
+            "분노의 데스 헌터",
+            "분노의 데스 도그"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072.0,
+            768.0,
+            768.0,
+            768.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "분노의 주시자 라즈엘"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5312.0,
+            832.0,
+            640.0,
+            640.0
+          ],
+          "source_cells_count": 0,
+          "position_evidence": "existing_TWILIGHT",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "EXISTING_POLYGONS",
+      "unused_legacy_spatial_metadata": null,
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_01": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            2976,
+            3180
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            2856,
+            3048
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": [
+            45440.0,
+            6240.0
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            2784,
+            2964
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            8280,
+            2328
+          ],
+          "target_map": "oman_02",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            2952,
+            3024
+          ],
+          "target_map": "oman_01",
+          "target_position_world_pixels": [
+            8280,
+            2328
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            8184,
+            2328
+          ],
+          "target_map": "oman_01",
+          "target_position_world_pixels": [
+            2784,
+            3180
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "왜곡의 웅골리언트",
+            "왜곡의 키메라",
+            "왜곡의 타란툴라"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1872,
+            2112,
+            3432,
+            1560
+          ],
+          "source_cells_count": 3544,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "왜곡의 키메라",
+            "왜곡의 타란툴라",
+            "왜곡의 라미아"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072,
+            432,
+            2736,
+            960
+          ],
+          "source_cells_count": 1731,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "왜곡의 타란툴라",
+            "왜곡의 라미아",
+            "왜곡의 코카트리스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5784,
+            1812,
+            2424,
+            1416
+          ],
+          "source_cells_count": 2115,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "왜곡의 키메라",
+            "왜곡의 타란툴라",
+            "왜곡의 라미아"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1488,
+            1188,
+            2328,
+            1140
+          ],
+          "source_cells_count": 1557,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "왜곡의 라미아",
+            "왜곡의 코카트리스",
+            "왜곡의 메두사"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3840,
+            3312,
+            2256,
+            864
+          ],
+          "source_cells_count": 1082,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "왜곡의 라미아",
+            "왜곡의 코카트리스",
+            "왜곡의 메두사"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            4536,
+            2640,
+            1920,
+            876
+          ],
+          "source_cells_count": 1163,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "왜곡의 타란툴라",
+            "왜곡의 라미아",
+            "왜곡의 코카트리스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3384,
+            1152,
+            3624,
+            1536
+          ],
+          "source_cells_count": 4649,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "왜곡의 제니스 퀸"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            864,
+            1992,
+            1656,
+            696
+          ],
+          "source_cells_count": 860,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_02": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4800,
+            2316
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4584,
+            2160
+          ],
+          "target_map": "oman_01",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            6648,
+            1440
+          ],
+          "target_map": "oman_03",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4680,
+            2160
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4488,
+            2160
+          ],
+          "target_map": "oman_02",
+          "target_position_world_pixels": [
+            6648,
+            1440
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            6552,
+            1416
+          ],
+          "target_map": "oman_02",
+          "target_position_world_pixels": [
+            4608,
+            2316
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "불신의 미믹",
+            "불신의 댄싱 소드",
+            "불신의 임프"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2832,
+            1512,
+            3384,
+            1584
+          ],
+          "source_cells_count": 5022,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "불신의 임프",
+            "불신의 다이어울프",
+            "불신의 비홀더"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5784,
+            1860,
+            2184,
+            1296
+          ],
+          "source_cells_count": 1889,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "불신의 댄싱 소드",
+            "불신의 임프",
+            "불신의 다이어울프"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1248,
+            1872,
+            1968,
+            768
+          ],
+          "source_cells_count": 1254,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "불신의 댄싱 소드",
+            "불신의 임프",
+            "불신의 다이어울프"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3912,
+            732,
+            2016,
+            864
+          ],
+          "source_cells_count": 1177,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "불신의 다이어울프",
+            "불신의 비홀더",
+            "불신의 서큐버스"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3744,
+            2916,
+            2928,
+            960
+          ],
+          "source_cells_count": 1981,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "불신의 임프",
+            "불신의 다이어울프",
+            "불신의 비홀더"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2184,
+            1020,
+            1992,
+            900
+          ],
+          "source_cells_count": 1418,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "불신의 다이어울프",
+            "불신의 비홀더",
+            "불신의 서큐버스"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            4848,
+            1140,
+            2040,
+            1140
+          ],
+          "source_cells_count": 1746,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "불신의 시어"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            2184,
+            2448,
+            2136,
+            1140
+          ],
+          "source_cells_count": 1886,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_03": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4800,
+            2316
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4584,
+            2160
+          ],
+          "target_map": "oman_02",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            1560,
+            2448
+          ],
+          "target_map": "oman_04",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4680,
+            2160
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4488,
+            2160
+          ],
+          "target_map": "oman_03",
+          "target_position_world_pixels": [
+            1560,
+            2448
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            1464,
+            2400
+          ],
+          "target_map": "oman_03",
+          "target_position_world_pixels": [
+            4608,
+            2316
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "공포의 레서 데몬",
+            "공포의 나이트메어",
+            "공포의 파이어 에그"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2184,
+            1272,
+            3792,
+            1704
+          ],
+          "source_cells_count": 3774,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "공포의 파이어 에그",
+            "공포의 켈베로스",
+            "공포의 이프리트"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            4800,
+            1020,
+            2232,
+            1116
+          ],
+          "source_cells_count": 1859,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "공포의 나이트메어",
+            "공포의 파이어 에그",
+            "공포의 켈베로스"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1656,
+            2328,
+            2904,
+            1260
+          ],
+          "source_cells_count": 2905,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "공포의 나이트메어",
+            "공포의 파이어 에그",
+            "공포의 켈베로스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1248,
+            1692,
+            2184,
+            972
+          ],
+          "source_cells_count": 1380,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "공포의 켈베로스",
+            "공포의 이프리트",
+            "공포의 아그니"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6480,
+            1848,
+            1488,
+            912
+          ],
+          "source_cells_count": 1111,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "공포의 파이어 에그",
+            "공포의 켈베로스",
+            "공포의 이프리트"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2880,
+            732,
+            2712,
+            1056
+          ],
+          "source_cells_count": 2172,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "공포의 켈베로스",
+            "공포의 이프리트",
+            "공포의 아그니"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3504,
+            2580,
+            2976,
+            1296
+          ],
+          "source_cells_count": 2576,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "공포의 뱀파이어"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            4776,
+            1680,
+            2256,
+            948
+          ],
+          "source_cells_count": 1134,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "dense_hotspot",
+          "mode": "dense",
+          "monster_types": [
+            "공포의 파이어 에그",
+            "공포의 켈베로스",
+            "공포의 레서 데몬",
+            "공포의 나이트메어",
+            "공포의 이프리트",
+            "공포의 아그니"
+          ],
+          "max_count": 24.0,
+          "respawn_seconds": 7.0,
+          "spawn_radius_pixels": 240.0,
+          "roaming_radius_pixels": 70.0,
+          "bounds_world_pixels": [
+            5880.0,
+            2592.0,
+            480.0,
+            480.0
+          ],
+          "source_cells_count": 285,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 67,
+      "boss_target": 1,
+      "dense_target": 24,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_04": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4776,
+            2328
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4560,
+            2172
+          ],
+          "target_map": "oman_03",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            7584,
+            2364
+          ],
+          "target_map": "oman_05",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4656,
+            2172
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4464,
+            2172
+          ],
+          "target_map": "oman_04",
+          "target_position_world_pixels": [
+            7584,
+            2364
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            7488,
+            2388
+          ],
+          "target_map": "oman_04",
+          "target_position_world_pixels": [
+            4584,
+            2328
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "죽음의 좀비",
+            "죽음의 스파토이",
+            "죽음의 해골 근위병"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2904,
+            1536,
+            3168,
+            1740
+          ],
+          "source_cells_count": 5090,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "죽음의 스파토이",
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3432,
+            3144,
+            2520,
+            708
+          ],
+          "source_cells_count": 1549,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "죽음의 좀비",
+            "죽음의 스파토이",
+            "죽음의 해골 근위병"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5808,
+            1596,
+            1896,
+            1008
+          ],
+          "source_cells_count": 1654,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "죽음의 스파토이",
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            4488,
+            756,
+            1560,
+            948
+          ],
+          "source_cells_count": 876,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병",
+            "죽음의 해골 저격병"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1512,
+            1644,
+            1752,
+            1248
+          ],
+          "source_cells_count": 1996,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "죽음의 스파토이",
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3264,
+            780,
+            1848,
+            864
+          ],
+          "source_cells_count": 1470,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "죽음의 해골 근위병",
+            "죽음의 해골 돌격병",
+            "죽음의 해골 저격병"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2328,
+            2676,
+            2616,
+            756
+          ],
+          "source_cells_count": 1338,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "죽음의 좀비 로드"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5136,
+            2040,
+            2520,
+            1236
+          ],
+          "source_cells_count": 1957,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_05": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4800,
+            2316
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4584,
+            2160
+          ],
+          "target_map": "oman_04",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            1368,
+            2040
+          ],
+          "target_map": "oman_06",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4680,
+            2160
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4488,
+            2160
+          ],
+          "target_map": "oman_05",
+          "target_position_world_pixels": [
+            1368,
+            2040
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            1272,
+            2088
+          ],
+          "target_map": "oman_05",
+          "target_position_world_pixels": [
+            4608,
+            2316
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "지옥의 고스트",
+            "지옥의 아이언골렘",
+            "지옥의 네크로맨서"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2184,
+            1020,
+            4848,
+            2568
+          ],
+          "source_cells_count": 7755,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "지옥의 아이언골렘",
+            "지옥의 네크로맨서",
+            "지옥의 본 드래곤"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            816,
+            1740,
+            1536,
+            792
+          ],
+          "source_cells_count": 716,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "지옥의 고스트",
+            "지옥의 아이언골렘",
+            "지옥의 네크로맨서"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3624,
+            444,
+            1968,
+            1368
+          ],
+          "source_cells_count": 1980,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "지옥의 아이언골렘",
+            "지옥의 네크로맨서",
+            "지옥의 본 드래곤"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2184,
+            2328,
+            2328,
+            1260
+          ],
+          "source_cells_count": 2051,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "지옥의 네크로맨서",
+            "지옥의 본 드래곤",
+            "지옥의 레서 드래곤"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6168,
+            1740,
+            2232,
+            1128
+          ],
+          "source_cells_count": 2124,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "지옥의 아이언골렘",
+            "지옥의 네크로맨서",
+            "지옥의 본 드래곤"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1656,
+            1740,
+            1800,
+            1128
+          ],
+          "source_cells_count": 1525,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "지옥의 네크로맨서",
+            "지옥의 본 드래곤",
+            "지옥의 레서 드래곤"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3624,
+            3264,
+            1968,
+            900
+          ],
+          "source_cells_count": 1611,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "지옥의 쿠거"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            4488,
+            1020,
+            2544,
+            1344
+          ],
+          "source_cells_count": 2179,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_06": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4824,
+            2304
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4608,
+            2148
+          ],
+          "target_map": "oman_05",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            3864,
+            3816
+          ],
+          "target_map": "oman_07",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4704,
+            2148
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4512,
+            2148
+          ],
+          "target_map": "oman_06",
+          "target_position_world_pixels": [
+            3864,
+            3816
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            3960,
+            3816
+          ],
+          "target_map": "oman_06",
+          "target_position_world_pixels": [
+            4632,
+            2304
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "불사의 구울",
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2424,
+            1428,
+            3864,
+            1728
+          ],
+          "source_cells_count": 4779,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군",
+            "불사의 좀비 병사"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3624,
+            3000,
+            2616,
+            876
+          ],
+          "source_cells_count": 1906,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "불사의 구울",
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3624,
+            732,
+            2568,
+            1032
+          ],
+          "source_cells_count": 2253,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "불사의 구울",
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5952,
+            1764,
+            1656,
+            1392
+          ],
+          "source_cells_count": 2166,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군",
+            "불사의 좀비 병사"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1608,
+            1896,
+            1968,
+            1536
+          ],
+          "source_cells_count": 1803,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군",
+            "불사의 좀비 병사"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3072,
+            2508,
+            2232,
+            1080
+          ],
+          "source_cells_count": 1619,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "불사의 좀비 마법사",
+            "불사의 좀비 장군",
+            "불사의 좀비 병사"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1632,
+            1008,
+            2568,
+            1272
+          ],
+          "source_cells_count": 2299,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "불사의 머미 로드"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5400,
+            1428,
+            1896,
+            948
+          ],
+          "source_cells_count": 1389,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_07": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4776,
+            2328
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4560,
+            2172
+          ],
+          "target_map": "oman_06",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5496,
+            1128
+          ],
+          "target_map": "oman_08",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4656,
+            2172
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4464,
+            2172
+          ],
+          "target_map": "oman_07",
+          "target_position_world_pixels": [
+            5496,
+            1128
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5592,
+            1128
+          ],
+          "target_map": "oman_07",
+          "target_position_world_pixels": [
+            4584,
+            2328
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "잔혹한 아시타지오",
+            "잔혹한 라이칸스로프",
+            "잔혹한 샤벨타이거"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2328,
+            1092,
+            3696,
+            2352
+          ],
+          "source_cells_count": 5957,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "잔혹한 라이칸스로프",
+            "잔혹한 샤벨타이거",
+            "잔혹한 혼 켈베로스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5208,
+            1164,
+            1680,
+            804
+          ],
+          "source_cells_count": 855,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "잔혹한 아시타지오",
+            "잔혹한 라이칸스로프",
+            "잔혹한 샤벨타이거"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2688,
+            2472,
+            1728,
+            1044
+          ],
+          "source_cells_count": 1206,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "잔혹한 아시타지오",
+            "잔혹한 라이칸스로프",
+            "잔혹한 샤벨타이거"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5952,
+            1848,
+            1656,
+            912
+          ],
+          "source_cells_count": 1262,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "잔혹한 라이칸스로프",
+            "잔혹한 샤벨타이거",
+            "잔혹한 혼 켈베로스"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3840,
+            804,
+            1680,
+            816
+          ],
+          "source_cells_count": 1107,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "잔혹한 라이칸스로프",
+            "잔혹한 샤벨타이거",
+            "잔혹한 혼 켈베로스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3840,
+            3048,
+            1536,
+            756
+          ],
+          "source_cells_count": 868,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "잔혹한 라이칸스로프",
+            "잔혹한 샤벨타이거",
+            "잔혹한 혼 켈베로스"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1608,
+            1848,
+            1680,
+            1164
+          ],
+          "source_cells_count": 1499,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "잔혹한 아이리스"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            5064,
+            2532,
+            1824,
+            984
+          ],
+          "source_cells_count": 1215,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "dense_hotspot",
+          "mode": "dense",
+          "monster_types": [
+            "잔혹한 혼 켈베로스",
+            "잔혹한 샤벨타이거",
+            "잔혹한 라이칸스로프",
+            "잔혹한 아시타지오"
+          ],
+          "max_count": 24.0,
+          "respawn_seconds": 7.0,
+          "spawn_radius_pixels": 240.0,
+          "roaming_radius_pixels": 70.0,
+          "bounds_world_pixels": [
+            5784.0,
+            1872.0,
+            480.0,
+            480.0
+          ],
+          "source_cells_count": 245,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 67,
+      "boss_target": 1,
+      "dense_target": 24,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_08": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4800,
+            2316
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4584,
+            2160
+          ],
+          "target_map": "oman_07",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            4536,
+            456
+          ],
+          "target_map": "oman_09",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4680,
+            2160
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4488,
+            2160
+          ],
+          "target_map": "oman_08",
+          "target_position_world_pixels": [
+            4536,
+            456
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            4632,
+            480
+          ],
+          "target_map": "oman_08",
+          "target_position_world_pixels": [
+            4608,
+            2316
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "어둠의 불타는 전사",
+            "암흑의 흑기사",
+            "암흑의 서큐버스 퀸"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2184,
+            1020,
+            4416,
+            2220
+          ],
+          "source_cells_count": 8433,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "암흑의 흑기사",
+            "암흑의 서큐버스 퀸",
+            "어둠의 불타는 궁수"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3624,
+            468,
+            1968,
+            1080
+          ],
+          "source_cells_count": 1589,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "어둠의 불타는 전사",
+            "암흑의 흑기사",
+            "암흑의 서큐버스 퀸"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6048,
+            1452,
+            2352,
+            1416
+          ],
+          "source_cells_count": 2014,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "어둠의 불타는 전사",
+            "암흑의 흑기사",
+            "암흑의 서큐버스 퀸"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3624,
+            3180,
+            1968,
+            984
+          ],
+          "source_cells_count": 1542,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "암흑의 흑기사",
+            "암흑의 서큐버스 퀸",
+            "어둠의 불타는 궁수"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            816,
+            1740,
+            2112,
+            1416
+          ],
+          "source_cells_count": 2129,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "암흑의 흑기사",
+            "암흑의 서큐버스 퀸",
+            "어둠의 불타는 궁수"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            4584,
+            1020,
+            2256,
+            1104
+          ],
+          "source_cells_count": 1769,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "암흑의 흑기사",
+            "암흑의 서큐버스 퀸",
+            "어둠의 불타는 궁수"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5256,
+            2508,
+            1800,
+            1080
+          ],
+          "source_cells_count": 1229,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "어둠의 나이트발드"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            2544,
+            2844,
+            2160,
+            744
+          ],
+          "source_cells_count": 1160,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_09": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4800,
+            2316
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4584,
+            2160
+          ],
+          "target_map": "oman_08",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5328,
+            3828
+          ],
+          "target_map": "oman_10",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4680,
+            2160
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4488,
+            2160
+          ],
+          "target_map": "oman_09",
+          "target_position_world_pixels": [
+            5328,
+            3828
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5232,
+            3828
+          ],
+          "target_map": "oman_09",
+          "target_position_world_pixels": [
+            4608,
+            2316
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "불멸의 해골 근위병",
+            "불멸의 해골 기사",
+            "불멸의 해골 돌격병"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2808,
+            1452,
+            3744,
+            1860
+          ],
+          "source_cells_count": 6349,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "불멸의 해골 기사",
+            "불멸의 해골 돌격병",
+            "불멸의 본 드래곤"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6072,
+            1452,
+            1536,
+            1416
+          ],
+          "source_cells_count": 2114,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "불멸의 해골 근위병",
+            "불멸의 해골 기사",
+            "불멸의 해골 돌격병"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3624,
+            3012,
+            2112,
+            864
+          ],
+          "source_cells_count": 1627,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "불멸의 해골 기사",
+            "불멸의 해골 돌격병",
+            "불멸의 본 드래곤"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3048,
+            732,
+            3120,
+            1008
+          ],
+          "source_cells_count": 2784,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "불멸의 해골 돌격병",
+            "불멸의 본 드래곤",
+            "불멸의 해골 저격병"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5376,
+            2640,
+            1656,
+            948
+          ],
+          "source_cells_count": 1104,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "불멸의 해골 기사",
+            "불멸의 해골 돌격병",
+            "불멸의 본 드래곤"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1608,
+            1416,
+            1896,
+            804
+          ],
+          "source_cells_count": 1273,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "불멸의 해골 돌격병",
+            "불멸의 본 드래곤",
+            "불멸의 해골 저격병"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2184,
+            2712,
+            1944,
+            876
+          ],
+          "source_cells_count": 903,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "불멸의 리치"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            1608,
+            2028,
+            1704,
+            852
+          ],
+          "source_cells_count": 1373,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 43,
+      "boss_target": 1,
+      "dense_target": 0,
+      "technical_complete": false,
+      "faithful_complete": false
+    },
+    "oman_10": {
+      "layout_revision": 2026101502,
+      "remake_applied": true,
+      "placement_status": "PROVISIONAL_TOPOLOGICAL_ZONES",
+      "npc": [
+        {
+          "id": "guide",
+          "name": "지역 안내자",
+          "position_world_pixels": [
+            4800,
+            2316
+          ],
+          "service": "guide",
+          "movement": "FIXED_EXISTING_GUIDE",
+          "placement_status": "provisional"
+        }
+      ],
+      "portals": [
+        {
+          "id": "previous",
+          "position_world_pixels": [
+            4584,
+            2160
+          ],
+          "target_map": "oman_09",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "next",
+          "position_world_pixels": [
+            5448,
+            2880
+          ],
+          "target_map": "domination_summit",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "aden_return",
+          "position_world_pixels": [
+            4680,
+            2160
+          ],
+          "target_map": "aden_world",
+          "target_position_world_pixels": null,
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "advance_waystone",
+          "position_world_pixels": [
+            4488,
+            2160
+          ],
+          "target_map": "oman_10",
+          "target_position_world_pixels": [
+            5448,
+            2880
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        },
+        {
+          "id": "entry_waystone",
+          "position_world_pixels": [
+            5352,
+            2880
+          ],
+          "target_map": "oman_10",
+          "target_position_world_pixels": [
+            4608,
+            2316
+          ],
+          "radius": 24,
+          "placement_status": "provisional"
+        }
+      ],
+      "regions": [
+        {
+          "id": "room_1",
+          "mode": "normal",
+          "monster_types": [
+            "오만한 아시타지오",
+            "오만한 플레임 팽",
+            "오만한 레비아탄"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2640,
+            1416,
+            3600,
+            1692
+          ],
+          "source_cells_count": 5006,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_2",
+          "mode": "normal",
+          "monster_types": [
+            "오만한 플레임 팽",
+            "오만한 레비아탄",
+            "오만한 아스모데우스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            6192,
+            1728,
+            1776,
+            852
+          ],
+          "source_cells_count": 1189,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_3",
+          "mode": "normal",
+          "monster_types": [
+            "오만한 아시타지오",
+            "오만한 플레임 팽",
+            "오만한 레비아탄"
+          ],
+          "max_count": 5,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            4680,
+            2856,
+            1992,
+            864
+          ],
+          "source_cells_count": 1262,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_4",
+          "mode": "normal",
+          "monster_types": [
+            "오만한 플레임 팽",
+            "오만한 레비아탄",
+            "오만한 아스모데우스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            1248,
+            2028,
+            1608,
+            732
+          ],
+          "source_cells_count": 889,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_5",
+          "mode": "normal",
+          "monster_types": [
+            "오만한 레비아탄",
+            "오만한 아스모데우스",
+            "오만한 서큐버스 퀸"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            3240,
+            732,
+            2928,
+            828
+          ],
+          "source_cells_count": 1454,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_6",
+          "mode": "normal",
+          "monster_types": [
+            "오만한 플레임 팽",
+            "오만한 레비아탄",
+            "오만한 아스모데우스"
+          ],
+          "max_count": 6,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            2184,
+            2544,
+            2832,
+            1332
+          ],
+          "source_cells_count": 2382,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "room_7",
+          "mode": "normal",
+          "monster_types": [
+            "오만한 레비아탄",
+            "오만한 아스모데우스",
+            "오만한 서큐버스 퀸"
+          ],
+          "max_count": 7,
+          "respawn_seconds": 25.0,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 130.0,
+          "bounds_world_pixels": [
+            5016,
+            1200,
+            1848,
+            900
+          ],
+          "source_cells_count": 1298,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "boss",
+          "mode": "boss",
+          "monster_types": [
+            "오만한 우그누스"
+          ],
+          "max_count": 1,
+          "respawn_seconds": 86400,
+          "spawn_radius_pixels": 0.0,
+          "roaming_radius_pixels": 110.0,
+          "bounds_world_pixels": [
+            2256,
+            1092,
+            1680,
+            1320
+          ],
+          "source_cells_count": 1584,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        },
+        {
+          "id": "dense_hotspot",
+          "mode": "dense",
+          "monster_types": [
+            "오만한 아스모데우스",
+            "오만한 플레임 팽",
+            "오만한 레비아탄",
+            "오만한 서큐버스 퀸",
+            "오만한 아시타지오"
+          ],
+          "max_count": 24.0,
+          "respawn_seconds": 7.0,
+          "spawn_radius_pixels": 220.0,
+          "roaming_radius_pixels": 70.0,
+          "bounds_world_pixels": [
+            6092.0,
+            2468.0,
+            440.0,
+            440.0
+          ],
+          "source_cells_count": 237,
+          "position_evidence": "provisional_topological_partition",
+          "stat_drop_ai_source": "EXISTING_DB_UNCHANGED"
+        }
+      ],
+      "source_geometry": "PRIVATE_PACK_DIRECTIONAL_GRID_AND_SOURCE_CELL_MEMBERSHIP",
+      "unused_legacy_spatial_metadata": "Legacy exclusion polygons copied as provenance are not source cell membership",
+      "boss_state": "EXISTING_BOSS_DIRECTOR_HP_PHASE_ABSOLUTE_DEADLINE_PRESERVED",
+      "total_population_target": 67,
+      "boss_target": 1,
+      "dense_target": 24,
+      "technical_complete": false,
+      "faithful_complete": false
+    }
+  },
+  "not_original_spawn_coordinates": true
+}
