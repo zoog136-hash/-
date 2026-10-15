@@ -1,0 +1,249 @@
+{
+  "schema": 1,
+  "target_key": "transform:357",
+  "decision": "PASS_E_ONLY_THREE_PHASE_GAIT_PILOT",
+  "scope": "Only3newly authored E-facing gait poses. No other direction/role, completed actor, runtime import or actual Main test.",
+  "source": {
+    "path": "/workspace/twilight-artwork/batch22/ringmaster/E-walk-v1.png",
+    "sha256": "f74ee6a97586c21515ac56bb0f5812b75f6f7dde2755d9548da01581f6c520aa",
+    "bytes": 885521,
+    "size": [
+      2034,
+      773
+    ],
+    "unchanged": true
+  },
+  "geometry": {
+    "large_separated_bodies": 3,
+    "distinct_rgba_crops": 3,
+    "foreign_body_regions": 0,
+    "opaque_crop_loss_pixels": 0,
+    "visible_canvas_border": false,
+    "crop_padding": 3,
+    "guards_relaxed": false
+  },
+  "gait_evidence": {
+    "anatomical_assignment": "In this E profile, anatomicalRIGHT is the near leg and anatomicalLEFT the far leg. This is a visual assignment from hip/puffed-breeches occlusion and near/far shading, not merely the screen-space leading-foot position.",
+    "phase0": "The large vertical near puff/bright near shin stay behind as the support leg; the forward bent thigh emerges from behind that near hip as the farLEFT swing leg. Far thigh is occluded at its origin by the near supporting breeches.",
+    "phase1": "Legs pass closer beneath the pelvis; one boot supports while the trailing heel lifts. The hip/knee/ankle arrangement differs from the two open stride poses. The overlapping breeches obscure an exact anatomical label for each passing leg, so phase1 trace names intentionally describe grounded/trailing roles only.",
+    "phase2": "The large forward horizontal puff/thigh now overlaps in front of the other hip as the nearRIGHT swing leg, while the darker farLEFT leg supports behind. The near/far thigh overlap order reverses fromphase0.",
+    "conclusion": "Opposite anatomical swing/support legs are sufficiently visible in this small pilot; this is stronger evidence than merely seeing a forward knee inphase0/2.",
+    "confidence_limit": "Anatomical labels derive from the static painted overlap/shading. No rig bone IDs, continuous video, foot pressure data or engine skeleton exists in these PNGs."
+  },
+  "other_visual_checks": {
+    "facing_identity": "All3 retain the clear rightward E mask/nose profile, source white/black carnival mask, ruff, purple/gold short jacket and puffed breeches, red stockings and dark shoes.",
+    "held_wand": "Same visible near/right holding hand, connected wrist/grip/shaft and complete violet orb across all3; no hand transfer or literal direction reversal.",
+    "connections": "Both hip-to-knee-to-ankle chains remain connected; no detached limb or full-body airborne pose was observed.",
+    "alpha": "No broad visible haze/matte/halo; sparse edge/fringe diagnostics recorded below."
+  },
+  "alpha_farther_than3px_from_alpha_gt100": {
+    "alpha_gt10_pixels": 7,
+    "alpha_gt25_pixels": 0,
+    "max_alpha": 16
+  },
+  "source_coordinate_evidence": [
+    {
+      "phase": 0,
+      "bbox_xyxy": [
+        211,
+        21,
+        651,
+        734
+      ],
+      "crop_region_xywh": [
+        208,
+        18,
+        446,
+        719
+      ],
+      "rgba_sha256": "89492ec851b1610d3dbff3917ca615ddbce83fd0e1896da8d3445c955ff5a99a",
+      "lowest_opaque_support_sole_y": 733,
+      "approximate_source_trace_joint_order": [
+        "hip/puffed-opening",
+        "knee",
+        "ankle",
+        "toe-center"
+      ],
+      "approximate_source_traces": {
+        "near_RIGHT_support": [
+          [
+            325,
+            490
+          ],
+          [
+            291,
+            558
+          ],
+          [
+            249,
+            657
+          ],
+          [
+            285,
+            704
+          ]
+        ],
+        "far_LEFT_swing": [
+          [
+            422,
+            447
+          ],
+          [
+            486,
+            472
+          ],
+          [
+            467,
+            561
+          ],
+          [
+            534,
+            600
+          ]
+        ]
+      }
+    },
+    {
+      "phase": 1,
+      "bbox_xyxy": [
+        836,
+        21,
+        1291,
+        727
+      ],
+      "crop_region_xywh": [
+        833,
+        18,
+        461,
+        712
+      ],
+      "rgba_sha256": "89ddfebe20934d8aafd49a958496215c591fcdfdb1b0faed6654309c98e0866d",
+      "lowest_opaque_support_sole_y": 726,
+      "approximate_source_trace_joint_order": [
+        "hip/puffed-opening",
+        "knee",
+        "ankle",
+        "toe-center"
+      ],
+      "approximate_source_traces": {
+        "passing_front_grounded": [
+          [
+            1032,
+            488
+          ],
+          [
+            1046,
+            551
+          ],
+          [
+            1056,
+            642
+          ],
+          [
+            1114,
+            685
+          ]
+        ],
+        "passing_rear_heel_lift": [
+          [
+            1004,
+            476
+          ],
+          [
+            960,
+            557
+          ],
+          [
+            902,
+            625
+          ],
+          [
+            935,
+            669
+          ]
+        ]
+      }
+    },
+    {
+      "phase": 2,
+      "bbox_xyxy": [
+        1522,
+        21,
+        1978,
+        706
+      ],
+      "crop_region_xywh": [
+        1519,
+        18,
+        462,
+        691
+      ],
+      "rgba_sha256": "c36e04811479274b210710d8ab54a5b691340d8daab3438e0ff403f2d491efd8",
+      "lowest_opaque_support_sole_y": 705,
+      "approximate_source_trace_joint_order": [
+        "hip/puffed-opening",
+        "knee",
+        "ankle",
+        "toe-center"
+      ],
+      "approximate_source_traces": {
+        "near_RIGHT_swing": [
+          [
+            1701,
+            439
+          ],
+          [
+            1797,
+            483
+          ],
+          [
+            1830,
+            594
+          ],
+          [
+            1888,
+            626
+          ]
+        ],
+        "far_LEFT_support": [
+          [
+            1637,
+            475
+          ],
+          [
+            1601,
+            555
+          ],
+          [
+            1571,
+            649
+          ],
+          [
+            1615,
+            676
+          ]
+        ]
+      }
+    }
+  ],
+  "ground_anchor_followup": {
+    "status": "Not an approved source_anchors configuration",
+    "finding": "Source lowest support-sole y differs across phases. Review per-pose foot-root anchors before any later import; an E-only source trial does not establish a shared in-game ground baseline.",
+    "observed_lowest_opaque_sole_y": [
+      733,
+      726,
+      705
+    ],
+    "world_contact_or_slide_validation": "not_run"
+  },
+  "inspection_paths": [
+    "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-E-walk-v1-independent.jpg",
+    "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-E-walk-v1-anatomical-traces.jpg"
+  ],
+  "new_face_expression_claim_limit": "Small mask expressions/teeth are newly authored interpretations, not verified original-game facts.",
+  "production_changes": false,
+  "source_PNGs_modified": 0,
+  "image_generation_performed": false,
+  "completed_count_increment": 0,
+  "runtime_import_ready": false
+}

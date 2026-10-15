@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "target_key": "transform:357",
+  "decision": "PASS_ROTATION_GUIDE_ONLY",
+  "scope": "Independent source identity,8-view rotation, connections and alpha inspection; no animation or Main approval.",
+  "generated_source": {
+    "path": "/workspace/twilight-artwork/batch22/ringmaster/rotation-v1.png",
+    "sha256": "ed2bfe20b6b2e415d7bf07ac8dda0cc874c7c88801080b3ab61656555a3bf245",
+    "bytes": 1126608,
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "unchanged_after_review": true
+  },
+  "reference": {
+    "path": "res://assets/catalog/4f7cead373e7901052fa2b5c.png",
+    "sha256": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b",
+    "expected_sha_match": true,
+    "authoring_copy_matches_original": true,
+    "classification": "Existing external-origin Inven catalog portrait. Local bytes/metadata verified; original external game pack or animation is not claimed."
+  },
+  "geometry": {
+    "distinct_views": 8,
+    "direction_order": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "logical_phases": 1,
+    "directions_axis": "columns",
+    "canvas_size": [
+      832,
+      832
+    ],
+    "opaque_crop_loss_pixels": 0,
+    "visible_image_border_pixels": 0,
+    "foreign_body_crop": "pass with original3px padding",
+    "guards_relaxed": false
+  },
+  "visual_review": {
+    "identity": "White/black asymmetric carnival mask/ears with red mouth accent, white ruff, purple/gold short fitted jacket and puffed breeches, exposed red stockings/knees, dark shoes and dark/orange one-handed wand with violet orb preserve the source silhouette and palette.",
+    "eight_views": "E and W have opposite clear side profiles with predominantly right/left shoe axes. S is frontal, SE/SW front diagonals, N is fully rear with no pasted face, and NW/NE show coherent rear shoulders/coat and partial mask occlusion.",
+    "handedness": "The wand is in viewer-left hand in S and viewer-right hand in N, consistent with the same anatomical holding hand. The free hand remains on the opposite side; no guide-frame hand transfer was observed.",
+    "connections": "All8 show attached hands/wrists/wand, complete mask/head/neck and both red-clad legs/feet. The short jacket exposes the knees; there is no long skirt, cropped toe or detached violet wand tip.",
+    "transparency": "No visible broad haze/matte/halo. Beyond3px from the alpha>100 silhouette there are0 pixels withalpha>25 and maxalpha25/255; source antialiasing retained.",
+    "inference_limit": "Exact tiny mask expression/teeth/ear construction and fine costume ornaments are newly authored interpretations of a108×132 portrait. They are not verified original-game details."
+  },
+  "exact_horizontal_pixel_mirror_checks": [
+    {
+      "views": [
+        "E",
+        "W"
+      ],
+      "exact_mirror": false
+    },
+    {
+      "views": [
+        "SE",
+        "SW"
+      ],
+      "exact_mirror": false
+    },
+    {
+      "views": [
+        "NW",
+        "NE"
+      ],
+      "exact_mirror": false
+    }
+  ],
+  "inspection_path": "/workspace/twilight-run/recovery/remote-three-contact/ringmaster-rotation-independent.jpg",
+  "next_required_validation": "Single E-direction three-phase real gait with opposite anatomical support/swing legs; keep head/profile and wand hand stable. Do not expand directions or import partially until that pilot passes.",
+  "acceptance_limit": "Guide8views only. No idle/walk/attack/hit/death or actual Main approval.",
+  "source_PNGs_modified": 0,
+  "production_changes": false,
+  "image_generation_performed": false,
+  "completed_count_increment": 0
+}

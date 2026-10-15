@@ -1,3 +1,9 @@
+## 2026-10-15 · 단장 E 보행 소규모시험 통과
+
+**374/498 완료 · 미완료124 · 개별Main103 · 신규완료0 유지.** 단장357의 E한방향3자세는 독립 **PASS_E_ONLY_THREE_PHASE_GAIT_PILOT** 이다. 첫·마지막의 허벅지 겹침 순서가 바뀌어 지지/스윙다리 교대를 확인했고 중간은 passing이다. 숨은 다리의 정체는 추정하지 않았다. alpha/foreign/crop/경계0. [3고유자세PNG·정확prompt·좌표근거](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json). 발의source y733/726/705가 달라 최종 per-pose groundanchor와 idle기준 크기검토는 아직 필요하다.
+
+방향별 임포터 **`dead8bbe758d7772047c89c588112cf5bfa6a38a` push·원격 일치 확인**, 46테스트 및 실제E기하검사만 통과했다. [새 Animation38733313019](https://github.com/zoog136-hash/-/actions/runs/38733313019)는해당SHA queued이며 dce의이전CI를대체한다(취소는실패/성공으로세지않음). guard수정031통합도대기중. 이제단장 idle/attack/hit/death를승인guide기준으로제작중이며7방향보행은미제작이다. **전체104·scale/발·실제Main 미완료이므로미연결**이다.
+
 ## 2026-10-15 · 방향별 시트 임포터 검증 체크포인트
 
 **완료 374/498 · 미완료 124 · 개별 Main 103종, 신규 완료 0종.** 새 `sheets[].directions` 입력으로 한 방향씩 제작한 시트를 합칠 수 있다. 최종 5역할 모두 8방향·최소2자세·역할별 동일 프레임 수가 모여야 파일/프로필 쓰기를 시작한다. 누락/중복방향/필수역할 간 프레임 재사용/캔버스·크기 검토 누락은 거절한다. subset은 명시 `canvas_size`와 `scale_review_note`가 필요하며 `blocks4x2` subset은 금지한다. 기존 full8 columns/rows/blocks 출력 바이트·좌표·mtime은 유지한다.

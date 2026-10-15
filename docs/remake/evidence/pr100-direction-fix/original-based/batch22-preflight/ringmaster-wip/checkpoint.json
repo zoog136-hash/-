@@ -1,10 +1,10 @@
 {
   "target": "transform:357",
-  "status": "WIP8viewguide only; independent review pending",
+  "status": "PASS_GUIDE8 and PASS_E_ONLY_THREE_PHASE_GAIT_PILOT, other104 scope incomplete/unlinked",
   "rotation_views": 8,
   "roles_passed": [],
-  "single_direction_trial": "E walk3phase pending",
-  "unique_motion_poses": 0,
+  "single_direction_trial": "E3phase gait independently passed hip/thigh occlusion reversal; phase1 hidden limb ID not inferred",
+  "unique_motion_poses": 3,
   "completed_added": 0,
   "runtime_connected": false,
   "main_validation": "not_run",
@@ -34,6 +34,55 @@
       "path": "rotation-v1.prompt.txt",
       "bytes": 2142,
       "sha256": "b383273804d6b09226a83cf62da9613c9e83659c7c0575fccb70992adcef9b2b"
+    },
+    {
+      "path": "E-walk-v1.geometry.json",
+      "bytes": 1465,
+      "sha256": "cd6fe0974b34df84a2b6d912e3b20df40079e8cc3a1cc8aef32ece777d2e5dc7"
+    },
+    {
+      "path": "E-walk-v1.png",
+      "bytes": 885521,
+      "sha256": "f74ee6a97586c21515ac56bb0f5812b75f6f7dde2755d9548da01581f6c520aa"
+    },
+    {
+      "path": "E-walk-v1.prompt.txt",
+      "bytes": 2662,
+      "sha256": "db27bb871dbde80103667603ff37015bd4259cfaecbbd0d8c6c1559311e4bcb4"
+    },
+    {
+      "path": "E-walk-v1.visual-review.json",
+      "bytes": 1675,
+      "sha256": "13473277a4033253959911c7c89fc3760aaf91dcad3a0c1f4f32ed69aed89441"
+    },
+    {
+      "path": "PILOT_REVIEW_PENDING.json",
+      "bytes": 2950,
+      "sha256": "4f4ee268e3925e74894a33b70ac52fff4311c915de0493eb43d746c5b577a06d"
+    },
+    {
+      "path": "rotation-v1.visual-review.json",
+      "bytes": 562,
+      "sha256": "fed6f072b630c27db5a77ea2e6930428fad69e096d6fbb5346e7dab5e7ad44ba"
+    },
+    {
+      "path": "independent-rotation-review.json",
+      "bytes": 3648,
+      "sha256": "9904cf24417af21fb7c05bf73ab5ef797f31175059773300d5bd1d292c1257ff"
+    },
+    {
+      "path": "independent-E-walk-review.json",
+      "bytes": 7139,
+      "sha256": "21f974322006e9410e345015ef86df81c25aae5b83b56fab8178146138c7b669"
     }
-  ]
+  ],
+  "source_anchors_status": "Per-pose anatomical ground/scale review still required; E soles y733/726/705; diagnostic canvas1280 not import approval",
+  "full_roles_remaining": [
+    "idle",
+    "walk7directions",
+    "attack",
+    "hit",
+    "death"
+  ],
+  "new_art_authoring": "idle/attack/hit/death in progress, immutable prefix paths, not runtime"
 }
