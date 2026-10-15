@@ -1,16 +1,17 @@
 {
   "target": "transform:360",
   "status": "WIP rotation-only, unlinked, not completed",
-  "roles_passed": [],
+  "roles_passed": [
+    "idle"
+  ],
   "roles_remaining": [
-    "idle",
     "walk",
     "attack",
     "hit",
     "death"
   ],
   "rotation_views": 8,
-  "unique_motion_poses": 0,
+  "unique_motion_poses": 16,
   "completed_added": 0,
   "main_validation": "not_run",
   "source_claim": "New 2D art based on existing external catalog portrait; not recovered original animation. Fine card/face details are inferred new art.",
@@ -44,6 +45,23 @@
       "path": "rotation-v1.review.json",
       "bytes": 791,
       "sha256": "d6ed312a5ee3baf2fee81341a4fd38c6e83efc2d97477fa5d288b7ae7a969634"
+    },
+    {
+      "path": "idle-v1.geometry.json",
+      "bytes": 290,
+      "sha256": "9108fb9b97612221891403e4ffc57a742bbe9e8bbe7ab24dbfa6b670bde3bc65"
+    },
+    {
+      "path": "idle-v1.png",
+      "bytes": 2034118,
+      "sha256": "2197351d31edbe2a21513b19549d07faa7a9fdb7d04c5e28a99154dc544aa509"
+    },
+    {
+      "path": "idle-v1.prompt.txt",
+      "bytes": 2356,
+      "sha256": "7a404f6f918c2fa215755fed9d61e96d1095c324909001dc4355aedb95bd313f"
     }
-  ]
+  ],
+  "independent_review": "pending; E torso twist versus travel/nose/feet axis needs check",
+  "canvas_note": "Idle reviewed virtual canvas640; pixels unchanged. Later sheets must preserve proportional scale and anatomical foot anchors."
 }

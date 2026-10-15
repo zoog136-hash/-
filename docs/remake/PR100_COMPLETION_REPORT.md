@@ -1,3 +1,7 @@
+## 2026-10-15 · 카드 마술사idle16 WIP 보존
+
+완료374/498·잔여124·개별Main103유지. 카드마술사360 **1/5동작idle16실포즈 제작검토통과, 독립8방향검토중**. E의상체비틀림과발/코방향을재검한다. 640가상canvas에서연결/누락/침범/경계검사통과. [원본PNG/정확prompt/SHA](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json). 미연결/Main미실행/신규완료0. 회전표보존 `4aa23e082187ed392a548a5c4c77078a58fe03d9` push·원격일치확인. 다음walk3pose×8방향을진행중이며,전5동작과독립검토가끝나기전런타임연결없음.
+
 ## 2026-10-15 · 카드 마술사8방향회전 WIP 보존
 
 **완료374/498·잔여124·개별Main103·신규완료0 유지**. 카드마술사360의8방향회전guide만1차승인(독립재검중),5동작미완성/미연결/Main미실행이다. 8분리body와crop누락/침범0, 모자·보라금코트·손의카드·부츠를확인했다. 저해상도원본에서확인불가한카드A/하트무늬·얼굴세부는새작화추론으로기록한다. [PNG/정확prompt/geometry/SHA보존](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json). [독립원본검토](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-source-independent-review.json). 다음은idle2pose×8방향소규모시험이며실제Main검증전완료로세지않는다.
