@@ -14,6 +14,12 @@ on:
       - 'scripts/loot/**'
       - 'scripts/monsters/monster_art.gd'
       - 'scripts/ui/renewal_theme.gd'
+      - 'scripts/ui/ground_alpha.gd'
+      - 'scripts/ui/item_visual_resolver.gd'
+      - 'data/ground_alpha.json'
+      - 'assets/ground_alpha/**'
+      - 'tests/ground_alpha_test.gd'
+      - 'tests/inventory_db_smoke_test.gd'
       - 'tests/l1j_*'
       - 'tests/capture_l1j_runtime.gd'
       - 'tools/l1j/**'
@@ -35,7 +41,9 @@ jobs:
             artifact: win64.exe
             executable: Godot_v4.7.2-stable_win64_console.exe
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 35
+    # Windows executes the full isolated Godot suite slower than Linux.
+    # Do not cancel the final regressions before their assertions finish.
+    timeout-minutes: 50
     env:
       PYTHONUTF8: '1'
     steps:
