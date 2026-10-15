@@ -1,36 +1,36 @@
 {
-  "observed_at_utc": "2026-10-15T18:51:10.522043+00:00",
+  "observed_at_utc": "2026-10-15T19:33:07.053343+00:00",
   "repository": "zoog136-hash/-",
   "pr": 100,
   "branch": "feature/twilight-animation-20261013",
   "verified_code_checkpoint": "f2fc2046998d647db332babf674f605008f1749c",
   "runtime_assets_checkpoint": {
-    "batch": 27,
-    "resolution": "git log -1 --format=%H -- docs/remake/evidence/pr100-direction-fix/original-based/batch27/summary.json"
+    "batch": 28,
+    "resolution": "git log -1 --format=%H -- docs/remake/evidence/pr100-direction-fix/original-based/batch28/summary.json"
   },
   "counts": {
     "target": 498,
-    "completed": 387,
-    "remaining": 111,
+    "completed": 389,
+    "remaining": 109,
     "hero_plus": [
       139,
       180
     ],
     "normal_monster": [
-      210,
+      211,
       258
     ],
     "boss": [
-      38,
+      39,
       60
     ],
-    "individual_Main_eight_direction": 116,
-    "durable_Main_reports": 245,
+    "individual_Main_eight_direction": 118,
+    "durable_Main_reports": 249,
     "supplemental_existing3_Main_reports_this_resume": 6
   },
   "new_completed": [
-    "피닉스",
-    "웨링"
+    "이프리트",
+    "알비노 악어거북"
   ],
   "validation": {
     "importer_tests_passed": 50,
@@ -359,6 +359,55 @@
       ],
       "WIP_continuity": "rabbit328-current compactarchive+index delivered;32selectedwalkposes/31PNG trial01: W/NW/SW root rejected same-leading-leg; HOLD, onlyE4endpointpilotapproved. TwoEregionsinside6posePNGineligibleforwhole-single-source importer; no completion/nativeprofileadded. Independentrole80authoring next.",
       "temporal_scope": "AdditiveQAclockedproductionMotionController inactualMain; directtextureassignment0. Simandwalltimestampsdistinguished, separateAI/combat/lifecycle unchanged. This is not walltime performance or8realweapondeaths."
+    },
+    "batch28": {
+      "observed_at_utc": "2026-10-15T19:33:07.053343+00:00",
+      "status": "completed_after_separate_static_and_actual_Main_visual_reviews",
+      "previous_completed": 387,
+      "new_completed": [
+        "이프리트",
+        "알비노 악어거북"
+      ],
+      "new_completed_count": 2,
+      "completed": 389,
+      "total": 498,
+      "percent": 78.1,
+      "remaining": 109,
+      "resumed_new_completed_count": 15,
+      "individual_Main_eight_direction": 118,
+      "canonical_Main_reports": 249,
+      "headless_engine_checks": 2555,
+      "headless_seconds": 89.581,
+      "OpenGL_engine_checks": 2783,
+      "OpenGL_seconds": 281.503,
+      "failures": 0,
+      "authored_unique_poses": 208,
+      "actual_Main_captured_PNGs": 224,
+      "original_full_viewport_PNGs_in_Git": 12,
+      "independent_Main_visual": "all208poses+16actualAI views independently reviewed",
+      "real_lifecycle": {
+        "Ifrit": "originalHP1250→0,50realweaponattempts, hit/death/drop/manualpickup PASS",
+        "Turtle": "originalHP1920→0,28realweaponattempts, hit/death/drop/manualpickup PASS"
+      },
+      "Ifrit_classification": "Canonical boss coverage group; original runtime ordinaryAI/non-special/native86floatingmagic retained; no invented special or128height.",
+      "Turtle_repair": "Six fresh S/N walk head-proportion drawings independently reviewed; rigid shell/true fourleg alternation preserved, actualMaingrounded78.",
+      "qualified_profile_changes": [
+        "monster:알비노 악어거북",
+        "monster:이프리트"
+      ],
+      "all_other_existing_profiles_preserved": true,
+      "existing245Main_report_SHAs_preserved": true,
+      "maps_or_game_scripts_changed": 0,
+      "CI_latest": "TWILIGHT Android ARM64 APK Playtest:success; TWILIGHT resource integrity (no silent missing assets):success; Godot Validate:success; Animation Presentation Validate:in_progress",
+      "Android_real_device": "unverified",
+      "main_merge": "not_performed; conflict remains",
+      "next_batch": [
+        "Hellcougar afterNfootplane+scale",
+        "Unicorn afterWpassing+scale",
+        "Rabbit328 after112fullquality+memory+Main",
+        "Iguana afterremaininggait+idle reauthor"
+      ],
+      "temporal_additive": "15newactors headless controller-step PASS; newfixed704x640diagnosticwindow7caseGL PASS aftercrab3oldcrop failures. Independenttemporalvisualproof packagingseparate, noadditionalactorcount."
     }
   },
   "new_WIP_HOLD": [
@@ -472,12 +521,64 @@
       ],
       "sha": "f2fc2046998d647db332babf674f605008f1749c"
     },
-    "latest": "dispatch4existingworkflows afterlatest27push; continueproduction"
+    "latest": {
+      "observed_at_utc": "2026-10-15T19:49:13.877731+00:00",
+      "sha": "86b49b190a5de15e5a4d31a3a969e105dce220ad",
+      "runs": [
+        {
+          "conclusion": "success",
+          "databaseId": 38791988124,
+          "headSha": "86b49b190a5de15e5a4d31a3a969e105dce220ad",
+          "status": "completed",
+          "url": "https://github.com/zoog136-hash/-/actions/runs/38791988124",
+          "workflowName": "TWILIGHT Android ARM64 APK Playtest"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 38791984730,
+          "headSha": "86b49b190a5de15e5a4d31a3a969e105dce220ad",
+          "status": "completed",
+          "url": "https://github.com/zoog136-hash/-/actions/runs/38791984730",
+          "workflowName": "TWILIGHT resource integrity (no silent missing assets)"
+        },
+        {
+          "conclusion": "success",
+          "databaseId": 38791980064,
+          "headSha": "86b49b190a5de15e5a4d31a3a969e105dce220ad",
+          "status": "completed",
+          "url": "https://github.com/zoog136-hash/-/actions/runs/38791980064",
+          "workflowName": "Godot Validate"
+        },
+        {
+          "conclusion": "",
+          "databaseId": 38791976197,
+          "headSha": "86b49b190a5de15e5a4d31a3a969e105dce220ad",
+          "status": "in_progress",
+          "url": "https://github.com/zoog136-hash/-/actions/runs/38791976197",
+          "workflowName": "Animation Presentation Validate"
+        }
+      ],
+      "Android_artifacts": [
+        {
+          "id": 12000519507,
+          "name": "TWILIGHT_ANDROID_APK_86b49b190a5de15e5a4d31a3a969e105dce220ad",
+          "size_in_bytes": 1076052969,
+          "expired": false
+        },
+        {
+          "id": 12000279643,
+          "name": "TWILIGHT_ANDROID_EXPORT_LOGS",
+          "size_in_bytes": 1165606,
+          "expired": false
+        }
+      ],
+      "Android_real_device": "unverified"
+    }
   },
   "main_conflict_unresolved": true,
   "next": [
-    "Continuequalifiedbatch28Main; noCIwaitinghalt",
-    "Finishallremaining111includingHOLD; retainexistingbranchPR100",
+    "Continueallremaining109withHOLDrepairsandnewsourcebasedauthoring; noCIwaitinghalt",
+    "Qualifiedbatch29Mainthencommit/pushsamePR100branch",
     "Final498connected/actual8motion/regression/currentCI+APK; Androiddeviceunverifiedunlessactuallyrun; noMainmerge"
   ],
   "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
@@ -487,12 +588,14 @@
   "observed_main_head": "e2119c37293a783e93b421ee0055d1318271b071",
   "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
   "current_WIPs": [
-    "Ifrit104rootstaticapproved/importedbutUNCOUNTED; original86floatingmagic/non-specialAI preserved; Mainnext",
-    "Iguana walk24 same physical leading leg rejected; HOLD; reauthor complete idle16+walk32, retain original other80roles/oldraw, no unused-selected-body exception",
-    "Turtle104 independent head repair approved; Main automatic PASS, root actual Main visual review next",
-    "32832selectedwalkposes/31PNG trial01 ROOT REJECTED W/NW/SW samelead; HOLD/no8directionpilotPASS; E2regions require freshsinglePNG; other80rolesauthoring/noMain/noincrement",
-    "UnicornWtransferHOLD despitegenuinesingles; otherrolesprogress. Hellcougar40gaitnewheadscale/rearviewsQAthenremainingroles",
-    "EarthE/WgaittransferHOLD. Hero269tombguardian andblackforestwolfsourceaudited/authoring"
+    "Rabbit328112rawmatrixpresent/physicaloppositionpilotimproved; head/core/legproportionsregistration+memory+MainHOLD, WIP03portable",
+    "Iguana newE/Wfourphasephysicalpilotsrootaccepted; N/S/restgait+newidle16pending; originalold40unselectedHOLD",
+    "UnicornWendpointpilotrootaccepted/newpassingneeded; full104allrolelandmarkscaleHOLD",
+    "HellcougarNforeoppositionfixed/rearfootplane+104scaleHOLD, sourceall104preserved",
+    "Hero269sourcefaithfulcardinal/diagonalattackpackingrepairsongoing, gait/deathHOLD",
+    "EarthE/WsameleadinglegHOLD; Blackforestwolf104rawcompletebutgait/reardeathscaleQAunfinished",
+    "Nungma16idlepotentiallystrictPASS, original2densePNGsrejectedwhole; directionalroleauthoringongoing",
+    "Optionalmixedwhole-sheets+singlePNGimporterindependentreviewfoundatomic2bugs; independenttransactionfix29testsPASS/rootfinalreviewpending, noactualapply/noPNGassembly/noqualityguardchange"
   ],
   "resumed_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015",
   "resumed_blocker": null,
@@ -501,11 +604,12 @@
     "transform:173 악몽의 잭 오 랜턴",
     "transform:288 도구리"
   ],
-  "resumed_new_completed_count": 13,
-  "previous_pushed_checkpoint": "cd1cdeb70e5e4d55d13efd1bea738c6adff22e8a",
+  "resumed_new_completed_count": 15,
+  "previous_pushed_checkpoint": "86b49b190a5de15e5a4d31a3a969e105dce220ad",
   "batch23_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch23",
   "batch24_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch24",
   "batch25_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch25",
   "batch26_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch26",
-  "batch27_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch27"
+  "batch27_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch27",
+  "batch28_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch28"
 }

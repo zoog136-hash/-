@@ -2,9 +2,9 @@
   "schema": 1,
   "evidence_scope": "Production profiles + tracked PNG hashes + reconstructed RGBA; gameplay/compass semantics/device execution require separate Godot evidence",
   "supplementary_evidence": [
-    "../../../../../../../scratch/pr100-continuation/batch27-audit-root/docs/remake/evidence/pr100-direction-fix/resource-mapping-audit.json",
-    "../../../../../../../scratch/pr100-continuation/batch27-audit-root/docs/remake/evidence/pr100-direction-fix/DIRECTION_CAUSE.md",
-    "../../../../../../../scratch/pr100-continuation/batch27-audit-root/docs/remake/evidence/pr100-direction-fix/gameplay.json"
+    "../../../../../../../scratch/pr100-continuation/batch28-audit-root/docs/remake/evidence/pr100-direction-fix/resource-mapping-audit.json",
+    "../../../../../../../scratch/pr100-continuation/batch28-audit-root/docs/remake/evidence/pr100-direction-fix/DIRECTION_CAUSE.md",
+    "../../../../../../../scratch/pr100-continuation/batch28-audit-root/docs/remake/evidence/pr100-direction-fix/gameplay.json"
   ],
   "directions": [
     "E",
@@ -29,9 +29,9 @@
     "other_transform:registered": 233,
     "other_transform:native_connected": 1,
     "normal_monster:registered": 258,
-    "normal_monster:native_connected": 210,
+    "normal_monster:native_connected": 211,
     "boss:registered": 60,
-    "boss:native_connected": 38,
+    "boss:native_connected": 39,
     "class:registered": 4,
     "class:native_connected": 4
   },
@@ -4270,11 +4270,11 @@
       "key": "monster:이프리트",
       "name": "이프리트",
       "group": "boss",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for fire",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:바포메트",
@@ -6560,11 +6560,11 @@
       "key": "monster:알비노 악어거북",
       "name": "알비노 악어거북",
       "group": "normal_monster",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "No identity-compatible licensed source for turtle",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "monster:알비노 유니콘",
@@ -16578,6 +16578,238 @@
         "NE"
       ],
       "resource_sha256": "e19fd266154de15122ae1439e7a76c648dc88b319051a4043be6a59011fd15b8",
+      "pixel_integrity": "verified"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "438d2c029ed15c9c35fd33aa3f1f21b663b665872bf9b7182f4f19b8cb61242d",
       "pixel_integrity": "verified"
     },
     {
@@ -32629,6 +32861,238 @@
       "pixel_integrity": "verified"
     },
     {
+      "path": "res://assets/actors/eight_direction/original_based/albino_crocodile_turtle_monster/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "813e43850c8be8761b3d958d86bfc4f384e399c37fc65a8746bb20c56fc08cad",
+      "pixel_integrity": "verified"
+    },
+    {
       "path": "res://assets/actors/eight_direction/original_based/albino_giant_crab_monster/SpriteFrames.tres",
       "tracks": {
         "idle_0": {
@@ -36245,9 +36709,9 @@
     "No compatible published sequential weapon frames: 랜서": 1,
     "No compatible published sequential weapon frames: 랜스": 2,
     "Existing legacy art retained; no native sequential8 profile": 232,
-    "No identity-compatible licensed source for fire": 2,
     "No identity-compatible licensed source for goat_demon": 3,
     "No identity-compatible licensed source for dark_knight": 11,
+    "No identity-compatible licensed source for fire": 1,
     "No identity-compatible licensed source for queen": 2,
     "No identity-compatible licensed source for reaper": 2,
     "No identity-compatible licensed source for dog": 1,
@@ -36272,7 +36736,6 @@
     "No identity-compatible licensed source for stag": 1,
     "No identity-compatible licensed source for ape": 1,
     "No identity-compatible licensed source for crystal": 1,
-    "No identity-compatible licensed source for turtle": 1,
     "No identity-compatible licensed source for unicorn": 1,
     "No identity-compatible licensed source for phoenix": 1,
     "No identity-compatible licensed source for ugnu": 1,
@@ -37751,6 +38214,30 @@
       "path": "../batch27/waring_monster_boss/gameplay-opengl.json",
       "sha256": "26f7625710c5d43ac54ddb46ab2f9ddfef66ea0a7bbd4694631ef971417d7652",
       "scope": "original-based waring_monster_boss, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch28/ifrit_monster_authored/gameplay-headless.json",
+      "sha256": "c7b8616ae8fd1966469b3b7071167d83dcb111cde09808183826ff2e678c2047",
+      "scope": "original-based ifrit_monster_authored, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch28/ifrit_monster_authored/gameplay-opengl.json",
+      "sha256": "fb986412ced5fbc8c7ba39a6220e282f3cd968f54d0e9aad3563a91391e053f5",
+      "scope": "original-based ifrit_monster_authored, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch28/albino_crocodile_turtle_monster/gameplay-headless.json",
+      "sha256": "891f4def8ea51966624fb91a1110dcf7217c1837eac3dc0463e8fdfd40498049",
+      "scope": "original-based albino_crocodile_turtle_monster, actual Main and production AI/combat/lifecycle",
+      "direction_rows": 8
+    },
+    {
+      "path": "../batch28/albino_crocodile_turtle_monster/gameplay-opengl.json",
+      "sha256": "e9de39a1a3b53c3eb95877b465a848cbd0b498e346bb581bc65d2a477d266ccd",
+      "scope": "original-based albino_crocodile_turtle_monster, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
     }
   ]

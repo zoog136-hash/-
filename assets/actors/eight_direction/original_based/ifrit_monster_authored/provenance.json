@@ -1,0 +1,3356 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_2.png",
+    "region": [
+      0,
+      321,
+      305,
+      322
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 2,
+    "cell": 4,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+    "image_size": [
+      1222,
+      1287
+    ],
+    "region_rgba_sha256": "121e72ef60b246bd5a362ee8de1a651f9a396227fddb5fa96611fbf03d740d22"
+  },
+  "target_keys": [
+    "monster:이프리트"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 2,
+      "cell": 4,
+      "body": "fire",
+      "variant": 7,
+      "width": 0.972,
+      "weapon": "staff",
+      "crest": 4,
+      "accent": "8daa7b"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": true
+    },
+    "attack_type": "magic",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:이프리트": {
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "region": [
+        0,
+        321,
+        305,
+        322
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 2,
+      "cell": 4,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "image_size": [
+        1222,
+        1287
+      ],
+      "region_rgba_sha256": "121e72ef60b246bd5a362ee8de1a651f9a396227fddb5fa96611fbf03d740d22"
+    }
+  },
+  "target_presentations": {
+    "monster:이프리트": {
+      "visual": {
+        "atlas": 2,
+        "cell": 4,
+        "body": "fire",
+        "variant": 7,
+        "width": 0.972,
+        "weapon": "staff",
+        "crest": 4,
+        "accent": "8daa7b"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": true
+      },
+      "attack_type": "magic",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "{\n  \"hit-E-SE-separated-exact-prompt.txt\": \"Create newlyauthored transparentRGBA 2D GAME sprites of the exactsource IFRIT, handpaintedbrightyellow-whitecore/orangegoldflames/reddarkedge, angularpointedhead/frontglowingeyes, broadfieryshoulders/branchingcoreveins, exactlyTWOthickattachedarms withcurledflamehands, ONEcontinuousnarrowwaistmergingintoattachedswirlingflamevortexbase. NOlegs/feet/weapons/props/rockbody/clothes/newfeatures. Exactsourceidentity/materials/bodyproportions andconnectedbody, no detachedsparks/flameislands. Existingrecordfloatingtrue duringliving; deathsettlesonfloor. Thisisnewauthoredmotion, not extractedoriginalanimation.\\nEXACTLYTWOdirectionCOLUMNS by 2 equalPHASEROWS = 4 completefullbodyposes onportrait1024x1536canvas. Centersx256and768; compactfigureswidth<=220height<=280, hugegutters/safeoutermargins, no clipping/overlap/touchingedges. ALLemptyspacefullyalpha0, no coloredmatte/shadow/floor/text/borders/labels/aura/projectiles/particles. Oneconnectedcompletebodyineachcell, no missing/blankrows. Column1E pureRIGHTprofile, face/coreedgeonRIGHT/backmassLEFT. Column2SE FRONT-RIGHT3/4facinglowerRIGHT, frontface/corevisible, sourceconsistentdepthandlimbs. Samehead/chest scale andcameraacrossallphases, truejoint/bodydeformation, neverglobalshrink/translatedstill.\\nONLY HITROLE: TOPROW1impactrecoil core/headleanbackoppositefacing, elbowsfolddefensively, continuousvortexcompresses. BOTTOMROW2distincthitrecovery corebeginsreturnupright, handsreleasewithactualshoulder/elbowangleschanged, attachedbaseuncurls. Bothlivingcompletebodies, stablehoverprojection, EheadstillRIGHT/SEheadlowerRIGHT. NOdeathposes. Exactly2rows4bodies.\\n\",\n  \"hit-death-E-SE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"hit-death-S-SW-onehead-spaced-exact-prompt.txt\": \"Re-author this existing WIP IFRIT sprite sheet with MUCH SMALLER BODIES and VERY WIDE CLEAR GUTTERS, while preserving allactualarticulatedposes/sourceidentity/head-core-limbproportions/orientation andconnectedflamebodydetails. EXACTLY2equalcolumns×5equalrows=10completeindependentfullbodyelementals. Onportrait1024x1536, all COMPLETE figures MUSTFIT180pixelwidth×190pixelheight boxes centeredatx256/768, androwcenters evenlyspaced; tinyfigures, overwhelminglyEMPTYcanvas. The currentreferencebodies are tooBIGandnearlytouch; newones must be roughlyHALFtheircurrentpixelheight andwidth. Do not fillrowheight. Verybroadtransparentoutermargins, at least80px entirelyemptybetweenallposeboundingrectangles. Paintatuniformsmallerhead/core drawingresolutionacrossall10 sprites, not arbitraryperdeath-heightnormalization. Preserveexactbodypostures/relativevolumes andfacing, thisisnewauthoredsize/spacingrepair, notoriginalanimationextraction.\\nActualsourceangularonehead/frontglowingeyepair, brightyellow-whitecore/orangegoldflames/reddarkedge, broadfieryshoulders/branchingveins, exactlyTWOattachedflamearms/curledhands/oneattachedvortexwaistbase, no legs/feet/weapons/clothes/rocks/newfeatures. ExactlyONEHEAD perbody, no addedfaceonchest/shoulder/crown. Every opaque flamepixel must belongtooneconnectedcompletebody: no detachedflares/sparks/islands. Closeeveryflamegapwithcoherentattachedflameanatomy or omitunrelatedlooseflare. No dropframe, emptybody, placeholders or translatedstill; preserve genuineoriginalposes. Allunusedspacefullyalpha0, no coloredmatte, background, floor/shadow/text/labels/borders/particles/aura. Do notclipanyheadtip/fingertip/vortexedge orincludeotherbodyinitsrectangle.\\nExactly5rows:hitrecoil,hitrecovery,deathdestabilize,deathcollapse,deathfinalcompleteveryLOWcollapsedflamecorpse. Column1Sfullfront/down; column2SWfrontLEFT3/4facinglowerLEFTall5rows. KeeptherightcolumnTOPspriteonlyonecorrectLEFT-facinghead; no oldupward/rightface. Do notreverseSWtoRIGHT. Preserve3deathprogressions andactualflatlowfinalcorpse; notstanding/noempty.\\n\",\n  \"idle-walk-N-NE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 N: FULLBACK facing straight AWAY/screenUP: backofhead/nape, rear shoulderblades and back flameveins; NO front eyes, NO frontal chestcore. Attack hands/head aim straightUP away, notRIGHT.\\nCOLUMN2 NE: BACK-RIGHT rear three-quarter facing UPPERRIGHT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; tiny side-edge eyesliver onlyif anatomically coherent, notfrontal.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"attack-N-NE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 N: FULLBACK facing straight AWAY/screenUP: backofhead/nape, rear shoulderblades and back flameveins; NO front eyes, NO frontal chestcore. Attack hands/head aim straightUP away, notRIGHT.\\nCOLUMN2 NE: BACK-RIGHT rear three-quarter facing UPPERRIGHT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; tiny side-edge eyesliver onlyif anatomically coherent, notfrontal.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"idle-walk-S-SW-leftfix-exact-prompt.txt\": \"Correct ONLY the right/SW direction column in the attached existing WIP fire-elemental animation sheet. This is new artwork authoring. The right-column figures currently wrongly face screenRIGHT; rotate/repaint their ACTUAL head/chest/shoulders/arms/vortex body into SOUTHWEST FRONT-LEFT three-quarter, aiming diagonally DOWN-LEFT. Reference2 is an ABSTRACT VIEW DIAGRAM for the correct frontLEFT planes and direction only; it is not a donorcharacter. Follow it: frontface/chest plane towardLEFT, side/rear mass onRIGHT, nose/head projection onLEFT, leading palm contact DOWNLEFT. Visible face/core stillfront, so do not make a rearbody. Every right-column sprite must have clear LEFTWARD orientation, opposite of oldwrongRIGHT-facingfigures. Newly draw coherent volumes and limb poses, not horizontalmirror-only copies. Preserve source unique brightyellow-whitecore/orange-goldflames/rededges, angularhead/frontglowingeyes, branching chestveins, thick two arms withcurledhands andoneattachedvortexbase; no legs/weapons/props or redesign. Keep leftcolumn S straightfrontal exactly inquality/style/proportions, head/chest/frontfacescreenDOWN. Do not change it intoLEFTprofile.\\n\\nOutput exactly TWO equal COLUMNS by 5 equal ROWS = 10 SMALL COMPLETE sprites. SAME phase order and sourcehead/core scale asattachedsheet. Use wide clear gutters and safe margins: body width<=200pixels/height<=210 onportrait1024x1536; complete extendedhands/flamecrowns/basefit ineachcell. Do not enlarge rightcolumn. All unused space transparentalpha0; no backdrop, floor/shadow/text/labels/borders/diagramcolors/particles/detachedflames. One continuousconnectedbodyineachcell. No clipping/touchingedges/overlappingrectangles/missingcells. Same realarticulatedposes and fullyattachedsourcebody, not translatedstills.\\nROWS1and2 are distinct actualIDLEbreathing/elbow/rootvortexflex. ROWS3,4,5 are realHOVERTRAVEL alternatingarm/shoulderleads andattachedwaist/vortexbends with3differentjointstates. Allrightcolumnhead/chestsfaceLEFTlowerLEFT, neverRIGHT. Stablecoreheight/rootprojection.\\n\",\n  \"attack-S-SW-leftfix-exact-prompt.txt\": \"Correct ONLY the right/SW direction column in the attached existing WIP fire-elemental animation sheet. This is new artwork authoring. The right-column figures currently wrongly face screenRIGHT; rotate/repaint their ACTUAL head/chest/shoulders/arms/vortex body into SOUTHWEST FRONT-LEFT three-quarter, aiming diagonally DOWN-LEFT. Reference2 is an ABSTRACT VIEW DIAGRAM for the correct frontLEFT planes and direction only; it is not a donorcharacter. Follow it: frontface/chest plane towardLEFT, side/rear mass onRIGHT, nose/head projection onLEFT, leading palm contact DOWNLEFT. Visible face/core stillfront, so do not make a rearbody. Every right-column sprite must have clear LEFTWARD orientation, opposite of oldwrongRIGHT-facingfigures. Newly draw coherent volumes and limb poses, not horizontalmirror-only copies. Preserve source unique brightyellow-whitecore/orange-goldflames/rededges, angularhead/frontglowingeyes, branching chestveins, thick two arms withcurledhands andoneattachedvortexbase; no legs/weapons/props or redesign. Keep leftcolumn S straightfrontal exactly inquality/style/proportions, head/chest/frontfacescreenDOWN. Do not change it intoLEFTprofile.\\n\\nOutput exactly TWO equal COLUMNS by 3 equal ROWS = 6 SMALL COMPLETE sprites. SAME phase order and sourcehead/core scale asattachedsheet. Use wide clear gutters and safe margins: body width<=200pixels/height<=210 onportrait1024x1536; complete extendedhands/flamecrowns/basefit ineachcell. Do not enlarge rightcolumn. All unused space transparentalpha0; no backdrop, floor/shadow/text/labels/borders/diagramcolors/particles/detachedflames. One continuousconnectedbodyineachcell. No clipping/touchingedges/overlappingrectangles/missingcells. Same realarticulatedposes and fullyattachedsourcebody, not translatedstills.\\nROWS1windupdrawarmsback whilehead/cheststayFRONTLEFT; ROW2contact: SWpalmextendsdownLEFT(screenLEFTlower)alongfacing, bodyleansLEFT; NO rightwardstrike. ROW3recover retractsarmdistinctfromwindup. LeftScolumn palmsreachDOWNtowardviewer. Frontleftorientationremainsall3rightcolumnrows.\\n\",\n  \"hit-S-SW-separated-exact-prompt.txt\": \"Create a transparent RGBA 2D game sprite sheet of the exact attached fiery elemental. Preserve its angular flame head, glowing eyes, orange-gold flame body, white branching core, two attached flame arms with curled hands, and one continuous flame-vortex base. One head per body. No legs, weapons or new features. This is new animation art, not extracted original motion.\\n\\nMake exactly TWO COLUMNS and 2 ROWS, 4 complete connected bodies, on a portrait1024x1536 canvas. Make the figures SMALL: each complete figure fits a200x240pixel box, with at least100pixels of clear transparent space between all bounding rectangles. No clipping, detached sparks or detached flame islands. All empty pixels alpha0. No floor, shadow, backdrop, text or labels.\\n\\nLEFT COLUMN: S, full FRONT facing viewer/screen down. RIGHT COLUMN: SW, FRONT-LEFT three-quarter, nose and chest aim LEFT and down-left. Rear flame mass is on the right. Maintain this actual body orientation in every row. Do not aim right. Newly paint coherent opposite-side volumes, no simple mirror duplicates.\\n\\nTOP ROW1: impact recoil, head and chest lean back, elbows fold, vortex compresses. BOTTOM ROW2: recovery, chest comes upright, one arm lowers, the other elbow releases. Two distinct actual poses, stable head/core size, attached body and stable hover projection. Exactly4 complete sprites in2rows. No death frames.\\n\",\n  \"idle-walk-E-SE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"hit-death-S-SW-leftfix-exact-prompt.txt\": \"Correct ONLY the right/SW direction column in the attached existing WIP fire-elemental animation sheet. This is new artwork authoring. The right-column figures currently wrongly face screenRIGHT; rotate/repaint their ACTUAL head/chest/shoulders/arms/vortex body into SOUTHWEST FRONT-LEFT three-quarter, aiming diagonally DOWN-LEFT. Reference2 is an ABSTRACT VIEW DIAGRAM for the correct frontLEFT planes and direction only; it is not a donorcharacter. Follow it: frontface/chest plane towardLEFT, side/rear mass onRIGHT, nose/head projection onLEFT, leading palm contact DOWNLEFT. Visible face/core stillfront, so do not make a rearbody. Every right-column sprite must have clear LEFTWARD orientation, opposite of oldwrongRIGHT-facingfigures. Newly draw coherent volumes and limb poses, not horizontalmirror-only copies. Preserve source unique brightyellow-whitecore/orange-goldflames/rededges, angularhead/frontglowingeyes, branching chestveins, thick two arms withcurledhands andoneattachedvortexbase; no legs/weapons/props or redesign. Keep leftcolumn S straightfrontal exactly inquality/style/proportions, head/chest/frontfacescreenDOWN. Do not change it intoLEFTprofile.\\n\\nOutput exactly TWO equal COLUMNS by 5 equal ROWS = 10 SMALL COMPLETE sprites. SAME phase order and sourcehead/core scale asattachedsheet. Use wide clear gutters and safe margins: body width<=200pixels/height<=210 onportrait1024x1536; complete extendedhands/flamecrowns/basefit ineachcell. Do not enlarge rightcolumn. All unused space transparentalpha0; no backdrop, floor/shadow/text/labels/borders/diagramcolors/particles/detachedflames. One continuousconnectedbodyineachcell. No clipping/touchingedges/overlappingrectangles/missingcells. Same realarticulatedposes and fullyattachedsourcebody, not translatedstills.\\nROW1hitrecoil/ROW2hitrecovery, FRONTLEFTtorsoheadorientationremainsSW despitebackwardlean. ROW3deathdestabilize/headslump/waistcompress; ROW4substantiallylowerfoldedconnectedbody; ROW5completeLOWhorizontalcollapsedextinguishingelementalcorpse withhead/torso/armsvortexattached. Exact3differentdeathstages, no standingfinalframe/noempty. Preservehead/chestsize, lowercorpsefromarticulationnotglobalshrink. EveryrightcolumndeathheadfacesLEFT; rear massRIGHT.\\n\",\n  \"attack-S-SW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 S: full FRONT towardviewer/screenDOWN, symmetric visible front eyes and front core; torso/head/arms do NOT turnright/left.\\nCOLUMN2 SW: FRONT-LEFT three-quarter, frontcore and eyes visible, facing lowerLEFT; clear LEFTward head/hand aim, notSE.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"death-E-SE-separated-exact-prompt.txt\": \"Create newlyauthored transparentRGBA 2D GAME sprites of the exactsource IFRIT, handpaintedbrightyellow-whitecore/orangegoldflames/reddarkedge, angularpointedhead/frontglowingeyes, broadfieryshoulders/branchingcoreveins, exactlyTWOthickattachedarms withcurledflamehands, ONEcontinuousnarrowwaistmergingintoattachedswirlingflamevortexbase. NOlegs/feet/weapons/props/rockbody/clothes/newfeatures. Exactsourceidentity/materials/bodyproportions andconnectedbody, no detachedsparks/flameislands. Existingrecordfloatingtrue duringliving; deathsettlesonfloor. Thisisnewauthoredmotion, not extractedoriginalanimation.\\nEXACTLYTWOdirectionCOLUMNS by 3 equalPHASEROWS = 6 completefullbodyposes onportrait1024x1536canvas. Centersx256and768; compactfigureswidth<=220height<=280, hugegutters/safeoutermargins, no clipping/overlap/touchingedges. ALLemptyspacefullyalpha0, no coloredmatte/shadow/floor/text/borders/labels/aura/projectiles/particles. Oneconnectedcompletebodyineachcell, no missing/blankrows. Column1E pureRIGHTprofile, face/coreedgeonRIGHT/backmassLEFT. Column2SE FRONT-RIGHT3/4facinglowerRIGHT, frontface/corevisible, sourceconsistentdepthandlimbs. Samehead/chest scale andcameraacrossallphases, truejoint/bodydeformation, neverglobalshrink/translatedstill.\\nONLY DEATHROLE: TOPROW1destabilize/slump, shoulders/headfall andarmsbendinward, torsoleans/collapsesbutstillupperbodyoverbase. MIDDLEROW2collapse withhead/chestmuchLOWER, corefoldedforward andarmsrestagainstattachedflatteningvortex. BOTTOMROW3FINALLOWCOMPLETEprone/extinguishingflamecorpse: horizontalverylowmound withhead/core/armscurledtogetherattachedtolowvortexbaseonfloor; recognizablecompleteoriginalelementalwithfaintorangecore/darkredflameedges, notstanding/notfloating/noemptyframe. THREEunmistakableprogressions; actualsourcebodyarticulation, noshrinkofstandingstill. Sameanatomicalcore/headsizeall3, donotnormalizecorpseheight. EcorpseheadRIGHT/SEheadlowerRIGHT, coherentheading.\\n\",\n  \"hit-death-S-SW-leftfix-onehead-exact-prompt.txt\": \"Make a highlyfocused transparentRGBA sprite-sheet repair to the attached IFRIT hit/death artwork. ExactlyTWOdirectioncolumns×FIVErows=TENcompleteconnectedfireelementals. Preserve everycorrectbody/pose/sourceidentity andhead/core/armdimensions. The TOPRIGHT sprite (SW HITrecoil) incorrectly has TWO faces/heads: anOLD upward/right-lookingface atupperRIGHT above shoulder, plus NEW correctfrontLEFTface lowerLEFT. REMOVE the oldupwardRIGHTface/head entirely by newlypainting coherent plainattachedrearflamecrown/backshoulder silhouette there. RETAIN ONLYthe correctfrontLEFT angularhead/glowingeyeface attachedatthenormalneck. ExactlyONEheadandONEpairfrontglowingeyes persprite; no duplicateface/chestface/extrahead hiddeninflames. Allother9poses alreadyhaveonehead; keepthem unchangedinquality andcount. Rightcolumnhead/bodyviewmuststayFRONT-LEFT3/4towardlowerLEFT, rearflamemassRIGHT. Toprightrecoilcanleanbackbutface/headstillfacesLEFT, notRIGHT. LeftcolumnSremainsfullfronttowardviewer. Nohorizontalmirror-onlyart, newpaintedcoherenthead/rearflamevolumes.\\nSame actualsourcebrightyellow-whitecore/orangegoldflames/darkrededges, upperbodytwoarmswithcurledflamehandsandoneattachedvortexbase, no legs/feet/weapons/newfeatures. Continuouswholebodyeverycell, no detachedsparks/particles. Keep original5rows:hitrecoil,hitrecover,deathdestabilize,deathcollapse,deathfinalveryLOWcompletepronecollapsedflamecorpse. Noemptyframes orstandingfinaldeath. All10compactcompletebodies separatedbylargebroadtransparentguttersandoutersafemargin. No clipping/overlap/touchingedges. Outputlargeportrait1024x1536, emptypixelsalpha0, nobackground/floor/shadow/text/labels/borders. Newauthoredmotionrepair, notoriginalanimationextraction. Onlyoneheadperbody ismandatory.\\n\",\n  \"attack-E-SE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"hit-death-W-NW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 W: true LEFT PROFILE, frontface/core only edge-on on LEFT, back mass to RIGHT; every head shoulders palms and vortextravel lean screenLEFT. Not frontal.\\nCOLUMN2 NW: BACK-LEFT rear three-quarter facing UPPERLEFT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; eye onlya tiny coherent side-edge sliver if needed, not front face.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"death-E-SE-connected-spaced-exact-prompt.txt\": \"Re-author this existing WIP IFRIT sprite sheet with MUCH SMALLER BODIES and VERY WIDE CLEAR GUTTERS, while preserving allactualarticulatedposes/sourceidentity/head-core-limbproportions/orientation andconnectedflamebodydetails. EXACTLY2equalcolumns×3equalrows=6completeindependentfullbodyelementals. Onportrait1024x1536, all COMPLETE figures MUSTFIT180pixelwidth×190pixelheight boxes centeredatx256/768, androwcenters evenlyspaced; tinyfigures, overwhelminglyEMPTYcanvas. The currentreferencebodies are tooBIGandnearlytouch; newones must be roughlyHALFtheircurrentpixelheight andwidth. Do not fillrowheight. Verybroadtransparentoutermargins, at least80px entirelyemptybetweenallposeboundingrectangles. Paintatuniformsmallerhead/core drawingresolutionacrossall6 sprites, not arbitraryperdeath-heightnormalization. Preserveexactbodypostures/relativevolumes andfacing, thisisnewauthoredsize/spacingrepair, notoriginalanimationextraction.\\nActualsourceangularonehead/frontglowingeyepair, brightyellow-whitecore/orangegoldflames/reddarkedge, broadfieryshoulders/branchingveins, exactlyTWOattachedflamearms/curledhands/oneattachedvortexwaistbase, no legs/feet/weapons/clothes/rocks/newfeatures. ExactlyONEHEAD perbody, no addedfaceonchest/shoulder/crown. Every opaque flamepixel must belongtooneconnectedcompletebody: no detachedflares/sparks/islands. Closeeveryflamegapwithcoherentattachedflameanatomy or omitunrelatedlooseflare. No dropframe, emptybody, placeholders or translatedstill; preserve genuineoriginalposes. Allunusedspacefullyalpha0, no coloredmatte, background, floor/shadow/text/labels/borders/particles/aura. Do notclipanyheadtip/fingertip/vortexedge orincludeotherbodyinitsrectangle.\\nExactly3DEATHrows: row1destabilizingfullsourceupperbody/slump, row2muchlowerfoldedhead/core/armsagainstflatteningbase, row3completeveryLOWhorizontalextinguishingflamecorpse head/core/armsattachedtovortexonfloor. Column1EtrueRIGHTprofile; column2SEfrontRIGHT3/4all3rows. Actualrelativeanatomicalbodydimensionsremainconstantanddeathheightdropsbyarticulation. TopLEFTsprite has oneoldDETACHEDflaretongueinsideleftforearmarea (aroundreferencex188,y403); joinitcoherentlytomainforearmoromitit. Mustbeexactly6connectedbodies, never7.\\n\",\n  \"idle-walk-S-SW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 S: full FRONT towardviewer/screenDOWN, symmetric visible front eyes and front core; torso/head/arms do NOT turnright/left.\\nCOLUMN2 SW: FRONT-LEFT three-quarter, frontcore and eyes visible, facing lowerLEFT; clear LEFTward head/hand aim, notSE.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"hit-death-E-SE-fivephase-fix-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\\nCRITICAL CORRECTION: Previousversion hadONLYFOURrows/eightbodies andFAILED. Output EXACTLYFIVErows/TENcompletebodies: row1HITrecoil, row2HITrecover, row3DEATHdestabilize-standing-but-slumped, row4DEATHcollapse-substantiallyLOWERfoldedbody, row5DEATHfinalLOWcompleteflattenedflamecorpse. DoNOTcombine two deathphases or leavefinalrowblank. Fivewell-separatedsourcebodiesineachcolumn. Fixsize/guttersifneeded, keepfullbody. Reference1is exactsource; reference2showsincorrecteightposeversion foridentityonly, notlayout.\\n\",\n  \"idle-walk-W-NW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 W: true LEFT PROFILE, frontface/core only edge-on on LEFT, back mass to RIGHT; every head shoulders palms and vortextravel lean screenLEFT. Not frontal.\\nCOLUMN2 NW: BACK-LEFT rear three-quarter facing UPPERLEFT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; eye onlya tiny coherent side-edge sliver if needed, not front face.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"attack-W-NW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 W: true LEFT PROFILE, frontface/core only edge-on on LEFT, back mass to RIGHT; every head shoulders palms and vortextravel lean screenLEFT. Not frontal.\\nCOLUMN2 NW: BACK-LEFT rear three-quarter facing UPPERLEFT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; eye onlya tiny coherent side-edge sliver if needed, not front face.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"hit-death-S-SW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 S: full FRONT towardviewer/screenDOWN, symmetric visible front eyes and front core; torso/head/arms do NOT turnright/left.\\nCOLUMN2 SW: FRONT-LEFT three-quarter, frontcore and eyes visible, facing lowerLEFT; clear LEFTward head/hand aim, notSE.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"hit-death-N-NE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 N: FULLBACK facing straight AWAY/screenUP: backofhead/nape, rear shoulderblades and back flameveins; NO front eyes, NO frontal chestcore. Attack hands/head aim straightUP away, notRIGHT.\\nCOLUMN2 NE: BACK-RIGHT rear three-quarter facing UPPERRIGHT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; tiny side-edge eyesliver onlyif anatomically coherent, notfrontal.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"death-S-SW-separated-exact-prompt.txt\": \"Create a transparent RGBA 2D game sprite sheet of the exact attached fiery elemental. Preserve its angular flame head, glowing eyes, orange-gold flame body, white branching core, two attached flame arms with curled hands, and one continuous flame-vortex base. One head per body. No legs, weapons or new features. This is new animation art, not extracted original motion.\\n\\nMake exactly TWO COLUMNS and 3 ROWS, 6 complete connected bodies, on a portrait1024x1536 canvas. Make the figures SMALL: each complete figure fits a200x240pixel box, with at least100pixels of clear transparent space between all bounding rectangles. No clipping, detached sparks or detached flame islands. All empty pixels alpha0. No floor, shadow, backdrop, text or labels.\\n\\nLEFT COLUMN: S, full FRONT facing viewer/screen down. RIGHT COLUMN: SW, FRONT-LEFT three-quarter, nose and chest aim LEFT and down-left. Rear flame mass is on the right. Maintain this actual body orientation in every row. Do not aim right. Newly paint coherent opposite-side volumes, no simple mirror duplicates.\\n\\nTOP ROW1: death starts, head and shoulders slump, arms curl inward, whole body lowers. MIDDLE ROW2: death collapse, chest folds low toward the vortex, hands settle against the same attached base. BOTTOM ROW3: final very LOW horizontal corpse, head/core/arms curled together on a flattened extinguishing vortex touching the ground. The complete original body stays connected and recognizable. Three clear collapse stages, not a standing last frame or an empty frame. Same anatomical size; lower height comes from folding. Exactly6 complete sprites in3rows.\\n\"\n}\n\nINDEPENDENT QA REPAIRS (exact saved prompts):\n{\n  \"hit-death-W-NW-independent-leftrepair-exact-prompt.txt\": \"Re-author an IFRIT animation game sprite sheet from the two attached references. Reference1 is exact source identity: fire elemental with angular pointed head, glowing front eyes, broad shoulder/chest, branching yellow-white core veins, TWO thick attached arms with curled flame fists, narrow connected waist and one attached flame vortex tail/base, no legs/feet/props. Reference2 shows the CORRECT WEST and NORTHWEST views. Preserve that image's camera/materials/body design and LEFTWARD FACE orientation for BOTH columns. Do NOT mirror any reference or duplicate a pose. This is new authored joint/body motion from existing-project art, not recovered original animation.\\n\\nOUTPUT true transparentRGBA portrait1024x1536, EXACTLY TWO columns × FIVE phase rows =10 complete independent fullbody fire elementals. ALL empty space alpha0, no opaque colored matte/glow/background/shadow/labels/grid/particles or detached sparks. Every visible fire pixel attached to its own one connected body. Huge clear gutters: compact bodies no wider than220px, no taller than230px, centered x256 and768, row centers y154,461,768,1075,1382. Keep all full bodies and crown/finger/vortex tips strictly inside their cells, with at least60pixels empty clear space between rows. Never crop a limb/flame tip or join neighboring bodies. Same actual anatomical head/core/arm dimensions drawing scale across all10; corpse collapses by folding, NOT shrinking a standing figure.\\n\\nLEFT COLUMN WEST W: true LEFT PROFILE, pointed face/glowing eye/nose on LEFT, backmass on RIGHT. RIGHT COLUMN NORTHWEST NW: genuine rear LEFT threequarter, back/nape/dorsal spine visible, head turned AWAY and toward LEFT. The visible nearer shoulder/upperarm is the LEFT screen side, far shoulder foreshortened on RIGHT. Show only a small LEFT-edge partial face or hide eyes completely. NEVER put an eye or pointed face on RIGHT edge. NW must be the exact same rear-left projection as the RIGHT column of reference2, NOT rear-right NE. Flamecrown trails to RIGHT behind the LEFT-facing head; crown tilt alone is not a facing cue. Keep this head/shoulder orientation for ALL FIVE NW rows even when recoiling/folding. Back chest should not show frontal face/chest V.\\n\\nROWS top to bottom: 1 HIT recoil, core/head lean back opposite the LEFT heading, elbows fold defensively, waist/vortex compress; but face remains LEFT and NW back-left planes stay consistent. 2 HIT recovery, return core upright with changed shoulder/elbow angles, fists lowering, one continuous body; face remains LEFT. 3 DEATH destabilize, head/shoulders slump, arms curl inward, base settles toward ground. 4 DEATH collapse, head/chest fold very low onto attached arms/base, complete original firebody recognizable. 5 DEATH final, complete LOW horizontal collapsed firecorpse with recognizable folded head/core/arms attached to flattened low vortex resting on implied floor; low mound, not standing, blank, or missingbody. W final head at LEFT side. NW final retains folded back-left shoulder/head projection and no RIGHT-facing face. All5 actual distinct poses; no translated/rescaled stills. Preserve original source identity, exactlyONEhead perbody, connected limbs, no added face on chest/shoulder.\\n\",\n  \"attack-E-SE-independent-connected-exact-prompt.txt\": \"Re-author this WIP transparentRGBA IFRIT game sprite sheet while preserving the exact original character identity, anatomical head/core/arm dimensions, its actual articulated poses and direction layout. Exact identity: one angular pointed firehead with glowing front eyes, broad fiery shoulders/branching brightyellow-white chestcore veins, exactlyTWO thick attached arms/curled flamehands, narrow continuous waist merged into ONE flamevortexbase, orangegold flames with darkrededges. No legs/feet/props/newfeatures. This is newly authored motion from existing project art, not recovered original animation.\\n\\nRepair a visible defect: the reference has TINY DETACHED flame fragments/wisps. Every visible nontransparent firepixel MUST belong to the SAME visiblyconnected fullbody in each cell. Attach every crown/arm/waist/vortex flame lobe with a THICK visible orange core connection, or omit the loose lobe in the newly painted art. NO detached sparks, embers, floatingflameislands, aura, beams, particles, shadow, floor, text or labels. Do NOT rely on nearlytransparent haze to bridge opaqueflames. All unused space fullyalpha0. Do not omit entireposes or crop any part.\\n\\nEXACTLY2directionCOLUMNS ×3phaseROWS =6complete independent fullbodyposes, portrait1024x1536. Column1E pureRIGHTprofile: pointedface/nose/eye onRIGHT, backmassLEFT, frontcoreedgeonRIGHT. Column2SE frontRIGHTthreequarter, frontcore andeyepair visible, facinglowerRIGHT. Keep consistent facing eachphase. Small compact figures with ampleclear gutters: eachbody fits width360height360, centeredx256/768 androwsy256/768/1280, at least50pixels emptybetweencompleteposes, safeoutermargins. Samehead/chest/armdrawing scale across6, genuine deformation notstilltranslation. ONLY ATTACK/cast role, rows top tobottom: row1 windup, elbows foldback andchestcoils; row2 clearrelease, RIGHTfacingE pushesattachedrightwardhandfarouttowardtarget, SE pushesfrontRIGHTpalmsforward, realshoulder/elbow/waistrotationandflamebasecountercurl; row3 recovery, handsreturnandcoreuncoils with actualdifferentjointangles. Keep the strong existing gestures and full bodies. No projectiles or new props. All6poses mustbe genuinelydistinct.\\n\",\n  \"death-E-SE-independent-connected-exact-prompt.txt\": \"Re-author this WIP transparentRGBA IFRIT game sprite sheet while preserving the exact original character identity, anatomical head/core/arm dimensions, its actual articulated poses and direction layout. Exact identity: one angular pointed firehead with glowing front eyes, broad fiery shoulders/branching brightyellow-white chestcore veins, exactlyTWO thick attached arms/curled flamehands, narrow continuous waist merged into ONE flamevortexbase, orangegold flames with darkrededges. No legs/feet/props/newfeatures. This is newly authored motion from existing project art, not recovered original animation.\\n\\nRepair a visible defect: the reference has TINY DETACHED flame fragments/wisps. Every visible nontransparent firepixel MUST belong to the SAME visiblyconnected fullbody in each cell. Attach every crown/arm/waist/vortex flame lobe with a THICK visible orange core connection, or omit the loose lobe in the newly painted art. NO detached sparks, embers, floatingflameislands, aura, beams, particles, shadow, floor, text or labels. Do NOT rely on nearlytransparent haze to bridge opaqueflames. All unused space fullyalpha0. Do not omit entireposes or crop any part.\\n\\nEXACTLY2directionCOLUMNS ×3phaseROWS =6complete independent fullbodyposes, portrait1024x1536. Column1E pureRIGHTprofile: pointedface/nose/eye onRIGHT, backmassLEFT, frontcoreedgeonRIGHT. Column2SE frontRIGHTthreequarter, frontcore andeyepair visible, facinglowerRIGHT. Keep consistent facing eachphase. Small compact figures with ampleclear gutters: eachbody fits width360height360, centeredx256/768 androwsy256/768/1280, at least50pixels emptybetweencompleteposes, safeoutermargins. Samehead/chest/armdrawing scale across6, genuine deformation notstilltranslation. ONLY DEATH role, rows top tobottom: row1 destabilize, head/shouldersslump, armscurlinwardandbasebeginstosettle; row2 collapse, head/corefoldsLOWontoattachedarmsandvortexbase; row3 finalcompleteveryLOWhorizontalfirecorpse, recognizablefoldedhead/core/botharms attachedtoflattenedwideflamevortexrestingonimpliedfloor. Finalbodymustnotstandorfloat, nomissinghead/arms, no ashparticles, no blankframes. Preserveanatomicalhead/core/armvolumes byfolding, NOTshrinking wholebody. Keep exactthreeexistingdeathpostures anddirectioncues, withallflamelobesvisiblyattached.\\n\"\n}",
+  "instruction_record_kind": "exact_prompt",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "cast_uses_authored_attack": true,
+    "notes": "IndependentQA inspected original104 overblack/whitealpha composites andsourceidentity; rejected NW5hit/death for actualNE/rightface and Eattack1/Edeath0 fortinyvisibleflameislands. Reauthored W/NW10 plusE/SEattack6/death6 viaimage_gen only; originals/failures/exactprompts preserved. Allremaining82 pass independentstaticvisualreview; new22 passauthorstaticdirection/connectedbody/scale/geometry butrequirefreshrootinspection beforeeight_views=true. Originalfloatingtrue/height86/magic/.52/presentationvariant7 retained. Anatomicalscale andvortexprojection/deathsupport measured; see anatomical-scale-review.json. No Main/completion approval. ROOT fresh independent inspection of all104black rolecontacts, especially new22 E/SEattack+death andW/NWhit/death: allcorrectheading/connectedflametorso/arms/vortexandcompleteextinguishedcollapse, nofragmentobserved, stablehead/coreandprojectedbase. Approved for actualMain trial only. Omitoptionalcastalias; preserve existing attack fallback and exact originalmagic/.52/floatingtrue/height86. No completion beforeMain."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        229,
+        26,
+        213,
+        293
+      ],
+      "margin": [
+        200,
+        111,
+        427,
+        347
+      ],
+      "source_anchor": [
+        349,
+        315
+      ],
+      "rgba_sha256": "b68854cd151e85b62ccb2bc594fcdd44ac8e94b5d6b5004fe81676e44761fd1f",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        632,
+        19,
+        246,
+        300
+      ],
+      "margin": [
+        188,
+        104,
+        394,
+        340
+      ],
+      "source_anchor": [
+        764,
+        315
+      ],
+      "rgba_sha256": "32dff6c7697c1ddd3b26f1d7bdb10545e62f961b23f78a18e432d6bc82b11c8b",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        244,
+        323,
+        236,
+        312
+      ],
+      "margin": [
+        215,
+        92,
+        404,
+        328
+      ],
+      "source_anchor": [
+        349,
+        631
+      ],
+      "rgba_sha256": "2b3b735f330103ed7972cb302da56c8c708d8ecb6ae0049402902012664b5222",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        626,
+        317,
+        292,
+        315
+      ],
+      "margin": [
+        182,
+        89,
+        348,
+        325
+      ],
+      "source_anchor": [
+        764,
+        628
+      ],
+      "rgba_sha256": "802e6a2b703a4191eec47b7009f323020e752e4847e4a70f429b36002beadf7c",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        156,
+        646,
+        379,
+        267
+      ],
+      "margin": [
+        127,
+        137,
+        261,
+        373
+      ],
+      "source_anchor": [
+        349,
+        909
+      ],
+      "rgba_sha256": "3bc6f6fdcee09486e0566e8089e7aabc0a6e4aaf1b00ec8c0d84d19a2b6fa5e2",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        618,
+        640,
+        361,
+        280
+      ],
+      "margin": [
+        174,
+        124,
+        279,
+        360
+      ],
+      "source_anchor": [
+        764,
+        916
+      ],
+      "rgba_sha256": "a54aeb1634691270ab6861220b0b0f9b4236219a29dc796c0aad16e686e6ba06",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        180,
+        923,
+        337,
+        282
+      ],
+      "margin": [
+        151,
+        122,
+        303,
+        358
+      ],
+      "source_anchor": [
+        349,
+        1201
+      ],
+      "rgba_sha256": "8c4a46f83d15abe3653b03992cb489762e05a9c1950c53b432c6a9977dd5a182",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        628,
+        923,
+        327,
+        286
+      ],
+      "margin": [
+        184,
+        118,
+        313,
+        354
+      ],
+      "source_anchor": [
+        764,
+        1205
+      ],
+      "rgba_sha256": "3b5fbcfd554e36213b6e9f1dc45adf3be7dafd73e27b428b4829c41beddeb76d",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        167,
+        1221,
+        386,
+        261
+      ],
+      "margin": [
+        138,
+        143,
+        254,
+        379
+      ],
+      "source_anchor": [
+        349,
+        1478
+      ],
+      "rgba_sha256": "35927d5c8b6691302bd32799ac3fdf2e4f2697ab2d0af5c3beb68005f28f4098",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        627,
+        1213,
+        363,
+        289
+      ],
+      "margin": [
+        183,
+        115,
+        277,
+        351
+      ],
+      "source_anchor": [
+        764,
+        1498
+      ],
+      "rgba_sha256": "8267eeb6ae3686ee791e09c35fa05d131c2bde6d6310211205ee16fcede7903a",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        153,
+        15,
+        294,
+        294
+      ],
+      "margin": [
+        161,
+        95,
+        322,
+        322
+      ],
+      "source_anchor": [
+        300,
+        305
+      ],
+      "rgba_sha256": "97dc53cc3cc53f4e0a0c4c32a9d669cf7f8fe4249ded9ae1a8f54fad4b5b7e49",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        588,
+        15,
+        310,
+        294
+      ],
+      "margin": [
+        154,
+        95,
+        306,
+        322
+      ],
+      "source_anchor": [
+        742,
+        305
+      ],
+      "rgba_sha256": "6e038e46eaf572d455b68178ea90639e8d57f2c819ac8aed5e394d46026362bc",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        136,
+        321,
+        330,
+        296
+      ],
+      "margin": [
+        144,
+        93,
+        286,
+        320
+      ],
+      "source_anchor": [
+        300,
+        613
+      ],
+      "rgba_sha256": "68ef47b1312453fbc39d212adda078d209e625d0cec63178c1dae1efea119a15",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        581,
+        317,
+        318,
+        300
+      ],
+      "margin": [
+        147,
+        89,
+        298,
+        316
+      ],
+      "source_anchor": [
+        742,
+        613
+      ],
+      "rgba_sha256": "9fc5d86fef056717e19f57b620aff470d68cd415acf360f1600fc588a9d77645",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        139,
+        628,
+        311,
+        280
+      ],
+      "margin": [
+        147,
+        109,
+        305,
+        336
+      ],
+      "source_anchor": [
+        300,
+        904
+      ],
+      "rgba_sha256": "0e6f3e7c41e259bd7882965879fd3731dcc2f6f9ae8cb9feada79d9cca9a2b62",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        575,
+        624,
+        339,
+        287
+      ],
+      "margin": [
+        141,
+        102,
+        277,
+        329
+      ],
+      "source_anchor": [
+        742,
+        907
+      ],
+      "rgba_sha256": "21dab54014cca510f9b8ab19f489b24b93cc3151b52f6c9d52f33da18241d92c",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        154,
+        918,
+        300,
+        278
+      ],
+      "margin": [
+        162,
+        111,
+        316,
+        338
+      ],
+      "source_anchor": [
+        300,
+        1192
+      ],
+      "rgba_sha256": "e3a7271c611e39332d894a3a56745acc04d2757dd5523cb2b6c8c47f07afde1a",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        589,
+        916,
+        306,
+        285
+      ],
+      "margin": [
+        155,
+        104,
+        310,
+        331
+      ],
+      "source_anchor": [
+        742,
+        1197
+      ],
+      "rgba_sha256": "c1cf1810c198e8203fb26f1e978102f9995328cc482fe1011c2ba66fc035396a",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        154,
+        1208,
+        318,
+        284
+      ],
+      "margin": [
+        162,
+        105,
+        298,
+        332
+      ],
+      "source_anchor": [
+        300,
+        1488
+      ],
+      "rgba_sha256": "980cd773f72174d28e7f5bd10707b9bd3e9d99f046e68f97375964b4159a5684",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        572,
+        1212,
+        326,
+        283
+      ],
+      "margin": [
+        138,
+        106,
+        290,
+        333
+      ],
+      "source_anchor": [
+        742,
+        1491
+      ],
+      "rgba_sha256": "5e733a7aa3dbba84d3de9595d4cc87c8e081ff0d757b7beb6bd5d8460fb767b2",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        156,
+        13,
+        237,
+        293
+      ],
+      "margin": [
+        191,
+        96,
+        379,
+        323
+      ],
+      "source_anchor": [
+        273,
+        302
+      ],
+      "rgba_sha256": "eff4e78e0dc028cc330f30486bd5c952dff7b22490612d6bd3da148fe680ac35",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        625,
+        9,
+        254,
+        299
+      ],
+      "margin": [
+        179,
+        90,
+        362,
+        317
+      ],
+      "source_anchor": [
+        754,
+        304
+      ],
+      "rgba_sha256": "4c2370e1ed7990428adb03bb42d949e5ef445e1d302c95d88402ced247067ef6",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        127,
+        319,
+        289,
+        291
+      ],
+      "margin": [
+        162,
+        98,
+        327,
+        325
+      ],
+      "source_anchor": [
+        273,
+        606
+      ],
+      "rgba_sha256": "439684d3b96a9bff2664f02b1ae87ae3f421f11d9964e7165cd05625b8a3f2ef",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        614,
+        321,
+        285,
+        295
+      ],
+      "margin": [
+        168,
+        94,
+        331,
+        321
+      ],
+      "source_anchor": [
+        754,
+        612
+      ],
+      "rgba_sha256": "745244c1a9f8e41060a6b885fbfe515dd8d61b717ede3396e25041f63706b998",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        86,
+        620,
+        349,
+        285
+      ],
+      "margin": [
+        121,
+        104,
+        267,
+        331
+      ],
+      "source_anchor": [
+        273,
+        901
+      ],
+      "rgba_sha256": "8752a8103d4841f658cb8eb9e017cfd74ed851c9e81d7ebf533e1fe551edd5a3",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        584,
+        625,
+        347,
+        282
+      ],
+      "margin": [
+        138,
+        107,
+        269,
+        334
+      ],
+      "source_anchor": [
+        754,
+        903
+      ],
+      "rgba_sha256": "62fa617797694ecd05d31c03ff115b8096b32777e89786e6528b258df0a51681",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        98,
+        919,
+        337,
+        288
+      ],
+      "margin": [
+        133,
+        101,
+        279,
+        328
+      ],
+      "source_anchor": [
+        273,
+        1203
+      ],
+      "rgba_sha256": "3b70b1f8ad40fbe4c1eee9471898066af3ae684cbdc64cb7e4b9c19ba4361fd2",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        586,
+        919,
+        357,
+        287
+      ],
+      "margin": [
+        140,
+        102,
+        259,
+        329
+      ],
+      "source_anchor": [
+        754,
+        1202
+      ],
+      "rgba_sha256": "9d19b94ebb0db15ade214f4ba16d10a3325939d76ec2c0347c8b67aef535b5e5",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        68,
+        1220,
+        372,
+        288
+      ],
+      "margin": [
+        103,
+        101,
+        244,
+        328
+      ],
+      "source_anchor": [
+        273,
+        1504
+      ],
+      "rgba_sha256": "0bef0e1b1bdb71938cc999c2925071467026ac67a451252263e6ffab25cb139a",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        571,
+        1222,
+        380,
+        284
+      ],
+      "margin": [
+        125,
+        105,
+        236,
+        332
+      ],
+      "source_anchor": [
+        754,
+        1502
+      ],
+      "rgba_sha256": "88846517b9ef9401deb389514e870206cb7d4692027d39cc8c7cd07a077900f6",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        146,
+        21,
+        291,
+        286
+      ],
+      "margin": [
+        156,
+        98,
+        317,
+        322
+      ],
+      "source_anchor": [
+        294,
+        303
+      ],
+      "rgba_sha256": "7b7ccd4574deb65e02136f399e9d96a0279a557f0ed35d6655ab243b37ec31f1",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        613,
+        24,
+        269,
+        284
+      ],
+      "margin": [
+        165,
+        100,
+        339,
+        324
+      ],
+      "source_anchor": [
+        752,
+        304
+      ],
+      "rgba_sha256": "27223a4164f2ae7b4fae5fb157478c18db4d13677c0da3fa55e70a91df6ccc39",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        140,
+        307,
+        314,
+        300
+      ],
+      "margin": [
+        150,
+        84,
+        294,
+        308
+      ],
+      "source_anchor": [
+        294,
+        603
+      ],
+      "rgba_sha256": "3728df203021e11a6731600d4808c2e493d67a7ee2470dea014e84efa721f487",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        610,
+        315,
+        294,
+        295
+      ],
+      "margin": [
+        162,
+        89,
+        314,
+        313
+      ],
+      "source_anchor": [
+        752,
+        606
+      ],
+      "rgba_sha256": "cac3d782f8465bc618759f2a69fc05bcb1039de30f5f2f9b9998e4c47631b372",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        142,
+        605,
+        328,
+        284
+      ],
+      "margin": [
+        152,
+        100,
+        280,
+        324
+      ],
+      "source_anchor": [
+        294,
+        885
+      ],
+      "rgba_sha256": "0b30fc45ac42b27dc098c465c6fd2320a743cc40cf13c71c81a2cfbc4901034e",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        604,
+        611,
+        327,
+        280
+      ],
+      "margin": [
+        156,
+        104,
+        281,
+        328
+      ],
+      "source_anchor": [
+        752,
+        887
+      ],
+      "rgba_sha256": "1bc28217e49ee018f6793a02e2d044447167c383f04547c7b2c9f522bc4eaf27",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        135,
+        890,
+        318,
+        280
+      ],
+      "margin": [
+        145,
+        104,
+        290,
+        328
+      ],
+      "source_anchor": [
+        294,
+        1166
+      ],
+      "rgba_sha256": "0dc11dd2b0e59f3b0320cd24038a893316e49dab8e622930026c94f9561450e4",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        605,
+        904,
+        331,
+        275
+      ],
+      "margin": [
+        157,
+        109,
+        277,
+        333
+      ],
+      "source_anchor": [
+        752,
+        1175
+      ],
+      "rgba_sha256": "8e8c88a8e6bce1edb4b23d056f66002633bab6c96618a967c7006b5a08668252",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        148,
+        1179,
+        322,
+        287
+      ],
+      "margin": [
+        158,
+        97,
+        286,
+        321
+      ],
+      "source_anchor": [
+        294,
+        1462
+      ],
+      "rgba_sha256": "653f281939aa461a3371f0629c4a2335dc5ed563ce551412bcd77ae3554a90df",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        605,
+        1189,
+        332,
+        284
+      ],
+      "margin": [
+        157,
+        100,
+        276,
+        324
+      ],
+      "source_anchor": [
+        752,
+        1469
+      ],
+      "rgba_sha256": "a7b93b27597f3400467f10d89015a80c56caad6cf620934a7832294aadea7c04",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        62,
+        35,
+        362,
+        457
+      ],
+      "margin": [
+        324,
+        187,
+        662,
+        567
+      ],
+      "source_anchor": [
+        250,
+        488
+      ],
+      "rgba_sha256": "a516dc7c465fb83c5461a099534d2d2cc68b4efb2e0a40184510438dd99e6f95",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        563,
+        25,
+        402,
+        471
+      ],
+      "margin": [
+        306,
+        173,
+        622,
+        553
+      ],
+      "source_anchor": [
+        769,
+        492
+      ],
+      "rgba_sha256": "fe9c296ef7d8f29de5bb57af09eb3f55fa6954aa3f24ab59f8737c082cc40fcc",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        22,
+        530,
+        548,
+        435
+      ],
+      "margin": [
+        284,
+        209,
+        476,
+        589
+      ],
+      "source_anchor": [
+        250,
+        961
+      ],
+      "rgba_sha256": "a2875bc72e63d26c320ec2841258f710d168d8fbe8e78b4b509890b70b30ed1f",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        589,
+        536,
+        421,
+        445
+      ],
+      "margin": [
+        332,
+        199,
+        603,
+        579
+      ],
+      "source_anchor": [
+        769,
+        977
+      ],
+      "rgba_sha256": "145b29ff27696597c21499016c26a9c24398c7e58a859258fb953021abe94717",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        78,
+        993,
+        345,
+        485
+      ],
+      "margin": [
+        340,
+        159,
+        679,
+        539
+      ],
+      "source_anchor": [
+        250,
+        1474
+      ],
+      "rgba_sha256": "a0c765a4e4b8f785b03b2ead6485ad1cecc91785244e3fe624a3122ad808e337",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        571,
+        1002,
+        396,
+        485
+      ],
+      "margin": [
+        314,
+        159,
+        628,
+        539
+      ],
+      "source_anchor": [
+        769,
+        1483
+      ],
+      "rgba_sha256": "45173f15616c09852b08b82cb394a24081b55894bd132fa901dd24f32d920690",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        58,
+        40,
+        458,
+        479
+      ],
+      "margin": [
+        256,
+        125,
+        502,
+        481
+      ],
+      "source_anchor": [
+        282,
+        515
+      ],
+      "rgba_sha256": "69963b6921e82957fc9590bbf979f24fc5756de97167c32ca7a925e596b528ff",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        568,
+        70,
+        397,
+        442
+      ],
+      "margin": [
+        266,
+        162,
+        563,
+        518
+      ],
+      "source_anchor": [
+        782,
+        508
+      ],
+      "rgba_sha256": "19d7ebca72f9a91e6936aca796fbea3f150329d58b7ee058c67a827fdfccbcfd",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        40,
+        534,
+        500,
+        460
+      ],
+      "margin": [
+        238,
+        144,
+        460,
+        500
+      ],
+      "source_anchor": [
+        282,
+        990
+      ],
+      "rgba_sha256": "5dadb222118238bef788b39c6931cdfe5d8326eb3d2f135b6fa2b0bfe8724c8e",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        545,
+        557,
+        436,
+        436
+      ],
+      "margin": [
+        243,
+        168,
+        524,
+        524
+      ],
+      "source_anchor": [
+        782,
+        989
+      ],
+      "rgba_sha256": "cb8e39a8b71e9615950c5607a0fb2ab2ada8d024a688a669cea2278862614def",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        59,
+        1010,
+        447,
+        480
+      ],
+      "margin": [
+        257,
+        124,
+        513,
+        480
+      ],
+      "source_anchor": [
+        282,
+        1486
+      ],
+      "rgba_sha256": "c459b00c3777dec493ee4bdcd2ed28da4d563d3da96f3f181191de924a8b92a8",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        579,
+        1053,
+        407,
+        434
+      ],
+      "margin": [
+        277,
+        170,
+        553,
+        526
+      ],
+      "source_anchor": [
+        782,
+        1483
+      ],
+      "rgba_sha256": "bef6114a11ffd77bc838c06d256d8a423e90274611116aaaa6b1348bc674a4b2",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        161,
+        49,
+        339,
+        426
+      ],
+      "margin": [
+        303,
+        163,
+        597,
+        510
+      ],
+      "source_anchor": [
+        326,
+        471
+      ],
+      "rgba_sha256": "429536f339ebd0eef5f0084c183305d6f5c7e9aaa2c16c135068607a5eef8dec",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        583,
+        50,
+        361,
+        426
+      ],
+      "margin": [
+        271,
+        163,
+        575,
+        510
+      ],
+      "source_anchor": [
+        780,
+        472
+      ],
+      "rgba_sha256": "6cd8c55e14e7b7b9a2e162ba8a1748775154f9035f737a219d2e939ae0994a9a",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        24,
+        563,
+        508,
+        408
+      ],
+      "margin": [
+        166,
+        181,
+        428,
+        528
+      ],
+      "source_anchor": [
+        326,
+        967
+      ],
+      "rgba_sha256": "93884a2fb31390b77253a94d4d1c944076734282d34787ab80c7bf7a37b021ce",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        562,
+        556,
+        444,
+        415
+      ],
+      "margin": [
+        250,
+        174,
+        492,
+        521
+      ],
+      "source_anchor": [
+        780,
+        967
+      ],
+      "rgba_sha256": "b7124e8c7cbe84af0d0c4896e20d3e969c9295c219efe7d5b36fc7f6b1560265",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        162,
+        1008,
+        328,
+        448
+      ],
+      "margin": [
+        304,
+        141,
+        608,
+        488
+      ],
+      "source_anchor": [
+        326,
+        1452
+      ],
+      "rgba_sha256": "34dacf50ffd5bc3ada432ebf515386c1fd4c723d35d1fa2054b1bc4496822a9c",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        612,
+        1016,
+        337,
+        442
+      ],
+      "margin": [
+        300,
+        147,
+        599,
+        494
+      ],
+      "source_anchor": [
+        780,
+        1454
+      ],
+      "rgba_sha256": "c9eb5083081ca228f472fec1919a1dbc9619e29133f399fb06a64ff0ab86c0f5",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        81,
+        70,
+        379,
+        429
+      ],
+      "margin": [
+        229,
+        100,
+        461,
+        411
+      ],
+      "source_anchor": [
+        272,
+        495
+      ],
+      "rgba_sha256": "13ded7d9669189d48298bd3d6c931533eada704026eb84563f1ac7404ffca76d",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        587,
+        97,
+        343,
+        394
+      ],
+      "margin": [
+        229,
+        135,
+        497,
+        446
+      ],
+      "source_anchor": [
+        778,
+        487
+      ],
+      "rgba_sha256": "301981e48b94c4ca45c80674b32b415f8cedb9b83f155695d5b5cc51c529ca5f",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        32,
+        556,
+        462,
+        443
+      ],
+      "margin": [
+        180,
+        86,
+        378,
+        397
+      ],
+      "source_anchor": [
+        272,
+        995
+      ],
+      "rgba_sha256": "b6ce3ec0570b27ef1e3f35890bb08a9b2f9be839af2e5d8cf7e62abefe402009",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        552,
+        591,
+        441,
+        410
+      ],
+      "margin": [
+        194,
+        119,
+        399,
+        430
+      ],
+      "source_anchor": [
+        778,
+        997
+      ],
+      "rgba_sha256": "135126d9d144edea8853cb16d7695091b133c4eb61a45346872fc1a53757c922",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        67,
+        1050,
+        409,
+        409
+      ],
+      "margin": [
+        215,
+        120,
+        431,
+        431
+      ],
+      "source_anchor": [
+        272,
+        1455
+      ],
+      "rgba_sha256": "d7a235e0d833277f52135cbd16be06b444397ed06156f92fd030d7ec35ccba90",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        596,
+        1066,
+        365,
+        390
+      ],
+      "margin": [
+        238,
+        139,
+        475,
+        450
+      ],
+      "source_anchor": [
+        778,
+        1452
+      ],
+      "rgba_sha256": "6d6357ba9df418b70693988cb11509760ecc59f5df2c05bd20010a58f6961e77",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        69,
+        102,
+        458,
+        584
+      ],
+      "margin": [
+        384,
+        200,
+        790,
+        664
+      ],
+      "source_anchor": [
+        309,
+        682
+      ],
+      "rgba_sha256": "168fa6b8b377eb4fa509d7d662aaa569e39cecb6e5212ea7f06f93f9894943e1",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        575,
+        125,
+        427,
+        559
+      ],
+      "margin": [
+        419,
+        225,
+        821,
+        689
+      ],
+      "source_anchor": [
+        780,
+        680
+      ],
+      "rgba_sha256": "293d0160a1fdf3279161f5be5e32295b5db0c6e2ccf834790e6e23564064c847",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        87,
+        775,
+        444,
+        604
+      ],
+      "margin": [
+        402,
+        180,
+        804,
+        644
+      ],
+      "source_anchor": [
+        309,
+        1375
+      ],
+      "rgba_sha256": "961eb20ee0256c74507f7c9ddf34ea6b9e1786248e265de0d195f3c61787fee8",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        550,
+        804,
+        459,
+        578
+      ],
+      "margin": [
+        394,
+        206,
+        789,
+        670
+      ],
+      "source_anchor": [
+        780,
+        1378
+      ],
+      "rgba_sha256": "e1d31007f4ef5536b327edc0fea9bb5c169ea96de8f8fe2982fbe36f562cece5",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        138,
+        143,
+        348,
+        502
+      ],
+      "margin": [
+        354,
+        162,
+        708,
+        554
+      ],
+      "source_anchor": [
+        312,
+        641
+      ],
+      "rgba_sha256": "5e4d68550589a0ee5e6bd93695aae1145909171b1cb1cee0395e2a5c0a1f5815",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        581,
+        150,
+        396,
+        495
+      ],
+      "margin": [
+        330,
+        169,
+        660,
+        561
+      ],
+      "source_anchor": [
+        779,
+        641
+      ],
+      "rgba_sha256": "343c7e69dc7b94ac649f0744472eeeddddeea68284a71c7a47d21cd29971bc39",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        51,
+        781,
+        423,
+        305
+      ],
+      "margin": [
+        267,
+        359,
+        633,
+        751
+      ],
+      "source_anchor": [
+        312,
+        1082
+      ],
+      "rgba_sha256": "b93a938598e6b6871a0be4aa2db834359ad56eafa4a37d339a6401d413bf9216",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        535,
+        796,
+        445,
+        293
+      ],
+      "margin": [
+        284,
+        371,
+        611,
+        763
+      ],
+      "source_anchor": [
+        779,
+        1085
+      ],
+      "rgba_sha256": "e7c42ac77012ddf841841018add068157153469efa1bcdc44e275c1138d8ca8c",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        42,
+        1213,
+        463,
+        213
+      ],
+      "margin": [
+        258,
+        451,
+        593,
+        843
+      ],
+      "source_anchor": [
+        312,
+        1422
+      ],
+      "rgba_sha256": "a7298c1c64f84726c2c119090c9aa82e6111971f7ba8c3c47a5e6ea4fd81f004",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        528,
+        1224,
+        475,
+        203
+      ],
+      "margin": [
+        277,
+        461,
+        581,
+        853
+      ],
+      "source_anchor": [
+        779,
+        1423
+      ],
+      "rgba_sha256": "706d3a3aca61ba35744b9dd9fc4924e552150d404673171c7237c2e08e73c920",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        70,
+        173,
+        440,
+        505
+      ],
+      "margin": [
+        322,
+        164,
+        624,
+        559
+      ],
+      "source_anchor": [
+        280,
+        674
+      ],
+      "rgba_sha256": "ca3879a3e624d53f0fa6ecf2644c3c58a23851800f502b731eb0eabfb49bc7fd",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        566,
+        176,
+        439,
+        502
+      ],
+      "margin": [
+        323,
+        167,
+        625,
+        562
+      ],
+      "source_anchor": [
+        775,
+        674
+      ],
+      "rgba_sha256": "36571b2d11957d63dea2a0831d8511463e7e89029a8dd42ca45025d61c0475f9",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        60,
+        827,
+        439,
+        513
+      ],
+      "margin": [
+        312,
+        156,
+        625,
+        551
+      ],
+      "source_anchor": [
+        280,
+        1336
+      ],
+      "rgba_sha256": "acb0005f5cca3ae17567149bfa289aea2b2b780a8e0fdfe74d923e0879992f17",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        544,
+        845,
+        462,
+        495
+      ],
+      "margin": [
+        301,
+        174,
+        602,
+        569
+      ],
+      "source_anchor": [
+        775,
+        1336
+      ],
+      "rgba_sha256": "84caa94df1c7f706f0febe6f5302102620f6b06f3086a4b8340216ecf8a4d80a",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        74,
+        217,
+        414,
+        438
+      ],
+      "margin": [
+        249,
+        136,
+        498,
+        474
+      ],
+      "source_anchor": [
+        281,
+        651
+      ],
+      "rgba_sha256": "c878c37f00e5617a1eadbcbbd12af375c06890cd205ad69bd3ca1576c7699942",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        554,
+        230,
+        418,
+        426
+      ],
+      "margin": [
+        247,
+        148,
+        494,
+        486
+      ],
+      "source_anchor": [
+        763,
+        652
+      ],
+      "rgba_sha256": "749233f515314d5885c1c3167f0dff1052c881bf5b1f02d29b6ece359fd2d8d3",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        61,
+        765,
+        442,
+        333
+      ],
+      "margin": [
+        236,
+        241,
+        470,
+        579
+      ],
+      "source_anchor": [
+        281,
+        1094
+      ],
+      "rgba_sha256": "1738e3d085fd61508894bc8e0b8e8e0ef516afc799d18515cf1266e6767df8d1",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        529,
+        793,
+        447,
+        302
+      ],
+      "margin": [
+        222,
+        272,
+        465,
+        610
+      ],
+      "source_anchor": [
+        763,
+        1091
+      ],
+      "rgba_sha256": "bdbb44229084df72b0253c903726e3bb25c1ddb21e62b524776f79acdb0be87a",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        52,
+        1229,
+        448,
+        203
+      ],
+      "margin": [
+        227,
+        371,
+        464,
+        709
+      ],
+      "source_anchor": [
+        281,
+        1428
+      ],
+      "rgba_sha256": "372d4578e66fa11f1eb584f5769199422eb6f1c095aa855a525738b99c449af7",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        524,
+        1237,
+        454,
+        196
+      ],
+      "margin": [
+        217,
+        378,
+        458,
+        716
+      ],
+      "source_anchor": [
+        763,
+        1429
+      ],
+      "rgba_sha256": "637b322fe3b6a14035c229eafca8d706acd255d483db3ac745c1d2e25d7fb8c0",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        163,
+        21,
+        269,
+        293
+      ],
+      "margin": [
+        191,
+        116,
+        379,
+        355
+      ],
+      "source_anchor": [
+        296,
+        310
+      ],
+      "rgba_sha256": "a24ad75efc444432fa147454f04e2f76c482e8a2d239187a7fcc1df5d32099bb",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        629,
+        27,
+        289,
+        288
+      ],
+      "margin": [
+        173,
+        121,
+        359,
+        360
+      ],
+      "source_anchor": [
+        780,
+        311
+      ],
+      "rgba_sha256": "c1fcf9c0332b88ac1500f2c84b5a9926580080393a3f583a97103ab83b3b1046",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        162,
+        340,
+        267,
+        310
+      ],
+      "margin": [
+        190,
+        99,
+        381,
+        338
+      ],
+      "source_anchor": [
+        296,
+        646
+      ],
+      "rgba_sha256": "50bcb00b634490e325e53b2574e0d7e087c181e8232291aa2b319146c655e8b6",
+      "sheet": 12
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        641,
+        340,
+        277,
+        310
+      ],
+      "margin": [
+        185,
+        99,
+        371,
+        338
+      ],
+      "source_anchor": [
+        780,
+        646
+      ],
+      "rgba_sha256": "3c880c09555bc47fa5ba204323294f2f1f6eb9d00b9c4b1eddddf858b9362554",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        163,
+        686,
+        274,
+        302
+      ],
+      "margin": [
+        191,
+        107,
+        374,
+        346
+      ],
+      "source_anchor": [
+        296,
+        984
+      ],
+      "rgba_sha256": "681dcc637aa53b323b608f5fef67cba6861444f411f88e4f8cbcb9bb9b538577",
+      "sheet": 12
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        640,
+        718,
+        300,
+        276
+      ],
+      "margin": [
+        184,
+        133,
+        348,
+        372
+      ],
+      "source_anchor": [
+        780,
+        990
+      ],
+      "rgba_sha256": "c5980909a9087c53223312282ab7b58ee2130f7e133154500d33c6daeab8a54c",
+      "sheet": 12
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        119,
+        1058,
+        362,
+        230
+      ],
+      "margin": [
+        147,
+        179,
+        286,
+        418
+      ],
+      "source_anchor": [
+        296,
+        1284
+      ],
+      "rgba_sha256": "d88ec1b774d750bcc24c9996fd490264e14151548e1c87dbefd73d814e1b1bb0",
+      "sheet": 12
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        601,
+        1081,
+        356,
+        205
+      ],
+      "margin": [
+        145,
+        204,
+        292,
+        443
+      ],
+      "source_anchor": [
+        780,
+        1282
+      ],
+      "rgba_sha256": "a30568280ddf5213fb0242cf7d11f6796cf4f7b2d250e0bcfdf8db1daa630330",
+      "sheet": 12
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        71,
+        1349,
+        417,
+        157
+      ],
+      "margin": [
+        99,
+        252,
+        231,
+        491
+      ],
+      "source_anchor": [
+        296,
+        1502
+      ],
+      "rgba_sha256": "7bf416f3e739acd65214f556ab009664126adf489a2ad5669b0c40454baa2d09",
+      "sheet": 12
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        563,
+        1356,
+        389,
+        152
+      ],
+      "margin": [
+        107,
+        257,
+        259,
+        496
+      ],
+      "source_anchor": [
+        780,
+        1504
+      ],
+      "rgba_sha256": "02607b31311766eb103d782f68446c880f6d03988dc0660fff1e713ccbd1b91c",
+      "sheet": 12
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        102,
+        28,
+        318,
+        302
+      ],
+      "margin": [
+        182,
+        132,
+        370,
+        386
+      ],
+      "source_anchor": [
+        264,
+        326
+      ],
+      "rgba_sha256": "999084fe53c025874dbc82b7b74934acb89bff8eb64420350fc2579705136c90",
+      "sheet": 13
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        616,
+        43,
+        315,
+        294
+      ],
+      "margin": [
+        176,
+        140,
+        373,
+        394
+      ],
+      "source_anchor": [
+        784,
+        333
+      ],
+      "rgba_sha256": "586601cd038ffb8d9e28d5a4ac9f078f08d7e41d7d32d915f0e062bfaf28212f",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        110,
+        344,
+        309,
+        332
+      ],
+      "margin": [
+        190,
+        102,
+        379,
+        356
+      ],
+      "source_anchor": [
+        264,
+        672
+      ],
+      "rgba_sha256": "c327954ef5cd0552372aa07e7ee85b2f18471fbe1a9cc0eca0edccbab992f364",
+      "sheet": 13
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        621,
+        352,
+        326,
+        325
+      ],
+      "margin": [
+        181,
+        109,
+        362,
+        363
+      ],
+      "source_anchor": [
+        784,
+        673
+      ],
+      "rgba_sha256": "d7eed298d28752f17df8e46594987e88f8568eb7a1949513a8baae9e6fe6650a",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        118,
+        707,
+        294,
+        320
+      ],
+      "margin": [
+        198,
+        114,
+        394,
+        368
+      ],
+      "source_anchor": [
+        264,
+        1023
+      ],
+      "rgba_sha256": "642506391b4a0fad40405fec7c20141d7faf8e89e4610e1906bdd84d78ecf8be",
+      "sheet": 13
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        623,
+        754,
+        314,
+        274
+      ],
+      "margin": [
+        183,
+        160,
+        374,
+        414
+      ],
+      "source_anchor": [
+        784,
+        1024
+      ],
+      "rgba_sha256": "967ae9d0076ed1524c4e62748f55842b865f9a6b8f0b541b44ccb9e0678f2404",
+      "sheet": 13
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        96,
+        1098,
+        328,
+        219
+      ],
+      "margin": [
+        176,
+        215,
+        360,
+        469
+      ],
+      "source_anchor": [
+        264,
+        1313
+      ],
+      "rgba_sha256": "cf253c704c35f4c7aaa1f236bc7158adf8a795e7cec6ccd7bdc7ede5f6c72a21",
+      "sheet": 13
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        612,
+        1106,
+        340,
+        210
+      ],
+      "margin": [
+        172,
+        224,
+        348,
+        478
+      ],
+      "source_anchor": [
+        784,
+        1312
+      ],
+      "rgba_sha256": "72d4002a509502e670c27f84f376b15f18fc955e69b2080ca4dbe56b5961c1bb",
+      "sheet": 13
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        103,
+        1379,
+        337,
+        130
+      ],
+      "margin": [
+        183,
+        304,
+        351,
+        558
+      ],
+      "source_anchor": [
+        264,
+        1505
+      ],
+      "rgba_sha256": "999d69d68d22acb1009339d287c5bd93575f2841c33fb0edecf44797535368a4",
+      "sheet": 13
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        568,
+        1389,
+        401,
+        120
+      ],
+      "margin": [
+        128,
+        314,
+        287,
+        568
+      ],
+      "source_anchor": [
+        784,
+        1505
+      ],
+      "rgba_sha256": "91661481f255a1e39cf0393c2f9e6af4ffbb6fae907b94b6fa8ed6e322055d9b",
+      "sheet": 13
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-0.png",
+          "sha256": "5ae3acaa75dc6300c9d2978404ef71040698c471e7b98716f1840f2548f03f55",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-1.png",
+          "sha256": "856658ba3d5ace36c89e0e8c483440a1d9bdd7980e158eec60617a6b276e7323",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            616,
+            616
+          ],
+          "foot": [
+            308,
+            385
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-2.png",
+          "sha256": "90ab0b38d8a78a2ebbdd9212d9c079047903f1652723bd2564307ce9afdcdc2d",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            616,
+            616
+          ],
+          "foot": [
+            308,
+            385
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-3.png",
+          "sha256": "1401b3eac81205ad35dfa0ecb036a632f2cb36cb2c52e094d86f640756279023",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-0.png",
+          "sha256": "5ae3acaa75dc6300c9d2978404ef71040698c471e7b98716f1840f2548f03f55",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-1.png",
+          "sha256": "856658ba3d5ace36c89e0e8c483440a1d9bdd7980e158eec60617a6b276e7323",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            616,
+            616
+          ],
+          "foot": [
+            308,
+            385
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-2.png",
+          "sha256": "90ab0b38d8a78a2ebbdd9212d9c079047903f1652723bd2564307ce9afdcdc2d",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            616,
+            616
+          ],
+          "foot": [
+            308,
+            385
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-3.png",
+          "sha256": "1401b3eac81205ad35dfa0ecb036a632f2cb36cb2c52e094d86f640756279023",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-4.png",
+          "sha256": "209d8b7a52dbf3527a5fcc66f8ed6d61be258d9e424abd482ef55e7091d1a8ef",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1024,
+            1024
+          ],
+          "foot": [
+            512,
+            640
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). New reviewer-authored source resolution: reviewedcanvas1024 preserves E/SE core44-56px or W/NW core54-59px versus same-direction idle44-56px. Root mustindependently inspect these reviewer-authoredposes. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-5.png",
+          "sha256": "191cfc659f3e061e627eca80fa03f014c17cb6fe28d71433fb98421455b2009d",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            960,
+            960
+          ],
+          "foot": [
+            480,
+            600
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-6.png",
+          "sha256": "a34d46bb6feb9e74d269a8f6ef2546fa28cc0e09acefd54b095e5183133ec5e4",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            936,
+            936
+          ],
+          "foot": [
+            468,
+            585
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-7.png",
+          "sha256": "549fbb21af98add28ea0bda9f3e0d68fe2a593b2a1d568d6537a0d03c92e5c48",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            840,
+            840
+          ],
+          "foot": [
+            420,
+            525
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-8.png",
+          "sha256": "4a80ac13a9ba5910493653560f10fa8d7c221f0d60f99c29b13c280943b86e92",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1248,
+            1248
+          ],
+          "foot": [
+            624,
+            780
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-10.png",
+          "sha256": "99596e95ec099f113f87c9ff22634e77444d393a453ca76693e576cf2d3d8668",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1064,
+            1064
+          ],
+          "foot": [
+            532,
+            665
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-12.png",
+          "sha256": "184eb4aa4c0c6ab577a76f6d72f22bbec53dead385ac438438191aab603ab383",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). New reviewer-authored source resolution: reviewedcanvas648 preserves E/SE core44-56px or W/NW core54-59px versus same-direction idle44-56px. Root mustindependently inspect these reviewer-authoredposes. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-13.png",
+          "sha256": "c66bc85bf4aebecb38bd3efe325be52a7e968a0a81daae867c20f2657d6ca0d3",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            688,
+            688
+          ],
+          "foot": [
+            344,
+            430
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-12.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-12.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-13.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-13.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-9.png",
+          "sha256": "41aa1bce8a95daa087ae5a66478223d219f3dafe74b0e944fa8903e38d99ae05",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1056,
+            1056
+          ],
+          "foot": [
+            528,
+            660
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). New reviewer-authored source resolution: reviewedcanvas1056 preserves E/SE core44-56px or W/NW core54-59px versus same-direction idle44-56px. Root mustindependently inspect these reviewer-authoredposes. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-11.png",
+          "sha256": "fe249f055045bd0b11199a34f3beca307344b9b67dd310cc07877c447dcf134a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            912,
+            912
+          ],
+          "foot": [
+            456,
+            570
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-12.png",
+          "sha256": "184eb4aa4c0c6ab577a76f6d72f22bbec53dead385ac438438191aab603ab383",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). New reviewer-authored source resolution: reviewedcanvas648 preserves E/SE core44-56px or W/NW core54-59px versus same-direction idle44-56px. Root mustindependently inspect these reviewer-authoredposes. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-13.png",
+          "sha256": "c66bc85bf4aebecb38bd3efe325be52a7e968a0a81daae867c20f2657d6ca0d3",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            688,
+            688
+          ],
+          "foot": [
+            344,
+            430
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-9.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-9.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-11.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-11.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-12.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-12.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-13.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-13.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 135.0095238095238
+}

@@ -143,7 +143,10 @@ func temporal_capture(actor: TwilightMonster, sample: Dictionary, slug: String, 
 	var screen_root: Vector2 = actor.get_global_transform_with_canvas().origin
 	# Fixed source-pixel viewport window per pose: resizing for contact sheets
 	# happens only in the diagnostic helper, uniformly across all poses.
-	var crop_rect := Rect2i(Vector2i(screen_root.round()) - Vector2i(288, 352), Vector2i(576, 480))
+	# The crab's original raised pincer reaches beyond 576x480 even though
+	# its complete body is inside the unchanged 1280x720 Main viewport.
+	# Enlarge only this diagnostic window, retaining the full-body guard.
+	var crop_rect := Rect2i(Vector2i(screen_root.round()) - Vector2i(352, 496), Vector2i(704, 640))
 	# Keep the fixed-size diagnostic window inside the viewport when a walk
 	# approaches its edge. Independently require the complete visible sprite
 	# rectangle to fit, so this never conceals clipped source/body pixels.

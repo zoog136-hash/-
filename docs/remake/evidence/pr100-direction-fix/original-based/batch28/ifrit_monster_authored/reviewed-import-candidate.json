@@ -1,0 +1,790 @@
+{
+  "key": "monster:이프리트",
+  "prompt": "{\n  \"hit-E-SE-separated-exact-prompt.txt\": \"Create newlyauthored transparentRGBA 2D GAME sprites of the exactsource IFRIT, handpaintedbrightyellow-whitecore/orangegoldflames/reddarkedge, angularpointedhead/frontglowingeyes, broadfieryshoulders/branchingcoreveins, exactlyTWOthickattachedarms withcurledflamehands, ONEcontinuousnarrowwaistmergingintoattachedswirlingflamevortexbase. NOlegs/feet/weapons/props/rockbody/clothes/newfeatures. Exactsourceidentity/materials/bodyproportions andconnectedbody, no detachedsparks/flameislands. Existingrecordfloatingtrue duringliving; deathsettlesonfloor. Thisisnewauthoredmotion, not extractedoriginalanimation.\\nEXACTLYTWOdirectionCOLUMNS by 2 equalPHASEROWS = 4 completefullbodyposes onportrait1024x1536canvas. Centersx256and768; compactfigureswidth<=220height<=280, hugegutters/safeoutermargins, no clipping/overlap/touchingedges. ALLemptyspacefullyalpha0, no coloredmatte/shadow/floor/text/borders/labels/aura/projectiles/particles. Oneconnectedcompletebodyineachcell, no missing/blankrows. Column1E pureRIGHTprofile, face/coreedgeonRIGHT/backmassLEFT. Column2SE FRONT-RIGHT3/4facinglowerRIGHT, frontface/corevisible, sourceconsistentdepthandlimbs. Samehead/chest scale andcameraacrossallphases, truejoint/bodydeformation, neverglobalshrink/translatedstill.\\nONLY HITROLE: TOPROW1impactrecoil core/headleanbackoppositefacing, elbowsfolddefensively, continuousvortexcompresses. BOTTOMROW2distincthitrecovery corebeginsreturnupright, handsreleasewithactualshoulder/elbowangleschanged, attachedbaseuncurls. Bothlivingcompletebodies, stablehoverprojection, EheadstillRIGHT/SEheadlowerRIGHT. NOdeathposes. Exactly2rows4bodies.\\n\",\n  \"hit-death-E-SE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"hit-death-S-SW-onehead-spaced-exact-prompt.txt\": \"Re-author this existing WIP IFRIT sprite sheet with MUCH SMALLER BODIES and VERY WIDE CLEAR GUTTERS, while preserving allactualarticulatedposes/sourceidentity/head-core-limbproportions/orientation andconnectedflamebodydetails. EXACTLY2equalcolumns×5equalrows=10completeindependentfullbodyelementals. Onportrait1024x1536, all COMPLETE figures MUSTFIT180pixelwidth×190pixelheight boxes centeredatx256/768, androwcenters evenlyspaced; tinyfigures, overwhelminglyEMPTYcanvas. The currentreferencebodies are tooBIGandnearlytouch; newones must be roughlyHALFtheircurrentpixelheight andwidth. Do not fillrowheight. Verybroadtransparentoutermargins, at least80px entirelyemptybetweenallposeboundingrectangles. Paintatuniformsmallerhead/core drawingresolutionacrossall10 sprites, not arbitraryperdeath-heightnormalization. Preserveexactbodypostures/relativevolumes andfacing, thisisnewauthoredsize/spacingrepair, notoriginalanimationextraction.\\nActualsourceangularonehead/frontglowingeyepair, brightyellow-whitecore/orangegoldflames/reddarkedge, broadfieryshoulders/branchingveins, exactlyTWOattachedflamearms/curledhands/oneattachedvortexwaistbase, no legs/feet/weapons/clothes/rocks/newfeatures. ExactlyONEHEAD perbody, no addedfaceonchest/shoulder/crown. Every opaque flamepixel must belongtooneconnectedcompletebody: no detachedflares/sparks/islands. Closeeveryflamegapwithcoherentattachedflameanatomy or omitunrelatedlooseflare. No dropframe, emptybody, placeholders or translatedstill; preserve genuineoriginalposes. Allunusedspacefullyalpha0, no coloredmatte, background, floor/shadow/text/labels/borders/particles/aura. Do notclipanyheadtip/fingertip/vortexedge orincludeotherbodyinitsrectangle.\\nExactly5rows:hitrecoil,hitrecovery,deathdestabilize,deathcollapse,deathfinalcompleteveryLOWcollapsedflamecorpse. Column1Sfullfront/down; column2SWfrontLEFT3/4facinglowerLEFTall5rows. KeeptherightcolumnTOPspriteonlyonecorrectLEFT-facinghead; no oldupward/rightface. Do notreverseSWtoRIGHT. Preserve3deathprogressions andactualflatlowfinalcorpse; notstanding/noempty.\\n\",\n  \"idle-walk-N-NE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 N: FULLBACK facing straight AWAY/screenUP: backofhead/nape, rear shoulderblades and back flameveins; NO front eyes, NO frontal chestcore. Attack hands/head aim straightUP away, notRIGHT.\\nCOLUMN2 NE: BACK-RIGHT rear three-quarter facing UPPERRIGHT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; tiny side-edge eyesliver onlyif anatomically coherent, notfrontal.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"attack-N-NE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 N: FULLBACK facing straight AWAY/screenUP: backofhead/nape, rear shoulderblades and back flameveins; NO front eyes, NO frontal chestcore. Attack hands/head aim straightUP away, notRIGHT.\\nCOLUMN2 NE: BACK-RIGHT rear three-quarter facing UPPERRIGHT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; tiny side-edge eyesliver onlyif anatomically coherent, notfrontal.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"idle-walk-S-SW-leftfix-exact-prompt.txt\": \"Correct ONLY the right/SW direction column in the attached existing WIP fire-elemental animation sheet. This is new artwork authoring. The right-column figures currently wrongly face screenRIGHT; rotate/repaint their ACTUAL head/chest/shoulders/arms/vortex body into SOUTHWEST FRONT-LEFT three-quarter, aiming diagonally DOWN-LEFT. Reference2 is an ABSTRACT VIEW DIAGRAM for the correct frontLEFT planes and direction only; it is not a donorcharacter. Follow it: frontface/chest plane towardLEFT, side/rear mass onRIGHT, nose/head projection onLEFT, leading palm contact DOWNLEFT. Visible face/core stillfront, so do not make a rearbody. Every right-column sprite must have clear LEFTWARD orientation, opposite of oldwrongRIGHT-facingfigures. Newly draw coherent volumes and limb poses, not horizontalmirror-only copies. Preserve source unique brightyellow-whitecore/orange-goldflames/rededges, angularhead/frontglowingeyes, branching chestveins, thick two arms withcurledhands andoneattachedvortexbase; no legs/weapons/props or redesign. Keep leftcolumn S straightfrontal exactly inquality/style/proportions, head/chest/frontfacescreenDOWN. Do not change it intoLEFTprofile.\\n\\nOutput exactly TWO equal COLUMNS by 5 equal ROWS = 10 SMALL COMPLETE sprites. SAME phase order and sourcehead/core scale asattachedsheet. Use wide clear gutters and safe margins: body width<=200pixels/height<=210 onportrait1024x1536; complete extendedhands/flamecrowns/basefit ineachcell. Do not enlarge rightcolumn. All unused space transparentalpha0; no backdrop, floor/shadow/text/labels/borders/diagramcolors/particles/detachedflames. One continuousconnectedbodyineachcell. No clipping/touchingedges/overlappingrectangles/missingcells. Same realarticulatedposes and fullyattachedsourcebody, not translatedstills.\\nROWS1and2 are distinct actualIDLEbreathing/elbow/rootvortexflex. ROWS3,4,5 are realHOVERTRAVEL alternatingarm/shoulderleads andattachedwaist/vortexbends with3differentjointstates. Allrightcolumnhead/chestsfaceLEFTlowerLEFT, neverRIGHT. Stablecoreheight/rootprojection.\\n\",\n  \"attack-S-SW-leftfix-exact-prompt.txt\": \"Correct ONLY the right/SW direction column in the attached existing WIP fire-elemental animation sheet. This is new artwork authoring. The right-column figures currently wrongly face screenRIGHT; rotate/repaint their ACTUAL head/chest/shoulders/arms/vortex body into SOUTHWEST FRONT-LEFT three-quarter, aiming diagonally DOWN-LEFT. Reference2 is an ABSTRACT VIEW DIAGRAM for the correct frontLEFT planes and direction only; it is not a donorcharacter. Follow it: frontface/chest plane towardLEFT, side/rear mass onRIGHT, nose/head projection onLEFT, leading palm contact DOWNLEFT. Visible face/core stillfront, so do not make a rearbody. Every right-column sprite must have clear LEFTWARD orientation, opposite of oldwrongRIGHT-facingfigures. Newly draw coherent volumes and limb poses, not horizontalmirror-only copies. Preserve source unique brightyellow-whitecore/orange-goldflames/rededges, angularhead/frontglowingeyes, branching chestveins, thick two arms withcurledhands andoneattachedvortexbase; no legs/weapons/props or redesign. Keep leftcolumn S straightfrontal exactly inquality/style/proportions, head/chest/frontfacescreenDOWN. Do not change it intoLEFTprofile.\\n\\nOutput exactly TWO equal COLUMNS by 3 equal ROWS = 6 SMALL COMPLETE sprites. SAME phase order and sourcehead/core scale asattachedsheet. Use wide clear gutters and safe margins: body width<=200pixels/height<=210 onportrait1024x1536; complete extendedhands/flamecrowns/basefit ineachcell. Do not enlarge rightcolumn. All unused space transparentalpha0; no backdrop, floor/shadow/text/labels/borders/diagramcolors/particles/detachedflames. One continuousconnectedbodyineachcell. No clipping/touchingedges/overlappingrectangles/missingcells. Same realarticulatedposes and fullyattachedsourcebody, not translatedstills.\\nROWS1windupdrawarmsback whilehead/cheststayFRONTLEFT; ROW2contact: SWpalmextendsdownLEFT(screenLEFTlower)alongfacing, bodyleansLEFT; NO rightwardstrike. ROW3recover retractsarmdistinctfromwindup. LeftScolumn palmsreachDOWNtowardviewer. Frontleftorientationremainsall3rightcolumnrows.\\n\",\n  \"hit-S-SW-separated-exact-prompt.txt\": \"Create a transparent RGBA 2D game sprite sheet of the exact attached fiery elemental. Preserve its angular flame head, glowing eyes, orange-gold flame body, white branching core, two attached flame arms with curled hands, and one continuous flame-vortex base. One head per body. No legs, weapons or new features. This is new animation art, not extracted original motion.\\n\\nMake exactly TWO COLUMNS and 2 ROWS, 4 complete connected bodies, on a portrait1024x1536 canvas. Make the figures SMALL: each complete figure fits a200x240pixel box, with at least100pixels of clear transparent space between all bounding rectangles. No clipping, detached sparks or detached flame islands. All empty pixels alpha0. No floor, shadow, backdrop, text or labels.\\n\\nLEFT COLUMN: S, full FRONT facing viewer/screen down. RIGHT COLUMN: SW, FRONT-LEFT three-quarter, nose and chest aim LEFT and down-left. Rear flame mass is on the right. Maintain this actual body orientation in every row. Do not aim right. Newly paint coherent opposite-side volumes, no simple mirror duplicates.\\n\\nTOP ROW1: impact recoil, head and chest lean back, elbows fold, vortex compresses. BOTTOM ROW2: recovery, chest comes upright, one arm lowers, the other elbow releases. Two distinct actual poses, stable head/core size, attached body and stable hover projection. Exactly4 complete sprites in2rows. No death frames.\\n\",\n  \"idle-walk-E-SE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"hit-death-S-SW-leftfix-exact-prompt.txt\": \"Correct ONLY the right/SW direction column in the attached existing WIP fire-elemental animation sheet. This is new artwork authoring. The right-column figures currently wrongly face screenRIGHT; rotate/repaint their ACTUAL head/chest/shoulders/arms/vortex body into SOUTHWEST FRONT-LEFT three-quarter, aiming diagonally DOWN-LEFT. Reference2 is an ABSTRACT VIEW DIAGRAM for the correct frontLEFT planes and direction only; it is not a donorcharacter. Follow it: frontface/chest plane towardLEFT, side/rear mass onRIGHT, nose/head projection onLEFT, leading palm contact DOWNLEFT. Visible face/core stillfront, so do not make a rearbody. Every right-column sprite must have clear LEFTWARD orientation, opposite of oldwrongRIGHT-facingfigures. Newly draw coherent volumes and limb poses, not horizontalmirror-only copies. Preserve source unique brightyellow-whitecore/orange-goldflames/rededges, angularhead/frontglowingeyes, branching chestveins, thick two arms withcurledhands andoneattachedvortexbase; no legs/weapons/props or redesign. Keep leftcolumn S straightfrontal exactly inquality/style/proportions, head/chest/frontfacescreenDOWN. Do not change it intoLEFTprofile.\\n\\nOutput exactly TWO equal COLUMNS by 5 equal ROWS = 10 SMALL COMPLETE sprites. SAME phase order and sourcehead/core scale asattachedsheet. Use wide clear gutters and safe margins: body width<=200pixels/height<=210 onportrait1024x1536; complete extendedhands/flamecrowns/basefit ineachcell. Do not enlarge rightcolumn. All unused space transparentalpha0; no backdrop, floor/shadow/text/labels/borders/diagramcolors/particles/detachedflames. One continuousconnectedbodyineachcell. No clipping/touchingedges/overlappingrectangles/missingcells. Same realarticulatedposes and fullyattachedsourcebody, not translatedstills.\\nROW1hitrecoil/ROW2hitrecovery, FRONTLEFTtorsoheadorientationremainsSW despitebackwardlean. ROW3deathdestabilize/headslump/waistcompress; ROW4substantiallylowerfoldedconnectedbody; ROW5completeLOWhorizontalcollapsedextinguishingelementalcorpse withhead/torso/armsvortexattached. Exact3differentdeathstages, no standingfinalframe/noempty. Preservehead/chestsize, lowercorpsefromarticulationnotglobalshrink. EveryrightcolumndeathheadfacesLEFT; rear massRIGHT.\\n\",\n  \"attack-S-SW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 S: full FRONT towardviewer/screenDOWN, symmetric visible front eyes and front core; torso/head/arms do NOT turnright/left.\\nCOLUMN2 SW: FRONT-LEFT three-quarter, frontcore and eyes visible, facing lowerLEFT; clear LEFTward head/hand aim, notSE.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"death-E-SE-separated-exact-prompt.txt\": \"Create newlyauthored transparentRGBA 2D GAME sprites of the exactsource IFRIT, handpaintedbrightyellow-whitecore/orangegoldflames/reddarkedge, angularpointedhead/frontglowingeyes, broadfieryshoulders/branchingcoreveins, exactlyTWOthickattachedarms withcurledflamehands, ONEcontinuousnarrowwaistmergingintoattachedswirlingflamevortexbase. NOlegs/feet/weapons/props/rockbody/clothes/newfeatures. Exactsourceidentity/materials/bodyproportions andconnectedbody, no detachedsparks/flameislands. Existingrecordfloatingtrue duringliving; deathsettlesonfloor. Thisisnewauthoredmotion, not extractedoriginalanimation.\\nEXACTLYTWOdirectionCOLUMNS by 3 equalPHASEROWS = 6 completefullbodyposes onportrait1024x1536canvas. Centersx256and768; compactfigureswidth<=220height<=280, hugegutters/safeoutermargins, no clipping/overlap/touchingedges. ALLemptyspacefullyalpha0, no coloredmatte/shadow/floor/text/borders/labels/aura/projectiles/particles. Oneconnectedcompletebodyineachcell, no missing/blankrows. Column1E pureRIGHTprofile, face/coreedgeonRIGHT/backmassLEFT. Column2SE FRONT-RIGHT3/4facinglowerRIGHT, frontface/corevisible, sourceconsistentdepthandlimbs. Samehead/chest scale andcameraacrossallphases, truejoint/bodydeformation, neverglobalshrink/translatedstill.\\nONLY DEATHROLE: TOPROW1destabilize/slump, shoulders/headfall andarmsbendinward, torsoleans/collapsesbutstillupperbodyoverbase. MIDDLEROW2collapse withhead/chestmuchLOWER, corefoldedforward andarmsrestagainstattachedflatteningvortex. BOTTOMROW3FINALLOWCOMPLETEprone/extinguishingflamecorpse: horizontalverylowmound withhead/core/armscurledtogetherattachedtolowvortexbaseonfloor; recognizablecompleteoriginalelementalwithfaintorangecore/darkredflameedges, notstanding/notfloating/noemptyframe. THREEunmistakableprogressions; actualsourcebodyarticulation, noshrinkofstandingstill. Sameanatomicalcore/headsizeall3, donotnormalizecorpseheight. EcorpseheadRIGHT/SEheadlowerRIGHT, coherentheading.\\n\",\n  \"hit-death-S-SW-leftfix-onehead-exact-prompt.txt\": \"Make a highlyfocused transparentRGBA sprite-sheet repair to the attached IFRIT hit/death artwork. ExactlyTWOdirectioncolumns×FIVErows=TENcompleteconnectedfireelementals. Preserve everycorrectbody/pose/sourceidentity andhead/core/armdimensions. The TOPRIGHT sprite (SW HITrecoil) incorrectly has TWO faces/heads: anOLD upward/right-lookingface atupperRIGHT above shoulder, plus NEW correctfrontLEFTface lowerLEFT. REMOVE the oldupwardRIGHTface/head entirely by newlypainting coherent plainattachedrearflamecrown/backshoulder silhouette there. RETAIN ONLYthe correctfrontLEFT angularhead/glowingeyeface attachedatthenormalneck. ExactlyONEheadandONEpairfrontglowingeyes persprite; no duplicateface/chestface/extrahead hiddeninflames. Allother9poses alreadyhaveonehead; keepthem unchangedinquality andcount. Rightcolumnhead/bodyviewmuststayFRONT-LEFT3/4towardlowerLEFT, rearflamemassRIGHT. Toprightrecoilcanleanbackbutface/headstillfacesLEFT, notRIGHT. LeftcolumnSremainsfullfronttowardviewer. Nohorizontalmirror-onlyart, newpaintedcoherenthead/rearflamevolumes.\\nSame actualsourcebrightyellow-whitecore/orangegoldflames/darkrededges, upperbodytwoarmswithcurledflamehandsandoneattachedvortexbase, no legs/feet/weapons/newfeatures. Continuouswholebodyeverycell, no detachedsparks/particles. Keep original5rows:hitrecoil,hitrecover,deathdestabilize,deathcollapse,deathfinalveryLOWcompletepronecollapsedflamecorpse. Noemptyframes orstandingfinaldeath. All10compactcompletebodies separatedbylargebroadtransparentguttersandoutersafemargin. No clipping/overlap/touchingedges. Outputlargeportrait1024x1536, emptypixelsalpha0, nobackground/floor/shadow/text/labels/borders. Newauthoredmotionrepair, notoriginalanimationextraction. Onlyoneheadperbody ismandatory.\\n\",\n  \"attack-E-SE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"hit-death-W-NW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 W: true LEFT PROFILE, frontface/core only edge-on on LEFT, back mass to RIGHT; every head shoulders palms and vortextravel lean screenLEFT. Not frontal.\\nCOLUMN2 NW: BACK-LEFT rear three-quarter facing UPPERLEFT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; eye onlya tiny coherent side-edge sliver if needed, not front face.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"death-E-SE-connected-spaced-exact-prompt.txt\": \"Re-author this existing WIP IFRIT sprite sheet with MUCH SMALLER BODIES and VERY WIDE CLEAR GUTTERS, while preserving allactualarticulatedposes/sourceidentity/head-core-limbproportions/orientation andconnectedflamebodydetails. EXACTLY2equalcolumns×3equalrows=6completeindependentfullbodyelementals. Onportrait1024x1536, all COMPLETE figures MUSTFIT180pixelwidth×190pixelheight boxes centeredatx256/768, androwcenters evenlyspaced; tinyfigures, overwhelminglyEMPTYcanvas. The currentreferencebodies are tooBIGandnearlytouch; newones must be roughlyHALFtheircurrentpixelheight andwidth. Do not fillrowheight. Verybroadtransparentoutermargins, at least80px entirelyemptybetweenallposeboundingrectangles. Paintatuniformsmallerhead/core drawingresolutionacrossall6 sprites, not arbitraryperdeath-heightnormalization. Preserveexactbodypostures/relativevolumes andfacing, thisisnewauthoredsize/spacingrepair, notoriginalanimationextraction.\\nActualsourceangularonehead/frontglowingeyepair, brightyellow-whitecore/orangegoldflames/reddarkedge, broadfieryshoulders/branchingveins, exactlyTWOattachedflamearms/curledhands/oneattachedvortexwaistbase, no legs/feet/weapons/clothes/rocks/newfeatures. ExactlyONEHEAD perbody, no addedfaceonchest/shoulder/crown. Every opaque flamepixel must belongtooneconnectedcompletebody: no detachedflares/sparks/islands. Closeeveryflamegapwithcoherentattachedflameanatomy or omitunrelatedlooseflare. No dropframe, emptybody, placeholders or translatedstill; preserve genuineoriginalposes. Allunusedspacefullyalpha0, no coloredmatte, background, floor/shadow/text/labels/borders/particles/aura. Do notclipanyheadtip/fingertip/vortexedge orincludeotherbodyinitsrectangle.\\nExactly3DEATHrows: row1destabilizingfullsourceupperbody/slump, row2muchlowerfoldedhead/core/armsagainstflatteningbase, row3completeveryLOWhorizontalextinguishingflamecorpse head/core/armsattachedtovortexonfloor. Column1EtrueRIGHTprofile; column2SEfrontRIGHT3/4all3rows. Actualrelativeanatomicalbodydimensionsremainconstantanddeathheightdropsbyarticulation. TopLEFTsprite has oneoldDETACHEDflaretongueinsideleftforearmarea (aroundreferencex188,y403); joinitcoherentlytomainforearmoromitit. Mustbeexactly6connectedbodies, never7.\\n\",\n  \"idle-walk-S-SW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 S: full FRONT towardviewer/screenDOWN, symmetric visible front eyes and front core; torso/head/arms do NOT turnright/left.\\nCOLUMN2 SW: FRONT-LEFT three-quarter, frontcore and eyes visible, facing lowerLEFT; clear LEFTward head/hand aim, notSE.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"hit-death-E-SE-fivephase-fix-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 E: true RIGHT PROFILE, front face/core only edge-on on RIGHT, back mass to LEFT; every head, shoulders, palms and vortex travel lean face screenRIGHT. No face towardviewer.\\nCOLUMN2 SE: FRONT-RIGHT three-quarter, frontcore and eyes visible, facing lowerRIGHT; asymmetry and rightward head/hand aim clear.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\\nCRITICAL CORRECTION: Previousversion hadONLYFOURrows/eightbodies andFAILED. Output EXACTLYFIVErows/TENcompletebodies: row1HITrecoil, row2HITrecover, row3DEATHdestabilize-standing-but-slumped, row4DEATHcollapse-substantiallyLOWERfoldedbody, row5DEATHfinalLOWcompleteflattenedflamecorpse. DoNOTcombine two deathphases or leavefinalrowblank. Fivewell-separatedsourcebodiesineachcolumn. Fixsize/guttersifneeded, keepfullbody. Reference1is exactsource; reference2showsincorrecteightposeversion foridentityonly, notlayout.\\n\",\n  \"idle-walk-W-NW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 W: true LEFT PROFILE, frontface/core only edge-on on LEFT, back mass to RIGHT; every head shoulders palms and vortextravel lean screenLEFT. Not frontal.\\nCOLUMN2 NW: BACK-LEFT rear three-quarter facing UPPERLEFT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; eye onlya tiny coherent side-edge sliver if needed, not front face.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 idle relaxed connected flamebody, arms lowered, vortexcoiled underwaist. ROW2 idle breathing: actual shoulder/elbow bend changes, chestexpands slightly, lowerwhirl compression changes and crownflames bend coherently; distinct real pose, same silhouette scale. ROW3 travel/hover CONTACTA: torsoleans slightly toward exactheading, leading shoulder/arm forward andotherarm back, lowerflamevortex curls behind alongoppositeheading. ROW4 travel passing: shoulders shift, leading elbow bendsback asoppositehand swingsforward, lowerwaist/vortex bends beneath core with different centralflamecurl. ROW5 travel CONTACTB: OPPOSITE arm/shoulder now leads alongheading, oldleadingarmback; lowerflamevortex swings to opposite curvedjoint arrangement. Both hands/shoulders andwaist/attachedvortex actuallyarticulate, tracecontinuous core→waist→base. No stillswithmerelydifferentflametexture or bodytranslation. Same rootprojection level in all livingframes, no detached floatingbodyparts. Exactly2idle+3travel genuinely distinctdrawings perdir.\\n\",\n  \"attack-W-NW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 3 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 W: true LEFT PROFILE, frontface/core only edge-on on LEFT, back mass to RIGHT; every head shoulders palms and vortextravel lean screenLEFT. Not frontal.\\nCOLUMN2 NW: BACK-LEFT rear three-quarter facing UPPERLEFT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; eye onlya tiny coherent side-edge sliver if needed, not front face.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nTHREE ATTACK/CAST PHASE ROWS top-to-bottom. ROW1 windup: arms draw back/bend atshoulders/elbows, chestleansbackslightly while facing remains exactcolumnheading. ROW2 CONTACT: one or both attached flamepalms extend FORCEFULLY along exactheading at an opponent immediately ahead, torsoleans intothatreach, palm is furthestattackpoint; fingers remain connectedtohand and vortex stabilizesunderwaist. For E reachRIGHT, SE lowerRIGHT, S towardviewer/DOWN, SW lowerLEFT, W LEFT, NW upperLEFT, N straightUP/away, NE upperRIGHT. Opponent/projectile/beam must not be drawn; actualhand/palm contactpoint must visibly alignfacing. ROW3 recover: elbows retracted, chestupright andattachedvortexreturns undercore, distinctfromwindup andidle. Magicstyle actualarmcasting lunge appropriateoriginal elemental, no inventedweapons/effectsprites. Everyrow sameheading, no frontalface flips inbackviews.\\n\",\n  \"hit-death-S-SW-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 S: full FRONT towardviewer/screenDOWN, symmetric visible front eyes and front core; torso/head/arms do NOT turnright/left.\\nCOLUMN2 SW: FRONT-LEFT three-quarter, frontcore and eyes visible, facing lowerLEFT; clear LEFTward head/hand aim, notSE.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"hit-death-N-NE-exact-prompt.txt\": \"Create newly authored transparent RGBA hand-painted 2D GAME animation sprites of ONLY the IFRIT fire elemental shown in the exact attached existing-project atlas context. This is new motion from a neutral existing source, NOT recovered original animation. Preserve actual source identity and proportions: menacing angular pointed flame head and glowing front eyes, broad fiery shoulders, glowing branching lava-like chest/core veins, thick flame forearms ending in curled claw/fist/palm flame volumes, narrow flame waist merging continuously into ONE broad curling flame vortex base. Bright yellow-white core, orange/gold flames with red dark edges. No rock body, armor, clothing, staff, sword, props, human skin, legs, feet, wings or new appendages. Source is already floatingTRUE: living motion is attached torso/arm/tail-vortex articulation and coherent hovertravel, NOT invented humanoid legs. Head, torso, exactly TWO arms and lower flame whirl remain one continuous connected fire body, no detached sparks, embers, flame islands or projectiles. Repaint clean connected flame silhouette and ignore unrelated neighbor fragments in source. Preserve source original face/core and fluid flame texture, not a new generic monster. Genuine original painted joint/body deformation in every frame, not translated/scaled/rotated copies of one still.\\n\\nEXACTLY TWO equal DIRECTION COLUMNS by 5 equal PHASE ROWS, large PORTRAIT1024x1536 canvas. Figure centers roughlyx256 and768. Each complete figure must fit within a SMALL compact200pixel WIDTH and210pixel HEIGHT box (including reaching hands and crown/vortex tips); source design should remain short/broad enough to fit. At most40percent cellwidth and62percent cellheight. VERY large transparent gutters, more than100pixels clear between entire body rectangles; broad safe outer margins and every bodyincludinghead/flamebase entirely visible. Same camera, head/core/arm proportions and drawing scale acrossallposes. No floor, shadow, background, text, gridlines, borders, labels, particles, beams, detachedfire, detachedembers or looseprops. All unused pixels fully alpha0; no opaque colored matte. ONE complete connected sprite percell. No body clipping or overlapping sprite rectangles.\\n\\nCOLUMN1 N: FULLBACK facing straight AWAY/screenUP: backofhead/nape, rear shoulderblades and back flameveins; NO front eyes, NO frontal chestcore. Attack hands/head aim straightUP away, notRIGHT.\\nCOLUMN2 NE: BACK-RIGHT rear three-quarter facing UPPERRIGHT; broad REAR torso/flame shoulderplanes and rearneck visible, frontcore hidden; tiny side-edge eyesliver onlyif anatomically coherent, notfrontal.\\nThe same2directioncolumns remain unchanged acrosseveryrow. Distinctfront/backandoppositeprofiles must be visuallycorrect; do NOT copyfrontbody into rearcolumns or mirrorduplicate poses.\\n\\nFIVE PHASE ROWS top-to-bottom. ROW1 HIT recoil: headandchestjerk back opposite exactheading, elbows fold defensively, continuouswaist/vortexcompresses; small realposturechange, not mirroredart. ROW2 HIT recover: corestartsbackupright, onehand lowersandotherbends, distinctanatomical recovery. ROW3 DEATH destabilize: shouldersslump andhead tilts, armscurl inward, waist/vortex sinks toward impliedfloor; connectedwholebody. ROW4 DEATH collapse: torso/corefolds low towardbase, head/shoulders substantiallydrop, attachedarmsrest inward on collapsedflamewhirl, stillwholeconnectedsourceelemental. ROW5 DEATH finalcomplete LOW extinguishing flamecorpse: sourcehead/core/arms curled together attachedto flattened lowflamevortex restingonfloor, verylowhorizontalmound with faintorangecore/redflameedges; recognizable completecollapsedoriginalelemental, NO standingbody, no floatingupperbody, no emptyframe andno detachedashparticles or newrocks. Three unmistakabledeathprogressions, allsameanatomicalsize; never shrinkrescale entirestandingstill. Do not normalize finalcorpseheight to livingheight. Preserveheading cues inhead/shoulder orientation throughdeaths, especially truebackN and coherent rear3/4NW/NE.\\n\",\n  \"death-S-SW-separated-exact-prompt.txt\": \"Create a transparent RGBA 2D game sprite sheet of the exact attached fiery elemental. Preserve its angular flame head, glowing eyes, orange-gold flame body, white branching core, two attached flame arms with curled hands, and one continuous flame-vortex base. One head per body. No legs, weapons or new features. This is new animation art, not extracted original motion.\\n\\nMake exactly TWO COLUMNS and 3 ROWS, 6 complete connected bodies, on a portrait1024x1536 canvas. Make the figures SMALL: each complete figure fits a200x240pixel box, with at least100pixels of clear transparent space between all bounding rectangles. No clipping, detached sparks or detached flame islands. All empty pixels alpha0. No floor, shadow, backdrop, text or labels.\\n\\nLEFT COLUMN: S, full FRONT facing viewer/screen down. RIGHT COLUMN: SW, FRONT-LEFT three-quarter, nose and chest aim LEFT and down-left. Rear flame mass is on the right. Maintain this actual body orientation in every row. Do not aim right. Newly paint coherent opposite-side volumes, no simple mirror duplicates.\\n\\nTOP ROW1: death starts, head and shoulders slump, arms curl inward, whole body lowers. MIDDLE ROW2: death collapse, chest folds low toward the vortex, hands settle against the same attached base. BOTTOM ROW3: final very LOW horizontal corpse, head/core/arms curled together on a flattened extinguishing vortex touching the ground. The complete original body stays connected and recognizable. Three clear collapse stages, not a standing last frame or an empty frame. Same anatomical size; lower height comes from folding. Exactly6 complete sprites in3rows.\\n\"\n}\n\nINDEPENDENT QA REPAIRS (exact saved prompts):\n{\n  \"hit-death-W-NW-independent-leftrepair-exact-prompt.txt\": \"Re-author an IFRIT animation game sprite sheet from the two attached references. Reference1 is exact source identity: fire elemental with angular pointed head, glowing front eyes, broad shoulder/chest, branching yellow-white core veins, TWO thick attached arms with curled flame fists, narrow connected waist and one attached flame vortex tail/base, no legs/feet/props. Reference2 shows the CORRECT WEST and NORTHWEST views. Preserve that image's camera/materials/body design and LEFTWARD FACE orientation for BOTH columns. Do NOT mirror any reference or duplicate a pose. This is new authored joint/body motion from existing-project art, not recovered original animation.\\n\\nOUTPUT true transparentRGBA portrait1024x1536, EXACTLY TWO columns × FIVE phase rows =10 complete independent fullbody fire elementals. ALL empty space alpha0, no opaque colored matte/glow/background/shadow/labels/grid/particles or detached sparks. Every visible fire pixel attached to its own one connected body. Huge clear gutters: compact bodies no wider than220px, no taller than230px, centered x256 and768, row centers y154,461,768,1075,1382. Keep all full bodies and crown/finger/vortex tips strictly inside their cells, with at least60pixels empty clear space between rows. Never crop a limb/flame tip or join neighboring bodies. Same actual anatomical head/core/arm dimensions drawing scale across all10; corpse collapses by folding, NOT shrinking a standing figure.\\n\\nLEFT COLUMN WEST W: true LEFT PROFILE, pointed face/glowing eye/nose on LEFT, backmass on RIGHT. RIGHT COLUMN NORTHWEST NW: genuine rear LEFT threequarter, back/nape/dorsal spine visible, head turned AWAY and toward LEFT. The visible nearer shoulder/upperarm is the LEFT screen side, far shoulder foreshortened on RIGHT. Show only a small LEFT-edge partial face or hide eyes completely. NEVER put an eye or pointed face on RIGHT edge. NW must be the exact same rear-left projection as the RIGHT column of reference2, NOT rear-right NE. Flamecrown trails to RIGHT behind the LEFT-facing head; crown tilt alone is not a facing cue. Keep this head/shoulder orientation for ALL FIVE NW rows even when recoiling/folding. Back chest should not show frontal face/chest V.\\n\\nROWS top to bottom: 1 HIT recoil, core/head lean back opposite the LEFT heading, elbows fold defensively, waist/vortex compress; but face remains LEFT and NW back-left planes stay consistent. 2 HIT recovery, return core upright with changed shoulder/elbow angles, fists lowering, one continuous body; face remains LEFT. 3 DEATH destabilize, head/shoulders slump, arms curl inward, base settles toward ground. 4 DEATH collapse, head/chest fold very low onto attached arms/base, complete original firebody recognizable. 5 DEATH final, complete LOW horizontal collapsed firecorpse with recognizable folded head/core/arms attached to flattened low vortex resting on implied floor; low mound, not standing, blank, or missingbody. W final head at LEFT side. NW final retains folded back-left shoulder/head projection and no RIGHT-facing face. All5 actual distinct poses; no translated/rescaled stills. Preserve original source identity, exactlyONEhead perbody, connected limbs, no added face on chest/shoulder.\\n\",\n  \"attack-E-SE-independent-connected-exact-prompt.txt\": \"Re-author this WIP transparentRGBA IFRIT game sprite sheet while preserving the exact original character identity, anatomical head/core/arm dimensions, its actual articulated poses and direction layout. Exact identity: one angular pointed firehead with glowing front eyes, broad fiery shoulders/branching brightyellow-white chestcore veins, exactlyTWO thick attached arms/curled flamehands, narrow continuous waist merged into ONE flamevortexbase, orangegold flames with darkrededges. No legs/feet/props/newfeatures. This is newly authored motion from existing project art, not recovered original animation.\\n\\nRepair a visible defect: the reference has TINY DETACHED flame fragments/wisps. Every visible nontransparent firepixel MUST belong to the SAME visiblyconnected fullbody in each cell. Attach every crown/arm/waist/vortex flame lobe with a THICK visible orange core connection, or omit the loose lobe in the newly painted art. NO detached sparks, embers, floatingflameislands, aura, beams, particles, shadow, floor, text or labels. Do NOT rely on nearlytransparent haze to bridge opaqueflames. All unused space fullyalpha0. Do not omit entireposes or crop any part.\\n\\nEXACTLY2directionCOLUMNS ×3phaseROWS =6complete independent fullbodyposes, portrait1024x1536. Column1E pureRIGHTprofile: pointedface/nose/eye onRIGHT, backmassLEFT, frontcoreedgeonRIGHT. Column2SE frontRIGHTthreequarter, frontcore andeyepair visible, facinglowerRIGHT. Keep consistent facing eachphase. Small compact figures with ampleclear gutters: eachbody fits width360height360, centeredx256/768 androwsy256/768/1280, at least50pixels emptybetweencompleteposes, safeoutermargins. Samehead/chest/armdrawing scale across6, genuine deformation notstilltranslation. ONLY ATTACK/cast role, rows top tobottom: row1 windup, elbows foldback andchestcoils; row2 clearrelease, RIGHTfacingE pushesattachedrightwardhandfarouttowardtarget, SE pushesfrontRIGHTpalmsforward, realshoulder/elbow/waistrotationandflamebasecountercurl; row3 recovery, handsreturnandcoreuncoils with actualdifferentjointangles. Keep the strong existing gestures and full bodies. No projectiles or new props. All6poses mustbe genuinelydistinct.\\n\",\n  \"death-E-SE-independent-connected-exact-prompt.txt\": \"Re-author this WIP transparentRGBA IFRIT game sprite sheet while preserving the exact original character identity, anatomical head/core/arm dimensions, its actual articulated poses and direction layout. Exact identity: one angular pointed firehead with glowing front eyes, broad fiery shoulders/branching brightyellow-white chestcore veins, exactlyTWO thick attached arms/curled flamehands, narrow continuous waist merged into ONE flamevortexbase, orangegold flames with darkrededges. No legs/feet/props/newfeatures. This is newly authored motion from existing project art, not recovered original animation.\\n\\nRepair a visible defect: the reference has TINY DETACHED flame fragments/wisps. Every visible nontransparent firepixel MUST belong to the SAME visiblyconnected fullbody in each cell. Attach every crown/arm/waist/vortex flame lobe with a THICK visible orange core connection, or omit the loose lobe in the newly painted art. NO detached sparks, embers, floatingflameislands, aura, beams, particles, shadow, floor, text or labels. Do NOT rely on nearlytransparent haze to bridge opaqueflames. All unused space fullyalpha0. Do not omit entireposes or crop any part.\\n\\nEXACTLY2directionCOLUMNS ×3phaseROWS =6complete independent fullbodyposes, portrait1024x1536. Column1E pureRIGHTprofile: pointedface/nose/eye onRIGHT, backmassLEFT, frontcoreedgeonRIGHT. Column2SE frontRIGHTthreequarter, frontcore andeyepair visible, facinglowerRIGHT. Keep consistent facing eachphase. Small compact figures with ampleclear gutters: eachbody fits width360height360, centeredx256/768 androwsy256/768/1280, at least50pixels emptybetweencompleteposes, safeoutermargins. Samehead/chest/armdrawing scale across6, genuine deformation notstilltranslation. ONLY DEATH role, rows top tobottom: row1 destabilize, head/shouldersslump, armscurlinwardandbasebeginstosettle; row2 collapse, head/corefoldsLOWontoattachedarmsandvortexbase; row3 finalcompleteveryLOWhorizontalfirecorpse, recognizablefoldedhead/core/botharms attachedtoflattenedwideflamevortexrestingonimpliedfloor. Finalbodymustnotstandorfloat, nomissinghead/arms, no ashparticles, no blankframes. Preserveanatomicalhead/core/armvolumes byfolding, NOTshrinking wholebody. Keep exactthreeexistingdeathpostures anddirectioncues, withallflamelobesvisiblyattached.\\n\"\n}",
+  "sheets": [
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-0.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 640,
+      "source_anchors": [
+        [
+          349,
+          315
+        ],
+        [
+          764,
+          315
+        ],
+        [
+          349,
+          631
+        ],
+        [
+          764,
+          628
+        ],
+        [
+          349,
+          909
+        ],
+        [
+          764,
+          916
+        ],
+        [
+          349,
+          1201
+        ],
+        [
+          764,
+          1205
+        ],
+        [
+          349,
+          1478
+        ],
+        [
+          764,
+          1498
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-1.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 616,
+      "source_anchors": [
+        [
+          300,
+          305
+        ],
+        [
+          742,
+          305
+        ],
+        [
+          300,
+          613
+        ],
+        [
+          742,
+          613
+        ],
+        [
+          300,
+          904
+        ],
+        [
+          742,
+          907
+        ],
+        [
+          300,
+          1192
+        ],
+        [
+          742,
+          1197
+        ],
+        [
+          300,
+          1488
+        ],
+        [
+          742,
+          1491
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-2.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 616,
+      "source_anchors": [
+        [
+          273,
+          302
+        ],
+        [
+          754,
+          304
+        ],
+        [
+          273,
+          606
+        ],
+        [
+          754,
+          612
+        ],
+        [
+          273,
+          901
+        ],
+        [
+          754,
+          903
+        ],
+        [
+          273,
+          1203
+        ],
+        [
+          754,
+          1202
+        ],
+        [
+          273,
+          1504
+        ],
+        [
+          754,
+          1502
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-3.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 608,
+      "source_anchors": [
+        [
+          294,
+          303
+        ],
+        [
+          752,
+          304
+        ],
+        [
+          294,
+          603
+        ],
+        [
+          752,
+          606
+        ],
+        [
+          294,
+          885
+        ],
+        [
+          752,
+          887
+        ],
+        [
+          294,
+          1166
+        ],
+        [
+          752,
+          1175
+        ],
+        [
+          294,
+          1462
+        ],
+        [
+          752,
+          1469
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-4.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 1024,
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). New reviewer-authored source resolution: reviewedcanvas1024 preserves E/SE core44-56px or W/NW core54-59px versus same-direction idle44-56px. Root mustindependently inspect these reviewer-authoredposes. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+      "source_anchors": [
+        [
+          250,
+          488
+        ],
+        [
+          769,
+          492
+        ],
+        [
+          250,
+          961
+        ],
+        [
+          769,
+          977
+        ],
+        [
+          250,
+          1474
+        ],
+        [
+          769,
+          1483
+        ]
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-5.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 960,
+      "source_anchors": [
+        [
+          282,
+          515
+        ],
+        [
+          782,
+          508
+        ],
+        [
+          282,
+          990
+        ],
+        [
+          782,
+          989
+        ],
+        [
+          282,
+          1486
+        ],
+        [
+          782,
+          1483
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-6.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 936,
+      "source_anchors": [
+        [
+          326,
+          471
+        ],
+        [
+          780,
+          472
+        ],
+        [
+          326,
+          967
+        ],
+        [
+          780,
+          967
+        ],
+        [
+          326,
+          1452
+        ],
+        [
+          780,
+          1454
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-7.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 840,
+      "source_anchors": [
+        [
+          272,
+          495
+        ],
+        [
+          778,
+          487
+        ],
+        [
+          272,
+          995
+        ],
+        [
+          778,
+          997
+        ],
+        [
+          272,
+          1455
+        ],
+        [
+          778,
+          1452
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-8.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 2,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ]
+      },
+      "canvas_size": 1248,
+      "source_anchors": [
+        [
+          309,
+          682
+        ],
+        [
+          780,
+          680
+        ],
+        [
+          309,
+          1375
+        ],
+        [
+          780,
+          1378
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-9.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 1056,
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). New reviewer-authored source resolution: reviewedcanvas1056 preserves E/SE core44-56px or W/NW core54-59px versus same-direction idle44-56px. Root mustindependently inspect these reviewer-authoredposes. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+      "source_anchors": [
+        [
+          312,
+          641
+        ],
+        [
+          779,
+          641
+        ],
+        [
+          312,
+          1082
+        ],
+        [
+          779,
+          1085
+        ],
+        [
+          312,
+          1422
+        ],
+        [
+          779,
+          1423
+        ]
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-10.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 2,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ]
+      },
+      "canvas_size": 1064,
+      "source_anchors": [
+        [
+          280,
+          674
+        ],
+        [
+          775,
+          674
+        ],
+        [
+          280,
+          1336
+        ],
+        [
+          775,
+          1336
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-11.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 912,
+      "source_anchors": [
+        [
+          281,
+          651
+        ],
+        [
+          763,
+          652
+        ],
+        [
+          281,
+          1094
+        ],
+        [
+          763,
+          1091
+        ],
+        [
+          281,
+          1428
+        ],
+        [
+          763,
+          1429
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-12.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 648,
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). New reviewer-authored source resolution: reviewedcanvas648 preserves E/SE core44-56px or W/NW core54-59px versus same-direction idle44-56px. Root mustindependently inspect these reviewer-authoredposes. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending.",
+      "source_anchors": [
+        [
+          296,
+          310
+        ],
+        [
+          780,
+          311
+        ],
+        [
+          296,
+          646
+        ],
+        [
+          780,
+          646
+        ],
+        [
+          296,
+          984
+        ],
+        [
+          780,
+          990
+        ],
+        [
+          296,
+          1284
+        ],
+        [
+          780,
+          1282
+        ],
+        [
+          296,
+          1502
+        ],
+        [
+          780,
+          1504
+        ]
+      ]
+    },
+    {
+      "output_path": "res://assets/actors/eight_direction/original_based/ifrit_monster_authored/poses-13.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ],
+        "death": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 688,
+      "source_anchors": [
+        [
+          264,
+          326
+        ],
+        [
+          784,
+          333
+        ],
+        [
+          264,
+          672
+        ],
+        [
+          784,
+          673
+        ],
+        [
+          264,
+          1023
+        ],
+        [
+          784,
+          1024
+        ],
+        [
+          264,
+          1313
+        ],
+        [
+          784,
+          1312
+        ],
+        [
+          264,
+          1505
+        ],
+        [
+          784,
+          1505
+        ]
+      ],
+      "scale_review_note": "Independently reviewed anatomical neck/uppercore/dorsal-to-narrowwaist landmarks on400pixel normalizedcanvases acrossallroles; see anatomical-scale-review.json (±4pxmanualuncertainty). Existingcanvas retained after matching same-direction head/core scale; no perpose resizing. Finalcorpseheight andgesturebbox were notusedfornormalization. SourcePNGpixels untouched. Measuredsourceanchors project attachedvortexbase; deathsupportline250/400; Mainhover/floorcontactpending."
+    }
+  ],
+  "display_height_basis": "max_living_frame",
+  "source_claim": "Newly authored2D from exact existing-project atlas2 neutral reference, not extracted original animation. Original reference region[0,321,305,322]/SHA preserved; supplemental same-atlas context restores474connected outside-region pixels. Same source picture as fire guardian but distinct presentation, no asset/profile sharing.",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "cast_uses_authored_attack": true,
+    "notes": "IndependentQA inspected original104 overblack/whitealpha composites andsourceidentity; rejected NW5hit/death for actualNE/rightface and Eattack1/Edeath0 fortinyvisibleflameislands. Reauthored W/NW10 plusE/SEattack6/death6 viaimage_gen only; originals/failures/exactprompts preserved. Allremaining82 pass independentstaticvisualreview; new22 passauthorstaticdirection/connectedbody/scale/geometry butrequirefreshrootinspection beforeeight_views=true. Originalfloatingtrue/height86/magic/.52/presentationvariant7 retained. Anatomicalscale andvortexprojection/deathsupport measured; see anatomical-scale-review.json. No Main/completion approval. ROOT fresh independent inspection of all104black rolecontacts, especially new22 E/SEattack+death andW/NWhit/death: allcorrectheading/connectedflametorso/arms/vortexandcompleteextinguishedcollapse, nofragmentobserved, stablehead/coreandprojectedbase. Approved for actualMain trial only. Omitoptionalcastalias; preserve existing attack fallback and exact originalmagic/.52/floatingtrue/height86. No completion beforeMain."
+  },
+  "status": "STATIC82_INDEPENDENT_PASS_NEW22_REQUIRES_ROOT_VISUAL_REVIEW_MAIN_PENDING",
+  "actual_Main": "not_run",
+  "completed_added": 0,
+  "root_static_review": {
+    "approved_for_Main_trial": true,
+    "new_reviewer_authored_poses_reviewed": 22,
+    "all_final_poses_reviewed": 104,
+    "completion_added": 0,
+    "scope": "all5roles8heading contacts, actualMainpending"
+  }
+}
