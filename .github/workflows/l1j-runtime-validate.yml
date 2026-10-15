@@ -41,7 +41,9 @@ jobs:
             artifact: win64.exe
             executable: Godot_v4.7.2-stable_win64_console.exe
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 35
+    # Windows executes the full isolated Godot suite slower than Linux.
+    # Do not cancel the final regressions before their assertions finish.
+    timeout-minutes: 50
     env:
       PYTHONUTF8: '1'
     steps:
