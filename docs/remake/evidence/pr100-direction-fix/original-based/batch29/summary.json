@@ -44,7 +44,50 @@
   ],
   "existing_good_assets_or_maps_or_game_code_replaced": 0,
   "mandatory_guard_relaxations": 0,
-  "CI": "Latest391437680cAndroid/resource/GodotSUCCESS; Animationinprogressasofremote-observation. New392fullCI notrun becauseuserSTOP.",
+  "CI": {
+    "sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+    "observed_utc": "2026-10-15T22:34:40.037367+00:00",
+    "runs": [
+      {
+        "id": 38812389847,
+        "name": "TWILIGHT Android ARM64 APK Playtest",
+        "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812389847"
+      },
+      {
+        "id": 38812386688,
+        "name": "TWILIGHT resource integrity (no silent missing assets)",
+        "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812386688"
+      },
+      {
+        "id": 38812382354,
+        "name": "Godot Validate",
+        "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812382354"
+      },
+      {
+        "id": 38812374975,
+        "name": "Animation Presentation Validate",
+        "head_sha": "437680c6cdd40a7a6fc9958b2d267402303a8f50",
+        "status": "completed",
+        "conclusion": "cancelled",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38812374975"
+      }
+    ],
+    "animation_job_counts": {
+      "success": 40,
+      "cancelled": 1,
+      "failure": 0
+    },
+    "new392_fullCI": "NOT_RUN_USER_STOP"
+  },
   "Android_actual_device": "UNVERIFIED",
   "main_merge": "NOT_PERFORMED;conflict remains",
   "user_stop": "All new production/imagegen/engines stopped; onlyfinalpreservation/doc/Git operationscontinue."

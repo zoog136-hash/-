@@ -1,0 +1,2893 @@
+{
+  "observed_utc": "2026-10-15T22:26:29.869275+00:00",
+  "goal": 498,
+  "completed": 392,
+  "percent": 78.7,
+  "remaining": 106,
+  "groups": {
+    "hero_plus": {
+      "completed": 140,
+      "total": 180,
+      "remaining": 40
+    },
+    "normal_monster": {
+      "completed": 212,
+      "total": 258,
+      "remaining": 46
+    },
+    "boss": {
+      "completed": 40,
+      "total": 60,
+      "remaining": 20
+    }
+  },
+  "source_of_truth": "qualifiedcoverage392 andstagedHEAD391plusHellv3only; allHOLD/WIPexcluded",
+  "identities": [
+    {
+      "id": "transform:393",
+      "numeric_transform_id": "393",
+      "name": "해방된 할파스",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: flying",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:393",
+      "source_reference": {
+        "path": "res://assets/catalog/0a4de2a60525e7bdee76bd2d.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "393",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/393.png?v=261001c",
+        "sha256": "9654163ce4bda136299fe5c8535bbaddfab3f5003b8ba2b659a56f4feb302e8c",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:267",
+      "numeric_transform_id": "267",
+      "name": "지배자 기르타스",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive horned or demonic body is not supplied by human equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:267",
+      "source_reference": {
+        "path": "res://assets/catalog/d4c5f056d66c079ee53f766f.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "267",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/267.png?v=261001c",
+        "sha256": "912ee3249f73a65d7eaf3c0fe0e872fd61c9a5b25094aa422baed39816af194d",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:411",
+      "numeric_transform_id": "411",
+      "name": "신화-투사(여)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 체인소드",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:411",
+      "source_reference": {
+        "path": "res://assets/catalog/23ddcb3e1e4a9f3c6f48124e.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "411",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/411.png?v=261001c",
+        "sha256": "c83eb1dd8aab0fc7b726a6c44f9a7fed43b4bb82d273ca5f5f1405fdb0fe8e77",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:242",
+      "numeric_transform_id": "242",
+      "name": "플래티넘 바포메트",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive horned or demonic body is not supplied by human equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:242",
+      "source_reference": {
+        "path": "res://assets/catalog/de8b2ddefd09cd8ade958384.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "242",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/242.png?v=261001c",
+        "sha256": "94457571d8749778f1c2c2548288fa69f4bf5c87e7139a225647dc8787f302f8",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:142",
+      "numeric_transform_id": "142",
+      "name": "신화-투사(남)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 체인소드",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:142",
+      "source_reference": {
+        "path": "res://assets/catalog/e8276e21323905849d6c9cd3.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "142",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/142.png?v=261001c",
+        "sha256": "d7d03cfffa0ff0b045a224ef2546ae9566faa642dafa8eff69b3fd46fc3a54ae",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:141",
+      "numeric_transform_id": "141",
+      "name": "신화-총사(여)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 총",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:141",
+      "source_reference": {
+        "path": "res://assets/catalog/dc95f84013483f22ba99d798.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "141",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/141.png?v=261001c",
+        "sha256": "978a51df5cb31131134d4f2dca4f66cd48c908db6b0b46be8a10bf3c568ca2c8",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:140",
+      "numeric_transform_id": "140",
+      "name": "신화-총사(남)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 총",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:140",
+      "source_reference": {
+        "path": "res://assets/catalog/28f3cc7da2ef8ab97ed03296.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "140",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/140.png?v=261001c",
+        "sha256": "e2cfc69f827a0836230bded49ec5c13aea90c5efadad9f0e69b6f6b7acf1e52e",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:139",
+      "numeric_transform_id": "139",
+      "name": "신화-다크엘프(여)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 이도류",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:139",
+      "source_reference": {
+        "path": "res://assets/catalog/672979626328d4a7e72a7762.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "139",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/139.png?v=261001c",
+        "sha256": "3fde39a02645010eb4ae6838cce62086810e6e2788d7303bf44b4b4e2d0ec8f3",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:138",
+      "numeric_transform_id": "138",
+      "name": "신화-다크엘프(남)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 이도류",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:138",
+      "source_reference": {
+        "path": "res://assets/catalog/22da970593e807d3e14de888.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "138",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/138.png?v=261001c",
+        "sha256": "0cd589996841afa8c1c251e5b1b68efdcfa461da7b9cd2cc75729e028b7a5d0e",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:375",
+      "numeric_transform_id": "375",
+      "name": "전설의 낚시왕 폴",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive costume is not supplied by the licensed equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:375",
+      "source_reference": {
+        "path": "res://assets/catalog/be6f2f0c73cd7dffe54e98b6.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "375",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/375.png?v=261001c",
+        "sha256": "0ad4f88dfd6540dc6d441c5ef0726908b6f6add0b8d353dede6499354d2f74ab",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:339",
+      "numeric_transform_id": "339",
+      "name": "실렌의 파수꾼",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: spirit",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:339",
+      "source_reference": {
+        "path": "res://assets/catalog/0e6c8d847abc53e0f210f938.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "339",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/339.png?v=261001c",
+        "sha256": "401caa29182acec3478fae546407331156d03e511143075c4589afdbdebd2182",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:338",
+      "numeric_transform_id": "338",
+      "name": "그랑카인의 역린",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: spirit",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:338",
+      "source_reference": {
+        "path": "res://assets/catalog/fe823245b3bb47d25032af5d.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "338",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/338.png?v=261001c",
+        "sha256": "9fd4e015ee61eac96c7573428d6a59e5a242a3eb2520312965f5667eb8b6ed29",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:191",
+      "numeric_transform_id": "191",
+      "name": "하딘의 영혼",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: spirit",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:191",
+      "source_reference": {
+        "path": "res://assets/catalog/fc02cba251d675d0d26277a0.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "191",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/191.png?v=261001c",
+        "sha256": "6c9fe7082678728b28a2c5befd6cfada0be61512be3affe6c862c56bcb93dce8",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:166",
+      "numeric_transform_id": "166",
+      "name": "다크 하딘",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: spirit",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:166",
+      "source_reference": {
+        "path": "res://assets/catalog/8f548bbfb547f0acb2e157af.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "166",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/166.png?v=261001c",
+        "sha256": "49690ae0bfbfaa565665a19c6041da859f42301af2a5a92aeb763d3f1d2c287d",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:407",
+      "numeric_transform_id": "407",
+      "name": "화염의 엔트",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_기존보류",
+      "reason": "화염의엔트 기존HOLD 유지. 현재엄격8방향네이티브미연결, 이번세션새모션/Main없음.",
+      "exact_resume": "docs/remake/PR100_COMPLETION_REPORT.md",
+      "source_reference": {
+        "path": "res://assets/catalog/e452df267006c1029bae8dde.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "407",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/407.png?v=261001c",
+        "sha256": "e81a288db6310eb0ef312f2e0b8accd52816301828269d8c404bd69344e292db",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:406",
+      "numeric_transform_id": "406",
+      "name": "화염의 네루파",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: special",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:406",
+      "source_reference": {
+        "path": "res://assets/catalog/09aec526b6598da31fe8706e.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "406",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/406.png?v=261001c",
+        "sha256": "827ff749efd4af6105d43b9a69acb6474ed4f2634197980258630c4931da5db5",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:405",
+      "numeric_transform_id": "405",
+      "name": "화염의 페어리",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: flying",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:405",
+      "source_reference": {
+        "path": "res://assets/catalog/64d25f3ba900292ba831c0b3.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "405",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/405.png?v=261001c",
+        "sha256": "5dd0e42a4ceab3527edc3f7e46b9adf9ac471645af0e5823388217d9eb740ddb",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:386",
+      "numeric_transform_id": "386",
+      "name": "벚꽃 소녀",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive costume is not supplied by the licensed equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:386",
+      "source_reference": {
+        "path": "res://assets/catalog/8af2dd8be3cfb5b851b59d37.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "386",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/386.png?v=261001c",
+        "sha256": "406ded98472ee588eeacfafa77f34455be5172d65fbdeebca41bab5e3cd9646f",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:376",
+      "numeric_transform_id": "376",
+      "name": "베테랑 낚시꾼 폴",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_기존실패",
+      "reason": "베테랑낚시꾼폴 기존방향/보행소형시험실패. 이번세션수정없음, 이전실패증거보존.",
+      "exact_resume": "../resume-20261015/fisherman376-wip/diagnostic.json",
+      "source_reference": {
+        "path": "res://assets/catalog/77499baacaaa399548946cb3.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "376",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/376.png?v=261001c",
+        "sha256": "a90a0e93f8f4f3d9b9a0ee89b6502b9e70a0549eed8ffa354c16cf2eb0f42d66",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:360",
+      "numeric_transform_id": "360",
+      "name": "서커스단 카드 마술사",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_기존보류",
+      "reason": "기존HOLD: 방향/카드손 외형 실패. 검증된전체5역할미연결.",
+      "exact_resume": "docs/remake/PR100_COMPLETION_REPORT.md",
+      "source_reference": {
+        "path": "res://assets/catalog/e3588916ce3e7e64dff4cae3.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "360",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/360.png?v=261001c",
+        "sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:359",
+      "numeric_transform_id": "359",
+      "name": "서커스단 트롬본 인형",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive costume is not supplied by the licensed equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:359",
+      "source_reference": {
+        "path": "res://assets/catalog/ec230f19da2fd4dc5363ab53.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "359",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/359.png?v=261001c",
+        "sha256": "c7043809271cbb43fb9d177f11f974a877cbf9f4c58671cd6dd6368c5b8bbf91",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:358",
+      "numeric_transform_id": "358",
+      "name": "서커스단 드러머",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive costume is not supplied by the licensed equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:358",
+      "source_reference": {
+        "path": "res://assets/catalog/ef11a31515ba49797bc7bb02.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "358",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/358.png?v=261001c",
+        "sha256": "cdc7f20987c47aea4e8b431cdabe494bcb59278a71d9efff5946e25bb72aba72",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:357",
+      "numeric_transform_id": "357",
+      "name": "서커스단 단장",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_기존보류",
+      "reason": "기존HOLD: attack2 crop 및N접촉/비례/발앵커 미승인. 승인35포즈는완료아님.",
+      "exact_resume": "docs/remake/PR100_COMPLETION_REPORT.md",
+      "source_reference": {
+        "path": "res://assets/catalog/4f7cead373e7901052fa2b5c.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "357",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/357.png?v=261001c",
+        "sha256": "9153b7571c3b5f97104465c7db0af5f78de63ff50d430b9dbaea0000f572f35b",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:352",
+      "numeric_transform_id": "352",
+      "name": "알비노 뿔 개구리",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_기존보류",
+      "reason": "알비노뿔개구리 변신352 기존HOLD. 완료된다른개체와혼동금지, 이번세션새모션/Main없음.",
+      "exact_resume": "docs/remake/PR100_COMPLETION_REPORT.md",
+      "source_reference": {
+        "path": "res://assets/catalog/0ffb2e6843a5f87f54a2fd76.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "352",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/352.png?v=261001c",
+        "sha256": "b81b4eca8b25fe5d72ecb074cc6f449ff8a377138721f1a20b682c34c205052f",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:276",
+      "numeric_transform_id": "276",
+      "name": "메이드 안나",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_외형보행파일럿",
+      "reason": "메이드안나 이전15개는같은지지다리/총그립위치불명확으로HOLD. 16번째frontcarry몸체모델미검토. 기존원본108×132불변, 외부아트생산사용없음.",
+      "exact_resume": "source-archives/anna276/maid-anna276-wip03-final-delta-index.json; 복원후 maid-anna276-authoring/STOP-RESUME-ANNA276.json",
+      "source_reference": {
+        "path": "res://assets/catalog/f111979ea61b2aea33dae32f.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "276",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/276.png?v=261001c",
+        "sha256": "54b5307d60c5b8cbf422ee596173d09296034c974d06ae69c571483ef4e98448",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:269",
+      "numeric_transform_id": "269",
+      "name": "거대한 무덤 가디언",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_앵커외형수정",
+      "reason": "거대한무덤가디언112/51원본초기기하PASS. 앵커·helmet/core·NE발/팔레트와장무기비율검토미완료. 새E3/NE-HD5수정본 및팔레트3원본은미선택/HOLD, 팔레트나머지3미실행.",
+      "exact_resume": "source-archives/tomb269/base/RESTORE_README.md; source-archives/tomb269/final-delta/RESTORE_README.md; 복원후 CURRENT_RESUME_STOP_FINAL.md",
+      "source_reference": {
+        "path": "res://assets/catalog/bace1006d136d422a1bb7fb9.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "269",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/269.png?v=261001c",
+        "sha256": "69428f91ad9635a546d465c93b5e7729879899c12afb97fbf31d724e135f4766",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:268",
+      "numeric_transform_id": "268",
+      "name": "천상의 수호 기사",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: flying",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:268",
+      "source_reference": {
+        "path": "res://assets/catalog/03d946f9367717a52aca2ebf.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "268",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/268.png?v=261001c",
+        "sha256": "ac6c744d3024b070a7a3356cdd5cf3a8f6512bec02d30fffc5231fcc68098826",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:260",
+      "numeric_transform_id": "260",
+      "name": "각성 켄라우헬",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: large",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:260",
+      "source_reference": {
+        "path": "res://assets/catalog/8816dfeaabd5f82d37e06dd9.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "260",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/260.png?v=261001c",
+        "sha256": "ff2c536ec8479e964bce9ae7cfab61d9a2a4705efe552e1c085a84cd344ba3e8",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:231",
+      "numeric_transform_id": "231",
+      "name": "유니크 랜서",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 랜서",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:231",
+      "source_reference": {
+        "path": "res://assets/catalog/d3129a87e012cec4099d9a3d.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "231",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/231.png?v=261001c",
+        "sha256": "b0426616db7c09e1970c738fef9b1caad5d9892b59ff654c8d576010f90c5488",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:198",
+      "numeric_transform_id": "198",
+      "name": "토끼 소녀",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive costume is not supplied by the licensed equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:198",
+      "source_reference": {
+        "path": "res://assets/catalog/0912019ed5caa32914f6699a.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "198",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/198.png?v=261001c",
+        "sha256": "eb0c2eeb137e2aed1294bd5806e873b633282f036bea8ce6ceab48f7c418a863",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:197",
+      "numeric_transform_id": "197",
+      "name": "사단장 하퍼",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: large",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:197",
+      "source_reference": {
+        "path": "res://assets/catalog/8285c5c41fcd1e6145c397e3.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "197",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/197.png?v=261001c",
+        "sha256": "71038b5762f948ce73dc7c1e97e13a108c47b4757a880454064ed0581b87b33f",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:182",
+      "numeric_transform_id": "182",
+      "name": "랜스 마스터(블루)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 랜스",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:182",
+      "source_reference": {
+        "path": "res://assets/catalog/f0e737c6db30210b1fa4b220.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "182",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/182.png?v=261001c",
+        "sha256": "50a114a762c36f0620499da421a773713495b4417a419ee88684cc223d186489",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:179",
+      "numeric_transform_id": "179",
+      "name": "랜스 마스터(레드)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 랜스",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:179",
+      "source_reference": {
+        "path": "res://assets/catalog/8bf952f2ddac970272de1acb.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "179",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/179.png?v=261001c",
+        "sha256": "eaeb21be40ef08dd95c900db83d272800781069832dd4ca902e4f6d680e78511",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:155",
+      "numeric_transform_id": "155",
+      "name": "데스",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: special",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:155",
+      "source_reference": {
+        "path": "res://assets/catalog/394db77a53ca94ad44ed0042.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "155",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/155.png?v=261001c",
+        "sha256": "1977f46122b5465cf080f3ec8c12639dd07fcd1063b3e488d3ff599f00494f8e",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:123",
+      "numeric_transform_id": "123",
+      "name": "이실로테(총)",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No compatible published sequential weapon frames: 총",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:123",
+      "source_reference": {
+        "path": "res://assets/catalog/5a63357054f72a54d89e7b30.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "123",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/123.png?v=261001c",
+        "sha256": "97746bf25f41ed0660a5021df75fa5e8964f1d4dff25a3936d6d0f74850916b1",
+        "image_size": [
+          111,
+          145
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:16",
+      "numeric_transform_id": "16",
+      "name": "각성:발록",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive horned or demonic body is not supplied by human equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:16",
+      "source_reference": {
+        "path": "res://assets/catalog/49f044c2f50dcc0a68af9d16.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "16",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/16.png?v=261001c",
+        "sha256": "f12c319d1e385a94756bd0a3a2163007f49dbbe25c8ee09e07b639b6768bee34",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:11",
+      "numeric_transform_id": "11",
+      "name": "베레스",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "Distinctive horned or demonic body is not supplied by human equipment layers",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:11",
+      "source_reference": {
+        "path": "res://assets/catalog/73d5ffcf7bd47bbbd9ff5338.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "11",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/11.png?v=261001c",
+        "sha256": "b9488518b5f578fe6df165f1e536fa24a8148136b679c22f2cee6dfe9705098c",
+        "image_size": [
+          101,
+          131
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:9",
+      "numeric_transform_id": "9",
+      "name": "헬바인",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: large",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:9",
+      "source_reference": {
+        "path": "res://assets/catalog/a237a9af26fd206d8bcb43b7.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "9",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/9.png?v=261001c",
+        "sha256": "dc967926567d7ef6864c8c4810070c3cfc739cfb815f9c99ecb17b07c16c9d3e",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:7",
+      "numeric_transform_id": "7",
+      "name": "바포메트",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "HOLD_기존보류",
+      "reason": "바포메트 변신7 기존HOLD. monster:바포메트와별도ID, 이번세션새모션/Main없음.",
+      "exact_resume": "docs/remake/PR100_COMPLETION_REPORT.md",
+      "source_reference": {
+        "path": "res://assets/catalog/626d89e940ee6d7cd7446881.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "7",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/7.png?v=261001c",
+        "sha256": "5fdd86892fb7ecf2776dd563c317458283dbcda492eb3da42ad400a767b7f490",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "transform:4",
+      "numeric_transform_id": "4",
+      "name": "천상의 기사",
+      "classification": "hero_plus",
+      "classification_ko": "영웅이상변신",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No matching licensed eight-view body: flying",
+      "exact_resume": "data/animation_authoring_sources.json 의 transform:4",
+      "source_reference": {
+        "path": "res://assets/catalog/8dad718d9d43087a10fc03d4.png",
+        "kind": "existing_catalog_portrait",
+        "catalog_source_id": "4",
+        "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/4.png?v=261001c",
+        "sha256": "298f88d539d2bd09d60bf4da92f484a486d25071804618f89d3cfcb53b0f1edc",
+        "image_size": [
+          108,
+          132
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:바포메트",
+      "numeric_transform_id": null,
+      "name": "바포메트",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for goat_demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:바포메트",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          299,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 4,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "a87418cdcc59e8d2d6d1f9e561f501111eca0be40053b916f7ffcf4f8f321486"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:테베 아누비스",
+      "numeric_transform_id": null,
+      "name": "테베 아누비스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:테베 아누비스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:테베 호루스",
+      "numeric_transform_id": null,
+      "name": "테베 호루스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:테베 호루스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:테베 오시리스",
+      "numeric_transform_id": null,
+      "name": "테베 오시리스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:테베 오시리스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:공포의 아그니",
+      "numeric_transform_id": null,
+      "name": "공포의 아그니",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_시각검토대기",
+      "reason": "104자세/16PNG. cast별칭 첫실행320오류/모드 보존. 선택별칭만제외한v2 Main1650/1778·시간진행104자세 자동PASS, 독립Main시각검토 미완료. fullDB 실제magic/floatingtrue/.52는overlay로복원됨.",
+      "exact_resume": "runtime-evidence/pending-runtime-manifest.json; source-archives/agni-dryad-curseburn-stop/CURRENT-RESUME.json",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          0,
+          321,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 4,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "121e72ef60b246bd5a362ee8de1a651f9a396227fddb5fa96611fbf03d740d22"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:얼음 여왕",
+      "numeric_transform_id": null,
+      "name": "얼음 여왕",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for queen",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:얼음 여왕",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          305,
+          965,
+          306,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 13,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:베레스",
+      "numeric_transform_id": null,
+      "name": "베레스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for goat_demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:베레스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          299,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 4,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "a87418cdcc59e8d2d6d1f9e561f501111eca0be40053b916f7ffcf4f8f321486"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:아크모",
+      "numeric_transform_id": null,
+      "name": "아크모",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:아크모",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:제로스",
+      "numeric_transform_id": null,
+      "name": "제로스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:제로스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:그림 리퍼",
+      "numeric_transform_id": null,
+      "name": "그림 리퍼",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for reaper",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:그림 리퍼",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          611,
+          965,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 14,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "ad01e704576d582eaca701c9d488aa14c08fe6e8f48e454500aac46b67d6f77b"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:말하는 섬 들개",
+      "numeric_transform_id": null,
+      "name": "말하는 섬 들개",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_보행소형시험",
+      "reason": "새E4개별원본 보행제안, head/core정합 미완료. 마지막idle16 원본은 중단후검사하지않음.",
+      "exact_resume": "source-archives/iguana-and-wilddog/source-only-delta06-full-member-sha256.json; 복원후 talking-island-wild-dog-authoring/STOPPED_HANDOFF_20261015.json",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          21,
+          328,
+          278
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "7075ede23ffc3ca4db20236c24d1776a78209d05cedfd9f10452e208c26c4072"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:검은숲 늑대",
+      "numeric_transform_id": null,
+      "name": "검은숲 늑대",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_보행제작중",
+      "reason": "기존104전부완료아님. 반대보행/후방사망/새N카메라 수정보존. 최신NW/NE 원본은 중단후검사하지않음.",
+      "exact_resume": "source-archives/unicorn/delta06-and-wolf-base/unicorn-wolf-source-delta06-index.json; source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          0,
+          929,
+          317,
+          284
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 12,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "2fa29d922c8c7241cd7f69d6324462fd3ea7eee91a4545da0c9ff86be5b8a305"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:검은숲 거미",
+      "numeric_transform_id": null,
+      "name": "검은숲 거미",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for spider",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:검은숲 거미",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          0,
+          12,
+          315,
+          299
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:에바 왕국 상어전사",
+      "numeric_transform_id": null,
+      "name": "에바 왕국 상어전사",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for lizard",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:에바 왕국 상어전사",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          0,
+          643,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 8,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "5dd8758a3c49a9521c146a3ed54da4499220fc254a2864fbf5f87ffa71f1660d"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:에바 왕국 심해어인",
+      "numeric_transform_id": null,
+      "name": "에바 왕국 심해어인",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for fishman",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:에바 왕국 심해어인",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:오만의 탑 공포의 악마",
+      "numeric_transform_id": null,
+      "name": "오만의 탑 공포의 악마",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:오만의 탑 공포의 악마",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          631,
+          623,
+          316,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:지룡의 둥지 대지수호자",
+      "numeric_transform_id": null,
+      "name": "지룡의 둥지 대지수호자",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for earth",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:지룡의 둥지 대지수호자",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          916,
+          321,
+          294,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 7,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "bd65ded52a83471855150c3b61a83871d3551afdfdb1280ac8be5fb9a9e682ac"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:테베라스 아누비스 수호자",
+      "numeric_transform_id": null,
+      "name": "테베라스 아누비스 수호자",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:테베라스 아누비스 수호자",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:테베라스 호루스 수호자",
+      "numeric_transform_id": null,
+      "name": "테베라스 호루스 수호자",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:테베라스 호루스 수호자",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:아틀란티스 심해창병",
+      "numeric_transform_id": null,
+      "name": "아틀란티스 심해창병",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:아틀란티스 심해창병",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:아틀란티스 심연수인",
+      "numeric_transform_id": null,
+      "name": "아틀란티스 심연수인",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:아틀란티스 심연수인",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:마계 악마전사",
+      "numeric_transform_id": null,
+      "name": "마계 악마전사",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:마계 악마전사",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          631,
+          623,
+          316,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:천상계 성광기사",
+      "numeric_transform_id": null,
+      "name": "천상계 성광기사",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for angel",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:천상계 성광기사",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          916,
+          643,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 11,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "311291fcf72704987a459f7ffc7292fc377b8c8211b74c9a1096589999d7cacf"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:천상계 천사궁수",
+      "numeric_transform_id": null,
+      "name": "천상계 천사궁수",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for skeleton_archer",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:천상계 천사궁수",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          317,
+          309,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 5,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "af520d31bc8a86d4ebd71534f3cdd2861a2660ed6b6322c50e5fd96b269d9026"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:가디언",
+      "numeric_transform_id": null,
+      "name": "가디언",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_소스파일럿",
+      "reason": "E4만root물리보행시험 승인. N4/E·Nidle은 작성자기하·해부제안, 독립전체방향/나머지모션/Main 미완료.",
+      "exact_resume": "source-archives/guardian/final-delta/index.json; 복원후 guardian-iron-monster-authoring/FINAL_USER_STOP_RESTART.txt",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          305,
+          9,
+          306,
+          312
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 1,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "eb45832896e823072746ba241aecd536eaf3e4a240fdff36986e5579a24bf435"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:공포의 레서 데몬",
+      "numeric_transform_id": null,
+      "name": "공포의 레서 데몬",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:공포의 레서 데몬",
+      "source_reference": {
+        "path": "res://assets/external_l1j/monsters/15758.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "공포의 레서 데몬",
+          "source_sprite_id": "15758",
+          "path": "res://assets/external_l1j/monsters/15758.png",
+          "source_npc_ids": [
+            "7310025"
+          ],
+          "source_name": "공포의 레서 데몬",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "c56c49dcfcbf4e6e81ae6ca306dff032643376728e7eb3acf1c21b8e1762ad84",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:공포의 뱀파이어",
+      "numeric_transform_id": null,
+      "name": "공포의 뱀파이어",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for vampire",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:공포의 뱀파이어",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          328,
+          299,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 5,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "4029c2ccf6cd9c090052e995fdf28260ce8d16110fe863bb3b09774dd1149a9e"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:공포의 켈베로스",
+      "numeric_transform_id": null,
+      "name": "공포의 켈베로스",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for cerberus",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:공포의 켈베로스",
+      "source_reference": {
+        "path": "res://assets/external_l1j/monsters/15604.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "켈베로스",
+          "source_sprite_id": "15604",
+          "path": "res://assets/external_l1j/monsters/15604.png",
+          "source_npc_ids": [
+            "18602"
+          ],
+          "source_name": "굶주린 켈베로스",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "266e56d24b0e0da19639eced5ff576123596655c421d25c723e20723142a3f0b",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:교만의 왕자 데우스",
+      "numeric_transform_id": null,
+      "name": "교만의 왕자 데우스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for prince",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:교만의 왕자 데우스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          0,
+          965,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 12,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "8b823524d382a0b8d4d78ff15e47204e74195428d9fce1e8a56d55f2cd6e34fb"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:교만의 제노사이더",
+      "numeric_transform_id": null,
+      "name": "교만의 제노사이더",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:교만의 제노사이더",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          631,
+          623,
+          316,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:교만의 제라키엘",
+      "numeric_transform_id": null,
+      "name": "교만의 제라키엘",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for angel",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:교만의 제라키엘",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          916,
+          643,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 11,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "311291fcf72704987a459f7ffc7292fc377b8c8211b74c9a1096589999d7cacf"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:교만의 킬 하운드",
+      "numeric_transform_id": null,
+      "name": "교만의 킬 하운드",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for cerberus",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:교만의 킬 하운드",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          947,
+          623,
+          312,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 11,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "ee436589d66800b5b2b06e75ccd038eac2b62a275abad7556fb7e7240c3a4356"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:그리미",
+      "numeric_transform_id": null,
+      "name": "그리미",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for ghoul",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:그리미",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          957,
+          309,
+          311,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 7,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "99e7804d85581915e2694f9889d49fa563b956eb679743ce01df2329a8aeec5b"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:놀",
+      "numeric_transform_id": null,
+      "name": "놀",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for gnoll",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:놀",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_5.png",
+        "region": [
+          16,
+          305,
+          304,
+          306
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 5,
+        "cell": 4,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "5abe098f0509d2d4810ebd4a42830916b1651959aa5b39c320a4f72756eb2284",
+        "image_size": [
+          1287,
+          1222
+        ],
+        "region_rgba_sha256": "03aacdb80bdc12007b84dff89e36b730dd85312c366cdd932a06db1ee847e9df"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:로머",
+      "numeric_transform_id": null,
+      "name": "로머",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for orc_captain",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:로머",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          0,
+          317,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 2,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "a28db9425a5212729ea475b3c5942cd2f2b9f212b0655976b3f06f8d6e054b9a"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:분노의 데스 도그",
+      "numeric_transform_id": null,
+      "name": "분노의 데스 도그",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for cerberus",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:분노의 데스 도그",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          947,
+          623,
+          312,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 11,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "ee436589d66800b5b2b06e75ccd038eac2b62a275abad7556fb7e7240c3a4356"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:분노의 데스 라이더",
+      "numeric_transform_id": null,
+      "name": "분노의 데스 라이더",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:분노의 데스 라이더",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:분노의 데스 리퍼",
+      "numeric_transform_id": null,
+      "name": "분노의 데스 리퍼",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for reaper",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:분노의 데스 리퍼",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          611,
+          965,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 14,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "ad01e704576d582eaca701c9d488aa14c08fe6e8f48e454500aac46b67d6f77b"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:분노의 데스 서번트",
+      "numeric_transform_id": null,
+      "name": "분노의 데스 서번트",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_소스최종검토대기",
+      "reason": "104자세/16PNG 새N/NE사망6. 전역고유/전체원본사용 기하PASS, hood/skull/core/바닥앵커 불확실성 및 독립검토·Main 미완료.",
+      "exact_resume": "source-archives/death-servant/delivery-manifest.json; source-archives/death-servant/portable-source-checkpoint.zip",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          0,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 8,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "d7be30fc549fe52a771f69fd9289c708c5157616c627e8e4b1f8361c497ec1d4"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:사라만다",
+      "numeric_transform_id": null,
+      "name": "사라만다",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for salamander",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:사라만다",
+      "source_reference": {
+        "path": "res://assets/external_l1j/monsters/15561.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "사라만다",
+          "source_sprite_id": "15561",
+          "path": "res://assets/external_l1j/monsters/15561.png",
+          "source_npc_ids": [
+            "45203"
+          ],
+          "source_name": "사라만다",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "db6a8edb128094b279c4539b04a8beeb6a24c80c4430f5fa5668762cf08b02f3",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:스파이더",
+      "numeric_transform_id": null,
+      "name": "스파이더",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for spider",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:스파이더",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          0,
+          12,
+          315,
+          299
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 데몬",
+      "numeric_transform_id": null,
+      "name": "알비노 데몬",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:알비노 데몬",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          631,
+          623,
+          316,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 드라이어드",
+      "numeric_transform_id": null,
+      "name": "알비노 드라이어드",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_생성도구차단",
+      "reason": "N/NE10자세부분만존재, 새앞/측면출력4건이 도구 output moderation_blocked로 실패. 실패ID·정확프롬프트보존, 전체40/104성공아님.",
+      "exact_resume": "source-archives/agni-dryad-curseburn-stop/CURRENT-RESUME.json; 복원후 albino-dryad-authoring/",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          637,
+          308,
+          318,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 6,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "77a2e787d3364b784c590c1d8fe4ff0249e8dbb3be03ba63771c5bdae4a37601"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 디어",
+      "numeric_transform_id": null,
+      "name": "알비노 디어",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for stag",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:알비노 디어",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          955,
+          308,
+          309,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 7,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "92323aff2d9c875a04b482856eac9775971d7779f2d4519294af0249aa1c3a1f"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 몽크",
+      "numeric_transform_id": null,
+      "name": "알비노 몽크",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for ape",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:알비노 몽크",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          899,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 12,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "7ea3960c7b010a83b5187dd5ace956f5b765ab0d013a482e378f448486bd1955"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 변이된 골렘",
+      "numeric_transform_id": null,
+      "name": "알비노 변이된 골렘",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for crystal",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:알비노 변이된 골렘",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          916,
+          0,
+          292,
+          321
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 3,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "94faa27ac13a8f22476f7c2edf8cc269a0571e77b6cf6d9dc3b67e500a1b893c"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 심해어",
+      "numeric_transform_id": null,
+      "name": "알비노 심해어",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for fishman",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:알비노 심해어",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 유니콘",
+      "numeric_transform_id": null,
+      "name": "알비노 유니콘",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "HOLD_임포터실패",
+      "reason": "104자세/29원본 후보06. 가벼운기하PASS이나 엄격한읽기전용검증 Standalone PNG must contain one connected visible body 실패. 임포트·Main33 미시작. 경계/alpha조건완화금지.",
+      "exact_resume": "source-archives/unicorn/final07-and-wolf-delta/unicorn-wolf-source-FINAL-PAUSED-delta07-index.json; runtime-evidence/unicorn-readonly-failure.json",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          0,
+          925,
+          318,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 12,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "4c556c014a8cc80c1aee7ef871900017804d2c00e45d2290155759601b3f03b9"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 이구아나",
+      "numeric_transform_id": null,
+      "name": "알비노 이구아나",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_시각검토대기",
+      "reason": "112자세/31PNG. Main headless865/OpenGL987·시간진행112자세 자동검사 PASS, 실제Main 최종 독립시각검토 미완료. 원본E/W지지반전/N뒤꿈치/S캔버스592 수정보존.",
+      "exact_resume": "runtime-evidence/pending-runtime-manifest.json; source-archives/iguana-and-wilddog/index.json",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          0,
+          643,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 8,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "5dd8758a3c49a9521c146a3ed54da4499220fc254a2864fbf5f87ffa71f1660d"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 피닉스",
+      "numeric_transform_id": null,
+      "name": "알비노 피닉스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for phoenix",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:알비노 피닉스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          947,
+          934,
+          315,
+          312
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 15,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "8bb91d69ba53dd7695ed8bb0dbf06aac304adff0a6444ca924f5033c569d83bd"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:알비노 피쉬맨",
+      "numeric_transform_id": null,
+      "name": "알비노 피쉬맨",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_기존보류",
+      "reason": "기존HOLD: 사망20/24자세반복 실패. 고유프레임조건을완화하지않음.",
+      "exact_resume": "docs/remake/PR100_COMPLETION_REPORT.md",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:에스카로스 치프",
+      "numeric_transform_id": null,
+      "name": "에스카로스 치프",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for orc_captain",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:에스카로스 치프",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          0,
+          317,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 2,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "a28db9425a5212729ea475b3c5942cd2f2b9f212b0655976b3f06f8d6e054b9a"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:오만한 아스모데우스",
+      "numeric_transform_id": null,
+      "name": "오만한 아스모데우스",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for prince",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:오만한 아스모데우스",
+      "source_reference": {
+        "path": "res://assets/external_l1j/monsters/15598.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "오만한 아스모데우스",
+          "source_sprite_id": "15598",
+          "path": "res://assets/external_l1j/monsters/15598.png",
+          "source_npc_ids": [
+            "7310065"
+          ],
+          "source_name": "오만한 아스모데우스",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "361e796dc6262104b38799d69dee73427084e8fcadcc3ec6336f4b9ef960b3d9",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:오만한 우그누스",
+      "numeric_transform_id": null,
+      "name": "오만한 우그누스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for ugnu",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:오만한 우그누스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          916,
+          965,
+          306,
+          307
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 15,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "c92030ccc6d42397a5f86e8848104676efd59bf30cd65fd2d101e1b163e425ca"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:오만한 플레임 팽",
+      "numeric_transform_id": null,
+      "name": "오만한 플레임 팽",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dark_knight",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:오만한 플레임 팽",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          634,
+          619,
+          317,
+          310
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "27c3640ff79b7fdaba07744edd67534834b5353c80e89ecd2b5e4b334a0a4d33"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:왜곡의 메두사",
+      "numeric_transform_id": null,
+      "name": "왜곡의 메두사",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for medusa",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:왜곡의 메두사",
+      "source_reference": {
+        "path": "res://assets/external_l1j/monsters/2535.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "메두사",
+          "source_sprite_id": "2535",
+          "path": "res://assets/external_l1j/monsters/2535.png",
+          "source_npc_ids": [
+            "45380",
+            "81099"
+          ],
+          "source_name": "메두사",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "998160c7a2005ee993d43ce2d7b3ce33d86d488e4521a290dc4dee90273d8240",
+        "image_size": [
+          60,
+          86
+        ]
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:왜곡의 제니스 퀸",
+      "numeric_transform_id": null,
+      "name": "왜곡의 제니스 퀸",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for spider_queen",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:왜곡의 제니스 퀸",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          984,
+          299,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 7,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "e1a6c7cec796c1ce4549e2e898ff77dbff2f0c40bf255a7e95032090e0ca1928"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:왜곡의 타란툴라",
+      "numeric_transform_id": null,
+      "name": "왜곡의 타란툴라",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for spider",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:왜곡의 타란툴라",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          0,
+          12,
+          315,
+          299
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:욥니르",
+      "numeric_transform_id": null,
+      "name": "욥니르",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for bull",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:욥니르",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          328,
+          899,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 13,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "ac5d418fcb2c7155e4d781351cd5de30d400eacda518e2d40cd471103f1ecc4b"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:잔혹한 아이리스",
+      "numeric_transform_id": null,
+      "name": "잔혹한 아이리스",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for valkyrie",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:잔혹한 아이리스",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          656,
+          599,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "44c79c443afb096584e78afbaea05437a81007269ecfa093eb3f537a1452869c"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:질투의 공주 이자벨",
+      "numeric_transform_id": null,
+      "name": "질투의 공주 이자벨",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for valkyrie",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:질투의 공주 이자벨",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          656,
+          599,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "44c79c443afb096584e78afbaea05437a81007269ecfa093eb3f537a1452869c"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:질투의 아타바크",
+      "numeric_transform_id": null,
+      "name": "질투의 아타바크",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for goat_demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:질투의 아타바크",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          299,
+          328,
+          300
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 4,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "a87418cdcc59e8d2d6d1f9e561f501111eca0be40053b916f7ffcf4f8f321486"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:커스번",
+      "numeric_transform_id": null,
+      "name": "커스번",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "HOLD_초기소스시험",
+      "reason": "원본은붉은뿔악마/RIGHT손큰도끼/LEFT열린손. E/W10 초기출력은축/보행이도끼에가려불명확, 전체모션/Main 미완료.",
+      "exact_resume": "source-archives/agni-dryad-curseburn-stop/CURRENT-RESUME.json; 복원후 curse-burn-authoring/source-proof.json",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          631,
+          623,
+          316,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:탐욕의 엔트키아",
+      "numeric_transform_id": null,
+      "name": "탐욕의 엔트키아",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for dryad",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:탐욕의 엔트키아",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          637,
+          308,
+          318,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 6,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "77a2e787d3364b784c590c1d8fe4ff0249e8dbb3be03ba63771c5bdae4a37601"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:탐욕의 여왕 벨리엘",
+      "numeric_transform_id": null,
+      "name": "탐욕의 여왕 벨리엘",
+      "classification": "boss",
+      "classification_ko": "보스",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for queen",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:탐욕의 여왕 벨리엘",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          305,
+          965,
+          306,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 13,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "58ef06a1560080a46f5e86f9a7b1f20a371431ca491e4b659e8a4d9ab7edd9e8"
+      },
+      "completed": false
+    },
+    {
+      "id": "monster:탐욕의 코아쿡",
+      "numeric_transform_id": null,
+      "name": "탐욕의 코아쿡",
+      "classification": "normal_monster",
+      "classification_ko": "일반몬스터",
+      "status": "미제작_검증된8방향미연결",
+      "reason": "No identity-compatible licensed source for demon",
+      "exact_resume": "data/animation_authoring_sources.json 의 monster:탐욕의 코아쿡",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          631,
+          623,
+          316,
+          311
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "eacb9991c657a69d2f241c52febadea9919a8cb46787ff1abd3dfb7105a87711"
+      },
+      "completed": false
+    }
+  ]
+}
