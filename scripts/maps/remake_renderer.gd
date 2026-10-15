@@ -4,6 +4,7 @@ class_name RemakeSourceRenderer
 ## Existing TWILIGHT art, no random pillars or inferred iron fences.
 const CHUNK_SIZE: int = 32
 const MAX_CHUNKS: int = 49
+const GIRAN_REVIEW = preload("res://scripts/maps/aden_giran_review/chunk.gd")
 var debug_collision: bool = false
 var render_profile: Dictionary = {}
 var floor_material: ShaderMaterial
@@ -70,7 +71,9 @@ func refresh_visible() -> void:
 	for key: Vector2i in keys.slice(0,MAX_CHUNKS):
 		needed[key] = true
 		if chunks.has(key): continue
-		var chunk := RemakeChunk.new()
+		# Isolated first review area; all other Aden/Oman chunks use the
+		# existing renderer and exactly the same collision/navigation stream.
+		var chunk: Node2D = GIRAN_REVIEW.new() if GIRAN_REVIEW.applies(source,key) else RemakeChunk.new()
 		chunk.name = "SourceChunk_%d_%d" % [key.x,key.y]
 		chunk.y_sort_enabled = true
 		add_child(chunk)

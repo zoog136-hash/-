@@ -23,9 +23,14 @@ static func pair(value: Variant) -> bool:
 		if not (number is int or number is float) or not is_finite(float(number)): return false
 	return true
 
+static func exact_pair(value: Variant, x: int, y: int) -> bool:
+	# JSON numbers are floats. Array equality distinguishes numeric Variant
+	# types in Godot, so compare the finite integer components explicitly.
+	return pair(value) and integer(value[0],x,x) and integer(value[1],y,y)
+
 static func valid_definition(value: Dictionary) -> bool:
 	if value.get("schema") != 2 or value.get("map_id") != "aden_world" or value.get("source_map_id") != 4: return false
-	if value.get("origin") != [32448,32064] or value.get("dimensions") != [WIDTH,HEIGHT]: return false
+	if not exact_pair(value.get("origin"),32448,32064) or not exact_pair(value.get("dimensions"),WIDTH,HEIGHT): return false
 	if value.get("source_sha256") != GRID_SHA or value.get("source_archive_sha256") != ARCHIVE_SHA: return false
 	if value.get("pack_root") != ROOT.trim_suffix("/") or not bool(value.get("playable",false)): return false
 	if value.get("corner_policy") != "no_corner_cut" or not integer(value.get("layout_revision"),2026101503,2147483647): return false
@@ -34,7 +39,7 @@ static func valid_definition(value: Dictionary) -> bool:
 	if not integer(value.spawn_source[0],32448,34495) or not integer(value.spawn_source[1],32064,33599): return false
 	var mapping: Variant = value.get("coordinate_mapping")
 	if not mapping is Dictionary: return false
-	if mapping.get("basis_x") != [24,-12] or mapping.get("basis_y") != [24,12] or mapping.get("translation") != [0,24576]: return false
+	if not exact_pair(mapping.get("basis_x"),24,-12) or not exact_pair(mapping.get("basis_y"),24,12) or not exact_pair(mapping.get("translation"),0,24576): return false
 	for key: String in ["npc_spawns","monster_spawns","portals","getback","doors","terrain_chunks"]:
 		if not value.get(key) is Array: return false
 	var navigation: Variant = value.get("navigation")
