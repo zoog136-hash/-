@@ -1,0 +1,48 @@
+{
+  "purpose": "Nonbinding geometry fit sweep; NOT an approved scale and NOT normalization by low death bbox",
+  "source_pixels_changed": false,
+  "results": [
+    {
+      "canvas": 384,
+      "fit": false,
+      "error": "Pose cannot fit the foot-anchored canvas"
+    },
+    {
+      "canvas": 400,
+      "fit": true
+    },
+    {
+      "canvas": 416,
+      "fit": true
+    },
+    {
+      "canvas": 432,
+      "fit": true
+    },
+    {
+      "canvas": 448,
+      "fit": true
+    },
+    {
+      "canvas": 480,
+      "fit": true
+    },
+    {
+      "canvas": 512,
+      "fit": true
+    },
+    {
+      "canvas": 544,
+      "fit": true
+    },
+    {
+      "canvas": 576,
+      "fit": true
+    },
+    {
+      "canvas": 608,
+      "fit": true
+    }
+  ],
+  "next_required": "Select final canvas by same head/torso pixel scale versus accepted idle and check ground anchors visually; then rerun analyze with that explicit value."
+}

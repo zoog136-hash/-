@@ -1,0 +1,43 @@
+{
+  "run_id": 38725467814,
+  "job_id": 116390206661,
+  "head_sha": "dce5048f17712c6c6d7a7ce97414e2f45e6756a4",
+  "conclusion": "failure",
+  "confirmed_cause": "OpenGL command exceeded timeout 1200 seconds; process exit code 124",
+  "headless_step": "success",
+  "overall_run_conclusion": "cancelled; superseded later by dead8bb",
+  "job_failed_at": "2026-10-15T11:56:33.6868789Z",
+  "log_source": "GitHub connector fetch_workflow_job_logs, 1353577 characters; direct CLI log redirect unavailable",
+  "bounded_log_excerpt": [
+    "2026-10-15T11:25:36.1658140Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+    "2026-10-15T11:25:36.1658499Z   BATCH_TIMEOUT: 1200",
+    "2026-10-15T11:25:36.6296320Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+    "2026-10-15T11:25:36.6296595Z   BATCH_TIMEOUT: 1200",
+    "2026-10-15T11:25:43.2869684Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+    "2026-10-15T11:25:43.2869974Z   BATCH_TIMEOUT: 1200",
+    "2026-10-15T11:28:59.3303719Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+    "2026-10-15T11:28:59.3303986Z   BATCH_TIMEOUT: 1200",
+    "2026-10-15T11:36:33.6736965Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+    "2026-10-15T11:36:33.6737238Z   BATCH_TIMEOUT: 1200",
+    "2026-10-15T11:56:33.6868789Z ##[error]Process completed with exit code 124.",
+    "2026-10-15T11:56:33.6990840Z   BATCH_OK_MARKER: PR100_TRANSFORM_BATCH_OK",
+    "2026-10-15T11:56:33.6991445Z   BATCH_TIMEOUT: 1200"
+  ],
+  "artifact": {
+    "id": 11970610314,
+    "name": "original-based-batchtransform-regression-dce5048f17712c6c6d7a7ce97414e2f45e6756a4",
+    "zip_bytes": 2419916993,
+    "downloaded": false
+  },
+  "capture_report_paths": [
+    "test-results/batchtransform-regression/render.txt",
+    "test-results/batchtransform-regression/render.json",
+    "test-results/batchtransform-regression/render-cases/"
+  ],
+  "artifact_access": {
+    "attempted": true,
+    "downloaded": false,
+    "tool_limit_bytes": 536870912,
+    "result": "InvalidInputException: artifact exceeds max size; no file reference returned"
+  }
+}

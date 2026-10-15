@@ -1,3 +1,9 @@
+## 2026-10-15 · 단장 중간작화 보존 / CI timeout 원인 확인
+
+**완료374/498 · 미완료124 · 개별Main103 · 신규완료0.** 단장 idle2/hit2/death2 기하후보 및 idle1/hit1/death1 crop실패·attack1 N접촉실패 원본/정확prompt/판정을[WIP](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json)로보존했다. 독립동작/방향/alpha·최종idle비례scale/발anchor 승인전이다. idle2의넓은검은영역이투명viewer배경인지실제lowalpha matte인지독립확인중이며, 현재생성중이던SE/W만저장하고다른보행생성은일시중단했다. 판정실패면idle2회실패로전체357HOLD한다. 실제pixel삭제/threshold완화없음·runtime미연결.
+
+이전dce Animation 전체는superseded/cancelled이지만 그전에발생한 **18성공/1실패/13취소** 를별도보존한다. 실제실패는10변신OpenGL이 `BATCH_TIMEOUT:1200`, exit124로끝난것이며 단언실패유무/완료case수는아직미확인이다. [timeout증거](evidence/pr100-direction-fix/original-based/recovery-20261015/ci-recovery/ci-38725467814-opengl-timeout.json). 2.42GB artifact는도구512MiB상한으로다운로드하지않았다. 동일전체10종OpenGL을local2700초상한으로재현중이며검사/캡처를줄이지않았다. 작은진단artifact 분리를검토한다. 새dead8bb Animation/031통합은별도추적하며성공으로계산하지않는다. Epilot보존 `66fd5eb8f33c8fc89f3cd557dfa6317d412b972b` push/원격일치확인.
+
 ## 2026-10-15 · 단장 E 보행 소규모시험 통과
 
 **374/498 완료 · 미완료124 · 개별Main103 · 신규완료0 유지.** 단장357의 E한방향3자세는 독립 **PASS_E_ONLY_THREE_PHASE_GAIT_PILOT** 이다. 첫·마지막의 허벅지 겹침 순서가 바뀌어 지지/스윙다리 교대를 확인했고 중간은 passing이다. 숨은 다리의 정체는 추정하지 않았다. alpha/foreign/crop/경계0. [3고유자세PNG·정확prompt·좌표근거](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json). 발의source y733/726/705가 달라 최종 per-pose groundanchor와 idle기준 크기검토는 아직 필요하다.
