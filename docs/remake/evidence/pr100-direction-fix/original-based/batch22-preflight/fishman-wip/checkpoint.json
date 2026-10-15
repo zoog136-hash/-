@@ -2,10 +2,10 @@
   "status": "WIP unlinked, not completed",
   "target": "monster:알비노 피쉬맨",
   "roles_passed": [
-    "idle"
+    "idle",
+    "walk"
   ],
   "roles_remaining": [
-    "walk",
     "attack",
     "hit",
     "death"
@@ -55,6 +55,26 @@
       "path": "idle-v2.geometry.json",
       "bytes": 284,
       "sha256": "813d8043429ae9cf4410c9b672b0dc9e7176fadc26a12bc56047d18c78e73111"
+    },
+    {
+      "path": "walk-v2.png",
+      "bytes": 2906377,
+      "sha256": "24a8c236222ed8095dedaae3f7961714c78299dc0e021d8aca05e122a386d40f"
+    },
+    {
+      "path": "walk-v2.prompt.txt",
+      "bytes": 2576,
+      "sha256": "cd6a934f78c1f031e86174ccbd702a25bed44032fcffb37df62b99d608e0de3f"
+    },
+    {
+      "path": "walk-v2.visual-review.json",
+      "bytes": 558,
+      "sha256": "09dee6c6b43759cd34756121ca81ef05aaad3faddd7dc51b91f04e3afff7f584"
+    },
+    {
+      "path": "walk-v2.geometry.json",
+      "bytes": 284,
+      "sha256": "4b55089a16315dfbe6fc2bc75a993a594340f2ad5f97076749cadbf184a43cc8"
     }
   ],
   "rejected_archive": {
@@ -62,5 +82,14 @@
     "bytes": 2522351,
     "sha256": "bfb993ea072c80961d83828a82485d2d84510e88b62a4d398001bebc9c71d2e2",
     "crc_ok": true
+  },
+  "validated_unique_poses_so_far": 40,
+  "normalization_note": "Walk source art is larger than idle; importer proportional virtual canvas is required, not a forced common512 canvas",
+  "walk_rejected_archive": {
+    "path": "walk-v1-rejected.zip",
+    "bytes": 2625489,
+    "sha256": "9adb3421fe6da54376621001e9216423a12e45bbe4b0bb90e49a583b56ce308d",
+    "crc_ok": true,
+    "reason": "Geometry passed but three leg phases did not show real alternating gait"
   }
 }
