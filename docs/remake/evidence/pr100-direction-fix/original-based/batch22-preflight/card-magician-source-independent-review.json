@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "target_key": "transform:360",
+  "name": "서커스단 카드 마술사",
+  "decision": "SOURCE_PASS_FOR_SMALL_EIGHT_VIEW_RISK_TRIAL",
+  "source": {
+    "path": "res://assets/catalog/e3588916ce3e7e64dff4cae3.png",
+    "bytes": 13675,
+    "sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
+    "expected_sha_match": true,
+    "mode": "RGBA",
+    "size": [
+      108,
+      132
+    ],
+    "tracked": true,
+    "authoring_reference_match": true
+  },
+  "full_body": {
+    "passed": true,
+    "visible_alpha_gt100_bbox_xyxy": [
+      26,
+      8,
+      84,
+      125
+    ],
+    "visible_border_pixels": 0,
+    "margins_left_top_right_bottom": [
+      26,
+      8,
+      24,
+      7
+    ],
+    "observations": "Whole tall black top hat with reddish band, shadowed face, purple/gold long coat and split tails, both arms/gloves, raised small pale card/hand shape, both trousered legs and both dark boots are inside the portrait. No neighboring creature or long weapon.",
+    "detail_limit": "At108×132 the raised white card/glove outline is visible, but card markings, exact finger anatomy and shadowed face detail are unresolved; do not invent them as verified original facts."
+  },
+  "source_provenance": {
+    "classification": "Existing repository catalog portrait with recorded external Inven origin",
+    "catalog_source": "inven",
+    "catalog_source_id": "360",
+    "source_url": "https://static.inven.co.kr/image_2011/site_image/lineagem/dataninfo/polymorph/360.png?v=261001c",
+    "catalog_image_path_matches": true,
+    "claim_limit": "Local catalog/source metadata and exact bytes verified; remote URL was not fetched and this does not verify redistribution rights, original game pack completeness or original animation."
+  },
+  "existing_work_overlap": {
+    "current_profile": {
+      "name": "서커스단 카드 마술사",
+      "layout": "still",
+      "motion_style": "slash",
+      "floating": false
+    },
+    "matching_native_completed_target_keys": [],
+    "matching_existing_native_provenance": [],
+    "completed_duplicate_count": 0
+  },
+  "pilot_review_focus": "Preserve the source hat/band, purple/gold costume, raised card-side hand versus opposite hip glove, coat tails and two boots through all8views; keep card touching the hand, show rear head/coat without a pasted frontal face, then verify real alternate-leg walking before any runtime claim.",
+  "production_changes": false,
+  "image_generation_performed": false,
+  "source_unchanged": true,
+  "completed_count_increment": 0
+}

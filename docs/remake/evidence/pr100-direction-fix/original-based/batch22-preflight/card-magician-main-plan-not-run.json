@@ -1,0 +1,159 @@
+{
+  "status": "PREPARATION ONLY; rotation and idle risk trial not yet started; no import, runtime connection, fixture creation, guard change, or Main execution authorized now",
+  "target": "transform:360",
+  "name": "서커스단 카드 마술사",
+  "new_completed": 0,
+  "source_evidence": {
+    "file": "docs/remake/evidence/pr100-direction-fix/original-based/batch22-preflight/next-card-magician-source.json",
+    "file_sha256": "ff44f57b7cd6cff6bac2331a7a7e5bf75fdb8ac856288cfbdbd0945d5381821d",
+    "reference_path": "res://assets/catalog/e3588916ce3e7e64dff4cae3.png",
+    "reference_sha256": "1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7",
+    "sha_match": true,
+    "classification": "External-origin existing catalog portrait already in repository; recorded Inven URL is provenance metadata, not an independently verified original-game pack or original animation claim",
+    "claim_limit": "Existing external-origin repository portrait; no verified original-game animation or independently recovered original-game pack claim"
+  },
+  "current_production_state": {
+    "raw_profile": {
+      "name": "서커스단 카드 마술사",
+      "layout": "still",
+      "motion_style": "slash",
+      "floating": false
+    },
+    "presentation": {
+      "body": "humanoid",
+      "evidence": "current_atlas_contact_review",
+      "atlas_sha256": "087077701c126ab7629c74bc5decf6cc3852b49f685fc73641a77c40809124cf"
+    },
+    "catalog_type": "공통",
+    "catalog_grade": "영웅",
+    "source_options": [
+      "이동 속도 +2%",
+      "공격 속도 +98%",
+      "스킬 쿨타임 감소 +15%",
+      "PVE 마법 추가 대미지 +2",
+      "마법 대미지 +1"
+    ],
+    "specific_weapon_or_job_restriction_found": false,
+    "source_option_interpretation": "Magic damage bonuses support a representative mage QA exercise; they do not establish a verified original attack animation or exclusive class/weapon."
+  },
+  "appearance_rules": [
+    "Retain the reviewed humanoid body, top hat, face, purple/gold coat, coat tails, gloves, small hand-held card, legs and boots.",
+    "Do not add a staff, long weapon, or unrelated prop to the artwork. The staff below is an existing production equipment record for damage/cadence/projectile validation only.",
+    "Retain card-hand connection, hat/face identity, coat-tail occlusion and true compass views; do not create eight mirrored copies."
+  ],
+  "deferred_fixture_path": "res://tests/fixtures/pr100_batch22_card_magician_pilot.json",
+  "deferred_fixture_example": {
+    "batch": "pr100-batch22-card-magician-pilot",
+    "kind": "transform",
+    "scope": "One-subject approved original-reference-based authored animation pilot; not a claim of recovered original animation",
+    "cases": [
+      {
+        "name": "서커스단 카드 마술사",
+        "folder": "card_magician_transform",
+        "slug": "card-magician-transform",
+        "body_kind": "humanoid",
+        "spec": {
+          "job": "마법사",
+          "appearance": 1,
+          "transform_id": "360",
+          "name": "훈련용 지팡이",
+          "type": "지팡이",
+          "style": "magic",
+          "magic": true
+        }
+      }
+    ]
+  },
+  "fixture_notes": [
+    "The folder is a proposal. It must exactly match the future approved SpriteFrames importer output before a real fixture is created.",
+    "Keep the raw profile motion_style slash as the recorded starting state; QA spec.style magic is the production equipped-weapon action requested by the real magic skill path, not an inferred original motion.",
+    "The catalog type 공통 is transformation applicability. spec.type 지팡이 is the equipped production weapon type; these are different fields.",
+    "마법사 allows 지팡이 in scripts/world.gd JOB_ALLOWED_WEAPONS. The existing nightmare-jack Main fixture uses this same mage/appearance1/training-staff/magic combination."
+  ],
+  "body_validation": {
+    "expected": "humanoid",
+    "evidence": "data/animation_presentation.json transforms[360].body; source review confirms upright humanoid",
+    "current_runner_limitation": "The existing transform runner does not assert fixture.body_kind. Adding that field alone would not validate the effective runtime body.",
+    "deferred_authorization": "Root explicitly permits an optional QA assertion matching the monster runner after all104 unique poses pass static review. Do not change it before that gate.",
+    "proposed_hook": "Override player_case(spec, transformed) in the transform QA runner, assert effective player.motion.profile.body_kind only when current_case has body_kind, record reviewed/actual body in report.setup, then await the unchanged super.player_case(spec, transformed). Existing fixtures without this optional field retain their checks.",
+    "validation_after_guard_change": [
+      "Run existing24 transform batch guard assertions in a fresh isolated directory.",
+      "Run this one approved case through actual Main headless and OpenGL, preserving all inherited attack/hit/death/respawn/AI/drop/manual-pickup checks."
+    ],
+    "production_code_changes_required": false
+  },
+  "execution_gates": [
+    "Pass the small eight-view rotation risk trial first, then idle; two repeated failures mean HOLD.",
+    "Independently approve all five role sheets: idle16, walk24, attack24, hit16, death24 =104 unique poses; confirm source SHA, transparent background, silhouette, connections, actual directions, proportional canvas and foot anchors.",
+    "No runtime connection until the complete approved104 are available. Keep WIP output and failed versions preserved and disconnected.",
+    "Root connects approved SpriteFrames/provenance to transform:360 and applies only the deferred QA body guard, then explicitly requests actual Main execution.",
+    "For magic=true the resource must contain cast_0 through cast_7 in addition to the five reviewed pose-role tracks. Declared reuse of approved attack images as cast aliases does not create extra unique poses.",
+    "Perform a single editor import after approved assets are connected, and avoid concurrent imports during Main verification."
+  ],
+  "common_environment": {
+    "TWILIGHT_PR100_BATCH_ISOLATED": "1",
+    "TWILIGHT_PR100_BATCH_CONFIG": "res://tests/fixtures/pr100_batch22_card_magician_pilot.json"
+  },
+  "per_mode_environment": {
+    "headless": {
+      "XDG_DATA_HOME": "/workspace/twilight-run/next-batch22/card-magician-main-headless/data",
+      "XDG_CACHE_HOME": "/workspace/twilight-run/next-batch22/card-magician-main-headless/cache",
+      "XDG_CONFIG_HOME": "/workspace/twilight-run/next-batch22/card-magician-main-headless/config",
+      "TWILIGHT_PR100_BATCH_REPORT": "/workspace/twilight-run/next-batch22/card-magician-main-headless/report.json",
+      "TWILIGHT_PR100_BATCH_CAPTURE_DIR": ""
+    },
+    "opengl": {
+      "XDG_DATA_HOME": "/workspace/twilight-run/next-batch22/card-magician-main-opengl/data",
+      "XDG_CACHE_HOME": "/workspace/twilight-run/next-batch22/card-magician-main-opengl/cache",
+      "XDG_CONFIG_HOME": "/workspace/twilight-run/next-batch22/card-magician-main-opengl/config",
+      "TWILIGHT_PR100_BATCH_REPORT": "/workspace/twilight-run/next-batch22/card-magician-main-opengl/report.json",
+      "TWILIGHT_PR100_BATCH_CAPTURE_DIR": "/workspace/twilight-run/next-batch22/card-magician-main-opengl/captures"
+    }
+  },
+  "commands_not_executed": {
+    "working_directory": "/workspace/twilight",
+    "headless": [
+      "timeout",
+      "1200",
+      "/workspace/twilight-tools/Godot_v4.7.2-stable_linux.x86_64",
+      "--headless",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      ".",
+      "--script",
+      "res://tests/run_original_based_transform_batch.gd"
+    ],
+    "opengl": [
+      "timeout",
+      "1200",
+      "/workspace/twilight-tools/run-with-xvfb",
+      "/workspace/twilight-tools/Godot_v4.7.2-stable_linux.x86_64",
+      "--rendering-driver",
+      "opengl3",
+      "--audio-driver",
+      "Dummy",
+      "--path",
+      ".",
+      "--script",
+      "res://tests/run_original_based_transform_batch.gd"
+    ]
+  },
+  "execution_notes": [
+    "Calls require exec_command additional_permissions.network.enabled=true in this environment.",
+    "Create fresh XDG and evidence paths per attempt; existing saves and existing batch evidence must remain untouched.",
+    "Redirect stdout/stderr to each mode run.log; report only counts, error excerpts, paths, bytes and SHA. Require exit0, no SCRIPT ERROR:/ERROR:/PR100_GAMEPLAY_FAIL, and PR100_TRANSFORM_BATCH_OK."
+  ],
+  "expected_Main_scope": [
+    "Production class entry, existing staff equipment and transform360 binding to its approved authored resource; optional effective humanoid-body assertion.",
+    "Eight real input movement/idle/magic-attack directions, production projectile origin/travel/contact clock, upright no-flip display, untransform/retransform identity and cadence retention.",
+    "Explicit104 approved pose samples, controlled production hit and actual death VFX clock/foot anchor in eight directions, real respawn retaining transformation.",
+    "Existing production monster AI in eight directions, actual equipped-weapon kill, real floor drop before award, actual UI manual pickup, exact transform identity retained.",
+    "Wider unchanged-terrain QA search from the batch21 fix remains available; any failure must be diagnosed without hiding actors/scenery or weakening combat assertions."
+  ],
+  "performed_now": [
+    "Read source proof, existing raw transform profile, presentation body, catalog options/class applicability and QA runner.",
+    "Verified portrait SHA from its existing repository path.",
+    "Saved this external plan only; no image was opened/imported/generated/edited, no repository code/fixture/profile was changed, no Godot/Main test ran, no commit or push was made."
+  ]
+}

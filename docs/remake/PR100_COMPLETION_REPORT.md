@@ -1,3 +1,13 @@
+## 2026-10-15 · 카드 마술사8방향회전 WIP 보존
+
+**완료374/498·잔여124·개별Main103·신규완료0 유지**. 카드마술사360의8방향회전guide만1차승인(독립재검중),5동작미완성/미연결/Main미실행이다. 8분리body와crop누락/침범0, 모자·보라금코트·손의카드·부츠를확인했다. 저해상도원본에서확인불가한카드A/하트무늬·얼굴세부는새작화추론으로기록한다. [PNG/정확prompt/geometry/SHA보존](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json). [독립원본검토](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-source-independent-review.json). 다음은idle2pose×8방향소규모시험이며실제Main검증전완료로세지않는다.
+
+## 2026-10-15 · 다음 위험파일럿: 카드 마술사360
+
+완료374/498·잔여124·개별Main103유지. 피쉬맨HOLD및독립보고/발좌표WIP/미실행Main계획은 `2257054789865720e151e2c1ee32cddf0fb188d6` push·원격일치확인. 추가피쉬맨생성을중단했다.
+
+다음은 **서커스단 카드 마술사(transform:360)** 의8방향회전/idle소규모시험이다. [원본검토후보](evidence/pr100-direction-fix/original-based/batch22-preflight/next-card-magician-source.json): catalogPNG SHA `1a681f05f5f709f7885d017619926fa677830cdfa00a031722bdb7921a958ac7`,온전한모자/장갑/카드/두발및여백,기존완료중복0확인. 외부catalogportrait기반새2D동작이며원작애니메이션회수주장없음. 독립원본검토→회전/idle→전체5동작104자세/발anchor→실제Main후에만연결·수량갱신한다. 현재미연결/완료0.
+
 ## 2026-10-15 · 피쉬맨 사망 반복누락 HOLD
 
 **완료374/498·잔여124·개별Main103, 신규완료0**. 피쉬맨은사망시트2회모두24필요중20포즈만생성되어제작중단/HOLD한다. 승인4/5동작80포즈및양쪽불합격원본PNG/정확prompt/geometry를[체크포인트](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json)에보존했다. partial-runtime연결·누락복제·방향추정배정·Main시험없음. 향후재개하더라도실제발anchor와전체104자세승인이먼저필요하다. 피격/APK증거commit `ebc6eeb436c738cca1e1c02a84844f919ce26914` push/원격일치확인. 다음은온전한원본전신을가진새후보를검토한다.
