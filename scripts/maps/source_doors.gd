@@ -5,6 +5,8 @@ var records: Dictionary = {}
 var opened: Dictionary = {}
 var origin := Vector2i.ZERO
 func configure(rows: Array, source_origin: Vector2i) -> void:
+	records.clear()
+	opened.clear()
 	origin = source_origin
 	for row: Dictionary in rows:
 		records[int(row.id)] = row

@@ -16,6 +16,13 @@ func state_for(map_id: String, region: Dictionary) -> Dictionary:
 	var id: String = key(map_id, region)
 	if not states.has(id):
 		states[id] = {"phase":"ready","ready_at":Time.get_unix_time_from_system()+float(region.get("initial_delay",0)),"hp":-1,"position":[],"home":[]}
+	var revision: int = int(region.get("layout_revision",0))
+	if int(states[id].get("layout_revision",0)) != revision:
+		# Preserve the life, HP and cooldown; old canvas positions may name a
+		# different room after a geometry migration. Spawn in the checked zone.
+		states[id]["position"] = []
+		states[id]["home"] = []
+		states[id]["layout_revision"] = revision
 	return states[id]
 
 func can_spawn(map_id: String, region: Dictionary) -> bool:
@@ -60,5 +67,6 @@ func import_state(value: Variant) -> void:
 			# Old saves stored game-time deadlines. Preserve remaining cooldown at upgrade.
 			deadline = now + maxf(0.0, deadline - game_seconds)
 		states[str(id)] = {"phase":phase,"ready_at":deadline,
+			"layout_revision":int(state.get("layout_revision",0)),
 			"hp":maxi(-1,int(state.get("hp",-1))),"position":position if position is Array and position.size()==2 else [],
 			"home":home if home is Array and home.size()==2 else []}

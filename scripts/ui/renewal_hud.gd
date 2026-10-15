@@ -1651,7 +1651,7 @@ func _add_original_map_controls(regions: VBoxContainer) -> void:
 		(regions.get_node("RegionCount") as Label).text = "지역 선택  ·  %d개 지역" % region_selection.item_count
 	selector.item_selected.connect(func(_index: int) -> void: populate.call())
 	search.text_changed.connect(func(_text: String) -> void: populate.call())
-	if get_parent().field_map is OriginalPlayableField:
+	if get_parent().field_map is OriginalPlayableField and get_parent().field_map.uses_original_gameplay_rules():
 		selector.select(1)
 		populate.call()
 	regions.add_child(UI.label("본토: 자체 제작 타일 v1 · 기타: 이미지 미확보",11,UI.MUTED))

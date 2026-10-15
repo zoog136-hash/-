@@ -33,6 +33,15 @@ func run() -> void:
 		for actor: Node in world.monsters_root.get_children(): actor.set_physics_process(false)
 		await physics_frame
 		var field: PlayableField=world.field_map
+		if field is RemakePlayableField:
+			# The source grid has closed directional edges, rather than legacy
+			# hunting_lane polygons. Exercise the same real-body obligations.
+			var source_result: Dictionary=await preload("res://tests/remake_source_route_checks.gd").run(self,world)
+			checks+=int(source_result.checks)
+			for failure: String in source_result.failures: failures.append(failure);printerr("HUNTING_PATH_FAIL "+failure)
+			metrics.append(source_result.metric)
+			print("HUNTING_MAP_CHECKED ",id," source_physical_detour=",source_result.metric.physical_detour_walk)
+			continue
 		var spawn: Vector2=vector(field.data.spawn_position)
 		var paths: Dictionary=field.data.get("hunting_paths",{})
 		check(paths.get("version",0)==1,id+" actual pathway data active")
