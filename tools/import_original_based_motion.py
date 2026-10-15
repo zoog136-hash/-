@@ -922,6 +922,32 @@ def _install_optional_plan(plan):
     return plan["result"]
 
 
+def _mixed_direction_canvases(spec, selected):
+    """Review optional whole-sheet direction scales, never per-phase scales."""
+    if "canvas_sizes_by_direction" not in spec:
+        return None
+    sizes = spec["canvas_sizes_by_direction"]
+    if (not isinstance(sizes, dict) or set(sizes) != set(selected)
+            or any(type(value) is not int or not 64 <= value <= 2048 for value in sizes.values())
+            or type(spec["canvas_size"]) is not int or spec["canvas_size"] != max(sizes.values())):
+        raise ValueError("Directional canvases require exact selected direction keys, bounded integers and canvas_size=max")
+    return {direction: sizes[direction] for direction in selected}
+
+
+def _rebase_mixed_frame_canvas(frame, canvas):
+    """Keep source pixels/anchor intact and recheck the actual virtual canvas."""
+    x, y, width, height = frame["region"]
+    anchor_x, anchor_y = frame["source_anchor"]
+    if not x <= anchor_x < x + width or not y <= anchor_y < y + height:
+        raise ValueError("Reviewed source anchor must lie inside its pose")
+    foot_x, foot_y = canvas // 2, canvas * 5 // 8
+    margin_x, margin_y = foot_x - (anchor_x - x), foot_y - (anchor_y - y)
+    if min(margin_x, margin_y) < 0 or margin_x + width > canvas or margin_y + height > canvas:
+        raise ValueError("Pose cannot fit its declared directional foot-anchored canvas")
+    frame.update(margin=[margin_x, margin_y, canvas - width, canvas - height],
+                 canvas_size=[canvas, canvas], foot=[foot_x, foot_y])
+
+
 def _prepare_mixed_sources(root, candidate, actor, keys, apply):
     """Strict complete-sheet + standalone-PNG union, with no source exclusions.
 
@@ -993,9 +1019,11 @@ def _prepare_mixed_sources(root, candidate, actor, keys, apply):
     prepared = []
     for spec in sheets:
         if (not isinstance(spec, dict) or not sheet_fields <= set(spec)
-                or set(spec) - sheet_fields - {"directions_axis", "reference_rows", "independent_review_id"}):
+                or set(spec) - sheet_fields - {"directions_axis", "reference_rows", "independent_review_id",
+                                               "canvas_sizes_by_direction"}):
             raise ValueError("Each mixed sheet needs explicit layout, roles, SHA, canvas and per-pose anchors")
         selected = reviewed_directions(spec["directions"])
+        _mixed_direction_canvases(spec, selected)
         rows, roles, anchors = spec["rows"], spec["roles"], spec["source_anchors"]
         if type(rows) is not int or rows < 2 or not isinstance(roles, dict) or not roles:
             raise ValueError("Mixed sheets retain the at-least-two-row temporal guard")
@@ -1054,12 +1082,17 @@ def _prepare_mixed_sources(root, candidate, actor, keys, apply):
             part = analyze(source, spec["rows"], spec.get("reference_rows"), None,
                            spec.get("directions_axis", "columns"), spec["canvas_size"],
                            spec["source_anchors"], selected)
+            direction_canvases = _mixed_direction_canvases(spec, selected)
+            if direction_canvases is not None:
+                for frame in part["frames"]:
+                    _rebase_mixed_frame_canvas(frame, direction_canvases[frame["direction"]])
             local_slots = {}
             for role in ROLES:
                 for phase, row in enumerate(spec["roles"].get(role, [])):
                     for local_direction, direction in enumerate(selected):
                         local_slots[row * len(selected) + local_direction] = role, direction, phase
         else:
+            direction_canvases = None
             part = analyze(source, rows_count=1, reference_rows=[0], directions=selected,
                            canvas_size=spec["canvas_size"], source_anchors=[spec["source_anchor"]])
             local_slots = {0: (spec["role"], spec["direction"], spec["phase"])}
@@ -1075,6 +1108,11 @@ def _prepare_mixed_sources(root, candidate, actor, keys, apply):
                  "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"}
         if kind == "whole_sheet":
             atlas["directions_axis"] = spec.get("directions_axis", "columns")
+        if direction_canvases is not None:
+            atlas.update(canvas_sizes_by_direction=direction_canvases,
+                         feet_by_direction={direction: [canvas // 2, canvas * 5 // 8]
+                                            for direction, canvas in direction_canvases.items()},
+                         canvas_size_basis="max_direction_analysis_only")
         atlases.append(atlas)
         copies.append((source, destination, spec["source_sha256"]))
         with Image.open(source) as image:
@@ -1107,7 +1145,8 @@ def _prepare_mixed_sources(root, candidate, actor, keys, apply):
                 records.append({"id": pose_id, "source_id": spec["id"], "source_kind": kind,
                                 "source_frame": local_index, "role": role, "direction": direction, "phase": phase,
                                 "file": atlas["path"], "source_sha256": spec["source_sha256"],
-                                "source_anchor": frame["source_anchor"], "canvas_size": spec["canvas_size"],
+                                "source_anchor": frame["source_anchor"],
+                                "canvas_size": frame.get("canvas_size", [spec["canvas_size"]])[0],
                                 "scale_review_note": spec["scale_review_note"], "rgba_sha256": frame["rgba_sha256"],
                                 "visible_sha256": visible,
                                 **({"independent_review_id": spec["independent_review_id"]} if "independent_review_id" in spec else {})})
@@ -1128,7 +1167,8 @@ def _prepare_mixed_sources(root, candidate, actor, keys, apply):
     height_basis = candidate.get("display_height_basis", "max_living_frame")
     if height_basis not in {"median_idle", "max_living_frame"}:
         raise ValueError("Unknown reviewed display-height basis")
-    heights = [frame["region"][3] * 256 / atlases[frame["sheet"]]["canvas_size"][1]
+    heights = [frame["region"][3] * 256
+               / frame.get("canvas_size", atlases[frame["sheet"]]["canvas_size"])[1]
                for frame in geometry["frames"]
                if frame["role"] == "idle" or (height_basis == "max_living_frame" and frame["role"] != "death")]
     reference_height = max(heights) if height_basis == "max_living_frame" else float(np.median(heights))

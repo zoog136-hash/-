@@ -1,3 +1,9 @@
+## 최신 진행 · batch31 검은 토끼 소녀328 신규1종
+
+**390 → 391/498(78.5%) · 잔여107 · 인계374 이후 신규17 · Main개별120종/canonical253보고서.** 112자세·48원본PNG를 연결하고 실제Main headless2,402/OpenGL2,024검사, 추가시간진행Main OpenGL61,539검사(204.471초), 별도112정지+56게임화면+112시간진행자세 전수시각검토 PASS. 기존251보고서SHA전부보존. 실제입력/장착/무기타격/HP피격/실제시간사망VFX/AI/지면드랍/수동습득 PASS. HUD가림을 첫실행에서거부하고 실제알림자연만료 후 재검증했다. [배치31 원본·실행·검토 증거](evidence/pr100-direction-fix/original-based/batch31/README.md).
+
+기존50+optional29+방향별13+coverage6+identity9=107검사 PASS. 정상에셋/게임코드/맵교체0, 필수검사완화0. 391체크포인트 push후 기존4통합CI/Android빌드·정적검사를실행하고 잔여107제작계속. Android실기기 미검증/main미병합. 아래는 변경하지 않은 과거체크포인트 기록이다.
+
 ## 최신 진행 · batch30 넝마 신규1종
 
 **389 → 390/498(78.3%) · 잔여108 · 인계374 이후 신규16 · Main개별119종.** 넝마104자세, 실제Main headless1009/OpenGL1123검사 오류0, 실제AI8방향·원래HP1960/무기28회·피격/사망/드랍/수동습득 PASS. root가104정지자세+8AI화면과 별도104연속컨트롤러자세/8방향표를 전수검토했다. 기존249보고서SHA보존+2=canonical251. [배치30 증거](evidence/pr100-direction-fix/original-based/batch30/README.md). 기존정상자산/맵/게임코드 교체0, 필수검사 완화0.

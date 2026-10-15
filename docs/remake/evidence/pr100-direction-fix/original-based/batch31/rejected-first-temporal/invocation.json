@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/workspace/scratch/bin/godot-pr100",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--path",
+    "/workspace/twilight",
+    "--script",
+    "res://tests/original_based_transform_temporal_main_test.gd"
+  ],
+  "explicit_environment": {
+    "DISPLAY": ":99",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "XDG_DATA_HOME": "/workspace/scratch/pr100-continuation/main31-temporal-root-render/data",
+    "XDG_CONFIG_HOME": "/workspace/scratch/pr100-continuation/main31-temporal-root-render/config",
+    "XDG_CACHE_HOME": "/workspace/scratch/pr100-continuation/main31-temporal-root-render/cache",
+    "TWILIGHT_PR100_BATCH_ISOLATED": "1",
+    "TWILIGHT_PR100_BATCH_CONFIG": "res://tests/fixtures/pr100_transform_batch31.json",
+    "TWILIGHT_PR100_BATCH_REPORT": "/workspace/scratch/pr100-continuation/main31-temporal-root-render/report.json",
+    "TWILIGHT_PR100_BATCH_CAPTURE_DIR": "/workspace/scratch/pr100-continuation/main31-temporal-root-render/captures",
+    "TWILIGHT_ORIGINAL_POSE_CAPTURE": "1"
+  },
+  "validator_sha256": "8c19042a3ced1f02182ab80e5a01105d25821c2ec539d16c1e8ada05a48fdda2",
+  "QA_scope": "AdditionalactualMain120Hzvisualcontrollerphaseplayback; inheritedactualgameplay/input/weapon/incomingHP/realdeathVFX/AI/drop/manualpickup unchanged",
+  "started_wall_ns": 1792099406985083715,
+  "returncode": 0,
+  "elapsed_seconds": 169.42897682900002,
+  "validator_unchanged": true
+}

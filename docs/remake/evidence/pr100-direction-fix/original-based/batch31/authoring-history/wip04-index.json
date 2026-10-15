@@ -1,0 +1,45 @@
+{
+  "label": "wip-04-preband-delta-trial05",
+  "status": "WIP04_PRE_BAND_IDENTITY_FIX_TRIAL05_STATIC_READY_MAIN_NOT_RUN",
+  "candidate_sha256": "0a7400762eec28195b0c1e8c107f76283f34902bb6fcd5e72221bcb844f530a9",
+  "required_prior_parts": [
+    {
+      "name": "rabbit328-wip-02-compact-part01.zip",
+      "sha256": "af9f52345cc02fd89666640deeaa5a830c1c1fa4c74cab9ae273b6a30ae1da47",
+      "bytes": 40335689
+    },
+    {
+      "name": "rabbit328-wip-02-compact-part02.zip",
+      "sha256": "cf0576063859aa5a5495916dfa3ed541160d9b0019eb3e513fcd7dc4a545f07e",
+      "bytes": 12469973
+    },
+    {
+      "name": "rabbit328-wip-03-compact-part01.zip",
+      "sha256": "17993df3e78c065cbd5c6ccd73412cd8112a0d20be0041847bd20ce83c4cffa3",
+      "bytes": 42393993
+    },
+    {
+      "name": "rabbit328-wip-03-compact-part02.zip",
+      "sha256": "2a91f8514f8b7b67806b9e9ddc11c4b2a7f0ca9bc30d9c2b300f561e982f648b",
+      "bytes": 6793679
+    }
+  ],
+  "parts": [
+    {
+      "path": "/workspace/scratch/pr100-continuation/rabbit328-portable/rabbit328-wip-04-preband-compact-part01.zip",
+      "bytes": 42850929,
+      "sha256": "8effbaa4b261fa61629279a266f3827115b577f9f223b23ba876698989ba369f",
+      "entries": 102
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/rabbit328-portable/rabbit328-wip-04-preband-compact-part02.zip",
+      "bytes": 33378425,
+      "sha256": "9b30ab3e0d4a225199823db8a230979eeceeb60440ec22e3e3b109e07706d233",
+      "entries": 115
+    }
+  ],
+  "included_entries": 217,
+  "excluded_capture_bodies": 1095,
+  "Main": false,
+  "completed_added": 0
+}

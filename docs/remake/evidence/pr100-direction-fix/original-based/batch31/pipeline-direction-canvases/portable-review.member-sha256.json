@@ -1,0 +1,151 @@
+{
+  "archive": "/workspace/scratch/pr100-continuation/optional-direction-canvas-review/portable-review.zip",
+  "archive_bytes": 131340,
+  "archive_sha256": "fd994ead23aaff494b9fdde5abad4ad1e81deda29eb63057a028f4a3ca1408a3",
+  "member_count": 35,
+  "zip_crc": "PASS",
+  "member_sha256": {
+    "MEMBERS-SHA256.json": {
+      "bytes": 5348,
+      "sha256": "5530f257890401249c7f683803d0201d6019d2e9961dd61037df24e263252a94"
+    },
+    "README.md": {
+      "bytes": 4214,
+      "sha256": "73493b478b4d7e2681e636c0d0892afd6b36063b835711fedfeee76c55a7d534"
+    },
+    "adversarial/probe.py": {
+      "bytes": 4031,
+      "sha256": "da54d69b21f4d93312f9f5dacaa5ce99b327a46f44fba4cd0745554b4fb038c1"
+    },
+    "adversarial/review-results-postfix.json": {
+      "bytes": 2769,
+      "sha256": "b89decab19d95def0c6f2761a9933bb489f1bf3aa9f9ed1b4200602825b81553"
+    },
+    "adversarial/review-results.json": {
+      "bytes": 2454,
+      "sha256": "f27a026cefc2a7c084fae5aeeea5351b10ac65ca9dc91239747c45e76af0944e"
+    },
+    "code/.github/workflows/animation-presentation-validate.yml": {
+      "bytes": 24347,
+      "sha256": "1b3d0de8056ad5f031656aa6a80a0d529466280bd67d21005bd39a2079880c54"
+    },
+    "code/tests/eight_direction_coverage_audit_test.py": {
+      "bytes": 7528,
+      "sha256": "77ee3ca838816d758970461ddbce82b7ba576b788b958eab1e1a984ab6fa82a3"
+    },
+    "code/tests/original_based_identity_link_test.py": {
+      "bytes": 7611,
+      "sha256": "cc2882aaddf8a0d13d23bbdb3eb24b8d0f1186c4dff43472a406d96a7993d4f2"
+    },
+    "code/tests/original_based_motion_import_test.py": {
+      "bytes": 88169,
+      "sha256": "f8d6dbb4547779a3a3e26f3a9d0959a438cef7711b5a35e37b513a059dbf93ac"
+    },
+    "code/tests/test_original_based_direction_canvases.py": {
+      "bytes": 16226,
+      "sha256": "824bcae3cbc5d6023b4761093aa160d4d83143a16bf7c6500ad25e6e6ad05778"
+    },
+    "code/tests/test_original_based_pose_files.py": {
+      "bytes": 44401,
+      "sha256": "acdf24580ed439d26eec8162e6a259e1f4fe876a8c146dd446ec143d9b8a21ab"
+    },
+    "code/tools/audit_eight_direction_coverage.py": {
+      "bytes": 28625,
+      "sha256": "91e6b455d3dcdfe01cebf8107d4b47fd3dd0fc9f5adcb14129374576caca8970"
+    },
+    "code/tools/build_animation_expansion.py": {
+      "bytes": 14536,
+      "sha256": "02514b89e78e12bbe96cd2146f46adaad2362013bc165b9bd006bcecb18d55da"
+    },
+    "code/tools/import_original_based_motion.py": {
+      "bytes": 83032,
+      "sha256": "7a8d532916908b791b9c2db4f68c3d2ce452a324762353b4cbfcb1392f255ce0"
+    },
+    "code/tools/link_original_based_identity.py": {
+      "bytes": 5710,
+      "sha256": "8f459852aba46db84c50a688163632db1becd758e65f611cfa84ae94b00d9173"
+    },
+    "context.json": {
+      "bytes": 590,
+      "sha256": "0b45af85ea50aa8f977e92eb6d2b805a26650043a4d5f31733700a54e97c534d"
+    },
+    "review/audit_eight_direction_coverage.py.before.txt": {
+      "bytes": 17566,
+      "sha256": "b78af9336646a56a7e5069b1d444051366dba3047315f832d8533236c3865ab1"
+    },
+    "review/author-observed-results.json": {
+      "bytes": 679,
+      "sha256": "12bb8b94929580f9c05920e89a2dd8baf07ff5f42f9dfdddb44cecf08f4de8b4"
+    },
+    "review/before-hashes.json": {
+      "bytes": 340,
+      "sha256": "e7fb4369c6b5ffd9d63418624a8b689074fad432c7da5588ca84d17c2e8b2a3c"
+    },
+    "review/design.json": {
+      "bytes": 4332,
+      "sha256": "5abbc03a1073092560b17f8c7f054257af1a8f2b2325c7eaceecc0251ebaf72a"
+    },
+    "review/implementation-delivery.json": {
+      "bytes": 1670,
+      "sha256": "cf6accc2ac97c3b955c5a81d5f9eea8ea9c8a5cd0f1a07123fba7e4f57fbe912"
+    },
+    "review/implementation.diff": {
+      "bytes": 20666,
+      "sha256": "ec3a95898b6d5c7fa7a327c6048d2dcf1efb090776898f96cbf7d3b887e93aea"
+    },
+    "review/import_original_based_motion.py.before.txt": {
+      "bytes": 80604,
+      "sha256": "13305d36098abed5e3a4ee25d7c18d9fd8523458fdf33f3084b026f5878aef9c"
+    },
+    "review/new-direction-canvas-tests.py": {
+      "bytes": 16226,
+      "sha256": "824bcae3cbc5d6023b4761093aa160d4d83143a16bf7c6500ad25e6e6ad05778"
+    },
+    "review/scope-immutability.json": {
+      "bytes": 485,
+      "sha256": "5c020b7e43778dae113f32ff70ab42ad68954c6c635ba273554d9cffca1646e4"
+    },
+    "review/test_original_based_pose_files.py.before.txt": {
+      "bytes": 44401,
+      "sha256": "acdf24580ed439d26eec8162e6a259e1f4fe876a8c146dd446ec143d9b8a21ab"
+    },
+    "root-logs/coverage6-exact.log": {
+      "bytes": 104,
+      "sha256": "8750d4b5acdce1e4d680a3a27eb5d68370ed8b7d37b619aa32e9e0049f881dae"
+    },
+    "root-logs/direction13.log": {
+      "bytes": 2787,
+      "sha256": "1da99f53a1a1da9cf57e5472b3616486aff88267fe71860678d3a4ea40017a81"
+    },
+    "root-logs/exact-existing-validation.json": {
+      "bytes": 318,
+      "sha256": "ce08b2e7444abf69c02783f1d01dc15eec48efa23f4d013e22377889c30e3dc5"
+    },
+    "root-logs/final-validation.json": {
+      "bytes": 1606,
+      "sha256": "c32e9ad4eb72fe669503c1d5587f4ca1bbd8fb8c495d50f8a1863e09b19ee88d"
+    },
+    "root-logs/identity9-exact.log": {
+      "bytes": 107,
+      "sha256": "21467eb6e1b0753a671ab5816dda7d58a22f5539d450e71bdb9274c23b03c494"
+    },
+    "root-logs/legacy50-exact.log": {
+      "bytes": 150,
+      "sha256": "35f97a968b7b935567bf1713a68a31aea792544f56cfef0681c95696d7ad66fa"
+    },
+    "root-logs/legacy50.log": {
+      "bytes": 108,
+      "sha256": "e70fec2825d9bf206d27463a792768195039599cb39bcca66339f47283f84cce"
+    },
+    "root-logs/optional29.log": {
+      "bytes": 5673,
+      "sha256": "841818f3edf7591b3082301cd2f61b01ac8693039f8df285043d46740526c72e"
+    },
+    "root-logs/validation.json": {
+      "bytes": 1367,
+      "sha256": "bc2e1e4da34039dd2c1849b4bb38989787a3a1aa06e7e1ddd67d97d2d4992866"
+    }
+  },
+  "no_production_apply": true,
+  "git_index_modified": false
+}

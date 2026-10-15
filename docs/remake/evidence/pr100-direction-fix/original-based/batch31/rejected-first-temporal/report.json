@@ -1,0 +1,62 @@
+{
+	"cases": [
+		{
+			"checks": 61508,
+			"failures": [],
+			"folder": "black_rabbit_girl_transform328",
+			"full_pose_capture": true,
+			"incoming_directions": 8,
+			"lifecycle": {
+				"attempt_limit": 200,
+				"death_callbacks": 1,
+				"death_track": "death_7",
+				"ground_drops": [
+					{
+						"created_at": 1792099572.56645,
+						"expires_at": 1792100172.56645,
+						"grade": "일반",
+						"hunt_batch": "6329178aad7fe428f2b1524ccfc2d669",
+						"id": "56292747b1a9f21b07bafdf9b5b3795f",
+						"item_name": "HP 물약",
+						"map_id": "aden_world",
+						"position": [
+							16081.0966796875,
+							774.9033203125
+						],
+						"quantity": 1,
+						"state": "ground"
+					}
+				],
+				"hit_pose": true,
+				"hp_end": 0,
+				"hp_start": 300,
+				"manual_pickup": true,
+				"player_hp": 1622,
+				"weapon_attempts": 6
+			},
+			"monster_directions": 8,
+			"name": "검은 토끼 소녀",
+			"physics_ticks": 1955,
+			"player_directions": 8,
+			"pose_samples": 112,
+			"preserved_saves": [
+				"user://pr100-transform-batch-preserved/black-rabbit-girl-transform328/twilight_v20_save.json"
+			],
+			"report": "/workspace/scratch/pr100-continuation/main31-temporal-root-render/report-cases/black-rabbit-girl-transform328.json",
+			"screenshots": 168,
+			"slug": "black-rabbit-girl-transform328",
+			"transform_id": "328"
+		}
+	],
+	"checks": 61508,
+	"config": "res://tests/fixtures/pr100_transform_batch31.json",
+	"engine_processes": 1,
+	"failures": [],
+	"metadata": {
+		"batch": "pr100-transform-batch31",
+		"scope": "ActualMaintransform328firstfull112trial:sourcefaithfulunarmedart, existingequippedclawproductioncombat, noquality/completionbeforeindependentgate"
+	},
+	"process_id": 63029,
+	"scene_per_case": "Main.tscn",
+	"user_directory": "/workspace/scratch/pr100-continuation/main31-temporal-root-render/data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD"
+}

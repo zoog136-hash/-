@@ -13,11 +13,13 @@ on:
       - 'assets/actors/eight_direction/**'
       - 'tools/build_animation_expansion.py'
       - 'tools/build_open_sprite_sample.gd'
+      - 'tools/audit_eight_direction_coverage.py'
       - 'tools/*original_based_motion*'
       - 'tools/link_original_based_identity.py'
       - 'data/animation_authoring_sources.json'
       - 'tests/original_based*'
       - 'tests/test_original_based_pose_files.py'
+      - 'tests/test_original_based_direction_canvases.py'
       - 'tests/run_original_based*batch.gd'
       - 'tests/pr100_direction_gameplay_test.gd'
       - 'tests/fixtures/pr100_batch*.json'
@@ -61,6 +63,7 @@ jobs:
           python3 tests/eight_direction_coverage_audit_test.py
           python3 tests/original_based_motion_import_test.py
           python3 tests/test_original_based_pose_files.py
+          python3 tests/test_original_based_direction_canvases.py
           python3 tests/original_based_identity_link_test.py
           python3 tools/audit_eight_direction_coverage.py --root . --output-dir test-results/eight-direction-coverage
           for name in eight_direction_animation_test native_animation_expansion_test original_based_canvas_test; do
@@ -297,6 +300,10 @@ jobs:
           - batch: 27
             script: run_original_based_boss_batch
             timeout: 1200
+          - batch: 31
+            config: res://tests/fixtures/pr100_transform_batch31.json
+            script: original_based_transform_temporal_main_test
+            marker: PR100_TRANSFORM_BATCH_OK
           - batch: 21
             config: res://tests/fixtures/pr100_batch21_accepted.json
             script: run_original_based_transform_batch

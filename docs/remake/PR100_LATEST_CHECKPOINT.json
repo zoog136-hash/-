@@ -1,19 +1,19 @@
 {
-  "observed_at_utc": "2026-10-15T21:21:25.087175+00:00",
+  "observed_at_utc": "2026-10-15T21:42:01.048219+00:00",
   "repository": "zoog136-hash/-",
   "pr": 100,
   "branch": "feature/twilight-animation-20261013",
-  "verified_code_checkpoint": "f2fc2046998d647db332babf674f605008f1749c",
+  "verified_code_checkpoint": "3cf3ab221c5072d228584fd94bdc1501ed10bfef",
   "runtime_assets_checkpoint": {
-    "batch": 30,
-    "resolution": "git log -1 --format=%H -- docs/remake/evidence/pr100-direction-fix/original-based/batch30/summary.json"
+    "batch": 31,
+    "resolution": "git log -1 --format=%H -- docs/remake/evidence/pr100-direction-fix/original-based/batch31/summary.json"
   },
   "counts": {
     "target": 498,
-    "completed": 390,
-    "remaining": 108,
+    "completed": 391,
+    "remaining": 107,
     "hero_plus": [
-      139,
+      140,
       180
     ],
     "normal_monster": [
@@ -24,12 +24,12 @@
       39,
       60
     ],
-    "individual_Main_eight_direction": 119,
-    "durable_Main_reports": 251,
+    "individual_Main_eight_direction": 120,
+    "durable_Main_reports": 253,
     "supplemental_existing3_Main_reports_this_resume": 6
   },
   "new_completed": [
-    "넝마"
+    "검은 토끼 소녀328"
   ],
   "validation": {
     "importer_tests_passed": 50,
@@ -42,7 +42,7 @@
     "resumed_importer_and_coverage_tests_passed": 56,
     "resumed_existing3_headless_checks": 7631,
     "resumed_existing3_OpenGL": "success",
-    "transform328_actual_Main": "not_run_incomplete_unlinked",
+    "transform328_actual_Main": "PASS_base2402/2024plusadditional61539finalGL_all112independentvisual",
     "resumed_existing3_OpenGL_checks": 6650,
     "resumed_existing3_Main_failures": 0,
     "resumed_existing3_Main_captured_PNGs": 480,
@@ -468,6 +468,64 @@
         "DeathServantnew104productionongoing",
         "MaidAnna276newsourcepilotsongoing"
       ]
+    },
+    "batch31": {
+      "previous_completed": 390,
+      "new_completed": [
+        "검은 토끼 소녀328"
+      ],
+      "new_completed_count": 1,
+      "completed": 391,
+      "target": 498,
+      "percent": 78.5,
+      "remaining": 107,
+      "hero_plus": [
+        140,
+        180
+      ],
+      "normal_monster": [
+        212,
+        258
+      ],
+      "boss": [
+        39,
+        60
+      ],
+      "individual_Main_eight_direction": 120,
+      "canonical_Main_reports": 253,
+      "old251_report_SHA_preserved": true,
+      "resumed_new_completed_count": 17,
+      "base_Main_headless_checks": 2402,
+      "base_Main_OpenGL_checks": 2024,
+      "additional_temporal_Main_OpenGL_checks": 61539,
+      "additional_temporal_Main_OpenGL_seconds": 204.47063754099872,
+      "failures": 0,
+      "authored_distinct_poses": 112,
+      "immutable_selected_whole_PNGs": 48,
+      "root_visual": "All112static+56actualfullviewport+112finaltimeprogressionphases independentlyviewedPASS. Finalall112clear/unclipped,2idle4walk3attack2hit3death each8direction. AnatomicalRIGHTband conserved.",
+      "automatic": "All8actualinputmovement/equipmentremove-reapply/cadence/weaponhits/controlledincomingHP/real-clock3deathVFX/AI. Normal300HP/6weaponattempts/1deathcallback/grounddrop/manualpickupPASS. AdditionalQApublic120Hzcontrollerstage separatefromrealgameplay.",
+      "previous_failed_visual_run": "Firsttemporal8c19042aautomaticPASSbutHUDcoveredS-walk0+staleearlycamera; preservedandrejected. Final8c6bd5ceonlyadditiveQAfix letsrealnoticeexpire andpubliccamerareset; noHUD/game/mapchanges.",
+      "qualified_profile_changes": [
+        "transform:328"
+      ],
+      "all_other_existing_profiles_unchanged": true,
+      "qualified_existing_native_assets_replaced": 0,
+      "maps_or_game_scripts_changed": 0,
+      "source_claim": "Newlyauthoredfromownoriginalcatalogreference; notoriginalanimationextraction. Noempty/mirroredmandatoryposes.",
+      "CI": "Exact389checkpoint5e6565fAnimation39jobsSUCCESS;391full4workflowsdispatchafterthispush;notyetverified.",
+      "Android_actual_device": "UNVERIFIED",
+      "main_merge": "NOT_PERFORMED;conflict remains",
+      "next_batch": [
+        "Hellcougarv3actualMain2312/2434automaticPASS;104temporal/rootvisualpending",
+        "Iguana112sameheadingSscale",
+        "Unicorn104SE/SWtrueprojectionwalkrepair",
+        "Agni104rootvisual/Main",
+        "DeathServant104N/NEcorpseheadingrepair",
+        "Hero269112anchors/core",
+        "Wolf104realgait",
+        "MaidAnna276physicalpilot",
+        "Guardianironphysicalpilot"
+      ]
     }
   },
   "new_WIP_HOLD": [
@@ -476,7 +534,6 @@
     "알비노 피쉬맨",
     "서커스단 카드 마술사360",
     "서커스단 단장357",
-    "검은 토끼 소녀328",
     "베테랑 낚시꾼 폴376",
     "알비노 유니콘: 재생방향/보행교대/누락프레임 재작화필요"
   ],
@@ -581,31 +638,31 @@
       ],
       "sha": "f2fc2046998d647db332babf674f605008f1749c"
     },
-    "latest": "Exact5e6565f389checkpoint Animation39jobsSUCCESS; current390notyetfullCI. Godot/resource/Android387checkpointSUCCESS."
+    "latest": "Exact389checkpoint5e6565fAnimation39jobsSUCCESS;391full4workflowsdispatchafterthispush;notyetverified."
   },
   "main_conflict_unresolved": true,
   "next": [
-    "FinishRabbit328independent112Mainreview+additiveactualMaincontrollerproof; commitonlyifpass",
-    "Hellrear20newproportionalart thenactualMainfreshv3; nevercountoldHOLD",
-    "Optionalperdirnewauditorindependentreviewfound3blockinggaps; fixes/rootrerunpending; noUnicornapplybeforePASS",
-    "Continueall108remaining/WIPs andnewDeathServant/Anna/wolfsourceproduction; noCIwaitinghalt/noMainmerge"
+    "Checkpoint391pushanddispatchfour existing fullCI; continueproductionwhileCIruns",
+    "Hellv3whole104 actualMain2312/2434PASS; finish104temporalvisualthenqualifyboss40onlyifpass",
+    "IguanaShead/corecalibration112 andUnicornSE/SWcamera/newgaitsourcebeforeMain",
+    "Agni/DeathServant/Hero269/Wolf/Anna/Guardianandall107remaining; noMainmerge"
   ],
   "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
   "remote_snapshot_bytes": 13916,
   "remote_snapshot_sha256": "5959dacc572e4d20f01001c99aa48891cbe9b193e9706d619f4d5064e2e81cd5",
   "session_base_head": "f7a0c751192012437af5b2cb0fa4eb2901b7ba84",
   "observed_main_head": "e2119c37293a783e93b421ee0055d1318271b071",
-  "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
+  "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/batch31/root-independent-Main-review.json",
   "current_WIPs": [
-    "Hellcougarbackattack/hitcoregrowthactualMain;20newrearposes underrepair",
-    "Rabbit328Main31baseheadless+GLPASS,112static/rootvisualpending +newadditiveMaincontrollercheckpending",
-    "Unicorn104rootvisual+perdirparserauditorfix/Mainpending",
-    "Iguana112E/Wtrueprofile+sourceproportionsreview",
-    "Hero269cardinal/diagonalgait/rearhand/footplanes",
-    "Agni104homologouscore/vortexroot/Mainpending",
-    "Blackforestwolfquadgait/rearcorpse",
-    "DeathServantnew104productionongoing",
-    "MaidAnna276newsourcepilotsongoing"
+    "Hellcougarv3actualMain2312/2434automaticPASS;104temporal/rootvisualpending",
+    "Iguana112sameheadingSscale",
+    "Unicorn104SE/SWtrueprojectionwalkrepair",
+    "Agni104rootvisual/Main",
+    "DeathServant104N/NEcorpseheadingrepair",
+    "Hero269112anchors/core",
+    "Wolf104realgait",
+    "MaidAnna276physicalpilot",
+    "Guardianironphysicalpilot"
   ],
   "resumed_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015",
   "resumed_blocker": null,
@@ -614,8 +671,8 @@
     "transform:173 악몽의 잭 오 랜턴",
     "transform:288 도구리"
   ],
-  "resumed_new_completed_count": 16,
-  "previous_pushed_checkpoint": "5e6565f6933cc112fc09bc65390c078a1c7282bc",
+  "resumed_new_completed_count": 17,
+  "previous_pushed_checkpoint": "3cf3ab221c5072d228584fd94bdc1501ed10bfef",
   "batch23_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch23",
   "batch24_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch24",
   "batch25_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch25",
@@ -623,5 +680,6 @@
   "batch27_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch27",
   "batch28_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch28",
   "pipeline_resume_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/pipeline-resume-20261015",
-  "batch30_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch30"
+  "batch30_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch30",
+  "batch31_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch31"
 }

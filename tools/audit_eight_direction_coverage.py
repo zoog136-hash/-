@@ -15,7 +15,7 @@ import subprocess
 from collections import Counter
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageDraw
 
 import build_animation_expansion as expansion
 
@@ -61,6 +61,159 @@ def read_spriteframes(path):
     return external, subresources, {track["name"]: track for track in animations}
 
 
+def _audit_mixed_direction_canvases(proof, actual_frames, animations, images, resource_text):
+    """Independently verify optional direction scales against real resources.
+
+    Uniform and legacy checks remain separate. No importer geometry or helpers
+    are reused here: the declared direction map must explain every frame's
+    actual Godot canvas, foot, source anchor and mandatory animation slot.
+    """
+    if proof.get("input_representation") != "mixed_sources_v1":
+        if "source_files" in proof or "source_poses" in proof:
+            raise ValueError("Mixed source metadata requires mixed_sources_v1 representation")
+        return
+    assignments = re.findall(r"^\s*metadata/twilight_canvas_size\s*=\s*(.*?)\s*$", resource_text, re.M)
+    roots = re.findall(r"^\[resource\]\s*$", resource_text, re.M)
+    root_text = resource_text.split("[resource]", 1)[-1]
+    root_assignments = re.findall(r"^\s*metadata/twilight_canvas_size\s*=\s*(.*?)\s*$", root_text, re.M)
+    if len(roots) != 1 or len(assignments) != 1 or assignments != root_assignments:
+        raise ValueError("Mixed resource requires exactly one runtime normalization metadata assignment")
+    match = re.fullmatch(r"Vector2\(([^)]+)\)", assignments[0])
+    values = [value.strip() for value in match[1].split(",")] if match else []
+    if len(values) != 2 or any(float(value) != 256 for value in values):
+        raise ValueError("Mixed runtime normalization metadata must be Vector2(256, 256)")
+    seen_rectangles = set()
+    for resource_id, block in re.findall(
+            r'\[sub_resource type="AtlasTexture" id="([^"]+)"\]\n(.*?)(?=\n\[|\Z)', resource_text, re.S):
+        if resource_id in seen_rectangles:
+            raise ValueError("Repeated actual mixed AtlasTexture ID")
+        seen_rectangles.add(resource_id)
+        for field in ("region", "margin"):
+            entries = re.findall(r"^\s*" + field + r"\s*=\s*(.*?)\s*$", block, re.M)
+            match = re.fullmatch(r"Rect2\(([^)]+)\)", entries[0]) if len(entries) == 1 else None
+            coordinates = [value.strip() for value in match[1].split(",")] if match else []
+            if len(coordinates) != 4 or any(not float(value).is_integer() for value in coordinates):
+                raise ValueError("Actual mixed Rect2 coordinates must be integer-valued")
+            if tuple(int(float(value)) for value in coordinates) != actual_frames[resource_id][field]:
+                raise ValueError("Raw mixed AtlasTexture coordinates differ")
+    if seen_rectangles != set(actual_frames):
+        raise ValueError("Actual mixed AtlasTexture rectangles are incomplete")
+    sources, frames = proof.get("source_files", []), proof.get("frames", [])
+    if not isinstance(sources, list) or not isinstance(frames, list):
+        raise ValueError("Invalid mixed directional source/frame metadata")
+    if any(not isinstance(frame, dict) for frame in frames):
+        raise ValueError("Invalid mixed directional frame metadata")
+    def integers(value, length):
+        return isinstance(value, list) and len(value) == length and all(type(item) is int for item in value)
+
+    counts = proof.get("phase_counts", {})
+    minima = dict(idle=2, walk=3, attack=3, hit=2, death=3)
+    if (not isinstance(counts, dict) or set(counts) != set(minima)
+            or any(type(counts[role]) is not int or counts[role] < minimum for role, minimum in minima.items())):
+        raise ValueError("Invalid directional mixed mandatory phase counts")
+    expected = sum(counts.values()) * len(DIRECTIONS)
+    records = proof.get("source_poses", [])
+    if (expected not in (104, 112) or len(frames) != expected or len(records) != expected
+            or set(actual_frames) != {"pose_%d" % index for index in range(expected)}):
+        raise ValueError("Directional mixed resource must retain every mandatory pose")
+    maps, source_usage, covered, slots = {}, Counter(), {}, set()
+    for index, source in enumerate(sources):
+        if not isinstance(source, dict):
+            raise ValueError("Invalid directional source record")
+        if "canvas_sizes_by_direction" not in source:
+            if "feet_by_direction" in source or "canvas_size_basis" in source:
+                raise ValueError("Undeclared directional canvas metadata")
+            size = source.get("canvas_size")
+            if (not integers(size, 2) or size[0] != size[1] or not 64 <= size[0] <= 2048
+                    or not integers(source.get("foot"), 2)
+                    or source["foot"] != [size[0] // 2, size[0] * 5 // 8]):
+                raise ValueError("Invalid declared uniform mixed canvas/foot")
+            continue
+        directions, sizes = source.get("directions"), source["canvas_sizes_by_direction"]
+        if (source.get("source_kind") != "whole_sheet" or not isinstance(directions, list) or not directions
+                or directions != [direction for direction in DIRECTIONS if direction in directions]
+                or not isinstance(sizes, dict) or set(sizes) != set(directions)
+                or any(type(size) is not int or not 64 <= size <= 2048 for size in sizes.values())):
+            raise ValueError("Invalid exact directional canvas map")
+        largest = max(sizes.values())
+        feet = {direction: [size // 2, size * 5 // 8] for direction, size in sizes.items()}
+        if (not integers(source.get("canvas_size"), 2) or source["canvas_size"] != [largest, largest]
+                or not integers(source.get("foot"), 2) or source["foot"] != [largest // 2, largest * 5 // 8]
+                or source.get("feet_by_direction") != feet
+                or any(not integers(value, 2) for value in source.get("feet_by_direction", {}).values())
+                or source.get("source_direction_indices") != [DIRECTIONS.index(direction) for direction in directions]
+                or source.get("canvas_size_basis") != "max_direction_analysis_only"):
+            raise ValueError("Directional source canvas/foot summary differs")
+        maps[index] = sizes
+    by_path = {source["path"]: source for source in sources}
+    for track in proof.get("tracks", {}).values():
+        for atlas in track.get("atlas_files", []):
+            source = by_path.get(atlas.get("path"), {})
+            for field in ("canvas_sizes_by_direction", "feet_by_direction", "canvas_size_basis"):
+                if atlas.get(field) != source.get(field):
+                    raise ValueError("Track and whole-source directional metadata differ")
+    for index, (frame, record) in enumerate(zip(frames, records)):
+        source_index = frame.get("sheet")
+        if type(source_index) is not int or not 0 <= source_index < len(sources):
+            raise ValueError("Invalid directional frame source index")
+        source = sources[source_index]
+        direction, role, phase = frame.get("direction"), frame.get("role"), frame.get("phase")
+        if (direction not in DIRECTIONS or role not in counts or type(phase) is not int
+                or not 0 <= phase < counts[role] or (role, direction, phase) in slots):
+            raise ValueError("Invalid or repeated directional mandatory slot")
+        slots.add((role, direction, phase))
+        track = animations.get("%s_%d" % (role, DIRECTIONS.index(direction)), {}).get("frames", [])
+        if len(track) != counts[role] or track[phase].get("texture") != "pose_%d" % index:
+            raise ValueError("Directional mandatory track/source order differs")
+        actual = actual_frames["pose_%d" % index]
+        if (not integers(frame.get("region"), 4) or not integers(frame.get("margin"), 4)
+                or list(actual["region"]) != frame["region"] or list(actual["margin"]) != frame["margin"]
+                or actual["path"] != source.get("path")):
+            raise ValueError("Directional provenance and actual AtlasTexture differ")
+        if (not isinstance(record, dict) or record.get("id") != frame.get("pose_id")
+                or record.get("source_id") != source.get("source_id")
+                or type(record.get("source_frame")) is not int
+                or record.get("source_frame") != source_usage[source_index]
+                or any(record.get(key) != frame.get(key) for key in ("role", "direction", "phase", "source_anchor"))
+                or record.get("file") != source.get("path") or record.get("source_sha256") != source.get("sha256")):
+            raise ValueError("Directional source-pose/frame linkage differs")
+        source_usage[source_index] += 1
+        if source_index not in maps:
+            if "canvas_size" in frame or "foot" in frame:
+                raise ValueError("Undeclared per-frame canvas/foot in mixed source")
+            size = source["canvas_size"][0]
+        else:
+            if direction not in maps[source_index]:
+                raise ValueError("Frame direction absent from declared canvas map")
+            size = maps[source_index][direction]
+        foot = [size // 2, size * 5 // 8]
+        if source_index in maps and (not integers(frame.get("canvas_size"), 2)
+                                    or frame["canvas_size"] != [size, size]
+                                    or not integers(frame.get("foot"), 2) or frame["foot"] != foot):
+            raise ValueError("Per-frame directional canvas/foot differs from declared map")
+        if (type(record.get("canvas_size")) is not int or record["canvas_size"] != size
+                or not integers(frame.get("source_anchor"), 2)):
+            raise ValueError("Mixed source-pose canvas/anchor differs from declaration")
+        x, y, width, height = frame["region"]
+        anchor_x, anchor_y = frame["source_anchor"]
+        margin_x, margin_y = foot[0] - (anchor_x - x), foot[1] - (anchor_y - y)
+        if (not x <= anchor_x < x + width or not y <= anchor_y < y + height
+                or min(margin_x, margin_y) < 0 or margin_x + width > size or margin_y + height > size
+                or frame["margin"] != [margin_x, margin_y, size - width, size - height]):
+            raise ValueError("Directional frame escapes its declared foot-anchored canvas")
+        coverage = covered.setdefault(source_index, Image.new("L", images[source["path"]].size))
+        ImageDraw.Draw(coverage).rectangle((x, y, x + width - 1, y + height - 1), fill=255)
+    for index, source in enumerate(sources):
+        if (source_usage[index] != source.get("analyzed_body_count")
+                or source_usage[index] != source.get("mandatory_usage_count")
+                or source.get("entire_png_complete") is not True
+                or source.get("every_analyzed_body_used_once") is not True):
+            raise ValueError("Directional whole-PNG body usage differs")
+        visible = images[source["path"]].getchannel("A").point(lambda alpha: 255 if alpha > 100 else 0)
+        if ImageChops.subtract(visible, covered[index]).getbbox() is not None:
+            raise ValueError("Directional whole PNG contains unassigned visible pixels")
+
+
 def audit_resource(root, path, tracked):
     result = {"path": path, "tracks": {}, "errors": [], "tracked": True,
               "compass_semantics": "source_metadata_only", "actual_gameplay": "not_run"}
@@ -81,6 +234,7 @@ def audit_resource(root, path, tracked):
         images = {}
         for atlas_path in external.values():
             images[atlas_path] = Image.open(local_path(root, atlas_path)).convert("RGBA")
+        _audit_mixed_direction_canvases(proof, frames, animations, images, resource_path.read_text())
         for role, source_track in proof.get("tracks", {}).items():
             atlas_records = source_track.get("atlas_files", [])
             if not atlas_records and source_track.get("sha256"):

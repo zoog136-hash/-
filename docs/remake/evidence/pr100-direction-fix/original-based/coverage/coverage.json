@@ -25,7 +25,7 @@
   ],
   "counts": {
     "hero_plus:registered": 180,
-    "hero_plus:native_connected": 139,
+    "hero_plus:native_connected": 140,
     "other_transform:registered": 233,
     "other_transform:native_connected": 1,
     "normal_monster:registered": 258,
@@ -1080,11 +1080,11 @@
       "key": "transform:328",
       "name": "검은 토끼 소녀",
       "group": "hero_plus",
-      "native_connected": false,
-      "frames_path": "",
-      "missing_source": "Distinctive costume is not supplied by the licensed equipment layers",
-      "actual_gameplay": "not_run",
-      "compass_semantics": "not_verified"
+      "native_connected": true,
+      "frames_path": "res://assets/actors/eight_direction/original_based/black_rabbit_girl_transform328/SpriteFrames.tres",
+      "missing_source": "",
+      "actual_gameplay": "recorded_Main_8_directions",
+      "compass_semantics": "source_metadata_only"
     },
     {
       "key": "transform:294",
@@ -12434,6 +12434,238 @@
         "NE"
       ],
       "resource_sha256": "4fec75be110fdcafe7e0ad651b00467a49be99d0c3d9c60abd3833bf197370a5",
+      "pixel_integrity": "verified"
+    },
+    {
+      "path": "res://assets/actors/eight_direction/original_based/black_rabbit_girl_transform328/SpriteFrames.tres",
+      "tracks": {
+        "idle_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "idle_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": true
+        },
+        "walk_0": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "walk_1": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "walk_2": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "walk_3": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "walk_4": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "walk_5": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "walk_6": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "walk_7": {
+          "frames": 4,
+          "distinct_rgba": 4,
+          "loop": true
+        },
+        "attack_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "attack_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "hit_0": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_1": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_2": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_3": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_4": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_5": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_6": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "hit_7": {
+          "frames": 2,
+          "distinct_rgba": 2,
+          "loop": false
+        },
+        "death_0": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_1": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_2": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_3": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_4": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_5": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_6": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        },
+        "death_7": {
+          "frames": 3,
+          "distinct_rgba": 3,
+          "loop": false
+        }
+      },
+      "errors": [],
+      "tracked": true,
+      "compass_semantics": "source_metadata_only",
+      "actual_gameplay": "not_run",
+      "source": "Newly authored from the existing target image; not recovered original animation",
+      "source_direction_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_directions": [
+        "E",
+        "SE",
+        "S",
+        "SW",
+        "W",
+        "NW",
+        "N",
+        "NE"
+      ],
+      "resource_sha256": "c9755ff40cb29ae3d956c94bb642fa1ad05a58ca4111f751b478e05c67e595c6",
       "pixel_integrity": "verified"
     },
     {
@@ -36932,7 +37164,7 @@
     "No compatible published sequential weapon frames: 체인소드": 2,
     "No compatible published sequential weapon frames: 총": 3,
     "No compatible published sequential weapon frames: 이도류": 2,
-    "Distinctive costume is not supplied by the licensed equipment layers": 10,
+    "Distinctive costume is not supplied by the licensed equipment layers": 9,
     "No matching licensed eight-view body: spirit": 4,
     "No matching licensed eight-view body: special": 3,
     "No matching licensed eight-view body: beast": 1,
@@ -38483,6 +38715,18 @@
       "sha256": "3c2bb30c47254d18031eccb66eaade365260fa9b651aead2bd6b43577e112059",
       "scope": "original-based nungma_monster_authored, actual Main and production AI/combat/lifecycle",
       "direction_rows": 8
+    },
+    {
+      "path": "../batch31/base-main/headless/case.json",
+      "sha256": "12e4a0205401db8d23a4490adef5c598311fbb30c1e4fdb1c07e2db6f148dfc3",
+      "scope": "original-based transform:328, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 16
+    },
+    {
+      "path": "../batch31/base-main/render/case.json",
+      "sha256": "6759dcb624a980417a6392bb0026e49fb103303ef9c0a5f92570f18ec55d3a94",
+      "scope": "original-based transform:328, actual Main/equipment/input/weapon/respawn",
+      "direction_rows": 16
     }
   ]
 }
