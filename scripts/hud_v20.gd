@@ -489,8 +489,9 @@ func set_ain_state(value: Dictionary, inventory: Dictionary) -> void:
 	var remaining_orb: int = maxi(0, int(value.get("dragon_orb_remaining", 0)))
 	var orb_text: String = "%d일 %d시간" % [int(remaining_orb / 86400), int((remaining_orb % 86400) / 3600)] if remaining_orb > 0 else "비활성"
 	var regen_text: String = "200 미만 자연회복 · %d초 후 +1" % int(value.get("next_regen_seconds", 0)) if remaining < 200 else "자연회복 상한 200"
-	v20_ain_info.text = "경험치 획득 %d%%  |  아데나 획득 %d%%\n드래곤의 보호: %s\n%s\n※ 축복 소모량은 TWILIGHT 조정값" % [
-		int(float(value.get("exp_rate", 1.0)) * 100.0), int(float(value.get("adena_rate", 1.0)) * 100.0), orb_text, regen_text]
+	v20_ain_info.text = "경험치 획득 %d%%  |  아데나 획득 %d%%\n축복 소모량 감소 %.1f%%\n드래곤의 보호: %s\n%s\n※ 기본 축복 소모량은 TWILIGHT 조정값" % [
+		int(float(value.get("exp_rate", 1.0)) * 100.0), int(float(value.get("adena_rate", 1.0)) * 100.0),
+		float(value.get("blessing_reduction_pct", 0.0)), orb_text, regen_text]
 	for item_name: String in v20_ain_item_buttons:
 		var button: Button = v20_ain_item_buttons[item_name] as Button
 		var held: int = int(inventory.get(item_name, 0)) + int(inventory.get(item_name + " (각인)", 0))
