@@ -1,0 +1,2830 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_2.png",
+    "region": [
+      305,
+      321,
+      306,
+      322
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 2,
+    "cell": 5,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+    "image_size": [
+      1222,
+      1287
+    ],
+    "region_rgba_sha256": "83fec7efad43ff84f52c5386156e9e12ca75377b47b0f6934ae627b69002324d"
+  },
+  "target_keys": [
+    "monster:수룡의 둥지 파도수호자"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 2,
+      "cell": 5,
+      "body": "water",
+      "variant": 13,
+      "width": 1.024,
+      "weapon": "staff",
+      "crest": 0,
+      "accent": "c4aa64"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": true
+    },
+    "attack_type": "magic",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:수룡의 둥지 파도수호자": {
+      "path": "res://assets/monsters/original/atlas_2.png",
+      "region": [
+        305,
+        321,
+        306,
+        322
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 2,
+      "cell": 5,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+      "image_size": [
+        1222,
+        1287
+      ],
+      "region_rgba_sha256": "83fec7efad43ff84f52c5386156e9e12ca75377b47b0f6934ae627b69002324d"
+    }
+  },
+  "target_presentations": {
+    "monster:수룡의 둥지 파도수호자": {
+      "visual": {
+        "atlas": 2,
+        "cell": 5,
+        "body": "water",
+        "variant": 13,
+        "width": 1.024,
+        "weapon": "staff",
+        "crest": 0,
+        "accent": "c4aa64"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": true
+      },
+      "attack_type": "magic",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "FILE attack.prompt.txt\nCreate a newly authored 2D ATTACK animation candidate from the attached exact existing TWILIGHT WATER GUARDIAN source sprite. This is new drawing based on the existing source, not recovered original animation. Preserve the source's blue/teal water elemental identity, original volume and textured painterly 2D rendering on a genuine transparent background.\n\nIDENTITY: connected dark turquoise WATER TORSO, foamy water shoulders, two substantial continuously attached WATER ARMS, water head with a dark recessed front framed by white wave crests, and a tapering spiral WHIRLPOOL LOWER BODY attached to torso. No legs, boots, skin, clothes, staff, armor, weapon, or added props. Deep teal water recesses, bright cyan streams and white foam. Every watery extension and foam edge must remain visibly attached to its body. No detached droplets, particles, spray specks, bubbles, projectiles, ground shadows or fragments. This is a floating magic water creature, never a person in a water costume. Painted 2D, no 3D rendering.\n\nEXACT LAYOUT: TWENTY-FOUR separate complete bodies in EIGHT equal columns and THREE equal rows, perfectly regular cells. One full connected creature centered in each cell, whole silhouette including attacking water-arm reach at MOST 40-45% of cell width, at most 65% of cell height. Generous clear transparent padding all sides; at least 60 image pixels between rows and wide horizontal gutters. Every body complete and safe from clipping or touching its neighbors. No labels, numbers, guides, borders or writing.\n\nALL THREE ROWS use directions in this exact column order: 1 E true right-facing side profile; 2 SE front-right three-quarter; 3 S straight front; 4 SW front-left three-quarter; 5 W true left-facing side profile; 6 NW back-left three-quarter; 7 N straight back; 8 NE back-right three-quarter. Front views show the dark head-front recess and chest; side views show an actual side volume and leading front edge pointing right/left; rear views show rear water head/shoulders/torso surfaces and NEVER retain a front face or chest. All8 are independently drawn genuine angles, no mirroring or flat front stuck sideways.\n\nROW 1 = MAGIC ATTACK WINDUP / GATHER: both elbows deeply flex and water hands curl toward the front of chest, head and shoulders draw back slightly. The water in the attached arms thickens as if gathering power. Keep all water attached; no detached orb or effect. Body is poised and lower vortex coils tighter.\nROW 2 = MAGIC ATTACK RELEASE / HIT MOMENT: one thick watery forearm and attached hand sweep/extend firmly FORWARD along the exact facing direction, the other elbow opens forward in support, torso leans toward release. E reaches image RIGHT; SE down-right; S down/toward viewer; SW down-left; W image LEFT; NW up-left/away; N up/away; NE up-right/away. The attacking extension is part of the same attached water arm, with continuous shoulder, upper arm, elbow, forearm and water-hand connection. No weapon and NO free projectile. Retain a coherent recognizable torso and vortex. Ensure sufficient negative space around the reach inside the cell.\nROW 3 = MAGIC ATTACK RECOVERY: releasing elbow bends back down toward side, opposite arm counterbalances at a visibly different height, torso returns toward upright, lower vortex unwinds and broadens toward its normal contour. This differs from both gather and release, with actual arm articulation and water-body deformation. Do not repeat the idle still or reuse a merely translated attack pose.\n\nStable original character identity and proportions, exact direction per column throughout all phases, physically continuous fluid torso and limbs, lower vortex tip grounded consistently on a shared row baseline. All24 poses must be distinct actual articulated states, every complete body separated on true transparent alpha, no empty frames, detached water fragments, copied/mirrored stills, clipping or 3D assets.\n\n\nFILE hit-death-front-attempt2.prompt.txt\nCreate newly authored 2D HIT and DEATH animation candidates from the attached exact existing TWILIGHT WATER GUARDIAN source sprite. This is new drawing based on that still, not recovered original animation. Preserve the original dark teal/cyan flowing-water body, white foam and textured painterly 2D source identity. Transparent alpha background, never a 3D render.\n\nCHARACTER IDENTITY: a fully connected water head, broad foamy water shoulders, deep turquoise water torso, two thick flowing attached WATER ARMS, and an attached tapering spiral WHIRLPOOL LOWER BODY. No legs, boots, clothes, human skin, armor, staff, weapon, or new props. A dark recessed FRONT head region is surrounded by foamy crests. Each foam curl and extension must attach to the body. This floating water creature retains continuous fluid anatomy while recoiling and collapsing. No disconnected droplets, particles, spray, bubbles, loose limbs, projectiles, fragments or ground shadows.\n\nCORRECTION / SMALLER DIRECTION GROUP: The previous eight-column sheet put adjacent front hit bodies too close together. Redraw this new sheet with exactly TWENTY separate complete connected bodies in FOUR equal COLUMNS by FIVE equal ROWS. This is a new smaller sheet, not a crop of the previous output. The canvas should be portrait so all five rows have plenty of vertical room. Each body, including extended water arms, must occupy AT MOST 55% of its cell width. Keep at least 22% of the cell width totally transparent on EACH side of every body, and at least 15% cell height transparent above every body and 15% below. Wide fully transparent gutters between ALL cells; no touching foam and no body bounding rectangles overlapping. Make actual sprites smaller, do not expand them to fill cells. No text, panel border or guide line.\n\nONLY THESE FOUR DIRECTIONS, identical order in all five rows: column 1 = E true RIGHT side profile; column 2 = SE FRONT-RIGHT three-quarter; column 3 = S straight FRONT; column 4 = SW FRONT-LEFT three-quarter. Do not add any extra direction or fifth column. Profiles actually orient head and torso side-on, and rear views show continuous rear head/shoulders/torso surfaces with NO front face or chest. All directions independently drawn, no mirror shortcut.\n\nROW1 = HIT A, STRUCK RECOIL: upper torso jerks AWAY from the facing direction, shoulders twist backward and upward, one elbow rises defensively and the other water arm curls inward. Vortex base braces wider, still continuously attached. Clear hit reaction distinct from idle.\nROW2 = HIT B, RECOVERY RECOIL: torso returns partially forward in a visibly different posture, elbows lower unevenly, water head bows slightly and the vortex compresses before recovering. Two clearly different recoiling articulated poses; no duplicate still.\nROW3 = DEATH A, COLLAPSE BEGINS: shoulders sag, elbows buckle in, head bows and upper torso loses some height; attached vortex visibly shortens and begins spreading at the bottom. Keep character recognizable and fully connected, no detached water or empty slot.\nROW4 = DEATH B, FOLDED LOW WATER BODY: substantial real loss of height, head/shoulders sink forward/down close to the attached broadening vortex; both arms fold inward/down and merge coherently along the sides. The overall body is roughly half living height, with a wider connected lower water mound. This is clearly a separate collapse phase, not a kneeling full-height still.\nROW5 = DEATH C, FINAL VERY LOW FLATTENED WATER BODY: the creature is visibly settled on the ground as a compact LOW PUDDLE / FLATTENED WHIRLPOOL mound, only about one-quarter of normal body height. Foamy remnants of the water head/shoulders and curled attached arms blend into one continuous flattened blue water mass. The form and attached remnants indicate each column's facing orientation but no standing full-height torso remains. The entire final puddle remains one connected substantial visible sprite, never empty/transparent and never scattered droplets. Its bottom rests exactly on the same ground baseline as earlier phases in that column. Keep flattened width within40-45%cellwidth so clear gutters survive.\n\nEvery phase needs actual changes of shoulder/elbow articulation, torso curvature and whirlpool geometry. Preserve fluid body connections, original water colors/style, source identity and per-column direction. Do not substitute translated, copied, mirrored or recolored stills, free particles, missing frames or disconnected limbs. All20 bodies separated, complete, original pixels of the generated output left intact for exact alpha-bounded sprite regions.\n\n\nFILE hit-death-front-attempt3.prompt.txt\nPerform a very narrow topology correction of the first attached TWILIGHT water-guardian animation sheet. The second attachment is its original source identity reference. Keep the sheet's EXACT twenty sprites in FOUR columns by FIVE rows, its direction order E, SE, S, SW, its two hit rows and three progressively collapsing death rows, and its existing deep teal/cyan/white painterly water identity. Preserve the full bodies and each articulated pose; do not add a cell, remove a body, move the grid, introduce new equipment, change a direction, crop a body, change the lower vortex to legs, or redesign the creature. Use a real transparent background and keep existing transparency.\n\nThe previous output has 38 tiny visible spray pixels separated from every complete body's bounding rectangle. Correct this by eliminating ALL detached tiny spray droplets, free bubbles, floating foam specks and stray fragments across the whole sheet. All visible water and foam must either connect physically to its sprite's head/arm/torso/vortex through a visible continuous water connection, or be absent. No new loose spray. Leave each of the20 sprites as ONE substantial connected water body with its foamy edges and attached arms, a generous transparent gutter from every neighboring sprite and no extra object. Do not remove a legitimate water arm or the source's continuous foamy silhouette; only the detached speck issue needs correction.\n\nMaintain two distinct hit recoil phases in rows1-2, initial lowering collapse row3, a much lower folded water mound row4, and a very low attached flattened whirlpool/puddle row5. Preserve the front/side distinctions E-rightprofile, SEfrontright, Sfront, SWfrontleft. All20 full-body pose rectangles must be isolated, safe from clipping and overlap, with every visible nontransparent pixel attributable to one connected full-body sprite. No text, shadow, border, particles, props, weapons, empty frame, mirrored/translated copy, or 3D rendering. This is newly authored source-based animation, not recovered original frames.\n\n\nFILE hit-death-rear-attempt2.prompt.txt\nCreate newly authored 2D HIT and DEATH animation candidates from the attached exact existing TWILIGHT WATER GUARDIAN source sprite. This is new drawing based on that still, not recovered original animation. Preserve the original dark teal/cyan flowing-water body, white foam and textured painterly 2D source identity. Transparent alpha background, never a 3D render.\n\nCHARACTER IDENTITY: a fully connected water head, broad foamy water shoulders, deep turquoise water torso, two thick flowing attached WATER ARMS, and an attached tapering spiral WHIRLPOOL LOWER BODY. No legs, boots, clothes, human skin, armor, staff, weapon, or new props. A dark recessed FRONT head region is surrounded by foamy crests. Each foam curl and extension must attach to the body. This floating water creature retains continuous fluid anatomy while recoiling and collapsing. No disconnected droplets, particles, spray, bubbles, loose limbs, projectiles, fragments or ground shadows.\n\nCORRECTION / SMALLER DIRECTION GROUP: The previous eight-column sheet put adjacent front hit bodies too close together. Redraw this new sheet with exactly TWENTY separate complete connected bodies in FOUR equal COLUMNS by FIVE equal ROWS. This is a new smaller sheet, not a crop of the previous output. The canvas should be portrait so all five rows have plenty of vertical room. Each body, including extended water arms, must occupy AT MOST 55% of its cell width. Keep at least 22% of the cell width totally transparent on EACH side of every body, and at least 15% cell height transparent above every body and 15% below. Wide fully transparent gutters between ALL cells; no touching foam and no body bounding rectangles overlapping. Make actual sprites smaller, do not expand them to fill cells. No text, panel border or guide line.\n\nONLY THESE FOUR DIRECTIONS, identical order in all five rows: column 1 = W true LEFT side profile; column 2 = NW BACK-LEFT three-quarter; column 3 = N straight BACK; column 4 = NE BACK-RIGHT three-quarter. Do not add any extra direction or fifth column. Profiles actually orient head and torso side-on, and rear views show continuous rear head/shoulders/torso surfaces with NO front face or chest. All directions independently drawn, no mirror shortcut.\n\nROW1 = HIT A, STRUCK RECOIL: upper torso jerks AWAY from the facing direction, shoulders twist backward and upward, one elbow rises defensively and the other water arm curls inward. Vortex base braces wider, still continuously attached. Clear hit reaction distinct from idle.\nROW2 = HIT B, RECOVERY RECOIL: torso returns partially forward in a visibly different posture, elbows lower unevenly, water head bows slightly and the vortex compresses before recovering. Two clearly different recoiling articulated poses; no duplicate still.\nROW3 = DEATH A, COLLAPSE BEGINS: shoulders sag, elbows buckle in, head bows and upper torso loses some height; attached vortex visibly shortens and begins spreading at the bottom. Keep character recognizable and fully connected, no detached water or empty slot.\nROW4 = DEATH B, FOLDED LOW WATER BODY: substantial real loss of height, head/shoulders sink forward/down close to the attached broadening vortex; both arms fold inward/down and merge coherently along the sides. The overall body is roughly half living height, with a wider connected lower water mound. This is clearly a separate collapse phase, not a kneeling full-height still.\nROW5 = DEATH C, FINAL VERY LOW FLATTENED WATER BODY: the creature is visibly settled on the ground as a compact LOW PUDDLE / FLATTENED WHIRLPOOL mound, only about one-quarter of normal body height. Foamy remnants of the water head/shoulders and curled attached arms blend into one continuous flattened blue water mass. The form and attached remnants indicate each column's facing orientation but no standing full-height torso remains. The entire final puddle remains one connected substantial visible sprite, never empty/transparent and never scattered droplets. Its bottom rests exactly on the same ground baseline as earlier phases in that column. Keep flattened width within40-45%cellwidth so clear gutters survive.\n\nEvery phase needs actual changes of shoulder/elbow articulation, torso curvature and whirlpool geometry. Preserve fluid body connections, original water colors/style, source identity and per-column direction. Do not substitute translated, copied, mirrored or recolored stills, free particles, missing frames or disconnected limbs. All20 bodies separated, complete, original pixels of the generated output left intact for exact alpha-bounded sprite regions.\n\n\nFILE hit-death.prompt.txt\nCreate newly authored 2D HIT and DEATH animation candidates from the attached exact existing TWILIGHT WATER GUARDIAN source sprite. This is new drawing based on that still, not recovered original animation. Preserve the original dark teal/cyan flowing-water body, white foam and textured painterly 2D source identity. Transparent alpha background, never a 3D render.\n\nCHARACTER IDENTITY: a fully connected water head, broad foamy water shoulders, deep turquoise water torso, two thick flowing attached WATER ARMS, and an attached tapering spiral WHIRLPOOL LOWER BODY. No legs, boots, clothes, human skin, armor, staff, weapon, or new props. A dark recessed FRONT head region is surrounded by foamy crests. Each foam curl and extension must attach to the body. This floating water creature retains continuous fluid anatomy while recoiling and collapsing. No disconnected droplets, particles, spray, bubbles, loose limbs, projectiles, fragments or ground shadows.\n\nEXACT SHEET: FORTY full separate creatures, EIGHT equal columns by FIVE equal rows. One whole connected body centered in each regular imaginary cell, at MOST 40-45% of cell width including collapsed appendages, at most65% of cell height. Entire bodies visible, generous transparent margins on all sides, at least60 image pixels clear gap between rows, wide gutters between columns. No clipping, overlap, text, numbers, labels, grid lines or panel borders. Dying bodies stay low in their cell near the SAME GROUND BASELINE used by living bodies, rather than floating at the cell center.\n\nAll5rows EXACT direction order: col1 E true RIGHT side profile; col2 SE FRONT-RIGHT; col3 S straight FRONT; col4 SW FRONT-LEFT; col5 W true LEFT side profile; col6 NW BACK-LEFT; col7 N straight BACK; col8 NE BACK-RIGHT. Source-facing headfront/chest recess only in genuine front views. Profiles must actually orient head/body side-on right/left. Rear views show backs of the water head, rear shoulders and rear torso with NO frontal face/chest stuck on back. Redraw volumes independently from each angle, no mirroring or spinning a flat front sprite sideways.\n\nROW1 = HIT A, STRUCK RECOIL: upper torso jerks AWAY from the facing direction, shoulders twist backward and upward, one elbow rises defensively and the other water arm curls inward. Vortex base braces wider, still continuously attached. Clear hit reaction distinct from idle.\nROW2 = HIT B, RECOVERY RECOIL: torso returns partially forward in a visibly different posture, elbows lower unevenly, water head bows slightly and the vortex compresses before recovering. Two clearly different recoiling articulated poses; no duplicate still.\nROW3 = DEATH A, COLLAPSE BEGINS: shoulders sag, elbows buckle in, head bows and upper torso loses some height; attached vortex visibly shortens and begins spreading at the bottom. Keep character recognizable and fully connected, no detached water or empty slot.\nROW4 = DEATH B, FOLDED LOW WATER BODY: substantial real loss of height, head/shoulders sink forward/down close to the attached broadening vortex; both arms fold inward/down and merge coherently along the sides. The overall body is roughly half living height, with a wider connected lower water mound. This is clearly a separate collapse phase, not a kneeling full-height still.\nROW5 = DEATH C, FINAL VERY LOW FLATTENED WATER BODY: the creature is visibly settled on the ground as a compact LOW PUDDLE / FLATTENED WHIRLPOOL mound, only about one-quarter of normal body height. Foamy remnants of the water head/shoulders and curled attached arms blend into one continuous flattened blue water mass. The form and attached remnants indicate each column's facing orientation but no standing full-height torso remains. The entire final puddle remains one connected substantial visible sprite, never empty/transparent and never scattered droplets. Its bottom rests exactly on the same ground baseline as earlier phases in that column. Keep flattened width within40-45%cellwidth so clear gutters survive.\n\nEvery phase needs actual changes of shoulder/elbow articulation, torso curvature and whirlpool geometry. Preserve fluid body connections, original water colors/style, source identity and per-column direction. Do not substitute translated, copied, mirrored or recolored stills, free particles, missing frames or disconnected limbs. All40 bodies separated, complete, original pixels of the generated output left intact for exact alpha-bounded sprite regions.\n\n\nFILE idle-walk.prompt.txt\nCreate a newly authored 2D sprite animation candidate from the attached exact existing TWILIGHT WATER GUARDIAN source sprite. This is new drawing based on the existing source, not recovered original animation. Preserve the source's blue/teal water elemental identity and textured painterly 2D rendering. Transparent background.\n\nIDENTITY: a connected dark turquoise WATER TORSO, water shoulders and two substantial continuous flowing WATER ARMS, a water head with a dark recessed front framed by foamy wave crests, and a tapering spiral WHIRLPOOL LOWER BODY. No human skin, clothing, legs, boots, weapon, staff, armor, or added props. The source uses deep teal recesses, vivid cyan water streams and white foam highlights; reproduce these colors and original silhouette details faithfully. Every wave and foamy edge must remain attached to its own body. No disconnected droplets, spray specks, bubbles, particles, shadows, ground plane or loose fragments. The lower vortex is attached continuously to the torso; this creature floats and has no feet. Do not redesign it as a human with water clothes. Entirely painted 2D art; no 3D asset, no 3D rendering.\n\nSHEET LAYOUT: EXACTLY 40 complete separate bodies, EIGHT equal columns by FIVE equal rows. The grid is regular, with one full body centered in each imaginary cell. No labels, numbers, cell borders, writing or guide lines. Keep every full body, including every connected water-arm extension, at MOST 40-45% of its cell width; keep height at most 65% of cell height. Maintain generous transparent margins, at least 60 image pixels of clear vertical gap between rows, and wide transparent horizontal gutters so no poses touch. Whole body must be visible with safe padding on ALL sides, no clipped foam or merged neighboring bodies. All five rows use the same eight directions in the same column positions:\nColumn 1 EAST: true right-facing side profile, leading head recess and torso orient RIGHT, rear water shoulder behind.\nColumn 2 SOUTHEAST: FRONT-RIGHT three-quarter, face recess/chest point down-right.\nColumn 3 SOUTH: straight FRONT toward viewer/lower image, front recess and chest visible.\nColumn 4 SOUTHWEST: FRONT-LEFT three-quarter, face recess/chest point down-left.\nColumn 5 WEST: true left-facing side profile, leading head recess and torso orient LEFT.\nColumn 6 NORTHWEST: BACK-LEFT three-quarter, dominant back of head/shoulders/torso, NO frontal face or chest stuck onto the back.\nColumn 7 NORTH: straight BACK away from viewer/upper image, continuous rear water surface and both rear shoulders, NO front face recess and NO front chest.\nColumn 8 NORTHEAST: BACK-RIGHT three-quarter, dominant back of head/shoulders/torso, NO frontal face or chest stuck onto the back.\nActually redraw the body volume from all eight camera directions. Do not just mirror a sprite, rotate a flat front picture sideways, or reuse a front face on every view.\n\nROW 1 = IDLE A: substantial connected vortex resting phase, bent water arms low and slightly forward, torso calm, water curls descending toward the whirlpool.\nROW 2 = IDLE B: real gentle articulation: shoulders rise subtly and both elbows flex inward/up, one shoulder nearer the head; connected foam/spiral curves change and the lower vortex tightens. Clearly different body/arm pose from row 1, not a translated copy or swapped pixels.\nROW 3 = WALK A: forward gliding propulsion pose along each column's facing direction. Near water arm reaches modestly forward, far water arm back, torso leans into travel, attached lower vortex has a wide pushing curved lobe behind and a narrow leading curl.\nROW 4 = WALK B: passing propulsion phase. Both elbows draw closer to torso at different heights, torso rises slightly while the vortex compresses into a tighter upright corkscrew. No legs; make an actual change in connected arm joints and whirlpool geometry, with a stable lower-body ground contact center.\nROW 5 = WALK C: opposite propulsion pose. The previously forward near arm is now back and the far arm reaches forward; shoulders and elbows counter-articulate. The attached whirlpool lobe exchange and compression phase must be visibly different from row 3. This is an articulated flowing cycle, not three poses made different by translating, recoloring or decorating a still.\n\nKeep direction, source identity, camera, torso size and lower vortex attachment consistent across all phases. Keep each vortex bottom on a shared baseline for its row so the body remains coherently placed above the ground in game. All 40 separate bodies must be fully connected and distinct, with no empty frame, copied still, mirror shortcut, free projectile, disconnected limb, or overlapping cell. Use genuine transparent alpha background.\n",
+  "instruction_record_kind": "exact_prompts",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Author static inspection recognizes blue/teal water upper body, foam, continuous water arms and tapering vortex with no legs/weapons. Genuine front/profile/back distinctions appear present. Poses differ visibly and death lowers to a connected puddle. These are preliminary findings; independent identity/direction/motion QA, normalized scale/anchor approval, actual Main8direction playback and magic attack/hit contact are PENDING. Gate fields remain false until those reviews. No production import or completion claim. Independent static full104 review approves identity, actual8compass, organicarm/tendril/vortex motions and coherentgrounded3stagecollapse for actualMain. Optional castalias omitted: same authoredmagicgesture uses established monster attack_N fallback and exact existingAIassertions. Main/uniformworldscale/contacttiming/drop/pickup stillunvalidated."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        34,
+        27,
+        150,
+        166
+      ],
+      "margin": [
+        187,
+        158,
+        362,
+        346
+      ],
+      "source_anchor": [
+        103,
+        189
+      ],
+      "rgba_sha256": "d5fe1a3683e85b93ebce18177967d1cac854a088e3becf3ff32b1bb1c1dd18d7",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        210,
+        27,
+        166,
+        167
+      ],
+      "margin": [
+        185,
+        157,
+        346,
+        345
+      ],
+      "source_anchor": [
+        281,
+        190
+      ],
+      "rgba_sha256": "4cf8088f44993024ff10aa0709c9372d25469de8e47ca8db1e6a84bc6b337508",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        393,
+        26,
+        172,
+        168
+      ],
+      "margin": [
+        170,
+        156,
+        340,
+        344
+      ],
+      "source_anchor": [
+        479,
+        190
+      ],
+      "rgba_sha256": "cfee76e8d04c5d4a9fa28f9e407cc68c176b3b86d1e56979bcd75b423e8bbfb1",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        578,
+        28,
+        173,
+        166
+      ],
+      "margin": [
+        164,
+        158,
+        339,
+        346
+      ],
+      "source_anchor": [
+        670,
+        190
+      ],
+      "rgba_sha256": "28d29ce492bbf3b988b4303ae9ce24cc1e3825af2d9e58503482b787b20a1ed1",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        778,
+        27,
+        145,
+        167
+      ],
+      "margin": [
+        182,
+        157,
+        367,
+        345
+      ],
+      "source_anchor": [
+        852,
+        190
+      ],
+      "rgba_sha256": "d85fd24ddfe379e8da1b7cb34d1f24fd762a91bab4f5af0536a878cb2d6db482",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        963,
+        25,
+        162,
+        168
+      ],
+      "margin": [
+        170,
+        156,
+        350,
+        344
+      ],
+      "source_anchor": [
+        1049,
+        189
+      ],
+      "rgba_sha256": "6bfe8163167263026fde4f210c105a746337701af7fe12c843f61235f1041693",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1147,
+        24,
+        180,
+        169
+      ],
+      "margin": [
+        166,
+        155,
+        332,
+        343
+      ],
+      "source_anchor": [
+        1237,
+        189
+      ],
+      "rgba_sha256": "ea660a4f5b275b3da30a898916234fd50e08d6c1eeb5ddf6a16f9ba3c0fc5ff7",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1348,
+        29,
+        165,
+        165
+      ],
+      "margin": [
+        179,
+        159,
+        347,
+        347
+      ],
+      "source_anchor": [
+        1425,
+        190
+      ],
+      "rgba_sha256": "17602139ffb5ee5bf963186242dff340c27167caf98e9c88ddd00ff60185e409",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        37,
+        215,
+        151,
+        170
+      ],
+      "margin": [
+        186,
+        154,
+        361,
+        342
+      ],
+      "source_anchor": [
+        107,
+        381
+      ],
+      "rgba_sha256": "42eb69ad2b2fb004de993d68507b7acb4af46561d35d7a14f1e3480e6cf24b35",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        218,
+        214,
+        151,
+        171
+      ],
+      "margin": [
+        189,
+        153,
+        361,
+        341
+      ],
+      "source_anchor": [
+        285,
+        381
+      ],
+      "rgba_sha256": "293a6d395b958131b2c53acf69a48a163def1f44208e3cc8c9797e14ed478219",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        395,
+        213,
+        168,
+        170
+      ],
+      "margin": [
+        173,
+        154,
+        344,
+        342
+      ],
+      "source_anchor": [
+        478,
+        379
+      ],
+      "rgba_sha256": "4bd20830a0fac76fbd6f72b2fe412aa04aa920b64b9565ca11c550a28d19589d",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        590,
+        215,
+        163,
+        168
+      ],
+      "margin": [
+        168,
+        156,
+        349,
+        344
+      ],
+      "source_anchor": [
+        678,
+        379
+      ],
+      "rgba_sha256": "2c341c0a57ffdc93c1b4f2a59a37294057dd8ce32885796e31c3107440cb6722",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        780,
+        215,
+        147,
+        168
+      ],
+      "margin": [
+        180,
+        156,
+        365,
+        344
+      ],
+      "source_anchor": [
+        856,
+        379
+      ],
+      "rgba_sha256": "e96148c9ccbc79adfa9934a1ad0d4322a086f1e1ee9f8ac8100e5013d5f4a20a",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        960,
+        216,
+        160,
+        169
+      ],
+      "margin": [
+        163,
+        155,
+        352,
+        343
+      ],
+      "source_anchor": [
+        1053,
+        381
+      ],
+      "rgba_sha256": "01442efea19fd63e08f6f667780495fe229fd3444a33bdbd90ba101df8559725",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1152,
+        214,
+        172,
+        169
+      ],
+      "margin": [
+        169,
+        155,
+        340,
+        343
+      ],
+      "source_anchor": [
+        1239,
+        379
+      ],
+      "rgba_sha256": "a90fbc862ce39784c3c56bb9370ade9d3bbf24c0573880e37263927501c257ae",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1352,
+        216,
+        161,
+        169
+      ],
+      "margin": [
+        185,
+        155,
+        351,
+        343
+      ],
+      "source_anchor": [
+        1423,
+        381
+      ],
+      "rgba_sha256": "89d538c8c38a85b0a33625e1432e63e6443a09ffca7ce7783ba95c9c04c8345e",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        19,
+        406,
+        189,
+        170
+      ],
+      "margin": [
+        191,
+        154,
+        323,
+        342
+      ],
+      "source_anchor": [
+        84,
+        572
+      ],
+      "rgba_sha256": "f31c024d2bc7709c9b6fc066fd5b4b66587b78fda051a15f20e0a54425150789",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        214,
+        408,
+        176,
+        167
+      ],
+      "margin": [
+        189,
+        157,
+        336,
+        345
+      ],
+      "source_anchor": [
+        281,
+        571
+      ],
+      "rgba_sha256": "d9dd705e8d7272ba1fa75442656a18cf2f706e8da8111be2fc5c4c47961b724b",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        397,
+        407,
+        188,
+        169
+      ],
+      "margin": [
+        168,
+        155,
+        324,
+        343
+      ],
+      "source_anchor": [
+        485,
+        572
+      ],
+      "rgba_sha256": "4c848d5149883d11b6b07787c42a1cbcd837821a8e6a8872ab3edbcb79a52c74",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        597,
+        410,
+        157,
+        165
+      ],
+      "margin": [
+        158,
+        159,
+        355,
+        347
+      ],
+      "source_anchor": [
+        695,
+        571
+      ],
+      "rgba_sha256": "31b4a6b54e1b591c50d477010c790002d3254f63d5c30579c67e8593e339804a",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        767,
+        408,
+        176,
+        168
+      ],
+      "margin": [
+        144,
+        156,
+        336,
+        344
+      ],
+      "source_anchor": [
+        879,
+        572
+      ],
+      "rgba_sha256": "9e44ae25ed9eddad43e4cf70094e151e8f828cbd0125c2ed8422c9495e6f4e39",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        956,
+        411,
+        180,
+        163
+      ],
+      "margin": [
+        147,
+        161,
+        332,
+        349
+      ],
+      "source_anchor": [
+        1065,
+        570
+      ],
+      "rgba_sha256": "133e06d342ddd9fc14082459ce3242f534f8f3565f1531152a8b571926dad09c",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1142,
+        406,
+        188,
+        169
+      ],
+      "margin": [
+        157,
+        155,
+        324,
+        343
+      ],
+      "source_anchor": [
+        1241,
+        571
+      ],
+      "rgba_sha256": "abd3e5c2f66c2a65b4e897144b76739f3e1ba6ee775cf92fa2c8ef4c04fc5d08",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1336,
+        411,
+        184,
+        163
+      ],
+      "margin": [
+        180,
+        161,
+        328,
+        349
+      ],
+      "source_anchor": [
+        1412,
+        570
+      ],
+      "rgba_sha256": "cc1349e417394c8869e0ab99934da5c9b908e25e5bca956942ca63714b222bed",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        41,
+        594,
+        131,
+        176
+      ],
+      "margin": [
+        194,
+        148,
+        381,
+        336
+      ],
+      "source_anchor": [
+        103,
+        766
+      ],
+      "rgba_sha256": "d86ecfc29567c7f454dc4265a8eadfafe8f097b5889531b70ce3eca60a3f20bf",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        222,
+        597,
+        136,
+        174
+      ],
+      "margin": [
+        193,
+        150,
+        376,
+        338
+      ],
+      "source_anchor": [
+        285,
+        767
+      ],
+      "rgba_sha256": "0189c884bd5d1a141b0197cc8c64afa29e1739c643fdd3e20b9a8b4784e1f391",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        408,
+        595,
+        151,
+        176
+      ],
+      "margin": [
+        183,
+        148,
+        361,
+        336
+      ],
+      "source_anchor": [
+        481,
+        767
+      ],
+      "rgba_sha256": "8e59062cf7f1754faadb56905cf2bef8462748a79b849fdb9f58c2f13bf3c22f",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        604,
+        597,
+        139,
+        174
+      ],
+      "margin": [
+        180,
+        150,
+        373,
+        338
+      ],
+      "source_anchor": [
+        680,
+        767
+      ],
+      "rgba_sha256": "c8f2bfbc97b435fd580ab3689ad7d2b554ca972279235bb298198197c94de687",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        791,
+        599,
+        135,
+        172
+      ],
+      "margin": [
+        180,
+        152,
+        377,
+        340
+      ],
+      "source_anchor": [
+        867,
+        767
+      ],
+      "rgba_sha256": "8171eaef45859af84ee62424a749b8cae39cbdc17fa2f102c5569e188e065ef9",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        974,
+        598,
+        157,
+        173
+      ],
+      "margin": [
+        173,
+        151,
+        355,
+        339
+      ],
+      "source_anchor": [
+        1057,
+        767
+      ],
+      "rgba_sha256": "13792945af3aa347c5adb51e9753cf417d88401c8f79980a18402118e23928b6",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1158,
+        596,
+        160,
+        175
+      ],
+      "margin": [
+        175,
+        149,
+        352,
+        337
+      ],
+      "source_anchor": [
+        1239,
+        767
+      ],
+      "rgba_sha256": "8ebb5d5b4067e64b73527703a28bc6fec32f9a5d386560488feab9617d51d8ec",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1350,
+        599,
+        157,
+        172
+      ],
+      "margin": [
+        184,
+        152,
+        355,
+        340
+      ],
+      "source_anchor": [
+        1422,
+        767
+      ],
+      "rgba_sha256": "83e677be91885666a01d992e70de55756f674a2c7cc5483d501d7d8a8054a620",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        20,
+        799,
+        188,
+        168
+      ],
+      "margin": [
+        166,
+        156,
+        324,
+        344
+      ],
+      "source_anchor": [
+        110,
+        963
+      ],
+      "rgba_sha256": "fa108199f4742cc960e44798cd9a57c00f1f867f925d574262604f81230bc783",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        218,
+        799,
+        177,
+        169
+      ],
+      "margin": [
+        192,
+        155,
+        335,
+        343
+      ],
+      "source_anchor": [
+        282,
+        964
+      ],
+      "rgba_sha256": "21853a5fe9470bbc6d4a4a354dd54d997503c5e472dd838b4ab77dba143977b8",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        407,
+        793,
+        176,
+        176
+      ],
+      "margin": [
+        184,
+        148,
+        336,
+        336
+      ],
+      "source_anchor": [
+        479,
+        965
+      ],
+      "rgba_sha256": "e83fe9997a486b7ac48817ad9b62458f0b729e084a49160f1f48bdfb5e37d7c9",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        591,
+        795,
+        166,
+        172
+      ],
+      "margin": [
+        157,
+        152,
+        346,
+        340
+      ],
+      "source_anchor": [
+        690,
+        963
+      ],
+      "rgba_sha256": "61c12d32e189b98611522a790f363f5453be8c39d154b3ed7f83dec5bf90e5c2",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        766,
+        803,
+        182,
+        165
+      ],
+      "margin": [
+        155,
+        159,
+        330,
+        347
+      ],
+      "source_anchor": [
+        867,
+        964
+      ],
+      "rgba_sha256": "741b422b87c6c4f585e51a43bea7023f486d7a02a91c608910c3e486961f4a82",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        957,
+        795,
+        176,
+        174
+      ],
+      "margin": [
+        149,
+        150,
+        336,
+        338
+      ],
+      "source_anchor": [
+        1064,
+        965
+      ],
+      "rgba_sha256": "8fb225b1c82eae5b46068a794b33f7c31edcfc177d6003692abcdf969c548c72",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        1148,
+        794,
+        176,
+        175
+      ],
+      "margin": [
+        166,
+        149,
+        336,
+        337
+      ],
+      "source_anchor": [
+        1238,
+        965
+      ],
+      "rgba_sha256": "a0cd492c99ca007235d97a558265b7dcbd272604bbbda5e2d132e985836b9cbd",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1335,
+        796,
+        179,
+        174
+      ],
+      "margin": [
+        184,
+        150,
+        333,
+        338
+      ],
+      "source_anchor": [
+        1407,
+        966
+      ],
+      "rgba_sha256": "f0047f4a0932f05470361a740a3edf2f2674ef300919fe6e41611d4f146a5f7f",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        52,
+        17,
+        182,
+        233
+      ],
+      "margin": [
+        276,
+        221,
+        538,
+        487
+      ],
+      "source_anchor": [
+        136,
+        246
+      ],
+      "rgba_sha256": "82ba291889e8d6750260f1149bce321672dd8dde0e6accadfdfe8552f98bb04e",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        290,
+        17,
+        209,
+        234
+      ],
+      "margin": [
+        253,
+        220,
+        511,
+        486
+      ],
+      "source_anchor": [
+        397,
+        247
+      ],
+      "rgba_sha256": "aa2098e2519aee46ea99c12795138193b585e8217c78cda1c7e6e3e28fc908f1",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        538,
+        16,
+        214,
+        235
+      ],
+      "margin": [
+        251,
+        219,
+        506,
+        485
+      ],
+      "source_anchor": [
+        647,
+        247
+      ],
+      "rgba_sha256": "6cb8de1e4f4140ab641fb48415a374556dd7e8a25b1465847a0dafe188e52680",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        782,
+        17,
+        207,
+        234
+      ],
+      "margin": [
+        259,
+        220,
+        513,
+        486
+      ],
+      "source_anchor": [
+        883,
+        247
+      ],
+      "rgba_sha256": "7bab9ce224bb857d99ae3cdab9e6edaee55500a77a60f89413d9d36d32bf5f77",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        1049,
+        18,
+        179,
+        233
+      ],
+      "margin": [
+        261,
+        221,
+        541,
+        487
+      ],
+      "source_anchor": [
+        1148,
+        247
+      ],
+      "rgba_sha256": "dfc3b2a776c425fdd5837ed7f4438817871923e5ac148d96bda44b8123fc956b",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        1302,
+        17,
+        205,
+        234
+      ],
+      "margin": [
+        251,
+        220,
+        515,
+        486
+      ],
+      "source_anchor": [
+        1411,
+        247
+      ],
+      "rgba_sha256": "133234fc5c92d7761e8cc08f05428acb064aadf03428ba92700ab497d3837cb5",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1556,
+        15,
+        237,
+        236
+      ],
+      "margin": [
+        243,
+        218,
+        483,
+        484
+      ],
+      "source_anchor": [
+        1673,
+        247
+      ],
+      "rgba_sha256": "3a415c6b3c97efd2f18150f081e55889638514ac00b330994491b8b1e04037f7",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1817,
+        15,
+        193,
+        236
+      ],
+      "margin": [
+        253,
+        218,
+        527,
+        484
+      ],
+      "source_anchor": [
+        1924,
+        247
+      ],
+      "rgba_sha256": "e611a7085319e39dc1462f8be553467777eaaf9bd13d0929f4c0677b16b9a40e",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        33,
+        270,
+        239,
+        227
+      ],
+      "margin": [
+        286,
+        227,
+        481,
+        493
+      ],
+      "source_anchor": [
+        107,
+        493
+      ],
+      "rgba_sha256": "71730c5176fef87fceffc97d917d04cb132756c862b0289444ac15a42ca7249b",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        285,
+        274,
+        256,
+        223
+      ],
+      "margin": [
+        262,
+        231,
+        464,
+        497
+      ],
+      "source_anchor": [
+        383,
+        493
+      ],
+      "rgba_sha256": "92177b1b9d163b3a6157e2b90a6a8a104f61653226e2532a4271f10a400f4845",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        559,
+        273,
+        194,
+        224
+      ],
+      "margin": [
+        274,
+        230,
+        526,
+        496
+      ],
+      "source_anchor": [
+        645,
+        493
+      ],
+      "rgba_sha256": "d9d6dd71604b3480e0e49580221e04f441292594d9846eb93e54c3d2a3e6ac0f",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        759,
+        275,
+        240,
+        222
+      ],
+      "margin": [
+        214,
+        232,
+        480,
+        498
+      ],
+      "source_anchor": [
+        905,
+        493
+      ],
+      "rgba_sha256": "80207d96c51874188730b48ad0e22d6c2604a3572de1ab90a8e038ee86ca5caf",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        1023,
+        268,
+        231,
+        229
+      ],
+      "margin": [
+        210,
+        225,
+        489,
+        491
+      ],
+      "source_anchor": [
+        1173,
+        493
+      ],
+      "rgba_sha256": "a08beea6a55a4f49fe36ec792eaad74f862e03ce26e784b9dc1ee9470e367d9e",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        1278,
+        269,
+        258,
+        229
+      ],
+      "margin": [
+        215,
+        225,
+        462,
+        491
+      ],
+      "source_anchor": [
+        1423,
+        494
+      ],
+      "rgba_sha256": "34a1ce8c2e311fa08350a721e15c66dbd9459f283b1b4ee232df10da9af95303",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1552,
+        269,
+        230,
+        228
+      ],
+      "margin": [
+        234,
+        226,
+        490,
+        492
+      ],
+      "source_anchor": [
+        1678,
+        493
+      ],
+      "rgba_sha256": "6f3c6eb3fc78912e7b5b41168be17c40d826a7f52f58e0d1277d2536b841f814",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1800,
+        268,
+        244,
+        230
+      ],
+      "margin": [
+        242,
+        224,
+        476,
+        490
+      ],
+      "source_anchor": [
+        1918,
+        494
+      ],
+      "rgba_sha256": "ac5799476373affe0cb1392107c377b86c56bb752c9c8468912b980b6696389b",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        23,
+        512,
+        223,
+        238
+      ],
+      "margin": [
+        244,
+        216,
+        497,
+        482
+      ],
+      "source_anchor": [
+        139,
+        746
+      ],
+      "rgba_sha256": "fb5eabe2bb71c562e47e93c05bbc061b440b70ebb7b4d7ab641c7290d8a09a29",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        280,
+        512,
+        223,
+        238
+      ],
+      "margin": [
+        243,
+        216,
+        497,
+        482
+      ],
+      "source_anchor": [
+        397,
+        746
+      ],
+      "rgba_sha256": "232de4ea0403dd564f77b933fead56fa9bffbacf7fab4f84a7d210e70b3f6d4d",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        522,
+        512,
+        241,
+        238
+      ],
+      "margin": [
+        240,
+        216,
+        479,
+        482
+      ],
+      "source_anchor": [
+        642,
+        746
+      ],
+      "rgba_sha256": "9c40e8b271c62a175ccc0a8f5640e32a80002e11fbc87e808f3eef97a4e89b0d",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        786,
+        513,
+        223,
+        237
+      ],
+      "margin": [
+        255,
+        217,
+        497,
+        483
+      ],
+      "source_anchor": [
+        891,
+        746
+      ],
+      "rgba_sha256": "97a906c2777c3a5f04d3d93a9a8a42feae8fee83dc854731027f8bff7fb5a7ec",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        1048,
+        514,
+        197,
+        236
+      ],
+      "margin": [
+        273,
+        218,
+        523,
+        484
+      ],
+      "source_anchor": [
+        1135,
+        746
+      ],
+      "rgba_sha256": "d0ab096cb7faf2c398f6c1d9c759e09b6b250a78cb949058b35a0126597718fe",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1293,
+        512,
+        239,
+        238
+      ],
+      "margin": [
+        247,
+        216,
+        481,
+        482
+      ],
+      "source_anchor": [
+        1406,
+        746
+      ],
+      "rgba_sha256": "8320fa95b93ef10b9f679bb618e51626ed61c55f3425314abdcabed9b50cba35",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1554,
+        512,
+        237,
+        239
+      ],
+      "margin": [
+        242,
+        215,
+        483,
+        481
+      ],
+      "source_anchor": [
+        1672,
+        747
+      ],
+      "rgba_sha256": "cd6e9c51acca70f332733aa1d76e8b3f0602895340858322e9078d4d1815a4b4",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1812,
+        512,
+        221,
+        239
+      ],
+      "margin": [
+        250,
+        215,
+        499,
+        481
+      ],
+      "source_anchor": [
+        1922,
+        747
+      ],
+      "rgba_sha256": "8dab7f4f81b52fb5575837caa46c7607c9fff2feec63259014ca50abcfa7fa0b",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        58,
+        45,
+        205,
+        331
+      ],
+      "margin": [
+        386,
+        283,
+        771,
+        645
+      ],
+      "source_anchor": [
+        160,
+        372
+      ],
+      "rgba_sha256": "a96084308f3356195c8e18b6546f2606dcc624046fe40210f6b6c59f11a0584c",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        284,
+        58,
+        215,
+        320
+      ],
+      "margin": [
+        379,
+        294,
+        761,
+        656
+      ],
+      "source_anchor": [
+        393,
+        374
+      ],
+      "rgba_sha256": "00f67468cc76daf0739e99a465ef98c5af261ed2234142018647c4b2c49291cf",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        512,
+        67,
+        279,
+        311
+      ],
+      "margin": [
+        358,
+        303,
+        697,
+        665
+      ],
+      "source_anchor": [
+        642,
+        374
+      ],
+      "rgba_sha256": "48cf33ae74090463909d315f886a7048d486ab1855e67050180c41b39e52b872",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        791,
+        50,
+        202,
+        326
+      ],
+      "margin": [
+        388,
+        288,
+        774,
+        650
+      ],
+      "source_anchor": [
+        891,
+        372
+      ],
+      "rgba_sha256": "3af2ad193f1e3a3b821224bbcbcc7679a8226ddaaf370d20f76c024e666a1983",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        46,
+        409,
+        197,
+        319
+      ],
+      "margin": [
+        377,
+        295,
+        779,
+        657
+      ],
+      "source_anchor": [
+        157,
+        724
+      ],
+      "rgba_sha256": "4da8757ae0cccbc6b9ae46919d85146526af4f816540b35f17ab2eb85c0a70b2",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        280,
+        425,
+        228,
+        303
+      ],
+      "margin": [
+        371,
+        311,
+        748,
+        673
+      ],
+      "source_anchor": [
+        397,
+        724
+      ],
+      "rgba_sha256": "0dc01713ec42207ca338fb30ff87faba69dced992e04327dd313f7960cfcf285",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        522,
+        432,
+        249,
+        298
+      ],
+      "margin": [
+        369,
+        316,
+        727,
+        678
+      ],
+      "source_anchor": [
+        641,
+        726
+      ],
+      "rgba_sha256": "05a38d27606105cfa47ba6e77c3bc74747ff228436acb36552d58b381e501350",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        784,
+        428,
+        213,
+        300
+      ],
+      "margin": [
+        378,
+        314,
+        763,
+        676
+      ],
+      "source_anchor": [
+        894,
+        724
+      ],
+      "rgba_sha256": "d8970d9faa2e5849d4cd6aab93c749e6add5ee662c6e5d61d38cd98f0aa0b554",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        43,
+        809,
+        203,
+        245
+      ],
+      "margin": [
+        379,
+        369,
+        773,
+        731
+      ],
+      "source_anchor": [
+        152,
+        1050
+      ],
+      "rgba_sha256": "96cb5aea921109b9ec4d61372a2a4b2c527c6ff4f48ec9fd1e75ad11bc835d81",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        298,
+        806,
+        215,
+        248
+      ],
+      "margin": [
+        378,
+        366,
+        761,
+        728
+      ],
+      "source_anchor": [
+        408,
+        1050
+      ],
+      "rgba_sha256": "ffba8e2e162d31de99e90286d79e82a5ef6d6422ca92aec4fdc06b70859601be",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        529,
+        816,
+        228,
+        242
+      ],
+      "margin": [
+        378,
+        372,
+        748,
+        734
+      ],
+      "source_anchor": [
+        639,
+        1054
+      ],
+      "rgba_sha256": "89b25e357f0986933e0b56813db79d6eb31953ecff76b40f1b8dfc692884d75d",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        777,
+        815,
+        214,
+        242
+      ],
+      "margin": [
+        384,
+        372,
+        762,
+        734
+      ],
+      "source_anchor": [
+        881,
+        1053
+      ],
+      "rgba_sha256": "3870dd3a0de69840d2c8b659235af836b3ab807c025555cf9cd7f4f7f328fe8f",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        24,
+        1140,
+        233,
+        170
+      ],
+      "margin": [
+        365,
+        444,
+        743,
+        806
+      ],
+      "source_anchor": [
+        147,
+        1306
+      ],
+      "rgba_sha256": "caa4ba38b04405b05fd1e0e17f63b8197ae8f7559c104bab96853ba305774604",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        282,
+        1142,
+        233,
+        171
+      ],
+      "margin": [
+        368,
+        443,
+        743,
+        805
+      ],
+      "source_anchor": [
+        402,
+        1309
+      ],
+      "rgba_sha256": "00c4a8f6d43083fb443bcbf02d28c81ab75ef905c94a5814ec66a0683339b298",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        523,
+        1161,
+        242,
+        154
+      ],
+      "margin": [
+        365,
+        460,
+        734,
+        822
+      ],
+      "source_anchor": [
+        646,
+        1311
+      ],
+      "rgba_sha256": "5f95ae90ae8624226a82ee38590b7b1c3b070334a4c74840d32badf083641d26",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        782,
+        1157,
+        221,
+        158
+      ],
+      "margin": [
+        374,
+        456,
+        755,
+        818
+      ],
+      "source_anchor": [
+        896,
+        1311
+      ],
+      "rgba_sha256": "fdd5ed04c856dadf4ec13cc104db6111fe226281ee3dde29937ec436ae0076a3",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        38,
+        1384,
+        225,
+        106
+      ],
+      "margin": [
+        364,
+        508,
+        751,
+        870
+      ],
+      "source_anchor": [
+        162,
+        1486
+      ],
+      "rgba_sha256": "1512f76761464bbb96a32f5e17134bdc785cad572eab4a85553693c07f90a7f8",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        301,
+        1393,
+        208,
+        97
+      ],
+      "margin": [
+        382,
+        517,
+        768,
+        879
+      ],
+      "source_anchor": [
+        407,
+        1486
+      ],
+      "rgba_sha256": "e0552527dc9f29c8cc6973aad3dd59599bfe4db0f904400c04067039a115f66d",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        533,
+        1395,
+        216,
+        96
+      ],
+      "margin": [
+        376,
+        518,
+        760,
+        880
+      ],
+      "source_anchor": [
+        645,
+        1487
+      ],
+      "rgba_sha256": "c7af56ff4bd6147ab820f1901d50c97ceab9191cf8eff038b8ebfe0420c3884e",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        787,
+        1393,
+        204,
+        98
+      ],
+      "margin": [
+        392,
+        516,
+        772,
+        878
+      ],
+      "source_anchor": [
+        883,
+        1487
+      ],
+      "rgba_sha256": "8b6846349fe2f19c6060bdb816000e3bda104e1eab917a6fe87522e624424984",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        19,
+        70,
+        225,
+        290
+      ],
+      "margin": [
+        285,
+        259,
+        647,
+        582
+      ],
+      "source_anchor": [
+        170,
+        356
+      ],
+      "rgba_sha256": "501f612afd89e0bec8ac9a14f0fd2ff43e8b54177bb3177516e0cbb88009b35d",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        275,
+        74,
+        220,
+        286
+      ],
+      "margin": [
+        284,
+        263,
+        652,
+        586
+      ],
+      "source_anchor": [
+        427,
+        356
+      ],
+      "rgba_sha256": "e8e3523438d02ccdc0e4fd2de5dd31acc0e425b41adf34244719e79ec53bda8c",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        520,
+        76,
+        240,
+        288
+      ],
+      "margin": [
+        306,
+        261,
+        632,
+        584
+      ],
+      "source_anchor": [
+        650,
+        360
+      ],
+      "rgba_sha256": "19d3659fe11588b063f9d0b1a9552fcf1c601d8e97bede3ef11c7421917c5001",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        795,
+        78,
+        212,
+        285
+      ],
+      "margin": [
+        371,
+        264,
+        660,
+        587
+      ],
+      "source_anchor": [
+        860,
+        359
+      ],
+      "rgba_sha256": "328638398a4eb8cf08484aa021b35cfe13a5463b5253f0ceb653ba72efad6ec6",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        25,
+        429,
+        219,
+        271
+      ],
+      "margin": [
+        301,
+        278,
+        653,
+        601
+      ],
+      "source_anchor": [
+        160,
+        696
+      ],
+      "rgba_sha256": "208ee6db8f12bd96a388ad01a327ca1d4703af2da10a04c51733d310fdb9d0b4",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        286,
+        419,
+        216,
+        280
+      ],
+      "margin": [
+        318,
+        269,
+        656,
+        592
+      ],
+      "source_anchor": [
+        404,
+        695
+      ],
+      "rgba_sha256": "75ff4ce7bc2e09dcd3a0df6ae48e5eac362d23565167906cc535058f167fb570",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        537,
+        429,
+        222,
+        274
+      ],
+      "margin": [
+        320,
+        275,
+        650,
+        598
+      ],
+      "source_anchor": [
+        653,
+        699
+      ],
+      "rgba_sha256": "76909d18860212226384b4f0dc19c6e697c5e008a9456dec3adfc2a8d60d61e2",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        805,
+        425,
+        200,
+        276
+      ],
+      "margin": [
+        358,
+        273,
+        672,
+        596
+      ],
+      "source_anchor": [
+        883,
+        697
+      ],
+      "rgba_sha256": "4d5e470d942502d3a2a3e6d6de255a870df83f6300745235324cfd43b04f3cfb",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        39,
+        786,
+        219,
+        241
+      ],
+      "margin": [
+        317,
+        308,
+        653,
+        631
+      ],
+      "source_anchor": [
+        158,
+        1023
+      ],
+      "rgba_sha256": "1311b819792c2625961cb45c543c52de472ecb05a2572815c8318c79cda1c0da",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        290,
+        785,
+        217,
+        242
+      ],
+      "margin": [
+        328,
+        307,
+        655,
+        630
+      ],
+      "source_anchor": [
+        398,
+        1023
+      ],
+      "rgba_sha256": "6d7e69fe4b6e81fbdd663783e4f65cfb496d4830c618fddadc587e9ef56d3944",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        532,
+        801,
+        219,
+        226
+      ],
+      "margin": [
+        323,
+        323,
+        653,
+        646
+      ],
+      "source_anchor": [
+        645,
+        1023
+      ],
+      "rgba_sha256": "dac2009c1394ae65d8200c433812d553e8720190d9f37d7f1764cb4858765c34",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        782,
+        790,
+        207,
+        234
+      ],
+      "margin": [
+        329,
+        315,
+        665,
+        638
+      ],
+      "source_anchor": [
+        889,
+        1020
+      ],
+      "rgba_sha256": "75ee05503051327d58336e07420fd1f8958aed14166a8f8976be552337f1925c",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        34,
+        1134,
+        225,
+        141
+      ],
+      "margin": [
+        307,
+        408,
+        647,
+        731
+      ],
+      "source_anchor": [
+        163,
+        1271
+      ],
+      "rgba_sha256": "3d502dceeb83c2e070bd18550d32d27fa5e47a956fcfe7ce0cfeed41ed6bb89b",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        285,
+        1130,
+        223,
+        147
+      ],
+      "margin": [
+        318,
+        402,
+        649,
+        725
+      ],
+      "source_anchor": [
+        403,
+        1273
+      ],
+      "rgba_sha256": "64cb3b2ed1ecfa9045d599787a463bdb6d476df2c9a7de6226ce2fa28c656f21",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        535,
+        1138,
+        224,
+        138
+      ],
+      "margin": [
+        324,
+        411,
+        648,
+        734
+      ],
+      "source_anchor": [
+        647,
+        1272
+      ],
+      "rgba_sha256": "360b25fe59e6d44de03ef72e96cdb3bbd6884147373798be0d57500451e23a9d",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        787,
+        1141,
+        217,
+        133
+      ],
+      "margin": [
+        331,
+        416,
+        655,
+        739
+      ],
+      "source_anchor": [
+        892,
+        1270
+      ],
+      "rgba_sha256": "69e3f19838352067e86af216b7db7b7416342e71c79a682b016cc83f854763a6",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        36,
+        1380,
+        219,
+        94
+      ],
+      "margin": [
+        313,
+        455,
+        653,
+        778
+      ],
+      "source_anchor": [
+        159,
+        1470
+      ],
+      "rgba_sha256": "832629300234f7946c6add20c5074c4ad50a554fa3045f9dfb01412c2fb5f6f5",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        286,
+        1395,
+        218,
+        85
+      ],
+      "margin": [
+        326,
+        464,
+        654,
+        787
+      ],
+      "source_anchor": [
+        396,
+        1476
+      ],
+      "rgba_sha256": "6aa23c501dea41b593e9ab38140da6f455c7f104891383fbd4f1ea4594519661",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        541,
+        1394,
+        210,
+        87
+      ],
+      "margin": [
+        326,
+        462,
+        662,
+        785
+      ],
+      "source_anchor": [
+        651,
+        1477
+      ],
+      "rgba_sha256": "3f6d93218adb3de61e3a42a491f9d93ea481ba72b9d4cba9f898a6ae4cbb65de",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        789,
+        1392,
+        209,
+        84
+      ],
+      "margin": [
+        323,
+        465,
+        663,
+        788
+      ],
+      "source_anchor": [
+        902,
+        1472
+      ],
+      "rgba_sha256": "72501e175bf855875443c2cf1516e9b67c2a252e0525e979d1fa0864ba168bec",
+      "sheet": 3
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-0.png",
+          "sha256": "0df2e0f9237b781c0f5c14cc405698c0cc6e1abe5c73052fe116c96d80817d25",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1
+      ],
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-0.png",
+          "sha256": "0df2e0f9237b781c0f5c14cc405698c0cc6e1abe5c73052fe116c96d80817d25",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        2,
+        3,
+        4
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-1.png",
+          "sha256": "3c6662f0f5cc5f5facf0181242e39a31401e4f6ea2c24b9c20cdcf3ed0a2bd1b",
+          "size": [
+            2048,
+            768
+          ],
+          "canvas_size": [
+            720,
+            720
+          ],
+          "foot": [
+            360,
+            450
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1,
+        2
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "sha256": "2f703292886cc2a55823ac6e22bbcd3d102a023a275b2fc140d597d6599580d1",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            976,
+            976
+          ],
+          "foot": [
+            488,
+            610
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "PROPOSED, NOT APPROVED: per-sheet virtual canvas 976 normalizes its median first living/recoil phases to the idle reference height of 81.0 per 256 canvas units. Contact anchors proposed at the median x of visible lower-vortex pixels near each alpha body bottom; grounded placement, amplitude, relative scale and attack contact await independent visual and Main review. Pixels unchanged.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "sha256": "2f5cfa417ab51dd0c14206f659bb0f3f4b9e59c85afe3c1474790ddb97bb606e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            872,
+            872
+          ],
+          "foot": [
+            436,
+            545
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "PROPOSED, NOT APPROVED: per-sheet virtual canvas 872 normalizes its median first living/recoil phases to the idle reference height of 81.0 per 256 canvas units. Contact anchors proposed at the median x of visible lower-vortex pixels near each alpha body bottom; grounded placement, amplitude, relative scale and attack contact await independent visual and Main review. Pixels unchanged.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "sha256": "2f703292886cc2a55823ac6e22bbcd3d102a023a275b2fc140d597d6599580d1",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            976,
+            976
+          ],
+          "foot": [
+            488,
+            610
+          ],
+          "directions": [
+            "E",
+            "SE",
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "scale_review_note": "PROPOSED, NOT APPROVED: per-sheet virtual canvas 976 normalizes its median first living/recoil phases to the idle reference height of 81.0 per 256 canvas units. Contact anchors proposed at the median x of visible lower-vortex pixels near each alpha body bottom; grounded placement, amplitude, relative scale and attack contact await independent visual and Main review. Pixels unchanged.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "sha256": "2f5cfa417ab51dd0c14206f659bb0f3f4b9e59c85afe3c1474790ddb97bb606e",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            872,
+            872
+          ],
+          "foot": [
+            436,
+            545
+          ],
+          "directions": [
+            "W",
+            "NW",
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "scale_review_note": "PROPOSED, NOT APPROVED: per-sheet virtual canvas 872 normalizes its median first living/recoil phases to the idle reference height of 81.0 per 256 canvas units. Contact anchors proposed at the median x of visible lower-vortex pixels near each alpha body bottom; grounded placement, amplitude, relative scale and attack contact await independent visual and Main review. Pixels unchanged.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/water_lair_wave_guardian/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 88.0
+}

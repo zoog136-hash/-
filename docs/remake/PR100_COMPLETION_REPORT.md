@@ -1,3 +1,9 @@
+## 최신 진행 · 2026-10-15 · batch24 신규3종 추가
+
+**377 → 380/498(76.3%) · 잔여118 · 이번재개신규6 · 개별Main8방향109종.** 파도수호자·시커·화염전사 각104자세, 실제Main headless4,806/OpenGL5,146검사 실패0 및 별도독립시각판정 승인. 실제AI/마법투사체8방향·원래HP/무기 사망/드랍/수동습득 PASS. 기존225보고서SHA보존+신규6(canonical231). [batch24증거/판정범위/실패보존](evidence/pr100-direction-fix/original-based/batch24/README.md). 기존자산/완료프로필/맵/게임코드교체0. 336실제캡처 중18원본대표+전수검토표Git, 전체본문로컬만/전체SHA전달. 원본추출이아닌새2D작화다.
+
+직전batch23 **`a891e167ec324917bc482ca6d603dcd07589e87a` push확인**. PR충돌로신규HEAD자동CI0관측/성공주장없음. 이번checkpoint를기준으로기존브랜치전체CI·APK를직접dispatch하며다음제작을계속한다. Android실기기미검증·main충돌미해결/미병합. 텐타클/플라워Main양모드검사완료·화면검토대기, 대지/소드/피닉스검수및웨링/크랩/레버넌트/328수정진행. 유니콘은방향/보행/누락문제로HOLD·미집계다.
+
 ## 최신 진행 · 2026-10-15 · batch23 신규3종 완료
 
 **374 → 377/498(75.7%) · 잔여121 · 개별 Main8방향106종.** 라즈엘·알비온·태풍수호자 각104자세, 실제 Main headless5,729/OpenGL6,095검사 실패0 및 별도 독립 시각검토 승인. 실제8방향 AI/마법, 라즈엘beam8방향, 원래 HP/무기 사망·드랍·수동습득 PASS. 기존219보고서 SHA를 보존하고6개 추가(canonical225). [배치 증거/실패보존/검토](evidence/pr100-direction-fix/original-based/batch23/README.md), [기계 체크포인트](PR100_LATEST_CHECKPOINT.json).

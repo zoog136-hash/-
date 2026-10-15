@@ -1,34 +1,34 @@
 {
-  "observed_at_utc": "2026-10-15T15:21:16.346173+00:00",
+  "observed_at_utc": "2026-10-15T15:43:44.788512+00:00",
   "repository": "zoog136-hash/-",
   "pr": 100,
   "branch": "feature/twilight-animation-20261013",
   "verified_code_checkpoint": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
-  "runtime_assets_checkpoint": "batch23 commit containing this checkpoint; exact SHA recorded after commit",
+  "runtime_assets_checkpoint": "batch24 commit containing this checkpoint; exact SHA recorded after commit",
   "counts": {
     "target": 498,
-    "completed": 377,
-    "remaining": 121,
+    "completed": 380,
+    "remaining": 118,
     "hero_plus": [
       139,
       180
     ],
     "normal_monster": [
-      202,
+      205,
       258
     ],
     "boss": [
       36,
       60
     ],
-    "individual_Main_eight_direction": 106,
-    "durable_Main_reports": 225,
+    "individual_Main_eight_direction": 109,
+    "durable_Main_reports": 231,
     "supplemental_existing3_Main_reports_this_resume": 6
   },
   "new_completed": [
-    "분노의 주시자 라즈엘",
-    "질투의 감시자 알비온",
-    "풍룡의 둥지 태풍수호자"
+    "수룡의 둥지 파도수호자",
+    "시커",
+    "화룡의 둥지 화염전사"
   ],
   "validation": {
     "importer_tests_passed": 50,
@@ -88,6 +88,52 @@
         "시커",
         "화룡의 둥지 화염전사"
       ]
+    },
+    "batch24": {
+      "observed_at_utc": "2026-10-15T15:43:44.788512+00:00",
+      "status": "completed_after_separate_static_and_actual_Main_visual_reviews",
+      "previous_completed": 377,
+      "new_completed": [
+        "수룡의 둥지 파도수호자",
+        "시커",
+        "화룡의 둥지 화염전사"
+      ],
+      "new_completed_count": 3,
+      "completed": 380,
+      "total": 498,
+      "percent": 76.3,
+      "remaining": 118,
+      "individual_Main_eight_direction": 109,
+      "canonical_Main_reports": 231,
+      "headless_engine_checks": 4806,
+      "headless_seconds": 168.796,
+      "OpenGL_engine_checks": 5146,
+      "OpenGL_seconds": 484.994,
+      "engine_failures": 0,
+      "authored_unique_poses": 312,
+      "actual_Main_captured_PNGs": 336,
+      "original_full_viewport_representatives_in_Git": 18,
+      "all_capture_bodies_in_Git": false,
+      "visual_gate": "All104 actualMain pose samples and8realAI fullviewport captures peractor reviewed independently from authors, compared against preserved exactsource and existing completed seer/ghost actualMain. See eachMain-independent-review.json for scope precision and observations.",
+      "automatic_gate": "OriginalAI8direction pursuit/magiccontact and8physicsobserved projectiles, actualweaponhit/death/drop/manualpickup, sourceSHA and strict104framegeometry passed eachactor. No game/stat/check relaxation.",
+      "CI": "PR remains conflict-blocked for automatic pull_request checks; a891e16 workflow_runs0 observed, not CI success. Full integration/animation/APK workflows will be explicitly dispatched on existingbranch after this checkpoint.",
+      "Android_new_APK": "pending integration dispatch",
+      "Android_real_device": "unverified",
+      "main_merge": "not_performed; conflict remains",
+      "next_batch": [
+        "탐욕의 텐타클",
+        "알비노 플라워"
+      ],
+      "next_candidates": [
+        "지룡의 둥지 대지수호자",
+        "불신의 댄싱 소드",
+        "피닉스",
+        "웨링",
+        "알비노 자이언트 크랩"
+      ],
+      "HOLD_new_not_counted": [
+        "알비노 유니콘: rearorientation, oppositelegcycle, missing/overlappingframes; raw7attempts retained in scratch pending durablearchive"
+      ]
     }
   },
   "new_WIP_HOLD": [
@@ -97,7 +143,8 @@
     "서커스단 카드 마술사360",
     "서커스단 단장357",
     "검은 토끼 소녀328",
-    "베테랑 낚시꾼 폴376"
+    "베테랑 낚시꾼 폴376",
+    "알비노 유니콘: 재생방향/보행교대/누락프레임 재작화필요"
   ],
   "previous_HOLD": [
     "화염의 엔트407",
@@ -123,13 +170,14 @@
       "device_tested": false
     },
     "observed_at_utc": "2026-10-15T13:41:42Z",
-    "batch23": "not_started_before_push"
+    "batch23": "No automatic run observed after push; PRconflict persists. dispatch integratedcheckpoint24 instead of restarting full CI for each actor",
+    "batch24": "pending workflow_dispatch after push"
   },
   "main_conflict_unresolved": true,
   "next": [
-    "Continue batch24 checkpoint after separate visual gate; do not stop for CI",
-    "Run Main batch25 tentacle/flower and independently approved next candidates",
-    "Keep authoring124goal, preserve HOLD and allfailedproofs; no map edits/newbranch/newPR/mainmerge"
+    "Dispatch existingbranch full animation/integration/APK CI after checkpoint24; continue production while running",
+    "Review batch25 actual Main, checkpoint qualifiedactors",
+    "Continue124 originalgoal including HOLD repairs; no newbranch/newPR/mainmerge/maps"
   ],
   "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
   "remote_snapshot_bytes": 13916,
@@ -138,10 +186,10 @@
   "observed_main_head": "e2119c37293a783e93b421ee0055d1318271b071",
   "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
   "current_WIPs": [
-    "batch24 water/seeker/fire: both Main modes passed, independent visual evidence being finalized, not in this checkpoint profiles",
-    "tentacle/flower: static approved; Main pending",
-    "earth/sword: full104 candidates; independent static QA pending",
-    "phoenix/albino unicorn/albino giant crab/328 repair: scratch authoring active"
+    "batch25 tentacle/flower: both Main modes passed; independent Mainvisualreview pending",
+    "earth/sword/phoenix:104candidates, independent scale/support/headingQA pending",
+    "Waring/crab/revenant: authoring active",
+    "328: singlepose oppositehip-knee-boot path independently confirmed; legproportions/registeredloop pending"
   ],
   "resumed_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015",
   "resumed_blocker": null,
@@ -150,7 +198,8 @@
     "transform:173 악몽의 잭 오 랜턴",
     "transform:288 도구리"
   ],
-  "resumed_new_completed_count": 3,
-  "previous_pushed_checkpoint": "4692897003c81c73514f374a2c805a607e085e7c",
-  "batch23_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch23"
+  "resumed_new_completed_count": 6,
+  "previous_pushed_checkpoint": "a891e167ec324917bc482ca6d603dcd07589e87a",
+  "batch23_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch23",
+  "batch24_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch24"
 }
