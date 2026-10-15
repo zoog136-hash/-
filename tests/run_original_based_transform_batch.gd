@@ -19,6 +19,64 @@ func subject_path() -> String:
 
 func subject_spec() -> Dictionary: return current_case.spec.duplicate(true)
 
+func lifecycle_attempt_limit() -> int: return 200
+
+func find_clearing() -> Vector2:
+	var initial: Vector2 = super.find_clearing()
+	if not initial.is_finite(): return initial
+	# Keep untouched terrain and paused background actors out of the portrait
+	# sampling area by selecting an empty real walkable part of the same map.
+	for radius: float in [0., 240., 320., 400., 560., 720.]:
+		for direction: int in range(8):
+			var point: Vector2 = initial + screen_direction(direction) * radius
+			if not route_clear(point, 150.): continue
+			var occupied := false
+			for actor: Node in world.monsters_root.get_children():
+				if actor is Node2D and (actor as Node2D).visible and (actor as Node2D).position.distance_to(point) < 192.:
+					occupied = true
+					break
+			if occupied: continue
+			world.player.position = point
+			world.player.camera.reset_smoothing()
+			world.player.camera.force_update_scroll()
+			world.field_renderer.refresh_visible()
+			# Walking clearance alone does not rule out tall foreground art.
+			# Inspect the same streamed prop rectangles as the monster pose QA.
+			var body := Rect2(point + Vector2(-128, -160), Vector2(256, 176))
+			for prop: Node2D in world.field_renderer.faded:
+				if prop is Sprite2D and prop.global_position.y + 16.0 > point.y:
+					var bounds: Rect2 = prop.global_transform * (prop as Sprite2D).get_rect()
+					if bounds.intersects(body):
+						occupied = true
+						break
+			if not occupied: return point
+	return Vector2.INF
+
+func incoming_and_death() -> void:
+	await super.incoming_and_death()
+	world.player.position = center
+	world.player.camera.zoom = Vector2(1.6, 1.6)
+	world.player.camera.reset_smoothing()
+	world.player.camera.force_update_scroll()
+	await monster_case()
+	# Use the same deterministic production drop-seed setup as the existing
+	# original-based monster test. Keep the real drop table and award handlers.
+	var probe := RandomNumberGenerator.new()
+	var drop_seed := 1
+	while drop_seed < 1000:
+		probe.seed = drop_seed
+		if not world.LOOT_DROP.roll_detailed(normal.drop_items, normal.is_boss, world.loot_catalog, probe, normal.monster_name).is_empty(): break
+		drop_seed += 1
+	check(drop_seed < 1000, "real production drop seed found")
+	report.setup.drop_rng_seed = drop_seed
+	normal.died.disconnect(world._on_monster_died)
+	normal.died.connect(func(_actor: TwilightMonster) -> void: world.rng.seed = drop_seed)
+	normal.died.connect(world._on_monster_died)
+	await lifecycle_case()
+	check(world.player.transform_active and world.player.motion.profile.profile_id == "transform:" + str(current_case.spec.transform_id), "AI and manual pickup retain the exact equipped transformation")
+	report.setup.additional_cases = "existing production field-monster AI in8directions,real weapon kill,floor drop,manual UI pickup"
+	report.setup.ai_camera_zoom = 1.6
+
 func safe_component(value: String) -> bool:
 	if value.is_empty(): return false
 	for letter: String in value:
@@ -211,6 +269,7 @@ func run() -> void:
 		var result := {"name": spec.name, "folder": spec.folder, "slug": spec.slug, "transform_id": spec.spec.transform_id,
 			"checks": checks, "failures": failures.duplicate(), "physics_ticks": ticks_elapsed, "report": out,
 			"player_directions": report.player.size(), "incoming_directions": report.get("incoming", []).size(),
+			"monster_directions": report.monster.size(), "lifecycle": report.lifecycle.duplicate(true),
 			"pose_samples": report.get("pose_samples", []).size(), "full_pose_capture": first_resource_case and not capture_root.is_empty(),
 			"screenshots": report.screenshots.size()}
 		var before_preservation: int = batch_failures.size()

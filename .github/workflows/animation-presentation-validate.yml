@@ -285,15 +285,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [15, 16, 17, 18, 19, 20]
+        batch: [15, 16, 17, 18, 19, 20, 21]
         include:
+          - batch: 21
+            script: run_original_based_transform_batch
+            marker: PR100_TRANSFORM_BATCH_OK
+            timeout: 1200
           - batch: transform-regression
             config: res://tests/fixtures/pr100_transform_regression.json
             script: run_original_based_transform_batch
             marker: PR100_TRANSFORM_BATCH_OK
             timeout: 1200
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'
       TWILIGHT_PR100_BATCH_CONFIG: ${{ matrix.config || format('res://tests/fixtures/pr100_batch{0}.json', matrix.batch) }}

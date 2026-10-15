@@ -1,3 +1,9 @@
+## 2026-10-15 · 동시 원격 체크포인트 복구 중
+
+첫 push 직전 원격이 `7cec25402501fe0672e8f040edb89604d3270606`으로 진전하여 일반 push가 거절됐다. 강제 push 없이 로컬 보호 커밋 `13676c6`과 runner WIP 커밋을 보존하고 **동일 PR 브랜치의 원격 변경만 병합**한다. main 병합은 하지 않는다. 원격에서 이전 세션의 미완성 4파일 및 변신5종 WIP가 회수됐다. 원격 PNG/TRES/출처는 덮어쓰지 않는다. 중복 제작은 중단하고 초안/지시/해시는 별도 보존한다. 아래의 "원격에 없어서 재구현"은 최초3fb 복구 시점 기록이며, 현재는 양쪽 구현을 결합한다.
+
+새 변신5종은 임시 연결 상태로 아직 **완료 수 371/498 및 개별 Main100종에 포함하지 않는다**. 원격의 실패한 foreground-clear 위치 선택 검사를 수정하고 새 Main headless/OpenGL 묶음검사와 외형 검토가 모두 통과한 뒤 수량을 갱신한다.
+
 ## 2026-10-15 · PR100 복구 / 임포터 보호 체크포인트
 
 - 기존 PR #100 / `feature/twilight-animation-20261013` 유지. 복구 기준 원격 HEAD `3fbdea4e6a9632e8858c0d6e16ce670acff4138a`. 이전 작업환경·미커밋 4파일은 현재 환경에서 접근 불가하여 원격의 정상 커밋에서 복구했다. 이전 변경 전체 복구를 주장하지 않는다.
@@ -7,6 +13,12 @@
 - 변신 배치 실행기는 원격에 없어서 재구현 중이며 기존10종 headless/OpenGL 회귀 진행 중이다. 화염의 엔트·알비노 악어거북 새 생성모션은 **WIP/미연결**. 동일 원본인 아타바크/살라흐도 표시 외형·크기가 달라 재사용 거절했다.
 - 기준 HEAD의 통합[38707935974](https://github.com/zoog136-hash/-/actions/runs/38707935974)·애니메이션[38707950473](https://github.com/zoog136-hash/-/actions/runs/38707950473)·Android[38707965290](https://github.com/zoog136-hash/-/actions/runs/38707965290)는 성공. 이 체크포인트의 새 HEAD CI는 별도 확인 전이며 Android 실기기 미검증. main 충돌 유지·병합하지 않음.
 - [복구 및 검사 증거](evidence/pr100-direction-fix/original-based/recovery-20261015/checkpoint.json). 재개: 최신 remote HEAD 조회 → 이 보고서 → WIP 제작물 승인/보류 → 묶음 Main 검증 → 완료 수량 갱신 → 같은 브랜치 commit/push/HEAD 대조. 로그·이미지는 파일에 저장하고 요약만 출력한다.
+
+## Batch21 WIP checkpoint — 2026-10-15
+
+User-requested checkpoint: five transformations provisionally connected (Fire Ent, Albino Horn Frog, Albino Snapping Turtle, Nightmare Jack, Doguri), 520 newly authored poses. **Validated total remains 371/498; individual Main headless/OpenGL validation remains 100/498.** Four initial headless cases passed; Jack passed a targeted retry after adding an explicitly reviewed cast track sharing its authored spell gesture. No additional poses are counted for this alias.
+
+OpenGL evidence is incomplete: the new conservative foreground-clear position search rejected all five cases. Correct the QA position selection and rerun actual Main before counting these actors. Baphomet remains held, unlinked and uncounted. New-commit CI/Android are not run; Android device execution is untested. Evidence and rejected authoring drafts are preserved in `evidence/pr100-direction-fix/original-based/batch21/`.
 
 ## 2026-10-15 · Batch20 실제 Main 검증 완료
 

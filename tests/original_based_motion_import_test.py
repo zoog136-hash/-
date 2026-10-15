@@ -164,6 +164,73 @@ class OriginalBasedImportTest(unittest.TestCase):
             self.assertEqual(self.import_snapshot(root), before)
             self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, modified)
 
+    def test_reviewed_cast_alias_preserves_pixels_counts_and_contact_frame(self):
+        target = next(row for row in json.loads((ROOT / "data/animation_authoring_sources.json").read_text())["targets"]
+                      if row["key"] == "monster:늑대인간")
+        image = ROOT / "assets/actors/eight_direction/original_based/werewolf/poses.png"
+        candidate = {"output_path": str(image), "prompt": "Temporary importer regression fixture, never game art",
+                     "action_aliases": {"cast": "attack"},
+                     "review": {"identity_preserved": True, "eight_views": True, "motion_roles": True,
+                                "no_clipping": True, "cast_uses_authored_attack": True,
+                                "notes": "Test explicit action sharing without adding pixels or bypassing mandatory roles"}}
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "data").mkdir()
+            (root / "data/animation_authoring_sources.json").write_text(json.dumps({"targets": [target]}))
+            (root / "data/combat_animation_profiles.json").write_text(json.dumps({"schema": 1, "profiles": {}}))
+            reference = Path(target["reference"]["path"].removeprefix("res://"))
+            (root / reference).parent.mkdir(parents=True)
+            shutil.copyfile(ROOT / reference, root / reference)
+            # Invalid aliases must fail before even creating an actor directory.
+            for aliases, reviewed in [({"death": "idle"}, True), ({"cast": "cast"}, True),
+                                      ({"cast": "missing"}, True), ({"cast": "attack"}, False)]:
+                bad = copy.deepcopy(candidate)
+                bad["action_aliases"] = aliases
+                bad["review"]["cast_uses_authored_attack"] = reviewed
+                with self.subTest(aliases=aliases, reviewed=reviewed):
+                    with self.assertRaises(ValueError):
+                        importer.import_sheet(root, bad, "cast_fixture", [target["key"]], True)
+                    self.assertFalse((root / "assets/actors").exists())
+                    self.assertEqual(json.loads((root / "data/combat_animation_profiles.json").read_text()), {"schema": 1, "profiles": {}})
+            result = importer.import_sheet(root, candidate, "cast_fixture", [target["key"]], True)
+            actor = Path(result["resource"])
+            proof = json.loads((actor / "provenance.json").read_text())
+            self.assertEqual((actor / "poses.png").read_bytes(), image.read_bytes())
+            self.assertEqual(result["poses"], 104)
+            self.assertEqual(len(proof["frames"]), 104)
+            self.assertEqual(proof["tracks"]["cast"]["alias_of"], "attack")
+            _external, _frames, tracks = audit.read_spriteframes(actor / "SpriteFrames.tres")
+            for direction in range(8):
+                cast, attack = tracks[f"cast_{direction}"], tracks[f"attack_{direction}"]
+                self.assertEqual(cast["frames"], attack["frames"])
+                self.assertEqual(cast["speed"], attack["speed"])
+                self.assertFalse(cast["loop"])
+            profile = json.loads((root / "data/combat_animation_profiles.json").read_text())["profiles"][target["key"]]
+            self.assertEqual(profile["action_hit_frames"], {"attack": 1, "cast": 1})
+
+    def test_reviewed_cast_alias_rerun_preserves_completed_outputs_and_profiles(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            candidate["action_aliases"] = {"cast": "attack"}
+            candidate["review"]["cast_uses_authored_attack"] = True
+            first = importer.import_sheet(root, candidate, "fixture", keys, True)
+            before = self.import_snapshot(root)
+            modified = {str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}
+            self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True), first)
+            self.assertEqual(self.import_snapshot(root), before)
+            self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, modified)
+            proof = json.loads((output / "provenance.json").read_text())
+            self.assertEqual(proof["tracks"]["cast"]["alias_of"], "attack")
+            self.assertEqual(first["poses"], 104)
+            # An approved cast track is part of the completed animation.
+            # A rerun cannot silently remove it from the runtime or proof.
+            changed = copy.deepcopy(candidate)
+            del changed["action_aliases"]
+            with self.assertRaisesRegex(ValueError, "Existing authored runtime profile differs"):
+                importer.import_sheet(root, changed, "fixture", keys, True)
+            self.assertEqual(self.import_snapshot(root), before)
+
     def test_single_sheet_nonstandard_canvas_preserves_world_foot(self):
         path = ROOT / "assets/actors/eight_direction/original_based/werewolf/poses.png"
         geometry = importer.analyze(path, canvas_size=384)

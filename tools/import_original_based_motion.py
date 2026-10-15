@@ -20,7 +20,7 @@ import build_animation_expansion as expansion
 
 DIRECTIONS = ["E", "SE", "S", "SW", "W", "NW", "N", "NE"]
 ROLES = {"idle": [0, 1], "walk": [2, 3, 4], "attack": [5, 6, 7], "hit": [8, 9], "death": [10, 11, 12]}
-SECONDS = {"idle": 1.2, "walk": .48, "attack": .42, "hit": .22, "death": .65}
+SECONDS = {"idle": 1.2, "walk": .48, "attack": .42, "hit": .22, "death": .65, "cast": .42}
 # PresentationCatalog.configure prefers these reviewed source bodies to the
 # unused fallback atlas body. This is deliberately limited to named records;
 # other bodies, references and presentations retain their existing strictness.
@@ -238,6 +238,20 @@ def spriteframes(sheet_path, geometry, role_frames=None):
     return '\n'.join(text)
 
 
+def reviewed_action_aliases(candidate):
+    """A reviewed spell gesture may serve both normal attack and magic casting.
+
+    This creates a runtime track name, never new pixels or counted poses. The
+    mandatory motions remain independently authored and cannot be aliased away.
+    """
+    aliases = candidate.get("action_aliases", {})
+    if not isinstance(aliases, dict) or (aliases and aliases != {"cast": "attack"}):
+        raise ValueError("Only an explicit cast-to-attack action alias is supported")
+    if aliases and candidate.get("review", {}).get("cast_uses_authored_attack") is not True:
+        raise ValueError("Review that the authored attack is also the actual spell gesture")
+    return aliases.copy()
+
+
 def import_sheet(root, candidate, actor, keys, apply):
     plan = expansion.read(root / "data/animation_authoring_sources.json")
     targets = {row["key"]: row for row in plan["targets"]}
@@ -258,6 +272,7 @@ def import_sheet(root, candidate, actor, keys, apply):
             raise ValueError("Missing explicit visual review: " + key)
     if not review.get("notes"):
         raise ValueError("Record what was visually reviewed")
+    aliases = reviewed_action_aliases(candidate)
     sheets = candidate.get("sheets", [{"output_path": candidate.get("output_path"), "rows": 13, "roles": ROLES}])
     parsed = []
     role_frames = {}
@@ -281,6 +296,8 @@ def import_sheet(root, candidate, actor, keys, apply):
         parsed.append(part)
     if set(role_frames) != set(ROLES):
         raise ValueError("Each mandatory role must have actual frames")
+    for alias, source_role in aliases.items():
+        role_frames[alias] = [indices.copy() for indices in role_frames[source_role]]
     height_basis = candidate.get("display_height_basis", "median_idle")
     if height_basis not in {"median_idle", "max_living_frame"}:
         raise ValueError("Unknown reviewed display-height basis")
@@ -328,12 +345,16 @@ def import_sheet(root, candidate, actor, keys, apply):
              "distinct_pixel_frames": geometry["distinct_pixel_frames"], "frames": geometry["frames"], "tracks": {}}
     proof["display_height_basis"] = height_basis
     proof["display_reference_height"] = display_reference_height
+    if aliases:
+        proof["action_aliases"] = aliases
     for role, directions in role_frames.items():
         count = len(directions[0])
         sheet_index = geometry["frames"][directions[0][0]].get("sheet", 0)
-        proof["tracks"][role] = {"atlas_files": [atlases[sheet_index]], "source_rows": sheets[sheet_index]["roles"][role], "source_frames_per_direction": count,
+        proof["tracks"][role] = {"atlas_files": [atlases[sheet_index]], "source_rows": sheets[sheet_index]["roles"][aliases.get(role, role)], "source_frames_per_direction": count,
                                   "unique_frames_per_direction": count, "direction_unique_frames": dict.fromkeys(DIRECTIONS, count),
                                   "source_duration_seconds": SECONDS[role], "loop_type": "loop" if role in ("idle", "walk") else "play_once"}
+        if role in aliases:
+            proof["tracks"][role]["alias_of"] = aliases[role]
     metadata = [(folder / "SpriteFrames.tres", resource),
                 (folder / "provenance.json", json.dumps(proof, ensure_ascii=False, indent=2) + "\n")]
     profiles_changed = False
@@ -355,7 +376,7 @@ def import_sheet(root, candidate, actor, keys, apply):
             profile.update({"name": targets[key]["name"], "frames_path": "res://" + str((folder / "SpriteFrames.tres").relative_to(root)),
                             "layout": "directional8", "pixel_scale": scale, "color_tint": "ffffff", "sprite_offset": [0, round(-32 * scale, 6)],
                             "embedded_shadow": False, "authored_motion_weight": 0, "hit_recoil": 0,
-                            "action_hit_frames": {"attack": 1}, "attack_hit_frame": 1, "death_duration": SECONDS["death"],
+                            "action_hit_frames": {"attack": 1, **{alias: 1 for alias in aliases}}, "attack_hit_frame": 1, "death_duration": SECONDS["death"],
                             "movement_fps": len(role_frames["walk"][0]) / SECONDS["walk"], "authoring_reference": targets[key]["reference"]["path"]})
             previous_frames = str(previous.get("frames_path", ""))
             # Coverage recognizes native packs across this whole directory,
