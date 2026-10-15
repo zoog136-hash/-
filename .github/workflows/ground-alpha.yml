@@ -1,0 +1,56 @@
+name: Ground Alpha Repair
+on:
+  push:
+    branches: [fix/ground-alpha-20261015]
+    paths: ['.github/workflows/ground-alpha.yml', 'tools/ground_alpha/**', 'scripts/ui/ground_alpha.gd', 'tests/ground_alpha_test.gd']
+permissions:
+  contents: read
+concurrency:
+  group: ground-alpha-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  alpha:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Inspect actual image alpha, not just the transparent canvas corner
+        run: |
+          python3 -m pip install Pillow==12.3.0
+          mkdir -p /tmp/ground-alpha
+          python3 - <<'PY'
+          import json,pathlib,collections,zipfile
+          from PIL import Image,ImageDraw
+          out=pathlib.Path('/tmp/ground-alpha'); rows=[]
+          manifest=json.loads(pathlib.Path('data/ground_item_icons.json').read_text())
+          paths={v['path'].removeprefix('res://') for v in manifest['categories'].values()}
+          for folder in ['assets/l1j/verified/ground','assets/original_items/ground']:
+              paths.update(str(p) for p in pathlib.Path(folder).glob('*.png'))
+          for name in sorted(paths):
+              image=Image.open(name).convert('RGBA');w,h=image.size;pixels=list(image.getdata())
+              bbox=image.getchannel('A').getbbox();solid=sum(p[3]>0 for p in pixels)
+              border=[image.getpixel((x,y)) for x,y in ([(x,0) for x in range(w)]+[(x,h-1) for x in range(w)]+[(0,y) for y in range(h)]+[(w-1,y) for y in range(h)])]
+              white=sum(p[3]>0 and min(p[:3])>=245 for p in pixels)
+              row={'path':name,'size':[w,h],'alpha_pixels':solid,'white_pixels':white,'opaque_border':sum(p[3]>0 for p in border),'bbox':bbox,'colors':collections.Counter(p for p in pixels if p[3]>0).most_common(4)}
+              rows.append(row);print(json.dumps(row),flush=True)
+          (out/'alpha-inspection.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2))
+          cols=8; cell=112;sheet=Image.new('RGB',(cols*cell,((len(rows)+cols-1)//cols)*cell),(50,65,70));draw=ImageDraw.Draw(sheet)
+          for i,row in enumerate(rows):
+              x=i%cols*cell;y=i//cols*cell;im=Image.open(row['path']).convert('RGBA');im.thumbnail((88,88),Image.Resampling.NEAREST)
+              sheet.paste(im,(x+12,y+6),im);draw.text((x+2,y+94),pathlib.Path(row['path']).stem[:17],fill='white')
+          sheet.save(out/'all-floor-icons-before.png')
+          with zipfile.ZipFile(out/'floor-inputs.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in sorted(paths):z.write(name,name)
+              for entry in manifest['categories'].values():
+                  name=entry['source_path'].removeprefix('res://')
+                  if name not in paths:z.write(name,name);paths.add(name)
+              z.write('data/ground_item_icons.json')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ground-alpha-inspection
+          path: /tmp/ground-alpha/
+          retention-days: 7
+          if-no-files-found: error
