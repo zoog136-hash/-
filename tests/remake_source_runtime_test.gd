@@ -42,9 +42,15 @@ func combat(id: String) -> void:
 	world._update_hud()
 	var cell: Vector2i = field.world_to_cell(boss.global_position)
 	var landing: Vector2 = Vector2.INF
-	for direction: Vector2i in field.DIRECTIONS:
-		var p: Vector2 = field.cell_to_world(cell+direction)
-		if field.remake_region_contains(str(slot.region.id),p) and field.point_clear(p) and not field.is_safe(p) and field.line_clear(p,boss.global_position): landing=p;break
+	var preferred: float=maxf(26,minf(boss.current_attack_range()*.65,float(boss.ai.get("retreat_distance",0))+56))
+	var error: float=INF
+	for dy: int in range(-12,13):
+		for dx: int in range(-12,13):
+			var p: Vector2=field.cell_to_world(cell+Vector2i(dx,dy))
+			var distance: float=p.distance_to(boss.global_position)
+			if distance<20 or distance>boss.current_attack_range(): continue
+			if not field.remake_region_contains(str(slot.region.id),p) or not field.point_clear(p) or field.is_safe(p) or not field.line_clear(p,boss.global_position): continue
+			if absf(distance-preferred)<error: landing=p;error=absf(distance-preferred)
 	check(landing.is_finite(),id+" boss combat approach")
 	if not landing.is_finite(): return
 	check(not field.path(world.player.global_position,landing).is_empty(),id+" boss reachable from entry")
@@ -58,6 +64,12 @@ func combat(id: String) -> void:
 	var player_before: int = world.hp
 	var boss_attacks: Array = [0]
 	boss.player_hit.connect(func(_who: TwilightMonster,_damage: int,_kind: String) -> void: boss_attacks[0]+=1)
+	# Observe the ranged boss inside its real attack range before AUTO pursuit
+	# can repeatedly drive it into retreat. Preserve actual marker/damage checks.
+	world.selected_monster=null;world.auto_target=null;world.player.set_auto_enabled(false)
+	for observation: int in range(600):
+		await frames(1)
+		if boss_attacks[0]>0 and world.hp<player_before: break
 	world.selected_monster=boss
 	world.auto_target=boss
 	world.player.set_auto_enabled(true)
@@ -86,7 +98,7 @@ func combat(id: String) -> void:
 	await shot(id+"-boss-combat")
 	combat_reports.append({"map":id,"boss":boss.monster_name,"boss_hp_before":hp_before,"boss_hp_after":boss.hp,
 		"player_hp_before":player_before,"player_hp_after":world.hp,"boss_attack_markers":boss_attacks[0],
-		"boss_attack_observation":"NORMAL_AUTO_PURSUIT_THEN_STATIONARY_PLAYER",
+		"boss_attack_observation":"STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK",
 		"arena_arrival":"QA_TELEPORT_AFTER_PATH_CHECK","attack":"NORMAL_GAMEPLAY_MARKERS",
 		"lifecycle_test":"DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY"})
 	boss.set_physics_process(false)
