@@ -1,3 +1,7 @@
+## 2026-10-15 · 피쉬맨 사망 반복누락 HOLD
+
+**완료374/498·잔여124·개별Main103, 신규완료0**. 피쉬맨은사망시트2회모두24필요중20포즈만생성되어제작중단/HOLD한다. 승인4/5동작80포즈및양쪽불합격원본PNG/정확prompt/geometry를[체크포인트](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json)에보존했다. partial-runtime연결·누락복제·방향추정배정·Main시험없음. 향후재개하더라도실제발anchor와전체104자세승인이먼저필요하다. 피격/APK증거commit `ebc6eeb436c738cca1e1c02a84844f919ce26914` push/원격일치확인. 다음은온전한원본전신을가진새후보를검토한다.
+
 ## 2026-10-15 · Android 통과 / 피쉬맨 피격 WIP 보존
 
 완료 **374/498·잔여124·개별Main103 유지**. 피쉬맨은4/5동작80실포즈 정적검토통과, 사망1차는24필요중20만생성되어거절/ZIP보존했다. **미연결·Main미실행·신규완료0**. 마지막사망재시도와실제발anchor검토후에만Main으로진행한다. 공격S창끝을ground로쓰지않도록per-pose발기준점을검토한다. [WIP](evidence/pr100-direction-fix/original-based/batch22-preflight/fishman-wip/checkpoint.json). 공격보존 `baf264c0ed09139f2dc437b7093167e42d44be03` push·원격일치확인.

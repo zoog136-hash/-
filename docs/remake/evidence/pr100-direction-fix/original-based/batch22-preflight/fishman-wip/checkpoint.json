@@ -1,5 +1,5 @@
 {
-  "status": "WIP unlinked, not completed",
+  "status": "HOLD: death twice20/24;80 approved partial poses unlinked",
   "target": "monster:알비노 피쉬맨",
   "roles_passed": [
     "idle",
@@ -147,5 +147,14 @@
     "sha256": "23a697a02926d70ea4a52e2ba8e4f9646566f83a85e28c3fbfac138d38438cde",
     "crc_ok": true,
     "reason": "Only20 of24 required bodies; no duplicate frames or guessed mapping accepted."
-  }
+  },
+  "authoring_stopped": true,
+  "death_second_rejected_archive": {
+    "path": "death-v2-rejected.zip",
+    "bytes": 2654215,
+    "sha256": "5c2f5199bb42c1079ddacc422f886dd69f976ef5f011dbda23106e1e51659255",
+    "crc_ok": true,
+    "reason": "Second authoring again20/24; no copy/predicted missing poses allowed."
+  },
+  "source_anchors_status": "Actual per-pose foot anchors still require review before any future import; southern attack spear tip must not be ground anchor."
 }
