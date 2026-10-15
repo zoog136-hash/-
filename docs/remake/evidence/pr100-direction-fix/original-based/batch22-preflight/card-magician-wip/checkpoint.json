@@ -1,6 +1,6 @@
 {
   "target": "transform:360",
-  "status": "WIP rotation-only, unlinked, not completed",
+  "status": "HOLD: walk twice lacks leg alternation; second has NE/NW direction/hand changes",
   "roles_passed": [
     "idle"
   ],
@@ -77,7 +77,7 @@
       "sha256": "47a0677fc1a22714bd2b4013ab7cc0526b43dd98233d3309ce6a65ae568bd5f6"
     }
   ],
-  "independent_review": "PASS_GUIDE8 and PASS_STATIC_IDLE_ONLY16. E nose/boots point right and torso twist differs from SE; later gait/attack axes still require own review.",
+  "independent_review": "HOLD confirmed: S stride alternation passes; E/W obscured/not proven, NE phase2 wrong facing, NW/N phase2 handedness changed. Rotation8+idle16 only approved; no104 recipe/import/Main.",
   "canvas_note": "Idle reviewed virtual canvas640; pixels unchanged. Later sheets must preserve proportional scale and anatomical foot anchors.",
   "walk_rejected_archive": {
     "path": "walk-v1-rejected.zip",
@@ -85,5 +85,31 @@
     "sha256": "19b492ea36e886cf008c16e0dfbedc0be8e0a28d446f7ab14c647bba0a2bb01b",
     "crc_ok": true,
     "reason": "Unique24 frames but phase0/2 same leading leg; no actual opposite leg alternation."
-  }
+  },
+  "authoring_stopped": true,
+  "walk_second_rejected_archive": {
+    "path": "walk-v2-rejected.zip",
+    "bytes": 2189990,
+    "sha256": "ee363e9d3da7ac08b6065703f50da9fece8a82c5c41647b0175a40f0c3c4c265",
+    "crc_ok": true,
+    "reason": "Historical author report retained. Corrected independent review recognizes S gait; definite failure is NE facing and NW/N card handedness. See correction records."
+  },
+  "hold_supporting_records": [
+    {
+      "path": "authoring-hold-report.json",
+      "bytes": 6135,
+      "sha256": "aa8b536079a89902ab5ee1634f56a78d2b8cb5119cbf8469950a4b0b260a53bb"
+    },
+    {
+      "path": "walk-v2.visual-review-corrected.json",
+      "bytes": 4820,
+      "sha256": "12bd755943179a168fee795c886accee3529ec1220f316bba108f02f754dfd1f"
+    },
+    {
+      "path": "independent-walk2-correction.json",
+      "bytes": 3330,
+      "sha256": "eb615907aa3e34efd31429a3b9e66f2a460298e05c7287ec2cf324434de45329"
+    }
+  ],
+  "hold_record_note": "Original rejected archive records remain unchanged; corrected visual and independent report are separate files. Absolute external paths are historical and recover by recorded SHA."
 }

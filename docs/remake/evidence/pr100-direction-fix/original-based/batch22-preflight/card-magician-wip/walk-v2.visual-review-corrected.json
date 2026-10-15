@@ -1,0 +1,175 @@
+{
+  "role": "walk",
+  "status": "FAIL_MOTION_AND_DIRECTION_REVIEW",
+  "geometry_pass": true,
+  "actual_pose_count": 24,
+  "distinct_rgba_crops": 24,
+  "canvas_size": [
+    640,
+    640
+  ],
+  "source_claim": "Newly authored motion from catalog portrait, not verified original motion",
+  "notes": [
+    "Phase0/phase2 E/S/W still do not clearly alternate anatomical leading/support leg; high-knee pose appears to repeat same lead leg. Unique pixels alone do not establish opposite stride.",
+    "Phase2 NE (frame23) visibly shows front-right face/vest rather than NE rear-three-quarter view.",
+    "Phase2 NW/N card-hand silhouette flips to opposite screen side versus same facing in earlier phases; same-hand equipment identity is not preserved."
+  ],
+  "direction_failure_evidence": [
+    {
+      "phase": 0,
+      "direction": "NW",
+      "global_frame_index": 5,
+      "source_region_xywh": [
+        984,
+        48,
+        138,
+        277
+      ],
+      "rgba_sha256": "13d77f8a766ba0e68340cd2d7b0c55bb7040e79f6401d921bb19913e702f5a81"
+    },
+    {
+      "phase": 0,
+      "direction": "N",
+      "global_frame_index": 6,
+      "source_region_xywh": [
+        1177,
+        44,
+        136,
+        284
+      ],
+      "rgba_sha256": "ad08ec4816b1de5b75f1cc78b77a00b53121ace2a299783339ebe9a09177ac89"
+    },
+    {
+      "phase": 0,
+      "direction": "NE",
+      "global_frame_index": 7,
+      "source_region_xywh": [
+        1368,
+        47,
+        145,
+        281
+      ],
+      "rgba_sha256": "33216ce17d709f7465e4eb5ea4d860cc916452eadbbcd24ddeedfd51651f7684"
+    },
+    {
+      "phase": 2,
+      "direction": "NW",
+      "global_frame_index": 21,
+      "source_region_xywh": [
+        981,
+        693,
+        142,
+        282
+      ],
+      "rgba_sha256": "f84ab469849b5e905876edce8eca9d11cfc50a8c9dea82c1020b9e2c1055c4ed"
+    },
+    {
+      "phase": 2,
+      "direction": "N",
+      "global_frame_index": 22,
+      "source_region_xywh": [
+        1170,
+        690,
+        139,
+        284
+      ],
+      "rgba_sha256": "9b35fee8e8c643255c234c891c88779e4a7d5dd510505b5a1ab82ef883e67d5e"
+    },
+    {
+      "phase": 2,
+      "direction": "NE",
+      "global_frame_index": 23,
+      "source_region_xywh": [
+        1362,
+        692,
+        131,
+        279
+      ],
+      "rgba_sha256": "3bde328ff827a1541934c4a1a086e74025261713a0013454e5ab822ddd71d11e"
+    }
+  ],
+  "stride_comparison": [
+    {
+      "phase": 0,
+      "direction": "E",
+      "global_frame_index": 0,
+      "source_region_xywh": [
+        30,
+        47,
+        152,
+        276
+      ],
+      "rgba_sha256": "87d466ca162361fefb965db049ef06b87081e5b61196ab72e2023fe11af65c10"
+    },
+    {
+      "phase": 2,
+      "direction": "E",
+      "global_frame_index": 16,
+      "source_region_xywh": [
+        30,
+        696,
+        147,
+        277
+      ],
+      "rgba_sha256": "665fcf9faea51f87fd08fae044f797563016d55abae891bdcf7aa19dd75e4b9c"
+    },
+    {
+      "phase": 0,
+      "direction": "S",
+      "global_frame_index": 2,
+      "source_region_xywh": [
+        421,
+        45,
+        129,
+        285
+      ],
+      "rgba_sha256": "b9de02b360a14203ff0d68c6910fb8edc156dfd5e1c81040437bf16e571d7cf8"
+    },
+    {
+      "phase": 2,
+      "direction": "S",
+      "global_frame_index": 18,
+      "source_region_xywh": [
+        418,
+        692,
+        139,
+        283
+      ],
+      "rgba_sha256": "967ea4a1e7a1693667bea12c924ae735ffd29cae9f60d92ac8e9b8b10a710013"
+    },
+    {
+      "phase": 0,
+      "direction": "W",
+      "global_frame_index": 4,
+      "source_region_xywh": [
+        794,
+        48,
+        133,
+        279
+      ],
+      "rgba_sha256": "3e6a9431771b6f58534a00dc0b1e083b0f8b24af56c6b59e56e7070bf2c6bac1"
+    },
+    {
+      "phase": 2,
+      "direction": "W",
+      "global_frame_index": 20,
+      "source_region_xywh": [
+        796,
+        692,
+        134,
+        282
+      ],
+      "rgba_sha256": "9f20fb98dd911458fb7f9997689ed3e89df24b8365626e1b0c6f108f02cecda5"
+    }
+  ],
+  "approved_for_runtime": false,
+  "completion_increment": 0,
+  "independent_review_correction": {
+    "source": "Independent pipeline_audit review, confirmed by root",
+    "historical_diagnosis_preserved": true,
+    "S_leg_alternation": "CORRECTED: Sphase0 lifts viewer-right leg and supports viewer-left; Sphase2 lifts viewer-left and supports viewer-right, so S does show actual opposite-leg alternation. The initial blanket E/S/W same-leg claim is withdrawn forS.",
+    "E_W_leg_alternation": "Limited to unresolved near/far-leg proof in side views, not a confirmed same-leg defect.",
+    "HOLD_basis_unchanged": "Confirmed phase2 NE front-right instead of rear3/4, plus NW/N card-hand side reversal.",
+    "evidence": "/workspace/twilight-run/recovery/remote-three-contact/card-magician-walk-v2-S-stride-detail.jpg"
+  }
+}

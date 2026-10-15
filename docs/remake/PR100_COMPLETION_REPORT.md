@@ -1,3 +1,9 @@
+## 2026-10-15 · 수정통합재요청 / 다음357작은시험
+
+CIguard수정 **`031d747d34ab0df2e28361b0236e7c4ac79e2f0e` push·원격일치확인**. 새 [통합38731518098](https://github.com/zoog136-hash/-/actions/runs/38731518098) 는해당SHA로queued,성공아님. 기존ce199실패는그대로보존한다. 신규subset임포터WIP는이통합SHA에포함되지않는다.
+
+카드360HOLD자료·수정된독립판정·초기판정을모두보존했다. **S보행교대PASS 인정, NE방향/NW·N카드손FAIL** 을근거로보류한다. [카드최종보존](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json). 다음 [후보357서커스단단장](evidence/pr100-direction-fix/original-based/batch22-preflight/backup-clean-candidates.json)은원본전신/짧은바지/두신발/짧은완드·SHA·중복0확인후회전표와E한방향3phase보행만시험중이다. 328은예비이며제작미진행. **완료374/498·잔여124·개별Main103·신규0 유지**.
+
 ## 2026-10-15 · 통합CI실패 원인수정 / 재검증대기
 
 완료374/498·잔여124·개별Main103 유지. ce199 [통합38722879756](https://github.com/zoog136-hash/-/actions/runs/38722879756)은 **FAIL: 194PASS+3SKIP(비공개맵)+1FAIL** 이다. guard24검사가실패한것이아니라 RESULT에actual `failures`배열이없어상위fail-closed파서가거절했다. guard출력에실제 `failures.duplicate()`를추가했고검사/파서는완화하지않았다. Godot4.7.2실제guard24/실패0,같은상위파서PASS, subprocess runner회귀20/20PASS를[로그/실패원문/원인](evidence/pr100-direction-fix/original-based/recovery-20261015/ci-recovery)에보존한다. **원격통합재실행전으로성공주장없음**. Androidce199성공및runtime범위374는동일.
