@@ -1,0 +1,11 @@
+SHARD_TIMEOUT after 360s
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+REGION FAIL: oman_01 actual world bounds match registered map
+REGION FAIL: oman_01 physics uses every authored blocker
+REGION FAIL: oman_01 gameplay camera scale
+REGION FAIL: oman_01 active-map art cache stays within 5 MiB
+SCRIPT ERROR: Invalid access to property or key 'room_1' on a base object of type 'Dictionary'.
+          at: _run (res://tests/world_regions_test.gd:76)
+          GDScript backtrace (most recent call first):
+              [0] _run (res://tests/world_regions_test.gd:76)
