@@ -1,5 +1,6 @@
 extends Node2D
 class_name TwilightDropVisual
+const FLOOR_ALPHA = preload("res://scripts/ui/ground_alpha.gd")
 
 # Original, procedural canvas art. No externally copied beam assets.
 const GRADES = ["일반", "고급", "희귀", "영웅", "전설", "신화", "유일"]
@@ -17,7 +18,7 @@ static func grade_color(grade: String) -> Color:
 
 func configure(grade: String, icon: Texture2D, kind: String) -> void:
 	rank = maxi(0, GRADES.find(grade))
-	texture = icon
+	texture = FLOOR_ALPHA.texture(icon)
 	slot = kind
 	if is_instance_valid(source_icon):
 		remove_child(source_icon)
