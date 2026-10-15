@@ -1,5 +1,8 @@
 # 같은 브랜치에서 재개하기
 
+**최신 전 맵 확장:** `4dbc58f`까지 코드 푸시. [expansion25/README.md](expansion25/README.md), 맵별 최신 JSON·128 PNG를 확인한다. 25개 모두 공통 리메이크 경로에 연결되며 원작 복원 완료는 0/25다. 새 15개는 A3 서버 격자를 추측하지 않고 기존 폴리곤 좌표를 보존한다. PR100 최신 확인 `07bba22`이며 해당 브랜치/player/monster/animation은 수정하지 않았다. 아덴의 기존 impact_visuals 폴리곤 렌더 오류는 미해결이다. 기존 10층 격자·v2 팩·성공 결과를 다시 만들지 않는다.
+
+
 ## 코드와 원본의 보관 상태
 
 - 저장소: https://github.com/zoog136-hash/-

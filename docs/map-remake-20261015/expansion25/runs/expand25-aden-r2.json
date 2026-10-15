@@ -1,0 +1,100 @@
+{
+  "android": "NOT_RUN",
+  "boss_combat": [
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "드레이크",
+      "boss_hp_after": 432,
+      "boss_hp_before": 520,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "observation": "STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
+      "player_hp_after": 999936,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 4,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "샌드 웜",
+      "boss_hp_after": 3148,
+      "boss_hp_before": 3200,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "observation": "STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
+      "player_hp_after": 999858,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "desert_boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "피닉스",
+      "boss_hp_after": 3507,
+      "boss_hp_before": 3600,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "observation": "STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
+      "player_hp_after": 999845,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "fire_boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "흑장로",
+      "boss_hp_after": 804,
+      "boss_hp_before": 900,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "observation": "STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
+      "player_hp_after": 999980,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 2,
+      "region": "dark_elder_encounter"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "데스나이트",
+      "boss_hp_after": 4002,
+      "boss_hp_before": 4100,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "observation": "STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
+      "player_hp_after": 999831,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "death_knight_encounter"
+    }
+  ],
+  "checks": 2241,
+  "display": "X11",
+  "failures": [],
+  "maps": [
+    {
+      "boss_zones": 5,
+      "collision": {
+        "active_shapes": 192,
+        "collision_unloaded_buckets": 92,
+        "floor_unloaded_chunks": 34,
+        "full_reference_shapes": 4416,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 359,
+      "load_ms": 1664.587,
+      "map": "aden_world",
+      "memory_static_bytes": 399802513,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    }
+  ],
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

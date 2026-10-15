@@ -1,0 +1,596 @@
+{
+  "android": "NOT_RUN",
+  "boss_combat": [],
+  "checks": 1227,
+  "display": "X11",
+  "failures": [],
+  "maps": [],
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+  "services_and_travel": [
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "town_waystone"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "ruin_waystone"
+        },
+        {
+          "actual": "oman_01",
+          "expected": "oman_01",
+          "portal": "oman_gate"
+        }
+      ],
+      "map": "aden_world",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "warden",
+          "service": "guide"
+        },
+        {
+          "actual_section": "npc_shop",
+          "npc": "merchant",
+          "service": "shop"
+        },
+        {
+          "actual_section": "warehouse",
+          "npc": "warehouse_keeper",
+          "service": "warehouse"
+        },
+        {
+          "actual_section": "teleport",
+          "npc": "teleport_guide",
+          "service": "teleport"
+        },
+        {
+          "actual_section": "crafting",
+          "npc": "craft_artisan",
+          "service": "craft"
+        },
+        {
+          "actual_section": "sell",
+          "npc": "buyback_trader",
+          "service": "buyback"
+        },
+        {
+          "actual_section": "npc_shop",
+          "npc": "giran_shop",
+          "service": "shop"
+        },
+        {
+          "actual_section": "warehouse",
+          "npc": "giran_warehouse",
+          "service": "warehouse"
+        },
+        {
+          "actual_section": "teleport",
+          "npc": "giran_teleport",
+          "service": "teleport"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "escaros_05",
+          "expected": "escaros_05",
+          "portal": "previous"
+        },
+        {
+          "actual": "albino_02",
+          "expected": "albino_02",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "albino_01",
+          "expected": "albino_01",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "albino_01",
+          "expected": "albino_01",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "albino_01",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "albino_01",
+          "expected": "albino_01",
+          "portal": "previous"
+        },
+        {
+          "actual": "albino_03",
+          "expected": "albino_03",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "albino_02",
+          "expected": "albino_02",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "albino_02",
+          "expected": "albino_02",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "albino_02",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "albino_02",
+          "expected": "albino_02",
+          "portal": "previous"
+        },
+        {
+          "actual": "albino_04",
+          "expected": "albino_04",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "albino_03",
+          "expected": "albino_03",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "albino_03",
+          "expected": "albino_03",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "albino_03",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "albino_03",
+          "expected": "albino_03",
+          "portal": "previous"
+        },
+        {
+          "actual": "faith_01",
+          "expected": "faith_01",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "albino_04",
+          "expected": "albino_04",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "albino_04",
+          "expected": "albino_04",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "albino_04",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "oman_10",
+          "expected": "oman_10",
+          "portal": "previous"
+        },
+        {
+          "actual": "escaros_01",
+          "expected": "escaros_01",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "domination_summit",
+          "expected": "domination_summit",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "domination_summit",
+          "expected": "domination_summit",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "domination_summit",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "domination_summit",
+          "expected": "domination_summit",
+          "portal": "previous"
+        },
+        {
+          "actual": "escaros_02",
+          "expected": "escaros_02",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "escaros_01",
+          "expected": "escaros_01",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "escaros_01",
+          "expected": "escaros_01",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "escaros_01",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "escaros_01",
+          "expected": "escaros_01",
+          "portal": "previous"
+        },
+        {
+          "actual": "escaros_03",
+          "expected": "escaros_03",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "escaros_02",
+          "expected": "escaros_02",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "escaros_02",
+          "expected": "escaros_02",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "escaros_02",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "escaros_02",
+          "expected": "escaros_02",
+          "portal": "previous"
+        },
+        {
+          "actual": "escaros_04",
+          "expected": "escaros_04",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "escaros_03",
+          "expected": "escaros_03",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "escaros_03",
+          "expected": "escaros_03",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "escaros_03",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "escaros_03",
+          "expected": "escaros_03",
+          "portal": "previous"
+        },
+        {
+          "actual": "escaros_05",
+          "expected": "escaros_05",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "escaros_04",
+          "expected": "escaros_04",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "escaros_04",
+          "expected": "escaros_04",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "escaros_04",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "escaros_04",
+          "expected": "escaros_04",
+          "portal": "previous"
+        },
+        {
+          "actual": "albino_01",
+          "expected": "albino_01",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "escaros_05",
+          "expected": "escaros_05",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "escaros_05",
+          "expected": "escaros_05",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "escaros_05",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "albino_04",
+          "expected": "albino_04",
+          "portal": "previous"
+        },
+        {
+          "actual": "faith_02",
+          "expected": "faith_02",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "faith_01",
+          "expected": "faith_01",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "faith_01",
+          "expected": "faith_01",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "faith_01",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "faith_01",
+          "expected": "faith_01",
+          "portal": "previous"
+        },
+        {
+          "actual": "faith_03",
+          "expected": "faith_03",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "faith_02",
+          "expected": "faith_02",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "faith_02",
+          "expected": "faith_02",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "faith_02",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "faith_02",
+          "expected": "faith_02",
+          "portal": "previous"
+        },
+        {
+          "actual": "faith_04",
+          "expected": "faith_04",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "faith_03",
+          "expected": "faith_03",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "faith_03",
+          "expected": "faith_03",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "faith_03",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    },
+    {
+      "actual_portal_arrivals": [
+        {
+          "actual": "faith_03",
+          "expected": "faith_03",
+          "portal": "previous"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "next"
+        },
+        {
+          "actual": "aden_world",
+          "expected": "aden_world",
+          "portal": "aden_return"
+        },
+        {
+          "actual": "faith_04",
+          "expected": "faith_04",
+          "portal": "advance_waystone"
+        },
+        {
+          "actual": "faith_04",
+          "expected": "faith_04",
+          "portal": "entry_waystone"
+        }
+      ],
+      "map": "faith_04",
+      "npc_services": [
+        {
+          "actual_section": "dialogue",
+          "npc": "guide",
+          "service": "guide"
+        }
+      ]
+    }
+  ]
+}

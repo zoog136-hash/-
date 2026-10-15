@@ -1,0 +1,674 @@
+{
+  "android": "NOT_RUN",
+  "boss_combat": [
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "드레이크",
+      "boss_hp_after": 0,
+      "boss_hp_before": 520,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "player_hp_after": 999925,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 0,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "샌드 웜",
+      "boss_hp_after": 3059,
+      "boss_hp_before": 3200,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "player_hp_after": 999858,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "desert_boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "피닉스",
+      "boss_hp_after": 3483,
+      "boss_hp_before": 3600,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "player_hp_after": 999845,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "fire_boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "흑장로",
+      "boss_hp_after": 712,
+      "boss_hp_before": 900,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "player_hp_after": 999980,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "dark_elder_encounter"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "데스나이트",
+      "boss_hp_after": 3906,
+      "boss_hp_before": 4100,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "aden_world",
+      "player_hp_after": 999831,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "death_knight_encounter"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "알비노 유니콘",
+      "boss_hp_after": 25951,
+      "boss_hp_before": 26000,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "albino_01",
+      "player_hp_after": 999940,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "알비노 피닉스",
+      "boss_hp_after": 25429,
+      "boss_hp_before": 26100,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "albino_02",
+      "player_hp_after": 1000000,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "알비노 데몬",
+      "boss_hp_after": 26252,
+      "boss_hp_before": 26300,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "albino_03",
+      "player_hp_after": 999939,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "그림 리퍼",
+      "boss_hp_after": 7547,
+      "boss_hp_before": 7600,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "domination_summit",
+      "player_hp_after": 999768,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "웨링",
+      "boss_hp_after": 26323,
+      "boss_hp_before": 26400,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "escaros_01",
+      "player_hp_after": 999939,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "듀페리온",
+      "boss_hp_after": 26408,
+      "boss_hp_before": 26500,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "escaros_02",
+      "player_hp_after": 999938,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "욥니르",
+      "boss_hp_after": 26504,
+      "boss_hp_before": 26600,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "escaros_03",
+      "player_hp_after": 999938,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "살라흐",
+      "boss_hp_after": 26650,
+      "boss_hp_before": 26700,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "escaros_04",
+      "player_hp_after": 999938,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "그라디움",
+      "boss_hp_after": 26325,
+      "boss_hp_before": 26800,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "escaros_05",
+      "player_hp_after": 999898,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "교만의 왕자 데우스",
+      "boss_hp_after": 25762,
+      "boss_hp_before": 25900,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "faith_01",
+      "player_hp_after": 999940,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "탐욕의 여왕 벨리엘",
+      "boss_hp_after": 25566,
+      "boss_hp_before": 26100,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "faith_02",
+      "player_hp_after": 999903,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "질투의 공주 이자벨",
+      "boss_hp_after": 26201,
+      "boss_hp_before": 26300,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "faith_03",
+      "player_hp_after": 999939,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    },
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "분노의 주시자 라즈엘",
+      "boss_hp_after": 26200,
+      "boss_hp_before": 26500,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "faith_04",
+      "player_hp_after": 999899,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    }
+  ],
+  "checks": 10831,
+  "display": "X11",
+  "failures": [
+    "aden_world actual boss attack 드레이크",
+    "aden_world existing boss persistence HP boss",
+    "albino_02 actual boss attack 알비노 피닉스"
+  ],
+  "maps": [
+    {
+      "boss_zones": 5,
+      "collision": {
+        "active_shapes": 192,
+        "collision_unloaded_buckets": 92,
+        "floor_unloaded_chunks": 34,
+        "full_reference_shapes": 4416,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 359,
+      "load_ms": 1725.901,
+      "map": "aden_world",
+      "memory_static_bytes": 401339221,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 254,
+        "collision_unloaded_buckets": 42,
+        "floor_unloaded_chunks": 39,
+        "full_reference_shapes": 822,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 344.801,
+      "map": "albino_01",
+      "memory_static_bytes": 306649051,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 269,
+        "collision_unloaded_buckets": 44,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 826,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 215.158,
+      "map": "albino_02",
+      "memory_static_bytes": 306462129,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 258,
+        "collision_unloaded_buckets": 49,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 840,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 187.754,
+      "map": "albino_03",
+      "memory_static_bytes": 307430869,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 0,
+      "collision": {
+        "active_shapes": 250,
+        "collision_unloaded_buckets": 57,
+        "floor_unloaded_chunks": 30,
+        "full_reference_shapes": 844,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 42,
+      "load_ms": 211.685,
+      "map": "albino_04",
+      "memory_static_bytes": 306957133,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 46,
+        "collision_unloaded_buckets": 44,
+        "floor_unloaded_chunks": 28,
+        "full_reference_shapes": 185,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 25,
+      "load_ms": 99.405,
+      "map": "domination_summit",
+      "memory_static_bytes": 295243203,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 182,
+        "collision_unloaded_buckets": 62,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 633,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 33,
+      "load_ms": 168.056,
+      "map": "escaros_01",
+      "memory_static_bytes": 302498631,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 180,
+        "collision_unloaded_buckets": 76,
+        "floor_unloaded_chunks": 42,
+        "full_reference_shapes": 645,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 33,
+      "load_ms": 148.237,
+      "map": "escaros_02",
+      "memory_static_bytes": 306261549,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 166,
+        "collision_unloaded_buckets": 76,
+        "floor_unloaded_chunks": 38,
+        "full_reference_shapes": 629,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 33,
+      "load_ms": 140.936,
+      "map": "escaros_03",
+      "memory_static_bytes": 301867081,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 172,
+        "collision_unloaded_buckets": 60,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 629,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 33,
+      "load_ms": 137.69,
+      "map": "escaros_04",
+      "memory_static_bytes": 302627713,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 186,
+        "collision_unloaded_buckets": 50,
+        "floor_unloaded_chunks": 30,
+        "full_reference_shapes": 596,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 33,
+      "load_ms": 149.057,
+      "map": "escaros_05",
+      "memory_static_bytes": 301854839,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 92,
+        "collision_unloaded_buckets": 44,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 322,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 171.832,
+      "map": "faith_01",
+      "memory_static_bytes": 298794377,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 97,
+        "collision_unloaded_buckets": 46,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 314,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 181.401,
+      "map": "faith_02",
+      "memory_static_bytes": 299050865,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 99,
+        "collision_unloaded_buckets": 44,
+        "floor_unloaded_chunks": 30,
+        "full_reference_shapes": 319,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 148.221,
+      "map": "faith_03",
+      "memory_static_bytes": 298729509,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 95,
+        "collision_unloaded_buckets": 46,
+        "floor_unloaded_chunks": 36,
+        "full_reference_shapes": 327,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 147.014,
+      "map": "faith_04",
+      "memory_static_bytes": 298842931,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 271.772,
+      "map": "oman_01",
+      "memory_static_bytes": 308613297,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 487.032,
+      "map": "oman_02",
+      "memory_static_bytes": 320181729,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 67,
+      "load_ms": 450.965,
+      "map": "oman_03",
+      "memory_static_bytes": 324590833,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 430.406,
+      "map": "oman_04",
+      "memory_static_bytes": 316767086,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 402.673,
+      "map": "oman_05",
+      "memory_static_bytes": 322111798,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 476.494,
+      "map": "oman_06",
+      "memory_static_bytes": 318608118,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 67,
+      "load_ms": 468.547,
+      "map": "oman_07",
+      "memory_static_bytes": 320708230,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 408.013,
+      "map": "oman_08",
+      "memory_static_bytes": 322924230,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 452.611,
+      "map": "oman_09",
+      "memory_static_bytes": 323868722,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    },
+    {
+      "boss_zones": 1,
+      "collision": {
+        "scope": "SOURCE_DETAILED_RESULTS_PRESERVED_IN_OMAN_FINAL_ACCEPTED"
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 67,
+      "load_ms": 493.374,
+      "map": "oman_10",
+      "memory_static_bytes": 325152272,
+      "original_fidelity_complete": false,
+      "source_kind": "A3_PC_GRID",
+      "technical_complete": false
+    }
+  ],
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

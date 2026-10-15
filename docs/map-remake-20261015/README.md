@@ -1,6 +1,6 @@
 # 전체 맵 리메이크 작업 기록 — 2026-10-15
 
-**완료 0/25, 정확한 리니지M 복원 0/25.** 이 변경은 기존 TWILIGHT의 공통 맵 시스템과 오만 10층의 A3 지형/플레이 통합 작업이다. 시각 품질, 원작 판본·기준점, Android 검증이 남아 있어 [PR #119](https://github.com/zoog136-hash/-/pull/119)를 Draft로 유지한다. [비공개 런타임 v2 팩](https://drive.google.com/file/d/1Iwn4v9dJIne1UBrHJAe-jVX6lur7OlGu/view)은 사용자 승인 후 기존 자료 폴더에 업로드했으며 재다운로드 해시·CRC·10층 격자/배치 검증을 통과했다.
+**완료 0/25, 정확한 리니지M 복원 0/25.** 현재 **25/25 맵에 공통 리메이크를 적용**했다. 오만 10층은 독립 A3 격자, 나머지 15개는 기존 지형을 보존하는 자체 맵 어댑터다. [최신 전 맵 확장·실제 화면·남은 실패](expansion25/README.md)를 먼저 확인한다. 아래의 오만 그룹 검증은 이전 성공 증거를 보존한 것이다. 시각 품질, 원작 판본·기준점, Android 검증이 남아 있어 [PR #119](https://github.com/zoog136-hash/-/pull/119)를 Draft로 유지한다. [비공개 런타임 v2 팩](https://drive.google.com/file/d/1Iwn4v9dJIne1UBrHJAe-jVX6lur7OlGu/view)은 사용자 승인 후 기존 자료 폴더에 업로드했으며 재다운로드 해시·CRC·10층 격자/배치 검증을 통과했다.
 
 작업 브랜치: `feature/twilight-map-remake-20261015`. 시작 main `89507a3`, 재확인·반영 main `8cc6dc6`. PR #108 `b9a9db1`을 독립 브랜치에 병합했다. PR #100의 별도 애니메이션 브랜치는 수정하지 않았다. main과 기존 PR은 병합·삭제하지 않았다. 최신 코드·증거 커밋은 이 문서가 속한 브랜치 이력에서 확인한다.
 
@@ -11,11 +11,11 @@
 | 오만 1층 | PR108 재사용 검토, 실제 Main 연결, 독립 A3 101 격자 | 원본 지형 기반 플레이 구현, 아트·배치 provisional |
 | 오만 2–5층 | 각 A3 102–105 격자, 층별 원점, 별도 연결 그래프 | 같은 상태 |
 | 오만 6–10층 | 각 A3 106–110 격자, 별도 연결 그래프 | 같은 상태 |
-| 아덴 | A3 4 격자/헤더 및 616 S32 조사 | 기존 TWILIGHT 배치 유지, 리메이크 미적용 |
-| 지배의 탑 | 12862 후보 조사, 오만 정상 111과 구분 | 판본 미확정, 연결하지 않음 |
-| 에스카로스 5 / 알비노 4 / 신념 4 | 기존 맵·DB 보존, 공개 참고자료 대조 | 원본 대응 불명, 리메이크 미적용 |
+| 아덴 | A3 4 격자/헤더 및 616 S32 조사 | 기존 지형 보존형 청크 바닥·벽·충돌 적용; A3 4 적용은 미완료 |
+| 지배의 탑 | 12862 후보 조사, 오만 정상 111과 구분 | 기존 지형 공통 리메이크 적용; 12862 후보는 연결하지 않음 |
+| 에스카로스 5 / 알비노 4 / 신념 4 | 기존 맵·DB 보존, 공개 참고자료 대조 | 기존 독립 지형 공통 리메이크·지역 프로필 적용; 원본 대응 provisional |
 
-맵별 수치·판본·출현 구역: [`remake_source_mapping.json`](../../data/maps/remake_source_mapping.json). 좌표 보정: [`remake_calibrations.json`](../../data/maps/remake_calibrations.json). 렌더 재질 프로필: [`remake_render_profiles.json`](../../data/maps/remake_render_profiles.json). 미적용 15개 프로필은 사용 설정이나 완료 증거가 아니다.
+맵별 수치·판본·출현 구역: [`remake_source_mapping.json`](../../data/maps/remake_source_mapping.json). 좌표 보정: [`remake_calibrations.json`](../../data/maps/remake_calibrations.json). 렌더 재질 프로필: [`remake_render_profiles.json`](../../data/maps/remake_render_profiles.json). 현재 15개 프로필도 자체 지형 어댑터에 연결되며 원본 지형 복원의 증거는 아니다.
 
 - 기존 `source_field`, `source_coordinates`, `source_renderer`, `field_population`, `BossDirector`, `Main.tscn` 연결을 확장했다. 별도 게임이나 3D 월드를 만들지 않았다.
 - 원본 청크의 압축 해제 결과와 SHA를 검사한 뒤 세계를 교체한다. 손상된 팩으로 기존 맵을 먼저 제거하지 않는다.
@@ -37,7 +37,7 @@ NPC, 일반/폭젠/보스 구역과 포털의 위치는 `provisional`이다. 기
 
 기존 TWILIGHT 바닥 아틀라스를 재사용했다. 오만 1층은 PR108의 자체 제작 균열 석판 PNG를 **재생성 없이 동일 바이트로 재사용**하며, 배치 메시와 전용 2D 셰이더로 표시한다. [아트 해시](../../data/map_remake/art_manifest.json)를 기록했다. 다른 층의 바닥 UV와 조명은 청크 경계를 가로질러 연속이며, 막힌 경계에는 낮은 석축을 표시한다. **실제 벽/철제 난간/절벽/잔해의 의미를 식별하지 못했으므로 이 석축 표현은 최종 아트가 아니다.** 원본 통행 차단만으로 금색 난간이나 반복 기둥을 배치하지 않았다. 현재 결과는 PR108의 구조물 시각 품질 기준을 충족했다고 평가하지 않는다.
 
-캡처의 `full-map`, `placements`, `boss-area`, `same-camera-detail`은 기존 Main을 정지한 **2D 진단 렌더**다. 미적용 15개는 기존 맵 화면이다. 실제 이동·전투 캡처는 별도 `gameplay` 증거이며 테스트 캐릭터의 레벨/HP만 검증용으로 설정했다. 보스는 기존 DB와 AI를 사용했다. 전투 구역까지의 경로를 검사한 뒤 QA 좌표 이동을 사용했으므로 입구부터 보스까지 수동 완주한 영상은 아니다.
+캡처의 `full-map`, `placements`, `boss-area`, `same-camera-detail`은 기존 Main을 정지한 **2D 진단 렌더**다. 이전 `evidence/current-diagnostic`의 15개는 당시 기존 화면이며, 새 화면은 `expansion25/diagnostic`에 있다. 실제 이동·전투 캡처는 별도 `gameplay` 증거이며 테스트 캐릭터의 레벨/HP만 검증용으로 설정했다. 보스는 기존 DB와 AI를 사용했다. 전투 구역까지의 경로를 검사한 뒤 QA 좌표 이동을 사용했으므로 입구부터 보스까지 수동 완주한 영상은 아니다.
 
 전후 확대 비교는 카메라의 **동일 월드 픽셀·줌·뷰포트**를 검증한다. 레이아웃 자체가 바뀌었으므로 같은 원작 지형 기준점의 정합 비교라고 주장하지 않는다. 전체 지도는 축소된 실제 렌더이며, 스트리밍 밖 세부 오브젝트까지 전수 검사했다는 뜻은 아니다.
 
@@ -46,7 +46,7 @@ NPC, 일반/폭젠/보스 구역과 포털의 위치는 `provisional`이다. 기
 - [검증 보고서](TEST_REPORT.md): 수정 전 실패와 이후 재검사를 구분한다. 최종 실제 Main 오만 10층 실행은 **5,951 checks / failures 0**, NPC 10곳, 실제 포털 50개, 보스 10종의 공격·피격/저장/재출현 검사다.
 - [실제 이동·충돌·보스 전투 PNG 30장](evidence/gameplay/runtime.json), [25개 맵의 진단 PNG 100장](evidence/current-diagnostic/captures.json), [동일 카메라 전후 비교 25쌍](evidence/COMPARISON.md), [PR108 샘플의 실제 실행 증거](evidence/pr108-baseline/runtime_results.json).
 - [25개 맵 상태 CSV](MAP_STATUS.csv), [NPC·몬스터·보스·포털 배치 보고서](PLACEMENT_REPORT.json), [성능 원본 측정](evidence/performance/streaming-uncontended.json), [비공개 팩 전달 영수증](PRIVATE_PACK_RECEIPT.json).
-- 실제 Android, 현재 M 기준점 정합, 15개 미적용 맵의 리메이크, 원본 구조물 의미와 아트, 미대응 드롭 등급은 미완료다. 최종 25개 전수 회귀 PASS나 원작 시각 복원 완료로 보고하지 않는다.
+- 실제 Android, 현재 M 기준점 정합, 15개 자체 지형 맵의 원작 대응, 원본 구조물 의미와 아트, 미대응 드롭 등급은 미완료다. 최종 25개 전수 회귀 PASS나 원작 시각 복원 완료로 보고하지 않는다.
 
 ## 재개 순서
 
