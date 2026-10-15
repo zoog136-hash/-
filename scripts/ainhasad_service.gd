@@ -1,14 +1,9 @@
 extends RefCounted
 class_name TwilightAinhasadService
 
-# TWILIGHT offline balance (not an official Lineage M consumption formula).
-# The legacy 42,000 EXP/point caused no visible consumption for ordinary mobs:
-# 894-EXP enemies took 47 kills to spend a single point, and 35-EXP ghosts
-# took 1200 kills. Every rewarded monster now costs at least 1 base point;
-# high-EXP monsters scale by 1000 base EXP per point. Percentage reduction
-# is applied AFTER this base cost, with fractional remainder preserved.
-const EXP_PER_BLESSING_POINT: float = 1000.0
-const MIN_BASE_SPEND_PER_KILL: float = 1.0
+# Lineage M inspired single-player rules. The precise post-rebalance cost per
+# monster EXP is unpublished: keep this ONE tuning constant editable.
+const EXP_PER_BLESSING_POINT: float = 42000.0
 const NATURAL_REGEN_SECONDS: int = 120
 const NATURAL_REGEN_CAP: int = 200
 const MAX_BLESSING: int = 999999
@@ -73,11 +68,10 @@ func protected_drops() -> bool:
 	return blessing > 0 or orb_active()
 
 func consume_for_kill(base_exp: int, reduction_percent: float = 0.0) -> int:
-	if blessing <= 0 or base_exp <= 0:
+	if blessing <= 0:
 		return 0
 	var reduction: float = clampf(reduction_percent, 0.0, 100.0)
-	var base_cost: float = maxf(MIN_BASE_SPEND_PER_KILL, float(base_exp) / EXP_PER_BLESSING_POINT)
-	spend_remainder += base_cost * (1.0 - reduction / 100.0)
+	spend_remainder += float(maxi(0, base_exp)) / EXP_PER_BLESSING_POINT * (1.0 - reduction / 100.0)
 	var spent: int = mini(blessing, int(floor(spend_remainder)))
 	if spent > 0:
 		blessing -= spent
@@ -157,8 +151,6 @@ func snapshot() -> Dictionary:
 	var remaining: int = maxi(0, dragon_orb_expires_at - now)
 	return {
 		"blessing": blessing,
-		"spend_remainder": spend_remainder,
-		"base_exp_per_point": EXP_PER_BLESSING_POINT,
 		"exp_rate": experience_rate(),
 		"adena_rate": adena_rate(),
 		"dragon_orb_active": remaining > 0,
