@@ -1,6 +1,7 @@
 """Guard exact reference identity, lossless import, and reviewed actual poses."""
 import json
 import copy
+import hashlib
 from pathlib import Path
 import shutil
 import sys
@@ -47,6 +48,130 @@ class OriginalBasedImportTest(unittest.TestCase):
     def import_snapshot(self, root):
         return {str(path.relative_to(root)): importer.sha(path) if path.is_file() else None
                 for path in root.rglob("*")}
+
+    def blocks4x2_fixture_pixels(self, phases=3):
+        pixels = np.zeros((phases * 128, 256, 4), dtype=np.uint8)
+        for phase in range(phases):
+            for direction in range(8):
+                x, y = direction % 4 * 64, (phase * 2 + direction // 4) * 64
+                pixels[y + 20:y + 44, x + 20:x + 36] = [10 + phase * 8 + direction, 100, 160, 255]
+        return pixels
+
+    def repack_synthetic_candidate_as_blocks4x2(self, candidate):
+        # Test-only repacking of colored rectangles, never production art.
+        for spec in candidate["sheets"]:
+            path = Path(spec["output_path"])
+            with Image.open(path) as source:
+                packed = Image.new("RGBA", (256, spec["rows"] * 128))
+                for phase in range(spec["rows"]):
+                    for direction in range(8):
+                        cell = source.crop((direction * 64, phase * 64, (direction + 1) * 64, (phase + 1) * 64))
+                        packed.paste(cell, (direction % 4 * 64, (phase * 2 + direction // 4) * 64))
+                packed.save(path)
+            spec["directions_axis"] = "blocks4x2"
+
+    def test_blocks4x2_normalizes_logical_phases_directions_and_foot_without_rewriting(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "synthetic-blocks.png"
+            pixels = self.blocks4x2_fixture_pixels()
+            Image.fromarray(pixels).save(path)
+            before = importer.sha(path)
+            geometry = importer.analyze(path, 3, directions_axis="blocks4x2")
+            importer.require_complete_pose_regions(path, geometry)
+            self.assertEqual(geometry["distinct_pixel_frames"], 24)
+            anchors = []
+            for phase in range(3):
+                for direction in range(8):
+                    frame = geometry["frames"][phase * 8 + direction]
+                    x, y = direction % 4 * 64, (phase * 2 + direction // 4) * 64
+                    self.assertEqual((frame["row"], frame["direction"]), (phase, importer.DIRECTIONS[direction]))
+                    self.assertEqual(frame["region"], [x + 17, y + 17, 22, 30])
+                    self.assertEqual(frame["source_anchor"], [x + 32, y + 43])
+                    self.assertEqual(frame["rgba_sha256"], hashlib.sha256(pixels[y + 17:y + 47, x + 17:x + 39].tobytes()).hexdigest())
+                    self.assertEqual([frame["margin"][0] + frame["source_anchor"][0] - frame["region"][0],
+                                      frame["margin"][1] + frame["source_anchor"][1] - frame["region"][1]], geometry["foot"])
+                    anchors.append([x + 29, y + 42])
+            reviewed = importer.analyze(path, 3, directions_axis="blocks4x2", source_anchors=anchors)
+            self.assertEqual([frame["source_anchor"] for frame in reviewed["frames"]], anchors)
+            self.assertEqual(importer.sha(path), before)
+
+    def test_blocks4x2_rejects_duplicate_cells_repeated_poses_and_unsafe_crops(self):
+        for problem, message in [("cell_collision", "Each blocks4x2 cell"),
+                                 ("repeated_pose", "repeated still"),
+                                 ("foreign_crop", "rectangle includes another body"),
+                                 ("boundary", "image boundary"),
+                                 ("detached_piece", "16 visible pixels outside pose regions")]:
+            with self.subTest(problem=problem), tempfile.TemporaryDirectory() as temporary:
+                pixels = self.blocks4x2_fixture_pixels()
+                if problem == "cell_collision":
+                    pixels[20:44, 44:60] = pixels[20:44, 84:100]
+                    pixels[20:44, 84:100] = 0
+                elif problem == "repeated_pose":
+                    pixels[20:44, 84:100] = pixels[20:44, 20:36]
+                elif problem == "foreign_crop":
+                    pixels[20:44, :128] = 0
+                    pixels[20:44, 12:63] = [10, 100, 160, 255]
+                    pixels[20:44, 64:112] = [11, 100, 160, 255]
+                elif problem == "boundary":
+                    pixels[0, 30] = [220, 100, 160, 255]
+                else:
+                    pixels[52:56, 52:56] = [220, 100, 160, 255]
+                path = Path(temporary) / "unsafe-blocks.png"
+                Image.fromarray(pixels).save(path)
+                before = importer.sha(path)
+                with self.assertRaisesRegex(ValueError, message):
+                    importer.require_complete_pose_regions(path, importer.analyze(path, 3, directions_axis="blocks4x2"))
+                self.assertEqual(importer.sha(path), before)
+
+    def test_blocks4x2_import_retains_source_bytes_provenance_and_audited_runtime_tracks(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            self.repack_synthetic_candidate_as_blocks4x2(candidate)
+            original_hashes = [importer.sha(Path(spec["output_path"])) for spec in candidate["sheets"]]
+            result = importer.import_sheet(root, candidate, "fixture", keys, True)
+            proof = json.loads((output / "provenance.json").read_text())
+            self.assertEqual(result["poses"], 104)
+            self.assertEqual(proof["directions"], importer.DIRECTIONS)
+            for index, digest in enumerate(original_hashes):
+                self.assertEqual(importer.sha(output / f"poses-{index}.png"), digest)
+                self.assertEqual(importer.sha(Path(candidate["sheets"][index]["output_path"])), digest)
+            for role, track in proof["tracks"].items():
+                self.assertEqual(track["atlas_files"][0]["directions_axis"], "blocks4x2", role)
+            tracked = {str(path.relative_to(root)) for path in root.rglob("*") if path.is_file()}
+            resource = "res://" + str((output / "SpriteFrames.tres").relative_to(root))
+            audited = audit.audit_resource(root, resource, tracked)
+            self.assertEqual(audited["pixel_integrity"], "verified", audited["errors"])
+            self.assertEqual(len(audited["tracks"]), 40)
+            before = self.import_snapshot(root)
+            self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True), result)
+            self.assertEqual(self.import_snapshot(root), before)
+
+    def test_legacy_column_and_row_geometry_and_resources_remain_byte_identical(self):
+        for actor in ("werewolf", "spear_guard_green"):
+            with self.subTest(actor=actor):
+                folder = ROOT / "assets/actors/eight_direction/original_based" / actor
+                proof = json.loads((folder / "provenance.json").read_text())
+                atlas_paths = list(dict.fromkeys(atlas["path"] for track in proof["tracks"].values() for atlas in track["atlas_files"]))
+                atlases = {atlas["path"]: atlas for track in proof["tracks"].values() for atlas in track["atlas_files"]}
+                frames, offsets = [], []
+                for index, path in enumerate(atlas_paths):
+                    committed = [frame for frame in proof["frames"] if frame.get("sheet", 0) == index]
+                    atlas = atlases[path]
+                    geometry = importer.analyze(ROOT / path.removeprefix("res://"), len(committed) // 8,
+                                                directions_axis=atlas.get("directions_axis", "columns"),
+                                                canvas_size=atlas.get("canvas_size", [256, 256])[0], source_anchors=[frame["source_anchor"] for frame in committed])
+                    offsets.append(len(frames))
+                    for frame in geometry["frames"]:
+                        if len(atlas_paths) > 1:
+                            frame["sheet"] = index
+                    frames.extend(geometry["frames"])
+                self.assertEqual(frames, proof["frames"], "All legacy crop, pixel hash, phase, direction and foot metadata must remain identical")
+                roles = {}
+                for role, track in proof["tracks"].items():
+                    sheet_index = atlas_paths.index(track["atlas_files"][0]["path"])
+                    roles[role] = [[offsets[sheet_index] + row * 8 + direction for row in track["source_rows"]] for direction in range(8)]
+                self.assertEqual(importer.spriteframes(atlas_paths, {"frames": frames}, roles).encode(), (folder / "SpriteFrames.tres").read_bytes())
 
     def test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet(self):
         with tempfile.TemporaryDirectory() as temporary:

@@ -1,0 +1,326 @@
+{
+  "target_key": "monster:말하는 섬 들개",
+  "batch": "proposed-pr100-batch22-risk-trial",
+  "status": "HOLD_AFTER_TWO_ROLE_ATLAS_FAILURES",
+  "source_claim": "Generated artwork based on existing TWILIGHT project atlas, not recovered original game art or animation",
+  "source_unchanged": true,
+  "source_reference_proof": "/workspace/twilight-artwork/batch22/dog/reference-proof.json",
+  "turntable_v2": "Eight-view identity/whole-body review passed; this is only a reference guide and does not count as completed animation",
+  "role_atlas_attempts": [
+    {
+      "file": "idle-v1.png",
+      "sha256": "58c968caba8e1e79c0154d5aca4e2d44110d3f0261007a8a76934cf13a13f8ba",
+      "large_body_count": 16,
+      "failing_pose_rectangles": [
+        {
+          "direction": "E",
+          "phase": 0,
+          "expanded_crop_xywh": [
+            189,
+            4,
+            259,
+            210
+          ],
+          "foreign_large_labels": [
+            3
+          ]
+        },
+        {
+          "direction": "E",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            603,
+            6,
+            247,
+            208
+          ],
+          "foreign_large_labels": [
+            4
+          ]
+        },
+        {
+          "direction": "SE",
+          "phase": 0,
+          "expanded_crop_xywh": [
+            209,
+            193,
+            198,
+            212
+          ],
+          "foreign_large_labels": [
+            1,
+            5
+          ]
+        },
+        {
+          "direction": "SE",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            616,
+            194,
+            209,
+            214
+          ],
+          "foreign_large_labels": [
+            2,
+            6
+          ]
+        },
+        {
+          "direction": "S",
+          "phase": 0,
+          "expanded_crop_xywh": [
+            253,
+            380,
+            129,
+            201
+          ],
+          "foreign_large_labels": [
+            3
+          ]
+        },
+        {
+          "direction": "S",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            666,
+            381,
+            128,
+            200
+          ],
+          "foreign_large_labels": [
+            4
+          ]
+        },
+        {
+          "direction": "SW",
+          "phase": 0,
+          "expanded_crop_xywh": [
+            202,
+            573,
+            230,
+            199
+          ],
+          "foreign_large_labels": [
+            5,
+            9
+          ]
+        },
+        {
+          "direction": "SW",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            621,
+            580,
+            230,
+            192
+          ],
+          "foreign_large_labels": [
+            10
+          ]
+        },
+        {
+          "direction": "W",
+          "phase": 0,
+          "expanded_crop_xywh": [
+            172,
+            753,
+            266,
+            183
+          ],
+          "foreign_large_labels": [
+            7,
+            11
+          ]
+        },
+        {
+          "direction": "W",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            580,
+            758,
+            269,
+            179
+          ],
+          "foreign_large_labels": [
+            8,
+            12
+          ]
+        },
+        {
+          "direction": "NW",
+          "phase": 0,
+          "expanded_crop_xywh": [
+            222,
+            930,
+            196,
+            213
+          ],
+          "foreign_large_labels": [
+            9
+          ]
+        },
+        {
+          "direction": "NW",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            634,
+            930,
+            199,
+            213
+          ],
+          "foreign_large_labels": [
+            10
+          ]
+        },
+        {
+          "direction": "NE",
+          "phase": 0,
+          "expanded_crop_xywh": [
+            206,
+            1309,
+            257,
+            214
+          ],
+          "foreign_large_labels": [
+            13
+          ]
+        },
+        {
+          "direction": "NE",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            615,
+            1318,
+            254,
+            205
+          ],
+          "foreign_large_labels": [
+            14
+          ]
+        }
+      ],
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    },
+    {
+      "file": "idle-v2.png",
+      "sha256": "3fc40d9a82acb82b038d0c9de4c75a4b32e4784b3b16204d630f64c2fe392fa5",
+      "large_body_count": 16,
+      "failing_pose_rectangles": [
+        {
+          "direction": "W",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            564,
+            780,
+            230,
+            165
+          ],
+          "foreign_large_labels": [
+            13
+          ]
+        },
+        {
+          "direction": "NW",
+          "phase": 1,
+          "expanded_crop_xywh": [
+            598,
+            940,
+            164,
+            192
+          ],
+          "foreign_large_labels": [
+            11
+          ]
+        }
+      ],
+      "reason": "A pose rectangle includes another body; cannot safely crop"
+    }
+  ],
+  "repeat_limit_applied": "Stopped after two idle-atlas layouts failed the unchanged importer foreign-body crop guard. No further role generation attempted.",
+  "reviewed_roles_completed": [],
+  "required_roles": [
+    "idle",
+    "walk",
+    "attack",
+    "hit",
+    "death"
+  ],
+  "recipe_status": "No import candidate recipe with approval booleans created because role sheets are incomplete and rejected.",
+  "production_runtime_changes": false,
+  "Main_validation": "NOT_RUN; no eligible role atlas to connect",
+  "completed_count_increment": 0,
+  "files": [
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/authoring-reference.png",
+      "bytes": 62521,
+      "sha256": "f73c240e1db1eaa154073eb87ad5d66cab916a9fe516d2bce2aa09a0e5a5da0d"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/idle-v1.geometry.json",
+      "bytes": 267,
+      "sha256": "a2922492672f64b57b35c07d6905bc827f2a0b3b0be729ed3390ec0734503b92"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/idle-v1.png",
+      "bytes": 1898752,
+      "sha256": "58c968caba8e1e79c0154d5aca4e2d44110d3f0261007a8a76934cf13a13f8ba"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/idle-v1.prompt.txt",
+      "bytes": 2189,
+      "sha256": "89bed21678cbaa13ebdff6a119d1ae03e74f6bd0871fa81b1f2a9265d2b30530"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/idle-v2.geometry.json",
+      "bytes": 267,
+      "sha256": "dedffad1b639990dda94773389d9f3dccea330be735b0d720c2a259761286131"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/idle-v2.png",
+      "bytes": 1680126,
+      "sha256": "3fc40d9a82acb82b038d0c9de4c75a4b32e4784b3b16204d630f64c2fe392fa5"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/idle-v2.prompt.txt",
+      "bytes": 2897,
+      "sha256": "3967d17b187092098399bee519be2ab1fbe483d606b8564e02fe8561acbdf758"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/reference-proof.json",
+      "bytes": 3447,
+      "sha256": "0cb3eec8173ee2da64b298be8f7594af78f8ea3ba83fdf6d026425b31e62be42"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/rotation-v1.png",
+      "bytes": 874813,
+      "sha256": "4cc6f802b3429e5ec0ab39f70d1b148794337f5a79c425e6e2ce6232ef72b3d4"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/rotation-v1.prompt.txt",
+      "bytes": 2085,
+      "sha256": "6aca57511017df3e1701919da602e5f7c816ddcad13bb41f5d00599773a0954a"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/rotation-v1.review.json",
+      "bytes": 367,
+      "sha256": "2f02a226a3d2654fc268afcfc2c55c6f1421be424e62335416ae0841971679c1"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/rotation-v2.png",
+      "bytes": 1972656,
+      "sha256": "891b797d7c44251fef4655869d909c5580fd5cac7b55e4345d627ecacf1b2b65"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/rotation-v2.prompt.txt",
+      "bytes": 2460,
+      "sha256": "ac9b9547c701132b849c19ae4d613965093348adfb606d6ba39a6cf8688033f0"
+    },
+    {
+      "path": "/workspace/twilight-artwork/batch22/dog/rotation-v2.review.json",
+      "bytes": 882,
+      "sha256": "5cbf2eb520e4d3a6a6c1ba8b09f48ae658eff90c749893833884fb59793fd519"
+    }
+  ],
+  "source_sha_at_stop": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8"
+}

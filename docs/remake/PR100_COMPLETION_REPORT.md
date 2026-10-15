@@ -1,3 +1,13 @@
+## 2026-10-15 · Batch22 경량검사 / 제작 파이프라인 체크포인트
+
+완료 수량은 **374/498·잔여124·개별Main103**으로 유지한다. 완료3종 증거 커밋 **`53e17aee7371e0aac6eb6a7ab84ae3ff9681fb39` push 성공**, local/remote 일치 확인.
+
+- 말하는섬들개·검은숲늑대는 각각idle시트2회프레임침범검사실패로 **HOLD/미연결/신규완료0**. 원본·완성애니메이션은 변경하지 않았다. 실패 PNG/프롬프트/정확좌표/SHA를 각 [들개 ZIP](evidence/pr100-direction-fix/original-based/batch22-preflight/dog-held-authoring.json), [늑대 ZIP](evidence/pr100-direction-fix/original-based/batch22-preflight/wolf-held-authoring.json)으로CRC검증해보존한다.
+- 임포터에 **`directions_axis: blocks4x2`**를 추가했다. phase마다4열×2행에 E/SE/S/SW, W/NW/N/NE를 놓고 원본픽셀변경없이기존logical8방향으로읽는다. synthetic5동작104포즈임포트·coverage검증, 중복/셀충돌/침범거절 및 기존columns/rows geometry·SpriteFrames 바이트보존을 포함해 **34/34 통과**. 실제늑대불합격시트는새packing에서도거절된다. 실패를우회한기능이아니다.
+- 다음은 **알비노피쉬맨**의온전한전신/창/그물/발참조가이드로위험시험진행중이다. 이웃게집게조각과본체손실0을구분해기록한다. 거미3종/디어/이구아나/크랩은참조경계에걸친몸체부위가있어성급히생성하지않는다. 현재Batch22승인완료0.
+- ce199의통합CI실행중, 애니메이션·APK는runner대기중이다. 새packing은제작용Python만변경하며완료3종runtime/QA/game data는ce199와같다. 새helper에대해서는별도애니메이션CI를실행한다. **대기/진행을성공으로계산하지않는다**.
+- [파이프라인 검사](evidence/pr100-direction-fix/original-based/batch22-preflight/pipeline-checkpoint.json). 재개시기존HOLD를재연결하지말고최신HEAD/CI상태확인→피쉬맨외형/시트경량검사→승인대상만새fixture→Main headless/OpenGL/드랍·수동습득→체크포인트push로진행한다. source222건SHA불일치0.
+
 ## 2026-10-15 · Batch21 회수 검증 완료 · 374/498
 
 **신규 완료3종: 알비노 악어거북349·악몽의 잭 오 랜턴173·도구리288.** 검증 완료 **374/498 (75.1%)**, 미완료 **124**. 영웅 이상139/180·일반200/258·보스35/60. 개별 실제 Main8방향 증거 **103/498**. 원본 기반 신규3외형/독립동작설계3개/실제 고유자세312개이며, cast 별칭·360개 검사샘플을 고유자세 수에 더하지 않는다.

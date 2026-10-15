@@ -107,11 +107,15 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
     """Return phase-major metadata, rejecting clipped or repeated poses.
 
     rows_count is the number of logical pose phases. A directions_axis="rows"
-    sheet has eight physical rows and rows_count physical columns. Its pixels
-    stay untouched; only the resulting frame indices are normalized.
+    sheet has eight physical rows and rows_count physical columns. A
+    directions_axis="blocks4x2" sheet places E/SE/S/SW in a phase's first
+    physical row and W/NW/N/NE in its second row, using four columns.
+    Pixels stay untouched; only the resulting frame indices are normalized.
     """
-    if directions_axis not in {"columns", "rows"}:
+    if directions_axis not in {"columns", "rows", "blocks4x2"}:
         raise ValueError("Unknown direction axis")
+    if directions_axis == "blocks4x2" and (not isinstance(rows_count, int) or rows_count < 1):
+        raise ValueError("blocks4x2 requires a positive integer number of logical phases")
     if canvas_size is not None and (not isinstance(canvas_size, int) or not 64 <= canvas_size <= 2048):
         raise ValueError("Reviewed canvas size must be an integer from 64 to 2048")
     with Image.open(path) as source:
@@ -135,12 +139,28 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
             raise ValueError(f"Expected exactly {expected} separated poses, found {len(bodies)}; review/re-author, never invent slots")
         # Normalize metadata to phase-major order, without transposing pixels.
         # Some long-weapon atlases put the eight directions in physical rows.
-        bodies.sort(key=lambda item: item["box"][1])
-        columns = rows_count if directions_axis == "rows" else 8
-        physical_rows = [sorted(bodies[start:start + columns], key=lambda item: item["box"][0])
-                         for start in range(0, expected, columns)]
-        rows = [[physical_rows[direction][phase] for direction in range(8)]
-                for phase in range(rows_count)] if directions_axis == "rows" else physical_rows
+        if directions_axis == "blocks4x2":
+            columns = 4
+            physical_rows = [[None] * columns for _ in range(rows_count * 2)]
+            for item in bodies:
+                x1, y1, x2, y2 = item["box"]
+                column = int((x1 + x2) / 2 / source.width * columns)
+                physical_row = int((y1 + y2) / 2 / source.height * len(physical_rows))
+                if physical_rows[physical_row][column] is not None:
+                    raise ValueError("Each blocks4x2 cell must contain exactly one separated pose")
+                physical_rows[physical_row][column] = item
+            if any(item is None for row in physical_rows for item in row):
+                raise ValueError("Each blocks4x2 cell must contain exactly one separated pose")
+            rows = [physical_rows[phase * 2] + physical_rows[phase * 2 + 1]
+                    for phase in range(rows_count)]
+        else:
+            # Keep the established column/row packing byte-for-byte stable.
+            bodies.sort(key=lambda item: item["box"][1])
+            columns = rows_count if directions_axis == "rows" else 8
+            physical_rows = [sorted(bodies[start:start + columns], key=lambda item: item["box"][0])
+                             for start in range(0, expected, columns)]
+            rows = [[physical_rows[direction][phase] for direction in range(8)]
+                    for phase in range(rows_count)] if directions_axis == "rows" else physical_rows
         neutral_rows = reference_rows if reference_rows is not None else [0, 1]
         neutral_height = float(np.median([item["box"][3] - item["box"][1] for index in neutral_rows for item in rows[index]]))
         # Preserve each sheet's actual pixels. Different source resolutions use
@@ -150,6 +170,9 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
             canvas = canvas_size
         foot_x, foot_y = canvas // 2, canvas * 5 // 8
         column_anchors = [round(float(np.median([(rows[row][direction]["box"][0] + rows[row][direction]["box"][2]) / 2 for row in neutral_rows]))) for direction in range(8)] if reference_rows is not None else [round(source.width / 8 * (direction + .5)) for direction in range(8)]
+        if directions_axis == "blocks4x2" and reference_rows is None:
+            column_anchors = [round(source.width / columns * (direction % columns + .5))
+                              for direction in range(8)]
         if source_anchors is not None and len(source_anchors) != expected:
             raise ValueError("Every reviewed pose must have its own source anchor")
         all_hashes = set()
@@ -159,6 +182,8 @@ def analyze(path, rows_count=13, reference_rows=None, reference_height=None,
                 x1, y1, x2, y2 = item["box"]
                 center_x = (x1 + x2) / 2
                 column = row_index if directions_axis == "rows" else direction
+                if directions_axis == "blocks4x2":
+                    column %= 4
                 if abs(center_x / source.width * columns - (column + .5)) > .55:
                     raise ValueError("Pose crossed into a neighbouring direction column")
                 x1, y1 = max(0, x1 - 3), max(0, y1 - 3)
