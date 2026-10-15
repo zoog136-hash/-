@@ -6,6 +6,7 @@ var output: String = "user://map-captures"
 var cameras: Dictionary = {}
 var reports: Dictionary = {}
 var failures: Array[String] = []
+var selected_maps: PackedStringArray = []
 
 func _initialize() -> void: call_deferred("run")
 func frames(n: int) -> void:
@@ -28,6 +29,7 @@ func run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="): output=arg.trim_prefix("--output=")
 		if arg.begins_with("--cameras="): cameras=JSON.parse_string(FileAccess.get_file_as_string(arg.trim_prefix("--cameras="))).maps
+		if arg.begins_with("--maps="): selected_maps=arg.trim_prefix("--maps=").split(",",false)
 	DirAccess.make_dir_recursive_absolute(output)
 	world=load("res://Main.tscn").instantiate();root.add_child(world)
 	await frames(3)
@@ -38,6 +40,7 @@ func run() -> void:
 	world.player.camera.position_smoothing_enabled=false
 	for record: Dictionary in world.maps:
 		var id: String=record.id
+		if not selected_maps.is_empty() and id not in selected_maps: continue
 		world._set_map(id,false)
 		world.field_population.set_process(false)
 		for mob: Node in world.monsters_root.get_children(): mob.set_physics_process(false)
@@ -45,6 +48,7 @@ func run() -> void:
 		if field==null: failures.append(id+" missing field");continue
 		var entry: Vector2=world.player.global_position
 		reports[id]={"remake_topology":field is RemakePlayableField,"images":[],
+			"layout_revision":int(field.data.get("layout_revision",0)),
 			"technical_complete":false,"faithful_complete":false,"diagnostic_only":true,
 			"entry":[entry.x,entry.y],"comparison_alignment":"SAME_CANVAS_PIXELS_NOT_CURRENT_M_CALIBRATION"}
 		world.player.hide();world.hud.hide();world.field_minimap.hide();world.monsters_root.hide()

@@ -7,6 +7,7 @@ var checks: int = 0
 var reports: Array = []
 var output: String = "user://map-remake"
 var combat_reports: Array = []
+var service_reports: Array = []
 
 func _initialize() -> void: call_deferred("run")
 func check(ok: bool,label: String) -> void:
@@ -103,6 +104,29 @@ func combat(id: String) -> void:
 	if is_instance_valid(slot.monster):
 		check(field.remake_region_contains(str(slot.region.id),slot.monster.home_position),id+" boss respawn stays in arena")
 
+func services_and_travel(id: String) -> void:
+	world._set_map(id,false)
+	world.portal_cooldown=1000
+	for npc: Dictionary in world.field_map.data.npc_spawn:
+		world.player.global_position=Vector2(npc.position[0],npc.position[1])
+		world._set_click_destination(world.player.global_position)
+		check(world.hud.active_section=="dialogue",id+" existing guide dialogue opens")
+		world.hud._close_workspace()
+	var portals: Array=world.field_map.data.portal.duplicate(true)
+	var arrivals: Array=[]
+	for portal: Dictionary in portals:
+		world._set_map(id,false)
+		world.player.global_position=Vector2(portal.position[0],portal.position[1])
+		world.player.set_auto_enabled(false)
+		world.portal_cooldown=0
+		# Exercise the production proximity trigger and its deferred transition.
+		world._update_field_triggers()
+		await frames(3)
+		check(world.active_map_id==str(portal.target_map),id+" actual portal trigger "+str(portal.id))
+		check(world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position),id+" destination foot clearance "+str(portal.id))
+		arrivals.append({"portal":portal.id,"expected":portal.target_map,"actual":world.active_map_id})
+	service_reports.append({"map":id,"portals":arrivals,"npc_action":"EXISTING_GUIDE_DIALOGUE"})
+
 func run() -> void:
 	if not REGISTRY.installed("oman_01"):
 		print("REMAKE_SOURCE_RUNTIME_SKIP: private A3 pack absent; no source play claim")
@@ -126,6 +150,7 @@ func run() -> void:
 		if not only.is_empty() and only != id: continue
 		var started: int = Time.get_ticks_usec()
 		world._set_map(id,false)
+		var load_msec: float = (Time.get_ticks_usec()-started)/1000.0
 		await frames(3)
 		world.portal_cooldown = 1000
 		check(world.active_map_id==id and world.field_map is RemakePlayableField,id+" Main entry")
@@ -189,15 +214,17 @@ func run() -> void:
 		await combat(id)
 		field=world.field_map
 		reports.append({"map":id,"checks_cumulative":checks,"entry_and_tests_ms":(Time.get_ticks_usec()-started)/1000.0,
+			"synchronous_map_entry_ms":load_msec,"layout_revision":int(field.data.layout_revision),
 			"physics_blocked_edges":blocked,"physics_open_edges":allowed,"monsters":world.monsters_root.get_child_count(),
 			"draw_chunks":world.field_renderer.chunks.size(),"nav_chunks":field.nav_cache.size(),
 			"max_chunk_build_usec":world.field_renderer.stream_build_usec,"memory_static_bytes":OS.get_static_memory_usage(),
 			"source_hash":field.definition.source_sha256,"edition":"A3_PC_CURRENT_M_UNVERIFIED"})
+		await services_and_travel(id)
 	world._set_map("aden_world",false)
 	await frames(2)
 	check(world.player.get_node("CollisionShape2D").shape is CapsuleShape2D,"legacy foot collider restored")
 	var report: Dictionary = {"checks":checks,"failures":failures,"maps":reports,"display":DisplayServer.get_name(),
-		"renderer":RenderingServer.get_video_adapter_name(),"android":"NOT_RUN","boss_combat":combat_reports}
+		"renderer":RenderingServer.get_video_adapter_name(),"android":"NOT_RUN","boss_combat":combat_reports,"services_and_travel":service_reports}
 	var file := FileAccess.open(output+"/runtime.json",FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t"));file.close()
 	print("REMAKE_RUNTIME_RESULT "+JSON.stringify(report))
