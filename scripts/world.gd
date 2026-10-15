@@ -1585,7 +1585,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, "melee")
 	_deal_successful_player_hit(target, damage, critical)
 	if target.dead:
 		_update_hud()
@@ -1855,7 +1855,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, "melee")
 	_deal_successful_player_hit(target, damage, critical)
 	if target.dead:
 		_update_hud()
@@ -1918,7 +1918,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical_chance: float = _critical_chance(_player_critical_rate("magic"), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, "magic")
 	_deal_successful_player_hit(target, damage, critical)
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
@@ -2014,7 +2014,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
 	_deal_successful_player_hit(target, damage, critical)
@@ -5118,7 +5118,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor * execute_factor)))
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
 			if critical:
-				damage = _critical_damage(damage)
+				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
 			_deal_successful_player_hit(victim, damage, critical)
 			_try_trigger_passives("on_hit", victim)
@@ -6168,6 +6168,20 @@ func _critical_chance(attacker_critical_rate: int, defender_critical_resistance:
 
 func _critical_damage(raw_damage: int) -> int:
 	return maxi(1, int(round(float(raw_damage) * 1.5)))
+
+# Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
+# Keep monster critical hits on _critical_damage so player gear never buffs enemies.
+func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
+	var final_damage: int = _critical_damage(raw_damage)
+	var option_key: String = ""
+	match attack_type:
+		"ranged":
+			option_key = "ranged_critical_damage"
+		"magic":
+			return final_damage
+		_:
+			option_key = "melee_critical_damage"
+	return maxi(1, final_damage + int(round(_equipped_numeric_sum(option_key))))
 
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
