@@ -152,13 +152,30 @@ def placements(legacy,grid,masks,origin,entry,reach):
                 owner[ny,nx]=owner[y,x];queue.append((nx,ny))
     regions=[]
     for i,old in enumerate(old_regions):
-        cells=np.flatnonzero((owner==i)&allowed).astype(int).tolist()
+        region_mask=(owner==i)&allowed
+        radius=float(old.get('spawn_radius',0))
+        center=pixel(seeds[i],w)
+        seed=seeds[i]
+        if radius>0:
+            # Farthest-point seeds often lie at corridor ends. Place a dense
+            # arena at the best existing open patch INSIDE its assigned zone,
+            # retaining the radius/cap and every obstacle/reservation.
+            cy,cx=np.nonzero(region_mask)
+            px=24*(cx+cy+1);py=12*(cy-cx+w)
+            counts=np.array([np.count_nonzero((px-x)**2+(py-y)**2<=radius*radius) for x,y in zip(px,py)])
+            best=int(counts.argmax())
+            seed=(int(cx[best]),int(cy[best]));center=pixel(seed,w)
+            # Dense hotspots retain the actual existing TWILIGHT radius and
+            # population cap. A whole Voronoi province is not a dense spawn.
+            region_mask &= (24*(xx+yy+1)-center[0])**2+(12*(yy-xx+w)-center[1])**2 <= radius*radius
+        cells=np.flatnonzero(region_mask).astype(int).tolist()
         if len(cells)<max(12,int(old['max_count'])*4): raise ValueError('Insufficient unreserved spawn cells '+old['id'])
         points=[pixel((c%w,c//w),w) for c in cells];xs=[p[0] for p in points];ys=[p[1] for p in points]
         record=dict(old)
         for key in ['polygon','patrol_region','encounter_region','spawn_coordinates']:record.pop(key,None)
-        record.update({'rect':[min(xs)-24,min(ys)-12,max(xs)-min(xs)+48,max(ys)-min(ys)+24],
-                       'source_cells':cells,'source_seed':list(seeds[i]),'spawn_radius':0,
+        rectangle=[center[0]-radius,center[1]-radius,radius*2,radius*2] if radius>0 else [min(xs)-24,min(ys)-12,max(xs)-min(xs)+48,max(ys)-min(ys)+24]
+        record.update({'rect':rectangle,
+                       'source_cells':cells,'source_seed':list(seed),'spawn_radius':radius,
                        'placement_status':'provisional_topological_partition',
                        'coordinate_evidence':'A3_connected_cells_with_TWILIGHT_runtime_zones_not_original_spawns'})
         regions.append(record)
@@ -167,8 +184,8 @@ def placements(legacy,grid,masks,origin,entry,reach):
             'placement_status':'provisional','preserved_gameplay_fields':['id','monster_types','weights','mode','boss_id','max_count','respawn_time','roaming_radius','level','variants','spawn_conditions']}
 
 def build(a3:Path,layouts_path:Path,out:Path):
-	# Do not repeatedly unpack/recover the same verified 1000-map archive.
-	# Existing incomplete/changed output is rejected, never silently replaced.
+    # Do not repeatedly unpack/recover the same verified 1000-map archive.
+    # Existing incomplete/changed output is rejected, never silently replaced.
     if out.exists():
         from verify_remake import verify
         report=json.loads((out/'build_report.json').read_text())
@@ -206,7 +223,7 @@ def build(a3:Path,layouts_path:Path,out:Path):
                 'navigation':{'profile':'A3_STATIC_EDGES','chunks':refs_chunks},'corner_policy':'no_corner_cut',
                 'coordinate_mapping':{'basis_x':[24,-12],'basis_y':[24,12],'translation':[0,12*w]},
                 'pack_root':'res://data/map_remake/private','spawn_source':[entry[0]+origin[0],entry[1]+origin[1]],
-                'playable':True,'layout_revision':2026101501,'rules':{},'npc_spawns':[],'monster_spawns':[],
+                'playable':True,'layout_revision':2026101502,'rules':{},'npc_spawns':[],'monster_spawns':[],
                 'portals':[],'getback':[],'doors':[r for r in db['spawnlist_door'] if int(r['mapid'])==mid],
                 'terrain_chunks':[],'remake_gameplay':gameplay,'render_profile':'oman_stone',
                 'edition_status':'A3_PC_TOPOLOGY_CURRENT_M_UNVERIFIED','art_status':'TWILIGHT_AUTHORED_NOT_ORIGINAL',

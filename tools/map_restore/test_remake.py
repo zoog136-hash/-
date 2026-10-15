@@ -37,13 +37,19 @@ class Remake(unittest.TestCase):
         old={'map_id':'oman_01','npc_spawn':[{'id':'guide','role':'shop','position':[5,9]}],
             'portal':[{'id':'home','position':[0,0],'target_map':'aden_world','target_position':[99,99]}],
             'monster_spawn':[{'id':'normal','monster_types':['existing'],'max_count':7,'respawn_time':25,'mode':'normal'},
-                {'id':'boss','boss_id':'existing_id','monster_types':['existing_boss'],'max_count':1,'respawn_time':86400,'mode':'boss'}]}
+                {'id':'boss','boss_id':'existing_id','monster_types':['existing_boss'],'max_count':1,'respawn_time':86400,'mode':'boss'},
+                {'id':'dense','monster_types':['existing'],'max_count':24,'respawn_time':7,'spawn_radius':240,'mode':'dense'}]}
         a=placements(old,grid,masks,[32704,32704],entry,reach)
         self.assertEqual(a,placements(old,grid,masks,[32704,32704],entry,reach))
         self.assertEqual(a['monster_spawn'][1]['respawn_time'],86400)
         self.assertEqual(a['monster_spawn'][1]['boss_id'],'existing_id')
         self.assertTrue(set(a['monster_spawn'][0]['source_cells']).isdisjoint(a['monster_spawn'][1]['source_cells']))
         self.assertEqual(a['npc_spawn'][0]['role'],'shop')
+        region=a['monster_spawn'][2];r=region['rect'];cx,cy=r[0]+r[2]/2,r[1]+r[3]/2
+        from build_remake import pixel
+        for flat in region['source_cells']:
+            px,py=pixel((flat%70,flat//70),70)
+            self.assertLessEqual((px-cx)**2+(py-cy)**2,240**2)
 
 
 if __name__=='__main__': unittest.main()

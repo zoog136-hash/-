@@ -24,12 +24,15 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	backdrop.color = Color("090d10")
 	add_child(backdrop)
 	render_profile = JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/remake_render_profiles.json")).maps.get(str(source.data.map_id),{})
+	reference_profile = render_profile
+	terrain = load("res://assets/maps/reference_expansion_v2/terrain.png")
 	floor_material = ShaderMaterial.new()
 	floor_material.shader = load("res://assets/maps/authored_mainland_v1/terrain.gdshader")
-	floor_material.set_shader_parameter("atlas",load("res://assets/maps/reference_expansion_v2/terrain.png"))
+	floor_material.set_shader_parameter("atlas",terrain)
 	floor_material.set_shader_parameter("atlas_grid",4.0)
 	var slots: Array = render_profile.get("materials",[4,5,4,7])
 	floor_material.set_shader_parameter("material_slots",Vector4(slots[0],slots[1],slots[2],slots[3]))
+	ground_materials["source_floor"] = floor_material
 	refresh_visible()
 
 func refresh_visible() -> void:
