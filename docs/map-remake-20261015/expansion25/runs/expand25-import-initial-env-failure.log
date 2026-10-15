@@ -1,0 +1,47 @@
+Fontconfig error: No writable cache directories
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+ERROR: Could not create directory: '/home/agent/.config/godot'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+ERROR: Could not create editor config directory: /home/agent/.config/godot
+   at: EditorPaths (editor/file_system/editor_paths.cpp:216)
+ERROR: Could not create directory: '/home/agent/.cache/godot'.
+   at: make_dir_recursive (core/io/dir_access.cpp:179)
+ERROR: Could not create editor cache directory: /home/agent/.cache/godot
+   at: EditorPaths (editor/file_system/editor_paths.cpp:237)
+
+Fontconfig error: No writable cache directories
+ERROR: Cannot create file '/home/agent/.cache/godot/editor_doc_cache-4.7.res'.
+   at: save (core/io/resource_format_binary.cpp:2117)
+ERROR: Cannot save editor help cache (/home/agent/.cache/godot/editor_doc_cache-4.7.res).
+   at: _gen_doc_thread (editor/doc/editor_help.cpp:3071)
+Unable to open Android 'build-tools' directory.
+ERROR: Cannot open directory '/home/agent/.config/godot/feature_profiles'.
+   at: _update_profile_list (editor/settings/editor_feature_profile.cpp:392)
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (7 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | AuthoredRemakeField[39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | FieldRenderer[39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | TwilightWorld[39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
+ERROR: Can't save resource to empty path. Provide non-empty path or a Resource with non-empty resource_path.
+   at: save (core/io/resource_saver.cpp:108)
+ERROR: Error saving editor settings to 
+   at: save (editor/settings/editor_settings.cpp:1525)

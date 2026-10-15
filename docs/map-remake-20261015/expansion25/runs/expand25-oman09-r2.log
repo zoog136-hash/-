@@ -1,0 +1,24 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+REMAKE_STAGE oman_09 dead_boss_restore_begin rng_state=83643400467824517
+REMAKE_STAGE oman_09 dead_boss_restore_end rng_state=-5711948035969728222
+REMAKE_STAGE oman_09 boss_respawn_end
+REMAKE_STAGE oman_09 portal_begin previous
+REMAKE_STAGE oman_09 portal_end previous
+REMAKE_STAGE oman_09 portal_begin next
+REMAKE_STAGE oman_09 portal_end next
+REMAKE_STAGE oman_09 portal_begin aden_return
+REMAKE_STAGE oman_09 portal_end aden_return
+REMAKE_STAGE oman_09 portal_begin advance_waystone
+REMAKE_STAGE oman_09 portal_end advance_waystone
+REMAKE_STAGE oman_09 portal_begin entry_waystone
+REMAKE_STAGE oman_09 portal_end entry_waystone
+REMAKE_FLOOR_CHECKED oman_09 checks=829
+REMAKE_STAGE legacy_return_begin
+REMAKE_STAGE legacy_return_set
+REMAKE_STAGE legacy_return_frames
+REMAKE_STAGE report_write
+REMAKE_RUNTIME_RESULT {"android":"NOT_RUN","boss_combat":[{"arena_arrival":"QA_TELEPORT_AFTER_PATH_CHECK","attack":"NORMAL_GAMEPLAY_MARKERS","boss":"불멸의 리치","boss_attack_markers":1,"boss_attack_observation":"STATIONARY_PLAYER_IN_REAL_RANGE_BEFORE_AUTO_ATTACK","boss_hp_after":25452,"boss_hp_before":25500,"lifecycle_test":"DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY","map":"oman_09","player_hp_after":999942,"player_hp_before":1000000}],"checks":830,"display":"X11","failures":[],"maps":[{"checks_cumulative":818,"draw_chunks":16,"edition":"A3_PC_CURRENT_M_UNVERIFIED","entry_and_tests_ms":8198.521,"layout_revision":2026101502,"map":"oman_09","max_chunk_build_usec":248965,"memory_static_bytes":318277182,"monsters":43,"nav_chunks":9,"physics_blocked_edges":20,"physics_open_edges":682,"source_hash":"c01412915550e4c5ca1f2a4616e7612bac6aa1fcd72ef4a525b202127472a5fa","synchronous_map_entry_ms":401.601}],"renderer":"llvmpipe (LLVM 19.1.7, 256 bits)","services_and_travel":[{"map":"oman_09","npc_action":"EXISTING_GUIDE_DIALOGUE","portals":[{"actual":"oman_08","expected":"oman_08","portal":"previous"},{"actual":"oman_10","expected":"oman_10","portal":"next"},{"actual":"aden_world","expected":"aden_world","portal":"aden_return"},{"actual":"oman_09","expected":"oman_09","portal":"advance_waystone"},{"actual":"oman_09","expected":"oman_09","portal":"entry_waystone"}]}]}
