@@ -1,0 +1,63 @@
+{
+	"capture_root": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready-captures",
+	"cases": [
+		{
+			"name": "웨링",
+			"native_phases": 104,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_0.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_0.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 104,
+			"report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready-cases/waring-monster-boss.json",
+			"report_sha256": "cf9f6f7b8b72a369c222c9dbefc7317c11be6b4e59b289aca6399d4f160a8bcc",
+			"roles": 40,
+			"slug": "waring-monster-boss"
+		},
+		{
+			"name": "불신의 댄싱 소드",
+			"native_phases": 104,
+			"reference_binding": {
+				"original": "res://assets/external_l1j/monsters/11319.png",
+				"resolved_portrait": "res://assets/external_l1j/monsters/11319.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 104,
+			"report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready-cases/dancing-sword.json",
+			"report_sha256": "c994fd47f92579c10d183d312fcef69aae116bf15aca3180e1abb39a24a00388",
+			"roles": 40,
+			"slug": "dancing-sword"
+		},
+		{
+			"name": "교만의 레버넌트",
+			"native_phases": 104,
+			"reference_binding": {
+				"identity_limit": "Existing project artwork, not verified external original game art",
+				"original": "res://assets/monsters/original/atlas_0.png",
+				"reference_kind": "existing_project_atlas",
+				"resolved_portrait": "res://assets/monsters/original/atlas_0.png",
+				"synthetic_fixture": false
+			},
+			"rendered_native_phases": 104,
+			"report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready-cases/pride-revenant.json",
+			"report_sha256": "20a04f927666ea3d387eae99b44b1dcf5714ec75383ebd70c698a51bb036925b",
+			"roles": 40,
+			"slug": "pride-revenant"
+		}
+	],
+	"checks": 120762,
+	"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+	"completed_added": 0,
+	"direct_texture_assignment": false,
+	"failures": [],
+	"production_game_or_guard_changes": false,
+	"rendered": true,
+	"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+	"simulation_step_seconds": 0.00833333333333333,
+	"user_directory": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready-data/godot/app_userdata/황혼의 기사 · Offline RPG V20 LINEAGE HUD",
+	"wall_microseconds": 181083322,
+	"wall_time_performance_claim": false
+}

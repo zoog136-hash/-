@@ -1,0 +1,70 @@
+{
+  "status": "PASS_SMOKE_REQUIRES_ROOT_CODE_AND_VISUAL_REVIEW_BEFORE_COMMIT",
+  "validator": "/workspace/twilight/tests/original_based_temporal_main_test.gd",
+  "validator_sha256": "e567f0b0c514eb5185f4c5ea9110cafed1f5f7fb5babfca82f78c5aa93413653",
+  "exact_validated_code_snapshot": "/workspace/scratch/pr100-continuation/temporal-smoke/code-snapshots/validator-ready.gd",
+  "headless_summary": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-ready.gameplay.temporal.json",
+  "headless_cases": "DancingSword, floatingRevenant, magicSeeker;312nativephases",
+  "headless_independent_verification": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-independent-verification.json",
+  "rendered_summary": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready.json",
+  "rendered_summary_sha256": "3d2b139f548bd815c42003bab726582314985baa7c6149da3e7158cdbaa9bd71",
+  "rendered_cases": [
+    {
+      "name": "웨링",
+      "roles": 40,
+      "native_phases": 104,
+      "rendered_unique_native_tokens": 104,
+      "all_controller_steps_logged": 5640,
+      "maximum_canvas_error_native_pixels": 4.31583721365314e-05,
+      "case_report_sha256": "cf9f6f7b8b72a369c222c9dbefc7317c11be6b4e59b289aca6399d4f160a8bcc",
+      "failures": []
+    },
+    {
+      "name": "불신의 댄싱 소드",
+      "roles": 40,
+      "native_phases": 104,
+      "rendered_unique_native_tokens": 104,
+      "all_controller_steps_logged": 5640,
+      "maximum_canvas_error_native_pixels": 2.15791860682657e-05,
+      "case_report_sha256": "c994fd47f92579c10d183d312fcef69aae116bf15aca3180e1abb39a24a00388",
+      "failures": []
+    },
+    {
+      "name": "교만의 레버넌트",
+      "roles": 40,
+      "native_phases": 104,
+      "rendered_unique_native_tokens": 104,
+      "all_controller_steps_logged": 5640,
+      "maximum_canvas_error_native_pixels": 4.31583721365314e-05,
+      "case_report_sha256": "20a04f927666ea3d387eae99b44b1dcf5714ec75383ebd70c698a51bb036925b",
+      "failures": []
+    }
+  ],
+  "rendered_phase_pngs_sha_verified": 312,
+  "original_full_viewport_pngs_sha_verified": 9,
+  "storyboards": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready-contacts",
+  "storyboard_manifest": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-ready-contacts/temporal-contact-manifest.json",
+  "scope": "ActualMainandactualDBactors, productionMotionControllerframe selection. QAclocked120Hzinputs, NOTrealAI/combat/weapondeaths/walltimeperformance. Separateunchangedproductiongameplaytestsremainrequired.",
+  "all_simulation_steps_checked_and_logged": true,
+  "rendered_observations": "Nativeframechanges/start/end; atomicframe_post_drawreadbackandmetadata, nostaleframelabels. 20Hzrichcontrollerrecordsflagdraw_synchronizedfalseifnodraw.",
+  "native_canvas_epsilon": 1.0,
+  "measured_canvas_max_native_pixels": 4.31583721365314e-05,
+  "no_direct_sprite_texture_assignment": true,
+  "production_game_map_existing_guard_changes": false,
+  "new_repo_files": [
+    "tests/original_based_temporal_main_test.gd",
+    "tests/fixtures/pr100_temporal_smoke.json"
+  ],
+  "scratch_helpers": [
+    "helpers/run_temporal_validation.py",
+    "helpers/compose_temporal_contacts.py"
+  ],
+  "rejected_prior_evidence_preserved": [
+    "gl-v1.json",
+    "gl-v2.json",
+    "code-snapshots/version-evidence.json"
+  ],
+  "fresh_xdg_per_execution": true,
+  "committed": false,
+  "completed_added": 0
+}

@@ -1,0 +1,37 @@
+{
+  "basis": "Reconstruct virtual canvas size from actual observed AtlasTexture region+margin and actual observed Sprite2D scale, divided by unchanged production pixel_scale. All inspected source profiles have authored_motion_weight0 andhit_recoil0; no stretch is expected. Actual GDScript float/vector roundoff yields <0.00007nativepixels, so old12pixel tolerance is unnecessary; finalvalidator will use <=1pixel andrecordactualmax.",
+  "cases": [
+    {
+      "name": "\uc6e8\ub9c1",
+      "report": "/workspace/scratch/pr100-continuation/temporal-smoke/gl-v2-cases/waring-monster-boss.json",
+      "authored_motion_weight": 0,
+      "pixel_scale": 1.457859,
+      "max_normalized_canvas_error_pixels": 3.196420534601593e-05,
+      "rich_samples_checked": 945
+    },
+    {
+      "name": "\ubd88\uc2e0\uc758 \ub304\uc2f1 \uc18c\ub4dc",
+      "report": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-final.gameplay.temporal-cases/dancing-sword.json",
+      "authored_motion_weight": 0,
+      "pixel_scale": 0.718163,
+      "max_normalized_canvas_error_pixels": 1.4812282079443005e-05,
+      "rich_samples_checked": 945
+    },
+    {
+      "name": "\uad50\ub9cc\uc758 \ub808\ubc84\ub10c\ud2b8",
+      "report": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-final.gameplay.temporal-cases/pride-revenant.json",
+      "authored_motion_weight": 0,
+      "pixel_scale": 1.011765,
+      "max_normalized_canvas_error_pixels": 2.4807645258959178e-05,
+      "rich_samples_checked": 945
+    },
+    {
+      "name": "\uc2dc\ucee4",
+      "report": "/workspace/scratch/pr100-continuation/temporal-smoke/headless-final.gameplay.temporal-cases/seeker.json",
+      "authored_motion_weight": 0,
+      "pixel_scale": 0.924272,
+      "max_normalized_canvas_error_pixels": 2.365652947580012e-05,
+      "rich_samples_checked": 945
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 extends RefCounted
 
-## Production Main/AI probes for the existing nova, beam and summon patterns.
+## Production Main/AI probes for existing nova, beam, summon and charge patterns.
 ## Positions, player healing and initial cooldowns are explicit QA inputs.
 ## Boss statistics, special definitions, damage and spawning remain unchanged.
 ## The 200-attempt field limit left 16,095/26,700 HP on Salah. Keep the real
@@ -16,6 +16,11 @@ static func exercise(qa: SceneTree, expected_kind: String) -> void:
 	if special.is_empty(): return
 	var center: Vector2 = qa.center
 	var distance: float = 150. if expected_kind == "beam" else 80.
+	# A ranged boss must be outside its original retreat radius so the idle
+	# recovery probe observes recovery rather than a legitimate retreat walk.
+	# Keep the original AI settings and the same-facing idle assertion intact.
+	if boss.attack_type == "magic":
+		distance = maxf(distance, float(boss.ai.get("retreat_distance", 0.)) + 30.)
 	qa.check(qa.route_clear(center, distance), "existing terrain permits all eight special directions")
 	var old_zoom: Vector2 = world.player.camera.zoom
 	var old_camera_position: Vector2 = world.player.camera.position
@@ -64,6 +69,11 @@ static func exercise(qa: SceneTree, expected_kind: String) -> void:
 				qa.check(rig.effect_outline == rig.warning_outline and boss.released_sequence == sequence, label + " same geometry released once at actual marker")
 				break
 		qa.check(warning and effect, label + " real AI completes special")
+		if expected_kind == "charge":
+			var destination: Vector2 = center + aim * distance
+			qa.check(world.field_map.walkable(destination) and world.field_map.point_clear(destination)
+				and world.field_map.line_clear(center, destination), label + " existing terrain permits actual charge destination")
+			qa.check(boss.global_position.is_equal_approx(destination), label + " actual charge reaches warned player position")
 		var spawned: int = 0
 		if expected_kind == "summon":
 			for entry: Dictionary in world.field_population.summons:

@@ -289,8 +289,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26]
+        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26, 27]
         include:
+          - batch: 27
+            script: run_original_based_boss_batch
+            timeout: 1200
           - batch: 21
             config: res://tests/fixtures/pr100_batch21_accepted.json
             script: run_original_based_transform_batch
