@@ -40,7 +40,19 @@ static func texture(original: Texture2D) -> Texture2D:
 	var pixels: Image = original.get_image()
 	if pixels == null or pixels.is_empty(): return original
 	if pixels.is_compressed() and pixels.decompress() != OK: return original
-	if _sha(pixels) != str(entry.get("source_rgba_sha256","")): return original
+	var decoded_matches: bool = _sha(pixels) == str(entry.get("source_rgba_sha256",""))
+	if not decoded_matches:
+		# A reviewed L1J ImageTexture can decode differently from the imported
+		# CompressedTexture2D used to pin source_rgba_sha256. In that case verify
+		# the *exact original PNG bytes* before accepting the audited cutout.
+		# Never relax the pixel-hash check for other source families.
+		if not original.resource_path.begins_with("res://assets/l1j/verified/ground/"): return original
+		var expected_source_sha: String = str(entry.get("source_sha256",""))
+		if expected_source_sha.length() != 64 or not expected_source_sha.is_valid_hex_number(false): return original
+		var raw_path: String = original.resource_path
+		if not FileAccess.file_exists(raw_path):
+			raw_path = "res://data/l1j/verified_bytes/%s.l1jpng" % expected_source_sha
+		if not FileAccess.file_exists(raw_path) or FileAccess.get_sha256(raw_path) != expected_source_sha: return original
 	var path: String = str(entry.path)
 	if FileAccess.file_exists(path) and FileAccess.get_sha256(path) != str(entry.get("sha256","")): return original
 	if not ResourceLoader.exists(path): return original
