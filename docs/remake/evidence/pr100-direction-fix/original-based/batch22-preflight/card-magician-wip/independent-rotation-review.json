@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "target_key": "transform:360",
+  "decision": "PASS_ROTATION_GUIDE_ONLY",
+  "source": {
+    "path": "/workspace/twilight-artwork/batch22/card_magician/rotation-v1.png",
+    "sha256": "e45aaa5bd5dd45a23c7126f0e7d6c103588db157c4426f4ef67b7b02687c88e0",
+    "bytes": 1068096,
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "source_unchanged": true
+  },
+  "geometry": {
+    "distinct_views": 8,
+    "direction_order": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "directions_axis": "columns",
+    "canvas_size": [
+      832,
+      832
+    ],
+    "analysis_call": "analyze(path,1,reference_rows=[0],directions_axis=\"columns\",canvas_size=832)",
+    "opaque_crop_loss_pixels": 0,
+    "visible_image_border_pixels": 0,
+    "guards_relaxed": false,
+    "canvas_note": "A larger explicitly reviewed virtual canvas fits the source pixels. No resampling, alpha edits, clipping or zero-padding relaxation was used."
+  },
+  "visual_review": {
+    "eight_views": "E and W show opposite facial profiles; SE/SW show more frontal chest/face, S is frontal, NW/NE show rear coat occlusion, and N shows the full back with no pasted face. E/SE distinction was checked again in enlarged head/chest crops.",
+    "handedness": "Raised card hand is viewer-right in S and viewer-left in N; the opposite glove stays at the hip/back. Rear coat seams, gold waist closure and shoulder occlusion vary with view rather than merely reflecting the front artwork.",
+    "source_identity": "Tall black top hat with reddish-purple band, purple/gold tailored coat and split tails, dark fitted trousers, pale gloves, held compact white card and two dark boots preserve the low-resolution source silhouette and palette.",
+    "connected_anatomy": "Hat/head/neck, both arms/gloves/card, coat tails, both legs and boots remain connected and uncropped in all8 views.",
+    "transparency": "No broad visible matte/halo. Only13 crop pixels with alpha>25 lie more than3px outside the alpha>100 body; sparse fringe maxalpha47/255.",
+    "new_authoring_inferences": "New pale human facial detail, blue/green jewel/ornament refinements, decorative vest pattern and A/heart card-face markings are newly drawn interpretations. Exact face, glyph, card suit/rank and fine embroidery are unresolved in the108×132 source and are NOT verified original facts."
+  },
+  "exact_pixel_mirror_checks": [
+    {
+      "views": [
+        "E",
+        "W"
+      ],
+      "exact_horizontal_mirror": false
+    },
+    {
+      "views": [
+        "SE",
+        "SW"
+      ],
+      "exact_horizontal_mirror": false
+    },
+    {
+      "views": [
+        "NW",
+        "NE"
+      ],
+      "exact_horizontal_mirror": false
+    }
+  ],
+  "inspection_paths": [
+    "/workspace/twilight-run/recovery/remote-three-contact/card-magician-rotation-independent.jpg",
+    "/workspace/twilight-run/recovery/remote-three-contact/card-magician-facing-detail.jpg"
+  ],
+  "acceptance_limits": [
+    "This is an8-view turntable guide, not approved motion roles or recovered original animation.",
+    "Idle/walk/attack/hit/death and real Main checks remain required.",
+    "No production profile, runtime asset or completed count was changed."
+  ],
+  "production_changes": false,
+  "completed_count_increment": 0
+}

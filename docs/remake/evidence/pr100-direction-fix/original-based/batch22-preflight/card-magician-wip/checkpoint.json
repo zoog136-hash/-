@@ -60,8 +60,30 @@
       "path": "idle-v1.prompt.txt",
       "bytes": 2356,
       "sha256": "7a404f6f918c2fa215755fed9d61e96d1095c324909001dc4355aedb95bd313f"
+    },
+    {
+      "path": "independent-rotation-review.json",
+      "bytes": 3322,
+      "sha256": "8529ea0c9fe99df3c5b324c004f53db891e6ff233f1f8dedbda06d0ae0c3f7e5"
+    },
+    {
+      "path": "independent-idle-review.json",
+      "bytes": 4217,
+      "sha256": "23b31ed690f8fb3dfa7738501f9eebd45b1d59f6201f20454ec581561eec0f3e"
+    },
+    {
+      "path": "idle-v1.visual-review.json",
+      "bytes": 1066,
+      "sha256": "47a0677fc1a22714bd2b4013ab7cc0526b43dd98233d3309ce6a65ae568bd5f6"
     }
   ],
-  "independent_review": "pending; E torso twist versus travel/nose/feet axis needs check",
-  "canvas_note": "Idle reviewed virtual canvas640; pixels unchanged. Later sheets must preserve proportional scale and anatomical foot anchors."
+  "independent_review": "PASS_GUIDE8 and PASS_STATIC_IDLE_ONLY16. E nose/boots point right and torso twist differs from SE; later gait/attack axes still require own review.",
+  "canvas_note": "Idle reviewed virtual canvas640; pixels unchanged. Later sheets must preserve proportional scale and anatomical foot anchors.",
+  "walk_rejected_archive": {
+    "path": "walk-v1-rejected.zip",
+    "bytes": 2206727,
+    "sha256": "19b492ea36e886cf008c16e0dfbedc0be8e0a28d446f7ab14c647bba0a2bb01b",
+    "crc_ok": true,
+    "reason": "Unique24 frames but phase0/2 same leading leg; no actual opposite leg alternation."
+  }
 }

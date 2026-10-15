@@ -1,3 +1,7 @@
+## 2026-10-15 · 카드 마술사idle독립통과 / walk1거절
+
+완료374/498·잔여124·개별Main103·신규완료0유지. rotation8/idle16독립검토PASS: E는발/코끝동쪽+상체휴식twist로SE복제/가짜반전이아님을확인했다. 원거리alpha>25 잔상0/침범0. **walk1은24고유프레임이어도실제반대다리교대가없어거절**했고, 원본/정확prompt/시각FAIL/geometryPASS를ZIP보존한다. 마지막walk2시도중,5동작/실제Main승인전연결없음. [독립판정/실패보존](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json). 이전idle보존 `f1b41f4955f555da7e34ea85c11129f14481d105` push/원격일치확인.
+
 ## 2026-10-15 · 카드 마술사idle16 WIP 보존
 
 완료374/498·잔여124·개별Main103유지. 카드마술사360 **1/5동작idle16실포즈 제작검토통과, 독립8방향검토중**. E의상체비틀림과발/코방향을재검한다. 640가상canvas에서연결/누락/침범/경계검사통과. [원본PNG/정확prompt/SHA](evidence/pr100-direction-fix/original-based/batch22-preflight/card-magician-wip/checkpoint.json). 미연결/Main미실행/신규완료0. 회전표보존 `4aa23e082187ed392a548a5c4c77078a58fe03d9` push·원격일치확인. 다음walk3pose×8방향을진행중이며,전5동작과독립검토가끝나기전런타임연결없음.

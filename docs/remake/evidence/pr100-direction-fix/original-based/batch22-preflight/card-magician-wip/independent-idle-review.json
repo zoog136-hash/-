@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "target_key": "transform:360",
+  "decision": "PASS_STATIC_IDLE_ONLY",
+  "source": {
+    "path": "/workspace/twilight-artwork/batch22/card_magician/idle-v1.png",
+    "bytes": 2034118,
+    "sha256": "2197351d31edbe2a21513b19549d07faa7a9fdb7d04c5e28a99154dc544aa509",
+    "source_unchanged": true,
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGBA"
+  },
+  "geometry": {
+    "logical_phases": 2,
+    "direction_order": [
+      "E",
+      "SE",
+      "S",
+      "SW",
+      "W",
+      "NW",
+      "N",
+      "NE"
+    ],
+    "directions_axis": "columns",
+    "distinct_real_poses": 16,
+    "canvas_size": [
+      640,
+      640
+    ],
+    "neutral_height": 336.0,
+    "analysis_call": "analyze(path,2,reference_rows=[0,1],directions_axis=\"columns\",canvas_size=640)",
+    "opaque_crop_loss_pixels": 0,
+    "visible_border_pixels": 0,
+    "foreign_body_crop_check": "passed with original3px padding and separated-body guards; no relaxation"
+  },
+  "visual_review": {
+    "source_identity": "Preserves the installed portrait silhouette/palette: tall black hat with purple/red band, purple/gold coat and split tails, dark trousers/boots, pale gloves and a small held white card.",
+    "idle_articulation": "In phase1 the shoulders/upper torso settle and card-side elbow/card angle lower/change slightly; glove/hip position and coat folds relax. Boot soles remain in a stable planted stance while upper-body landmarks articulate. These are16 independently drawn, nonidentical breathing/rest poses, not a single still translated to fake motion.",
+    "eight_directions": "E/W opposite profiles; SE/SW more frontal face/chest; S fully frontal; N fully rear with no front face; NW/NE rear coat/arm occlusion. Card hand is viewer-right in S and viewer-left in N, with the other glove on the opposite hip/back.",
+    "E_vs_SE_axis_assessment": {
+      "conclusion": "E is a deliberate camera-open resting torso twist while head/foot direction remains east, rather than a reused SE view. Accepted for idle scope.",
+      "head": "E nose/chin silhouette points right with a near-side profile; SE exposes a broader frontal cheek/face beneath the brim.",
+      "feet": "E far boot points predominantly right and the near boot opens diagonally right; in SE both toe axes turn further toward screen-down, especially the near boot.",
+      "torso": "E gold vest/chest remains visible because the hip/card presentation twists the torso toward the camera. SE has broader frontal vest exposure and different forearm/coat overlap. A torso-facing angle alone is not treated as the movement direction.",
+      "next_scope": "This idle decision does not certify future gait or attack axes. E walking must progress right with genuine leg phases and E attack contact must point toward the actual east target."
+    },
+    "connections": "All16 preserve connected head/hat, two arms/gloves with held card, coat tails, two legs and complete boot soles. No neighboring body, detached card, extra limb or cutoff brim/toe was found.",
+    "transparency": "No broad visible halo/matte: alpha>25 count beyond3px from alpha>100 silhouette is0, maxalpha23. Remaining sparse low-alpha antialias fringes were retained unchanged.",
+    "authored_inference_limit": "New human face/finger detail, fine vest/jewel pattern and A/heart card marks are newly authored interpretations of an unresolved low-resolution source, not verified original game details."
+  },
+  "alpha_diagnostics": {
+    "farther_than3px_alpha_gt10_pixels": 43,
+    "farther_than3px_alpha_gt25_pixels": 0,
+    "max_alpha_farther_than3px": 23
+  },
+  "inspection_paths": [
+    "/workspace/twilight-run/recovery/remote-three-contact/card-magician-idle-independent.jpg",
+    "/workspace/twilight-run/recovery/remote-three-contact/card-magician-idle-facing-analysis.jpg"
+  ],
+  "acceptance_limits": [
+    "Only2idle phases×8directions approved statically.",
+    "Walk/attack/hit/death, actual Main foot contact, combat and drops remain untested.",
+    "No runtime import, production/profile edit or completed-count increment."
+  ],
+  "production_changes": false,
+  "source_PNGs_modified": 0,
+  "image_generation_performed": false,
+  "completed_count_increment": 0
+}
