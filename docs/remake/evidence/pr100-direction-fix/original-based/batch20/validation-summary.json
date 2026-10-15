@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "basis_commit": "97af60383e1ea7a53877892d397792cc0fd202fd",
+  "branch": "feature/twilight-animation-20261013",
+  "newly_validated": [
+    "monster:공포의 나이트메어",
+    "monster:오만한 레비아탄",
+    "monster:알비노 악어",
+    "monster:왜곡의 키메라",
+    "monster:질투의 스켈레톤 윙"
+  ],
+  "new_resource_appearances": 5,
+  "new_distinct_pixel_poses": 512,
+  "new_base_motion_designs": 5,
+  "pose_counts": {
+    "four_actors": 104,
+    "jealous_skeleton_wing": 96,
+    "skeleton_death_frames_per_direction": 2
+  },
+  "validation": {
+    "headless": {
+      "checks": 4421,
+      "failures": [],
+      "engine_processes": 1
+    },
+    "render": {
+      "checks": 4903,
+      "failures": [],
+      "engine_processes": 1
+    },
+    "godot_import": "passed Godot4.7.2 after enabling editor socket access; initial restricted-sandbox socket errors retained as diagnostic",
+    "actual_Main": "both modes passed,5subjects x8AI directions,512authored poses,hit,death callback once,floor drop/manual pickup,stable ground anchor",
+    "native_expansion_assertions": 35742,
+    "canvas_assertions": 640,
+    "screenshots": 552,
+    "representative_screenshots_in_repository": 71
+  },
+  "preservation": {
+    "baseline_head": "97af60383e1ea7a53877892d397792cc0fd202fd",
+    "protected_files_unchanged": 4574,
+    "changed_protected_files": [
+      "data/combat_animation_profiles.json"
+    ],
+    "changed_profiles": [
+      "monster:공포의 나이트메어",
+      "monster:알비노 악어",
+      "monster:오만한 레비아탄",
+      "monster:왜곡의 키메라",
+      "monster:질투의 스켈레톤 윙"
+    ],
+    "old_bound_profiles_unchanged": 371,
+    "source_references_checked": 222
+  },
+  "coverage": {
+    "counts": {
+      "hero_plus:registered": 180,
+      "hero_plus:native_connected": 136,
+      "other_transform:registered": 233,
+      "other_transform:native_connected": 1,
+      "normal_monster:registered": 258,
+      "normal_monster:native_connected": 200,
+      "boss:registered": 60,
+      "boss:native_connected": 35,
+      "class:registered": 4,
+      "class:native_connected": 4
+    },
+    "total_target_connected": 371,
+    "target_total": 498,
+    "remaining": 127,
+    "native_resources": 99,
+    "original_based_appearances": 63,
+    "original_based_distinct_pixel_poses": 6496,
+    "individual_Main_headless_and_render_8directions": 100,
+    "recorded_Main_reports": 203,
+    "direction_rows": 5880,
+    "errors": []
+  },
+  "manual_review": "All raw source atlas poses reviewed; actual Main front/back attack and terminal death samples reviewed per actor, including repaired skeleton E death orientation. No production actor/terrain hiding. All8direction combat captures retained for each actor.",
+  "blocked_targets": {
+    "monster:공포의 레서 데몬": {
+      "reason": "Attack rectangular crop includes neighboring body in both original and spacing retry.",
+      "attempts": [
+        "exec-103669b7-995a-4582-8924-7dc1ee774ede.png",
+        "exec-a4d5ba8a-a3c3-4b4f-9585-e108bcc7c2ef.png"
+      ]
+    },
+    "monster:오만한 아스모데우스": {
+      "reason": "Attack rectangular crop includes neighboring body in wide and tall re-layout attempts.",
+      "attempts": [
+        "exec-52d2eb17-e965-4ead-8457-043919e0aecd.png",
+        "exec-3385e70c-ee0d-4a83-878c-bedd917df7e1.png"
+      ]
+    },
+    "monster:왜곡의 메두사": {
+      "reason": "Original attack crop overlaps; re-layout has only23 separated bodies rather than24. Reaction generation also blocked by image service output safety filter (sexual), request e652c405-a61d-48b9-9a47-58025a01232d. No generated reaction image.",
+      "attempts": [
+        "exec-e4699882-7728-4de3-9117-2475a3f5e8ff.png",
+        "exec-1310825a-5f90-4039-95de-62e840b38539.png"
+      ]
+    },
+    "monster:공포의 켈베로스": {
+      "reason": "S/front has four heads instead of source three in original and anatomy retry.",
+      "attempts": [
+        "exec-40a6c00d-95eb-40d7-b739-b6ffcd4f2d09.png",
+        "exec-1a54147c-954e-4d54-a6b5-dcb7451e272a.png"
+      ]
+    }
+  },
+  "draft_archive": {
+    "path": "authoring-drafts.zip",
+    "bytes": 33123778,
+    "sha256": "ba4bc6a31649f395f94ef7a8e33ae37ba29475f51aa5fe75c9f590d5efa53e0e",
+    "generated_outputs": 33,
+    "accepted_runtime_sheets": 15,
+    "excluded_pngs": 18,
+    "crc_and_member_sha_verified": true
+  },
+  "ci": "pending exact pushed batch20 HEAD; 97af603 checkpoint success is not claimed for newer content",
+  "android_apk": "pending exact pushed batch20 HEAD",
+  "android_device_execution": "not_run_no_device_attached",
+  "next_batch": [
+    "화염의 엔트",
+    "알비노 뿔 개구리",
+    "알비노 악어거북",
+    "악몽의 잭 오 랜턴",
+    "바포메트"
+  ]
+}

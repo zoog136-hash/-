@@ -1,0 +1,404 @@
+{
+  "attempted_targets": 9,
+  "validated_targets": 5,
+  "held_targets": 4,
+  "targets": [
+    {
+      "key": "monster:공포의 나이트메어",
+      "name": "공포의 나이트메어",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15757.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "공포의 나이트메어",
+          "source_sprite_id": "15757",
+          "path": "res://assets/external_l1j/monsters/15757.png",
+          "source_npc_ids": [
+            "7310024"
+          ],
+          "source_name": "공포의 나이트메어",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "60a025d864e5b0180991e8bffb9c9dc00c7fc20eea18cdf944c31d5d0f75c1c4",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 0,
+          "cell": 10,
+          "body": "dark_knight",
+          "variant": 9,
+          "width": 0.946,
+          "weapon": "sword",
+          "crest": 0,
+          "accent": "c4aa64"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:공포의 레서 데몬",
+      "name": "공포의 레서 데몬",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15758.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "공포의 레서 데몬",
+          "source_sprite_id": "15758",
+          "path": "res://assets/external_l1j/monsters/15758.png",
+          "source_npc_ids": [
+            "7310025"
+          ],
+          "source_name": "공포의 레서 데몬",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "c56c49dcfcbf4e6e81ae6ca306dff032643376728e7eb3acf1c21b8e1762ad84",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 10,
+          "body": "demon",
+          "variant": 7,
+          "width": 0.92,
+          "weapon": "sword",
+          "crest": 2,
+          "accent": "849bab"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:공포의 켈베로스",
+      "name": "공포의 켈베로스",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15604.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "켈베로스",
+          "source_sprite_id": "15604",
+          "path": "res://assets/external_l1j/monsters/15604.png",
+          "source_npc_ids": [
+            "18602"
+          ],
+          "source_name": "굶주린 켈베로스",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "266e56d24b0e0da19639eced5ff576123596655c421d25c723e20723142a3f0b",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 11,
+          "body": "cerberus",
+          "variant": 3,
+          "width": 0.946,
+          "weapon": "staff",
+          "crest": 3,
+          "accent": "aa8aaf"
+        },
+        "animation_profile": {
+          "motion_style": "magic",
+          "attack_hit_ratio": 0.52,
+          "floating": false
+        },
+        "attack_type": "magic",
+        "visual_height": 78
+      }
+    },
+    {
+      "key": "monster:알비노 악어",
+      "name": "알비노 악어",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/1574.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "악어",
+          "source_sprite_id": "1574",
+          "path": "res://assets/external_l1j/monsters/1574.png",
+          "source_npc_ids": [
+            "9316"
+          ],
+          "source_name": "해안가 악어",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "f099e7cd1c5027f2251bfae63e0e34a5c00495c5f134e5202f4a3bde7e30e8b2",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 2,
+          "cell": 8,
+          "body": "lizard",
+          "variant": 7,
+          "width": 0.972,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:오만한 레비아탄",
+      "name": "오만한 레비아탄",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15793.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "오만한 레비아탄",
+          "source_sprite_id": "15793",
+          "path": "res://assets/external_l1j/monsters/15793.png",
+          "source_npc_ids": [
+            "7310064"
+          ],
+          "source_name": "오만한 레비아탄",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "2eb097a9b8590da0730d76a1cbaad6c2c9df0c73e5e4ee0df915be125f471505",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 0,
+          "cell": 10,
+          "body": "dark_knight",
+          "variant": 13,
+          "width": 1.076,
+          "weapon": "sword",
+          "crest": 2,
+          "accent": "849bab"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:오만한 아스모데우스",
+      "name": "오만한 아스모데우스",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15598.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "오만한 아스모데우스",
+          "source_sprite_id": "15598",
+          "path": "res://assets/external_l1j/monsters/15598.png",
+          "source_npc_ids": [
+            "7310065"
+          ],
+          "source_name": "오만한 아스모데우스",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "361e796dc6262104b38799d69dee73427084e8fcadcc3ec6336f4b9ef960b3d9",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 2,
+          "cell": 12,
+          "body": "prince",
+          "variant": 3,
+          "width": 1.05,
+          "weapon": "staff",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "magic",
+          "attack_hit_ratio": 0.52,
+          "floating": false
+        },
+        "attack_type": "magic",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:왜곡의 메두사",
+      "name": "왜곡의 메두사",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/2535.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "메두사",
+          "source_sprite_id": "2535",
+          "path": "res://assets/external_l1j/monsters/2535.png",
+          "source_npc_ids": [
+            "45380",
+            "81099"
+          ],
+          "source_name": "메두사",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "998160c7a2005ee993d43ce2d7b3ce33d86d488e4521a290dc4dee90273d8240",
+        "image_size": [
+          60,
+          86
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 5,
+          "body": "medusa",
+          "variant": 0,
+          "width": 0.92,
+          "weapon": "sword",
+          "crest": 1,
+          "accent": "b76d5a"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:왜곡의 키메라",
+      "name": "왜곡의 키메라",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/15749.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "왜곡의 키메라",
+          "source_sprite_id": "15749",
+          "path": "res://assets/external_l1j/monsters/15749.png",
+          "source_npc_ids": [
+            "7310013"
+          ],
+          "source_name": "왜곡의 키메라",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "e8ca6f4fb1397b932dc5252b7ff6b788402a5d43c090429b2a2fbba0ce4aa5be",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 7,
+          "body": "chimera",
+          "variant": 15,
+          "width": 0.946,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    },
+    {
+      "key": "monster:질투의 스켈레톤 윙",
+      "name": "질투의 스켈레톤 윙",
+      "group": "normal_monster",
+      "reference": {
+        "path": "res://assets/external_l1j/monsters/145.png",
+        "kind": "existing_family_portrait",
+        "family_binding": {
+          "family_id": "해골",
+          "source_sprite_id": "145",
+          "path": "res://assets/external_l1j/monsters/145.png",
+          "source_npc_ids": [
+            "45061"
+          ],
+          "source_name": "썩어가는 해골",
+          "original_animation": false,
+          "mapping": "explicit same-species regional alias"
+        },
+        "sha256": "4e33a88ab0310d8afc3910b245b1db42e74246325febfce560fa927ee5164ff7",
+        "image_size": [
+          82,
+          123
+        ]
+      },
+      "presentation_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 13,
+          "body": "winged_skeleton",
+          "variant": 7,
+          "width": 0.946,
+          "weapon": "sword",
+          "crest": 3,
+          "accent": "aa8aaf"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      }
+    }
+  ]
+}
