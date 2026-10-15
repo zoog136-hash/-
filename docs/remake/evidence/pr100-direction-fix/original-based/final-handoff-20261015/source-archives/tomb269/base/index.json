@@ -1,0 +1,58 @@
+{
+  "format": "twilight-source-wip-cas-v1",
+  "actor": "transform:269",
+  "original_directory": "/workspace/scratch/pr100-continuation/tomb-guardian269-authoring",
+  "manifest": {
+    "path": "contents-manifest.json",
+    "sha256": "3fc3a37b15ba52d62b40baa89b22ca745cc9c62cea9d1a885310510b72bc6999"
+  },
+  "restorer": {
+    "path": "restore.py",
+    "sha256": "57bb27db2e05565e4cca903bf12d7fc06b6b3b8423f22dcccc871e33ab26b3a1"
+  },
+  "parts": [
+    {
+      "path": "tomb269-wip-part01.zip",
+      "sha256": "4cd80f0708dedac3f15e59841af235319989625edfd491bf43781c4bd35ccb09",
+      "bytes": 83795981,
+      "objects": 119
+    },
+    {
+      "path": "tomb269-wip-part02.zip",
+      "sha256": "3d10203ff788a515fd5a0e4272a4e8c7800a66b84d3f58fb232e47eb540c9ad3",
+      "bytes": 83092751,
+      "objects": 370
+    },
+    {
+      "path": "tomb269-wip-part03.zip",
+      "sha256": "a7e1375471e8332d874ff47b1ec1dc635948bb82a0b62f5261e04d28cb3f3dcb",
+      "bytes": 83153865,
+      "objects": 94
+    },
+    {
+      "path": "tomb269-wip-part04.zip",
+      "sha256": "4e1abe8d69f8251b1eb474a3c7d9e33b6bf6aef3d7f817d18f46e2f819bf0e85",
+      "bytes": 40480243,
+      "objects": 48
+    }
+  ],
+  "file_count": 636,
+  "unique_objects": 631,
+  "source_bytes_total": 301912960,
+  "selected_source_pngs": 51,
+  "strict_geometry_poses": 112,
+  "review_flags": "ALL FALSE; all source only HOLD",
+  "Main": "UNVERIFIED",
+  "completed_added": 0,
+  "restore_proof": {
+    "path": "restore-proof.json",
+    "sha256": "3957d82ff5c84871b1fc470a88a14fc1619ee401d795a62657313dba3fa0daf1",
+    "all_member_sha256": "PASS",
+    "restored_files": 636,
+    "selected51_exact_sha_restored": "PASS"
+  },
+  "readme": {
+    "path": "RESTORE_README.md",
+    "sha256": "56633a43ece75df0db934a882e5cd6b7fbfd79a7c5ee440307304cecd06f093a"
+  }
+}

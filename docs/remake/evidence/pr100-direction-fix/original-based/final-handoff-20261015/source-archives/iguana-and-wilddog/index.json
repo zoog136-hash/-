@@ -1,0 +1,2356 @@
+{
+  "status": "STATIC_MAIN_TRIAL_READY_PENDING_ROOT_METADATA_ACCEPTANCE",
+  "scope": "Source WIP31rawPNG/112poses plus exact prompts/history, full-source validation, registered matrices, source anatomical landmarks with uncertainty, NW2 actualcontactproof. Latest05 onlychangesSvirtualcanvas, no sourcebytes or112anchors changed. Main notrun; completed+0.",
+  "restore": "Unzip parts01/02/03/04/05 in numericorder beneath /workspace/scratch/pr100-continuation. Latestpart05 currentcheckpoint overrides historic samepathcheckpoint. All31rawhistory bytes immutable. Root must accept S metadata and run actualMain before completion.",
+  "candidate": "albino-iguana-authoring/mixed112-trial05/candidate112-trial05-PROPOSED.json",
+  "selected31_preserved": true,
+  "source_count": 31,
+  "source_poses": 112,
+  "completed_added": 0,
+  "parts": [
+    {
+      "file": "/workspace/scratch/pr100-continuation/iguana-source-wip-portable/iguana112-source-WIP03-part01.zip",
+      "bytes": 73101669,
+      "sha256": "e93afa56396f41f7caaab7c71622d080cfa38ac3fd63c3955ea76d2e703b17bd",
+      "entries": 233,
+      "uncompressed": 74768417
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/iguana-source-wip-portable/iguana112-source-WIP03-part02.zip",
+      "bytes": 47922714,
+      "sha256": "faf2acac6bedf2421d4603dd23b7da11aafbe0c36715ab6dac4262f9f7bed9ee",
+      "entries": 172,
+      "uncompressed": 49457182
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/iguana-source-wip-portable/iguana112-source-WIP03-part03-diagnostics.zip",
+      "bytes": 28389085,
+      "sha256": "0fea56d6be7b46cdd8025fd3d81f8d5f74253a67d99fa03170dd322e21d0d6ac",
+      "entries": 49,
+      "uncompressed": 28933866
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/iguana-source-wip-portable/iguana112-source-WIP04-part04-N-palette.zip",
+      "bytes": 25688797,
+      "sha256": "08c4d214a6af49b98316f56cf12dfcbd891a5107dd3eec57414e67b00f868aaa",
+      "entries": 28,
+      "uncompressed": 26149977
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/iguana-source-wip-portable/iguana112-source-WIP05-part05-proportion-contact.zip",
+      "bytes": 70115877,
+      "sha256": "08d6414169727aa937d28f3f764ba5edf34b4a766643f7cb487262392f739bf3",
+      "entries": 122,
+      "uncompressed": 71105112,
+      "testzip": "PASS",
+      "all_entry_sha_matches_local": "PASS"
+    }
+  ],
+  "inventory": [
+    {
+      "path": "attack-front-spacing2.png",
+      "bytes": 2008087,
+      "sha256": "998661db405a3c157561e72228bad45c1032012cb25b78851b92b9210c9a01e2"
+    },
+    {
+      "path": "attack-rear-attempt1.png",
+      "bytes": 2124240,
+      "sha256": "930f91267ec8fc67bb2f0d1aa80380792b860d9ad6ef6de5ccefddb3d3c40b6c"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk0-attempt2-rear-heel.png",
+      "bytes": 1290801,
+      "sha256": "b724f616935069ae0d8a24072b637596745d43f479c8d6882a989e2ba439e569"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk1-attempt1-body-guide.png",
+      "bytes": 1292454,
+      "sha256": "7226509e38cd09b792603af0e2cfb18f0fe6c3988952a479905e5e4aca4f7dbb"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt4-trailing-heel.png",
+      "bytes": 1286445,
+      "sha256": "2520411fe5e7e44aa157d19c20885f16520da5e5fc0751fa33b33056e036f49f"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk3-attempt2-planted-heel.png",
+      "bytes": 1246681,
+      "sha256": "79f51c3249b93670f941853132e12b10b6809809a30fdf491501094482daf08b"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-actual-B-from-requested-A-attempt1.png",
+      "bytes": 1115753,
+      "sha256": "b04662cb92909b12310b01be5398a5a26ed0a7bd54a36d4986df87e2952f492e"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk0-attempt3-original-calf-straps.png",
+      "bytes": 1419127,
+      "sha256": "87f349f3f46942db148a94b80aa5115f970b0899a310a7165c4279680989ea42"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk1-attempt1-body-guide.png",
+      "bytes": 1326764,
+      "sha256": "70ba17527efc78de4c9164903589de5a65d798ceaf055b018dea3b3fa77ff0ae"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk3-attempt2-pure-skeleton.png",
+      "bytes": 1349963,
+      "sha256": "74a863baab4e4760bca721d361cc59115653303a2a27e23f0088011f80c50391"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk0-attempt1.png",
+      "bytes": 1116402,
+      "sha256": "110a1a2cc33b23e959dcea4bdaee90d53740bfcc832ccb776463c5857dda506b"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk1-attempt1-body-guide.png",
+      "bytes": 1290953,
+      "sha256": "fa323177de67993abd88b57eaee2068e32ec069f50486dee84c43ecd724e6c32"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk2-attempt1-body-guide.png",
+      "bytes": 1304621,
+      "sha256": "092735978271d56dc4f7f0759b3241f35a90276dd6018f1f115befdea8edba8f"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk3-attempt1-body-guide.png",
+      "bytes": 1289484,
+      "sha256": "b769a4d6918d01afa80e61156349e3776939e10fc243c2a88c2d77b21d3c65ce"
+    },
+    {
+      "path": "gait-repair/new-idle-front8.png",
+      "bytes": 2062792,
+      "sha256": "49e4448e76def8f2f7ed5faea6811f2eb03dbf39508e63eae914cdd13d4efacc"
+    },
+    {
+      "path": "gait-repair/new-idle-rear8.png",
+      "bytes": 2049694,
+      "sha256": "02a708aee33e251d4b32483a359df4de00059a2f54d8711841722f4050a4e8f5"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot7-rear-heel-contact.png",
+      "bytes": 1474293,
+      "sha256": "f0398b670759e113a42ce073fa586d3cbb0d150e9a8b517b9d383265d5237d24"
+    },
+    {
+      "path": "gait-repair/walk4-S-pilot2-small-layout.png",
+      "bytes": 1363138,
+      "sha256": "0cd150d9b1196ab420a43232fab71b67ce76b6aed4cabfddc7219a008eeb51ab"
+    },
+    {
+      "path": "gait-repair/walk4-SW-pilot2-left-heading.png",
+      "bytes": 1522716,
+      "sha256": "c7d354c866b20199cb60251881fabfcc9dfc1641df9bb88438151a56e3781d7b"
+    },
+    {
+      "path": "hit-death-E-SE-spacing2.png",
+      "bytes": 1990993,
+      "sha256": "29733ac73290b7cc9669970c4124259e78825dea7bb0d84dd25234b4fdd57c14"
+    },
+    {
+      "path": "hit-death-N-NE-subset1.png",
+      "bytes": 2222075,
+      "sha256": "36b594dd4d712e7a8e83e1215390a90ea8f62917aef7641bc1670a767420bf4e"
+    },
+    {
+      "path": "hit-death-S-SW-clean2.png",
+      "bytes": 1853094,
+      "sha256": "183fa3ed8602f4a7166293899eb86b8bc7bf84ed4d9b1572b767cd781a2f4eb1"
+    },
+    {
+      "path": "hit-death-W-NW-subset1.png",
+      "bytes": 2152396,
+      "sha256": "4bedbebe5f1f3d13e875bfeb1324ca43e52dbfaf675d002269221adf1999edc7"
+    },
+    {
+      "path": "profile-heading-repair/E-walk0-true-profile-single-selected-proposal.png",
+      "bytes": 755584,
+      "sha256": "babe3d6146d4ba392ec940fa657bad7d9ab05d6086f0add66bf9807b90839986"
+    },
+    {
+      "path": "profile-heading-repair/E-walk1-true-profile-single-selected-proposal.png",
+      "bytes": 924598,
+      "sha256": "d973488b987fd5d1a8c810125357ddca22ebd818ea0f20b30760f26343495cec"
+    },
+    {
+      "path": "profile-heading-repair/E-walk2-true-profile-single-selected-proposal.png",
+      "bytes": 995154,
+      "sha256": "f1b2e477ef19f03fea9b39866dfa835dff093fcb4e0753e8c7c0a8cb9afa47bb"
+    },
+    {
+      "path": "profile-heading-repair/E-walk3-true-profile-single-selected-proposal.png",
+      "bytes": 853890,
+      "sha256": "7d983aa73eef36cd7a399407a1a0b642c3c458b9d66a7ff0c67fea92b0f3b84e"
+    },
+    {
+      "path": "profile-heading-repair/W-walk0-true-profile-single-selected-proposal.png",
+      "bytes": 1002423,
+      "sha256": "e01ef88e57c6bc83330a3b572ba0b3bbf8ca353ca4652ea807a402ae6cd57f73"
+    },
+    {
+      "path": "profile-heading-repair/W-walk1-true-profile-single-proportion2-proposed.png",
+      "bytes": 912033,
+      "sha256": "8f8bc6196e78697cce91147fc1ba23cd7755e0ba066d33e13460efa42e4bf86f"
+    },
+    {
+      "path": "profile-heading-repair/W-walk2-true-profile-single-selected-proposal.png",
+      "bytes": 807435,
+      "sha256": "a307043658295844159b73ff7294ca0bcff63c7ce3a5a0724f6e335dffde37a2"
+    },
+    {
+      "path": "profile-heading-repair/W-walk3-true-profile-single-selected-proposal.png",
+      "bytes": 849271,
+      "sha256": "7183829cb477a096b40459582e1299e4abf304c2505605e346bd66990e480c41"
+    },
+    {
+      "path": "attack-front-attempt1-validation.json",
+      "bytes": 290,
+      "sha256": "e5e2ee6faee4201fc9c29b6b3f1de07047c3e94748139f313696586c2a6a85d8"
+    },
+    {
+      "path": "attack-front-attempt1.png",
+      "bytes": 2387633,
+      "sha256": "52553f8bac0379d5ec1af9e56bfc7208f2aeb2749416f3f805f1ce4d3d8ff926"
+    },
+    {
+      "path": "attack-front-spacing2-geometry.json",
+      "bytes": 4472,
+      "sha256": "785b37e434dc582204c00c86a282beee0e66625705d2851d5bf9302af108b854"
+    },
+    {
+      "path": "attack-front-spacing2-validation.json",
+      "bytes": 460,
+      "sha256": "28051b41165918199747d64230a8e40889170d20b8d37cc4981f8a82d17456c6"
+    },
+    {
+      "path": "attack-rear-attempt1-geometry.json",
+      "bytes": 4472,
+      "sha256": "6a28a93d17c55037ed973f08eedef699db817eb48cbb5040528f8fe8747fcc5a"
+    },
+    {
+      "path": "attack-rear-attempt1-validation.json",
+      "bytes": 459,
+      "sha256": "c5df24b0534c9722390689d61b9f5f0c6e6aceff71a0d9ce6cfc00f9b067a02b"
+    },
+    {
+      "path": "author-review.json",
+      "bytes": 8894,
+      "sha256": "218ed8f228b5043e5b805307f4d13328c31122e45b153c5596c18d3926e98c1a"
+    },
+    {
+      "path": "build_candidate.py",
+      "bytes": 9183,
+      "sha256": "64b54bef04698f9902a57e2b7acda3b8a20ce5d332a7dca1d16e9f494d15ede9"
+    },
+    {
+      "path": "build_mixed112_trial02.py",
+      "bytes": 7269,
+      "sha256": "a8dc62fbc91ebddf2ece2124cd91efbf6b22392b90c52efa67f4d412352a7bbe"
+    },
+    {
+      "path": "build_mixed112_trial03.py",
+      "bytes": 7868,
+      "sha256": "e47156bac04ba677a9738468db0137a8ab74163e488bf13fbc782461940807eb"
+    },
+    {
+      "path": "build_mixed112_wip.py",
+      "bytes": 7514,
+      "sha256": "475e8eac7e95b666624c286e3c8236f5f46231030e2fb7900e6a3348a13ba947"
+    },
+    {
+      "path": "candidate-before-root-gait-hold.json",
+      "bytes": 93349,
+      "sha256": "a3b56f6f8c20f5d3adb1884b886808b6bd58cda0c99190896599e4d1f940dc06"
+    },
+    {
+      "path": "candidate-provisional.json",
+      "bytes": 90989,
+      "sha256": "831c872dd4212efab8cc26fa24919872e4dff0102f3f28e58aff659fa100c633"
+    },
+    {
+      "path": "candidate-root-reviewed.json",
+      "bytes": 94379,
+      "sha256": "1fba3422e09ba38b8fbf5fdc412375687a36f08a984a24788a9ec34c68c71999"
+    },
+    {
+      "path": "candidate.json",
+      "bytes": 93799,
+      "sha256": "96f6c991e70491093de38a7bc8733e98964b53892009b3d5ee2332376235517c"
+    },
+    {
+      "path": "checkpoint.json",
+      "bytes": 1198,
+      "sha256": "987cd132534d41b37239d82c4449038986bd99bdb9e13ab1f06a2cff0d6653ce"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NE-walk0-compact1.txt",
+      "bytes": 2401,
+      "sha256": "3931b14dd53e5277aa032b877698543d4835e828e5054e77713e3bfc4463d548"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NE-walk1-compact1.txt",
+      "bytes": 2405,
+      "sha256": "6dd88ff9ed78fc0413c39959387fde1c83946f2e41d725c8e5f69af1769fe7bf"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NE-walk2-compact1.txt",
+      "bytes": 2401,
+      "sha256": "2b7b0ba0c51876eb061225d4e1895fa5bfafd43ac734980968bb5550f9be86d4"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NE-walk3-compact1.txt",
+      "bytes": 2405,
+      "sha256": "79e5b437b533c712c48838dc25036411d775497ff364aa3c37acc0528447982e"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NW-walk0-compact1.txt",
+      "bytes": 2399,
+      "sha256": "f320cefa22fac3159931fa6ea337b012bfde02b3fc2be312bdb4fa566e1ef1ac"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NW-walk1-compact1.txt",
+      "bytes": 2403,
+      "sha256": "ec3d081ce3ac4394868964c45354f8fc2295a7369696c60d758041b0dd2a80da"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NW-walk2-compact1.txt",
+      "bytes": 2399,
+      "sha256": "a63b61430099ac3af9a0d8332e5c92f58982a3ce31ecd7242d1918c86dc7dfee"
+    },
+    {
+      "path": "compact-walk-singles/prompt-NW-walk3-compact1.txt",
+      "bytes": 2403,
+      "sha256": "62374eb2ac9dad8f6b4b6b95ecb128c8d624327c6787046dcbe3dc755095fd70"
+    },
+    {
+      "path": "compact-walk-singles/prompt-SE-walk0-compact1.txt",
+      "bytes": 2304,
+      "sha256": "5e2df047d3e448fcfbf45648c32787895efc2ab4725ee667084627f57cb1275e"
+    },
+    {
+      "path": "compact-walk-singles/prompt-SE-walk1-compact1.txt",
+      "bytes": 2308,
+      "sha256": "77401dd91d45e45f31e4655f390e0d0c3e9807455347c5e14c6b35c078976c3a"
+    },
+    {
+      "path": "compact-walk-singles/prompt-SE-walk2-compact1.txt",
+      "bytes": 2304,
+      "sha256": "9144b87189a2aa8c3a4bae4e16c33b11c91756ac837a3eb48967366f50993ff5"
+    },
+    {
+      "path": "compact-walk-singles/prompt-SE-walk3-compact1.txt",
+      "bytes": 2308,
+      "sha256": "c78e8b6a1013deb9c4e60239b5d2ddbe7b46652e39e18b697419c918b4323912"
+    },
+    {
+      "path": "compact-walk-singles/source-selection.json",
+      "bytes": 6941,
+      "sha256": "82d137581b876fb3c9ae38d5e7c8588dda627f52f1173ab683b14cc717ad0b3f"
+    },
+    {
+      "path": "gait-repair-checkpoint.json",
+      "bytes": 1874,
+      "sha256": "17820377d8e9bd06684ee57046fc35755d092fe7b62c4e9277357d770f5ad3a4"
+    },
+    {
+      "path": "gait-repair/E-fourphase-anatomical-guide.png",
+      "bytes": 74327,
+      "sha256": "783cf694346a7088f5b61f7b21f86f7ff17567ff6692f467d7f70b4a3735b104"
+    },
+    {
+      "path": "gait-repair/N-fourphase-anatomical-guide.png",
+      "bytes": 62198,
+      "sha256": "4512492e4481a2bbe707bbc3e0eb9f9eabf5bde9d981ba7255c7f1d15be65116"
+    },
+    {
+      "path": "gait-repair/N-gear-correction-annotation.png",
+      "bytes": 525161,
+      "sha256": "80e70ac3e0df2128352121926ee31a0f7b9cb171d004b9a32ad8d4f44d9a69cc"
+    },
+    {
+      "path": "gait-repair/N-planted-rear-heel-guide.png",
+      "bytes": 24000,
+      "sha256": "72c2b3fafb36e086ef85f24a1ad6c9910e7427efdcae65e94b5ee76eb01d708d"
+    },
+    {
+      "path": "gait-repair/N-tail-spine-bridge-annotation.png",
+      "bytes": 508420,
+      "sha256": "cbb1b381b16504ffcfa59c2aefb9214a0456174cccb5c2d12f29d7dfa6536193"
+    },
+    {
+      "path": "gait-repair/NE-fourphase-anatomical-guide.png",
+      "bytes": 46123,
+      "sha256": "7a4f58673285a0ab9791169c2a48c2860b8aaa36521bbba25a4c547fafc5611e"
+    },
+    {
+      "path": "gait-repair/NW-fourphase-anatomical-guide.png",
+      "bytes": 47787,
+      "sha256": "266475e4d928f03d160918fd7fd99c4f54cc568dcb22fe1c560ce22d5c2d61e3"
+    },
+    {
+      "path": "gait-repair/S-fourphase-anatomical-guide.png",
+      "bytes": 44059,
+      "sha256": "41d492b1fde18f2c6d6a7345cf391a9ed8fdb8c868218accf06712f45fb3b0e2"
+    },
+    {
+      "path": "gait-repair/SE-fourphase-anatomical-guide.png",
+      "bytes": 46663,
+      "sha256": "341fa007c7ae60d7ae69c249b2664fc67d924d83b89c51369dfb314655b7f270"
+    },
+    {
+      "path": "gait-repair/SW-fourphase-anatomical-guide.png",
+      "bytes": 48452,
+      "sha256": "6679f634eb26bae5e0b371ee8609d75fcb61abf0cac90220bdc55e7fe2b02a60"
+    },
+    {
+      "path": "gait-repair/W-fourphase-anatomical-guide.png",
+      "bytes": 66412,
+      "sha256": "46589df2142e6be990f0a376c976555a5b9ca72c963dcbff36f9407b23aa6e8e"
+    },
+    {
+      "path": "gait-repair/all-pilot-validation-index.json",
+      "bytes": 15785,
+      "sha256": "4530f9cac5421b81b8839093cf9f34f256829ec51bc5db371782d860813c16d1"
+    },
+    {
+      "path": "gait-repair/fourrow-small-figure-layout-guide.png",
+      "bytes": 62690,
+      "sha256": "f9fe58b6cf0d4c971f077b72378deaf8ac9513c1cf7a5936123447654880bc55"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-actual-A-from-requested-B-attempt1-geometry.json",
+      "bytes": 558,
+      "sha256": "a0bbd256d1239c577d512fce48c3fe75b236fc312d6ac152d57daa6daccfea5a"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-actual-A-from-requested-B-attempt1-validation.json",
+      "bytes": 602,
+      "sha256": "86f666c598240bae1c517eb8e98531cfdf1adb30731429e4b9a40a1e3f1cc41e"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-actual-A-from-requested-B-attempt1.png",
+      "bytes": 1049099,
+      "sha256": "6f6b03e773dc043b1ce9988267334c7b4ee4717cadd85bbd4eff2d0a6ce9c471"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk0-attempt2-rear-heel-geometry.json",
+      "bytes": 556,
+      "sha256": "8dd60670ede703426cede330e497fd418fc50ab1c8ac8f8c381bdd06df6c0b67"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk0-attempt2-rear-heel-validation.json",
+      "bytes": 592,
+      "sha256": "4c302ca24d19919d1e5ad7261b28278c38e744ff54ba359fcc44c9c35b18df4f"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk0-joint-guide.png",
+      "bytes": 23008,
+      "sha256": "3f3a67ce15ea4d05f6a4b615b48be23fb9bea8af87a930e559d711d62ee75236"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk1-attempt1-body-guide-geometry.json",
+      "bytes": 558,
+      "sha256": "35f8d13cc18178c8a676c498cd78491b8b4276236206566bd5a79f502ad5517a"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk1-attempt1-body-guide-validation.json",
+      "bytes": 465,
+      "sha256": "9bde05d2eec667fc9ce7e4e93950e465666cd425a26eabcf43d262a0a09dc56c"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk1-joint-guide.png",
+      "bytes": 23497,
+      "sha256": "ce0dd65b89c880589a637c040903da8bedaa117c954aa0c8dbf0df843808c5cb"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt2-crossed-geometry.json",
+      "bytes": 557,
+      "sha256": "117eb198916a8ac112242ba54e6bb8ef3e41cb404472309424b4a7cb11025666"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt2-crossed-validation.json",
+      "bytes": 461,
+      "sha256": "b96fd891f5f0ff59ff1862b679d8b5befb9cf7e5f012295c90f7ba04c7bfed56"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt2-crossed.png",
+      "bytes": 1388069,
+      "sha256": "7eeefc2a9cca56f6f006517527983cc43d195b85127dea8c3d1823eea1a5a7ff"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt3-calf-identity-geometry.json",
+      "bytes": 556,
+      "sha256": "f02a198abb6e807528af1fafd6586488aa2fddc7f179af0e3009e4b227fffa51"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt3-calf-identity-validation.json",
+      "bytes": 596,
+      "sha256": "442775f723a6e26a50373c6ecc5883f0b029ef211413cf9d6436d48136d8f6cb"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt3-calf-identity.png",
+      "bytes": 1341092,
+      "sha256": "30f730811c7441a1e4d443131fbe0472909d548054703f3f59699d2547a8d848"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt4-trailing-heel-geometry.json",
+      "bytes": 555,
+      "sha256": "a019fb265e2da50cdbe1eb4e08abbc2413eb863838fb88c2115c5f6ad1830d84"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-attempt4-trailing-heel-validation.json",
+      "bytes": 596,
+      "sha256": "e720a4111c7ec13f1a39ac632c5e8c9d8388c0417de7941cd1be4f237ca38e78"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk2-joint-guide.png",
+      "bytes": 23198,
+      "sha256": "280b92c8a6ef5e95f5f7eba9dde37fa83a4b98999954c6e0ed6c5991b3811c9f"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk3-attempt1-body-guide-geometry.json",
+      "bytes": 556,
+      "sha256": "65e309d94c0933962b0068ffd6bfc6195f317dffa8f37582d7875e5299d4fa06"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk3-attempt1-body-guide-validation.json",
+      "bytes": 593,
+      "sha256": "26e97e2aa815929383bb306af7601988efa57197022d1aa2ff600ad33e104bfe"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk3-attempt1-body-guide.png",
+      "bytes": 1281455,
+      "sha256": "8e6c75e2c279aa6eef3ab020857d95b4db3d3b860cf00da9e61fe8a94dd6e014"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk3-attempt2-planted-heel-geometry.json",
+      "bytes": 556,
+      "sha256": "c47ad1c170dce8ca11eb180372eef6d0f7f7558301e69fea7c39b211452c0f57"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk3-attempt2-planted-heel-validation.json",
+      "bytes": 595,
+      "sha256": "dfc81ae18aa27feb186c1cb558ab0a4ba792970c6732e563929f90e8169b40e0"
+    },
+    {
+      "path": "gait-repair/individual-walk/NE-walk3-joint-guide.png",
+      "bytes": 23824,
+      "sha256": "dfaa3759e65e39dd27869d8072c41966461594528f11639cae2f68d666af6fd2"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-actual-B-from-requested-A-attempt1-geometry.json",
+      "bytes": 560,
+      "sha256": "ebc45c34c788a09a43963d5163b8ed39db9e65096c26757b2a8c197e352a089b"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-actual-B-from-requested-A-attempt1-validation.json",
+      "bytes": 602,
+      "sha256": "3254e27c6d94b44732de7e3eb980fd599fd08ec4b23ae81f866fb3dd63e42408"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk0-attempt2-crossed-geometry.json",
+      "bytes": 557,
+      "sha256": "b79e863daee72f6cd51b59abcf58212719e5c9a2ada25224e60507fad923672b"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk0-attempt2-crossed-validation.json",
+      "bytes": 590,
+      "sha256": "296b26122c6101c590193192bb06f49607a51e870402285e27098e5dd29718c0"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk0-attempt2-crossed.png",
+      "bytes": 1515352,
+      "sha256": "c12ffdd26cb51864ed06b7e5b558ac953eb0639a81022288a5fbb9e8f09ea023"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk0-attempt3-original-calf-straps-geometry.json",
+      "bytes": 557,
+      "sha256": "a4333ffc2d0b8029da35d70657816c81b1488c480a5d32c5eb108939a4440ae6"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk0-attempt3-original-calf-straps-validation.json",
+      "bytes": 603,
+      "sha256": "ec25e631965f6cb6697505eaffe01b193e73835d3812f1b39256fb2048a65f80"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk0-joint-guide.png",
+      "bytes": 23623,
+      "sha256": "c53f7c477b7204f5b7d5eb73ec7298bf17cc0bd75fa88db316732bfac9656be2"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk1-attempt1-body-guide-geometry.json",
+      "bytes": 557,
+      "sha256": "cec5573e43998b1e4dfa6935045fe3dfe1bdaee60fac1cb5500d13c067f77ac7"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk1-attempt1-body-guide-validation.json",
+      "bytes": 464,
+      "sha256": "bbfdc74abbd7d9b46c43ce90c0cc0303e7e4b40236660931f9c3c4f185e6ead7"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk1-joint-guide.png",
+      "bytes": 24116,
+      "sha256": "61d1a601e0a9b59ed3eeccc3d198eda43537930d80e4ee747849c6037a8106b9"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk2-joint-guide.png",
+      "bytes": 23513,
+      "sha256": "fbe9f5c14db769500d69ae11661ddf053b1524d4dbe71799d0d0d3314460c2d8"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk3-attempt1-body-guide-HOLD-same-support-geometry.json",
+      "bytes": 556,
+      "sha256": "142a27eaa9c30958638bd52d7584b756f5e26252e44a47c79b34f301e638dac7"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk3-attempt1-body-guide-HOLD-same-support-validation.json",
+      "bytes": 482,
+      "sha256": "e1cd0a3468da82b774355767b9d503f101fd05abc9882d8bf7d66d44a09c79d1"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk3-attempt1-body-guide-HOLD-same-support.png",
+      "bytes": 1277252,
+      "sha256": "b9a205c66c5f374be7a9416e19dc148749d85e76f82d4fa86edd49885bfb8c27"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk3-attempt2-pure-skeleton-geometry.json",
+      "bytes": 557,
+      "sha256": "7886c9e762a1cf9a2628caf09d5b9753c43bb99197cc19ddf7d4ddb7863e507c"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk3-attempt2-pure-skeleton-validation.json",
+      "bytes": 596,
+      "sha256": "880074ae8bfd718e594e7404194f4e1d067cef28d1fd1b042edee35c00869550"
+    },
+    {
+      "path": "gait-repair/individual-walk/NW-walk3-joint-guide.png",
+      "bytes": 24060,
+      "sha256": "b83605d682588629152a62379f26576f1022543ab81637822d47e20fc5923786"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk0-attempt1-geometry.json",
+      "bytes": 558,
+      "sha256": "6552dd2d4522549d95252c9a8c0b3e4246916fcaa37a35d51fad8eabaf89931e"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk0-attempt1-validation.json",
+      "bytes": 582,
+      "sha256": "72cda1ee94b27f15cf19e0ef782b34fb9939d95ff36dcc3b90560f9ebf2b72cc"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk0-joint-guide.png",
+      "bytes": 23541,
+      "sha256": "a5f45c3d786f8a6f4547be6837892683fa62ea364b41156a312156cf28eced15"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk1-attempt1-body-guide-geometry.json",
+      "bytes": 556,
+      "sha256": "f302538ea7999c52e946b2cc76c79387ba6fecf58841946890ae525c7c88487e"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk1-attempt1-body-guide-validation.json",
+      "bytes": 465,
+      "sha256": "b82fdb1ff27efa6de8ddfbb101b0e72ba7864512b2f70a982c400b8225f4c837"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk1-joint-guide.png",
+      "bytes": 23771,
+      "sha256": "02a11422e6a344167ee9a123e21441cff8bd244f1a1adf478c09ca45639db539"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk2-attempt1-body-guide-geometry.json",
+      "bytes": 556,
+      "sha256": "361b1c40ba769079a20546930dee70848eed1c824473fe78ab7df8754e40330b"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk2-attempt1-body-guide-validation.json",
+      "bytes": 593,
+      "sha256": "eede80c642013de6bd8981341983d92deedbe757b16532fb1779aac5d70cec86"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk2-joint-guide.png",
+      "bytes": 23539,
+      "sha256": "c358242de313ac03600f6b9381a0e884a475ecff313c3942df106caa946c6dd6"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk3-attempt1-body-guide-geometry.json",
+      "bytes": 555,
+      "sha256": "639272b5acc3c40765c5ad323cd458771bc6aef1c567e3934e189d3560a5cd1d"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk3-attempt1-body-guide-validation.json",
+      "bytes": 464,
+      "sha256": "468e8a1bb0df1d01a8eb51c5a23c02b27f036eb5c2aeef2edfc45653bae4d0f6"
+    },
+    {
+      "path": "gait-repair/individual-walk/SE-walk3-joint-guide.png",
+      "bytes": 23821,
+      "sha256": "d5110a9b3426b914d1cfee0da4c2898035aa03813af45411599b9cdfbc4b913a"
+    },
+    {
+      "path": "gait-repair/individual-walk/prepare_crossed_legs.py",
+      "bytes": 4598,
+      "sha256": "952a767c86272af4423000a142740595f8cc1341da3ca5623d5f5ae0c768b67f"
+    },
+    {
+      "path": "gait-repair/individual-walk/prepare_remaining_whole_poses.py",
+      "bytes": 7611,
+      "sha256": "161a318b0923a61bfa1bd784fdffc72da41844b26c75cbcfe5e2626aa7e9fc71"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk0-attempt1.txt",
+      "bytes": 2947,
+      "sha256": "026097c38400c9667dcd2f6304329b4eb7632310136e97190672e60b5b11a0ad"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk0-attempt2-rear-heel.txt",
+      "bytes": 1416,
+      "sha256": "1202028f2ee7e80384968f13013cfe7da1fe3b482f9def29e34e2dd18d435948"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk1-attempt1-body-guide.txt",
+      "bytes": 2347,
+      "sha256": "c789f41952805fddc0315187ff825cf879f27c9844c359ca496e37bfe5722796"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk1-attempt1.txt",
+      "bytes": 2984,
+      "sha256": "d4e419319b48377bd1433286617cca8db8d9dd0998dcc613c3ec9c1f29b83bec"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk2-attempt1.txt",
+      "bytes": 3003,
+      "sha256": "d0d61b6314f8d4be41d55e2de12e139661fcd1ea9f8f29424a124bccff2703f4"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk2-attempt2-crossed.txt",
+      "bytes": 2214,
+      "sha256": "648f5b291827fbfbcd47e83c2cf0e27680d842d5282d3976115537713a872cde"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk2-attempt3-calf-identity.txt",
+      "bytes": 1382,
+      "sha256": "5dfb4a67c1b801ab18da05172c487e09241ac6a35f5afd7c0b7f037ee4ab04ca"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk2-attempt4-trailing-heel.txt",
+      "bytes": 1331,
+      "sha256": "db9fc6333696539d43c9e9ea56c0a3869797c0ff4d476e9e7b8eb9297866dbd0"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk3-attempt1-body-guide.txt",
+      "bytes": 2372,
+      "sha256": "068766440ab909c249c78aac7750b55c55e3e2c7e167682e7297c2c562ecb79c"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk3-attempt1.txt",
+      "bytes": 3009,
+      "sha256": "f212add895e01032f68dc5490b41f5dab8837d095ddde4d10775c42489c0bff1"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NE-walk3-attempt2-planted-heel.txt",
+      "bytes": 1511,
+      "sha256": "26519fe6875fed89a775e0141659da3e78aedd1bd77fc24339288980027bb91c"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk0-attempt1.txt",
+      "bytes": 2945,
+      "sha256": "49e9ee25eba4795a69237f5fe03546a872912df78dd3186041c64f9e13f6b98b"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk0-attempt2-crossed.txt",
+      "bytes": 2210,
+      "sha256": "b27b95f70ce6b50c5e9737dc8c5eeb1a5bab587ed0ea5a1c974e16216536f18a"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk0-attempt3-original-calf-straps.txt",
+      "bytes": 1459,
+      "sha256": "fe29d07ee2b1a0e6267d21ee820a3c1fce0cf68da702e0df05f435a3fb4d59ca"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk1-attempt1-body-guide.txt",
+      "bytes": 2343,
+      "sha256": "546de9bec2e19cd962f9462626a7609940aad1f9af26a07f814a773cd161d17a"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk1-attempt1.txt",
+      "bytes": 2982,
+      "sha256": "eb881c755bb2061895ad9cab8986e0904b77909879695ec1946799fc86841029"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk2-attempt1.txt",
+      "bytes": 3001,
+      "sha256": "8192e839be47c49ca7d742bf368077070e72385ac1198d1448c41e8489f35ad2"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk3-attempt1-body-guide.txt",
+      "bytes": 2368,
+      "sha256": "eb210b1cbc157142a59e6e33d422cb0e7c2b27ccdbdceb8ad2c5831f7c4ac5af"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk3-attempt1.txt",
+      "bytes": 3007,
+      "sha256": "b44cf64e8d457a35ccb147c30b77e2d182c9539a1826c18ad7997ba89861b204"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-NW-walk3-attempt2-pure-skeleton.txt",
+      "bytes": 2090,
+      "sha256": "ed0e6a391375b68f8434661f80a7f9811a0012bf5f199d9c69a5fdf46da89f78"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-SE-walk0-attempt1.txt",
+      "bytes": 2794,
+      "sha256": "90352c8d6303336ec5c40e4669fc8e2584251154bb343ce49151f8dd2801c8e2"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-SE-walk1-attempt1-body-guide.txt",
+      "bytes": 2231,
+      "sha256": "812d804bb6c485fbe8a052c8814bcc73ef91fe2461d51e9c78f60a345dab81a1"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-SE-walk1-attempt1.txt",
+      "bytes": 2831,
+      "sha256": "6312e78ab17aa8661eaf7d488b8ea1d27561325acc060e36112755fd07738e52"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-SE-walk2-attempt1-body-guide.txt",
+      "bytes": 2339,
+      "sha256": "8075c659c10a646a4f8ace5f1d622094eb7089c1408d1022d81e832a91248e2c"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-SE-walk2-attempt1.txt",
+      "bytes": 2850,
+      "sha256": "7c704d7caceb0a95fd49db07725788cee31f3ce2966c9f72d1b4961b26ef0da3"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-SE-walk3-attempt1-body-guide.txt",
+      "bytes": 2256,
+      "sha256": "6a1d0953e5cd9a1e6fd5b478e68ed6ce6ce91e329655da5bff699056fb4bc16e"
+    },
+    {
+      "path": "gait-repair/individual-walk/prompt-SE-walk3-attempt1.txt",
+      "bytes": 2856,
+      "sha256": "d675ed07f6d4904e106b509d21a1915fd4895b5ec309b8b99b8d38c9788e2180"
+    },
+    {
+      "path": "gait-repair/individual-walk/validate_single.py",
+      "bytes": 1325,
+      "sha256": "93f72adf8fcab8df336c3873903e18a1c9e29fc8ad03b025a9900a6dae5ccc27"
+    },
+    {
+      "path": "gait-repair/new-idle-front8-geometry.json",
+      "bytes": 3045,
+      "sha256": "191db025bda9598f7b1e71490b2732884a62e2ff2ce0046fdfba4f3ee302547e"
+    },
+    {
+      "path": "gait-repair/new-idle-front8-validation.json",
+      "bytes": 493,
+      "sha256": "4c480341a2ba015c5ffde61359fe65767d6e3e7c1fa5ed83dacd02eaea50549c"
+    },
+    {
+      "path": "gait-repair/new-idle-rear8-geometry.json",
+      "bytes": 3037,
+      "sha256": "e98976fd5d79b14b8bf30fb7eda9ad15557afa5d70cc6d7896d499e0b3d1826e"
+    },
+    {
+      "path": "gait-repair/new-idle-rear8-validation.json",
+      "bytes": 492,
+      "sha256": "db3dd9b743676d62c030116fcd85cdb728a0b21839d1ce6e4edc588bc2503496"
+    },
+    {
+      "path": "gait-repair/prepare_Ngear.py",
+      "bytes": 3208,
+      "sha256": "def53fa1c9464803fcd214905afa28e06e161cfc0683d2cf16f7422f0f2efaa5"
+    },
+    {
+      "path": "gait-repair/prepare_WN_guides.py",
+      "bytes": 7246,
+      "sha256": "49cc69696b5bd00b680c5b0bb6619ef2e6a721db1d8627ad09512864d7917e0e"
+    },
+    {
+      "path": "gait-repair/prepare_focus_repairs.py",
+      "bytes": 5835,
+      "sha256": "b007291d531d2ffde094b6ce1bacab7eadfcac79ecb958a1355fa00ed6ba7dd3"
+    },
+    {
+      "path": "gait-repair/prepare_individual_phases.py",
+      "bytes": 10035,
+      "sha256": "98be7e59d38926a0e82e22222baf2ef2b639b22a02aeca8bffaa57de65ef18fe"
+    },
+    {
+      "path": "gait-repair/prepare_pilot2.py",
+      "bytes": 6587,
+      "sha256": "a339fe53757a55b8debe7c90e415ffbcf2262e40c4f3e1ee85485b8740cd14e0"
+    },
+    {
+      "path": "gait-repair/prepare_pose_transfer.py",
+      "bytes": 5750,
+      "sha256": "a36e7cbef67348dce3465ab48bd61f14e61329013aa2cafaab9b9768947adfcf"
+    },
+    {
+      "path": "gait-repair/prepare_rear_SW_repairs.py",
+      "bytes": 8154,
+      "sha256": "e63924c77584fac77b6a285616d4534eef25921d8f67c9780abaabc26c2521db"
+    },
+    {
+      "path": "gait-repair/prepare_remaining_guides.py",
+      "bytes": 9546,
+      "sha256": "975a50c6f4e17387b805c4b192f88276c84b66902331b75c9ee8e4ae844431d0"
+    },
+    {
+      "path": "gait-repair/prompt-new-idle-front8.txt",
+      "bytes": 2657,
+      "sha256": "993ead13ca6c339b7be31847f9e86896bd181f65ad836dd6ed70650e8175be1a"
+    },
+    {
+      "path": "gait-repair/prompt-new-idle-rear8.txt",
+      "bytes": 2744,
+      "sha256": "32953d2d8d3cf093890cc3f7f51b01f379b7da8c8536779544063a3c7ca9ead7"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-E-pilot1.txt",
+      "bytes": 3694,
+      "sha256": "2a754bc5362915a997cd003a4654339908278dab07c007cf3c84e73b76d50934"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-E-pilot2-guide.txt",
+      "bytes": 3223,
+      "sha256": "1120d04f84a36c4fd001804a028fc9eb105f82d2e1e6dd0d277a5d41edd126fc"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-E-pilot3-spacing.txt",
+      "bytes": 2157,
+      "sha256": "2eacd0b4f4cc8af8ed125e21bf985f82d975e5734c9c0d24312c852bde72cf61"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-E-pilot4-opposite-support.txt",
+      "bytes": 2367,
+      "sha256": "c5a4405c386a21e3588d560e8025c96a883e40a651d085628ca90adb519dbb69"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-E-pilot5-small-layout.txt",
+      "bytes": 2383,
+      "sha256": "d26c99368fbf0e492cbfe9d5acc759561877d135a7a5caa50850458c3c028910"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-N-pilot1.txt",
+      "bytes": 3687,
+      "sha256": "be51bc8f746c1484b267a328906cd64781475e6c1c284ad54391dc55e81ebdf9"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-N-pilot2-guide.txt",
+      "bytes": 3505,
+      "sha256": "2a493cf6a4b211f70f548e665893aace1f6b3d2bfc1f5adc6e67b66dd0369a67"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-N-pilot3-gear-support.txt",
+      "bytes": 2323,
+      "sha256": "8e708364da30fe9eb5b4b6f004fee5e599e7bcc51794c1bdc242381835a10b25"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-N-pilot4-gear-only-annotation.txt",
+      "bytes": 1958,
+      "sha256": "57e2402d796e9614e6e4e12f225bf91dd50cd4d6e31b92243b5271d032752098"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-N-pilot5-connected-small.txt",
+      "bytes": 1778,
+      "sha256": "a51e92923e88666fa4481777a9b9b4fce4788aee40ddd6bedb189d3d1ab9b7b4"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-N-pilot6-tail-spine-bridge.txt",
+      "bytes": 1786,
+      "sha256": "ba93c3e35a0bdcc74dc3c8ab135450fea6b2217af8e5c9b3ffc9aaa494b09946"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-N-pilot7-rear-heel-contact.txt",
+      "bytes": 1788,
+      "sha256": "a9fada59a5b395f580f3cfd1192f221e1ebaee695bc91167884a215dc8e90198"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-NE-pilot1-guide.txt",
+      "bytes": 2484,
+      "sha256": "f3abdcc6d604dc80b6dae52b8d85a1a63d309eeeb4b8adcab980e6738e89cd52"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-NE-pilot2-chains.txt",
+      "bytes": 2361,
+      "sha256": "38b54bdeeabedf5c5f1c13ad2a79310d6c2c19996a7a6eca8b30ad5ae0a76997"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-NE-pilot3-approved-pose-transfer.txt",
+      "bytes": 2502,
+      "sha256": "2ad9b6cc5ffdfd529ef83e781c825b909468c6a15c01447d763e82ac1087d7d5"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-NW-pilot1-guide.txt",
+      "bytes": 2467,
+      "sha256": "f8e06323d16014349e8fd5e27016cc6c8fad4ed50610ffe325e21b979296bc9e"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-NW-pilot2-chains.txt",
+      "bytes": 2399,
+      "sha256": "d6e1564039af38bddacdc305596a1d11a78a435b2ba9604f8977bd6dc610db31"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-NW-pilot3-approved-pose-transfer.txt",
+      "bytes": 2445,
+      "sha256": "1af9b26094ea6ca40bcb1c1062f2378f1308d65e0a5e6403fae6c615ec9533a2"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-S-pilot1-guide.txt",
+      "bytes": 2597,
+      "sha256": "548bde4d36f09aaf908790652f7ce62f178246ae7e515210bf2d3a0a6d7dbe0d"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-S-pilot2-small-layout.txt",
+      "bytes": 1469,
+      "sha256": "9bcac0f5b635e91606111db14be7f1ed6d1822067a72c8978b6434ec3dc22a68"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-SE-pilot1-guide.txt",
+      "bytes": 2438,
+      "sha256": "7b8f22d67321eca3f2d87d9c4872032fe807b739e8fa0832a2fcdf586f2868ce"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-SE-pilot2-opposite-support.txt",
+      "bytes": 1717,
+      "sha256": "a10d3c4416bc6cbf00f672d68d31919ac45782e7020fdfdeea30ad2ddd181a63"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-SE-pilot3-small-layout.txt",
+      "bytes": 1358,
+      "sha256": "7462acbcbf0314e6c18e643f2de9cdbe2102ddacdbbc216f5a9d534cb7c7a1aa"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-SW-pilot1-guide.txt",
+      "bytes": 2431,
+      "sha256": "3f3d0d6f1cc4c5287e1d71c51d09a84c414e4700978616a10a54dd07566aff02"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-SW-pilot2-left-heading.txt",
+      "bytes": 2466,
+      "sha256": "33d16ddde3bf000d451316c2a2c9a68cc3e084a1f04d7052ca4df24c9ea3f597"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-W-pilot1.txt",
+      "bytes": 3439,
+      "sha256": "7e50699ff86c51ecd97fd6562873dacc3642e2c14422ae866ae1a1f7988e0f17"
+    },
+    {
+      "path": "gait-repair/prompt-walk4-W-pilot2-guide.txt",
+      "bytes": 3275,
+      "sha256": "aabea68a3b2d03a150669bff756ce4ed9232286306bd990c97a031ea7693587d"
+    },
+    {
+      "path": "gait-repair/validate_pilot.py",
+      "bytes": 1638,
+      "sha256": "2ac422effe4afa13eed0e12edf5c63bfde20952ac6d99668f2284fcdcdbcda21"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot1-validation.json",
+      "bytes": 388,
+      "sha256": "ef8bb71f9e05299bb65ee121f7818c615df5c2701248fb52f3d661d293f4488f"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot1.png",
+      "bytes": 1934446,
+      "sha256": "62dc11c26437f23f9877853c00e479349b0a9f112524360474f272b92b206a2d"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot2-guide-validation.json",
+      "bytes": 470,
+      "sha256": "4d7b7daee853cb763d939a01afe9069951cb991b146afd6f098a748e4d129b49"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot2-guide.png",
+      "bytes": 1583785,
+      "sha256": "f08625c3d841ad1941a097248f304ff7d9fd8cce45bbf9af7b000584df8df44b"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot3-spacing.png",
+      "bytes": 1478416,
+      "sha256": "2e0fce22124613030c5283e99af5d6427b43c4d737d3707e87d05f7571691b10"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot4-opposite-support-validation.json",
+      "bytes": 936,
+      "sha256": "029c376c19140cf9dad259a79d13f91038d2d3b06b423ee89b45e4f8d45e8bec"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot4-opposite-support.png",
+      "bytes": 1570239,
+      "sha256": "3968448f894a72a55e26c6b396de1171d31078df030596667f07f4cd64430e06"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot5-small-layout-geometry.json",
+      "bytes": 1616,
+      "sha256": "63478d71e312bd517e2c07e1a7c8b706ce4553fef3728a7439898e6832a4afdf"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot5-small-layout-validation.json",
+      "bytes": 924,
+      "sha256": "29db4a1cf7a0098d1f22de10c07d77a7df655aff0fad99614103048b0ef941f9"
+    },
+    {
+      "path": "gait-repair/walk4-E-pilot5-small-layout.png",
+      "bytes": 1396194,
+      "sha256": "6198b8517121076da65bd4ae02e29b4b7e8df0bd6fe7e88769bef6ef71c04cf1"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot1-geometry.json",
+      "bytes": 1625,
+      "sha256": "9c2ae727b61bd90b5d1b6c861f1394b0850435a458aa42b7714e78277fb4aea9"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot1-validation.json",
+      "bytes": 323,
+      "sha256": "883c5d9b215402a7941a40187cfa9224fbec6def809be86088bbad8b3e54fb42"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot1.png",
+      "bytes": 2113310,
+      "sha256": "9f8b02293855ef3dccbad24c1f99246a711c984954412b4982e7b123064a138f"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot2-guide-geometry.json",
+      "bytes": 1615,
+      "sha256": "34b7d418b7fa470a00b999976c3ca0e80208600de82dfa1c775cada05652b4a1"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot2-guide-validation.json",
+      "bytes": 453,
+      "sha256": "6ebd78e6b48d5c47eb572e5c8f2bff7d8dee2c72c98955a02c16bde5a30d4fee"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot2-guide.png",
+      "bytes": 1351284,
+      "sha256": "1711cd5ffa7116c50e522ed041a66192b1389febcc7df927941a88dcdde783cb"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot3-gear-support.png",
+      "bytes": 1422969,
+      "sha256": "2753362b4e41524bffcfedf9f339168c3b257c15970d5acb865b4b88b92763b7"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot4-gear-only-annotation-validation.json",
+      "bytes": 586,
+      "sha256": "deff34f8c3b6a78fd05bbab9dd46392b11fdf7cc5bd5b0d016a35e4f1cf7d7be"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot4-gear-only-annotation.png",
+      "bytes": 1445342,
+      "sha256": "de2c71070925702fe0a5e96ced3a094f5141ddcb5cbca765c3c306b4beb210b9"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot5-connected-small-geometry.json",
+      "bytes": 1616,
+      "sha256": "532bdc6980e1996d0cae7309a4562f38fe1ea248e130c5e3921658b191c1256e"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot5-connected-small-validation.json",
+      "bytes": 741,
+      "sha256": "22659d08d8d6477aaf670c80a5357abba1bdf992e5a9ab1b0ab3c3826d819ff1"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot5-connected-small.png",
+      "bytes": 1427840,
+      "sha256": "195b59e5b74953ddec83a9b533cec22d0ed8f6864a2ed14c524233ebf48bf3cf"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot6-tail-spine-bridge-geometry.json",
+      "bytes": 1616,
+      "sha256": "6f76fe45a3584eb2f3f111542dcd1c97a64160e4790261074c13d2c06aae8283"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot6-tail-spine-bridge-validation.json",
+      "bytes": 743,
+      "sha256": "a3d140ef925c87a64c7943203803e46edb1cc3f6afb45ea175d4a6f8939ab744"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot6-tail-spine-bridge.png",
+      "bytes": 1425274,
+      "sha256": "da5c7e4851de941c5f5c93209ff4065f1c655924cfe287720f671c75fb16ae55"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot7-rear-heel-contact-geometry.json",
+      "bytes": 1616,
+      "sha256": "2cf574ce39662ce612d0fb96ff742ec1ce89405fc230e6dac15d787c9f1a7cf8"
+    },
+    {
+      "path": "gait-repair/walk4-N-pilot7-rear-heel-contact-validation.json",
+      "bytes": 743,
+      "sha256": "6b59a30c65c89b14b74ae32caddb4723f806afd6482ef40e3d43778726791449"
+    },
+    {
+      "path": "gait-repair/walk4-NE-pilot1-guide-geometry.json",
+      "bytes": 1619,
+      "sha256": "44f54f19d799ed779a112672f4e90e17a76832eca42906df1af710f0a760d8c5"
+    },
+    {
+      "path": "gait-repair/walk4-NE-pilot1-guide-validation.json",
+      "bytes": 731,
+      "sha256": "a86283486eff3657e9a5d9f4227bbd73c454f16c697f23874aed867aa82a361c"
+    },
+    {
+      "path": "gait-repair/walk4-NE-pilot1-guide.png",
+      "bytes": 1539691,
+      "sha256": "6445367d8230bdacdab503d7cef875210bcacc74c90435d6e0af5abc35ea520a"
+    },
+    {
+      "path": "gait-repair/walk4-NE-pilot2-chains-geometry.json",
+      "bytes": 1619,
+      "sha256": "76c8c6ec882568a6612fa037d3ad8c7258955bf257a86f86c721134d3744f52d"
+    },
+    {
+      "path": "gait-repair/walk4-NE-pilot2-chains-validation.json",
+      "bytes": 732,
+      "sha256": "7de11845fedbbe3e69e6da1ebfbf0e2eedbff455a999c935f546cb411d0284a6"
+    },
+    {
+      "path": "gait-repair/walk4-NE-pilot2-chains.png",
+      "bytes": 1576455,
+      "sha256": "67ad44cfd4e09caac91ff40c52475e70dca6751e74130d2089db715c9a96f5bc"
+    },
+    {
+      "path": "gait-repair/walk4-NW-pilot1-guide-geometry.json",
+      "bytes": 1619,
+      "sha256": "e530fa2cbbb6ba5da91059151ccd590a10f8ae0f71a9266e879e69211b78493d"
+    },
+    {
+      "path": "gait-repair/walk4-NW-pilot1-guide-validation.json",
+      "bytes": 731,
+      "sha256": "97b725c3751a549711b6e94360227be5457d7d2900fb5d100a63b04a6f0c1085"
+    },
+    {
+      "path": "gait-repair/walk4-NW-pilot1-guide.png",
+      "bytes": 1732704,
+      "sha256": "703474aac2b304f27a1abf23b48f236b01700a4d702e380befef656e38eeba37"
+    },
+    {
+      "path": "gait-repair/walk4-S-pilot1-guide-validation.json",
+      "bytes": 722,
+      "sha256": "7eeb0563255d2483f60ec2ee489e9687a6ea8ff359a1535b63454252693525dd"
+    },
+    {
+      "path": "gait-repair/walk4-S-pilot1-guide.png",
+      "bytes": 1548064,
+      "sha256": "a34a98392f4ab2793e5569989f8e67c7faac83b49b423d66d19f1f1394b4b2b8"
+    },
+    {
+      "path": "gait-repair/walk4-S-pilot2-small-layout-geometry.json",
+      "bytes": 1620,
+      "sha256": "7f0c933620980e2b77be3cd35b985c76048d7d146a20ed0043eb37e116a6f688"
+    },
+    {
+      "path": "gait-repair/walk4-S-pilot2-small-layout-validation.json",
+      "bytes": 738,
+      "sha256": "6be2ae6204d0b2e5d2e3f8cd9f24240e774cde144c9e2fc85161236a7f7d57ac"
+    },
+    {
+      "path": "gait-repair/walk4-SE-pilot1-guide-geometry.json",
+      "bytes": 1619,
+      "sha256": "c7e5f5ea16e458625a67554d7879b255c842e9bd74681eb4d1dc4db9f4f45ace"
+    },
+    {
+      "path": "gait-repair/walk4-SE-pilot1-guide-validation.json",
+      "bytes": 731,
+      "sha256": "c83040699438150ba4a84a7ebf08d857e0b0e0e0352934d7dcc0ca9e63a49a28"
+    },
+    {
+      "path": "gait-repair/walk4-SE-pilot1-guide.png",
+      "bytes": 1663840,
+      "sha256": "ec933e10c441126fba5bc34419118b5cf9db89a87b4466182b326839969040fb"
+    },
+    {
+      "path": "gait-repair/walk4-SE-pilot2-opposite-support-validation.json",
+      "bytes": 734,
+      "sha256": "cce1a9bea388e76ed22d20d006925a7d6f0d05b277eed8c121e740d537b03d4e"
+    },
+    {
+      "path": "gait-repair/walk4-SE-pilot2-opposite-support.png",
+      "bytes": 1699374,
+      "sha256": "d7c074b29c20638d214d55e47da1736160ff2901257af6e2c2342e3671fee072"
+    },
+    {
+      "path": "gait-repair/walk4-SW-pilot1-guide-validation.json",
+      "bytes": 723,
+      "sha256": "97cb683aa8ad4e28758dd48f681ec6445c463bbaee6e72cb5b18ae663a97c005"
+    },
+    {
+      "path": "gait-repair/walk4-SW-pilot1-guide.png",
+      "bytes": 1671144,
+      "sha256": "c06f38056be4e58afc82a2100feadfc15265290692a2a9519fe531d5315dc902"
+    },
+    {
+      "path": "gait-repair/walk4-SW-pilot2-left-heading-geometry.json",
+      "bytes": 1622,
+      "sha256": "889543bc96f5093141b79466bf3ad539be3bc3926319ee60fce4903066c3ee6e"
+    },
+    {
+      "path": "gait-repair/walk4-SW-pilot2-left-heading-validation.json",
+      "bytes": 739,
+      "sha256": "0107e358c837f992aaf82645b83c0f91910a29f6bd67e07e80775abe4c10ceb8"
+    },
+    {
+      "path": "gait-repair/walk4-W-pilot1-validation.json",
+      "bytes": 388,
+      "sha256": "f90c9e962c216e6326e3efd5d94621d12760b3f3d493fc322ae6550d37837d8e"
+    },
+    {
+      "path": "gait-repair/walk4-W-pilot1.png",
+      "bytes": 1887689,
+      "sha256": "b5e180f101cde7e28e58c2c3da586d526af310ec0cd00366842f655d44ecc57e"
+    },
+    {
+      "path": "gait-repair/walk4-W-pilot2-guide-geometry.json",
+      "bytes": 1616,
+      "sha256": "47ed7dceff0d7b71f0dde84b549ff3831b00cc4c4e418b2c24252ab4aaecb95c"
+    },
+    {
+      "path": "gait-repair/walk4-W-pilot2-guide-validation.json",
+      "bytes": 432,
+      "sha256": "42a1e61ae0549ae8dc5b9903a093948f0b986d33b803bfcc4fb70f822adccf68"
+    },
+    {
+      "path": "gait-repair/walk4-W-pilot2-guide.png",
+      "bytes": 1613330,
+      "sha256": "4292dbd70900d963ad07a8ca2be260eebfaa7d3ee3bbb50f24b37207e40278cb"
+    },
+    {
+      "path": "generation-manifest.json",
+      "bytes": 6746,
+      "sha256": "82198a8140b86f892b0f0a9fc19f118f17222b55e76ab21c9477617b7dac4a2d"
+    },
+    {
+      "path": "hit-death-E-SE-spacing2-geometry.json",
+      "bytes": 3768,
+      "sha256": "79bbf0c7c3a4325278a5c1ee4baca513bbd47552d7290864cd574366609aee48"
+    },
+    {
+      "path": "hit-death-E-SE-spacing2-validation.json",
+      "bytes": 462,
+      "sha256": "4894e4e7fef589e674f1b8a28915147d56c3090ae6931e330e6c54d1af8e6bdd"
+    },
+    {
+      "path": "hit-death-E-SE-subset1-validation.json",
+      "bytes": 418,
+      "sha256": "1aa45c2e437b3e4e4c802f07e66d880d2f69efde5b132cbf93c999393484edc7"
+    },
+    {
+      "path": "hit-death-E-SE-subset1.png",
+      "bytes": 2265602,
+      "sha256": "7593c07d6ae35177534569f25908ab5183f3db28f1c32f0938515bdff4146327"
+    },
+    {
+      "path": "hit-death-N-NE-subset1-geometry.json",
+      "bytes": 3765,
+      "sha256": "5ed09ef74a1d79361731f922f07615205cc1bf33d6398a3d293c27b9dfa958e2"
+    },
+    {
+      "path": "hit-death-N-NE-subset1-validation.json",
+      "bytes": 461,
+      "sha256": "1c520c44c4b5cd1f651f0f73d848a2677d31f41a0d0b845ce49f64a498295ea2"
+    },
+    {
+      "path": "hit-death-S-SW-clean2-geometry.json",
+      "bytes": 3764,
+      "sha256": "ab0526e6f8ad00df04948f971a5a86892d36abacb0d2a220841b3b7589ac76a4"
+    },
+    {
+      "path": "hit-death-S-SW-clean2-validation.json",
+      "bytes": 460,
+      "sha256": "a2fc5af38d402cdc5a64d61cd9ae1e0e82dc8e954ab317809fd062420f32c1ac"
+    },
+    {
+      "path": "hit-death-S-SW-subset1-validation.json",
+      "bytes": 418,
+      "sha256": "0f0862d0bdb654da3dc8dd373240e591e3db5e1e9da37baebe54c668743d17f4"
+    },
+    {
+      "path": "hit-death-S-SW-subset1.png",
+      "bytes": 2196264,
+      "sha256": "5b46e6b51537f841a92314a4f36a8cb58d003d3e73883723c4a2a6c14b74f126"
+    },
+    {
+      "path": "hit-death-W-NW-subset1-geometry.json",
+      "bytes": 3763,
+      "sha256": "cb9b982952b4a1b1460ef79514c1afd16921cfab59ef8fd11c66edebb7784094"
+    },
+    {
+      "path": "hit-death-W-NW-subset1-validation.json",
+      "bytes": 461,
+      "sha256": "5dd9bf393efd48fb97b8a8b672af5f7ae2af0dbe6d4140c99fcd4e68ffdec8bf"
+    },
+    {
+      "path": "hit-death-front-SW-hit-head3-validation.json",
+      "bytes": 449,
+      "sha256": "b9209f85d5b9393299ffeda2f452c7ff7e613be2ce46f86d42cf4df1cd255516"
+    },
+    {
+      "path": "hit-death-front-SW-hit-head3.png",
+      "bytes": 2508061,
+      "sha256": "2263a52931b8a2baa47f94d2a57e2792fcb5e23cc0e85a6f840f36e8352b057c"
+    },
+    {
+      "path": "hit-death-front-attempt1-geometry.json",
+      "bytes": 7326,
+      "sha256": "838963defe97b50b5b6f7a60592419d2d317ae19ff92e1ad78f6a29c677dbea6"
+    },
+    {
+      "path": "hit-death-front-attempt1-validation.json",
+      "bytes": 645,
+      "sha256": "901793838df322d34d1f0e5e5c2d4cb2895ef96304575141ad4f4c5fbf0fac37"
+    },
+    {
+      "path": "hit-death-front-attempt1.png",
+      "bytes": 2129573,
+      "sha256": "1a0274a3bc5e59793810632ad7f3902842aba01a2216ea4976b7a28721acb45c"
+    },
+    {
+      "path": "hit-death-front-compass2-geometry.json",
+      "bytes": 7327,
+      "sha256": "3004d2105750e7a3888066f5a28473ef06e38e4f7af03d5a89e768b2f7dc8056"
+    },
+    {
+      "path": "hit-death-front-compass2-validation.json",
+      "bytes": 595,
+      "sha256": "1d926125137fb604363110de8cb3b173d6e8a48b610dcefded75877b899def5c"
+    },
+    {
+      "path": "hit-death-front-compass2.png",
+      "bytes": 2336062,
+      "sha256": "5477461f2c22cf8eaa244c3dd6784a84e0db504c36fac07e1ea45d1306ad62d5"
+    },
+    {
+      "path": "idle-walk-front-attempt1-validation.json",
+      "bytes": 292,
+      "sha256": "34b92de26244112b2dbd827227ea5d561ad9c024bf51f6cecdb894417879b6d5"
+    },
+    {
+      "path": "idle-walk-front-attempt1.png",
+      "bytes": 2354118,
+      "sha256": "0ef86d427cd5b36a03b6dcd9413d630b4906a6f7c9577604eeabbbcd41cadaca"
+    },
+    {
+      "path": "idle-walk-front-spacing2-geometry.json",
+      "bytes": 7331,
+      "sha256": "46d602fe10bf42d0adb624fd4a5d7845cfc3628eaad2c4c2afcdefccd32d0ff2"
+    },
+    {
+      "path": "idle-walk-front-spacing2-validation.json",
+      "bytes": 255,
+      "sha256": "eb08fb2a2276cd7c4f8cedb9a2dc0a62d824e03c385b02b7b451caf3827d0506"
+    },
+    {
+      "path": "idle-walk-front-spacing2.png",
+      "bytes": 1974002,
+      "sha256": "c682b6491a6291e44f9456a85c65701e5b009507c10901127c996ee69c044c31"
+    },
+    {
+      "path": "idle-walk-rear-attempt1-validation.json",
+      "bytes": 437,
+      "sha256": "1081c8f4f5bb5d0e28d2b0cf3f89f99eefcbd883e23cc4ec24136102548038ad"
+    },
+    {
+      "path": "idle-walk-rear-attempt1.png",
+      "bytes": 2160103,
+      "sha256": "47f8776b4d2e697d6e5862875311cc10b95affb66b54f175aa0018242cd6023b"
+    },
+    {
+      "path": "idle-walk-rear-direction-spacing2-geometry.json",
+      "bytes": 7331,
+      "sha256": "b00e916554e8ed5402d55c00e06db6bc588c331e6219fc8a1c4f001a0438e500"
+    },
+    {
+      "path": "idle-walk-rear-direction-spacing2-validation.json",
+      "bytes": 336,
+      "sha256": "56433d8878c2002dc8926d28a83daa83f54b53245a1a116b71a3045a242fa4e5"
+    },
+    {
+      "path": "idle-walk-rear-direction-spacing2.png",
+      "bytes": 2080959,
+      "sha256": "0e19ce43478ddcb72999af3f07e352ed32a9bfae976a6228f9330e7ab3ba6db3"
+    },
+    {
+      "path": "memory31-lossless-probe/gl31-process.json",
+      "bytes": 632,
+      "sha256": "4a02a13f52ffc47f897db31b6897e8598fceeb21db75370c63cf7a7937ce1d15"
+    },
+    {
+      "path": "memory31-lossless-probe/gl31-python.stderr.log",
+      "bytes": 171,
+      "sha256": "afb1f5fc2b66a934a3065a96218b0e267afe77f117083274512da2a3a15b1cb7"
+    },
+    {
+      "path": "memory31-lossless-probe/gl31-python.stdout.log",
+      "bytes": 349,
+      "sha256": "0b0b85dba31c74e9b21974b9b1b198bb477935588539dc1de607c07058cd79c0"
+    },
+    {
+      "path": "memory31-lossless-probe/gl31.json",
+      "bytes": 38453,
+      "sha256": "2812d3fa0b357d15f6fb7537ee1e6e9ce252905cd4cae88da20cd4f74280320b"
+    },
+    {
+      "path": "memory31-lossless-probe/headless31-process.json",
+      "bytes": 585,
+      "sha256": "3b12365a38d6f4598a844bf49578111472dd58ec220f80877c3c4abee40bad62"
+    },
+    {
+      "path": "memory31-lossless-probe/headless31-python.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "memory31-lossless-probe/headless31-python.stdout.log",
+      "bytes": 215,
+      "sha256": "24f66b69bcff08ed0013804c087a18c415c32c46b9f512121ec9ab8b4498427b"
+    },
+    {
+      "path": "memory31-lossless-probe/headless31.json",
+      "bytes": 38398,
+      "sha256": "c7b33f4b97437ba18bf49086b6ddc20d4021ea887aab8ea052dc982f54f8fb2c"
+    },
+    {
+      "path": "memory31-lossless-probe/import-process.json",
+      "bytes": 432,
+      "sha256": "6d81a02e5d86a203aca9f64aa7745103a012d718bc5712910e05bad3463f7f1d"
+    },
+    {
+      "path": "memory31-lossless-probe/import-python.stderr.log",
+      "bytes": 444,
+      "sha256": "a3f3f2036d464ef6b4fcd34c3c7a9a6af2c4634a144ff7d2ccc757b903ed54b8"
+    },
+    {
+      "path": "memory31-lossless-probe/import-python.stdout.log",
+      "bytes": 7474,
+      "sha256": "035b79adf68e6a47ae95d0ab919e1c54bd58d7e7543cf3ddc20f5f87fbeac83c"
+    },
+    {
+      "path": "memory31-lossless-probe/import.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "memory31-lossless-probe/import.time.log",
+      "bytes": 61,
+      "sha256": "39d2bc5b5ec14e44e2f15846e92e96557b0def6b5f1be1be35178400e0fee4f1"
+    },
+    {
+      "path": "memory31-lossless-probe/run_probe.py",
+      "bytes": 1226,
+      "sha256": "a34e7afb2342544d92b91644d47a56166bdf8084b5dfcde6bc127a8a65b5462c"
+    },
+    {
+      "path": "memory31-lossless-probe/source-manifest.json",
+      "bytes": 31584,
+      "sha256": "64e64a8d376bfdbf2284001532907d44ba0879c06afce16e86257f57e8f28961"
+    },
+    {
+      "path": "memory31-lossless-probe/xdg/godot/app_userdata/Isolated raw pose memory probe/logs/godot.log",
+      "bytes": 518,
+      "sha256": "b0a4b663b2b35be68d80b06b3fceeb6fbfbad745d6434c6c2b617437b6ffc6e2"
+    },
+    {
+      "path": "memory31-lossless-probe/xdg/godot/app_userdata/Isolated raw pose memory probe/logs/godot2026-10-15T21.20.44.log",
+      "bytes": 215,
+      "sha256": "24f66b69bcff08ed0013804c087a18c415c32c46b9f512121ec9ab8b4498427b"
+    },
+    {
+      "path": "mixed112-trial02/candidate112-trial02-HOLD.json",
+      "bytes": 283845,
+      "sha256": "2f40e7443e0d05dff7b107bcdf36a2507bff0202dbe082c31a4728257abfbb99"
+    },
+    {
+      "path": "mixed112-trial02/source-geometry112.json",
+      "bytes": 47119,
+      "sha256": "de41a772c3179cda9cd1af3a973c31582085b86f152b05d111b380eeec7ecb81"
+    },
+    {
+      "path": "mixed112-trial03/candidate112-trial03-HOLD.json",
+      "bytes": 285703,
+      "sha256": "8d395238d19b981da40301e21579764e97878a12297c8ac74a13932163a3170d"
+    },
+    {
+      "path": "mixed112-trial03/source-geometry112.json",
+      "bytes": 47103,
+      "sha256": "904d3b55462c4adce16ea840572112eadbc55a31bf273990a3d249a0e52c6cdb"
+    },
+    {
+      "path": "mixed112-wip/candidate112-WIP.json",
+      "bytes": 239799,
+      "sha256": "a4d9cc5cb61fb0b30902d1b76db5ae4899d26efc6844ad4c083cf86835a76648"
+    },
+    {
+      "path": "mixed112-wip/source-geometry112.json",
+      "bytes": 5331,
+      "sha256": "5c5cae24e311144c8d6009dd8ec9049125863040de0a74206ad9dcdce7d7fb1f"
+    },
+    {
+      "path": "package_recovery.py",
+      "bytes": 2804,
+      "sha256": "e45f248382fb05594bce6e2844d5c31863e5ac9d2ab0d6496d3aae58d21612bf"
+    },
+    {
+      "path": "prepare_compact_singles.py",
+      "bytes": 4264,
+      "sha256": "ce2d1f76b6ac0b456849d814d92af5484803ef644c8221547533f0367d91da0d"
+    },
+    {
+      "path": "prepare_memory_probe.py",
+      "bytes": 2303,
+      "sha256": "932ae300c469d1944c8509da9ac36529188820f08d86501168fee2a3aa334957"
+    },
+    {
+      "path": "prepare_profile_repair.py",
+      "bytes": 3982,
+      "sha256": "9e4ddeaee6af4a87f7ad029ce3a7ab211493020d356fb57aa64e7083bc60d06c"
+    },
+    {
+      "path": "profile-heading-repair/E-fourphase-true-profile1-HOLD-gait.png",
+      "bytes": 1515996,
+      "sha256": "7735500fe3295f43612c06393685eefd470d6a1cba76a35eaa378bff31744416"
+    },
+    {
+      "path": "profile-heading-repair/E-fourphase-true-profile1-HOLD-review.json",
+      "bytes": 411,
+      "sha256": "e1c65e8a5c457b137a563a927e4f89a18ac373e747dd14f93162c84bf357a309"
+    },
+    {
+      "path": "profile-heading-repair/E-fourphase-true-profile1-geometry.json",
+      "bytes": 1621,
+      "sha256": "684069f2e0768ebaf627332d4c7e60c601438391141f19b17969d7984a565dc1"
+    },
+    {
+      "path": "profile-heading-repair/E-fourphase-true-profile2-HOLD-gait-review.json",
+      "bytes": 530,
+      "sha256": "b6e16f623688927df755a740f5dbdec82e35f4357256eabf1b8f03c7bfeabe4c"
+    },
+    {
+      "path": "profile-heading-repair/E-fourphase-true-profile2-HOLD-gait.png",
+      "bytes": 1534357,
+      "sha256": "1b2d17158bb169b060cadbe9d60e014d09b5ea7c8716fa882f913ab614e5b0bd"
+    },
+    {
+      "path": "profile-heading-repair/E-opposite-colored-leg-study1-HOLD-intermediate.png",
+      "bytes": 1017134,
+      "sha256": "c379bd154f8f04532f0c9dc51c175ecb8b637ac2f2f1f165a4cc0a01e3a0e9cb"
+    },
+    {
+      "path": "profile-heading-repair/E-single-B-opposite-blue-final1.png",
+      "bytes": 995154,
+      "sha256": "f1b2e477ef19f03fea9b39866dfa835dff093fcb4e0753e8c7c0a8cb9afa47bb"
+    },
+    {
+      "path": "profile-heading-repair/E-single-opposite-stride-pilot1-ACTUAL-A-HOLD-request.png",
+      "bytes": 755584,
+      "sha256": "babe3d6146d4ba392ec940fa657bad7d9ab05d6086f0add66bf9807b90839986"
+    },
+    {
+      "path": "profile-heading-repair/E-single-opposite-stride-pilot2-HOLD-near-lead-geometry.json",
+      "bytes": 557,
+      "sha256": "57b4b0a6a74037dc389540989f6e283c0c2665fe59eb06d32d81ce3e6894f78a"
+    },
+    {
+      "path": "profile-heading-repair/E-single-opposite-stride-pilot2-HOLD-near-lead-review.json",
+      "bytes": 442,
+      "sha256": "fb14995c0e921504a9a0f60d8167827c3d0d557d3fa5f3aac945fd7243dd8170"
+    },
+    {
+      "path": "profile-heading-repair/E-single-opposite-stride-pilot2-HOLD-near-lead.png",
+      "bytes": 886543,
+      "sha256": "6299f33551006772dd04aa6c6b90e9bcd9ce5106d726da57df70287edd240770"
+    },
+    {
+      "path": "profile-heading-repair/E-walk0-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 558,
+      "sha256": "a1b30f05284bc848ed24279e3022228b5d777f6c5df41043c415d5585947c41f"
+    },
+    {
+      "path": "profile-heading-repair/E-walk1-colored-support-study1-HOLD-intermediate.png",
+      "bytes": 909736,
+      "sha256": "c1d3e269fe32ea99ca1880a23b4c574eede1b22c78e58f446bc56487d7462447"
+    },
+    {
+      "path": "profile-heading-repair/E-walk1-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 556,
+      "sha256": "ff8f91cb6b02668bedf35a7e8f6c01ff2baeb13bb005503bc2bcd2b92ac3b28f"
+    },
+    {
+      "path": "profile-heading-repair/E-walk2-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 556,
+      "sha256": "5ed4f34da2effa61654f8624b40f79de49ae44df858ed94409bcd8ef3abf1fad"
+    },
+    {
+      "path": "profile-heading-repair/E-walk3-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 556,
+      "sha256": "e25aa8e40b3d233c16af7e6b8c9fbbba842765d997db946a264df37500db0ee2"
+    },
+    {
+      "path": "profile-heading-repair/W-fourphase-true-profile1-HOLD-gait.png",
+      "bytes": 1595303,
+      "sha256": "9eae03babd7fbe0590c691af7db894fbf2a609f6ad8bd0693d402cbbb5b6fb50"
+    },
+    {
+      "path": "profile-heading-repair/W-fourphase-true-profile1-HOLD-review.json",
+      "bytes": 483,
+      "sha256": "b43bb6f2d20be0478eda5e01dac6fcfd53d97bd720f462b4a0a02834f26bca9a"
+    },
+    {
+      "path": "profile-heading-repair/W-fourphase-true-profile2-HOLD-endpoints-geometry.json",
+      "bytes": 1631,
+      "sha256": "22b5d4949cb12818b133c8e4f59f9ae9349d73e991087095ed1bca95477267b2"
+    },
+    {
+      "path": "profile-heading-repair/W-fourphase-true-profile2-HOLD-endpoints-review.json",
+      "bytes": 500,
+      "sha256": "f7d418537c2a1e886c5d7b9ab9563ade722d530abb8f0ce2dcb47e56475cc26b"
+    },
+    {
+      "path": "profile-heading-repair/W-fourphase-true-profile2-HOLD-endpoints.png",
+      "bytes": 1560914,
+      "sha256": "ea715b6611ae8117ddc8f7e356dd56174a2e9ee0c61ab76bb2589c0306115f90"
+    },
+    {
+      "path": "profile-heading-repair/W-single-opposite-stride-pilot1-ACTUAL-B-HOLD-request.png",
+      "bytes": 807435,
+      "sha256": "a307043658295844159b73ff7294ca0bcff63c7ce3a5a0724f6e335dffde37a2"
+    },
+    {
+      "path": "profile-heading-repair/W-single-opposite-stride-pilot2-A-proposed-geometry.json",
+      "bytes": 557,
+      "sha256": "0222445ebdbc9d698712f3f532b7e833a5f9d72e2a7509582a5d4df361d98d60"
+    },
+    {
+      "path": "profile-heading-repair/W-single-opposite-stride-pilot2-A-proposed-review.json",
+      "bytes": 474,
+      "sha256": "0d557b5cf45fd94e4e6571a1a1ddca5fd69650e430e910a54afa1e06e1cf745f"
+    },
+    {
+      "path": "profile-heading-repair/W-single-opposite-stride-pilot2-A-proposed.png",
+      "bytes": 1002423,
+      "sha256": "e01ef88e57c6bc83330a3b572ba0b3bbf8ca353ca4652ea807a402ae6cd57f73"
+    },
+    {
+      "path": "profile-heading-repair/W-walk0-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 557,
+      "sha256": "0222445ebdbc9d698712f3f532b7e833a5f9d72e2a7509582a5d4df361d98d60"
+    },
+    {
+      "path": "profile-heading-repair/W-walk1-true-profile-single-proportion2-geometry.json",
+      "bytes": 555,
+      "sha256": "cb8ac0237ab1bac62c45d8d7f8ecc10d635e9bb14ef3bb69fa9e707c15cc1b26"
+    },
+    {
+      "path": "profile-heading-repair/W-walk1-true-profile-single-proportion2-review.json",
+      "bytes": 564,
+      "sha256": "1fa7ba4bfdea178f15836425e9ae8fb7de859ccf150df6212df9f7368386c24f"
+    },
+    {
+      "path": "profile-heading-repair/W-walk1-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 555,
+      "sha256": "6a1e285d2adf30ca19819d457d078261e8d6bc306dad78c1496b2184cfed8627"
+    },
+    {
+      "path": "profile-heading-repair/W-walk1-true-profile-single-selected-proposal.png",
+      "bytes": 950751,
+      "sha256": "59703ffdb1fb9ac942790a1d6ff240dded2813c97f8457a795a77673a9c646d7"
+    },
+    {
+      "path": "profile-heading-repair/W-walk2-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 558,
+      "sha256": "724f7848d0b624d853696912e060688da80d81d8b1543096b6bb6525f6638698"
+    },
+    {
+      "path": "profile-heading-repair/W-walk3-colored-support-study1-HOLD-intermediate.png",
+      "bytes": 848130,
+      "sha256": "f9b1a6885f9ec19a16d6d850d79375c5aeedd86a5162a63af7eb56f96560397e"
+    },
+    {
+      "path": "profile-heading-repair/W-walk3-true-profile-single-selected-proposal-geometry.json",
+      "bytes": 558,
+      "sha256": "ca97e06fdff199d8185d900bac85156ac64ff873cc8c2d787145df08974b14c1"
+    },
+    {
+      "path": "profile-heading-repair/freeze_profile_singles.py",
+      "bytes": 2224,
+      "sha256": "aaddb3f80ecc7632371205091c3fccb3d162e7ca2a46363dab4c5f77efb71665"
+    },
+    {
+      "path": "profile-heading-repair/prepare_body_cross_pilots.py",
+      "bytes": 3778,
+      "sha256": "bcf475e5a754310fc20f9c67c41f09b557e705c4581d1229296b8588c4c47e72"
+    },
+    {
+      "path": "profile-heading-repair/prepare_passing_singles.py",
+      "bytes": 3868,
+      "sha256": "9e2f2fc93ca5186d622ebe17fc58e88df681da232b5f64c02a28de07fbd31d95"
+    },
+    {
+      "path": "profile-heading-repair/prepare_single_profile_pilots.py",
+      "bytes": 4186,
+      "sha256": "f8a2735f4ff17cb495361aecfb8f4a9e9719395407a5ade8a14780ea657d2a3c"
+    },
+    {
+      "path": "profile-heading-repair/prepare_true_profile_jointguide.py",
+      "bytes": 5094,
+      "sha256": "283c71d9537ef697f37a116f41723190e55a38a8317fef02cf2f36c904060052"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-colored-leg-anatomy-study1.txt",
+      "bytes": 2087,
+      "sha256": "4d170fc0669c9c7e459da01e1fd701b6bdd90a2cea085c6d7bdc5e86af468c8b"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-fourphase-true-profile1.txt",
+      "bytes": 2816,
+      "sha256": "97df8fe09217ecfc2ecedd4fb6c3d6cdcaddb77f03a0096e014b62c59a1ffdb2"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-fourphase-true-profile2-skeleton.txt",
+      "bytes": 2779,
+      "sha256": "e7fd638b88219c321209c283f80fa7e970b9479d23fde649a96da4306e4b234f"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-opposite-colored-study-blue-final1.txt",
+      "bytes": 1549,
+      "sha256": "b46af81ea70e16ef5c77bd2fc44ed956589267b03c4c61d524f8d7fe86c3a616"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-single-opposite-stride-pilot1.txt",
+      "bytes": 2238,
+      "sha256": "42bea9eae58ca6f4cd4c240bc2041a1a5edf77c03843e8b6dd55cfa5c0c15d5b"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-single-opposite-stride-pilot2-body-guide.txt",
+      "bytes": 2083,
+      "sha256": "7ff676cce3af8973078d2fa50c6784465a0a96cc1c8d6b58dcd976b0d3a7dbfd"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-walk1-colored-study-blue-final1.txt",
+      "bytes": 1125,
+      "sha256": "ee7ad2faf3693950a5f01c6e9287a8c5f0d5ab7cbcb596ceb607547bd5149780"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-walk1-colored-support-study1.txt",
+      "bytes": 1905,
+      "sha256": "ca6448f43cac733278d82c8ef5d3426446e216d6c9ca9b4d9966eef9641ff5e6"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-walk1-passing-single1.txt",
+      "bytes": 1828,
+      "sha256": "fcf5a8354b5add81881905bb2c0a1116ed400fcfad3fffa3494126c2c451ae9f"
+    },
+    {
+      "path": "profile-heading-repair/prompt-E-walk3-passing-single1.txt",
+      "bytes": 1828,
+      "sha256": "9236f0ecfcb3bb448a6ecc9b222b981beea6f832d080cab9a5291dd1f9bbbba6"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-fourphase-true-profile1.txt",
+      "bytes": 2842,
+      "sha256": "f9d48334a676767952d4f18725eca043429a7ce06f33057513c101b6d0e1985f"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-fourphase-true-profile2-skeleton.txt",
+      "bytes": 2780,
+      "sha256": "479cb0814c3c2e9e643fa1518cba258c5ac934192b8c3c9eadd947a49625c893"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-single-opposite-stride-pilot1.txt",
+      "bytes": 2253,
+      "sha256": "28fbe237255f117d751629ccd11506b8989ce6e196626bf7c2de1b70c84a2db3"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-single-opposite-stride-pilot2-body-guide.txt",
+      "bytes": 2082,
+      "sha256": "7d9df8fd4918663f1be41c535ed6f5e9a36187eca7072dc59d5d08606e42e778"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-walk1-anatomical-proportion2.txt",
+      "bytes": 1767,
+      "sha256": "c00e1b9334a05ffdd743b37565236f9b37785406486a5fd6de8bd56a3f2fc46c"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-walk1-passing-single1.txt",
+      "bytes": 1828,
+      "sha256": "a30c151968dfe59b5394ec08192f03e488d8e36b4cf79c54818402c1778c4431"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-walk3-colored-study-blue-final1.txt",
+      "bytes": 1428,
+      "sha256": "538b691e5942d44962ca6fd2908e6171b2bd85e0cca30e74c17928091f9936f4"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-walk3-colored-support-study1.txt",
+      "bytes": 1835,
+      "sha256": "9016ba348d53b40ca4cf25d6bda0aa7c84b035d1eb029e4db9ff51b68ff9ccee"
+    },
+    {
+      "path": "profile-heading-repair/prompt-W-walk3-passing-single1.txt",
+      "bytes": 1828,
+      "sha256": "abb4107b9338e75d875c6b78736c1d84fa2cbf27fcb66f38e4509371b7ba71a1"
+    },
+    {
+      "path": "profile-heading-repair/true-profile-eight-single-proposal.json",
+      "bytes": 5886,
+      "sha256": "578a232ff553d4550fedbc62746a20dce0fe586318fdcf573ebeea02871fbd0e"
+    },
+    {
+      "path": "prompt-attack-front-spacing2.txt",
+      "bytes": 1910,
+      "sha256": "e3ce4bad146cbc28903233128fa5ad7cd02651cfc6ff93e702125203bc9a3de3"
+    },
+    {
+      "path": "prompt-attack-front.txt",
+      "bytes": 4863,
+      "sha256": "2bdf6a18a322f03d25a11119439fb8c828080bd3acef333d70b48d9a96c277fc"
+    },
+    {
+      "path": "prompt-attack-rear.txt",
+      "bytes": 5267,
+      "sha256": "56c967e93a5dadce25648bc0e67e624d0bd4a382598f4f9830e559e7c2570462"
+    },
+    {
+      "path": "prompt-base.txt",
+      "bytes": 3005,
+      "sha256": "87111bea53b937df014cd6d4eb7ea4f463dfa8a7a8a576b81d9cada64d566f46"
+    },
+    {
+      "path": "prompt-hit-death-E-SE-clean-subset.txt",
+      "bytes": 5262,
+      "sha256": "462d02eed6b784ed62fab587ae913430db71270468039a109b214e2630f8fcdf"
+    },
+    {
+      "path": "prompt-hit-death-E-SE-subset-spacing2.txt",
+      "bytes": 1892,
+      "sha256": "0b8993840e247df0197ff7669bb7ecda255cddd81e4fdfa5f75ef5fc2dafbaf3"
+    },
+    {
+      "path": "prompt-hit-death-N-NE-clean-subset.txt",
+      "bytes": 4981,
+      "sha256": "30865ed117cfe3f4f2c0fe2df4d7fc1089ef9e226cb8cf3ec5ca28765442304b"
+    },
+    {
+      "path": "prompt-hit-death-S-SW-clean-subset.txt",
+      "bytes": 5756,
+      "sha256": "774f892e42527888e4db57bfbf237f32ea9977ab4cffd9cba4e2b68990ae2e52"
+    },
+    {
+      "path": "prompt-hit-death-S-SW-clean-subset2.txt",
+      "bytes": 2970,
+      "sha256": "edaab7b067588caeaf76a96d65defb573a3b7a28fa01b33b2ea7ba3482c29bda"
+    },
+    {
+      "path": "prompt-hit-death-W-NW-clean-subset.txt",
+      "bytes": 4713,
+      "sha256": "78de724d649bd7964e280d704b32ae87a0fef75108ee76c3fa0830b6f2454ede"
+    },
+    {
+      "path": "prompt-hit-death-front-SW-hit-head3.txt",
+      "bytes": 1704,
+      "sha256": "16f538daf1862a1ec5f5c1657b70922f91361ae8658e5ba840085f5bf4eebea1"
+    },
+    {
+      "path": "prompt-hit-death-front-compass2.txt",
+      "bytes": 2594,
+      "sha256": "de34d1c2964d6e6f23e8c425f708288708d2071e408f7917a292836c6f591a87"
+    },
+    {
+      "path": "prompt-hit-death-front.txt",
+      "bytes": 5556,
+      "sha256": "b183798d19cb14c75fa9e83c88f52d21d7e6b7a1b464148316ed61f541584924"
+    },
+    {
+      "path": "prompt-hit-death-rear.txt",
+      "bytes": 6104,
+      "sha256": "5860a4ed4d2cb69a60c602dd102d20f37dc84498371926f59d4abe4c103a152d"
+    },
+    {
+      "path": "prompt-idle-walk-front-spacing2.txt",
+      "bytes": 1828,
+      "sha256": "f2a773ebf4c46bd015097ec0ba5fb711866ee856af6f902bda4fd138bdd79b2b"
+    },
+    {
+      "path": "prompt-idle-walk-front.txt",
+      "bytes": 4851,
+      "sha256": "eae7ad7950ef35eb63c30ee9d7e105af55ff9cff98e2ec69f22b74a0b398e0f7"
+    },
+    {
+      "path": "prompt-idle-walk-rear-direction-spacing2.txt",
+      "bytes": 5512,
+      "sha256": "3c862c986f3916620022cd0db4e22aef5ce2b7e946317417ff80d9944327b650"
+    },
+    {
+      "path": "prompt-idle-walk-rear.txt",
+      "bytes": 5190,
+      "sha256": "be3901ea35760fe216b2e56f316bddb90520dff6e950f67c35b961b104922a22"
+    },
+    {
+      "path": "qa/anchor-diagnostics.json",
+      "bytes": 44320,
+      "sha256": "232c76ec1ad0ef00624a799ec82d112511200b5661620855e309371f3217c1bb"
+    },
+    {
+      "path": "qa/attack-front-spacing2-reviewed-geometry.json",
+      "bytes": 4472,
+      "sha256": "a8cf95c71cb8002923a07d6ccc2e3500dc5222f4c756610ce9bffcfa1d24e30f"
+    },
+    {
+      "path": "qa/attack-rear-attempt1-reviewed-geometry.json",
+      "bytes": 4472,
+      "sha256": "a1d3f062798adca833d4a0c334c50f70cafe04df080e132c62db498fd2617bda"
+    },
+    {
+      "path": "qa/hit-death-E-SE-spacing2-reviewed-geometry.json",
+      "bytes": 3765,
+      "sha256": "f91eaf4ea6d96fd98dcf1362ca6f27bfa21e98a0f5de07c63a875fbf833b6aac"
+    },
+    {
+      "path": "qa/hit-death-N-NE-subset1-reviewed-geometry.json",
+      "bytes": 3763,
+      "sha256": "9c6212a9c99c1631b7342fc2d4cdf935d9b2cbbe1764b9a46bbddb8600962fcf"
+    },
+    {
+      "path": "qa/hit-death-S-SW-clean2-reviewed-geometry.json",
+      "bytes": 3764,
+      "sha256": "2cbd1af1234a2b9df11ba34e78069f7e3b06ea84e028a0b40c40d8705c26fb09"
+    },
+    {
+      "path": "qa/hit-death-W-NW-subset1-reviewed-geometry.json",
+      "bytes": 3760,
+      "sha256": "793a837ac225543f1e05200b3f56eea3468c442194acff231583d2f365b083b6"
+    },
+    {
+      "path": "qa/idle-walk-front-spacing2-reviewed-geometry.json",
+      "bytes": 7331,
+      "sha256": "a917f789544fa4eb6e04b732983b58487064df1a53129bedbbd8a8d1eb1e2b4d"
+    },
+    {
+      "path": "qa/idle-walk-rear-direction-spacing2-reviewed-geometry.json",
+      "bytes": 7331,
+      "sha256": "59bcf34efbe6d8ed1966f3d99a9746e5aa0d9abb1c680ac7980d0538406acbe6"
+    },
+    {
+      "path": "qa/strict104.json",
+      "bytes": 2239,
+      "sha256": "d29a77dd4ab2c9ec0badd3cd78d315c3de00b0aec8ba62e8fa11b3159a6c66a1"
+    },
+    {
+      "path": "render_source_core_grids.py",
+      "bytes": 941,
+      "sha256": "60808a98fe12c2c2b05cdcb21269ade9815c2c76946bd995e4851adbec086370"
+    },
+    {
+      "path": "source-exact-region.png",
+      "bytes": 158480,
+      "sha256": "20976c8b236c943e3eda39855218bcffc38aaf8a54d65f54956f62cf5a6746ea"
+    },
+    {
+      "path": "source-proof.json",
+      "bytes": 1786,
+      "sha256": "1553edb741c76f61257251b67075ccf3aa7751362835f60b422b0d5859a0a71c"
+    },
+    {
+      "path": "source-wholebody-context.png",
+      "bytes": 165000,
+      "sha256": "7126e1e15941ac164f33e381ac7685d8a31589663c21b943758fad3dc4457a9c"
+    },
+    {
+      "path": "validate_sheet.py",
+      "bytes": 1479,
+      "sha256": "80247132b753ee8e949ac4be6921dd4874ef0a495534f05239212f263770a7aa"
+    },
+    {
+      "path": "write_recovery_checkpoint.py",
+      "bytes": 2967,
+      "sha256": "a5efebcd82324326254bea108f18ce2ab3e0c06c6db30c64ea339d0581c99ab2"
+    },
+    {
+      "path": "memory31-lossless-probe/summarize_probe.py",
+      "bytes": 2293,
+      "sha256": "a58c4725382095d5ee80b6da39a1133fc6ab19f95756db168c343e0dc672c02c"
+    },
+    {
+      "path": "memory31-lossless-probe/summary.json",
+      "bytes": 3416,
+      "sha256": "db4a983d8e0460d86b013737a1c155415d10d455a85c25bf751f8cccf976c913"
+    },
+    {
+      "path": "mixed112-trial03/README.md",
+      "bytes": 2484,
+      "sha256": "895e417d3c2bd4f181bc01050f37740e617685042b6370c08d3ea8e929104063"
+    },
+    {
+      "path": "mixed112-trial03/matrix-E-14poses-WIP.png",
+      "bytes": 1814540,
+      "sha256": "97dc0b391bed0c28359769c3c1c6a11f650fe6b29b6d216b353a9b4be3b5791f"
+    },
+    {
+      "path": "mixed112-trial03/matrix-N-14poses-WIP.png",
+      "bytes": 1912667,
+      "sha256": "7dd01c840aca2ad793a316cbd3541dd0f4c05620c48c521a3d673063a4106fd7"
+    },
+    {
+      "path": "mixed112-trial03/matrix-NE-14poses-WIP.png",
+      "bytes": 2141604,
+      "sha256": "5330119d8d7f997d3da22713795a032a3d90e2f6d8a79fff6579d73e701792cd"
+    },
+    {
+      "path": "mixed112-trial03/matrix-NW-14poses-WIP.png",
+      "bytes": 2317027,
+      "sha256": "87f061eb2e89cd8cca2ebc2b940b717a70b1e56432b6b6d417b5b2265dfa60bc"
+    },
+    {
+      "path": "mixed112-trial03/matrix-S-14poses-WIP.png",
+      "bytes": 1815618,
+      "sha256": "08dcfa5538b439ea66ae1ce9acc210c7b80cb621fc9cfee681882a7e275c043a"
+    },
+    {
+      "path": "mixed112-trial03/matrix-SE-14poses-WIP.png",
+      "bytes": 2169194,
+      "sha256": "c15ef0fd04aa4f416f8c52c92b2eaa3fcd9df076e3966a21b8caec710bc532aa"
+    },
+    {
+      "path": "mixed112-trial03/matrix-SW-14poses-WIP.png",
+      "bytes": 1946442,
+      "sha256": "4839f23d7bdc52580d13ce0add969d107c85a9349e17aa8d03dcfd06b5abd5ec"
+    },
+    {
+      "path": "mixed112-trial03/matrix-W-14poses-WIP.png",
+      "bytes": 2090595,
+      "sha256": "0e91b3bac9d35a531faa5d07f1ee006260f9e908fb947a4e39fb97210e5ba6d7"
+    },
+    {
+      "path": "mixed112-trial03/walk-E-fourphase-WIP.png",
+      "bytes": 834073,
+      "sha256": "c6d2ecb5cf4b001dd1a567a6504f8be6c0dcb456708964e97609068654e5fea0"
+    },
+    {
+      "path": "mixed112-trial03/walk-N-fourphase-WIP.png",
+      "bytes": 801319,
+      "sha256": "f819e997a6b8b41d3211529555c741394d0cbb4af087885313c8070d36f2f6d7"
+    },
+    {
+      "path": "mixed112-trial03/walk-NE-fourphase-WIP.png",
+      "bytes": 1175576,
+      "sha256": "474ccfa5c4d8e0a71cbfc19884e29ca33fd29c7e73f6886445d54b10f68de40c"
+    },
+    {
+      "path": "mixed112-trial03/walk-NW-fourphase-WIP.png",
+      "bytes": 1220572,
+      "sha256": "dd7139798b5478a1192cda5b18e2068b5b97301ce65e119426939e19cbc187e9"
+    },
+    {
+      "path": "mixed112-trial03/walk-S-fourphase-WIP.png",
+      "bytes": 802409,
+      "sha256": "e044b64a3cfc8b293c362af9f87b1cc98a5dc6738b9c248b1ff57aece7ae65be"
+    },
+    {
+      "path": "mixed112-trial03/walk-SE-fourphase-WIP.png",
+      "bytes": 1212563,
+      "sha256": "13f46e3c92d2e16908e83118591e56c0d61ab28698e853352e625efd55563de7"
+    },
+    {
+      "path": "mixed112-trial03/walk-SW-fourphase-WIP.png",
+      "bytes": 956475,
+      "sha256": "e2ca1859ba49ea796b4563fea8acf5ad2c9165d1b8bbb3694f5b0b880c3cf3dd"
+    },
+    {
+      "path": "mixed112-trial03/walk-W-fourphase-WIP.png",
+      "bytes": 925550,
+      "sha256": "43f73733e2c9494e7ed64a4e536fa3fd7292810206bccd6b08fdf37b52481083"
+    },
+    {
+      "path": "package_recovery_diagnostics.py",
+      "bytes": 1712,
+      "sha256": "56b585d0d3d2367923b5f5e7153fd473212be45b9dd18b59abad46f8b774c31f"
+    },
+    {
+      "path": "source-core-grids/E-walk0-source-coordinate-head-core-QA.png",
+      "bytes": 455412,
+      "sha256": "729359a6866096e630d574461a8bb42f10565f40ce52e50a8c5f6fe5d21e6de7"
+    },
+    {
+      "path": "source-core-grids/E-walk1-source-coordinate-head-core-QA.png",
+      "bytes": 561565,
+      "sha256": "516921cdc693286a8c7723cbfc4a6425c07368a249a7c95d2d82c51eeeeaad3d"
+    },
+    {
+      "path": "source-core-grids/E-walk2-source-coordinate-head-core-QA.png",
+      "bytes": 543021,
+      "sha256": "cbe054864a8058881c1fe642d3ad0ac71729458cb510cfa033a7c8a9929ad2dd"
+    },
+    {
+      "path": "source-core-grids/E-walk3-source-coordinate-head-core-QA.png",
+      "bytes": 558429,
+      "sha256": "225a1ebf4527ee30ac443dcc4772bad5b76f55cbb36291c9cc33edfc5f9d6429"
+    },
+    {
+      "path": "source-core-grids/W-walk0-source-coordinate-head-core-QA.png",
+      "bytes": 552365,
+      "sha256": "f5de7b20345dc675f111bbc79541b74c2b7bd7e7c36c7f328bebe7e6f8beceee"
+    },
+    {
+      "path": "source-core-grids/W-walk1-source-coordinate-head-core-QA.png",
+      "bytes": 584413,
+      "sha256": "adfad3534948543c73729fd748769ad9db4cd3e435253b5a045314d18fc9ee40"
+    },
+    {
+      "path": "source-core-grids/W-walk2-source-coordinate-head-core-QA.png",
+      "bytes": 480641,
+      "sha256": "3e316586ed4b29825e940144e297644ae9c4d73585391a5408d9e7271adf8e56"
+    },
+    {
+      "path": "source-core-grids/W-walk3-source-coordinate-head-core-QA.png",
+      "bytes": 582728,
+      "sha256": "db31f3b0b362239d98b7f0ca81921bb2a973cc326cb93df938491c18eaddc5ff"
+    },
+    {
+      "path": "RECOVERY_CURRENT.json",
+      "bytes": 12881,
+      "sha256": "eee47c5657a4bc1643e18f13798db399f6185b5b15881563a491e8d8a1c6c655"
+    },
+    {
+      "path": "build_mixed112_trial04.py",
+      "bytes": 8139,
+      "sha256": "adaef7a0475816f922d7e2970d02a49bdab9848680f416793ce7905d9f6cb167"
+    },
+    {
+      "path": "mixed112-trial04/candidate112-trial04-HOLD.json",
+      "bytes": 287969,
+      "sha256": "3b442c12e5d77bfd299b7b0df1026f5c1f7c68a2872b4556fa3ab51708cb5cd1"
+    },
+    {
+      "path": "mixed112-trial04/matrix-E-14poses-WIP.png",
+      "bytes": 1814438,
+      "sha256": "115ae1ff93e30c4c5c5be4cf2a388d81222441525a4f58d30884d9dd8a3ab1a2"
+    },
+    {
+      "path": "mixed112-trial04/matrix-N-14poses-WIP.png",
+      "bytes": 1921495,
+      "sha256": "d7446218fd2690a96870b51049e8ed28fabc451672ddb5a48861f39dbfac4386"
+    },
+    {
+      "path": "mixed112-trial04/matrix-NE-14poses-WIP.png",
+      "bytes": 2141509,
+      "sha256": "a79a81669577582b1738198f6917184b8e822b94508e72ecc841c863c6283a8b"
+    },
+    {
+      "path": "mixed112-trial04/matrix-NW-14poses-WIP.png",
+      "bytes": 2316866,
+      "sha256": "5635097afc24f928039b589b74f91277ba01b23912548d9af18a53e1d28344cc"
+    },
+    {
+      "path": "mixed112-trial04/matrix-S-14poses-WIP.png",
+      "bytes": 1815468,
+      "sha256": "558b25c214e707505802b737f65d2a17ca18fb4fa0c096715518806d79c27d00"
+    },
+    {
+      "path": "mixed112-trial04/matrix-SE-14poses-WIP.png",
+      "bytes": 2169126,
+      "sha256": "458b93d84f8dbcc7aeae0904505315636cc9d0077394d26648bc3699c5aea0cd"
+    },
+    {
+      "path": "mixed112-trial04/matrix-SW-14poses-WIP.png",
+      "bytes": 1946283,
+      "sha256": "98eec518c593019d484c017b01f15b269c562f46f0032327b00f23bd37495b98"
+    },
+    {
+      "path": "mixed112-trial04/matrix-W-14poses-WIP.png",
+      "bytes": 2090474,
+      "sha256": "d7ce782a5a7dd9b6d0fcc594dee6db35c0960287416e61f05af03864a3932f7f"
+    },
+    {
+      "path": "mixed112-trial04/source-geometry112.json",
+      "bytes": 47103,
+      "sha256": "43b5595fccd45fccdb5f5fcb0efc17c40e7fefc70f2a876e9359c03e3fc332d5"
+    },
+    {
+      "path": "mixed112-trial04/trial03-to04-source-preservation.json",
+      "bytes": 775,
+      "sha256": "ff7773f62f10ae6d5417f8927a5ed19b4c41e0c454a7d630ae199bae0fac8778"
+    },
+    {
+      "path": "mixed112-trial04/walk-E-fourphase-WIP.png",
+      "bytes": 834073,
+      "sha256": "c6d2ecb5cf4b001dd1a567a6504f8be6c0dcb456708964e97609068654e5fea0"
+    },
+    {
+      "path": "mixed112-trial04/walk-N-fourphase-WIP.png",
+      "bytes": 819462,
+      "sha256": "660cdba4168116c60ff4c51bc8dcf378ab385691e395f7d2b0073a5fb9fce578"
+    },
+    {
+      "path": "mixed112-trial04/walk-NE-fourphase-WIP.png",
+      "bytes": 1175576,
+      "sha256": "474ccfa5c4d8e0a71cbfc19884e29ca33fd29c7e73f6886445d54b10f68de40c"
+    },
+    {
+      "path": "mixed112-trial04/walk-NW-fourphase-WIP.png",
+      "bytes": 1220572,
+      "sha256": "dd7139798b5478a1192cda5b18e2068b5b97301ce65e119426939e19cbc187e9"
+    },
+    {
+      "path": "mixed112-trial04/walk-S-fourphase-WIP.png",
+      "bytes": 802409,
+      "sha256": "e044b64a3cfc8b293c362af9f87b1cc98a5dc6738b9c248b1ff57aece7ae65be"
+    },
+    {
+      "path": "mixed112-trial04/walk-SE-fourphase-WIP.png",
+      "bytes": 1212563,
+      "sha256": "13f46e3c92d2e16908e83118591e56c0d61ab28698e853352e625efd55563de7"
+    },
+    {
+      "path": "mixed112-trial04/walk-SW-fourphase-WIP.png",
+      "bytes": 956475,
+      "sha256": "e2ca1859ba49ea796b4563fea8acf5ad2c9165d1b8bbb3694f5b0b880c3cf3dd"
+    },
+    {
+      "path": "mixed112-trial04/walk-W-fourphase-WIP.png",
+      "bytes": 925550,
+      "sha256": "43f73733e2c9494e7ed64a4e536fa3fd7292810206bccd6b08fdf37b52481083"
+    },
+    {
+      "path": "package_recovery04.py",
+      "bytes": 2037,
+      "sha256": "597334469185fbf2d3ebcd46a4abec8e7c1441baff041a684f4c70c0e418d91f"
+    },
+    {
+      "path": "palette-repair/N-idle-own-palette-reference-QA.png",
+      "bytes": 159905,
+      "sha256": "43c9d16bb27380d4340494797b9fce8282c5705332c857d9cab28179f5712697"
+    },
+    {
+      "path": "palette-repair/N-walk4-palette-only1-geometry.json",
+      "bytes": 1620,
+      "sha256": "5dbba0ab7421ea7ce7ec342eb3eee0ed392f78a2996a85572a0b0c772be930b5"
+    },
+    {
+      "path": "palette-repair/N-walk4-palette-only1-proposed.png",
+      "bytes": 1461028,
+      "sha256": "b50531c95ae55fc263dc040621979fffc641443035ed74437234d203e90abc58"
+    },
+    {
+      "path": "palette-repair/N-walk4-palette-only1-review.json",
+      "bytes": 795,
+      "sha256": "d059547ca2f24abb8e081a2f6efface2950cdec276c808be429b4f89b2b0fc9c"
+    },
+    {
+      "path": "palette-repair/prompt-N-walk4-palette-only1.txt",
+      "bytes": 2235,
+      "sha256": "b494a280856c90c0edcba24187eff59266e8f8ff8bee45c545e7ad58491d9327"
+    },
+    {
+      "path": "write_recovery_checkpoint04.py",
+      "bytes": 3151,
+      "sha256": "888eb3726b82ee0635e269894c8df6ac1d6bbea6ee2d7c402358b6c09eb6711c"
+    }
+  ],
+  "diagnostic_part3": "Adds all8current registered14pose matrices/8gaitstrips/8sourceheadcorecoordinate grids/isolated31lossless memory logs+summary. This part supplements sourceparts1/2 and overrides earlier duplicated checkpoint/README with same currentvalues. No rawselectedPNG differences.",
+  "latest_candidate": "albino-iguana-authoring/mixed112-trial04/candidate112-trial04-HOLD.json",
+  "latest_checkpoint": "albino-iguana-authoring/RECOVERY_CURRENT.json",
+  "palette_part04": "Only Nwalk4 wholePNG replaced in newproposal, prior30PNGs/108poses sourcegeometry unchanged. NewNmutedteal palette whilepreservingfourphysicalleg/heelstates; exactprompt/raw/geometry allrecorded. No completedactor claim.",
+  "candidate_sha256": "6292298d3d08d02fec45df0102b7d0ac0dda99da656c4bf09b79d9eaba66760e"
+}

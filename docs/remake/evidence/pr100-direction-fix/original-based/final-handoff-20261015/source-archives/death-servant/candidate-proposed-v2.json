@@ -1,0 +1,818 @@
+{
+  "key": "monster:분노의 데스 서번트",
+  "prompt": "{\n  \"death-N-NE-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column N full BACK facing straight AWAY/UP: CLOSED back of hood with NO skull/eyes/front opening; shoulderblades under BACK cape, back shroud folds. RIGHT column NE BACK-RIGHT away/UP-RIGHT: rear hood/cape/shoulders dominate, front skull/opening hidden except tiny coherent RIGHT side sliver. Never back-left or front.\\n\\n\\nROW1 DEATH SINK: entireconnectedghostloseshoverheight, hood/skullandshouldersdroop, bothhandsfoldinwardunderattachedsleeves, longclothtrailscompressunderbody; fullsubstantialsourcebody. ROW2 DEATH FALL: shroud/torsofoldsdown andontoSIDE nearinvisibleground, hoodwithskullslumpsalongcontinuouscloak, bonyhandsstillattachedto wrists/sleevesrestalongbody, actualjointcollapse. ROW3 FINAL CORPSE: wholeCOMPLETE recognizablehoodedghost liesVERYLOW/FLAT ongroundascontinuouscollapsedraggedgrayclothbody, hood/skullrestsflatwithdarkeyes, bothbonyhandsremainattachedtoshroudsleeves, noemptyframe/disappearance/pileoffragments orstandinghoverbody. Lowheightfromphysicalfolding, NOT shrinkingportrait. Keepintrinsic skull/hood/core dimensions allphases, compassorientation recognizablefront/back/side evenfallen. No paintedfloor/shadow/dust/particles.\\n\",\n  \"attack-N-NE-v2-exact-prompt.txt\": \"Re-render the attached SAME SIX DeathServantattackposes at60percentcurrentdrawsize, preserving actualthreewindup/contact/recoverjoints andsource identity. Currentwholeclothbodycrop rectangles overlapneighbors. TWO directioncolumns ×THREE phase rows on1024x1536transparentRGBA, wholefiguremax260pxWIDE ×270pxHIGH, centersx256/768,y256/768/1280. Atleast150pxblankbetweenallvisiblebounds andsafe100pxoutermargins. Uniform reductionall6, samehood/skull/core MODELdimensions, no posegrowth. Realpaintednewdrawings, notpixelwarp/assembly. No clipping/omission orparticles/halo/floor/shadow/background/text/grid. Exactlyonehood/skull/twoattachedbonyhands/continuousraggedgrayshroud, nolegs/weapons/newappendages. Completebodyall6fullyused.\\n\\nCRITICAL CONTACT AXIS: LEFTCOLUMN row2 NORTH handcurrentlyreachesUP-RIGHT towardNE, wrong. Keep CLOSEDbackhood/shouldersstraightNandredrawitsstrikingbonyhand reaching straightUP/AWAY abovehoodCENTER, handxmuststaywithin30pxofhood/spinecenterx (leftcellcenter256), palmcloserx256thanx430. Attach shoulder→elbow→wrist in a coherent bending path, do notdetach oraddthirdhand. NORTHtargetisstraightaheadUP, nottoRIGHT. Otherhanddrawsback. Rightcolumn NEcontactremainsUP-RIGHT diagonal. PreservecorrectNback/NEback-right inall6.\\n\\n\\nReference1 is the CURRENT OWN SIXPOSE sheet torepair, Reference2 is ONLYabstractcompass/planes. Preservethissameactualhoodedskull/raggedcloak/twohandsidentity. Left N straightBACKawayUP closedhood/noeyes/skullopening, right NE BACK-RIGHT upRIGHT, tinycoherentrightfacesliveronly. Allthreephase rowskeepexactsamecamera/heading. Row1 WINDUP elbowfolds/retracts onehand andcoretwistsback. Row2 CONTACT trueforwardmeleeclawswipe along exactcompass withactualshoulder/elbow/wristchain andoppositehandcounterbalance. Row3 RECOVER strikingelbowfolds/lowerswhileotheropens, shroudreforms. Real3distinctjointstates, not translatedstill. FloatingTRUE/nolegs, fullsourceclothvolumeattached.\\n\",\n  \"hit-W-NW-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×2 phaseROWS = 4 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column W pure LEFT SIDE profile: hood opening/skull nose to LEFT, near/far shoulder overlap seen from side. RIGHT column NW BACK-LEFT away/UP-LEFT: back of closed hood/cape/back shoulders dominate, front opening/skull HIDDEN except at most tiny coherent LEFT side sliver. No frontal face/chest on back.\\n\\n\\nROW1 HIT RECOIL: shoulder/corejerksback oppositeexactcompass, elbowsfold defensivelyandtwoattachedbonywristscurl, hoodtips withoutchangingwhichfront/backplaneisvisible, connectedcloakcompresses. ROW2 HIT RECOVER: shouldersbeginupright, oneelbowopens/otherdrops, wristsunfurlandcontinuousclothuncurls. Two genuine differentjointpostures, not scaled/translatedstill. Back N/NW/NE hoodCLOSEDaway; doNOTturnskull/front openingtoviewer duringrecoil. No blood/particles.\\n\",\n  \"hit-N-NE-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×2 phaseROWS = 4 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column N full BACK facing straight AWAY/UP: CLOSED back of hood with NO skull/eyes/front opening; shoulderblades under BACK cape, back shroud folds. RIGHT column NE BACK-RIGHT away/UP-RIGHT: rear hood/cape/shoulders dominate, front skull/opening hidden except tiny coherent RIGHT side sliver. Never back-left or front.\\n\\n\\nROW1 HIT RECOIL: shoulder/corejerksback oppositeexactcompass, elbowsfold defensivelyandtwoattachedbonywristscurl, hoodtips withoutchangingwhichfront/backplaneisvisible, connectedcloakcompresses. ROW2 HIT RECOVER: shouldersbeginupright, oneelbowopens/otherdrops, wristsunfurlandcontinuousclothuncurls. Two genuine differentjointpostures, not scaled/translatedstill. Back N/NW/NE hoodCLOSEDaway; doNOTturnskull/front openingtoviewer duringrecoil. No blood/particles.\\n\",\n  \"idle-walk-N-NE-exact-prompt.txt\": \"Create independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column N full BACK facing straight AWAY/UP: CLOSED back of hood with NO skull/eyes/front opening; shoulderblades under BACK cape, back shroud folds. RIGHT column NE BACK-RIGHT away/UP-RIGHT: rear hood/cape/shoulders dominate, front skull/opening hidden except tiny coherent RIGHT side sliver. Never back-left or front.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"attack-N-NE-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column N full BACK facing straight AWAY/UP: CLOSED back of hood with NO skull/eyes/front opening; shoulderblades under BACK cape, back shroud folds. RIGHT column NE BACK-RIGHT away/UP-RIGHT: rear hood/cape/shoulders dominate, front skull/opening hidden except tiny coherent RIGHT side sliver. Never back-left or front.\\n\\n\\nROW1 WINDUP: retract one attached skeletal hand opposite facing, elbowbends andshoulders twist back undercontinuousshroud, skull/hoodstilllooks exactheading. ROW2 MELEE CONTACT: that hand/claws SWIPES forward exactlyalongheading towardinvisible nearbytarget, genuine shoulder/elbow/wrist extension andbodylunge, oppositeelbowdrawsback. NOprojectile/effects/weapon. ROW3 RECOVER: attacking elbowfolds/lowers, cloth torso returnsupright, otherhandopens, realthirdphase. Hands/hitdirection mustagreewithhood/bodyfacing, not arbitraryscreen-right. For N/back keepCLOSEDbackhood/nape and rearcloaking inall3; slash reachesUP/AWAY seenfrombehind, notfrontskull flip. Completecontinuousshroud/baseandtwolinkedhands inall3.\\n\",\n  \"hit-S-SW-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×2 phaseROWS = 4 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column S full FRONT toward viewer/DOWN: centered hood opening, skull frontal eyes/nose, front shroud folds. RIGHT column SW FRONT-LEFT toward LOWER LEFT: hood opening/skull on LEFT edge, robe front-left planes, hands glide left; never reset RIGHT.\\n\\n\\nROW1 HIT RECOIL: shoulder/corejerksback oppositeexactcompass, elbowsfold defensivelyandtwoattachedbonywristscurl, hoodtips withoutchangingwhichfront/backplaneisvisible, connectedcloakcompresses. ROW2 HIT RECOVER: shouldersbeginupright, oneelbowopens/otherdrops, wristsunfurlandcontinuousclothuncurls. Two genuine differentjointpostures, not scaled/translatedstill. Back N/NW/NE hoodCLOSEDaway; doNOTturnskull/front openingtoviewer duringrecoil. No blood/particles.\\n\",\n  \"death-W-NW-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column W pure LEFT SIDE profile: hood opening/skull nose to LEFT, near/far shoulder overlap seen from side. RIGHT column NW BACK-LEFT away/UP-LEFT: back of closed hood/cape/back shoulders dominate, front opening/skull HIDDEN except at most tiny coherent LEFT side sliver. No frontal face/chest on back.\\n\\n\\nROW1 DEATH SINK: entireconnectedghostloseshoverheight, hood/skullandshouldersdroop, bothhandsfoldinwardunderattachedsleeves, longclothtrailscompressunderbody; fullsubstantialsourcebody. ROW2 DEATH FALL: shroud/torsofoldsdown andontoSIDE nearinvisibleground, hoodwithskullslumpsalongcontinuouscloak, bonyhandsstillattachedto wrists/sleevesrestalongbody, actualjointcollapse. ROW3 FINAL CORPSE: wholeCOMPLETE recognizablehoodedghost liesVERYLOW/FLAT ongroundascontinuouscollapsedraggedgrayclothbody, hood/skullrestsflatwithdarkeyes, bothbonyhandsremainattachedtoshroudsleeves, noemptyframe/disappearance/pileoffragments orstandinghoverbody. Lowheightfromphysicalfolding, NOT shrinkingportrait. Keepintrinsic skull/hood/core dimensions allphases, compassorientation recognizablefront/back/side evenfallen. No paintedfloor/shadow/dust/particles.\\n\",\n  \"idle-walk-N-NE-v2-exact-prompt.txt\": \"Re-render the attached SAME TEN Death Servant sprites at HALF current figure size, preserving source identity, all ten real articulated phases and compass planes. Current longcloth figures overlap adjacent row crop rectangles. This is a spacing-only repair except the explicit SW correction below. Output one1024x1536 transparentRGBA sheet, TWO columns × FIVE rows, ten completeconnectedfigures. Each WHOLE hood+hands+alllongcloth must fit max210pixelsWIDE ×155pixelsHIGH, centered x256/768 and y155/460/768/1075/1380. Keep at least150pixels fullyEMPTY between vertical boundingrectangles,250horizontalblank,100outermargin. Do NOTenlarge tofillcells. UniformHALF drawscale for ALL ten, samehead/skull/shouldermodelscale. Verysmallfigures and hugeblankgutters aremandatory. No cropping/omittedcloth/floatinghands or unownedpixels. Do not merely changecanvas size orcamera.\\n\\nKeep EXACT same five phases and allbody/shoulder/elbow/wrist/cloth changes, onehood/skull, two skeletalarms/handsattachedto shroud, continuous raggedgraycloak, NOweapons/legs/newappendages/aura/floor/shadow/background/text/grid/particles. Emptyalpha0, no detachedthreadislands. No duplicatedstill orcopied endpoint; genuine glidingjoint/cloth articulation. These are newlyauthored poses, not extractedoriginalanimation.\\n\\nPreserve columns N-NE same correct compass/front-back planes fromreference, allfive rows. Nclosedbackhood noeyes/skull/frontopening. NW/NErearhood/cape neverfront. E/Wpureprofiles trueopposites, front3quarter onlySE/SW.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column N full BACK facing straight AWAY/UP: CLOSED back of hood with NO skull/eyes/front opening; shoulderblades under BACK cape, back shroud folds. RIGHT column NE BACK-RIGHT away/UP-RIGHT: rear hood/cape/shoulders dominate, front skull/opening hidden except tiny coherent RIGHT side sliver. Never back-left or front.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"idle-walk-E-SE-exact-prompt.txt\": \"Create independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column E pure RIGHT SIDE profile: hood opening and skull nose to RIGHT, near/far shoulder overlap seen from side; no frontal eyes pair. RIGHT column SE FRONT-RIGHT toward LOWER RIGHT: front hood opening/skull and robe front folds visible, head+hands point down-right.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"idle-walk-E-SE-v2-exact-prompt.txt\": \"Re-render the attached SAME TEN Death Servant sprites at HALF current figure size, preserving source identity, all ten real articulated phases and compass planes. Current longcloth figures overlap adjacent row crop rectangles. This is a spacing-only repair except the explicit SW correction below. Output one1024x1536 transparentRGBA sheet, TWO columns × FIVE rows, ten completeconnectedfigures. Each WHOLE hood+hands+alllongcloth must fit max210pixelsWIDE ×155pixelsHIGH, centered x256/768 and y155/460/768/1075/1380. Keep at least150pixels fullyEMPTY between vertical boundingrectangles,250horizontalblank,100outermargin. Do NOTenlarge tofillcells. UniformHALF drawscale for ALL ten, samehead/skull/shouldermodelscale. Verysmallfigures and hugeblankgutters aremandatory. No cropping/omittedcloth/floatinghands or unownedpixels. Do not merely changecanvas size orcamera.\\n\\nKeep EXACT same five phases and allbody/shoulder/elbow/wrist/cloth changes, onehood/skull, two skeletalarms/handsattachedto shroud, continuous raggedgraycloak, NOweapons/legs/newappendages/aura/floor/shadow/background/text/grid/particles. Emptyalpha0, no detachedthreadislands. No duplicatedstill orcopied endpoint; genuine glidingjoint/cloth articulation. These are newlyauthored poses, not extractedoriginalanimation.\\n\\nPreserve columns E-SE same correct compass/front-back planes fromreference, allfive rows. Nclosedbackhood noeyes/skull/frontopening. NW/NErearhood/cape neverfront. E/Wpureprofiles trueopposites, front3quarter onlySE/SW.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column E pure RIGHT SIDE profile: hood opening and skull nose to RIGHT, near/far shoulder overlap seen from side; no frontal eyes pair. RIGHT column SE FRONT-RIGHT toward LOWER RIGHT: front hood opening/skull and robe front folds visible, head+hands point down-right.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"attack-S-SW-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column S full FRONT toward viewer/DOWN: centered hood opening, skull frontal eyes/nose, front shroud folds. RIGHT column SW FRONT-LEFT toward LOWER LEFT: hood opening/skull on LEFT edge, robe front-left planes, hands glide left; never reset RIGHT.\\n\\n\\nROW1 WINDUP: retract one attached skeletal hand opposite facing, elbowbends andshoulders twist back undercontinuousshroud, skull/hoodstilllooks exactheading. ROW2 MELEE CONTACT: that hand/claws SWIPES forward exactlyalongheading towardinvisible nearbytarget, genuine shoulder/elbow/wrist extension andbodylunge, oppositeelbowdrawsback. NOprojectile/effects/weapon. ROW3 RECOVER: attacking elbowfolds/lowers, cloth torso returnsupright, otherhandopens, realthirdphase. Hands/hitdirection mustagreewithhood/bodyfacing, not arbitraryscreen-right. For N/back keepCLOSEDbackhood/nape and rearcloaking inall3; slash reachesUP/AWAY seenfrombehind, notfrontskull flip. Completecontinuousshroud/baseandtwolinkedhands inall3.\\n\",\n  \"attack-E-SE-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column E pure RIGHT SIDE profile: hood opening and skull nose to RIGHT, near/far shoulder overlap seen from side; no frontal eyes pair. RIGHT column SE FRONT-RIGHT toward LOWER RIGHT: front hood opening/skull and robe front folds visible, head+hands point down-right.\\n\\n\\nROW1 WINDUP: retract one attached skeletal hand opposite facing, elbowbends andshoulders twist back undercontinuousshroud, skull/hoodstilllooks exactheading. ROW2 MELEE CONTACT: that hand/claws SWIPES forward exactlyalongheading towardinvisible nearbytarget, genuine shoulder/elbow/wrist extension andbodylunge, oppositeelbowdrawsback. NOprojectile/effects/weapon. ROW3 RECOVER: attacking elbowfolds/lowers, cloth torso returnsupright, otherhandopens, realthirdphase. Hands/hitdirection mustagreewithhood/bodyfacing, not arbitraryscreen-right. For N/back keepCLOSEDbackhood/nape and rearcloaking inall3; slash reachesUP/AWAY seenfrombehind, notfrontskull flip. Completecontinuousshroud/baseandtwolinkedhands inall3.\\n\",\n  \"death-S-SW-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column S full FRONT toward viewer/DOWN: centered hood opening, skull frontal eyes/nose, front shroud folds. RIGHT column SW FRONT-LEFT toward LOWER LEFT: hood opening/skull on LEFT edge, robe front-left planes, hands glide left; never reset RIGHT.\\n\\n\\nROW1 DEATH SINK: entireconnectedghostloseshoverheight, hood/skullandshouldersdroop, bothhandsfoldinwardunderattachedsleeves, longclothtrailscompressunderbody; fullsubstantialsourcebody. ROW2 DEATH FALL: shroud/torsofoldsdown andontoSIDE nearinvisibleground, hoodwithskullslumpsalongcontinuouscloak, bonyhandsstillattachedto wrists/sleevesrestalongbody, actualjointcollapse. ROW3 FINAL CORPSE: wholeCOMPLETE recognizablehoodedghost liesVERYLOW/FLAT ongroundascontinuouscollapsedraggedgrayclothbody, hood/skullrestsflatwithdarkeyes, bothbonyhandsremainattachedtoshroudsleeves, noemptyframe/disappearance/pileoffragments orstandinghoverbody. Lowheightfromphysicalfolding, NOT shrinkingportrait. Keepintrinsic skull/hood/core dimensions allphases, compassorientation recognizablefront/back/side evenfallen. No paintedfloor/shadow/dust/particles.\\n\",\n  \"idle-walk-S-SW-v2-exact-prompt.txt\": \"Re-render the attached SAME TEN Death Servant sprites at HALF current figure size, preserving source identity, all ten real articulated phases and compass planes. Current longcloth figures overlap adjacent row crop rectangles. This is a spacing-only repair except the explicit SW correction below. Output one1024x1536 transparentRGBA sheet, TWO columns × FIVE rows, ten completeconnectedfigures. Each WHOLE hood+hands+alllongcloth must fit max210pixelsWIDE ×155pixelsHIGH, centered x256/768 and y155/460/768/1075/1380. Keep at least150pixels fullyEMPTY between vertical boundingrectangles,250horizontalblank,100outermargin. Do NOTenlarge tofillcells. UniformHALF drawscale for ALL ten, samehead/skull/shouldermodelscale. Verysmallfigures and hugeblankgutters aremandatory. No cropping/omittedcloth/floatinghands or unownedpixels. Do not merely changecanvas size orcamera.\\n\\nKeep EXACT same five phases and allbody/shoulder/elbow/wrist/cloth changes, onehood/skull, two skeletalarms/handsattachedto shroud, continuous raggedgraycloak, NOweapons/legs/newappendages/aura/floor/shadow/background/text/grid/particles. Emptyalpha0, no detachedthreadislands. No duplicatedstill orcopied endpoint; genuine glidingjoint/cloth articulation. These are newlyauthored poses, not extractedoriginalanimation.\\n\\nCRITICAL DIRECTION CORRECTION: Right column MUST be SW FRONT-LEFT in ALL FIVE rows. The top-right, second-right and bottom-right currentlyface FRONT-RIGHT, wrong. Redraw their hood opening and skull nose to LEFT side of front-left shoulder/chest planes, matching the already LEFT-facing right-column row3 androw4. Every rightcolumn skull/front opening aims DOWN-LEFT, cloaktrailsUP-RIGHT, neverRIGHT. One coherent skull/hood, do not leaveoldface ormakebackhood. Leftcolumn remains S fullfront towardviewer. Correct perspective bodydrawing, not horizontalmirror ofleft S. Abstractsecondreference givesfront-left plane/arrowonly.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column S full FRONT toward viewer/DOWN: centered hood opening, skull frontal eyes/nose, front shroud folds. RIGHT column SW FRONT-LEFT toward LOWER LEFT: hood opening/skull on LEFT edge, robe front-left planes, hands glide left; never reset RIGHT.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"idle-walk-S-SW-exact-prompt.txt\": \"Create independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column S full FRONT toward viewer/DOWN: centered hood opening, skull frontal eyes/nose, front shroud folds. RIGHT column SW FRONT-LEFT toward LOWER LEFT: hood opening/skull on LEFT edge, robe front-left planes, hands glide left; never reset RIGHT.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"death-E-SE-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column E pure RIGHT SIDE profile: hood opening and skull nose to RIGHT, near/far shoulder overlap seen from side; no frontal eyes pair. RIGHT column SE FRONT-RIGHT toward LOWER RIGHT: front hood opening/skull and robe front folds visible, head+hands point down-right.\\n\\n\\nROW1 DEATH SINK: entireconnectedghostloseshoverheight, hood/skullandshouldersdroop, bothhandsfoldinwardunderattachedsleeves, longclothtrailscompressunderbody; fullsubstantialsourcebody. ROW2 DEATH FALL: shroud/torsofoldsdown andontoSIDE nearinvisibleground, hoodwithskullslumpsalongcontinuouscloak, bonyhandsstillattachedto wrists/sleevesrestalongbody, actualjointcollapse. ROW3 FINAL CORPSE: wholeCOMPLETE recognizablehoodedghost liesVERYLOW/FLAT ongroundascontinuouscollapsedraggedgrayclothbody, hood/skullrestsflatwithdarkeyes, bothbonyhandsremainattachedtoshroudsleeves, noemptyframe/disappearance/pileoffragments orstandinghoverbody. Lowheightfromphysicalfolding, NOT shrinkingportrait. Keepintrinsic skull/hood/core dimensions allphases, compassorientation recognizablefront/back/side evenfallen. No paintedfloor/shadow/dust/particles.\\n\",\n  \"hit-E-SE-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×2 phaseROWS = 4 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column E pure RIGHT SIDE profile: hood opening and skull nose to RIGHT, near/far shoulder overlap seen from side; no frontal eyes pair. RIGHT column SE FRONT-RIGHT toward LOWER RIGHT: front hood opening/skull and robe front folds visible, head+hands point down-right.\\n\\n\\nROW1 HIT RECOIL: shoulder/corejerksback oppositeexactcompass, elbowsfold defensivelyandtwoattachedbonywristscurl, hoodtips withoutchangingwhichfront/backplaneisvisible, connectedcloakcompresses. ROW2 HIT RECOVER: shouldersbeginupright, oneelbowopens/otherdrops, wristsunfurlandcontinuousclothuncurls. Two genuine differentjointpostures, not scaled/translatedstill. Back N/NW/NE hoodCLOSEDaway; doNOTturnskull/front openingtoviewer duringrecoil. No blood/particles.\\n\",\n  \"attack-W-NW-v2-exact-prompt.txt\": \"Re-render the attached SAME SIX DeathServantattackposes at60percentcurrentdrawsize, preserving actualthreewindup/contact/recoverjoints andsource identity. Currentwholeclothbodycrop rectangles overlapneighbors. TWO directioncolumns ×THREE phase rows on1024x1536transparentRGBA, wholefiguremax260pxWIDE ×270pxHIGH, centersx256/768,y256/768/1280. Atleast150pxblankbetweenallvisiblebounds andsafe100pxoutermargins. Uniform reductionall6, samehood/skull/core MODELdimensions, no posegrowth. Realpaintednewdrawings, notpixelwarp/assembly. No clipping/omission orparticles/halo/floor/shadow/background/text/grid. Exactlyonehood/skull/twoattachedbonyhands/continuousraggedgrayshroud, nolegs/weapons/newappendages. Completebodyall6fullyused.\\n\\n\\nReference1 is the CURRENT OWN SIXPOSE sheet torepair, Reference2 is ONLYabstractcompass/planes. Preservethissameactualhoodedskull/raggedcloak/twohandsidentity. Left W trueLEFTprofile, right NW BACK-LEFT awayUPLEFT closedrearhood; nofrontskull/chest. Allthreephase rowskeepexactsamecamera/heading. Row1 WINDUP elbowfolds/retracts onehand andcoretwistsback. Row2 CONTACT trueforwardmeleeclawswipe along exactcompass withactualshoulder/elbow/wristchain andoppositehandcounterbalance. Row3 RECOVER strikingelbowfolds/lowerswhileotheropens, shroudreforms. Real3distinctjointstates, not translatedstill. FloatingTRUE/nolegs, fullsourceclothvolumeattached.\\n\",\n  \"attack-E-SE-v2-exact-prompt.txt\": \"Re-render the attached SAME SIX DeathServantattackposes at60percentcurrentdrawsize, preserving actualthreewindup/contact/recoverjoints andsource identity. Currentwholeclothbodycrop rectangles overlapneighbors. TWO directioncolumns ×THREE phase rows on1024x1536transparentRGBA, wholefiguremax260pxWIDE ×270pxHIGH, centersx256/768,y256/768/1280. Atleast150pxblankbetweenallvisiblebounds andsafe100pxoutermargins. Uniform reductionall6, samehood/skull/core MODELdimensions, no posegrowth. Realpaintednewdrawings, notpixelwarp/assembly. No clipping/omission orparticles/halo/floor/shadow/background/text/grid. Exactlyonehood/skull/twoattachedbonyhands/continuousraggedgrayshroud, nolegs/weapons/newappendages. Completebodyall6fullyused.\\n\\n\\nReference1 is the CURRENT OWN SIXPOSE sheet torepair, Reference2 is ONLYabstractcompass/planes. Preservethissameactualhoodedskull/raggedcloak/twohandsidentity. Left E trueRIGHTprofile, right SE frontRIGHT. Allthreephase rowskeepexactsamecamera/heading. Row1 WINDUP elbowfolds/retracts onehand andcoretwistsback. Row2 CONTACT trueforwardmeleeclawswipe along exactcompass withactualshoulder/elbow/wristchain andoppositehandcounterbalance. Row3 RECOVER strikingelbowfolds/lowerswhileotheropens, shroudreforms. Real3distinctjointstates, not translatedstill. FloatingTRUE/nolegs, fullsourceclothvolumeattached.\\n\",\n  \"idle-walk-W-NW-v2-exact-prompt.txt\": \"Re-render the attached SAME TEN Death Servant sprites at HALF current figure size, preserving source identity, all ten real articulated phases and compass planes. Current longcloth figures overlap adjacent row crop rectangles. This is a spacing-only repair except the explicit SW correction below. Output one1024x1536 transparentRGBA sheet, TWO columns × FIVE rows, ten completeconnectedfigures. Each WHOLE hood+hands+alllongcloth must fit max210pixelsWIDE ×155pixelsHIGH, centered x256/768 and y155/460/768/1075/1380. Keep at least150pixels fullyEMPTY between vertical boundingrectangles,250horizontalblank,100outermargin. Do NOTenlarge tofillcells. UniformHALF drawscale for ALL ten, samehead/skull/shouldermodelscale. Verysmallfigures and hugeblankgutters aremandatory. No cropping/omittedcloth/floatinghands or unownedpixels. Do not merely changecanvas size orcamera.\\n\\nKeep EXACT same five phases and allbody/shoulder/elbow/wrist/cloth changes, onehood/skull, two skeletalarms/handsattachedto shroud, continuous raggedgraycloak, NOweapons/legs/newappendages/aura/floor/shadow/background/text/grid/particles. Emptyalpha0, no detachedthreadislands. No duplicatedstill orcopied endpoint; genuine glidingjoint/cloth articulation. These are newlyauthored poses, not extractedoriginalanimation.\\n\\nPreserve columns W-NW same correct compass/front-back planes fromreference, allfive rows. Nclosedbackhood noeyes/skull/frontopening. NW/NErearhood/cape neverfront. E/Wpureprofiles trueopposites, front3quarter onlySE/SW.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column W pure LEFT SIDE profile: hood opening/skull nose to LEFT, near/far shoulder overlap seen from side. RIGHT column NW BACK-LEFT away/UP-LEFT: back of closed hood/cape/back shoulders dominate, front opening/skull HIDDEN except at most tiny coherent LEFT side sliver. No frontal face/chest on back.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"idle-walk-W-NW-exact-prompt.txt\": \"Create independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nSPARSE portrait1024x1536, TWO direction COLUMNS x FIVE phase ROWS = EXACTLY TEN complete figures. Each whole hood/hands/all cloth tails fits within max260pxWIDE x200pxHIGH in its512x307cell. Sprite centers x256/768, rowcenters155/460/768/1075/1380. At least90pixels clear vertical gutter,150horizontalgutter, safe outer margins. Do not enlarge tofillcells, crop torn hems/fingers or overlap body rectangles. One coherent connected wholebody percell; no detached cloth islands/loose threads/embers. Transparent RGBA alpha0 empty space; no paintedbackground/floor/shadow/halo/particles/text/grid/labels. Same head/skull/hood/core MODELscale and camera across ten, no posegrowth.\\n\\nLEFT column W pure LEFT SIDE profile: hood opening/skull nose to LEFT, near/far shoulder overlap seen from side. RIGHT column NW BACK-LEFT away/UP-LEFT: back of closed hood/cape/back shoulders dominate, front opening/skull HIDDEN except at most tiny coherent LEFT side sliver. No frontal face/chest on back.\\nSame compass/camera allfive rows, genuinely distinct front/back/side planes, not mirror-only.\\n\\nExactly FIVE rows top to bottom. ROW1 IDLE neutral: quiet hover, shoulders level, elbows softly bent, two bony hands hanging forward, cloak strips drape continuously. ROW2 IDLE breathe: very subtle actual shoulder/core bend, skull/hood tiny tilt, wrists and cloth folds change while hood/core modelsize stays constant. ROW3 GLIDE A: near shoulder and elbow open forward along the exact heading, opposite elbow bends back, joined shroud torso twists and trailing cloak hem curls backward; real fullbody articulation. ROW4 GLIDE PASSING: shoulders roll through neutral, lead elbow folds while other begins to extend, bony wrists rotate naturally, long continuous cloth flexes into different S-curves. ROW5 GLIDE B: now the OPPOSITE actual shoulder/elbow/hand extends forward and prior lead elbow pulls back; limb overlap and elbow bend reverse, robe torso twist/hem sweep changes. NOT merely shifting the same hands, recoloring cloth, scale/translation of a still or duplicate endpoints. Both attached skeletal wrists must remain believable under sleeve edges; no severed/floating hands. For BACK directions keep CLOSED hood and rear cloth allfive, even as joints move; cloth stream direction alone is not facing proof.\\n\",\n  \"attack-W-NW-exact-prompt.txt\": \"Reference1 is this SAME actor own idle/walk pilot ONLY for head/hood/core model and correct front/back direction, never copy a still or existing phase. Reference2 is abstract compass guidance only. Reference3 is the EXACT existing-project neutral source for original appearance. Author new distinct action poses; not another actor/source or recovered motion.\\n\\nCreate independently NEW hand-painted transparent2D RPG sprites of monster FEAR DEATH SERVANT from attached EXACT existing-project neutral reference only. This is new motion, NOT recovered original animation. Do not reuse/recolor any other actor animation. Actual identity: one PALE COLD GRAY tattered cloth HOOD surrounding a recessed off-white skeletal skull with dark eye sockets, shoulders/elbows under the continuous ragged shroud, TWO long bony hands with articulated skeletal wrists/fingers, long flowing torn cloak strips joined to the main robe. No visible human legs/feet, no armor/horns/wings/extraarms/weapon/sword/staff/fire/aura. Source configuredfloatingTRUE/native86/melee slash, so gliding with continuous cloth shoulders/elbows/wrists/hem articulation is appropriate. Do NOT invent a grounded gait or levitating legs. Same skull/hood/shoulder core dimensions in every phase. Ignore tiny unrelated brown fragment at upper-left source context edge; preserve all actual hood/cloth/hands. Second reference is ONLY abstract compass/front-back plane direction guidance, never a donor character/color/label/prop.\\n\\nEXACTLY TWO directionCOLUMNS ×3 phaseROWS = 6 fullconnectedghostbodies, portrait1024x1536RGBA. KeepwholefiguresSMALL, max260pxwidth×280pxheight, xcenters256/768 andevenlyspacedrowcenters. Huge transparentgutters at least100pixels betweenallbodyrectangles, generousoutermargin. Uniform skull/hood/shouldercore MODELscale/camera inallposes, no posegrowth. No crop/clipping/neighboroverlap, detachedcloth/fragments/floatinghands/extraappendages, floor/shadow/background/halo/text/grid/particles. All emptypixelsalpha0. Eachfigurecompletecontinuoussourcebody.\\n\\nLEFT column W pure LEFT SIDE profile: hood opening/skull nose to LEFT, near/far shoulder overlap seen from side. RIGHT column NW BACK-LEFT away/UP-LEFT: back of closed hood/cape/back shoulders dominate, front opening/skull HIDDEN except at most tiny coherent LEFT side sliver. No frontal face/chest on back.\\n\\n\\nROW1 WINDUP: retract one attached skeletal hand opposite facing, elbowbends andshoulders twist back undercontinuousshroud, skull/hoodstilllooks exactheading. ROW2 MELEE CONTACT: that hand/claws SWIPES forward exactlyalongheading towardinvisible nearbytarget, genuine shoulder/elbow/wrist extension andbodylunge, oppositeelbowdrawsback. NOprojectile/effects/weapon. ROW3 RECOVER: attacking elbowfolds/lowers, cloth torso returnsupright, otherhandopens, realthirdphase. Hands/hitdirection mustagreewithhood/bodyfacing, not arbitraryscreen-right. For N/back keepCLOSEDbackhood/nape and rearcloaking inall3; slash reachesUP/AWAY seenfrombehind, notfrontskull flip. Completecontinuousshroud/baseandtwolinkedhands inall3.\\n\"\n}\nFOCUSED NEW WHOLE6 CORRECTION PROMPT:\nCreate a NEW 6-pose transparent hand-painted2D RPG sprite sheet, 2directioncolumns×3deathphaserows, portrait1024x1536. Reference1 is this SAME actor newly authored SINGLE correct low prone rear-N corpse: use its actual flattened shoulder/hood/attached-folded-cloak topology as finalN endpoint, not its huge pixel size. Reference2 is SAME actor own closedrear idle/walk for intrinsic hood/core size and N/NE directions. Reference3 is EXACT original neutral sourceidentity; ignore tiny unrelated brown fragment upperleft. NO other actor/motion reuse. Originalpale coldgraytatteredshroud, hoodensurroundinghidden skull, two attached bony skeletalhands via sleeves/wrists, continuous long raggedcloak. NO legs/feet/weapons/armor/horns/wings/extraarms/particles.\n\nCritical: Reference1 is genuinely PRONE, with closed napehood at farTOP and flattened shoulder mass/foldedcloth towardBOTTOM. Preserve that physicallyLOW corpse construction in BOTTOMLEFT. Do NOT turn it into a hanging triangular upright cloak/cone, and do NOT rotate it to rightprofile. Spread clothphysicalfolds LEFT andRIGHT/back but keep entireNbodyaxisUP/DOWN. Scale its hood to MATCH same intrinsic hoodsize as other5cells; do NOT copy giant image size. Cloak folds retainallcloth volume, notempty shreddedrags.\n\nLEFT COLUMN N facing AWAY/UP all3phases: closedbackhood and bothrearshoulders visible, noface/opening/skull/eyes. RIGHT COLUMN NE facing AWAYUPRIGHT all3: rearhood/cape dominant, finalcorpsehood at farUPRIGHT and attachedcloakfanningDOWNLEFT, not horizontallypureE. NE canhave tinycoherentRIGHTsidefaceopening only.\nTOPROW death sink: substantialwholebody dropshoverheight, head/shouldersdroop, elbowsrelax, cloth startscompressing. MiddleROW deathfall: shoulders/spine ACTUALLY foldFORWARD AWAY towardground, torsoLOW at~45degrees, hoodlowerthanstanding andarmsfalltowardground; attachedclothfolds underbody. N midpointbetweenuprightfirst andpronefinal, topwardaxis remains. BottomROW finaldeath: wholebodyPRONE oninvisibleground, directlyuse low Nconstruction fromreference1; NE rotates thatphysical construction todiagonalAWAYRIGHT. Bothskeletalhands connectedtoflattenedsleeves besidehood andfingersrestonground. Finalclosedhood low atfarend, substantialfoldedshroudundertorso, no hanging orhoverstandingbody.\n\nCellMODELscale consistent hoodwidth65-80px andshoulderwidth150-170px, noheadgrowth/shrink. TOPposewholeheight~270px, middle~180-210px fromphysicalfolding, final~100-140px LOWTHICKNESS fromfolding, wholewidth~260-300px. Projecteddepthcanextendbehindbut nofinaluprightcone. Centersx256/768 androwy256/768/1280, wholebodymax330pxwidth, at least100pxtransparentgutters betweenallrectanglesandclearmargins, no crop/neighboroverlap/detachedfragments. Everyposedistinctrealarticulation, nottranslatedstill/mirror. No floor/shadow/halo/background/text/grid/effects; alloutsidepixelsalpha0. This is new independent motion, NOToriginal extractedanimation.",
+  "sheets": [
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/idle-walk-E-SE-v2.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 640,
+      "source_anchors": [
+        [
+          272,
+          387
+        ],
+        [
+          748,
+          393
+        ],
+        [
+          272,
+          664
+        ],
+        [
+          748,
+          670
+        ],
+        [
+          272,
+          945
+        ],
+        [
+          748,
+          956
+        ],
+        [
+          272,
+          1208
+        ],
+        [
+          748,
+          1223
+        ],
+        [
+          272,
+          1469
+        ],
+        [
+          748,
+          1485
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/idle-walk-S-SW-v2.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 664,
+      "source_anchors": [
+        [
+          276,
+          337
+        ],
+        [
+          782,
+          333
+        ],
+        [
+          276,
+          620
+        ],
+        [
+          782,
+          617
+        ],
+        [
+          276,
+          904
+        ],
+        [
+          782,
+          893
+        ],
+        [
+          276,
+          1189
+        ],
+        [
+          782,
+          1193
+        ],
+        [
+          276,
+          1468
+        ],
+        [
+          782,
+          1464
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/idle-walk-W-NW-v2.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 600,
+      "source_anchors": [
+        [
+          295,
+          310
+        ],
+        [
+          764,
+          316
+        ],
+        [
+          295,
+          590
+        ],
+        [
+          764,
+          603
+        ],
+        [
+          295,
+          878
+        ],
+        [
+          764,
+          888
+        ],
+        [
+          295,
+          1159
+        ],
+        [
+          764,
+          1170
+        ],
+        [
+          295,
+          1441
+        ],
+        [
+          764,
+          1447
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/idle-walk-N-NE-v2.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 5,
+      "reference_rows": [
+        0,
+        1
+      ],
+      "roles": {
+        "idle": [
+          0,
+          1
+        ],
+        "walk": [
+          2,
+          3,
+          4
+        ]
+      },
+      "canvas_size": 680,
+      "source_anchors": [
+        [
+          303,
+          406
+        ],
+        [
+          761,
+          406
+        ],
+        [
+          303,
+          683
+        ],
+        [
+          761,
+          689
+        ],
+        [
+          303,
+          956
+        ],
+        [
+          761,
+          965
+        ],
+        [
+          303,
+          1247
+        ],
+        [
+          761,
+          1239
+        ],
+        [
+          303,
+          1506
+        ],
+        [
+          761,
+          1503
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/attack-E-SE-v2.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 960,
+      "source_anchors": [
+        [
+          245,
+          483
+        ],
+        [
+          778,
+          485
+        ],
+        [
+          245,
+          940
+        ],
+        [
+          778,
+          949
+        ],
+        [
+          245,
+          1383
+        ],
+        [
+          778,
+          1397
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/attack-S-SW.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 1104,
+      "source_anchors": [
+        [
+          251,
+          484
+        ],
+        [
+          772,
+          471
+        ],
+        [
+          251,
+          983
+        ],
+        [
+          772,
+          941
+        ],
+        [
+          251,
+          1440
+        ],
+        [
+          772,
+          1428
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/attack-W-NW-v2.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 856,
+      "source_anchors": [
+        [
+          303,
+          490
+        ],
+        [
+          770,
+          492
+        ],
+        [
+          303,
+          907
+        ],
+        [
+          770,
+          905
+        ],
+        [
+          303,
+          1305
+        ],
+        [
+          770,
+          1316
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/attack-N-NE-v2.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        2
+      ],
+      "roles": {
+        "attack": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 952,
+      "source_anchors": [
+        [
+          290,
+          511
+        ],
+        [
+          742,
+          517
+        ],
+        [
+          290,
+          999
+        ],
+        [
+          742,
+          981
+        ],
+        [
+          290,
+          1406
+        ],
+        [
+          742,
+          1416
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/hit-E-SE.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 2,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ]
+      },
+      "canvas_size": 1192,
+      "source_anchors": [
+        [
+          266,
+          669
+        ],
+        [
+          780,
+          673
+        ],
+        [
+          266,
+          1302
+        ],
+        [
+          780,
+          1307
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/hit-S-SW.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 2,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ]
+      },
+      "canvas_size": 1208,
+      "source_anchors": [
+        [
+          245,
+          635
+        ],
+        [
+          778,
+          643
+        ],
+        [
+          245,
+          1319
+        ],
+        [
+          778,
+          1279
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/hit-W-NW.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 2,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ]
+      },
+      "canvas_size": 1232,
+      "source_anchors": [
+        [
+          278,
+          652
+        ],
+        [
+          787,
+          672
+        ],
+        [
+          278,
+          1306
+        ],
+        [
+          787,
+          1315
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/hit-N-NE.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 2,
+      "reference_rows": [
+        1
+      ],
+      "roles": {
+        "hit": [
+          0,
+          1
+        ]
+      },
+      "canvas_size": 1376,
+      "source_anchors": [
+        [
+          258,
+          693
+        ],
+        [
+          772,
+          679
+        ],
+        [
+          258,
+          1334
+        ],
+        [
+          772,
+          1337
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/death-E-SE.png",
+      "directions": [
+        "E",
+        "SE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 992,
+      "source_anchors": [
+        [
+          268,
+          751
+        ],
+        [
+          736,
+          761
+        ],
+        [
+          268,
+          1117
+        ],
+        [
+          736,
+          1114
+        ],
+        [
+          268,
+          1447
+        ],
+        [
+          736,
+          1448
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/death-S-SW.png",
+      "directions": [
+        "S",
+        "SW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 1024,
+      "source_anchors": [
+        [
+          250,
+          572
+        ],
+        [
+          812,
+          576
+        ],
+        [
+          250,
+          985
+        ],
+        [
+          812,
+          989
+        ],
+        [
+          250,
+          1394
+        ],
+        [
+          812,
+          1403
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/death-W-NW.png",
+      "directions": [
+        "W",
+        "NW"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 992,
+      "source_anchors": [
+        [
+          270,
+          572
+        ],
+        [
+          790,
+          579
+        ],
+        [
+          270,
+          977
+        ],
+        [
+          790,
+          1008
+        ],
+        [
+          270,
+          1380
+        ],
+        [
+          790,
+          1415
+        ]
+      ],
+      "scale_review_note": "PROVISIONAL diagnostic normalization against E/SE living reference canvas640 using neutral/recovery/precollapse rows only, never final corpse height. Hood/cloth silhouette varies with deformation; skull/shoulder/chest landmarks and actual Main must independently review final scale. Neutral bboxX and perpose lowest visible cloth/hoverprojectionY are provisional metadata; source PNG pixels untouched and no final contact approval."
+    },
+    {
+      "output_path": "/workspace/scratch/pr100-continuation/death-servant-authoring/death-N-NE-v4.png",
+      "directions": [
+        "N",
+        "NE"
+      ],
+      "directions_axis": "columns",
+      "rows": 3,
+      "reference_rows": [
+        0
+      ],
+      "roles": {
+        "death": [
+          0,
+          1,
+          2
+        ]
+      },
+      "canvas_size": 1280,
+      "source_anchors": [
+        [
+          270,
+          573
+        ],
+        [
+          752,
+          553
+        ],
+        [
+          270,
+          1066
+        ],
+        [
+          752,
+          1092
+        ],
+        [
+          270,
+          1468
+        ],
+        [
+          752,
+          1463
+        ]
+      ],
+      "scale_review_note": "PROPOSED1280 living/precollapse hood/core scale only, never finalcorpseheightfit. NewownN/NE6 physicalfolding correctsrightturn/hangingfinal. Exactsameheadinghood/core androotneedindependentreview. Rawpixelsunaltered."
+    }
+  ],
+  "display_height_basis": "max_living_frame",
+  "source_claim": "New independently authored2D hooded wraith motion, not extracted original animation. Exact existing atlas0[0,619,317,310] SHA preserved; same-atlas context restores233 connected outside-cell pixels. Distinct variant4/width.946/crest0/accentc4aa64 from Revenant/Nungma; no animation frame alias/recolor/reuse.",
+  "review": {
+    "identity_preserved": true,
+    "eight_views": false,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Author static source comparison: pale gray tattered hooded skull shroud, two attached skeletal hands, continuous long cloth, no legs/weapon/newappendages, native86 floatingtrue slash melee58 preserved. Initial40 had3rectoverlap sheets and3SWright flips; allpreserved, small10posev2 corrections pass. E/W attack spacing and Ncontactaxis corrected in newwhole6v2 versions.104strict/raw+visibleunique/fullPNGuse andmandatoryslot checks recorded separately from semanticreview. Ndeath sidefallen projection, exacthead/hood/core scale, cloak-root/bob andactualmelee contact require fresh independentQA and actualMain; notapproved bygeometry. OriginalN/NEcorpse andv2/v3 remainedHOLD. OwnsingleNproneendpointwithabstracttopologyguide enablednewwhole6v4actualNclosedbackflatfoldedcorpse; selectedonlythisproposedcandidate. Alloldrawpreserved. Stillneedsindependentstaticsemantics/modelscale/root/Main."
+  },
+  "status": "FULL104_STRICT_GEOMETRY_PASS_PENDING_INDEPENDENT_VISUAL_MAIN",
+  "actual_Main": "not_run",
+  "completed_added": 0
+}

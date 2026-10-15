@@ -1,0 +1,1856 @@
+{
+  "created_utc": "2026-10-15T22:02:44.899699+00:00",
+  "status": "SOURCE_ONLY_HOLD_NO_PRODUCTION_NO_MAIN_NO_COUNT",
+  "requires_prior_base05_archives": [
+    {
+      "file": "unicorn-source-wip05-part01.zip",
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/portable-wip05/unicorn-source-wip05-part01.zip",
+      "bytes": 66627079,
+      "sha256": "28000be8821ddca1eeee864e6e8a05ef76b40ff78ecbdd7eb38d7736d6741e72",
+      "entries": [
+        "albino-unicorn-authoring/attack-A-validation.json",
+        "albino-unicorn-authoring/attack-A.png",
+        "albino-unicorn-authoring/attack-B-geometry.json",
+        "albino-unicorn-authoring/attack-B-validation.json",
+        "albino-unicorn-authoring/attack-B.png",
+        "albino-unicorn-authoring/author-review.json",
+        "albino-unicorn-authoring/candidate.json",
+        "albino-unicorn-authoring/generation-manifest.json",
+        "albino-unicorn-authoring/hitdeath-A-validation.json",
+        "albino-unicorn-authoring/hitdeath-A.png",
+        "albino-unicorn-authoring/hitdeath-B-geometry.json",
+        "albino-unicorn-authoring/hitdeath-B-validation.json",
+        "albino-unicorn-authoring/hitdeath-B.png",
+        "albino-unicorn-authoring/idle-walk-full8-initial-validation.json",
+        "albino-unicorn-authoring/idle-walk-full8-initial.png",
+        "albino-unicorn-authoring/idlewalk-A-validation.json",
+        "albino-unicorn-authoring/idlewalk-A.png",
+        "albino-unicorn-authoring/idlewalk-B-validation.json",
+        "albino-unicorn-authoring/idlewalk-B.png",
+        "albino-unicorn-authoring/prompt-attack-A.txt",
+        "albino-unicorn-authoring/prompt-attack-B.txt",
+        "albino-unicorn-authoring/prompt-hitdeath-A.txt",
+        "albino-unicorn-authoring/prompt-hitdeath-B.txt",
+        "albino-unicorn-authoring/prompt-idle-walk.txt",
+        "albino-unicorn-authoring/prompt-idlewalk-A.txt",
+        "albino-unicorn-authoring/prompt-idlewalk-B.txt",
+        "albino-unicorn-authoring/recovery/E-contactA-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/E-contactA-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/E-contactB-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/E-contactB-single-attempt1.review.json",
+        "albino-unicorn-authoring/recovery/E-contactB-single-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/E-contactB-single-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/N-idle-walk-homologous-raw-grid.png",
+        "albino-unicorn-authoring/recovery/S-idle-walk-homologous-raw-grid.png",
+        "albino-unicorn-authoring/recovery/SE-A-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SE-A-single-attempt1.png",
+        "albino-unicorn-authoring/recovery/SE-A-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/SE-B-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SE-B-single-attempt1.png",
+        "albino-unicorn-authoring/recovery/SE-B-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/SE-B-single-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SE-B-single-attempt2.png",
+        "albino-unicorn-authoring/recovery/SE-B-single-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/SE-passing-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/SE-passing-single-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SE-passing-single-attempt2.png",
+        "albino-unicorn-authoring/recovery/SE-passing-single-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/SW-A-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SW-A-single-attempt1.png",
+        "albino-unicorn-authoring/recovery/SW-A-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/SW-B-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SW-B-single-attempt1.png",
+        "albino-unicorn-authoring/recovery/SW-B-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/SW-B-single-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SW-B-single-attempt2.png",
+        "albino-unicorn-authoring/recovery/SW-B-single-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/SW-passing-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/SW-passing-single-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/SW-passing-single-attempt2.png",
+        "albino-unicorn-authoring/recovery/SW-passing-single-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/W-attempt4-endpoint-joint-evidence.json",
+        "albino-unicorn-authoring/recovery/W-contactA-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/W-contactA-single-attempt1.png",
+        "albino-unicorn-authoring/recovery/W-contactA-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/W-contactA-single-attempt1.tool-return-provenance.json",
+        "albino-unicorn-authoring/recovery/W-contactB-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/W-contactB-single-attempt1.png",
+        "albino-unicorn-authoring/recovery/W-contactB-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/W-passing-single-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/W-passing-single-attempt1.png",
+        "albino-unicorn-authoring/recovery/W-passing-single-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/W-passing-single-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/W-passing-single-attempt2.png",
+        "albino-unicorn-authoring/recovery/W-passing-single-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/W-single-passing2-registered-clean-and-joints.png",
+        "albino-unicorn-authoring/recovery/W-single-passing2-review.json",
+        "albino-unicorn-authoring/recovery/attack-E-SE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-E-SE-attempt1.png",
+        "albino-unicorn-authoring/recovery/attack-E-SE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-E-SE-spacing-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-E-SE-spacing-attempt2.png",
+        "albino-unicorn-authoring/recovery/attack-E-SE-spacing-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-N-NE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-N-NE-attempt1.png",
+        "albino-unicorn-authoring/recovery/attack-N-NE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-N-NE-heading-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-N-NE-heading-attempt2.png",
+        "albino-unicorn-authoring/recovery/attack-N-NE-heading-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-N-threephase-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-N-threephase-attempt1.png",
+        "albino-unicorn-authoring/recovery/attack-N-threephase-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-NE-spacing-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-NE-spacing-attempt2.png",
+        "albino-unicorn-authoring/recovery/attack-NE-spacing-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-NE-threephase-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-NE-threephase-attempt1.png",
+        "albino-unicorn-authoring/recovery/attack-NE-threephase-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-S-SW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-S-SW-attempt1.png",
+        "albino-unicorn-authoring/recovery/attack-S-SW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/attack-W-NW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/attack-W-NW-attempt1.png",
+        "albino-unicorn-authoring/recovery/attack-W-NW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/build_N_attack_guide.py",
+        "albino-unicorn-authoring/recovery/build_SE_B_overlay_guide.py",
+        "albino-unicorn-authoring/recovery/build_SW_B_overlay_guide.py",
+        "albino-unicorn-authoring/recovery/build_S_raw_grid.py",
+        "albino-unicorn-authoring/recovery/build_W_endpoint_evidence.py",
+        "albino-unicorn-authoring/recovery/build_W_passing_guide.py",
+        "albino-unicorn-authoring/recovery/build_W_single_review.py",
+        "albino-unicorn-authoring/recovery/build_diagonal_single_guides.py",
+        "albino-unicorn-authoring/recovery/build_front_back_guides.py",
+        "albino-unicorn-authoring/recovery/build_guides.py",
+        "albino-unicorn-authoring/recovery/build_pilot_review.py",
+        "albino-unicorn-authoring/recovery/build_registered104.py",
+        "albino-unicorn-authoring/recovery/build_registered104_trial02.py",
+        "albino-unicorn-authoring/recovery/build_registered104_trial03.py",
+        "albino-unicorn-authoring/recovery/build_registration_proposal04.py",
+        "albino-unicorn-authoring/recovery/build_registration_proposal05.py",
+        "albino-unicorn-authoring/recovery/build_scale_coordinates.py",
+        "albino-unicorn-authoring/recovery/build_west_guides.py",
+        "albino-unicorn-authoring/recovery/candidate-mixed104-registration-proposal05.json",
+        "albino-unicorn-authoring/recovery/candidate-mixed104-registration-trial01.json",
+        "albino-unicorn-authoring/recovery/candidate-mixed104-registration-trial03.json",
+        "albino-unicorn-authoring/recovery/candidate-recovery-all104-wip.json",
+        "albino-unicorn-authoring/recovery/candidate-recovery-wip.json",
+        "albino-unicorn-authoring/recovery/checkpoint-recovered-20261015-181153.json",
+        "albino-unicorn-authoring/recovery/checkpoint.json",
+        "albino-unicorn-authoring/recovery/death-E-SE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/death-E-SE-attempt1.png",
+        "albino-unicorn-authoring/recovery/death-E-SE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/death-N-NE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/death-N-NE-attempt1.png",
+        "albino-unicorn-authoring/recovery/death-N-NE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/death-S-SW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/death-S-SW-attempt1.png",
+        "albino-unicorn-authoring/recovery/death-S-SW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/death-W-NW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/death-W-NW-attempt1.png",
+        "albino-unicorn-authoring/recovery/death-W-NW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/desired-E-contactA-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-E-contactA-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-E-contactB-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-E-contactB-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-N-attack-physical-guide.json",
+        "albino-unicorn-authoring/recovery/desired-N-attack-physical-guide.png",
+        "albino-unicorn-authoring/recovery/desired-S-N-contactAB-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-S-N-contactAB-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SE-A-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-SE-A-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SE-B-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-SE-B-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SE-B-on-own-body-guide.json"
+      ]
+    },
+    {
+      "file": "unicorn-source-wip05-part02.zip",
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/portable-wip05/unicorn-source-wip05-part02.zip",
+      "bytes": 46073529,
+      "sha256": "cf3256cffc65af21195fa88d15750c71a2032dff33ab2a4c68051378756e5e94",
+      "entries": [
+        "albino-unicorn-authoring/recovery/desired-SE-B-on-own-body-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SE-passing-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-SE-passing-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SW-A-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-SW-A-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SW-B-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-SW-B-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SW-B-on-own-body-guide.json",
+        "albino-unicorn-authoring/recovery/desired-SW-B-on-own-body-guide.png",
+        "albino-unicorn-authoring/recovery/desired-SW-passing-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-SW-passing-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-W-contactA-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-W-contactA-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-W-contactB-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-W-contactB-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/desired-W-passing-equine-joint-guide.json",
+        "albino-unicorn-authoring/recovery/desired-W-passing-equine-joint-guide.png",
+        "albino-unicorn-authoring/recovery/hit-E-SE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/hit-E-SE-attempt1.png",
+        "albino-unicorn-authoring/recovery/hit-E-SE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/hit-N-NE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/hit-N-NE-attempt1.png",
+        "albino-unicorn-authoring/recovery/hit-N-NE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/hit-S-SW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/hit-S-SW-attempt1.png",
+        "albino-unicorn-authoring/recovery/hit-S-SW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/hit-S-SW-spacing-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/hit-S-SW-spacing-attempt2.png",
+        "albino-unicorn-authoring/recovery/hit-S-SW-spacing-attempt2.prompt.txt",
+        "albino-unicorn-authoring/recovery/hit-W-NW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/hit-W-NW-attempt1.png",
+        "albino-unicorn-authoring/recovery/hit-W-NW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/hitdeath-E-SE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/hitdeath-E-SE-attempt1.png",
+        "albino-unicorn-authoring/recovery/hitdeath-E-SE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/hitdeath-N-NE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/hitdeath-S-SW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/hitdeath-W-NW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/idle-E-SE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/idle-E-SE-attempt1.png",
+        "albino-unicorn-authoring/recovery/idle-E-SE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/idle-N-NE-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/idle-N-NE-attempt1.png",
+        "albino-unicorn-authoring/recovery/idle-N-NE-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/idle-S-SW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/idle-S-SW-attempt1.png",
+        "albino-unicorn-authoring/recovery/idle-S-SW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/idle-W-NW-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/idle-W-NW-attempt1.png",
+        "albino-unicorn-authoring/recovery/idle-W-NW-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/package-wip05.log",
+        "albino-unicorn-authoring/recovery/package_wip05.py",
+        "albino-unicorn-authoring/recovery/prepare_remaining_roles.py",
+        "albino-unicorn-authoring/recovery/prepare_split_hit_death.py",
+        "albino-unicorn-authoring/recovery/proposal05-independent-geometry-proof.json",
+        "albino-unicorn-authoring/recovery/record_output.py",
+        "albino-unicorn-authoring/recovery/recovery-generation-records.json",
+        "albino-unicorn-authoring/recovery/recovery-manifest.json",
+        "albino-unicorn-authoring/recovery/registered104-trial01-proof.json",
+        "albino-unicorn-authoring/recovery/registered104-trial03-proof.json",
+        "albino-unicorn-authoring/recovery/registration-proposal04/source_registration_proposal.json",
+        "albino-unicorn-authoring/recovery/registration-proposal05/N-walk-canvas736-784-824-homologous-comparison.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-E-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-N-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-NE-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-NW-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-S-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-SE-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-SW-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/matrix-W-13poses.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/source_registration_proposal.json",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-E-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-N-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-NE-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-NW-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-S-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-SE-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-SW-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-proposal05/walk-W-idle-A-pass-B.png",
+        "albino-unicorn-authoring/recovery/registration-trial02-guard-rejection.json",
+        "albino-unicorn-authoring/recovery/verify-proposal05-geometry.log",
+        "albino-unicorn-authoring/recovery/verify_proposal05_geometry.py",
+        "albino-unicorn-authoring/recovery/walk-E-threephase-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-E-threephase-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/walk-NW-NE-threephase-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-NW-NE-threephase-attempt1.png",
+        "albino-unicorn-authoring/recovery/walk-NW-NE-threephase-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/walk-S-N-threephase-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-S-N-threephase-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/walk-SE-SW-threephase-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-SE-SW-threephase-attempt1.png",
+        "albino-unicorn-authoring/recovery/walk-SE-SW-threephase-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/walk-W-B-propagation-attempt4.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-W-B-propagation-attempt4.png",
+        "albino-unicorn-authoring/recovery/walk-W-B-propagation-attempt4.prompt.txt",
+        "albino-unicorn-authoring/recovery/walk-W-bottomB-correction-attempt3.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-W-bottomB-correction-attempt3.png",
+        "albino-unicorn-authoring/recovery/walk-W-bottomB-correction-attempt3.prompt.txt",
+        "albino-unicorn-authoring/recovery/walk-W-threephase-attempt1.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-W-threephase-attempt1.png",
+        "albino-unicorn-authoring/recovery/walk-W-threephase-attempt1.prompt.txt",
+        "albino-unicorn-authoring/recovery/walk-W-threephase-attempt2.diagnostic.json",
+        "albino-unicorn-authoring/recovery/walk-W-threephase-attempt2.png",
+        "albino-unicorn-authoring/recovery/walk-W-threephase-attempt2.prompt.txt",
+        "albino-unicorn-authoring/source-expanded-context.png",
+        "albino-unicorn-authoring/source-proof.json",
+        "albino-unicorn-authoring/source-wholebody-context.png"
+      ]
+    }
+  ],
+  "restore_root": "/workspace/scratch/pr100-continuation",
+  "candidate06": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/candidate-mixed104-registration-proposal06.json",
+  "candidate06_sha256": "f5e2e96cee8d9c13e38a5285be2ba9b663abe93267c0ec35542bf6576d01de26",
+  "new_Unicorn_authored_raw": 14,
+  "new_Wolf_authored_raw": 11,
+  "all_old_Wolf_base_raw_pngs_and_candidate_and_prompts_included": true,
+  "source_reference_assets": "Original reference atlas paths/hashes remain pinned to existing repository assets; no external substitute or production asset mutation.",
+  "member_sha_verified": true,
+  "base05_artifacts_unchanged": true,
+  "archives": [
+    {
+      "file": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/portable-delta06/unicorn-wolf-source-delta06-part01.zip",
+      "bytes": 62405598,
+      "sha256": "59752540d4390e3d8fa60ad568085759992588062ad1883724fe449b1c14b9f0",
+      "entries": 155,
+      "extract": "independent ZIP; extract each to /workspace/scratch/pr100-continuation; do not concatenate"
+    },
+    {
+      "file": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/portable-delta06/unicorn-wolf-source-delta06-part02.zip",
+      "bytes": 18813483,
+      "sha256": "fc7b5cb001e61dea7bfec156f9c41a603f37fae5aeb395d9501335c787239e05",
+      "entries": 40,
+      "extract": "independent ZIP; extract each to /workspace/scratch/pr100-continuation; do not concatenate"
+    }
+  ],
+  "entry_count": 195,
+  "uncompressed_bytes": 83072036,
+  "entries": [
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt1.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt1.diagnostic.json",
+      "bytes": 1348,
+      "sha256": "f9f55ad9b0c044c9a1f90c6eb06f549e2f9f34817d94a2ea84a29b463e374a73",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt1.png",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt1.png",
+      "bytes": 1465840,
+      "sha256": "a81bfdd50e75989aeaf8889a4201baaff386252b322a5e41cbb0f521920a6892",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt1.prompt.txt",
+      "bytes": 2092,
+      "sha256": "4c04fc6778f0a02373c22667025c82f3e20ea806476d7dd52d623dc9d7c5f239",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt2.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt2.diagnostic.json",
+      "bytes": 1347,
+      "sha256": "510e19483739cb7a3e1b5d6511daa8304ceabd7f5a58c09094c4f630685beb32",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt2.png",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt2.png",
+      "bytes": 1588202,
+      "sha256": "bfd215785baab8c6d19d7c02ec18235daec45806ad748d51d6c1b9fa1946048d",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt2.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-projection-attempt2.prompt.txt",
+      "bytes": 2722,
+      "sha256": "426a2b16ef32b8ad0a922c436cf9bcdd9e1023c43fe2b66438849089304ca41a",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-proportion-attempt3.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-proportion-attempt3.diagnostic.json",
+      "bytes": 1349,
+      "sha256": "973096c876c77c3462ff48e121ffd297d1092ce45c451497c58e4296dcc240c6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-proportion-attempt3.png",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-proportion-attempt3.png",
+      "bytes": 1544065,
+      "sha256": "99eec78f838ec22fcdf13ef9611bc3c4326dc580a5cc480e1245c07dbe710f16",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-proportion-attempt3.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-A-frontal-proportion-attempt3.prompt.txt",
+      "bytes": 2137,
+      "sha256": "8269ecca2f4107e5237a00187be91c2558c3ecb561e60512ac2f62b2b8fd6de6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-projection-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-B-frontal-projection-attempt1.prompt.txt",
+      "bytes": 2106,
+      "sha256": "7eacd91da8ed15f5943afb6198ce6e73495851f16059225c44d1541d68220bc0",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt3.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt3.diagnostic.json",
+      "bytes": 1349,
+      "sha256": "9fd19002cf987051fe7d8406afd538525c396a5c517b5bd0b78ad53962fd8b3e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt3.png",
+      "entry": "albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt3.png",
+      "bytes": 1516335,
+      "sha256": "e3e9797973abb589225abcbcd1e992ff9ca4b69bafa44bfe5810a7b49995963a",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt3.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt3.prompt.txt",
+      "bytes": 1839,
+      "sha256": "0f7598ee84c7dcb3e72d04e0642b626c9478647465dfc34fae040d59b6bf6988",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt4.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt4.diagnostic.json",
+      "bytes": 1349,
+      "sha256": "bf37cbefac0d619d8056e9c7891fc23cb6adf2d3da063cca56802073fbde2b67",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt4.png",
+      "entry": "albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt4.png",
+      "bytes": 1574428,
+      "sha256": "fb2743bf12b14fcbb71fd21c871d900111e6bbbbe426424392f474b2c778afd0",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt4.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt4.prompt.txt",
+      "bytes": 1915,
+      "sha256": "ddc25b746c52d076e4e73ce95705d650af5ccf6d2ac2b09193aa691216d414f6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-passing-frontal-projection-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-passing-frontal-projection-attempt1.prompt.txt",
+      "bytes": 2092,
+      "sha256": "bed85a85fe1edd2fa56c9b7f95da62b7f6fe156cdf37b0aea335bacc313791a7",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-passing-frontal-proportion-attempt3.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SE-passing-frontal-proportion-attempt3.diagnostic.json",
+      "bytes": 1355,
+      "sha256": "6618f400a2ffe8598a423004f5f44404c9a3a5c6ec82ed99eea2a0097558c81b",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-passing-frontal-proportion-attempt3.png",
+      "entry": "albino-unicorn-authoring/recovery/SE-passing-frontal-proportion-attempt3.png",
+      "bytes": 1511027,
+      "sha256": "30bcb272c5fa71be4effec35f8ef52256f01bfd6445c1b959c5fdd3f4db21fa5",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-passing-frontal-proportion-attempt3.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SE-passing-frontal-proportion-attempt3.prompt.txt",
+      "bytes": 1922,
+      "sha256": "866daa9bbc614094f1fd01d80373753aa879100183fc2a471e35c64809685bb8",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt1.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt1.diagnostic.json",
+      "bytes": 1350,
+      "sha256": "6b80658e2ce1ab61000a48d87ab632a7e53f339b3b1fb2993257dbd39c3f1266",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt1.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt1.png",
+      "bytes": 1367135,
+      "sha256": "7fa72fea8871cda8ca770b42f94ae118295afdca4be1c30cccf6795d065e39d6",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt1.prompt.txt",
+      "bytes": 2091,
+      "sha256": "bc07ea71dba47b18636e6a2a2d541f1eb28e8467bc3d91a242289d6c5d15bb05",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt2.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt2.diagnostic.json",
+      "bytes": 1347,
+      "sha256": "f97ac767a360db0af4e162d73b6f0e36eac4ad320f0b6a9a3d3cfb6afb77066e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt2.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt2.png",
+      "bytes": 1505622,
+      "sha256": "89f65c213d0288265421601b3513caaf75ccbc7fb8683a5414a49f3524757156",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt2.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt2.prompt.txt",
+      "bytes": 2947,
+      "sha256": "9a27d10849774f1c875a7de7c903ab690681336f1a5136a0ffdb3ec4e5740bf6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-projection-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-B-frontal-projection-attempt1.prompt.txt",
+      "bytes": 2105,
+      "sha256": "c2630f957b00ee00fd87ae4f3183d00d1011bfb31762824d66fcc058822fa9ed",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt1.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt1.diagnostic.json",
+      "bytes": 1348,
+      "sha256": "e8aa37b10fb6564a549c97627765ef5d0436986b016296b1556a10d5bfe91f77",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt1.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt1.png",
+      "bytes": 1492950,
+      "sha256": "940ed6e6c3213bed7237a243d59fbf59a10ff3f57ca87830418794a44746311b",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt1.prompt.txt",
+      "bytes": 1838,
+      "sha256": "7c799b5787ea97aa0b5ac7430204abd627052879bfd1a1aadd07a14b5f7e716e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt2.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt2.diagnostic.json",
+      "bytes": 1348,
+      "sha256": "5923493ade909cec47a68909157ac4b78cff74468d06a2a217dbe974383040ce",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt2.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt2.png",
+      "bytes": 1546180,
+      "sha256": "eb2f33d9971a3a919a8545cc1d52045d9b30b2a150bb5ceda71b304eefe03a6d",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt2.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt2.prompt.txt",
+      "bytes": 1804,
+      "sha256": "30f880400274d7342ae19f6954eb7d3e510aaf9292d96834e3bd9c78fa2d8dea",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-projection-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-projection-attempt1.prompt.txt",
+      "bytes": 2091,
+      "sha256": "a3b3f18c681225d871aea63947f44cd7c76f844da6d98ec5a8d239aec1e56167",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt1.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt1.diagnostic.json",
+      "bytes": 1354,
+      "sha256": "f14fde9e16ddaf73e260e35426e050aacaa4fc83a60d6fe34d08d59f7fa19f7e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt1.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt1.png",
+      "bytes": 1522896,
+      "sha256": "b4fd7c7fe6b0fc5d94b84be465f2b12f2a80d61230c4756b3c25120c3e07c0d7",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt1.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt1.prompt.txt",
+      "bytes": 1921,
+      "sha256": "914cf81058619142a7c5f752172d35574dd85d1e318d9df00f6dbe7f675d0e8c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt2.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt2.diagnostic.json",
+      "bytes": 1354,
+      "sha256": "19f35967615762ae5f1cf07ca185f83f45524a04d43a3c83658df9398a95c8e6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt2.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt2.png",
+      "bytes": 1554457,
+      "sha256": "619e3bbd22987dbdcaf461aa054f0f806079e90d38fecb1e05bfd20b17e3d7de",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt2.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt2.prompt.txt",
+      "bytes": 1667,
+      "sha256": "e998d69be8c471a6397d9e111d7185eb92234c20a104e9ae08c69f46d9b53468",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt3.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt3.diagnostic.json",
+      "bytes": 1354,
+      "sha256": "99369d6214d19a731068e3854d30ed2cfdad2e01f8be473574bfc9bc385dd3df",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt3.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt3.png",
+      "bytes": 1513445,
+      "sha256": "f3f39a465d27cb27208319a86d17f7280309d6cd3e9ece7ff2f0108a19737b37",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt3.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt3.prompt.txt",
+      "bytes": 1821,
+      "sha256": "0992cf40bc8c4158bee85bf96c2a973a959f0fa75ade4b0c3e9a62a47aa3b051",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt4.diagnostic.json",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt4.diagnostic.json",
+      "bytes": 1354,
+      "sha256": "e6b2718d6a0bcfc25aef14bd71f76f0c840b229140479d2fcb4ad981e253867a",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt4.png",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt4.png",
+      "bytes": 1598735,
+      "sha256": "01f761a0ff33844c276991cb0e87a91ee3bb2956e90eb760b6caf7a96358c034",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt4.prompt.txt",
+      "entry": "albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt4.prompt.txt",
+      "bytes": 2383,
+      "sha256": "893861964201f95e2a659a4a41b68824231ec5e2e527027f19f91a827f2fade6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/build_front_diagonal_gait_guides.py",
+      "entry": "albino-unicorn-authoring/recovery/build_front_diagonal_gait_guides.py",
+      "bytes": 5001,
+      "sha256": "790c2e5eea4bc0f2032d73007586fdf168090b01184c395cbd347cd1266797a2",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/build_new_SE_physical_row.py",
+      "entry": "albino-unicorn-authoring/recovery/build_new_SE_physical_row.py",
+      "bytes": 2854,
+      "sha256": "4011ec9afd81f409e4c9f2123525785aa0326b23cb3ae2c6068ccebd46aae4b6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/build_new_SW_physical_row.py",
+      "entry": "albino-unicorn-authoring/recovery/build_new_SW_physical_row.py",
+      "bytes": 2866,
+      "sha256": "df671ddd389ee4f1dfffdfae118f19d808246315f243c4d12ed9afe796fc7cfd",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/build_portable_delta06.py",
+      "entry": "albino-unicorn-authoring/recovery/build_portable_delta06.py",
+      "bytes": 6957,
+      "sha256": "df4f61dcb2c675dd8448fb0ed43028763080b084ead9035f678b37b3a51d91bf",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/build_registration_proposal06.py",
+      "entry": "albino-unicorn-authoring/recovery/build_registration_proposal06.py",
+      "bytes": 4108,
+      "sha256": "546f62e29caf336dc4cb06d24a623a5cb83e595e79713db31c0b43c71459fa36",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/candidate-mixed104-registration-proposal06.json",
+      "entry": "albino-unicorn-authoring/recovery/candidate-mixed104-registration-proposal06.json",
+      "bytes": 36651,
+      "sha256": "f5e2e96cee8d9c13e38a5285be2ba9b663abe93267c0ec35542bf6576d01de26",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/checkpoint-proposal06.json",
+      "entry": "albino-unicorn-authoring/recovery/checkpoint-proposal06.json",
+      "bytes": 10155,
+      "sha256": "f8300b0442d8bd566606740028b465298e156baeba2f9f8404c6771a8d620607",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/compare_frontal_pilot.py",
+      "entry": "albino-unicorn-authoring/recovery/compare_frontal_pilot.py",
+      "bytes": 1181,
+      "sha256": "30f13170a643fa4df8bba4c0f5d358b78a14016ca20548b2f18deed175bcbc18",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/measure_proposal06_roots.py",
+      "entry": "albino-unicorn-authoring/recovery/measure_proposal06_roots.py",
+      "bytes": 2012,
+      "sha256": "62ef2fb3d8081270a072d099e09af8314cb2767dae30f883647ccf02344be057",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/proposal06-independent-geometry-proof.json",
+      "entry": "albino-unicorn-authoring/recovery/proposal06-independent-geometry-proof.json",
+      "bytes": 90071,
+      "sha256": "29a06d3cb71b7b01de3b723b3ee8ecebb750789511c6d37b32e6fd4af36d327c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/recovery-generation-records.json",
+      "entry": "albino-unicorn-authoring/recovery/recovery-generation-records.json",
+      "bytes": 40362,
+      "sha256": "b8fbe7cfce67ffa0f1e8a729bc1b3cdcb80583b6b7596c147aa5fcb93ef6a4d9",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SE-B4-desired-whole-hind-reversal-on-own-body-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SE-B4-desired-whole-hind-reversal-on-own-body-guide.png",
+      "bytes": 1172894,
+      "sha256": "abef375c904b294181d5c3ae5641245aa9a9e45b44206e63658361df3575b48b",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SE-frontal-latest-pilot-comparison.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SE-frontal-latest-pilot-comparison.png",
+      "bytes": 437095,
+      "sha256": "33125ea88247376a28753294c03aef2b9ec621b4dda98aa627e9ec4b8f375793",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SE-idle-authoritative-crop-DIAGNOSTIC-REFERENCE-ONLY.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SE-idle-authoritative-crop-DIAGNOSTIC-REFERENCE-ONLY.png",
+      "bytes": 311900,
+      "sha256": "b22a0c7b3063207272860c110935ff0b6c666f92141a4e7834ac661da3963255",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SE-new-A3-passing3-B4-idle-clean-and-joint-review.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SE-new-A3-passing3-B4-idle-clean-and-joint-review.png",
+      "bytes": 1157236,
+      "sha256": "fba3682d9910269aa5a7cb10c0b512a8b2e7f0050a532312701e4fc7484bdd8c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SE-new-A3-passing3-B4-registration-and-joints.json",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SE-new-A3-passing3-B4-registration-and-joints.json",
+      "bytes": 6233,
+      "sha256": "d31bb8c85daa2b3adeaba1a36117906fa774b5e5f57c1b193b32e992018d9b22",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SE-new-frontal-A2-idle-comparison.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SE-new-frontal-A2-idle-comparison.png",
+      "bytes": 288820,
+      "sha256": "8f83005bd16f711f93da41b2a990bc6e717c88e6c967da2982c8778fb8b8b043",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SE-raw-homologous-coordinate-review.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SE-raw-homologous-coordinate-review.png",
+      "bytes": 1151634,
+      "sha256": "5b9889d7f350cef98e2eeff62e08fc8dc915720f7830eb4d9a22310980ac57e1",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-A1-idle-homologous-canvas-comparison.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-A1-idle-homologous-canvas-comparison.png",
+      "bytes": 422034,
+      "sha256": "ee1cd7a4b732bc8b7718ec08cda32534f67128717c2c3754271c7e8600b53d1e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-B2-desired-whole-physical-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-B2-desired-whole-physical-guide.png",
+      "bytes": 1160919,
+      "sha256": "65284f7e088f3020225fabd96c405f969ebc74d6ea73d7b446de6f10a842f682",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-frontal-latest-pilot-comparison.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-frontal-latest-pilot-comparison.png",
+      "bytes": 430155,
+      "sha256": "ca74d06a4816a7b879f418fa03237a7490407841bdd83aaa23ec67de8eb22a48",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-idle-authoritative-crop-DIAGNOSTIC-REFERENCE-ONLY.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-idle-authoritative-crop-DIAGNOSTIC-REFERENCE-ONLY.png",
+      "bytes": 373545,
+      "sha256": "8bbc1645a1aa7245823d0674b0574bc20560e58bf6564280dd21627112524eea",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-new-A1-passing4-B2-idle-clean-and-joint-review.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-new-A1-passing4-B2-idle-clean-and-joint-review.png",
+      "bytes": 1211134,
+      "sha256": "6b4d179cd2552b4be56bfd605dd9d8be2311dfebc2ba2c9c2762f3a6a821870c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-new-A1-passing4-B2-registration-and-joints.json",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-new-A1-passing4-B2-registration-and-joints.json",
+      "bytes": 6227,
+      "sha256": "80d10ceb35eff882d6573d0c288e5d45c8153c6ab0b448ff67d796bad0631de1",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-passing2-desired-whole-physical-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-passing2-desired-whole-physical-guide.png",
+      "bytes": 1170467,
+      "sha256": "dfaa3ef92b53ee262604ef1dc93db5594678b8b9e70e8a55ad0a39fb515594af",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-passing3-desired-underhip-whole-chain-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-passing3-desired-underhip-whole-chain-guide.png",
+      "bytes": 1214325,
+      "sha256": "6fe43a7eaed96450b5fd6d9144103327de9f8c15a87d3ec925e3ab1499f8f55f",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-passing4-underhip-advance-own-body-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-passing4-underhip-advance-own-body-guide.png",
+      "bytes": 1180694,
+      "sha256": "90713eee510500f2ab06a4046a92b369ea17f881c6111df3d5968cba2ba824c4",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/SW-raw-homologous-coordinate-review.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/SW-raw-homologous-coordinate-review.png",
+      "bytes": 1039977,
+      "sha256": "d02f0d9cf8606b0e96847b75083f6f512bf1b638b19bf2646e723eb624703efd",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/front-SE-A-blank-gait-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/front-SE-A-blank-gait-guide.png",
+      "bytes": 17967,
+      "sha256": "a800a4226785082da18e491ff7c5870fb92a58b2da3e1a665d9807c7b892011f",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/front-SE-B-blank-gait-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/front-SE-B-blank-gait-guide.png",
+      "bytes": 18257,
+      "sha256": "0bdf3d6ae29c2c0c95136c2c844ddb0c7ada4b62c848c695814b40ad08bcb6e7",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/front-SE-passing-blank-gait-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/front-SE-passing-blank-gait-guide.png",
+      "bytes": 17768,
+      "sha256": "66bc7416177bc00c6d88864b8b9636130d27aedfa4c74ba4211f58fa6cb6f5c6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/front-SW-A-blank-gait-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/front-SW-A-blank-gait-guide.png",
+      "bytes": 18191,
+      "sha256": "8ba4d4ef719ecdc8d774a0a3073070a1b1ee663efc0eb9448a545ee0df373114",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/front-SW-B-blank-gait-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/front-SW-B-blank-gait-guide.png",
+      "bytes": 18438,
+      "sha256": "41789ea6e8c040a0c2b1367f0702d19b7c44f0ce0c92d1f017c25ae326aa51ae",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/front-SW-passing-blank-gait-guide.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/front-SW-passing-blank-gait-guide.png",
+      "bytes": 17908,
+      "sha256": "871f00074f628bb99d1afc630164f8d511887b91004d2026e820d6b4fdc8c871",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/idle-isolated-reference-provenance.json",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/idle-isolated-reference-provenance.json",
+      "bytes": 1324,
+      "sha256": "7d9cc669779ab9b84d890292dd1ec8537f4df62556fb89b001d938c3ea78cf17",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/independent-sole-alpha-and-projection.json",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/independent-sole-alpha-and-projection.json",
+      "bytes": 2145,
+      "sha256": "068f647690c721265e65640be32788c606179f728938436f09048b5c4c9209db",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/matrix-SE-13poses.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/matrix-SE-13poses.png",
+      "bytes": 1602912,
+      "sha256": "e0035c1080b82c615a85893d088e14e6ed1d896d2b9939f364af721c19e56f19",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/matrix-SW-13poses.png",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/matrix-SW-13poses.png",
+      "bytes": 1505756,
+      "sha256": "393fdcf3e51ab7545d0e97b0b3314243d6d82729de722be46de9c3947f85ed1c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/proportion-root-and-failure-notes.json",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/proportion-root-and-failure-notes.json",
+      "bytes": 4123,
+      "sha256": "f49b1415252ed3d27157cd0b4139c74c0e37b4955ec3ca82418b6e57892419a8",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/registration-proposal06/source_registration_proposal.json",
+      "entry": "albino-unicorn-authoring/recovery/registration-proposal06/source_registration_proposal.json",
+      "bytes": 92552,
+      "sha256": "5bd8260033aa5ad761257ed66f1980572fc51fe1021c54295c41f29dc6c28a70",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/verify_proposal06_geometry.py",
+      "entry": "albino-unicorn-authoring/recovery/verify_proposal06_geometry.py",
+      "bytes": 3683,
+      "sha256": "cee6a4a3879ffcd7d1d958efc268f950a1dd2bc7135c58c5332e61503d9cf511",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-front-attempt1-validation.json",
+      "entry": "blackforest-wolf-authoring/attack-front-attempt1-validation.json",
+      "bytes": 420,
+      "sha256": "d6fc57d7429dc7f2b1c000df17f5a509f5520f457f11e0dae597bcf2c2cf6ea9",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-front-attempt1.png",
+      "entry": "blackforest-wolf-authoring/attack-front-attempt1.png",
+      "bytes": 2385748,
+      "sha256": "0948025b0b32f5c4c0dd87ebd221838e8249aa3b6ff3fc1db80af9d6756eee88",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-front-spacing2-geometry.json",
+      "entry": "blackforest-wolf-authoring/attack-front-spacing2-geometry.json",
+      "bytes": 4476,
+      "sha256": "7cfbc96e5d656a9b39e7b7ca17874d939070bc2cd147157215f21430168ce628",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-front-spacing2-validation.json",
+      "entry": "blackforest-wolf-authoring/attack-front-spacing2-validation.json",
+      "bytes": 463,
+      "sha256": "256bee6e5122a34cf7d1dd61a0330d6f5d2535ecded9074620c00bb55dabeaa0",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-front-spacing2.png",
+      "entry": "blackforest-wolf-authoring/attack-front-spacing2.png",
+      "bytes": 2061165,
+      "sha256": "ca785a3981af4166e552d2075dddd11572b8f35b3813b8dff2dcbeb7e32c86ce",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-rear-attempt1-geometry.json",
+      "entry": "blackforest-wolf-authoring/attack-rear-attempt1-geometry.json",
+      "bytes": 4472,
+      "sha256": "5abb11606ab9de0cfe332e64c8612392f92e86c09280b7680ca630aebfa6d016",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-rear-attempt1-validation.json",
+      "entry": "blackforest-wolf-authoring/attack-rear-attempt1-validation.json",
+      "bytes": 462,
+      "sha256": "a24565de25efecd5c4f6519275465c121d401755c6da3056fd14b6174932f9b1",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-rear-attempt1.png",
+      "entry": "blackforest-wolf-authoring/attack-rear-attempt1.png",
+      "bytes": 2192122,
+      "sha256": "b6f5a8f31c59ce00b0d1718d52e16a7a6062b5969d3204f208dd5a2ffddda494",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/author-review-wip.json",
+      "entry": "blackforest-wolf-authoring/author-review-wip.json",
+      "bytes": 4522,
+      "sha256": "41d8257f147d15a92df97a35298ebe34b7ac13b0c4d0be5639f94560574e006f",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/candidate-wip.json",
+      "entry": "blackforest-wolf-authoring/candidate-wip.json",
+      "bytes": 5454,
+      "sha256": "06bb857d060d412d61985607b9e306d5c489c6f342c53a690d95e3abeff44e14",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/checkpoint.json",
+      "entry": "blackforest-wolf-authoring/checkpoint.json",
+      "bytes": 1357,
+      "sha256": "0b4d3e53b1eb31b604338a5b555dbbe47e91bb7916a03b33e3c9143600830f05",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-E-SE-attempt1-geometry.json",
+      "entry": "blackforest-wolf-authoring/hit-death-E-SE-attempt1-geometry.json",
+      "bytes": 3761,
+      "sha256": "749e334f809730486cee7e2d3ad15aab25b5ec3027a28bec9a6d5de2bffd9c35",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-E-SE-attempt1-validation.json",
+      "entry": "blackforest-wolf-authoring/hit-death-E-SE-attempt1-validation.json",
+      "bytes": 465,
+      "sha256": "b38c3f4093d970ee9825a6bd6b11cea85a4b2f5011832ea46c6ad13938e5e997",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-E-SE-attempt1.png",
+      "entry": "blackforest-wolf-authoring/hit-death-E-SE-attempt1.png",
+      "bytes": 2349605,
+      "sha256": "54bf9f2c6a1facd0eb5f598439219d4961014152f364b71b1cb5ebcefff682bd",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-N-NE-attempt1-validation.json",
+      "entry": "blackforest-wolf-authoring/hit-death-N-NE-attempt1-validation.json",
+      "bytes": 422,
+      "sha256": "02459e0b9fc5ef27cafe1df41d93bffbbe75c033103e5fe16518072651742464",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-N-NE-attempt1.png",
+      "entry": "blackforest-wolf-authoring/hit-death-N-NE-attempt1.png",
+      "bytes": 2164095,
+      "sha256": "5f3c3802e16b1ab6942a1d63fbe8172e41a210c3692cf1d11c5d7af2d73515ef",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-N-NE-rear-corpse-spacing2-geometry.json",
+      "entry": "blackforest-wolf-authoring/hit-death-N-NE-rear-corpse-spacing2-geometry.json",
+      "bytes": 3768,
+      "sha256": "aded57f7e932eb6e52548bc6609219002ef6efb0bdf7b386062dbcadd99a3b9c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-N-NE-rear-corpse-spacing2-validation.json",
+      "entry": "blackforest-wolf-authoring/hit-death-N-NE-rear-corpse-spacing2-validation.json",
+      "bytes": 477,
+      "sha256": "e7f6c69ff05201a324f2a18360a63ace717de115e7e79f663b1aa3334c5a7613",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-N-NE-rear-corpse-spacing2.png",
+      "entry": "blackforest-wolf-authoring/hit-death-N-NE-rear-corpse-spacing2.png",
+      "bytes": 2054191,
+      "sha256": "aeb63e4f62837e494be40de0b0a63a60a8e7e418205e54c432a3d361425ead92",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-S-SW-attempt1-geometry.json",
+      "entry": "blackforest-wolf-authoring/hit-death-S-SW-attempt1-geometry.json",
+      "bytes": 3766,
+      "sha256": "4eb95e801e1d583fb0cfd23efdf61dfa74cb17dd53a17b952ce509f608360768",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-S-SW-attempt1-validation.json",
+      "entry": "blackforest-wolf-authoring/hit-death-S-SW-attempt1-validation.json",
+      "bytes": 465,
+      "sha256": "97e19d5ebe2b3c78d4f0b84de96c8363736ae8f81de36d13ca5ae918cdade890",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-S-SW-attempt1.png",
+      "entry": "blackforest-wolf-authoring/hit-death-S-SW-attempt1.png",
+      "bytes": 2419208,
+      "sha256": "5b02d8fa5a728f01af4098fcb0c218abcec6e049817432d9a8a31d5849524cfc",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-W-NW-attempt1-geometry.json",
+      "entry": "blackforest-wolf-authoring/hit-death-W-NW-attempt1-geometry.json",
+      "bytes": 3763,
+      "sha256": "4489bc9633b3cd9c9d3b7dcb1b98e7df958f7a39c9ab1f93a4c16b82d16980d8",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-W-NW-attempt1-validation.json",
+      "entry": "blackforest-wolf-authoring/hit-death-W-NW-attempt1-validation.json",
+      "bytes": 465,
+      "sha256": "b1efc9b19ab3156912b35a79fb9f248647ad0955deff62dc90b865af47a87793",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-W-NW-attempt1.png",
+      "entry": "blackforest-wolf-authoring/hit-death-W-NW-attempt1.png",
+      "bytes": 2214170,
+      "sha256": "715726e6e2f7c44cec7993383d7d19ba305f122f5963ca2bd4e72803089eac7e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-W-NW-rear-corpse2-geometry.json",
+      "entry": "blackforest-wolf-authoring/hit-death-W-NW-rear-corpse2-geometry.json",
+      "bytes": 3763,
+      "sha256": "1d897ddbc084b1ebb6a2432c81342f015743eb21858bc439d9b2c2ec989f987e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-W-NW-rear-corpse2-validation.json",
+      "entry": "blackforest-wolf-authoring/hit-death-W-NW-rear-corpse2-validation.json",
+      "bytes": 469,
+      "sha256": "541c3f086f2d0a69b78622b5e17854eb9a7fdd24f463986afd8bafa089b27350",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-W-NW-rear-corpse2.png",
+      "entry": "blackforest-wolf-authoring/hit-death-W-NW-rear-corpse2.png",
+      "bytes": 2304487,
+      "sha256": "b641399e911ffcf7ab203d24c3e653cf9a3ba4a79bb86c1a4cf5dac5cfc9ee91",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/idle-walk-eight-trial1-geometry.json",
+      "entry": "blackforest-wolf-authoring/idle-walk-eight-trial1-geometry.json",
+      "bytes": 14468,
+      "sha256": "2d36b8f4cbcb530a2e3615e3a6ea1eccd279cb50e62a59639dd652be74ba2aad",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/idle-walk-eight-trial1-validation.json",
+      "entry": "blackforest-wolf-authoring/idle-walk-eight-trial1-validation.json",
+      "bytes": 464,
+      "sha256": "d1818d4978818d9b534fa4dec76b9178889e21e4687ee9c0c5893e33411eabcd",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/idle-walk-eight-trial1.png",
+      "entry": "blackforest-wolf-authoring/idle-walk-eight-trial1.png",
+      "bytes": 2463668,
+      "sha256": "d0c9614c3c6701529f279ff4210a089f25c28808a666a8ae8f7121a47ca67bc6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-attack-front-spacing2.txt",
+      "entry": "blackforest-wolf-authoring/prompt-attack-front-spacing2.txt",
+      "bytes": 1565,
+      "sha256": "28a715297bc33bde8675f41438a4a4c4653e73bf5fd3ba2ac12b8c4861ace445",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-attack-front.txt",
+      "entry": "blackforest-wolf-authoring/prompt-attack-front.txt",
+      "bytes": 4580,
+      "sha256": "8a11502307b4122058e87bc487e338828716b65ff9deec13d1e6a5aa9d93b2df",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-attack-rear.txt",
+      "entry": "blackforest-wolf-authoring/prompt-attack-rear.txt",
+      "bytes": 4839,
+      "sha256": "0ae504d07996044aab235a7fab24a22ff20ec5d4a883d4f558c9a69e5389c6c6",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-base.txt",
+      "entry": "blackforest-wolf-authoring/prompt-base.txt",
+      "bytes": 1975,
+      "sha256": "c99e9dadd8e8397b16b2541326240aca066b2b667ca397963ffdb771bae3c62e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-hit-death-E-SE.txt",
+      "entry": "blackforest-wolf-authoring/prompt-hit-death-E-SE.txt",
+      "bytes": 4180,
+      "sha256": "04ee1e51b0c0d69c3813c001e4019c82d5e33ab69151ae55dccb44a6bc31b536",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-hit-death-N-NE-rear-corpse-spacing2.txt",
+      "entry": "blackforest-wolf-authoring/prompt-hit-death-N-NE-rear-corpse-spacing2.txt",
+      "bytes": 2610,
+      "sha256": "e58c5bb67b929a05449fc64c3c725d82d85813df4b3b7ee7ffdbc66c5adb099c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-hit-death-N-NE.txt",
+      "entry": "blackforest-wolf-authoring/prompt-hit-death-N-NE.txt",
+      "bytes": 4456,
+      "sha256": "096fbaf53505522a993226ebf6b37b2e27ea0276d8dea3fa463c926a856fa1b0",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-hit-death-S-SW.txt",
+      "entry": "blackforest-wolf-authoring/prompt-hit-death-S-SW.txt",
+      "bytes": 4378,
+      "sha256": "b83bbc77d80280db8ea629aed2f9ec0156c674a0dbc49ca7b3bde67910927ca0",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-hit-death-W-NW-rear-corpse2.txt",
+      "entry": "blackforest-wolf-authoring/prompt-hit-death-W-NW-rear-corpse2.txt",
+      "bytes": 2400,
+      "sha256": "0dd087fd8028417222cb91f9829fbd1a2aea9c031578ad7c4cad8f1c1b27c2f2",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-hit-death-W-NW.txt",
+      "entry": "blackforest-wolf-authoring/prompt-hit-death-W-NW.txt",
+      "bytes": 4212,
+      "sha256": "c5a3b57c138a68933dc5aa6fc4571a248f513fc8983212e401a23617cb294cfa",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/prompt-idle-walk-eight-trial.txt",
+      "entry": "blackforest-wolf-authoring/prompt-idle-walk-eight-trial.txt",
+      "bytes": 4801,
+      "sha256": "1c8ff8ec425228a4b4f0bbb76ef9c9d748c684f5d76f98f502b8b244917ae12f",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/E-pilot1-actual-joint-review.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/E-pilot1-actual-joint-review.json",
+      "bytes": 3253,
+      "sha256": "534c95921c3d45733e9f5b449c27a6c309b056c1f2d05f5626826075dea75953",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/E-pilot1-clean-and-actual-joint-review.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/E-pilot1-clean-and-actual-joint-review.png",
+      "bytes": 1484898,
+      "sha256": "37645219ab3d167b3c83026c102b1ccce8ec0d310943c20800baa79d53d6a34b",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/N-single-A-passing-B-registered-review.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/N-single-A-passing-B-registered-review.png",
+      "bytes": 232536,
+      "sha256": "d7a0fbf5185bedf24009eea2ce37439a1b730fe58c9efad32cba6876ea2d1683",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/N-single-pilots-review.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/N-single-pilots-review.json",
+      "bytes": 2651,
+      "sha256": "5847ef6edcfcdeef5af1b56a9dd9563f0853b17df1a37a723bb7b6e6a2138b41",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/build_E_actual_joint_review.py",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/build_E_actual_joint_review.py",
+      "bytes": 2501,
+      "sha256": "92ca5f133739fef70a57d895b601ff2d36588135f89a4c49aa138893423485a4",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/build_E_gait_guide.py",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/build_E_gait_guide.py",
+      "bytes": 4403,
+      "sha256": "bbdce637b3fbbaa715b21d73b0e447a58ec0d190995acc6bd7364ecd92e2f187",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/build_N_single_guides.py",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/build_N_single_guides.py",
+      "bytes": 3654,
+      "sha256": "76d42b57a97ec69d798d44271d4aaff4c1bf954a9e318fef2b95a0f8bee91389",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/build_W_N_guides.py",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/build_W_N_guides.py",
+      "bytes": 6369,
+      "sha256": "755ccca07d44a4b23ecb8ff500943e2f27ebcd5f9ba33c3299e166000523f525",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/checkpoint.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/checkpoint.json",
+      "bytes": 13327,
+      "sha256": "937e4494d09484e8567b2ba3873f2365bfa89cd0d9c14af540d1f7c5b9e2b374",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-E-A-passing-B-joint-guide.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-E-A-passing-B-joint-guide.json",
+      "bytes": 2934,
+      "sha256": "09a2a479b0a2c8ac3217c7ccbd432c530db538a598e7754c320cf942e4d5d510",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-E-A-passing-B-joint-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-E-A-passing-B-joint-guide.png",
+      "bytes": 54155,
+      "sha256": "a15e8ff31ea7f1c0d30b94b512ec34343cff94fa766a3de1f21aa4d958ec566c",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-A-passing-B-joint-guide.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-A-passing-B-joint-guide.json",
+      "bytes": 2909,
+      "sha256": "8ed8eff9e2ad87f5e6736a00cf2b5b2992f9e9b60304e561f3d1a4f89a513478",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-A-passing-B-joint-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-A-passing-B-joint-guide.png",
+      "bytes": 50756,
+      "sha256": "7778f0a8de322744686fdc69ebeb4f886348369705c1664e761b7df1b9f25830",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-A-single-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-A-single-guide.png",
+      "bytes": 19995,
+      "sha256": "74639b99bd7be9de724d01ab746a282cd826e51c909a3f7f2c58198925501380",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-B-single-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-B-single-guide.png",
+      "bytes": 20015,
+      "sha256": "1ad3d35b6b8c58decf14ffcdbc65f7ca37cb56c8045e15f15fd195995d7b8294",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-passing-diagonal-single-guide.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-passing-diagonal-single-guide.json",
+      "bytes": 849,
+      "sha256": "42612acdd5f869c6ebfdd65df00b3f7fed81e9d67aa09e056e2a5ca4cbb7dcb3",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-passing-diagonal-single-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-passing-diagonal-single-guide.png",
+      "bytes": 19816,
+      "sha256": "1c8967272f78a8aee3b13c681689729a94a25e88fc69e5e66bb6e7cba96ee48b",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-passing-single-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-N-passing-single-guide.png",
+      "bytes": 20548,
+      "sha256": "f9e9dfdd65899fd6be9348c6dd9393d9ac87843ab56205163b2ffd86bd1880fd",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-W-A-passing-B-joint-guide.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-W-A-passing-B-joint-guide.json",
+      "bytes": 2897,
+      "sha256": "529ac5f2d3d37ed61eb2f2e63de0c629bb0e9712cd2ca4d1445014d28c9bf734",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-W-A-passing-B-joint-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/desired-wolf-W-A-passing-B-joint-guide.png",
+      "bytes": 49564,
+      "sha256": "7ec4b37649e422b929a28c57ba7fba5f3b02ce3473556272036ea962c3885de1",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/generation-records.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/generation-records.json",
+      "bytes": 10315,
+      "sha256": "adcee0712ffdc34af14f8eee6f37bac1589f7065583c878323fd1858481d14de",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-front-eight-pilot1.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-front-eight-pilot1.diagnostic.json",
+      "bytes": 4353,
+      "sha256": "3d3df67f6e0c7f692f5034d1ef4be57141ef7cdedfccec23fa9c3ae85c317df3",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-front-eight-pilot1.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-front-eight-pilot1.png",
+      "bytes": 1560890,
+      "sha256": "6582defebedf0c9930b56d6020d1d3428fb1a9b4706bbf7543da2e84f77d7421",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-front-eight-pilot1.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-front-eight-pilot1.prompt.txt",
+      "bytes": 2078,
+      "sha256": "328fd277bfc7de8750885704eed961501aec67f3bef285b2892bc35f9d425e6d",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-front-view-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-front-view-guide.png",
+      "bytes": 19069,
+      "sha256": "b9eab527ccc43b35df908f6b29d83e0c694f2cf957a2ee89453c61edec16caf7",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-eight-pilot1.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-eight-pilot1.diagnostic.json",
+      "bytes": 4350,
+      "sha256": "92944d49183114920f2e5122a9dc246a8a764edf9244a2c292881d1617df580d",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-eight-pilot1.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-eight-pilot1.png",
+      "bytes": 1548011,
+      "sha256": "91feb3fbeace9a526e32529c339aaa0e563918539cf31546144fa4ce5efe9a38",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-eight-pilot1.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-eight-pilot1.prompt.txt",
+      "bytes": 2259,
+      "sha256": "9d7fd4d1f418411d7bed8e47ddcd5d0e9ad92a90ec176c6b18f5859e205072bc",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-view-guide.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/idle-rear-view-guide.png",
+      "bytes": 18937,
+      "sha256": "5e8f44b36cd619c1446a7f765d800f21856dd7495297a6a0bf0c10457f42d55e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/initial-independent-QA.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/initial-independent-QA.json",
+      "bytes": 66981,
+      "sha256": "3ae5785d67ac8e69cb390f0579326d06be075b494e8fb43acb6338f172ff97d8",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/initial-review.log",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/initial-review.log",
+      "bytes": 123,
+      "sha256": "4fde44e559a1ab1ffc113f41f2b92eda999c0966fcd4152f9f5e7e537b52b475",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/initial_review.py",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/initial_review.py",
+      "bytes": 3608,
+      "sha256": "2e8f128a4bf8f99998da48fbef3d08239239c72b8f6e230d7201de82fdb98952",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/old-walk-raw-contact-E-SW.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/old-walk-raw-contact-E-SW.png",
+      "bytes": 1129255,
+      "sha256": "86edbeef6875a7b22495cc08790370cd735d6a9d3ea90e837a66b56ca4a7c4b5",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/old-walk-raw-contact-W-NE.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/old-walk-raw-contact-W-NE.png",
+      "bytes": 1067530,
+      "sha256": "f6c00c566cdb4400337cfca0a8e23f50889a778cb12b5cfce456a4a0c5a6fcf1",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/record_generated.py",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/record_generated.py",
+      "bytes": 1841,
+      "sha256": "96909b7ad9d378231957f40627363d1e66706c6d5f27e8fba48d87e3eda673c5",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-E-threephase-pilot1.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-E-threephase-pilot1.diagnostic.json",
+      "bytes": 2330,
+      "sha256": "94198f623dff6b4622445da1dea8bb34a8cdf09d12d1bb0d37a75c51b7378349",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-E-threephase-pilot1.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-E-threephase-pilot1.png",
+      "bytes": 2393106,
+      "sha256": "c4bfebc609de018928462494a2450f7796d87391ebcc184177858fff0e1f3927",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-E-threephase-pilot1.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-E-threephase-pilot1.prompt.txt",
+      "bytes": 2265,
+      "sha256": "c3362d16402530c59fc30227f419f75d386d7541f45dc241d171c1299ffeb8d8",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot1.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot1.diagnostic.json",
+      "bytes": 1534,
+      "sha256": "7d66758446f31a965a9fe192da56dfa0936b9436c05fc3261a105d2fca1c301d",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot1.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot1.png",
+      "bytes": 1621029,
+      "sha256": "b5b170f81300f22eeb212ab1916bd770d1c5ef1311595e2465efde3e7a8b3252",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot1.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot1.prompt.txt",
+      "bytes": 2120,
+      "sha256": "2b9bc5ce25ebe3705708cf898b1544cf93b6ba39cca8de5260e51a7a0ecdc1fb",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot2.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot2.diagnostic.json",
+      "bytes": 849,
+      "sha256": "4334a19d5199f67ad349295787757f1c703264288fbec3b1b3d7406e76439ec0",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot2.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot2.png",
+      "bytes": 2001121,
+      "sha256": "29fcf570cdaabd70a58ce5fa5d9819c7a3b5a7f9d11f3bdadca0b4d389c49049",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot2.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot2.prompt.txt",
+      "bytes": 1728,
+      "sha256": "80e331beebdc43a59a316c320b91458c1d25544534a5e3d2b1521ea16d4ec752",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot3.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot3.diagnostic.json",
+      "bytes": 1535,
+      "sha256": "ac12e133003536444a378fe2765f4b6c6cc972fb371adc5497470ada5ce20e3b",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot3.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot3.png",
+      "bytes": 1438072,
+      "sha256": "0410346ecb97caa52c806078f7f57b7dde4879f5dcd73d067aa7b1c62ecb3932",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot3.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-A-single-pilot3.prompt.txt",
+      "bytes": 1520,
+      "sha256": "4904beaa4ac0726cf33bbb53fd807f0cc684494411d249d6eccb97f58071a00f",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-B-single-pilot2.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-B-single-pilot2.diagnostic.json",
+      "bytes": 1535,
+      "sha256": "05a2333a077a0196d4860ee4da71e273369792da3c36bc61e7bfbdc32f6d5438",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-B-single-pilot2.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-B-single-pilot2.png",
+      "bytes": 1491305,
+      "sha256": "0c9a0795771fea5fbe3c0113a02048992e69520e2d5723fd814562faafc55d72",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-B-single-pilot2.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-B-single-pilot2.prompt.txt",
+      "bytes": 1521,
+      "sha256": "23bb2d7314137e7baec187794a9e229f0e9b50e07a38ebbb71bd1bd598ac4f74",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot1.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot1.diagnostic.json",
+      "bytes": 1547,
+      "sha256": "f65764d08b5a47e19e7cbfd909f4449f3da2bb19d9a79aaf9494b1b53ddd6d0b",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot1.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot1.png",
+      "bytes": 1673348,
+      "sha256": "05962efb15c0e4357b3636d4c07c5183d00ef7d9f7384cd38be6e6ba2ee8447c",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot1.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot1.prompt.txt",
+      "bytes": 1718,
+      "sha256": "fe345dfd69f2a22f051c05eeb8de1cbe4018d3eb3c0112eeb7ef4cc34f2cc066",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot2-palette.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot2-palette.diagnostic.json",
+      "bytes": 1561,
+      "sha256": "292ada9accb9bc6bfa97f6f23e59d05e005eaef728107a14d33c70b1970c9a1e",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot2-palette.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot2-palette.png",
+      "bytes": 1815931,
+      "sha256": "b6a701d2c7cbef87525ea5a89591f7a1e72ca262cf042732b7644de47d7fb773",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot2-palette.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-passing-single-pilot2-palette.prompt.txt",
+      "bytes": 1463,
+      "sha256": "57a23f75106e38d3ceac4ba8110692445f1dc9aea3b3a18d978c7d82d7dbb012",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-threephase-pilot1.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-threephase-pilot1.diagnostic.json",
+      "bytes": 2333,
+      "sha256": "0c9ce1d908ae110b646a7f8b1470696d399c7d0290157933f7528353c6ae5454",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-threephase-pilot1.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-threephase-pilot1.png",
+      "bytes": 1051813,
+      "sha256": "7a28743320cdd8ba26dc6bf4cf2a52d1c4aaa6b54e2fb20a42af02f90ef84a6f",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-N-threephase-pilot1.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-threephase-pilot1.prompt.txt",
+      "bytes": 2287,
+      "sha256": "6602bcd65031ad1b7187b6f4fcaf7f67c2c4e04a969b02d01a2e6360d1fb1302",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-W-threephase-pilot1.diagnostic.json",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-W-threephase-pilot1.diagnostic.json",
+      "bytes": 2331,
+      "sha256": "a91a2ff5a24a5260979481e9deca1de6bc1f6d087d60961d17c786e9b8ca2d39",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-W-threephase-pilot1.png",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-W-threephase-pilot1.png",
+      "bytes": 1555568,
+      "sha256": "8afc85ccc2f15b2fd15fd63db480d7cc6dbf39d80286bdb16b715a880fbd1d91",
+      "kind": "new_authored_raw"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/recovery-by-unicorn/walk-W-threephase-pilot1.prompt.txt",
+      "entry": "blackforest-wolf-authoring/recovery-by-unicorn/walk-W-threephase-pilot1.prompt.txt",
+      "bytes": 1752,
+      "sha256": "4856e81d9c4fe3fed23d682b9982ee8fc6ed7b20ac581b7dba3636d8dcfde928",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/source-exact-region.png",
+      "entry": "blackforest-wolf-authoring/source-exact-region.png",
+      "bytes": 120409,
+      "sha256": "b90f8e937da055e0c858f00452b50ec9fd4bb26b4587286a07382c1d8296ab83",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/source-proof.json",
+      "entry": "blackforest-wolf-authoring/source-proof.json",
+      "bytes": 1751,
+      "sha256": "e63c13f084a344bdc7fed9b20a15fca99da7f4dc8f093bb7c70e64dad55124cb",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/source-wholebody-context.png",
+      "entry": "blackforest-wolf-authoring/source-wholebody-context.png",
+      "bytes": 114701,
+      "sha256": "7ebdc0c24e2d40a17ddefe77170340c557c9ae79a334219080cdbecef300e6b7",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    },
+    {
+      "source": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/validate_sheet.py",
+      "entry": "blackforest-wolf-authoring/validate_sheet.py",
+      "bytes": 1479,
+      "sha256": "80247132b753ee8e949ac4be6921dd4874ef0a495534f05239212f263770a7aa",
+      "kind": "checkpoint_or_diagnostic_or_old_Wolf_base"
+    }
+  ],
+  "selected_Unicorn_source_pins": [
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/walk-E-threephase-attempt1.png",
+      "sha256": "f06c68e55f31e76615dce59ad655b7f4f094a464162b80410bca4d93c98e107b",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/walk-S-N-threephase-attempt1.png",
+      "sha256": "b73b4849b70003cc6052094e4539789b9343b2a00f77ec0b4187d3da052ef8ae",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/walk-NW-NE-threephase-attempt1.png",
+      "sha256": "caefb295a01fb456a0b09068326297a4ffc3f6e7dd6649541112b33c39501f1d",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/idle-E-SE-attempt1.png",
+      "sha256": "f85239b009266269ed35f07b14e8e1a68e31d5d5cbb92a6c723000af707378fa",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/idle-S-SW-attempt1.png",
+      "sha256": "5723f82fb026eedafc1ef5bc8c004d00185fb16e1e4f830a565ca0cac745d493",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/idle-W-NW-attempt1.png",
+      "sha256": "5fbef6b0a47e1e6280167c6f9959b142309b611c09d8d04109622b99567ff041",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/idle-N-NE-attempt1.png",
+      "sha256": "6e432c538633883a6dfe56c7c0ac0c28322a208a31b49a1b930b8b97d6137893",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/hit-E-SE-attempt1.png",
+      "sha256": "fe1f0b5baa62ddae257592aa284b9dafb9ece9ac89a78b02af1155610f08d9a8",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/hit-S-SW-spacing-attempt2.png",
+      "sha256": "c5e4177e9a8e6f2d0e1453b1bfd34cd4853ad2fbb5eb2628410572323b24597b",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/hit-W-NW-attempt1.png",
+      "sha256": "0f55f87ee28491c21c9b50b07055151081e106be8aa75ae0b24ad6f715be0a42",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/hit-N-NE-attempt1.png",
+      "sha256": "00cf855aaa7a0537c5df3838c46e5177c67b8f3496b9c5c502c718b08e03786b",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/death-E-SE-attempt1.png",
+      "sha256": "65208296c6c616e1e680fdc9821659b7f57af21badb1f3103d9990db02203e69",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/death-S-SW-attempt1.png",
+      "sha256": "2ae91364efd8b81055ce5c90cb89270fb2c8e2f5d5a6b03658cc069fa5085daf",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/death-W-NW-attempt1.png",
+      "sha256": "b2d351472a40e6af7a3ffd3eddb1254fbd86c4f9b4957602d890c1b275eb2bb7",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/death-N-NE-attempt1.png",
+      "sha256": "956c64b42e5ad0681959bf7753ec878911b39b06af9c507d225affe161c324d0",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/attack-E-SE-spacing-attempt2.png",
+      "sha256": "fa8f06c3e2e6e348f262f0613d2fb2cb3c267ce238393cefae08fd97185be5ec",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/attack-S-SW-attempt1.png",
+      "sha256": "1da089d1a8dd8d61c868f594aadcc7245f45347ea037ae809ada17dc64844103",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/attack-W-NW-attempt1.png",
+      "sha256": "84249fd3ab8e70ee9446a00fdfa18c5ff0c44ab31fb1f97024b755ce47195065",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/attack-N-threephase-attempt1.png",
+      "sha256": "10f303849b308063d737e736a2bdd78b7f21e09907cd4b978e3f842e81756ed4",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/attack-NE-spacing-attempt2.png",
+      "sha256": "c6b09c395c6e8d309c95b2961475dad8755bc745650e37ad3d886ba29f553548",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/W-contactA-single-attempt1.png",
+      "sha256": "b5e121880b149e46465030016c75a9a26d8106ba9df3d15839e2613307a94ae7",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/W-passing-single-attempt2.png",
+      "sha256": "c870ecb22ef4d3b5d2df7cc7d9dffc95db419e20ad5f51db313b8cd06cc267bf",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/W-contactB-single-attempt1.png",
+      "sha256": "3773bb479cb26f4bbef00ad948bced55e88237fe9741c3265f6a21b289c08bf2",
+      "location": "base05"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-A-frontal-proportion-attempt3.png",
+      "sha256": "99eec78f838ec22fcdf13ef9611bc3c4326dc580a5cc480e1245c07dbe710f16",
+      "location": "delta06"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-passing-frontal-proportion-attempt3.png",
+      "sha256": "30bcb272c5fa71be4effec35f8ef52256f01bfd6445c1b959c5fdd3f4db21fa5",
+      "location": "delta06"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SE-B-frontal-proportion-attempt4.png",
+      "sha256": "fb2743bf12b14fcbb71fd21c871d900111e6bbbbe426424392f474b2c778afd0",
+      "location": "delta06"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-A-frontal-projection-attempt1.png",
+      "sha256": "7fa72fea8871cda8ca770b42f94ae118295afdca4be1c30cccf6795d065e39d6",
+      "location": "delta06"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-passing-frontal-proportion-attempt4.png",
+      "sha256": "01f761a0ff33844c276991cb0e87a91ee3bb2956e90eb760b6caf7a96358c034",
+      "location": "delta06"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/albino-unicorn-authoring/recovery/SW-B-frontal-proportion-attempt2.png",
+      "sha256": "eb2f33d9971a3a919a8545cc1d52045d9b30b2a150bb5ceda71b304eefe03a6d",
+      "location": "delta06"
+    }
+  ],
+  "selected_Wolf_old_base_pins": [
+    {
+      "path": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/idle-walk-eight-trial1.png",
+      "sha256": "d0c9614c3c6701529f279ff4210a089f25c28808a666a8ae8f7121a47ca67bc6"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-front-spacing2.png",
+      "sha256": "ca785a3981af4166e552d2075dddd11572b8f35b3813b8dff2dcbeb7e32c86ce"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/attack-rear-attempt1.png",
+      "sha256": "b6f5a8f31c59ce00b0d1718d52e16a7a6062b5969d3204f208dd5a2ffddda494"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-E-SE-attempt1.png",
+      "sha256": "54bf9f2c6a1facd0eb5f598439219d4961014152f364b71b1cb5ebcefff682bd"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-S-SW-attempt1.png",
+      "sha256": "5b02d8fa5a728f01af4098fcb0c218abcec6e049817432d9a8a31d5849524cfc"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-W-NW-rear-corpse2.png",
+      "sha256": "b641399e911ffcf7ab203d24c3e653cf9a3ba4a79bb86c1a4cf5dac5cfc9ee91"
+    },
+    {
+      "path": "/workspace/scratch/pr100-continuation/blackforest-wolf-authoring/hit-death-N-NE-rear-corpse-spacing2.png",
+      "sha256": "aeb63e4f62837e494be40de0b0a63a60a8e7e418205e54c432a3d361425ead92"
+    }
+  ],
+  "review_flags": false,
+  "Main": "not_run",
+  "completed_added": 0
+}

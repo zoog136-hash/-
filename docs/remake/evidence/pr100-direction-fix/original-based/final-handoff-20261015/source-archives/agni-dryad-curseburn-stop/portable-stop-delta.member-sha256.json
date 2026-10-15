@@ -1,0 +1,912 @@
+{
+  "archive": "/workspace/scratch/pr100-continuation/pipeline-audit-stop-delta/portable-stop-delta.zip",
+  "bytes": 83177759,
+  "sha256": "a898cece9c08e75f22204dfea2b1d10a0dcaba38507dfae6a8e50bfeffafa765",
+  "members": 225,
+  "crc": "PASS",
+  "member_index": {
+    "CURRENT-RESUME.json": {
+      "bytes": 2834,
+      "sha256": "f844ce7b722e240fce53572fbceeac731edf13595a2711ff39cd2e1381d9127a"
+    },
+    "MEMBERS-SHA256.json": {
+      "bytes": 40985,
+      "sha256": "fa882d45dae1a3632e35fb84d7a8e8ade14c298151226fc368b32061a6a66daf"
+    },
+    "README.txt": {
+      "bytes": 2768,
+      "sha256": "214a82a5552c1758c13651d657f7bfd416ad691299dde34ea4777c05fe5ab479"
+    },
+    "authoring/albino-dryad-authoring/capture_generated.py": {
+      "bytes": 2073,
+      "sha256": "12aa1664162c7256997c445a949c7716a101756e604131939d134088e04ff2a7"
+    },
+    "authoring/albino-dryad-authoring/checkpoint.json": {
+      "bytes": 379,
+      "sha256": "799ad9fd6664e5a413cb8d4ea9d85ef4583d42d524a613075923ea18e7b7f41e"
+    },
+    "authoring/albino-dryad-authoring/direction-guide-E-SE.png": {
+      "bytes": 6040,
+      "sha256": "315e6f5a73eb7ea163dedfde5889c14977542cbead2936a7e364d0c202f5f3c8"
+    },
+    "authoring/albino-dryad-authoring/direction-guide-N-NE.png": {
+      "bytes": 6088,
+      "sha256": "2da0d1a0423f0fd98942d0d484bcd08035bcca926597dfd15a0c97259cff3d42"
+    },
+    "authoring/albino-dryad-authoring/direction-guide-S-SW.png": {
+      "bytes": 6236,
+      "sha256": "eea708ed3793c9a1430549d4f7c059d7694509d93d0aca257268dbb8128f2882"
+    },
+    "authoring/albino-dryad-authoring/direction-guide-W-NW.png": {
+      "bytes": 6310,
+      "sha256": "ec4c18306826c7e8a566e9b86e95b02a834e832488fb03597c54930b38bc63f2"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-E-SE-exact-prompt.txt": {
+      "bytes": 3128,
+      "sha256": "2fcd2ce78ea04eb2a81b669b612887555468aef1448b047961e3beb1f11765ff"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-E-SE-safe-v2-exact-prompt.txt": {
+      "bytes": 3956,
+      "sha256": "a56256ec5cf10fed17a763143f7bd7d7608dcfa6ed14024de60cce94569887c1"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-N-NE-exact-prompt.txt": {
+      "bytes": 3181,
+      "sha256": "98a085c01ffaa3555c6a020f88ca85c69747d0534aeab6eda95da243019656e0"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-N-NE-geometry.json": {
+      "bytes": 3775,
+      "sha256": "2bfa6b54a20369978f9e32e7b8e36c318f87c5f2a47eb4772ce0d4400e4f0fe7"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-N-NE-validation.json": {
+      "bytes": 673,
+      "sha256": "1fb770d3cbf9b02384aa8b7fe48a80ad9943f849fbf44ffce168cc54b6372f80"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-N-NE.png": {
+      "bytes": 2171218,
+      "sha256": "5f7291d7bc8de0a69af9d11abfa16bb8ef32e9eb74402f698d44759f9f22b33c"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-S-SW-exact-prompt.txt": {
+      "bytes": 3108,
+      "sha256": "399f2a5ae459447405f2a1d51cb091ccfae3b349dc196c7f41a6511121d787b5"
+    },
+    "authoring/albino-dryad-authoring/idle-walk-W-NW-exact-prompt.txt": {
+      "bytes": 3155,
+      "sha256": "bb16f1306c33803c6d489d90b94927668899ae802ca6becaac54a648fff5054d"
+    },
+    "authoring/albino-dryad-authoring/pilot-partial-hold.json": {
+      "bytes": 1206,
+      "sha256": "9b65da7dea52bda17540bd854e99420c72c97a8ae1735e70e28faeb916235cd6"
+    },
+    "authoring/albino-dryad-authoring/sheet-specs.json": {
+      "bytes": 1491,
+      "sha256": "5bc73b0f9085f4d459c8e817334d980c3216f86f9fa464715707e51dacc7f4b7"
+    },
+    "authoring/albino-dryad-authoring/source-proof.json": {
+      "bytes": 4031,
+      "sha256": "47c47a025249593c9db8e7900ec19293ac64952677810f36b0afccae5c4d1d88"
+    },
+    "authoring/curse-burn-authoring/capture_generated.py": {
+      "bytes": 2073,
+      "sha256": "12aa1664162c7256997c445a949c7716a101756e604131939d134088e04ff2a7"
+    },
+    "authoring/curse-burn-authoring/checkpoint.json": {
+      "bytes": 392,
+      "sha256": "376d7016a5a25bf60aea7cf9425646f3b2c31e84f0ec73e05a56e07f4e75f808"
+    },
+    "authoring/curse-burn-authoring/idle-walk-E-W-exact-prompt.txt": {
+      "bytes": 3071,
+      "sha256": "9b2a1499d924b55cbb0af8a9a9a4679d9ecb61dc431f1be10f6686c4b5660a49"
+    },
+    "authoring/curse-burn-authoring/idle-walk-E-W-geometry.json": {
+      "bytes": 3760,
+      "sha256": "a5ca3b3682bdde8b8627171e4dd66577f5477b457eeddd5b013107fe6720b174"
+    },
+    "authoring/curse-burn-authoring/idle-walk-E-W-validation.json": {
+      "bytes": 668,
+      "sha256": "4e821e30a2ec691119f558b4b4f596d266471254f529708bb1bf41fa92b6c53f"
+    },
+    "authoring/curse-burn-authoring/idle-walk-E-W.png": {
+      "bytes": 2575462,
+      "sha256": "54119ba0bb70dd00690139e4dc9c6877f30da9c1d089520ae60044c210fb47e0"
+    },
+    "authoring/curse-burn-authoring/pilot-static-hold.json": {
+      "bytes": 695,
+      "sha256": "e1bedd9bd35e0911b63f16ffd59487dd339d3597a57ec6af86947855e2aed110"
+    },
+    "authoring/curse-burn-authoring/sheet-specs.json": {
+      "bytes": 297,
+      "sha256": "25bc8b885156c1a4f94a09cea4099ba495264603d0e260d8b0a0400e0da2c155"
+    },
+    "authoring/curse-burn-authoring/source-proof.json": {
+      "bytes": 3765,
+      "sha256": "4b00554ff582c165dd953fd80b84a39f02c1b904cedf4e1479fca81499f8f88e"
+    },
+    "authoring/fear-agni-authoring/assemble_readonly.py": {
+      "bytes": 10388,
+      "sha256": "272a8ed65f5e4299a12f50d9bc84b5dc07cb590c6056681d799628bf90abd08e"
+    },
+    "authoring/fear-agni-authoring/attack-E-SE-assembled-geometry.json": {
+      "bytes": 2443,
+      "sha256": "8bc33271d095d786f5386f267edfc0a65acda2f15d0fafbb47498e1bedb9c6d9"
+    },
+    "authoring/fear-agni-authoring/attack-E-SE-exact-prompt.txt": {
+      "bytes": 3251,
+      "sha256": "cfcebd163c5cb42a54bc09feaca17698c6aa11056d78387124360eeec65d3f9d"
+    },
+    "authoring/fear-agni-authoring/attack-E-SE-geometry.json": {
+      "bytes": 2335,
+      "sha256": "5eb7464e727dd30ff5811b397331c1cb879337d394b9c5f2919b8dbfb090adb5"
+    },
+    "authoring/fear-agni-authoring/attack-E-SE-validation.json": {
+      "bytes": 627,
+      "sha256": "20e0e1e3124c22618c74c1b91f06502a94ca9929d6b1ca70008232af2afbb1b7"
+    },
+    "authoring/fear-agni-authoring/attack-E-SE.png": {
+      "bytes": 2249848,
+      "sha256": "ee433a6eb47261ad192f680630206f97334264117f98e2dba38f35b9d9a9d255"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE-exact-prompt.txt": {
+      "bytes": 3388,
+      "sha256": "62ec89018226ff8433e708f02079ec9ebf9172c6c16a4f9e253ea7d84c8dd8f2"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE-geometry.json": {
+      "bytes": 2337,
+      "sha256": "30cc173db63b2eac7704a1d49be6b16394bd8818fd942e3cf3e480d0f5f63f6b"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE-v2-exact-prompt.txt": {
+      "bytes": 4168,
+      "sha256": "cd51e4e227def3a0fd24ab1dcadb41abbd662235ae05c370f294776be353af2e"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE-v2-geometry.json": {
+      "bytes": 2336,
+      "sha256": "79b9e5fbabc9ca1f24c56393cd308b51851403080ff5f93b4fbe7261fe4da474"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE-v2-validation.json": {
+      "bytes": 633,
+      "sha256": "fd554ef96d47e79cad773421f89221e21da3c237ecae0d19815e9584e55e2614"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE-v2.png": {
+      "bytes": 2113330,
+      "sha256": "02ca1f101289a2a529b20501aba89b4f4c2cc8b8feaff3c31b83ad3cf7be58c0"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE-validation.json": {
+      "bytes": 627,
+      "sha256": "1a81c6b45f8d067118befaaa558ef27b87e5972ce86ead6977b75212d9e47ffd"
+    },
+    "authoring/fear-agni-authoring/attack-N-NE.png": {
+      "bytes": 2129532,
+      "sha256": "4bd8451390fbd340e429635603085fd5eb9763afffd737fe2fb6037cdfc3a704"
+    },
+    "authoring/fear-agni-authoring/attack-S-SW-assembled-geometry.json": {
+      "bytes": 2443,
+      "sha256": "3f0ff570af984eee2d983c475f892636a379db8f7cce3694d896baf472a65c13"
+    },
+    "authoring/fear-agni-authoring/attack-S-SW-exact-prompt.txt": {
+      "bytes": 3317,
+      "sha256": "72e8d7de06a1e901f5afc775f470fab83544353123a2676264958bdf107b2014"
+    },
+    "authoring/fear-agni-authoring/attack-S-SW-geometry.json": {
+      "bytes": 2335,
+      "sha256": "5cc190aad629039620e67ffc1a4858300fa8902a8fbf07bcb136eb56bb70fbbd"
+    },
+    "authoring/fear-agni-authoring/attack-S-SW-validation.json": {
+      "bytes": 627,
+      "sha256": "cb2723503dcc9db7effe95f6bbb8143f02f4a1345e8cc131c5002153d2e0f5a4"
+    },
+    "authoring/fear-agni-authoring/attack-S-SW.png": {
+      "bytes": 2217890,
+      "sha256": "236284f9fc8a909527c16a232d7bc46547fee78a19973028df062edd972cd0ff"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW-exact-prompt.txt": {
+      "bytes": 3332,
+      "sha256": "438e5bd736bb44f874d567b713e538d58ef0bc15640fd950089ee4e5534cf51a"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW-v2-assembled-geometry.json": {
+      "bytes": 2443,
+      "sha256": "d295a839dd0e35e5e73ab316db0221b669537266a12b308d91fe73701e9e5c5a"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW-v2-exact-prompt.txt": {
+      "bytes": 3954,
+      "sha256": "26f98bf59d60e19e9991818fe79614620cde4ffedded0efd63d274e02915debb"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW-v2-geometry.json": {
+      "bytes": 2337,
+      "sha256": "bc3482ca32753e30f6440964602135a14ca24acbbad798a4d3ceae2ce75733bc"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW-v2-validation.json": {
+      "bytes": 633,
+      "sha256": "b8a487c3ab3d755609499aa6d4d3c2295e8894f74644ec00582521ca9b837630"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW-v2.png": {
+      "bytes": 2107521,
+      "sha256": "839ebe7341709a73f3f753f0925c34e0a8b54e474bb9bc4402168bd396009e7e"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW-validation.json": {
+      "bytes": 786,
+      "sha256": "e28b1907dc862eb87757f0acd39ffcec529746f96a7721b59bcaa7c93d5cdeb6"
+    },
+    "authoring/fear-agni-authoring/attack-W-NW.png": {
+      "bytes": 2161296,
+      "sha256": "4a71284c2467e813067e30b56d097805f4d2cbd54d59749165acb220be516073"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v3-exact-prompt.txt": {
+      "bytes": 3420,
+      "sha256": "3d5db7948a36ea8e7b63439df2fd1daab85f1bda3319e4dae38d51cd4ccf188e"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v3-validation.json": {
+      "bytes": 714,
+      "sha256": "4797b228867d8013f762eb89dd6f7abdf6fec5ce4fb155cef7eb36e9303c8e60"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v3.png": {
+      "bytes": 1416581,
+      "sha256": "dbc3544fbab6e6ce5dd4800452d594239075926518547a408ba394cd3df7fdf7"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v4-assembled-geometry.json": {
+      "bytes": 2070,
+      "sha256": "e51a80f2f451341d193e20f0b6eed96115aca9a3c082a33f6da47f1d3c53eb7c"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v4-exact-prompt.txt": {
+      "bytes": 1746,
+      "sha256": "9aae02fe5d91a2efefadd1d87b2238ca1c752187ebd47738d1c7c8e91e9658d4"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v4-geometry.json": {
+      "bytes": 1988,
+      "sha256": "f446ab01aa1bdd6b8a2aca322cdeb45f85caff9dbb623943fc3b7bc6c44c813c"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v4-validation.json": {
+      "bytes": 662,
+      "sha256": "316468fb0452700708f9aed3d89f488988197602ed1cc226e3d4160453105f2a"
+    },
+    "authoring/fear-agni-authoring/attack-hit-N-v4.png": {
+      "bytes": 1321129,
+      "sha256": "35454b559fe5842b9b984c990db02c4a14c7a148968e3ea1943454a69c864c6f"
+    },
+    "authoring/fear-agni-authoring/attack-hit-NE-v3-assembled-geometry.json": {
+      "bytes": 2077,
+      "sha256": "fe6a33a395549b50b9291095fdf54a4fcf10e0a9deb66b1d2cfd0628e2b385ad"
+    },
+    "authoring/fear-agni-authoring/attack-hit-NE-v3-exact-prompt.txt": {
+      "bytes": 3216,
+      "sha256": "6511a317c5730560d49db0e17968f9e5acfd10ec23f2d1652c86db544861ffe1"
+    },
+    "authoring/fear-agni-authoring/attack-hit-NE-v3-geometry.json": {
+      "bytes": 1988,
+      "sha256": "fddf01987d930d28d40848cc383245088b55bfdd6a9aa3acfa6a18607553c6e2"
+    },
+    "authoring/fear-agni-authoring/attack-hit-NE-v3-validation.json": {
+      "bytes": 665,
+      "sha256": "146039102c536534018f87942e0e326fef214c1f0a6134d803197068c0ab3cc4"
+    },
+    "authoring/fear-agni-authoring/attack-hit-NE-v3.png": {
+      "bytes": 1541024,
+      "sha256": "0e17fe1f46dbc035af0a3aefbc8fa69c253f41c0869ef20f0eca646a73bb9f41"
+    },
+    "authoring/fear-agni-authoring/authoring-record.json": {
+      "bytes": 16795,
+      "sha256": "4c25a7a5ff1253590d4988c3d058686296c858c9fbcb10a9608bbc57513ed396"
+    },
+    "authoring/fear-agni-authoring/candidate.json": {
+      "bytes": 108081,
+      "sha256": "ff17bb6c381927f3c0f35aaea2cf01f998e839787e947421f88b8f6466c51e18"
+    },
+    "authoring/fear-agni-authoring/capture_generated.py": {
+      "bytes": 2073,
+      "sha256": "12aa1664162c7256997c445a949c7716a101756e604131939d134088e04ff2a7"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/E-all13-registered-model-v3.png": {
+      "bytes": 668385,
+      "sha256": "89e6257ea103a51515f90aa05ed256c24000e4136857cfcda01d3add0dea5826"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/N-all13-registered-model-v3.png": {
+      "bytes": 650880,
+      "sha256": "ffc3845c85241cced2b3d3febea942a2adc29b2ce3d6e14dd677d1dc73313df3"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/NE-all13-registered-model-v3.png": {
+      "bytes": 644078,
+      "sha256": "1e7557e41bbd2e90a2fc42028c56e7a46665b4090f687f15792a1c98ef0d0f51"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/NW-all13-registered-model-v3.png": {
+      "bytes": 693065,
+      "sha256": "03f14b8046f5da287de19b4b5e08f7b4b329e09d12b07fc97c2cef4ce53d5c71"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/S-all13-registered-model-v3.png": {
+      "bytes": 689918,
+      "sha256": "0576d71a1b5e481b04b2af7b43ef4c743a44fdffe4d36b6e60446a4cd70911b7"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/SE-all13-registered-model-v3.png": {
+      "bytes": 694051,
+      "sha256": "fc5fda299349d42928aad8acf2d73e7cd76a52ce49ed4e40f4d11aacd40aa732"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/SW-all13-registered-model-v3.png": {
+      "bytes": 663166,
+      "sha256": "6c5ff61cb470f58726d874a391b3cef817fdaa26f12bb35d117d5757ccd477ea"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/W-NW-head-core-source-coordinate-grid.png": {
+      "bytes": 1935895,
+      "sha256": "20e6fcb7d1392dbc65284b508e556a890553431cc3abc2362cb32b74f5571719"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/W-all13-registered-model-v3.png": {
+      "bytes": 718346,
+      "sha256": "87579959ce6d4910afae6780b78908558e615c449ecbddc5d11969c417557bb8"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/author-final-model-root-notes.json": {
+      "bytes": 3630,
+      "sha256": "c1254141e0b72bbb3134a0a29df47c1c173093bc030191ab77f5fab74fca532d"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/candidate-proposed-model-v3.json": {
+      "bytes": 112261,
+      "sha256": "b3b54b2e6b933d72cd2ce6cdc08dfb317cf74ecef81fc158f62805a2237a7b87"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/frozen-handoff.json": {
+      "bytes": 2867,
+      "sha256": "cb3a29e73868e6afaf1efa28a2abe6849e286598a18fa51b8c77bfbccc78d140"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/full104-guard-report.json": {
+      "bytes": 5590,
+      "sha256": "9ed5598f0fb0862d29a966e9f7dff54509cbbc461361a504ffa434447a3b6d25"
+    },
+    "authoring/fear-agni-authoring/central-vortex-model-v3/immutable-selected-source-pins.json": {
+      "bytes": 8495,
+      "sha256": "080e4c4dd0e5531c76381be63844d7f968eecc64ba24be83644be74624a941e2"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/E-all13-central-vortex-seed.png": {
+      "bytes": 667079,
+      "sha256": "25da26c89a55e1d5e01e5bf3297cf18e473aa4226761a7cc9a84c3eba1aac652"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/N-all13-central-vortex-seed.png": {
+      "bytes": 650021,
+      "sha256": "231799a749cda1fbbeac24953d7e8369bbaa680a96358bb34bb82e14092ccdf2"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/NE-all13-central-vortex-seed.png": {
+      "bytes": 642934,
+      "sha256": "fe4c541b6f05ee5f3dacf478f3df68758c95796ef4fb2d7f0782cae898ef6c8a"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/NW-all13-central-vortex-seed.png": {
+      "bytes": 655717,
+      "sha256": "473fdb326c43481902977436c827ba66a2e70a463ec68774a4cf136a58783d11"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/S-all13-central-vortex-seed.png": {
+      "bytes": 687671,
+      "sha256": "bfa11660dddd9c5fc77955b2e836d7f1ef02214ec24eeeccd037bdab5ee80096"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/SE-all13-central-vortex-seed.png": {
+      "bytes": 691999,
+      "sha256": "d18e1c59a1057eb3198ee9bba629bdc8c849991eb85cbc2dab1f37d6d4f40aab"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/SW-all13-central-vortex-seed.png": {
+      "bytes": 661411,
+      "sha256": "fc188ed056839cf1a646997fcc7a9d1de04168c05551f536175c1791abb378b1"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/W-all13-central-vortex-seed.png": {
+      "bytes": 677756,
+      "sha256": "d8ffaeb7fcce3209fcc676e269eae7fe7f963fd37387f1bd8fd0adc93e3992e2"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/anchor-seeds.json": {
+      "bytes": 53787,
+      "sha256": "b369e526c9493264b66b44f7c60e3d4383acbd9542267655084627b628e47382"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/candidate-central-vortex-seed.json": {
+      "bytes": 109761,
+      "sha256": "315876826dee6ef33c6bccdfa0deba1743db1f51f7feec040b8f2e53096b8105"
+    },
+    "authoring/fear-agni-authoring/central-vortex-registration/manual-calibration-notes.json": {
+      "bytes": 3457,
+      "sha256": "4aed69b2fcd518368d6f4c3aa3c4abb6a16436a8a2716a663a49aff7b816a402"
+    },
+    "authoring/fear-agni-authoring/checkpoint.json": {
+      "bytes": 3707,
+      "sha256": "69ab7a7a74a4a67067dd8e706c0d06c57ad981809723891bf29c5d23964f9827"
+    },
+    "authoring/fear-agni-authoring/death-E-SE-assembled-geometry.json": {
+      "bytes": 2455,
+      "sha256": "7fdbfa0913bed0f94930f9beaff6eb0af77c10e0fd303e0f1240b7473d32ed36"
+    },
+    "authoring/fear-agni-authoring/death-E-SE-exact-prompt.txt": {
+      "bytes": 3408,
+      "sha256": "7b60ef6b6ebf4a4485fc257917e9230c7ced052bb241aa62d657396ee5b34e63"
+    },
+    "authoring/fear-agni-authoring/death-E-SE-geometry.json": {
+      "bytes": 2343,
+      "sha256": "be014171aa618254156b1a7b67ee98c563836a3ac5dd04897163966b69646fb7"
+    },
+    "authoring/fear-agni-authoring/death-E-SE-validation.json": {
+      "bytes": 624,
+      "sha256": "0b5e22c99663a865ae989f9c430bf3d1b6cc553875882f1c71d77d10d9ead4a1"
+    },
+    "authoring/fear-agni-authoring/death-E-SE.png": {
+      "bytes": 1989915,
+      "sha256": "34a52813aa00cd9b9e10c0c98694412aab9208a5fceaf1e5797b606b483c5b3c"
+    },
+    "authoring/fear-agni-authoring/death-N-NE-assembled-geometry.json": {
+      "bytes": 2454,
+      "sha256": "8dc5dc10f70fa71adb2a0c67649fc3f94a943280525277481229a51db06f8852"
+    },
+    "authoring/fear-agni-authoring/death-N-NE-exact-prompt.txt": {
+      "bytes": 3545,
+      "sha256": "d5851b7aa86be6578cf7ec650f7e48ce025ed4efef085d4283fe4627b82421e0"
+    },
+    "authoring/fear-agni-authoring/death-N-NE-geometry.json": {
+      "bytes": 2343,
+      "sha256": "b1966881952cb877fa7947526bfd17e8457f36c4984a96320cf85529a6a1aacb"
+    },
+    "authoring/fear-agni-authoring/death-N-NE-validation.json": {
+      "bytes": 624,
+      "sha256": "f7debbacb6cec6b53287cc7333a83e16d232d2d2254b2836c23017fb66795cfe"
+    },
+    "authoring/fear-agni-authoring/death-N-NE.png": {
+      "bytes": 2014506,
+      "sha256": "cd0e6aa6800d8e1167f55ce1742f0f87bac18893e8dba692ae317a680c743edd"
+    },
+    "authoring/fear-agni-authoring/death-S-SW-assembled-geometry.json": {
+      "bytes": 2452,
+      "sha256": "318356acdbbbb2eaf5da85d1d29d8383902c6754a9eff8c7c07a5e6391192475"
+    },
+    "authoring/fear-agni-authoring/death-S-SW-exact-prompt.txt": {
+      "bytes": 3474,
+      "sha256": "df0e1aecef1534d54e95046f287a06476a3126df95db50668b0a4734b51687e4"
+    },
+    "authoring/fear-agni-authoring/death-S-SW-geometry.json": {
+      "bytes": 2340,
+      "sha256": "d2f28c65faa0c7671608814a682bb12e045b3a1ac634fd474ff273799b9b7240"
+    },
+    "authoring/fear-agni-authoring/death-S-SW-validation.json": {
+      "bytes": 624,
+      "sha256": "0b2f34bbc0eba593bcef0d390802996d5d8664b14c23c87770d710efb3894383"
+    },
+    "authoring/fear-agni-authoring/death-S-SW.png": {
+      "bytes": 2133219,
+      "sha256": "1d7d093b84ec2ea1b6e4cbda29bd648b145251aae566ba8be1a9e2d66a50605d"
+    },
+    "authoring/fear-agni-authoring/death-W-NW-assembled-geometry.json": {
+      "bytes": 2454,
+      "sha256": "fad8cd82f005d3b0d3eec8c9575536b9ef9bcb40087f4479a57fd1d64c401ed9"
+    },
+    "authoring/fear-agni-authoring/death-W-NW-exact-prompt.txt": {
+      "bytes": 3489,
+      "sha256": "640287e837207ea0dc90731f6bc0ca0227a400dc3a32a3ab80ef30bf5d9c350c"
+    },
+    "authoring/fear-agni-authoring/death-W-NW-geometry.json": {
+      "bytes": 2342,
+      "sha256": "e33af52d579d61f50358bc54bd50ba37afd81c32f1aec0e5ecddadef99c3fd04"
+    },
+    "authoring/fear-agni-authoring/death-W-NW-validation.json": {
+      "bytes": 624,
+      "sha256": "0161e18df0b68c302edcd9de7928f5b7a55335fd3815847f5459ee6deb93b870"
+    },
+    "authoring/fear-agni-authoring/death-W-NW.png": {
+      "bytes": 2015970,
+      "sha256": "69d1102d4b39e1331f87ae5150a1c9f3fe0b8b335b03c43219b058167a2eee9d"
+    },
+    "authoring/fear-agni-authoring/delivery-manifest.json": {
+      "bytes": 13844,
+      "sha256": "fc8295e6107f2e1a4f06723c02f4cd8e051807d73c05089a086df3668cd8c112"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/E-all13-raw-anatomy.png": {
+      "bytes": 1156452,
+      "sha256": "98bd19e86979743bdbbcc0676e5549e05f5d88be3363a2e522e98418863822f1"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/N-all13-raw-anatomy.png": {
+      "bytes": 1025889,
+      "sha256": "bf7b80a2b6de60be372a8ab0fafbf6a422aab192f7814776db1634ba3d85a5e2"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/NE-all13-raw-anatomy.png": {
+      "bytes": 1128499,
+      "sha256": "f05b0a4417279a816509d16ea129be8e684bf0dda7e3d7e32ff75e0024319702"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/NW-all13-raw-anatomy.png": {
+      "bytes": 1142061,
+      "sha256": "49bedb8fc3b500c9b7b8d503a23d3bf2ed189ebbb5379bab4d7422431001cf19"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/S-all13-raw-anatomy.png": {
+      "bytes": 1236049,
+      "sha256": "0f12a0c09b216a9919eead0d0910e8b5ba08c795de3900a3a59462d58f65b49c"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/SE-all13-raw-anatomy.png": {
+      "bytes": 1239789,
+      "sha256": "a6505cb0f37f5b9a9d03743182bfeb9ef5d9bc0e4bbe56a884a2199ea667be33"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/SW-all13-raw-anatomy.png": {
+      "bytes": 1196976,
+      "sha256": "ebc7dfb624bea840b216b15332cbe73fca145bd0b4eb4b98b06770221bd740f7"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/W-all13-raw-anatomy.png": {
+      "bytes": 1138140,
+      "sha256": "9dfe3679049fef1816f30da313e5e21fd8894ca9475b4e621e57a60ca97b7f63"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/attack-all8.png": {
+      "bytes": 590962,
+      "sha256": "eefc0b4ae148da6ef518c91b271b7ffef4c2f548c61998340ccf912e7fb55725"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/death-all8.png": {
+      "bytes": 446250,
+      "sha256": "a8e5055fd78e342dd45d2e3f84b59fff48bc1e2546faaa298dcfe462ed59d287"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/hit-all8.png": {
+      "bytes": 359448,
+      "sha256": "92fec94f43064950c134c1999edad9ed2502cb10ae57533cc7eb61fbca87e36f"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/idle-all8.png": {
+      "bytes": 429366,
+      "sha256": "4958432cf0575109d5999cd22b39378d141a7805753c8a63f88605f42d075155"
+    },
+    "authoring/fear-agni-authoring/diagnostic-contacts/walk-all8.png": {
+      "bytes": 691673,
+      "sha256": "4de6676cf610efbcfadf18855cb12f2fc0ba9b1e7f2cc6ef05cbedfee276d5c7"
+    },
+    "authoring/fear-agni-authoring/direction-guide-E-SE.png": {
+      "bytes": 14553,
+      "sha256": "79a38a772de449e897a66160b46071c5ba3681fd8d9cbd502766c556c1189ffc"
+    },
+    "authoring/fear-agni-authoring/direction-guide-N-NE.png": {
+      "bytes": 14046,
+      "sha256": "de36b501c289d4e6dcf0d286988794707d1f626b30a75b91d0b99ae5c85a581f"
+    },
+    "authoring/fear-agni-authoring/direction-guide-N-only.png": {
+      "bytes": 18049,
+      "sha256": "4bd6c9deae89ae6cdb3060deae60c325b96586f7efe58e4560a1035de930b13d"
+    },
+    "authoring/fear-agni-authoring/direction-guide-NE-only.png": {
+      "bytes": 17268,
+      "sha256": "11507cb7efa02b51859d43c361927a76112cc57d984abaa70d75a0e21d0966e7"
+    },
+    "authoring/fear-agni-authoring/direction-guide-S-SW.png": {
+      "bytes": 14657,
+      "sha256": "1e5b7e9df4f3ea6cae6d5a1d778597130c01ad8f999f08b263d24fda01a67660"
+    },
+    "authoring/fear-agni-authoring/direction-guide-W-NW.png": {
+      "bytes": 15295,
+      "sha256": "bd01ae584f38dd10c4460fe153a7a3b0a26ee41b1aa1733172aabab64dca712b"
+    },
+    "authoring/fear-agni-authoring/full104-guard-report.json": {
+      "bytes": 10488,
+      "sha256": "17f7622af32f90463088c6cb4ee22ba0076c892b88dca0e2f8c2989b55faa12c"
+    },
+    "authoring/fear-agni-authoring/hit-E-SE-assembled-geometry.json": {
+      "bytes": 1695,
+      "sha256": "51a0580532eb7300de69c7f4625cdad222880a1c82ae9d9cb2d0c53d92a92005"
+    },
+    "authoring/fear-agni-authoring/hit-E-SE-exact-prompt.txt": {
+      "bytes": 2987,
+      "sha256": "debcddddf6b43baa6842de88a54a65757afd1b0a31cbbebced5ae92fedc3f329"
+    },
+    "authoring/fear-agni-authoring/hit-E-SE-geometry.json": {
+      "bytes": 1623,
+      "sha256": "2abe4d567d3fa609cee841ce2b46e9decb1644f46718ecc1fa8b4fc1783b5060"
+    },
+    "authoring/fear-agni-authoring/hit-E-SE-validation.json": {
+      "bytes": 609,
+      "sha256": "b006aa9ff71600d0724113757cca37fa70f841b2d0e9e8c1925faf2a4c6e2966"
+    },
+    "authoring/fear-agni-authoring/hit-E-SE.png": {
+      "bytes": 1995970,
+      "sha256": "707181590d486d62d8713b46639b20b1da8992b0494d14e3b513951ee343588e"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE-exact-prompt.txt": {
+      "bytes": 3124,
+      "sha256": "9f983b6d3d009d3628c3beef31a56e00be182fc2d2719b31b74b8a1a09cec0d2"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE-geometry.json": {
+      "bytes": 1623,
+      "sha256": "d5351a9d62670c43db755891898a959f52f71018bacdf827a9f9b3ec9715bc99"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE-v2-exact-prompt.txt": {
+      "bytes": 3729,
+      "sha256": "0d9d08e6a9f928fd98df929f23015b87793406053f9927e59dccc4f9020456fb"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE-v2-geometry.json": {
+      "bytes": 1624,
+      "sha256": "3c2458709aaf12f7dd56738cfc43bab04af4ef574cf5e903dd36520c1d761461"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE-v2-validation.json": {
+      "bytes": 615,
+      "sha256": "7105365f45b00808b4d6d679c10dc98d163ae9778a193372f9a8114ab41234f3"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE-v2.png": {
+      "bytes": 2083842,
+      "sha256": "98fe71e196b854d42040f9dd86a027f864ec84960086021dac19147e72a480b0"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE-validation.json": {
+      "bytes": 609,
+      "sha256": "f83ab8d82225efedaa6809282e4377eca562ef08e06bb2a587213439df9e4f31"
+    },
+    "authoring/fear-agni-authoring/hit-N-NE.png": {
+      "bytes": 2187945,
+      "sha256": "fbe84e00d706aa4e502f5f603d2a7cd2152fed75d633fce7fe96ff248c17ede0"
+    },
+    "authoring/fear-agni-authoring/hit-S-SW-assembled-geometry.json": {
+      "bytes": 1695,
+      "sha256": "4c48c1149adb829efa0917ca5b2c36672fafa308852bbd981825b3c05175b983"
+    },
+    "authoring/fear-agni-authoring/hit-S-SW-exact-prompt.txt": {
+      "bytes": 3053,
+      "sha256": "4edf679a46d4acd7ac18cb23c0f284804cbcfcf4c387a22518b652a30246b1e0"
+    },
+    "authoring/fear-agni-authoring/hit-S-SW-geometry.json": {
+      "bytes": 1623,
+      "sha256": "2540051d4181d9f2d9dcac58a889b4926a098c3975ba06dbed090327c43ea425"
+    },
+    "authoring/fear-agni-authoring/hit-S-SW-validation.json": {
+      "bytes": 609,
+      "sha256": "7abcd7fa69ddade58d6507f5c8a42a3a7b78c863265c08fbd43b336b73236213"
+    },
+    "authoring/fear-agni-authoring/hit-S-SW.png": {
+      "bytes": 2035186,
+      "sha256": "2afa6665ba4a14fd8de023977186d59c59de01115cc18118247988780086f4eb"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-exact-prompt.txt": {
+      "bytes": 3068,
+      "sha256": "acdd3cb4d8e50a7cc6cb8d859ebd5519b9e784999bc44807c3318a4d0e4e61c3"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-geometry.json": {
+      "bytes": 1623,
+      "sha256": "088646c554d86e03e45eee4150f98e491158c0260094f5b39ab144bb999ccb2b"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-model-v3-exact-prompt.txt": {
+      "bytes": 2415,
+      "sha256": "8917c6d9f820d3bdb5bd950625ec2f75b9be3dd9da3ff2ab62c0191cea70ce7f"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-model-v3-geometry.json": {
+      "bytes": 1623,
+      "sha256": "96a2fd4b320fb96a5bedcb5e6d90e2a63071b7073087dcf2e22a8a955cbaf212"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-model-v3-validation.json": {
+      "bytes": 627,
+      "sha256": "8d41029b09f6e7e2530132110cc6f98d9d100d0e44bcdbdda4e6ffb959062ad3"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-model-v3.png": {
+      "bytes": 2202614,
+      "sha256": "be0973124e55ad0242d7f3a50059553e755d98fb67899599d1a0e0fcb9972778"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-v2-assembled-geometry.json": {
+      "bytes": 1696,
+      "sha256": "3f2e7334cffda71547a4941450db2983cca22c027959f87ca3451572e47daf18"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-v2-exact-prompt.txt": {
+      "bytes": 3533,
+      "sha256": "e424c5c3c270b0180abdde78cc1f0bcfa629ea0e25827a2822cb0e83f794b19c"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-v2-geometry.json": {
+      "bytes": 1623,
+      "sha256": "c836bbdeab8afc390db5106a6fb9ac2cc2af44f214ba149babe50afd7f509469"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-v2-validation.json": {
+      "bytes": 615,
+      "sha256": "8afd14f1fe03033b86c945853ca767e2ea8d078099b512e5e3d2a54bffcc7c8a"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-v2.png": {
+      "bytes": 2114845,
+      "sha256": "9a7e4b28ff8b69e68b54ecd9bc1a31f962f646627bdb352917d0aa4424663ed1"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW-validation.json": {
+      "bytes": 609,
+      "sha256": "0dedb24ed0b70c535d0bfac300ef8c09f639b054602fd9cb9c0220c9caac2167"
+    },
+    "authoring/fear-agni-authoring/hit-W-NW.png": {
+      "bytes": 2043622,
+      "sha256": "ab83a7a8d7a6064472aedead9e0c83f39a92f5c601368639e715e88adf0c0e30"
+    },
+    "authoring/fear-agni-authoring/idle-walk-E-SE-assembled-geometry.json": {
+      "bytes": 3945,
+      "sha256": "f2ab32c9a28c768fc09d94ea6f917debfdb7170d8fe9e12064a9b1006d09d9f7"
+    },
+    "authoring/fear-agni-authoring/idle-walk-E-SE-exact-prompt.txt": {
+      "bytes": 3349,
+      "sha256": "5193003fb9edad7ef30d6e22c3b12b2f227979b67e2171b61c7f1a1d40d23581"
+    },
+    "authoring/fear-agni-authoring/idle-walk-E-SE-geometry.json": {
+      "bytes": 3777,
+      "sha256": "657cbf0f1c66f51a4425b46d5e9db8d3548438891769d409f60a3185fcf67eb3"
+    },
+    "authoring/fear-agni-authoring/idle-walk-E-SE-validation.json": {
+      "bytes": 670,
+      "sha256": "ce4ff735d46ebbf6e5bfd524e7a96faddef1d296f2b2ba2a2bcfb2e8e7bdf2fb"
+    },
+    "authoring/fear-agni-authoring/idle-walk-E-SE.png": {
+      "bytes": 2105012,
+      "sha256": "f810609233adf838f16735ba76ed28c087cbda5de486dbb985c1fe2676781db6"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-exact-prompt.txt": {
+      "bytes": 3486,
+      "sha256": "7458e628e7c696ed23b69ef29b26a2ec52120f40148c537da20845bcb430bb7b"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-geometry.json": {
+      "bytes": 3779,
+      "sha256": "9065999080f6589700aa70f33cfe181a9658e6868bdc0016bbe5919e044e165e"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-v2-assembled-geometry.json": {
+      "bytes": 3945,
+      "sha256": "5c180b9933c00d60bcb99ba5c5c4f90211d04c47b041dcb24d5294e002ad86a9"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-v2-exact-prompt.txt": {
+      "bytes": 4172,
+      "sha256": "5d711c2cfbf41e3917d81af730d08e92efeb827170a22de42966e4ae5ad0e7b4"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-v2-geometry.json": {
+      "bytes": 3775,
+      "sha256": "3917247bfad216c2cb82eac58f40566e173d877f0cf5c8251201df96a3a11ef4"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-v2-validation.json": {
+      "bytes": 676,
+      "sha256": "c51050a3078a24b1e8213507630e70c1b90777a1d4ba884799150c3a120b050a"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-v2.png": {
+      "bytes": 2079096,
+      "sha256": "108e5559247147ea37fdee2ed371ac517ace4bf76b0d7749e6b58df152e6a4ed"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE-validation.json": {
+      "bytes": 670,
+      "sha256": "5e8defa6b49f13da2dbf9c020c9954146721eb463af5068774a3b0c082359dc7"
+    },
+    "authoring/fear-agni-authoring/idle-walk-N-NE.png": {
+      "bytes": 2008167,
+      "sha256": "57d0d1fcc84dfdde9a0ab21301f51c154667b6c256ed7865b949f0d1bb6657a7"
+    },
+    "authoring/fear-agni-authoring/idle-walk-S-SW-assembled-geometry.json": {
+      "bytes": 3945,
+      "sha256": "cecd6abb54f23661ecee25627ac4f563b0998c975d99b4b27e8e1bba12e77948"
+    },
+    "authoring/fear-agni-authoring/idle-walk-S-SW-exact-prompt.txt": {
+      "bytes": 3415,
+      "sha256": "4c8b2e4369ef5d67ad8e0e298c3bca22ce676abae0634556d5ea4715e05c7f96"
+    },
+    "authoring/fear-agni-authoring/idle-walk-S-SW-geometry.json": {
+      "bytes": 3781,
+      "sha256": "433918f80393947368a595d70965643fed8cdf868cc0536d2cb1e4dac3782d37"
+    },
+    "authoring/fear-agni-authoring/idle-walk-S-SW-validation.json": {
+      "bytes": 670,
+      "sha256": "d72009ffe0e2dde8ebc37b2d8155d78820960a0c0d5d799966a719c0017c854c"
+    },
+    "authoring/fear-agni-authoring/idle-walk-S-SW.png": {
+      "bytes": 2024495,
+      "sha256": "23faf29ab7b8a778cbd19635d38362de85e5790c43900f216f32a818e5aa2e4a"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-exact-prompt.txt": {
+      "bytes": 3430,
+      "sha256": "e2e739444307cdfb2b0e4407d7e8e555eee911814706f1236f2cbae3d48c111c"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-geometry.json": {
+      "bytes": 3785,
+      "sha256": "5059e523beb5aabcff83cbea8b1a6ced2c7ebbf0d88fabe50d0fa21a706b4de9"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-v2-assembled-geometry.json": {
+      "bytes": 3945,
+      "sha256": "12a267818e859253a3dbe77f423e81810823d4a7fd3cd0fbfb6f8a41829aca92"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-v2-exact-prompt.txt": {
+      "bytes": 4231,
+      "sha256": "0e81de712bfdb8bcd3a5803ddb5b59c5a9e0e01c156fefcdd2f058250695e633"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-v2-geometry.json": {
+      "bytes": 3783,
+      "sha256": "8a2c30f1feed3aa4c76138064f9805fb453375d8bf7a75ed910c31369c67bb35"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-v2-validation.json": {
+      "bytes": 676,
+      "sha256": "a5c208dbd1239226aa296dd4a2acdada52754b31cf49f41d976ee6559e7e4845"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-v2.png": {
+      "bytes": 2037295,
+      "sha256": "ca1617dd2b45b0aa84f16c512dfcb10942fa7b07e566f8193fa1378e5173230c"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW-validation.json": {
+      "bytes": 670,
+      "sha256": "863afa7f25ba8ce05c938bceabdef9cf98096fab413aba580a9c92ba945db76e"
+    },
+    "authoring/fear-agni-authoring/idle-walk-W-NW.png": {
+      "bytes": 2040190,
+      "sha256": "57402c4a773acb39b669994180614ab5b1006b2d5acc57960ba4767444637072"
+    },
+    "authoring/fear-agni-authoring/prepare_authoring.py": {
+      "bytes": 10094,
+      "sha256": "5a10e55e148fa908e2ee396ae8d20db851d8c344d17e6c085f0efdff46447e1b"
+    },
+    "authoring/fear-agni-authoring/prepare_central_registration.py": {
+      "bytes": 4610,
+      "sha256": "3a849b5ebb4d579e2daf67d1f5c3ad8940acbc921b18e198d0d4e5e4a58c93cc"
+    },
+    "authoring/fear-agni-authoring/prepare_model_v3_proposal.py": {
+      "bytes": 4282,
+      "sha256": "01a5ee3e4b1aadf7d830e5d5fff21ff595e0f2985add7d5ec53ff286c3d96401"
+    },
+    "authoring/fear-agni-authoring/recovery-diagnostic-contact.png": {
+      "bytes": 1743918,
+      "sha256": "65b5a60b0dc38d64e86dc349d60018df69039a4083a7de00d77a78577c6a22ac"
+    },
+    "authoring/fear-agni-authoring/runtime-flags-readonly-trace.json": {
+      "bytes": 3187,
+      "sha256": "63155702cbce618e3cc53224981436355843dbd2fa2a1fd35070d2241b8a724f"
+    },
+    "authoring/fear-agni-authoring/sheet-specs.json": {
+      "bytes": 7780,
+      "sha256": "7acd7341dd33e99f642fc69d1e7afdb5f7ecfcb895ff93121511364f3093ba83"
+    },
+    "authoring/fear-agni-authoring/source-proof.json": {
+      "bytes": 2464,
+      "sha256": "c7f692ca52f02321e41f3cbdbc0a487631bf0b301e519990ec4e1dad23db6ddf"
+    },
+    "authoring/fear-agni-authoring/static-review-in-progress.json": {
+      "bytes": 411,
+      "sha256": "1c1b8070457035c1ce2540e3786ef10c8f8ba995e6849c7b5936c9a81fc4d5a7"
+    },
+    "authoring/fear-agni-authoring/static-review.json": {
+      "bytes": 1818,
+      "sha256": "b5699e48c42d038702c013ec39053c9e236c69978c5517486e11f70924ee2bcd"
+    },
+    "root-existing-reports/main-batch32-first-cast-alias-rejected/failure-reason.json": {
+      "bytes": 640,
+      "sha256": "4a423096a0d4dc00fb8436fc0ce631b71a04717866d4131fa72ac18b796f67f3"
+    },
+    "root-existing-reports/main-batch32-first-cast-alias-rejected/headless/report-cases/fear-agni-monster-authored.json": {
+      "bytes": 19741,
+      "sha256": "0b547ac53084ee2e7305f2d144e039a5388fa7938cde9d1b652637bc62abfd33"
+    },
+    "root-existing-reports/main-batch32-first-cast-alias-rejected/headless/report.json": {
+      "bytes": 31637,
+      "sha256": "4ca564a8226089fdb046a073c81f914d214279eae29441b1b79f55d1679465b2"
+    },
+    "root-existing-reports/main-batch32-first-cast-alias-rejected/render/report-cases/fear-agni-monster-authored.json": {
+      "bytes": 23077,
+      "sha256": "74420668a8d2baafee74762d485e8d72ccc57e17f37c5149bcf5545a4b9e4b61"
+    },
+    "root-existing-reports/main-batch32-first-cast-alias-rejected/render/report.json": {
+      "bytes": 31815,
+      "sha256": "ecc65f7eafb6fcfb7f199152ac0c4fbad509a99f442e22a42a4bce8d4861cd47"
+    },
+    "root-existing-reports/main-batch32/headless/report-cases/fear-agni-monster-authored.json": {
+      "bytes": 9341,
+      "sha256": "80801134ccb07045605e561ece9df18f56aec620fe4387a72125ac39b24797c6"
+    },
+    "root-existing-reports/main-batch32/headless/report.json": {
+      "bytes": 1236,
+      "sha256": "deda3496d18541235268787dacc7d6100fd256d1e0ecb5e396709d9e17f07a1a"
+    },
+    "root-existing-reports/main-batch32/render/report-cases/fear-agni-monster-authored.json": {
+      "bytes": 12681,
+      "sha256": "adc8bf7bc97e937a60ec2e14ea9a907a0855130a91c5b848011fc79780a9eba7"
+    },
+    "root-existing-reports/main-batch32/render/report.json": {
+      "bytes": 1414,
+      "sha256": "1340f3aeb9d7101dbb5634966ed8c2ade2eee108c6396a75ed72a7fa0448f98d"
+    },
+    "root-existing-reports/temporal-batch32-render/invocation.json": {
+      "bytes": 3251,
+      "sha256": "9bcd1e89a0c4d7062993daf89e2718ba123c5f2291a985dbb287d2b9aa6dac17"
+    },
+    "root-existing-reports/temporal-batch32-render/summary-cases/fear-agni-monster-authored.json": {
+      "bytes": 2942600,
+      "sha256": "c417b9bd36e86ad0957e9a36ed1017e3d4b370031a55f3afeed2ebd48d49cd14"
+    },
+    "root-existing-reports/temporal-batch32-render/summary.json": {
+      "bytes": 2279,
+      "sha256": "a2eb0939c16e0d80261b58690dd29463f6cd7ed28b69869f998b1f4723404892"
+    },
+    "root-import/fear_agni_monster_authored-candidate-root-reviewed.json": {
+      "bytes": 111576,
+      "sha256": "5feb63f1ca418e886a38451a3f103b0d11b1dddc75dce194f03da8151a71a271"
+    },
+    "root-import/fear_agni_monster_authored-import.json": {
+      "bytes": 234,
+      "sha256": "2a3072a17159524fba7021cce289c8ddd7cfd28ce2dd937557f4533a2b40eab7"
+    },
+    "root-import/fear_agni_monster_authored_v2-candidate-root-reviewed.json": {
+      "bytes": 111788,
+      "sha256": "0ddb9ce30906739162209d8ec072e1a71baba95609ed238d69afeafce9ff5662"
+    },
+    "root-import/fear_agni_monster_authored_v2-import.json": {
+      "bytes": 237,
+      "sha256": "cdc3411b3a8692baf3c44f3f45787549791c02bf1b046ad61b2ff0264aa923b3"
+    },
+    "root-import/first-agni-alias-profile.json": {
+      "bytes": 754,
+      "sha256": "de62a2695caa60ab0d827b3bba5aa8809c920770a0586b31b151203306e7320b"
+    },
+    "root-import/first-fixture32-cast-alias-rejected.json": {
+      "bytes": 547,
+      "sha256": "306e2baf6cc446e68d5e4b7196374f99321b7f902cc83a5e6b13a8343b8320f6"
+    }
+  },
+  "running_calls": [],
+  "completed_added": 0,
+  "production_stopped": true
+}
