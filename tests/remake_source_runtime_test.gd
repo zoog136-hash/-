@@ -44,7 +44,7 @@ func combat(id: String) -> void:
 	var landing: Vector2 = Vector2.INF
 	for direction: Vector2i in field.DIRECTIONS:
 		var p: Vector2 = field.cell_to_world(cell+direction)
-		if field.point_clear(p) and not field.is_safe(p) and field.line_clear(p,boss.global_position): landing=p;break
+		if field.remake_region_contains(str(slot.region.id),p) and field.point_clear(p) and not field.is_safe(p) and field.line_clear(p,boss.global_position): landing=p;break
 	check(landing.is_finite(),id+" boss combat approach")
 	if not landing.is_finite(): return
 	check(not field.path(world.player.global_position,landing).is_empty(),id+" boss reachable from entry")
@@ -67,6 +67,14 @@ func combat(id: String) -> void:
 		if boss.hp<hp_before and world.hp<player_before and boss_attacks[0]>0: break
 	world.player.set_auto_enabled(false)
 	world.player.clear_click_path()
+	world.player.velocity=Vector2.ZERO
+	# Ranged bosses retreat while AUTO pursues them. Observe their ordinary AI
+	# with the player stationary as well, so pursuit cannot indefinitely postpone
+	# their cast. Keep the actual boss marker and player-damage assertions below.
+	if boss_attacks[0]==0:
+		for observation: int in range(300):
+			await frames(1)
+			if boss_attacks[0]>0 and world.hp<player_before: break
 	check(boss.hp<hp_before,id+" ordinary player attack damages boss")
 	check(world.hp<player_before and boss_attacks[0]>0,id+" actual boss AI damages player")
 	if boss.hp==hp_before or boss_attacks[0]==0:
@@ -78,6 +86,7 @@ func combat(id: String) -> void:
 	await shot(id+"-boss-combat")
 	combat_reports.append({"map":id,"boss":boss.monster_name,"boss_hp_before":hp_before,"boss_hp_after":boss.hp,
 		"player_hp_before":player_before,"player_hp_after":world.hp,"boss_attack_markers":boss_attacks[0],
+		"boss_attack_observation":"NORMAL_AUTO_PURSUIT_THEN_STATIONARY_PLAYER",
 		"arena_arrival":"QA_TELEPORT_AFTER_PATH_CHECK","attack":"NORMAL_GAMEPLAY_MARKERS",
 		"lifecycle_test":"DIRECT_LETHAL_DAMAGE_AND_TEST_CLOCK_EXPIRY"})
 	boss.set_physics_process(false)
@@ -227,6 +236,10 @@ func run() -> void:
 		await services_and_travel(id)
 		print("REMAKE_FLOOR_CHECKED ",id," checks=",checks)
 	print("REMAKE_STAGE legacy_return_begin")
+	# The portal coroutine resumes inside physics_frame. Let the deferred portal
+	# transition and its queued collision-body cleanup finish before this QA-only
+	# immediate map change; normal proximity travel already uses call_deferred.
+	await process_frame
 	world._set_map("aden_world",false)
 	print("REMAKE_STAGE legacy_return_set")
 	await frames(2)

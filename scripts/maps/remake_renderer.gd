@@ -33,6 +33,11 @@ func configure(value: PlayableField, actor: Node2D) -> void:
 	floor_material.set_shader_parameter("atlas_grid",4.0)
 	var slots: Array = render_profile.get("materials",[4,5,4,7])
 	floor_material.set_shader_parameter("material_slots",Vector4(slots[0],slots[1],slots[2],slots[3]))
+	if str(render_profile.get("floor_style","")) == "pr108_cracked_flagstones":
+		# Reuse the exact PR108 authored atlas; no new image generation or source
+		# object classification is implied by this floor-material selection.
+		floor_material.shader = load("res://assets/maps/remake/pr108_flagstones.gdshader")
+		floor_material.set_shader_parameter("floor_atlas",load(str(render_profile.floor_atlas)))
 	ground_materials["source_floor"] = floor_material
 	refresh_visible()
 
@@ -95,6 +100,9 @@ class RemakeChunk extends Node2D:
 		var colors := PackedColorArray()
 		var indices := PackedInt32Array()
 		var rows: Dictionary = {}
+		var pr108_floor: bool = str(profile.get("floor_style","")) == "pr108_cracked_flagstones"
+		var atlas_grid := Vector2(8,4)
+		var diamond_uv := PackedVector2Array([Vector2(0,0.5),Vector2(0.5,0),Vector2(1,0.5),Vector2(0.5,1)])
 		for y: int in range(key.y*32,mini((key.y+1)*32,map.height)):
 			for x: int in range(key.x*32,mini((key.x+1)*32,map.width)):
 				var cell := Vector2i(x,y)
@@ -103,10 +111,13 @@ class RemakeChunk extends Node2D:
 				var at: int = vertices.size()
 				var kind: float = 0.0 if open else 1.0
 				var shade: float = float(profile.get("floor_light",0.80)) if open else 0.15
-				for point: Vector2 in polygon:
+				var variant: int = (x*73856093 ^ y*19349663)&31
+				if pr108_floor and open: shade += float(variant%7)*0.015
+				for corner: int in range(polygon.size()):
+					var point: Vector2 = polygon[corner]
 					vertices.append(point)
 					var grid: Vector2 = map.coordinates.world_to_grid(point)
-					uv.append(grid/6.0)
+					uv.append((Vector2(variant%8,variant/8)+diamond_uv[corner])/atlas_grid if pr108_floor else grid/6.0)
 					# Continuous vertex light, including across chunk borders.
 					var light: float = 0.5+0.22*sin(grid.x*0.043+grid.y*0.071)
 					colors.append((Color("327d5e") if open else Color("302026")) if debug else Color(kind,light,shade,1))
