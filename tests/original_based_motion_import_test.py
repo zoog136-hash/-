@@ -16,6 +16,154 @@ import audit_eight_direction_coverage as audit
 
 
 class OriginalBasedImportTest(unittest.TestCase):
+    def prepare_synthetic_import(self, root):
+        """Small import fixtures; these colored rectangles are never game art."""
+        (root / "data").mkdir()
+        reference = root / "assets/reference.png"
+        reference.parent.mkdir()
+        Image.new("RGBA", (16, 16), (80, 120, 160, 255)).save(reference)
+        target = {"key": "monster:fixture", "name": "fixture", "group": "normal_monster",
+                  "reference": {"kind": "existing_family_portrait", "path": "res://assets/reference.png",
+                                "sha256": importer.sha(reference), "image_size": [16, 16]},
+                  "presentation_to_preserve": {"visual": {"body": "fixture"}, "visual_height": 80}}
+        (root / "data/animation_authoring_sources.json").write_text(json.dumps({"targets": [target]}))
+        (root / "data/combat_animation_profiles.json").write_text(json.dumps({"schema": 1, "profiles": {}}))
+        sheets = []
+        for index, rows in enumerate((8, 5)):
+            pixels = np.zeros((rows * 64, 512, 4), dtype=np.uint8)
+            for row in range(rows):
+                for direction in range(8):
+                    x, y = direction * 64, row * 64
+                    pixels[y + 20:y + 44, x + 20:x + 36] = [30 + index * 64 + row * 8 + direction, 100, 160, 255]
+            path = root / f"synthetic-{index}.png"
+            Image.fromarray(pixels).save(path)
+            roles = {"idle": [0, 1], "walk": [2, 3, 4], "attack": [5, 6, 7]} if index == 0 else {"hit": [0, 1], "death": [2, 3, 4]}
+            sheets.append({"output_path": str(path), "rows": rows, "roles": roles, "reference_rows": [0, 1]})
+        candidate = {"sheets": sheets, "prompt": "Synthetic import preservation fixture, never game art",
+                     "review": {"identity_preserved": True, "eight_views": True, "motion_roles": True,
+                                "no_clipping": True, "notes": "Synthetic guard fixture, not a visual art approval"}}
+        return candidate, [target["key"]], root / "assets/actors/eight_direction/original_based/fixture"
+
+    def import_snapshot(self, root):
+        return {str(path.relative_to(root)): importer.sha(path) if path.is_file() else None
+                for path in root.rglob("*")}
+
+    def test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            output.mkdir(parents=True)
+            (output / "poses-1.png").write_bytes(b"preserve existing reviewed art")
+            before = self.import_snapshot(root)
+            for apply in (False, True):
+                with self.subTest(apply=apply):
+                    with self.assertRaisesRegex(ValueError, "Existing authored output differs"):
+                        importer.import_sheet(root, candidate, "fixture", keys, apply)
+                    self.assertEqual(self.import_snapshot(root), before)
+
+    def test_existing_resource_and_provenance_are_never_overwritten(self):
+        for filename in ("SpriteFrames.tres", "provenance.json"):
+            with self.subTest(filename=filename), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, output = self.prepare_synthetic_import(root)
+                importer.import_sheet(root, candidate, "fixture", keys, True)
+                (output / filename).write_bytes(b"preserve existing reviewed metadata")
+                # A missing first sheet must not be recreated before finding
+                # a later resource/proof conflict.
+                (output / "poses-0.png").unlink()
+                before = self.import_snapshot(root)
+                with self.assertRaisesRegex(ValueError, "Existing authored output differs"):
+                    importer.import_sheet(root, candidate, "fixture", keys, True)
+                self.assertEqual(self.import_snapshot(root), before)
+
+    def test_changed_review_cannot_rewrite_completed_provenance(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            importer.import_sheet(root, candidate, "fixture", keys, True)
+            candidate["review"]["notes"] = "A different review requires an explicitly versioned output"
+            before = self.import_snapshot(root)
+            with self.assertRaisesRegex(ValueError, "provenance.json"):
+                importer.import_sheet(root, candidate, "fixture", keys, True)
+            self.assertEqual(self.import_snapshot(root), before)
+
+    def test_invalid_proof_and_apply_catalog_fail_before_any_output(self):
+        for invalid in ("missing_prompt", "catalog_shape", "profile_shape"):
+            with self.subTest(invalid=invalid), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, output = self.prepare_synthetic_import(root)
+                if invalid == "missing_prompt":
+                    del candidate["prompt"]
+                    expected = KeyError
+                else:
+                    profiles = [] if invalid == "catalog_shape" else {keys[0]: []}
+                    (root / "data/combat_animation_profiles.json").write_text(json.dumps({"schema": 1, "profiles": profiles}))
+                    expected = ValueError
+                before = self.import_snapshot(root)
+                with self.assertRaises(expected):
+                    importer.import_sheet(root, candidate, "fixture", keys, True)
+                self.assertEqual(self.import_snapshot(root), before)
+                self.assertFalse(output.exists())
+
+    def test_completed_runtime_profile_cannot_be_replaced_by_new_art(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            profiles = {keys[0]: {"frames_path": "res://assets/actors/eight_direction/original_based/reviewed/SpriteFrames.tres"}}
+            (root / "data/combat_animation_profiles.json").write_text(json.dumps({"schema": 1, "profiles": profiles}))
+            before = self.import_snapshot(root)
+            with self.assertRaisesRegex(ValueError, "Existing authored runtime profile differs"):
+                importer.import_sheet(root, candidate, "fixture", keys, True)
+            self.assertEqual(self.import_snapshot(root), before)
+            self.assertFalse(output.exists())
+
+    def test_completed_native_pack_profiles_cannot_be_replaced_by_original_based_art(self):
+        for layout in ("sequential8", "directional8"):
+            with self.subTest(layout=layout), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, output = self.prepare_synthetic_import(root)
+                importer.import_sheet(root, candidate, "fixture", keys, False)
+                native_folder = root / "assets/actors/eight_direction/expanded/native_fixture"
+                shutil.copytree(output, native_folder)
+                native_path = "res://" + str((native_folder / "SpriteFrames.tres").relative_to(root))
+                tracked = {str(path.relative_to(root)) for path in root.rglob("*") if path.is_file()}
+                self.assertEqual(audit.audit_resource(root, native_path, tracked)["pixel_integrity"], "verified",
+                                 "The protected synthetic native resource must satisfy actual coverage checks")
+                profiles = {keys[0]: {"name": "existing completed native pack", "frames_path": native_path, "layout": layout}}
+                (root / "data/combat_animation_profiles.json").write_text(json.dumps({"schema": 1, "profiles": profiles}))
+                before = self.import_snapshot(root)
+                with self.assertRaisesRegex(ValueError, "Existing authored runtime profile differs"):
+                    importer.import_sheet(root, candidate, "fixture", keys, True)
+                self.assertEqual(self.import_snapshot(root), before)
+
+    def test_unfinished_legacy_profiles_can_receive_new_reviewed_art_and_rerun(self):
+        for path, layout in (("res://assets/legacy/fixture.png", "still"),
+                             ("res://assets/directional/fixture.png", "directional4")):
+            with self.subTest(layout=layout), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, output = self.prepare_synthetic_import(root)
+                previous = {"name": "existing legacy fallback", "frames_path": path, "layout": layout}
+                (root / "data/combat_animation_profiles.json").write_text(json.dumps({"schema": 1, "profiles": {keys[0]: previous}}))
+                result = importer.import_sheet(root, candidate, "fixture", keys, True)
+                profile = json.loads((root / "data/combat_animation_profiles.json").read_text())["profiles"][keys[0]]
+                self.assertEqual(profile["prior_visual_profile"], previous)
+                self.assertEqual(profile["layout"], "directional8")
+                self.assertEqual(profile["frames_path"], "res://" + str((output / "SpriteFrames.tres").relative_to(root)))
+                before = self.import_snapshot(root)
+                self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True), result)
+                self.assertEqual(self.import_snapshot(root), before)
+
+    def test_identical_import_rerun_preserves_all_bytes_and_mtimes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            first = importer.import_sheet(root, candidate, "fixture", keys, True)
+            before = self.import_snapshot(root)
+            modified = {str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}
+            self.assertEqual(importer.import_sheet(root, candidate, "fixture", keys, True), first)
+            self.assertEqual(self.import_snapshot(root), before)
+            self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, modified)
+
     def test_single_sheet_nonstandard_canvas_preserves_world_foot(self):
         path = ROOT / "assets/actors/eight_direction/original_based/werewolf/poses.png"
         geometry = importer.analyze(path, canvas_size=384)

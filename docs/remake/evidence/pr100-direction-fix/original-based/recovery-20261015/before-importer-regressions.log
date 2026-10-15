@@ -1,0 +1,108 @@
+FFFFFFEEFF
+======================================================================
+ERROR: test_invalid_proof_and_apply_catalog_fail_before_any_output (import_tests.OriginalBasedImportTest.test_invalid_proof_and_apply_catalog_fail_before_any_output) (invalid='catalog_shape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 104, in test_invalid_proof_and_apply_catalog_fail_before_any_output
+    importer.import_sheet(root, candidate, "fixture", keys, True)
+  File "/workspace/twilight/tools/import_original_based_motion.py", line 335, in import_sheet
+    "unique_frames_per_direction": count, "direction_unique_frames": dict.fromkeys(DIRECTIONS, count),
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+======================================================================
+ERROR: test_invalid_proof_and_apply_catalog_fail_before_any_output (import_tests.OriginalBasedImportTest.test_invalid_proof_and_apply_catalog_fail_before_any_output) (invalid='profile_shape')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 104, in test_invalid_proof_and_apply_catalog_fail_before_any_output
+    importer.import_sheet(root, candidate, "fixture", keys, True)
+  File "/workspace/twilight/tools/import_original_based_motion.py", line 337, in import_sheet
+    metadata = [(folder / "SpriteFrames.tres", resource),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: list indices must be integers or slices, not str
+
+======================================================================
+FAIL: test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet (import_tests.OriginalBasedImportTest.test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet) (apply=False)
+----------------------------------------------------------------------
+ValueError: Existing authored sheet differs; use a new reviewed version, do not overwrite
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 60, in test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet
+    with self.assertRaisesRegex(ValueError, "Existing authored output differs"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "Existing authored output differs" does not match "Existing authored sheet differs; use a new reviewed version, do not overwrite"
+
+======================================================================
+FAIL: test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet (import_tests.OriginalBasedImportTest.test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet) (apply=True)
+----------------------------------------------------------------------
+ValueError: Existing authored sheet differs; use a new reviewed version, do not overwrite
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 60, in test_later_sheet_conflict_cannot_leave_an_earlier_copied_sheet
+    with self.assertRaisesRegex(ValueError, "Existing authored output differs"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "Existing authored output differs" does not match "Existing authored sheet differs; use a new reviewed version, do not overwrite"
+
+======================================================================
+FAIL: test_existing_resource_and_provenance_are_never_overwritten (import_tests.OriginalBasedImportTest.test_existing_resource_and_provenance_are_never_overwritten) (filename='SpriteFrames.tres')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 75, in test_existing_resource_and_provenance_are_never_overwritten
+    with self.assertRaisesRegex(ValueError, "Existing authored output differs"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_existing_resource_and_provenance_are_never_overwritten (import_tests.OriginalBasedImportTest.test_existing_resource_and_provenance_are_never_overwritten) (filename='provenance.json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 75, in test_existing_resource_and_provenance_are_never_overwritten
+    with self.assertRaisesRegex(ValueError, "Existing authored output differs"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_changed_review_cannot_rewrite_completed_provenance (import_tests.OriginalBasedImportTest.test_changed_review_cannot_rewrite_completed_provenance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 86, in test_changed_review_cannot_rewrite_completed_provenance
+    with self.assertRaisesRegex(ValueError, "provenance.json"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_invalid_proof_and_apply_catalog_fail_before_any_output (import_tests.OriginalBasedImportTest.test_invalid_proof_and_apply_catalog_fail_before_any_output) (invalid='missing_prompt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 105, in test_invalid_proof_and_apply_catalog_fail_before_any_output
+    self.assertEqual(self.import_snapshot(root), before)
+AssertionError: {'syn[203 chars]sets/actors': None, 'assets/reference.png': 'd[845 chars]228'} != {'syn[203 chars]sets/reference.png': 'd149c0dba0ce5bd20553538c[253 chars]d01'}
+Diff is 1146 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_completed_runtime_profile_cannot_be_replaced_by_new_art (import_tests.OriginalBasedImportTest.test_completed_runtime_profile_cannot_be_replaced_by_new_art)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 115, in test_completed_runtime_profile_cannot_be_replaced_by_new_art
+    with self.assertRaisesRegex(ValueError, "Existing authored runtime profile differs"):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_identical_import_rerun_preserves_all_bytes_and_mtimes (import_tests.OriginalBasedImportTest.test_identical_import_rerun_preserves_all_bytes_and_mtimes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/twilight/tests/original_based_motion_import_test.py", line 129, in test_identical_import_rerun_preserves_all_bytes_and_mtimes
+    self.assertEqual({str(path.relative_to(root)): path.stat().st_mtime_ns for path in root.rglob("*")}, modified)
+AssertionError: {'syn[263 chars]59928910621588, 'data/animation_authoring_sour[592 chars]5812} != {'syn[263 chars]59928892560837, 'data/animation_authoring_sour[592 chars]0817}
+Diff is 2278 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.413s
+
+FAILED (failures=8, errors=2)
+BASELINE_REGRESSION_SUMMARY 6 8 2

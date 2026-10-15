@@ -40,6 +40,12 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def require_preserved_output(path, expected_sha):
+    """Preflight every immutable output before creating any import artifact."""
+    if path.is_symlink() or (path.exists() and (not path.is_file() or sha(path) != expected_sha)):
+        raise ValueError("Existing authored output differs; use a new reviewed version, do not overwrite: " + str(path))
+
+
 def candidate_image(root, value):
     if value.startswith("res://"):
         if not value.startswith("res://assets/") or ".." in Path(value).parts:
@@ -295,22 +301,22 @@ def import_sheet(root, candidate, actor, keys, apply):
     if not actor or any(char not in "abcdefghijklmnopqrstuvwxyz0123456789_-" for char in actor):
         raise ValueError("Use a bounded ASCII actor folder name")
     folder = root / "assets/actors/eight_direction/original_based" / actor
-    folder.mkdir(parents=True, exist_ok=True)
+    # Prepare all bytes and profile changes first. A later sheet conflict,
+    # invalid proof or invalid runtime catalog must leave no partial import.
     atlases = []
+    copies = []
     for index, spec in enumerate(sheets):
         source = candidate_image(root, spec["output_path"])
         sheet = folder / ("poses.png" if len(sheets) == 1 else f"poses-{index}.png")
-        if sheet.exists() and sha(sheet) != sha(source):
-            raise ValueError("Existing authored sheet differs; use a new reviewed version, do not overwrite")
-        if source.resolve() != sheet.resolve():
-            shutil.copyfile(source, sheet)
-        atlases.append({"path": "res://" + str(sheet.relative_to(root)), "sha256": sha(sheet), "size": parsed[index]["image_size"],
+        source_sha = sha(source)
+        copies.append((source, sheet, source_sha))
+        atlases.append({"path": "res://" + str(sheet.relative_to(root)), "sha256": source_sha, "size": parsed[index]["image_size"],
                         "canvas_size": parsed[index]["canvas_size"], "foot": parsed[index]["foot"]})
         if spec.get("directions_axis", "columns") != "columns":
             atlases[-1]["directions_axis"] = spec["directions_axis"]
         if spec.get("source_anchors") is not None:
             atlases[-1]["source_anchor_kind"] = "reviewed per-pose foot anchors recorded in frames"
-    (folder / "SpriteFrames.tres").write_text(spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames))
+    resource = spriteframes([atlas["path"] for atlas in atlases], geometry, role_frames)
     proof = {"schema": 1, "source": "Newly authored from the existing target image; not recovered original animation",
              "reference": reference, "target_keys": keys, "presentation_to_preserve": first["presentation_to_preserve"],
              "target_references": {row["key"]: row["reference"] for row in bindings},
@@ -328,11 +334,19 @@ def import_sheet(root, candidate, actor, keys, apply):
         proof["tracks"][role] = {"atlas_files": [atlases[sheet_index]], "source_rows": sheets[sheet_index]["roles"][role], "source_frames_per_direction": count,
                                   "unique_frames_per_direction": count, "direction_unique_frames": dict.fromkeys(DIRECTIONS, count),
                                   "source_duration_seconds": SECONDS[role], "loop_type": "loop" if role in ("idle", "walk") else "play_once"}
-    expansion.save(folder / "provenance.json", proof)
+    metadata = [(folder / "SpriteFrames.tres", resource),
+                (folder / "provenance.json", json.dumps(proof, ensure_ascii=False, indent=2) + "\n")]
+    profiles_changed = False
     if apply:
         document = expansion.read(root / "data/combat_animation_profiles.json")
+        if not isinstance(document, dict) or not isinstance(document.get("profiles"), dict):
+            raise ValueError("Runtime animation profiles must contain a profiles object")
+        prior_document = json.dumps(document, ensure_ascii=False)
         for key in keys:
-            profile = document["profiles"].get(key, {}).copy()
+            previous = document["profiles"].get(key, {})
+            if not isinstance(previous, dict):
+                raise ValueError("Runtime animation profile must be an object: " + key)
+            profile = previous.copy()
             if "prior_visual_profile" not in profile:
                 profile["prior_visual_profile"] = profile.copy() or None
             height = float(first["presentation_to_preserve"].get("visual_height", 100))
@@ -343,7 +357,38 @@ def import_sheet(root, candidate, actor, keys, apply):
                             "embedded_shadow": False, "authored_motion_weight": 0, "hit_recoil": 0,
                             "action_hit_frames": {"attack": 1}, "attack_hit_frame": 1, "death_duration": SECONDS["death"],
                             "movement_fps": len(role_frames["walk"][0]) / SECONDS["walk"], "authoring_reference": targets[key]["reference"]["path"]})
+            previous_frames = str(previous.get("frames_path", ""))
+            # Coverage recognizes native packs across this whole directory,
+            # including the existing expanded/flare sequential animations.
+            # Preserve every declared native eight-direction profile without
+            # requiring a fresh full pixel audit for each import attempt.
+            native_profile = (previous_frames.startswith("res://assets/actors/eight_direction/")
+                              and previous_frames.endswith("/SpriteFrames.tres")
+                              and previous.get("layout") in {"sequential8", "directional8"})
+            if ((native_profile or previous_frames.startswith("res://assets/actors/eight_direction/original_based/"))
+                    and previous != profile):
+                raise ValueError("Existing authored runtime profile differs; explicit re-review required: " + key)
             document["profiles"][key] = profile
+        profiles_changed = json.dumps(document, ensure_ascii=False) != prior_document
+    for parent in (folder, *folder.parents):
+        if parent.is_symlink() or (parent.exists() and not parent.is_dir()):
+            raise ValueError("Authored output directory is not a regular directory: " + str(parent))
+        if parent == root:
+            break
+    for _, sheet, source_sha in copies:
+        require_preserved_output(sheet, source_sha)
+    for path, content in metadata:
+        require_preserved_output(path, hashlib.sha256(content.encode()).hexdigest())
+    # All input, output and profile checks passed. Identical reruns need no
+    # asset writes and preserve the reviewed SpriteFrames/provenance bytes.
+    folder.mkdir(parents=True, exist_ok=True)
+    for source, sheet, _ in copies:
+        if not sheet.exists():
+            shutil.copyfile(source, sheet)
+    for path, content in metadata:
+        if not path.exists():
+            path.write_text(content)
+    if apply and profiles_changed:
         expansion.save_profiles(root / "data/combat_animation_profiles.json", document)
     if any(sha(original) != expected_sha for original, expected_sha in originals) or any(sha(candidate_image(root, spec["output_path"])) != atlas["sha256"] for spec, atlas in zip(sheets, atlases)):
         raise AssertionError("Byte preservation failed")

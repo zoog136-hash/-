@@ -1,3 +1,13 @@
+## 2026-10-15 · PR100 복구 / 임포터 보호 체크포인트
+
+- 기존 PR #100 / `feature/twilight-animation-20261013` 유지. 복구 기준 원격 HEAD `3fbdea4e6a9632e8858c0d6e16ce670acff4138a`. 이전 작업환경·미커밋 4파일은 현재 환경에서 접근 불가하여 원격의 정상 커밋에서 복구했다. 이전 변경 전체 복구를 주장하지 않는다.
+- 보고서와 coverage 일치: **371/498 연결·127 미완료**, 변신136/180·일반200/258·보스35/60, 개별 Main 8방향 검증 **100종**. Batch20이 마지막 완료. 신규 완료 **0종**.
+- 임포터는 모든 시트·SpriteFrames·출처·profile을 쓰기 전 검사한다. 뒤쪽 충돌/잘못된 입력에서 부분 결과를 남기지 않으며 기존 authored 및 native sequential8/directional8 완료 profile을 덮어쓰지 않는다. 동일 입력 재실행은 bytes·mtime 유지. 회귀 **28/28** 통과.
+- 기존 리소스 723시트/41,442프레임 SHA 검사 통과. Godot4.7.2 초기 설정 경로 오류는 실패 기록으로 보존했고 작업 폴더 XDG 설정 재임포트는 오류0. 보호 대상 assets/scripts/data/Main **4,704파일 불변**.
+- 변신 배치 실행기는 원격에 없어서 재구현 중이며 기존10종 headless/OpenGL 회귀 진행 중이다. 화염의 엔트·알비노 악어거북 새 생성모션은 **WIP/미연결**. 동일 원본인 아타바크/살라흐도 표시 외형·크기가 달라 재사용 거절했다.
+- 기준 HEAD의 통합[38707935974](https://github.com/zoog136-hash/-/actions/runs/38707935974)·애니메이션[38707950473](https://github.com/zoog136-hash/-/actions/runs/38707950473)·Android[38707965290](https://github.com/zoog136-hash/-/actions/runs/38707965290)는 성공. 이 체크포인트의 새 HEAD CI는 별도 확인 전이며 Android 실기기 미검증. main 충돌 유지·병합하지 않음.
+- [복구 및 검사 증거](evidence/pr100-direction-fix/original-based/recovery-20261015/checkpoint.json). 재개: 최신 remote HEAD 조회 → 이 보고서 → WIP 제작물 승인/보류 → 묶음 Main 검증 → 완료 수량 갱신 → 같은 브랜치 commit/push/HEAD 대조. 로그·이미지는 파일에 저장하고 요약만 출력한다.
+
 ## 2026-10-15 · Batch20 실제 Main 검증 완료
 
 - 추가 5종: 공포의 나이트메어, 오만한 레비아탄, 알비노 악어, 왜곡의 키메라, 질투의 스켈레톤 윙.
