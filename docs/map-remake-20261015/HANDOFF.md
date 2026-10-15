@@ -44,6 +44,7 @@ python3 -m unittest discover -s tools/map_restore -p 'test_*.py'
 - 오만 위치/보스방은 provisional. 현재 M 기준점·원본 S32·층별 구조물 의미/아트가 미확정이다. 25개 완료 집계는 0이다.
 - 수정 전 실패한 검사 로그와 수정 후의 로그를 구분한다. 합성 CI fixture 검사는 원본 이미지 통합 검증이 아니다.
 - 기존 폴리곤 맵의 도로·배치·등록 bounds를 전제하는 검사는 기존 배치 모드에서 보존한다. 새 A3 격자의 실물 이동/충돌/전투/포털 검증은 `remake_source_runtime_test`와 `hunting_paths_test`의 원본 격자 분기로 수행한다. 예전 맵 검사 PASS를 새 아트 완료로 계산하지 않는다.
+- `tools/test_project.py`는 기존 기하 구조를 고정해서 검사하는 7개 테스트에만 `--legacy-map-layouts`를 전달하며 로그/summary에 `validation_scopes`를 남긴다. 기존 테스트의 assertion은 유지한다. 일반 게임플레이·몬스터·저장·UI·새 A3 검사는 설치된 실제 맵을 사용한다. A3 팩이 없으면 새 격자 플레이 검사는 SKIP이며 전체 원본 검증 PASS가 아니다.
 - 전체 테스트 도구는 과거 docs/evidence 경로에 화면을 덮어쓴다. 실행 결과를 새 날짜 증거 폴더에 복사한 뒤 과거 추적 증거는 복원한다. 사용자 변경 파일에 일괄 restore/clean을 사용하지 않는다.
 - Android 장치/실행 환경, 대형 A3 아덴 장거리 이동, Windows GPU 성능, 전체 원작 시각 비교는 NOT_RUN/UNVERIFIED다.
 - 모든 맵의 12가지 완료 조건이 충족되기 전 Draft 해제·자동 병합·정확 복원 완료 표시를 하지 않는다.

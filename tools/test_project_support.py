@@ -18,6 +18,13 @@ ERROR = re.compile(
 REPORT = re.compile(r'\b[A-Z][A-Z0-9_]*_RESULT\s+(.+)$')
 SUCCESS = re.compile(r'\b[A-Z][A-Z0-9_]*_OK\b')
 SKIP = re.compile(r'\b[A-Z][A-Z0-9_]*_SKIP:')
+# Fixed, existing TWILIGHT geometry contracts; not source-grid acceptance.
+# Do not add generic gameplay tests here to hide source regressions.
+LEGACY_GEOMETRY_TESTS = frozenset({
+    'reference_object_placement_test', 'road_surface_render_test',
+    'terrain_surface_render_test', 'world_region_portals_test',
+    'world_regions_test', 'world_structure_test', 'world_terrain_coverage_test',
+})
 # This existing producer writes a counted summary rather than an _OK marker.
 # Accept only its exact, positive-check, zero-failure report, for that test only.
 RENEWED_SPAWN_SUMMARY = re.compile(
