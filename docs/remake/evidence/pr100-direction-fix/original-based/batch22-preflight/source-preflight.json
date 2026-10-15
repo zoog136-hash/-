@@ -1,0 +1,1255 @@
+{
+  "batch": "proposed-pr100-batch22",
+  "status": "SOURCE_PREFLIGHT_ONLY_NOT_COMPLETION",
+  "scope": "10 requested missing normal monsters; no image generation, runtime binding or production profile changes",
+  "source_claim": "All 10 reference existing TWILIGHT generated project atlases. These are not verified external original LineageM game art. Use exact existing artwork identity rather than name-based redesign.",
+  "source_files_unchanged": true,
+  "start_source_sha256": {
+    "res://assets/monsters/original/atlas_3.png": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+    "res://assets/monsters/original/atlas_0.png": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+    "res://assets/monsters/original/atlas_1.png": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "res://assets/monsters/original/atlas_4.png": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "res://assets/monsters/original/atlas_2.png": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+  },
+  "end_source_sha256": {
+    "res://assets/monsters/original/atlas_3.png": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+    "res://assets/monsters/original/atlas_0.png": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+    "res://assets/monsters/original/atlas_1.png": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+    "res://assets/monsters/original/atlas_4.png": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "res://assets/monsters/original/atlas_2.png": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9"
+  },
+  "summary": {
+    "targets": 10,
+    "source_preflight_ready": 10,
+    "raw_reference_contamination_hold": 9,
+    "raw_reference_primary_edge_contact_hold": 6,
+    "isolated_complete_primary_guides_ready": 2,
+    "unique_source_regions": 7,
+    "distinct_presentations": 10,
+    "completion_increment": 0
+  },
+  "motion_structure_groups": [
+    {
+      "id": "canid-quadrupeds",
+      "keys": [
+        "monster:말하는 섬 들개",
+        "monster:검은숲 늑대"
+      ],
+      "structure": "Four-legged trot, bite/lunge, recoil, connected side-collapse; independent dog and wolf silhouettes"
+    },
+    {
+      "id": "arachnids",
+      "keys": [
+        "monster:검은숲 거미",
+        "monster:스파이더",
+        "monster:왜곡의 타란툴라"
+      ],
+      "structure": "Eight-leg alternating crawl, fang lunge, low body recoil, folded-leg corpse; exactly preserve leg count"
+    },
+    {
+      "id": "antlered-ungulate",
+      "keys": [
+        "monster:알비노 디어"
+      ],
+      "structure": "Four-legged stride and head/antler attack, recoil, side-collapse; no invented hand weapon"
+    },
+    {
+      "id": "armed-lizard-biped",
+      "keys": [
+        "monster:알비노 이구아나"
+      ],
+      "structure": "Upright two-legged blue-scale lizard with held spear/staff and shield; preserve actual source equipment"
+    },
+    {
+      "id": "crustacean",
+      "keys": [
+        "monster:알비노 자이언트 크랩"
+      ],
+      "structure": "Low multi-leg sideways gait and pincer strike; independent pincer/leg articulation"
+    },
+    {
+      "id": "armed-fishfolk-bipeds",
+      "keys": [
+        "monster:알비노 심해어",
+        "monster:알비노 피쉬맨"
+      ],
+      "structure": "Upright two-legged pale fishfolk, source spear and net, spear thrust/recoil/collapse"
+    }
+  ],
+  "sharing_rule": "Motion-structure grouping is scheduling only. Spider variants and the fishfolk pair share exact source regions but differ in presentation, so no identical-motion linking or generated sheet sharing is approved. All ten require separate identity/presentation review.",
+  "recommended_first_risk_trial": {
+    "key": "monster:말하는 섬 들개",
+    "reason": "Whole brown canine primary silhouette is complete with generous source margins; focus bbox excludes three distant neighbor fragments and retains every primary alpha>100 pixel. Simpler four-leg anatomy and no held equipment make it the first trial.",
+    "guide_path": "/workspace/twilight-run/next-batch22/canid-reference-guides.json",
+    "image_generation_status": "NOT_STARTED"
+  },
+  "appearance_cautions": [
+    "Albino iguana is currently a blue upright lizard with source spear/staff and shield, not an unarmed white quadruped; keep the current art.",
+    "Fishfolk are pale upright spear/net users; preserve source equipment.",
+    "Source atlas shader variation/accent and width differ among same-image identities; future Main comparison must verify presentation instead of assuming name/color equality.",
+    "Spider, deer, iguana and crab primary silhouettes contact raw reference borders; do not reconstruct missing body pieces and claim original facts."
+  ],
+  "targets": [
+    {
+      "key": "monster:말하는 섬 들개",
+      "name": "말하는 섬 들개",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_3.png",
+        "region": [
+          0,
+          21,
+          328,
+          278
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 3,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "342493b8df473bfbfa6b7d45cf391ef8ba6f738d7bffd6c43bbf36ac774408f8",
+        "image_size": [
+          1312,
+          1199
+        ],
+        "region_rgba_sha256": "7075ede23ffc3ca4db20236c24d1776a78209d05cedfd9f10452e208c26c4072"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 3,
+          "cell": 0,
+          "body": "dog",
+          "variant": 7,
+          "width": 1.076,
+          "weapon": "claws",
+          "crest": 0,
+          "accent": "c4aa64"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        55,
+        30,
+        189,
+        219
+      ],
+      "primary_visible_area": 16652,
+      "primary_touches_reference_edges": [],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 519,
+          "bbox_relative_xywh": [
+            316,
+            94,
+            12,
+            88
+          ]
+        },
+        {
+          "visible_area": 442,
+          "bbox_relative_xywh": [
+            133,
+            266,
+            52,
+            12
+          ]
+        },
+        {
+          "visible_area": 396,
+          "bbox_relative_xywh": [
+            196,
+            262,
+            35,
+            16
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "CLEAR",
+      "authoring_status": "READY_FOR_SMALL_RISK_TRIAL",
+      "completion_increment": 0,
+      "focus_guide_available": true
+    },
+    {
+      "key": "monster:검은숲 늑대",
+      "name": "검은숲 늑대",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_0.png",
+        "region": [
+          0,
+          929,
+          317,
+          284
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 0,
+        "cell": 12,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "2773365f0b61a793383207b8fb7cb5a2da2d9cd09e819d90cc96f5f599f4814f",
+        "image_size": [
+          1269,
+          1239
+        ],
+        "region_rgba_sha256": "2fa29d922c8c7241cd7f69d6324462fd3ea7eee91a4545da0c9ff86be5b8a305"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 0,
+          "cell": 12,
+          "body": "wolf",
+          "variant": 2,
+          "width": 1.05,
+          "weapon": "claws",
+          "crest": 0,
+          "accent": "c4aa64"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        16,
+        48,
+        277,
+        222
+      ],
+      "primary_visible_area": 34151,
+      "primary_touches_reference_edges": [],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 708,
+          "bbox_relative_xywh": [
+            299,
+            58,
+            18,
+            55
+          ]
+        },
+        {
+          "visible_area": 36,
+          "bbox_relative_xywh": [
+            78,
+            0,
+            6,
+            11
+          ]
+        },
+        {
+          "visible_area": 14,
+          "bbox_relative_xywh": [
+            57,
+            0,
+            4,
+            6
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "CLEAR",
+      "authoring_status": "READY_FOR_SMALL_RISK_TRIAL",
+      "completion_increment": 0,
+      "focus_guide_available": true
+    },
+    {
+      "key": "monster:검은숲 거미",
+      "name": "검은숲 거미",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          0,
+          12,
+          315,
+          299
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 0,
+          "body": "spider",
+          "variant": 4,
+          "width": 0.92,
+          "weapon": "claws",
+          "crest": 0,
+          "accent": "c4aa64"
+        },
+        "animation_profile": {
+          "motion_style": "crawl",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        16,
+        3,
+        299,
+        269
+      ],
+      "primary_visible_area": 41153,
+      "primary_touches_reference_edges": [
+        "right"
+      ],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 410,
+          "bbox_relative_xywh": [
+            143,
+            284,
+            37,
+            15
+          ]
+        },
+        {
+          "visible_area": 150,
+          "bbox_relative_xywh": [
+            283,
+            279,
+            21,
+            20
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "HOLD",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    },
+    {
+      "key": "monster:스파이더",
+      "name": "스파이더",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          0,
+          12,
+          315,
+          299
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 0,
+          "body": "spider",
+          "variant": 3,
+          "width": 1.076,
+          "weapon": "claws",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "crawl",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        16,
+        3,
+        299,
+        269
+      ],
+      "primary_visible_area": 41153,
+      "primary_touches_reference_edges": [
+        "right"
+      ],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 410,
+          "bbox_relative_xywh": [
+            143,
+            284,
+            37,
+            15
+          ]
+        },
+        {
+          "visible_area": 150,
+          "bbox_relative_xywh": [
+            283,
+            279,
+            21,
+            20
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "HOLD",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    },
+    {
+      "key": "monster:왜곡의 타란툴라",
+      "name": "왜곡의 타란툴라",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_1.png",
+        "region": [
+          0,
+          12,
+          315,
+          299
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 1,
+        "cell": 0,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "f32e36a311e090f38f419a17d92a45a5e9af5214d144a0261ef5d356bc1e6387",
+        "image_size": [
+          1263,
+          1246
+        ],
+        "region_rgba_sha256": "aae5b32743e5b3926e0ac24dc9cd3915d1986a0c463594295c7ae7217ef11d0a"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 1,
+          "cell": 0,
+          "body": "spider",
+          "variant": 7,
+          "width": 1.024,
+          "weapon": "claws",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "crawl",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        16,
+        3,
+        299,
+        269
+      ],
+      "primary_visible_area": 41153,
+      "primary_touches_reference_edges": [
+        "right"
+      ],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 410,
+          "bbox_relative_xywh": [
+            143,
+            284,
+            37,
+            15
+          ]
+        },
+        {
+          "visible_area": 150,
+          "bbox_relative_xywh": [
+            283,
+            279,
+            21,
+            20
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "HOLD",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    },
+    {
+      "key": "monster:알비노 디어",
+      "name": "알비노 디어",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          955,
+          308,
+          309,
+          309
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 7,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "92323aff2d9c875a04b482856eac9775971d7779f2d4519294af0249aa1c3a1f"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 7,
+          "body": "stag",
+          "variant": 4,
+          "width": 1.076,
+          "weapon": "claws",
+          "crest": 2,
+          "accent": "849bab"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        38,
+        0,
+        262,
+        309
+      ],
+      "primary_visible_area": 26993,
+      "primary_touches_reference_edges": [
+        "top",
+        "bottom"
+      ],
+      "neighbor_fragment_components": [],
+      "reference_contamination": "NONE_OBSERVED",
+      "reference_edge_safety": "HOLD",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    },
+    {
+      "key": "monster:알비노 이구아나",
+      "name": "알비노 이구아나",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_2.png",
+        "region": [
+          0,
+          643,
+          305,
+          322
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 2,
+        "cell": 8,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "07ed0ffe7904cba821178ee635ac7ee29dc87cdec9c972fbd58683a3447106c9",
+        "image_size": [
+          1222,
+          1287
+        ],
+        "region_rgba_sha256": "5dd8758a3c49a9521c146a3ed54da4499220fc254a2864fbf5f87ffa71f1660d"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 2,
+          "cell": 8,
+          "body": "lizard",
+          "variant": 4,
+          "width": 0.92,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        17,
+        0,
+        270,
+        274
+      ],
+      "primary_visible_area": 36529,
+      "primary_touches_reference_edges": [
+        "top"
+      ],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 2069,
+          "bbox_relative_xywh": [
+            76,
+            276,
+            71,
+            46
+          ]
+        },
+        {
+          "visible_area": 916,
+          "bbox_relative_xywh": [
+            205,
+            285,
+            38,
+            37
+          ]
+        },
+        {
+          "visible_area": 576,
+          "bbox_relative_xywh": [
+            160,
+            298,
+            38,
+            24
+          ]
+        },
+        {
+          "visible_area": 423,
+          "bbox_relative_xywh": [
+            28,
+            285,
+            28,
+            37
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "HOLD",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    },
+    {
+      "key": "monster:알비노 자이언트 크랩",
+      "name": "알비노 자이언트 크랩",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          637,
+          617,
+          318,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 10,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "76f31edba8cd09e055cab036e2a6d5476cb4cb8a7ca17ddfabb3644124364162"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 10,
+          "body": "crab",
+          "variant": 14,
+          "width": 0.998,
+          "weapon": "claws",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "crawl",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 78
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        0,
+        23,
+        307,
+        242
+      ],
+      "primary_visible_area": 45609,
+      "primary_touches_reference_edges": [
+        "left"
+      ],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 962,
+          "bbox_relative_xywh": [
+            242,
+            267,
+            55,
+            41
+          ]
+        },
+        {
+          "visible_area": 892,
+          "bbox_relative_xywh": [
+            56,
+            278,
+            60,
+            30
+          ]
+        },
+        {
+          "visible_area": 765,
+          "bbox_relative_xywh": [
+            130,
+            290,
+            68,
+            18
+          ]
+        },
+        {
+          "visible_area": 238,
+          "bbox_relative_xywh": [
+            196,
+            0,
+            53,
+            8
+          ]
+        },
+        {
+          "visible_area": 170,
+          "bbox_relative_xywh": [
+            107,
+            0,
+            34,
+            8
+          ]
+        },
+        {
+          "visible_area": 57,
+          "bbox_relative_xywh": [
+            313,
+            145,
+            5,
+            24
+          ]
+        },
+        {
+          "visible_area": 51,
+          "bbox_relative_xywh": [
+            168,
+            0,
+            17,
+            4
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "HOLD",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    },
+    {
+      "key": "monster:알비노 심해어",
+      "name": "알비노 심해어",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 9,
+          "body": "fishman",
+          "variant": 9,
+          "width": 1.076,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        20,
+        15,
+        291,
+        250
+      ],
+      "primary_visible_area": 31551,
+      "primary_touches_reference_edges": [],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 2601,
+          "bbox_relative_xywh": [
+            27,
+            268,
+            111,
+            40
+          ]
+        },
+        {
+          "visible_area": 1759,
+          "bbox_relative_xywh": [
+            285,
+            98,
+            34,
+            126
+          ]
+        },
+        {
+          "visible_area": 995,
+          "bbox_relative_xywh": [
+            263,
+            274,
+            43,
+            34
+          ]
+        },
+        {
+          "visible_area": 572,
+          "bbox_relative_xywh": [
+            215,
+            289,
+            38,
+            19
+          ]
+        },
+        {
+          "visible_area": 110,
+          "bbox_relative_xywh": [
+            190,
+            0,
+            25,
+            8
+          ]
+        },
+        {
+          "visible_area": 71,
+          "bbox_relative_xywh": [
+            316,
+            151,
+            3,
+            36
+          ]
+        },
+        {
+          "visible_area": 65,
+          "bbox_relative_xywh": [
+            168,
+            297,
+            12,
+            11
+          ]
+        },
+        {
+          "visible_area": 53,
+          "bbox_relative_xywh": [
+            122,
+            0,
+            12,
+            9
+          ]
+        },
+        {
+          "visible_area": 45,
+          "bbox_relative_xywh": [
+            0,
+            198,
+            4,
+            15
+          ]
+        },
+        {
+          "visible_area": 34,
+          "bbox_relative_xywh": [
+            0,
+            189,
+            5,
+            9
+          ]
+        },
+        {
+          "visible_area": 20,
+          "bbox_relative_xywh": [
+            154,
+            0,
+            8,
+            4
+          ]
+        },
+        {
+          "visible_area": 10,
+          "bbox_relative_xywh": [
+            228,
+            0,
+            6,
+            3
+          ]
+        },
+        {
+          "visible_area": 7,
+          "bbox_relative_xywh": [
+            218,
+            151,
+            2,
+            5
+          ]
+        },
+        {
+          "visible_area": 6,
+          "bbox_relative_xywh": [
+            215,
+            0,
+            3,
+            3
+          ]
+        },
+        {
+          "visible_area": 6,
+          "bbox_relative_xywh": [
+            204,
+            172,
+            2,
+            4
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "CLEAR",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    },
+    {
+      "key": "monster:알비노 피쉬맨",
+      "name": "알비노 피쉬맨",
+      "source_preflight": "READY",
+      "source_reference": {
+        "path": "res://assets/monsters/original/atlas_4.png",
+        "region": [
+          318,
+          617,
+          319,
+          308
+        ],
+        "kind": "existing_project_atlas",
+        "atlas": 4,
+        "cell": 9,
+        "identity_limit": "Existing project artwork, not verified external original game art",
+        "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+        "image_size": [
+          1274,
+          1234
+        ],
+        "region_rgba_sha256": "88a9fc936e98b6e937e38b9f3d09199fb177d9c00801149952c35ae7f3203850"
+      },
+      "appearance_to_preserve": {
+        "visual": {
+          "atlas": 4,
+          "cell": 9,
+          "body": "fishman",
+          "variant": 6,
+          "width": 0.998,
+          "weapon": "sword",
+          "crest": 4,
+          "accent": "8daa7b"
+        },
+        "animation_profile": {
+          "motion_style": "slash",
+          "attack_hit_ratio": 0.44,
+          "floating": false
+        },
+        "attack_type": "melee",
+        "visual_height": 86
+      },
+      "checks": {
+        "file_sha_matches": true,
+        "size_matches": true,
+        "region_within_source": true,
+        "rgba_region_sha_matches": true,
+        "current_reference_snapshot_matches": true,
+        "current_presentation_snapshot_matches": true,
+        "listed_missing": true
+      },
+      "source_image_mode": "RGBA",
+      "primary_component_bbox_relative_xywh": [
+        20,
+        15,
+        291,
+        250
+      ],
+      "primary_visible_area": 31551,
+      "primary_touches_reference_edges": [],
+      "neighbor_fragment_components": [
+        {
+          "visible_area": 2601,
+          "bbox_relative_xywh": [
+            27,
+            268,
+            111,
+            40
+          ]
+        },
+        {
+          "visible_area": 1759,
+          "bbox_relative_xywh": [
+            285,
+            98,
+            34,
+            126
+          ]
+        },
+        {
+          "visible_area": 995,
+          "bbox_relative_xywh": [
+            263,
+            274,
+            43,
+            34
+          ]
+        },
+        {
+          "visible_area": 572,
+          "bbox_relative_xywh": [
+            215,
+            289,
+            38,
+            19
+          ]
+        },
+        {
+          "visible_area": 110,
+          "bbox_relative_xywh": [
+            190,
+            0,
+            25,
+            8
+          ]
+        },
+        {
+          "visible_area": 71,
+          "bbox_relative_xywh": [
+            316,
+            151,
+            3,
+            36
+          ]
+        },
+        {
+          "visible_area": 65,
+          "bbox_relative_xywh": [
+            168,
+            297,
+            12,
+            11
+          ]
+        },
+        {
+          "visible_area": 53,
+          "bbox_relative_xywh": [
+            122,
+            0,
+            12,
+            9
+          ]
+        },
+        {
+          "visible_area": 45,
+          "bbox_relative_xywh": [
+            0,
+            198,
+            4,
+            15
+          ]
+        },
+        {
+          "visible_area": 34,
+          "bbox_relative_xywh": [
+            0,
+            189,
+            5,
+            9
+          ]
+        },
+        {
+          "visible_area": 20,
+          "bbox_relative_xywh": [
+            154,
+            0,
+            8,
+            4
+          ]
+        },
+        {
+          "visible_area": 10,
+          "bbox_relative_xywh": [
+            228,
+            0,
+            6,
+            3
+          ]
+        },
+        {
+          "visible_area": 7,
+          "bbox_relative_xywh": [
+            218,
+            151,
+            2,
+            5
+          ]
+        },
+        {
+          "visible_area": 6,
+          "bbox_relative_xywh": [
+            215,
+            0,
+            3,
+            3
+          ]
+        },
+        {
+          "visible_area": 6,
+          "bbox_relative_xywh": [
+            204,
+            172,
+            2,
+            4
+          ]
+        }
+      ],
+      "reference_contamination": "HOLD",
+      "reference_edge_safety": "CLEAR",
+      "authoring_status": "HOLD_REFERENCE_REVIEW",
+      "completion_increment": 0
+    }
+  ]
+}

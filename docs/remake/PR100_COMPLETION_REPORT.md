@@ -1,3 +1,15 @@
+## 2026-10-15 · Batch21 회수 검증 완료 · 374/498
+
+**신규 완료3종: 알비노 악어거북349·악몽의 잭 오 랜턴173·도구리288.** 검증 완료 **374/498 (75.1%)**, 미완료 **124**. 영웅 이상139/180·일반200/258·보스35/60. 개별 실제 Main8방향 증거 **103/498**. 원본 기반 신규3외형/독립동작설계3개/실제 고유자세312개이며, cast 별칭·360개 검사샘플을 고유자세 수에 더하지 않는다.
+
+- 실제 Main headless **7,819**, OpenGL **7,142** 검사, 실패0. 각3종8방향 입력·공격·피격·사망/respawn·실제AI추적/공격·원래 장비로 처치·바닥드랍·수동UI습득을 확인했다. N/S idle/contact/death 및 실제전투26화면 육안검토 통과. 북쪽 거북 공격은 3단계 횡베기와 타깃영역 교차를 정성검토했으며, 픽셀단위 충돌시스템을 새로 구현/증명했다는 뜻은 아니다.
+- 원격WIP5종 중 **화염의 엔트407(공격 머리외형 불일치), 알비노 뿔개구리352(공격내 저알파 배경잔상)**는 원래3fb프로필로 복원·보류했다. 바포메트7도 기존보류 유지. PNG/TRES/출처·원래5종fixture·실패/중단로그는 보존하며 완료에서 제외한다. accepted fixture는3종/held2종을 명시한다.
+- 기존assets/scripts/data/Main **4,704파일**을 대조했다. 차이는 combat profile 문서1개이며 허용된 신규3개 profile만 변경했다. 기존완료 profile 변경0, 원본222개 참조·원격회수PNG/TRES 바이트 보존. 임포터30/30·identity9/9·coverage6/6·guard24·native35,742·기존canvas640 통과.
+- Main203개 기존보고서+신규6개를 coverage에 연결했다. 전체480캡처 **751,102,064bytes**의SHA를 기록하고 N/S대표18PNG만Git보존했다. 나머지 원본PNG는 현재환경에만 있으며 전달완료로 주장하지 않는다. CI에서 재생성한다.
+- 검증한 runtime/QA 코드 체크포인트 **`ce19943619ba8ea0874446e6eee72ee3926bf739`**는 push후원격일치 확인. 해당커밋 [통합38722879756](https://github.com/zoog136-hash/-/actions/runs/38722879756)·[애니메이션38722899266](https://github.com/zoog136-hash/-/actions/runs/38722899266)·[Android38722918015](https://github.com/zoog136-hash/-/actions/runs/38722918015)를dispatch했으며 기록시점queued, 성공으로계산하지 않는다. 뒤의완료증거commit은문서/coverage/PNG만추가하며runtime코드는동일하다. Android실기기미검증, main충돌그대로·병합하지않음.
+- [배치 검증/보존](evidence/pr100-direction-fix/original-based/batch21-completed/validation-summary.json) · [실제Main 결과](evidence/pr100-direction-fix/original-based/batch21-completed/render.json) · [대표화면](evidence/pr100-direction-fix/original-based/batch21-completed/captures) · [최신coverage](evidence/pr100-direction-fix/original-based/coverage/coverage.json).
+- 다음 Batch22는 일반10종 source SHA/영역/appearance 점검10/10. 이웃조각/잘린원본 위험을 별도보류 기록했다. 말하는섬들개는 완전한 primary body 참조가이드와8방향회전표를 통과해 동작시트 시험중이며 **미완성/미연결**이다. [다음 원본점검](evidence/pr100-direction-fix/original-based/batch22-preflight/source-preflight.json).
+
 ## 2026-10-15 · 회수 WIP 품질 보류 / 실제 Main 최종 검사 중
 
 동일 브랜치 병합 체크포인트 **`d0b53c484c0500a485ecebf5c8372c6194499014` push 성공**, 로컬·원격 HEAD 일치 확인. 원격 `7cec254`와 로컬 `13676c6`/runner WIP 커밋을 모두 조상으로 보존했다. main은 병합하지 않았다.

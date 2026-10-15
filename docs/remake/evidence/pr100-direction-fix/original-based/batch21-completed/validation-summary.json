@@ -1,0 +1,58 @@
+{
+  "basis_commit": "3fbdea4e6a9632e8858c0d6e16ce670acff4138a",
+  "validated_runtime_code_commit": "ce19943619ba8ea0874446e6eee72ee3926bf739",
+  "completed_this_checkpoint": 3,
+  "completed_total": 374,
+  "target": 498,
+  "remaining": 124,
+  "hero_plus": [
+    139,
+    180
+  ],
+  "normal_monster": [
+    200,
+    258
+  ],
+  "boss": [
+    35,
+    60
+  ],
+  "individual_main_8_directions": 103,
+  "new_unique_pixel_poses": 312,
+  "held": [
+    "transform:407",
+    "transform:352",
+    "transform:7 (prior Baphomet hold)"
+  ],
+  "main_headless": {
+    "checks": 7819,
+    "failures": 0
+  },
+  "main_opengl": {
+    "checks": 7142,
+    "failures": 0
+  },
+  "captures": {
+    "raw_count": 480,
+    "raw_bytes": 751102064,
+    "tracked_representatives": 18,
+    "full_transfer_claim": false
+  },
+  "protected_files_checked": 4704,
+  "protected_file_changes": [
+    "data/combat_animation_profiles.json"
+  ],
+  "changed_profiles": [
+    "transform:349",
+    "transform:288",
+    "transform:173"
+  ],
+  "completed_existing_profile_changes": [],
+  "new_source_assets_unchanged_from_remote_checkpoint": true,
+  "source_reference_sha_review": "exact installed references, not recovered original animation",
+  "prior_main_reports_preserved": 203,
+  "new_main_reports": 6,
+  "CI": "ce199 three workflows dispatched; status in GitHub, no success claim while queued",
+  "android_device": "not_tested",
+  "main_merge_conflict": "unchanged; main not merged"
+}
