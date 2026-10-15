@@ -10,7 +10,11 @@ class GroundAlphaTests(unittest.TestCase):
     def test_two_occupied_corners_do_not_disable_cleanup(self):
         im=Image.new('RGBA',(11,11),'white');draw=ImageDraw.Draw(im)
         draw.line((0,0,10,10),fill=(40,50,60,255),width=2)
+        # Pillow's even-width diagonal cap need not include its endpoint pixel.
+        # Set the fixture's two occupied corner pixels explicitly.
+        im.putpixel((0,0),(40,50,60,255));im.putpixel((10,10),(40,50,60,255))
         out=clear_white_border(im)
+        self.assertEqual(im.getpixel((0,0)),(40,50,60,255))
         self.assertEqual(out.getpixel((0,0)),im.getpixel((0,0)))
         self.assertEqual(out.getpixel((10,10)),im.getpixel((10,10)))
         self.assertEqual(out.getpixel((10,0))[3],0)
