@@ -289,7 +289,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24]
+        batch: [15, 16, 17, 18, 19, 20, 21, 23, 24, 25]
         include:
           - batch: 21
             config: res://tests/fixtures/pr100_batch21_accepted.json

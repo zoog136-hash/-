@@ -1,34 +1,33 @@
 {
-  "observed_at_utc": "2026-10-15T15:43:44.788512+00:00",
+  "observed_at_utc": "2026-10-15T16:28:31.706072+00:00",
   "repository": "zoog136-hash/-",
   "pr": 100,
   "branch": "feature/twilight-animation-20261013",
   "verified_code_checkpoint": "166abe6b1b13fd15449d58b8e4762a6ecf42fcd3",
-  "runtime_assets_checkpoint": "batch24 commit containing this checkpoint; exact SHA recorded after commit",
+  "runtime_assets_checkpoint": "batch25 commit containing this file;resolvegitHEAD",
   "counts": {
     "target": 498,
-    "completed": 380,
-    "remaining": 118,
+    "completed": 382,
+    "remaining": 116,
     "hero_plus": [
       139,
       180
     ],
     "normal_monster": [
-      205,
+      207,
       258
     ],
     "boss": [
       36,
       60
     ],
-    "individual_Main_eight_direction": 109,
-    "durable_Main_reports": 231,
+    "individual_Main_eight_direction": 111,
+    "durable_Main_reports": 235,
     "supplemental_existing3_Main_reports_this_resume": 6
   },
   "new_completed": [
-    "수룡의 둥지 파도수호자",
-    "시커",
-    "화룡의 둥지 화염전사"
+    "탐욕의 텐타클",
+    "알비노 플라워"
   ],
   "validation": {
     "importer_tests_passed": 50,
@@ -134,6 +133,94 @@
       "HOLD_new_not_counted": [
         "알비노 유니콘: rearorientation, oppositelegcycle, missing/overlappingframes; raw7attempts retained in scratch pending durablearchive"
       ]
+    },
+    "batch25": {
+      "observed_at_utc": "2026-10-15T16:28:31.706072+00:00",
+      "status": "completed_after_separate_static_and_actual_Main_visual_reviews",
+      "previous_completed": 380,
+      "new_completed": [
+        "탐욕의 텐타클",
+        "알비노 플라워"
+      ],
+      "new_completed_count": 2,
+      "completed": 382,
+      "total": 498,
+      "percent": 76.7,
+      "remaining": 116,
+      "individual_Main_eight_direction": 111,
+      "canonical_Main_reports": 235,
+      "headless_engine_checks": 2183,
+      "headless_seconds": 81.297,
+      "OpenGL_engine_checks": 2411,
+      "OpenGL_seconds": 281.165,
+      "failures": 0,
+      "authored_unique_poses": 208,
+      "actual_Main_captured_PNGs": 224,
+      "original_full_viewport_PNGs_in_Git": 12,
+      "all_capture_bodies_in_Git": false,
+      "independent_Main_visual": "approved all208sampledposes+16actualAIfullviews, sourceidentity/heading/support/scale/articulation/death; seeindividualreview scope precision",
+      "automatic_Main": "8realAIwalk/attack/contact each,8tentaclemagicflights; realweaponhit/death/drop/manualpickup each; originalstats/gamescripts unchanged",
+      "failed_art_preserved": "Flower22headingposes reauthored and sourcePNG/prompts/failedversions retained. No failedmotion was promoted based ongeometryalone.",
+      "unchanged_existing_profiles": 1439,
+      "qualified_profile_changes": [
+        "monster:알비노 플라워",
+        "monster:탐욕의 텐타클"
+      ],
+      "maps_or_game_scripts_changed": 0,
+      "CI": {
+        "sha": "f2fc2046998d647db332babf674f605008f1749c",
+        "runs": [
+          {
+            "id": 38763828238,
+            "name": "TWILIGHT Android ARM64 APK Playtest",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+            "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763828238"
+          },
+          {
+            "id": 38763823745,
+            "name": "TWILIGHT resource integrity (no silent missing assets)",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+            "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763823745"
+          },
+          {
+            "id": 38763818074,
+            "name": "Godot Validate",
+            "status": "completed",
+            "conclusion": "success",
+            "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+            "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763818074"
+          },
+          {
+            "id": 38763812655,
+            "name": "Animation Presentation Validate",
+            "status": "in_progress",
+            "conclusion": null,
+            "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+            "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763812655"
+          }
+        ]
+      },
+      "Android_APK": "f2fc204 checkpoint380 build+staticinspection success38763828238; artifact11988261203(990646373bytes); thisnew2actorcheckpoint notyetrebuilt",
+      "Android_real_device": "unverified",
+      "next_batch": [
+        "불신의 댄싱 소드",
+        "알비노 자이언트 크랩",
+        "교만의 레버넌트"
+      ],
+      "next_bosses": [
+        "피닉스",
+        "웨링",
+        "이프리트"
+      ],
+      "HOLD_and_repairs": [
+        "Original328/376andearlierHOLDremainuncounted;328EfourphasekinematicpilotnowPASS,7directionsinproduction",
+        "UnicornHOLD; EarthE/Wsupportreversalnotyetproven despitegenuineindependentBsingleposes;WaringandHellcougargaitrepairscontinue"
+      ],
+      "main_merge": "not_performed; conflict remains"
     }
   },
   "new_WIP_HOLD": [
@@ -171,13 +258,51 @@
     },
     "observed_at_utc": "2026-10-15T13:41:42Z",
     "batch23": "No automatic run observed after push; PRconflict persists. dispatch integratedcheckpoint24 instead of restarting full CI for each actor",
-    "batch24": "pending workflow_dispatch after push"
+    "batch24": "pending workflow_dispatch after push",
+    "checkpoint24": {
+      "sha": "f2fc2046998d647db332babf674f605008f1749c",
+      "runs": [
+        {
+          "id": 38763828238,
+          "name": "TWILIGHT Android ARM64 APK Playtest",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763828238"
+        },
+        {
+          "id": 38763823745,
+          "name": "TWILIGHT resource integrity (no silent missing assets)",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763823745"
+        },
+        {
+          "id": 38763818074,
+          "name": "Godot Validate",
+          "status": "completed",
+          "conclusion": "success",
+          "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763818074"
+        },
+        {
+          "id": 38763812655,
+          "name": "Animation Presentation Validate",
+          "status": "in_progress",
+          "conclusion": null,
+          "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+          "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763812655"
+        }
+      ]
+    },
+    "batch25": "notyetstarted; checkpoint24 fullanimation continues while production runs"
   },
   "main_conflict_unresolved": true,
   "next": [
-    "Dispatch existingbranch full animation/integration/APK CI after checkpoint24; continue production while running",
-    "Review batch25 actual Main, checkpoint qualifiedactors",
-    "Continue124 originalgoal including HOLD repairs; no newbranch/newPR/mainmerge/maps"
+    "ContinueMain26 afterindependentstaticgate; keepCIrunning",
+    "Preserveeveryfailure/source/proof; maintainexistingbranchPR100",
+    "Finishallremaining116includingHOLDrepairs; final498/real8motion/Android/currentCIchecks;noMainmerge"
   ],
   "remote_snapshot": "docs/remake/evidence/pr100-direction-fix/original-based/recovery-20261015/final-remote-snapshot.json",
   "remote_snapshot_bytes": 13916,
@@ -186,10 +311,12 @@
   "observed_main_head": "e2119c37293a783e93b421ee0055d1318271b071",
   "current_WIP": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015/rabbit328-wip/checkpoint.json",
   "current_WIPs": [
-    "batch25 tentacle/flower: both Main modes passed; independent Mainvisualreview pending",
-    "earth/sword/phoenix:104candidates, independent scale/support/headingQA pending",
-    "Waring/crab/revenant: authoring active",
-    "328: singlepose oppositehip-knee-boot path independently confirmed; legproportions/registeredloop pending"
+    "Sword corrected24/staticmetadata:rootindependentreviewthenMain",
+    "Crab:independentstaticQAfinalizing",
+    "Revenant:104readyindependentQAneeded",
+    "Phoenix correctedNW5/coreanchors andWaring4leggaitrepairs;Ifrit/Hellcougarauthoring",
+    "328Efourphasepilotapproved;7directionssinglesinproduction",
+    "EarthE/Wgaitnotproven; goodoppositeendpointsneedfaithfulsubsetassembly"
   ],
   "resumed_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/resume-20261015",
   "resumed_blocker": null,
@@ -198,8 +325,9 @@
     "transform:173 악몽의 잭 오 랜턴",
     "transform:288 도구리"
   ],
-  "resumed_new_completed_count": 6,
-  "previous_pushed_checkpoint": "a891e167ec324917bc482ca6d603dcd07589e87a",
+  "resumed_new_completed_count": 8,
+  "previous_pushed_checkpoint": "f2fc2046998d647db332babf674f605008f1749c",
   "batch23_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch23",
-  "batch24_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch24"
+  "batch24_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch24",
+  "batch25_evidence": "docs/remake/evidence/pr100-direction-fix/original-based/batch25"
 }

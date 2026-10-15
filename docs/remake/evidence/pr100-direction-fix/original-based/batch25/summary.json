@@ -1,0 +1,88 @@
+{
+  "observed_at_utc": "2026-10-15T16:28:31.706072+00:00",
+  "status": "completed_after_separate_static_and_actual_Main_visual_reviews",
+  "previous_completed": 380,
+  "new_completed": [
+    "탐욕의 텐타클",
+    "알비노 플라워"
+  ],
+  "new_completed_count": 2,
+  "completed": 382,
+  "total": 498,
+  "percent": 76.7,
+  "remaining": 116,
+  "individual_Main_eight_direction": 111,
+  "canonical_Main_reports": 235,
+  "headless_engine_checks": 2183,
+  "headless_seconds": 81.297,
+  "OpenGL_engine_checks": 2411,
+  "OpenGL_seconds": 281.165,
+  "failures": 0,
+  "authored_unique_poses": 208,
+  "actual_Main_captured_PNGs": 224,
+  "original_full_viewport_PNGs_in_Git": 12,
+  "all_capture_bodies_in_Git": false,
+  "independent_Main_visual": "approved all208sampledposes+16actualAIfullviews, sourceidentity/heading/support/scale/articulation/death; seeindividualreview scope precision",
+  "automatic_Main": "8realAIwalk/attack/contact each,8tentaclemagicflights; realweaponhit/death/drop/manualpickup each; originalstats/gamescripts unchanged",
+  "failed_art_preserved": "Flower22headingposes reauthored and sourcePNG/prompts/failedversions retained. No failedmotion was promoted based ongeometryalone.",
+  "unchanged_existing_profiles": 1439,
+  "qualified_profile_changes": [
+    "monster:알비노 플라워",
+    "monster:탐욕의 텐타클"
+  ],
+  "maps_or_game_scripts_changed": 0,
+  "CI": {
+    "sha": "f2fc2046998d647db332babf674f605008f1749c",
+    "runs": [
+      {
+        "id": 38763828238,
+        "name": "TWILIGHT Android ARM64 APK Playtest",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763828238"
+      },
+      {
+        "id": 38763823745,
+        "name": "TWILIGHT resource integrity (no silent missing assets)",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763823745"
+      },
+      {
+        "id": 38763818074,
+        "name": "Godot Validate",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763818074"
+      },
+      {
+        "id": 38763812655,
+        "name": "Animation Presentation Validate",
+        "status": "in_progress",
+        "conclusion": null,
+        "head_sha": "f2fc2046998d647db332babf674f605008f1749c",
+        "html_url": "https://github.com/zoog136-hash/-/actions/runs/38763812655"
+      }
+    ]
+  },
+  "Android_APK": "f2fc204 checkpoint380 build+staticinspection success38763828238; artifact11988261203(990646373bytes); thisnew2actorcheckpoint notyetrebuilt",
+  "Android_real_device": "unverified",
+  "next_batch": [
+    "불신의 댄싱 소드",
+    "알비노 자이언트 크랩",
+    "교만의 레버넌트"
+  ],
+  "next_bosses": [
+    "피닉스",
+    "웨링",
+    "이프리트"
+  ],
+  "HOLD_and_repairs": [
+    "Original328/376andearlierHOLDremainuncounted;328EfourphasekinematicpilotnowPASS,7directionsinproduction",
+    "UnicornHOLD; EarthE/Wsupportreversalnotyetproven despitegenuineindependentBsingleposes;WaringandHellcougargaitrepairscontinue"
+  ],
+  "main_merge": "not_performed; conflict remains"
+}

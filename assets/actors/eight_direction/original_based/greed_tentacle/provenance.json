@@ -1,0 +1,2781 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      637,
+      925,
+      318,
+      309
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 14,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "78ca24b6347db932e2300f8472bb2f6313d267c3627b73bfbda14878cd4a9c0f"
+  },
+  "target_keys": [
+    "monster:탐욕의 텐타클"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 4,
+      "cell": 14,
+      "body": "tentacle",
+      "variant": 3,
+      "width": 1.024,
+      "weapon": "staff",
+      "crest": 0,
+      "accent": "c4aa64"
+    },
+    "animation_profile": {
+      "motion_style": "magic",
+      "attack_hit_ratio": 0.52,
+      "floating": false
+    },
+    "attack_type": "magic",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:탐욕의 텐타클": {
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "region": [
+        637,
+        925,
+        318,
+        309
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 4,
+      "cell": 14,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+      "image_size": [
+        1274,
+        1234
+      ],
+      "region_rgba_sha256": "78ca24b6347db932e2300f8472bb2f6313d267c3627b73bfbda14878cd4a9c0f"
+    }
+  },
+  "target_presentations": {
+    "monster:탐욕의 텐타클": {
+      "visual": {
+        "atlas": 4,
+        "cell": 14,
+        "body": "tentacle",
+        "variant": 3,
+        "width": 1.024,
+        "weapon": "staff",
+        "crest": 0,
+        "accent": "c4aa64"
+      },
+      "animation_profile": {
+        "motion_style": "magic",
+        "attack_hit_ratio": 0.52,
+        "floating": false
+      },
+      "attack_type": "magic",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "idle-walk-attempt1 EXACT PROMPT:\nCreate a NEW transparent RGBA hand-painted 2D isometric game animation atlas based ONLY on the ONE dark green tentacle creature in the attached existing project portrait. This is newly authored articulated 2D motion, not recovered original animation. Preserve this source identity exactly: an upright tapered wrinkled olive/dark-moss-GREEN organic central body, ONE large VERTICAL BLACK FRONT MAW ringed with many fine GOLDEN/IVORY teeth, tiny red slit/spot details embedded down the body, numerous thick long green curling tentacles growing organically from the solid body. Rough mottled green skin and tan/gold edge highlights. Several large upper tentacles curl upward; lower heavy tentacles coil on the ground. No floating orb, octopus head replacement, human legs/arms, wings, staff, weapon, clothing, extra eyes or new objects. All tentacles remain connected to the central body; one coherent complete silhouette. Repaint clean silhouettes and do not copy damaged border pixels, stray neighbor fragments or hidden transparent RGB speckles.\n\nSTRICT LAYOUT: exactly EIGHT equal columns by FIVE equal rows = FORTY SMALL complete independently articulated full-body poses on one canvas. Every ENTIRE silhouette, including the widest curled tentacle tips, occupies at most 40-45 percent of BOTH its cell width and cell height. Huge transparent gutters and safe outer margins; no neighboring silhouettes or rectangular crop bounds overlap. Never clip a tip or disconnect an appendage. Fixed camera, identical original body/core scale and material across all40. Empty space fully transparent alpha0. No background, floor drawn, shadow, text, label, grid, aura, dust, glow cloud, detached particles or blood.\n\nCOLUMN DIRECTIONS left to right, held fixed down all rows: E = true RIGHT-facing SIDE PROFILE with front mouth at the right leading edge and visible side-body depth; SE = FRONT-RIGHT three-quarter toward screen lower-right; S = full FRONT toward viewer/down with vertical mouth centered; SW = FRONT-LEFT three-quarter toward screen lower-left; W = true LEFT-facing SIDE PROFILE with mouth at left leading edge; NW = BACK-LEFT away/upper-left; N = full BACK away/up, showing actual wrinkled rear organic body with NO front mouth or teeth visible through it; NE = BACK-RIGHT away/upper-right. Rear three-quarter views show rear body anatomy with front maw occluded. True side profiles have the maw seen narrow/edge-on, not a full frontal mouth pasted sideways. Correct SE/SW front and NW/NE back, not simple mirrored front views.\n\nPHASE ROWS top to bottom:\nROW1 relaxed IDLE, heavy lower tentacles firmly PLANTED along a consistent implied ground baseline, upper tentacles loosely curled.\nROW2 distinct breathing IDLE: central body flexes, mouth subtly breathes, upper curls and lower support tentacles bend into visibly new curves while ground supports remain planted.\nROW3 CRAWLING WALK phaseA: leading lower tentacles reach forward along the column compass heading and PLANT, trailing lower tentacles brace behind as the central core leans forward. This creature crawls on its own tentacles, never hovers.\nROW4 CRAWLING WALK passing phaseB: planted leading tentacles pull the core forward, rear tentacles retract into compact loops, support contact remains on ground. Clearly different root bends and core lean from phaseA.\nROW5 CRAWLING WALK phaseC: opposite set of lower tentacles extends and plants ahead, first set trails/recoils, core sways oppositely; visible new joint curves and alternating support, not the same stance translated.\n\nALL40 must contain real organic articulation, substantial tentacle-curve changes and body lean. No scaled/translated/duplicated stills, no mirrored pseudo-frames. Keep body MASS and upper core proportions constant and lower support contact on a common cell baseline. This is a GROUNDED creature (floating FALSE): several lower tentacles always touch the implied floor, no airborne body, invented levitation or shadow. Keep all limbs connected and all complete bodies separated.\n\n\nattack-E-SE-attempt3 EXACT PROMPT:\nCreate a very SPARSE transparent 2D GAME SPRITE ATLAS with SIX TINY full-body green tentacle monster poses. The large LANDSCAPE canvas is1536x1024. It MUST look mostly EMPTY. Do not enlarge drawings to fill cells. Use exactly THREE equal columns and TWO equal rows; the six body centers are roughly(256,256),(768,256),(1280,256),(256,768),(768,768),(1280,768). Each COMPLETE creature INCLUDING THE LONGEST EXTENDED TENTACLES must fit inside a compact210x210-pixel box centered at its position. Leave huge clear transparent gaps of at least200pixels between drawings, and large transparent outer margins. No overlap of any complete rectangular pose bounds, no clipped tips. Six miniature figures, not six large portraits. Same core/body scale and fixed camera. Fully transparent RGBA alpha0 empty background, no shadows, floor, text, labels, grid, aura, magic particles or detached objects.\n\nIDENTITY from first reference, same model as second authored idle sheet: dark olive/moss-GREEN tapered wrinkled organic core, one vertical black FRONT MAW with fine gold/ivory teeth, tiny red embedded slits/spots, many thick attached curling GREEN TENTACLES with tan/gold highlights, upper curls and heavy lower support coils. No legs, human limbs, wings, weapon, staff, clothing, extra eyes, orb or new body. All appendages are attached to a substantial solid core. It is GROUNDED floatingFALSE: lower coils firmly planted on a common cell floor baseline in all poses, never hovering. Repaint clean silhouettes, ignore source border debris and hidden transparent RGB.\n\nDIRECTION ROWS: TOP ROW E, TRUE RIGHT-facing SIDE PROFILE, front mouth narrow and edge-on at right leading edge, body side depth visible. BOTTOM ROW SE, FRONT-RIGHT three-quarter view toward lower-right, frontal maw visible. All three top poses stay true E; all three bottom stay true SE. E narrower side body/maw must differ from SE. Direct attack toward right for E and lower-right for SE, not sideways identically.\n\nCOLUMNS are the THREE ATTACK PHASES in each direction row: LEFT WINDUP, core leans back and leading tendrils gather into tight curls; MIDDLE STRIKE, core leans forward and two ATTACHED leading tendrils extend ahead in the exact travel heading but remain WITHIN the same210pixel whole-body box, lower support coils stay planted, maw opens when visible; RIGHT RECOVERY, core settles and leading tendrils recoil into distinctly different loose curls. This is a compact short-range aiming gesture, not huge long whips extending into other slots. Game supplies the actual magic beam. Visible changing roots/core/tentacle bends through windup→strike→recovery, no resized/translated/duplicated stills or mirror-only poses. Keep all six full bodies connected and safely separated. Exactly six TINY miniatures with huge empty margins.\n\n\nattack-S-SW-attempt4 EXACT PROMPT:\nFix the ATTACK sprite sheet in the THIRD reference. FIRST reference gives the exact source dark green organic tentacle monster identity; SECOND reference shows already authored eight-direction idle/walk views. THIRD reference is the actual six-pose sheet being corrected. Keep this as a transparent1536x1024 atlas with exactly3 equal phase columns and2 direction rows, six very small separated full-body sprites with huge transparent gutters, no text/shadow/background. Draw newly authored poses, not copy-paste or mirror.\n\nTHE PRECISE ERROR TO CORRECT: in the THIRD reference, BOTTOM ROW LEFT windup incorrectly shows the mouth on the RIGHT side, FRONT-RIGHT/SE. ALL THREE BOTTOM ROW sprites must instead be TRUE FRONT-LEFT/SW, the front maw on the LEFT/LOWER-LEFT side of the body. This includes the LEFT WINDUP. In windup the core may lean backward, but its FACE and mouth must continue facing LEFT/LOWER-LEFT, never rotate right. Red slit lines on the FRONT plane and central mouth must clearly establish the LEFT-facing front plane in ALL3 bottom sprites. Like the front-left fourth column of the SECOND reference, never like the front-right second column. Keep SW camera FIXED through windup, strike and recovery.\n\nTOP ROW stays S full FRONT toward viewer/screen down, centered vertical black mouth with gold teeth; top-left windup, top-middle forward/downward tentacle strike, top-right recovery. BOTTOM ROW is SW FRONT-LEFT toward LOWER-LEFT for bottom-left WINDUP, bottom-middle LEFT/DOWN-FORWARD STRIKE with two attached leading tentacles, bottom-right RECOVERY. Core and tentacle gestures change genuinely but heading never flips. Keep these ground-dwelling creatures grounded: complete connected lower coils planted on common baseline. Attack extensions remain compact inside each cell; all six bound boxes safely separated.\n\nExact SOURCE identity: tapered wrinkled olive/moss DARK GREEN organic core, one VERTICAL BLACK front maw ringed in many fine GOLD/IVORY teeth, small RED embedded slit/spot details, many thick curling green tentacles, rough green skin and tan/gold edge highlights. Every appendage physically attached to a substantial core. No human limbs/legs, weapons, wings, clothing, extra eyes, floating orb, severed parts, particles or new objects. floatingFALSE, no hovering. Retain coherent core mass. All empty pixels alpha0; no background, floor paint, shadow, glow, text, grid or labels. Every complete miniature max210px in height and max300px in width including tentacles, use huge blank margins. Correct only through newly DRAWN full connected figures. Exactly SIX figures, no repeats/translations/scaled stills.\n\n\nattack-W-NW-attempt3 EXACT PROMPT:\nCreate a very SPARSE transparent 2D GAME SPRITE ATLAS with SIX TINY full-body green tentacle monster poses. The large LANDSCAPE canvas is1536x1024. It MUST look mostly EMPTY. Do not enlarge drawings to fill cells. Use exactly THREE equal columns and TWO equal rows; the six body centers are roughly(256,256),(768,256),(1280,256),(256,768),(768,768),(1280,768). Each COMPLETE creature INCLUDING THE LONGEST EXTENDED TENTACLES must fit inside a compact210x210-pixel box centered at its position. Leave huge clear transparent gaps of at least200pixels between drawings, and large transparent outer margins. No overlap of any complete rectangular pose bounds, no clipped tips. Six miniature figures, not six large portraits. Same core/body scale and fixed camera. Fully transparent RGBA alpha0 empty background, no shadows, floor, text, labels, grid, aura, magic particles or detached objects.\n\nIDENTITY from first reference, same model as second authored idle sheet: dark olive/moss-GREEN tapered wrinkled organic core, one vertical black FRONT MAW with fine gold/ivory teeth, tiny red embedded slits/spots, many thick attached curling GREEN TENTACLES with tan/gold highlights, upper curls and heavy lower support coils. No legs, human limbs, wings, weapon, staff, clothing, extra eyes, orb or new body. All appendages are attached to a substantial solid core. It is GROUNDED floatingFALSE: lower coils firmly planted on a common cell floor baseline in all poses, never hovering. Repaint clean silhouettes, ignore source border debris and hidden transparent RGB.\n\nDIRECTION ROWS: TOP ROW W = TRUE LEFT-facing SIDE PROFILE, front mouth narrow and edge-on at the LEFT leading edge, actual side-body depth visible. BOTTOM ROW NW = BACK-LEFT three-quarter view AWAY toward screen upper-left, the real rear organic hide dominates. In NW all3 phases the frontal maw/teeth are fully hidden behind the solid body. There must be NO visible front mouth on any bottom-row figure. Do NOT replace NW with front-left. All three top poses stay true W; all three bottom stay true NW. Direct attack left for W and away/upper-left for NW, with rear body visible while leading tentacles project away.\n\nCOLUMNS are the THREE ATTACK PHASES in each direction row: LEFT WINDUP, core leans back and leading tendrils gather into tight curls; MIDDLE STRIKE, core leans forward and two ATTACHED leading tendrils extend ahead in the exact travel heading but remain WITHIN the same210pixel whole-body box, lower support coils stay planted, maw opens when visible; RIGHT RECOVERY, core settles and leading tendrils recoil into distinctly different loose curls. This is a compact short-range aiming gesture, not huge long whips extending into other slots. Game supplies the actual magic beam. Visible changing roots/core/tentacle bends through windup→strike→recovery, no resized/translated/duplicated stills or mirror-only poses. Keep all six full bodies connected and safely separated. Exactly six TINY miniatures with huge empty margins.\n\n\nattack-N-NE-attempt4 EXACT PROMPT:\nCreate a very SPARSE transparent 2D GAME SPRITE ATLAS with SIX TINY full-body green tentacle monster poses. The large LANDSCAPE canvas is1536x1024. It MUST look mostly EMPTY. Do not enlarge drawings to fill cells. Use exactly THREE equal columns and TWO equal rows; the six body centers are roughly(256,256),(768,256),(1280,256),(256,768),(768,768),(1280,768). Each COMPLETE creature INCLUDING THE LONGEST EXTENDED TENTACLES must fit inside a compact210x210-pixel box centered at its position. Leave huge clear transparent gaps of at least200pixels between drawings, and large transparent outer margins. No overlap of any complete rectangular pose bounds, no clipped tips. Six miniature figures, not six large portraits. Same core/body scale and fixed camera. Fully transparent RGBA alpha0 empty background, no shadows, floor, text, labels, grid, aura, magic particles or detached objects.\n\nIDENTITY from first reference, same model as second authored idle sheet: dark olive/moss-GREEN tapered wrinkled organic core, one vertical black FRONT MAW with fine gold/ivory teeth, tiny red embedded slits/spots, many thick attached curling GREEN TENTACLES with tan/gold highlights, upper curls and heavy lower support coils. No legs, human limbs, wings, weapon, staff, clothing, extra eyes, orb or new body. All appendages are attached to a substantial solid core. It is GROUNDED floatingFALSE: lower coils firmly planted on a common cell floor baseline in all poses, never hovering. Repaint clean silhouettes, ignore source border debris and hidden transparent RGB.\n\nDIRECTION ROWS: TOP ROW N = full BACK facing directly AWAY / screen UP, approximately symmetrical rear hide and no front mouth. BOTTOM ROW NE = BACK-RIGHT three-quarter view AWAY toward screen upper-right, rear organic hide dominates and front mouth is fully occluded. In ALL SIX figures the central front maw and gold teeth are hidden behind the solid core; NO visible mouth in ANY frame. Do NOT turn NE into front-right. All3 top phases stay N and all3 bottom phases stay NE. N strike extends attached tendrils away/up with back still visible; NE strike extends away/upper-right, no sideways frontal turn.\n\nCOLUMNS are the THREE ATTACK PHASES in each direction row: LEFT WINDUP, core leans back and leading tendrils gather into tight curls; MIDDLE STRIKE, core leans forward and two ATTACHED leading tendrils extend ahead in the exact travel heading but remain WITHIN the same210pixel whole-body box, lower support coils stay planted, maw opens when visible; RIGHT RECOVERY, core settles and leading tendrils recoil into distinctly different loose curls. This is a compact short-range aiming gesture, not huge long whips extending into other slots. Game supplies the actual magic beam. Visible changing roots/core/tentacle bends through windup→strike→recovery, no resized/translated/duplicated stills or mirror-only poses. Keep all six full bodies connected and safely separated. Exactly six TINY miniatures with huge empty margins.\n\nCONNECTIVITY CORRECTION: Be especially careful that the FRONT-AWAY extension in the top-row middle N strike is visibly and THICKLY CONNECTED to the rear crown. Use solid thick fleshy neck/root connections from EVERY upper tentacle to the central body, at least10pixels thick at intended210pixel figure size. Do not hide a root behind a transparent gap, do not draw separate curl tips, loose trailing strings or off-body green fragments. All six complete creatures must each form exactly ONE substantial joined silhouette; SIX connected figures only. Keep strike compact; never detach a tiny curled eye/appendage from the crown.\n\nThe prior failed layout had an isolated detached LOWER-LEFT BASE COIL under the TOP-LEFT N windup figure. In this new drawing attach the whole lowest support coil to the body with a broad opaque continuous green bridge; no isolated green toe at the lower-left baseline. Keep ALL lower support coils physically joined as one floor-contact base.\n\n\nhit-death-attempt1 EXACT PROMPT:\nCreate a NEW transparent RGBA 2D isometric game HIT and DEATH animation atlas of the ONE dark-green grounded tentacle monster in the FIRST attached existing project portrait. SECOND attached image contains the same creature's authored idle/walk atlas and fixes model, body/core scale, material and eight directional views. Preserve this exact source design. Newly authored articulated motion, not recovered original animation. Paint whole clean silhouettes, ignoring stray off-body pixels, neighboring fragments or damaged reference borders.\n\nIDENTITY: tapered wrinkled olive/moss DARK GREEN organic body, ONE large vertical black FRONT MAW bordered with many fine GOLD/IVORY teeth, small red embedded slits/spots, numerous thick attached curling green tentacles with tan/gold edge highlights. Upper tentacles coil up; heavy lower coils support body on floor. Do not invent human legs/arms, staff, weapon, wings, clothing, eyes or objects. ALL tentacles grow from and remain connected to a substantial central body. This is a GROUNDED creature, floatingFALSE; living and dead bodies always have real lower appendage contact with the implied ground. No detached parts or new levitation.\n\nLAYOUT STRICT: exactly EIGHT equal columns by FIVE equal rows = FORTY SMALL complete independent sprites. Entire silhouette with widest tentacle tips at most40-45 percent of BOTH cell width and height. Huge transparent gutters, safe outer margins, no crop rectangles overlapping. Uniform source body/core drawing scale; death is organically collapsed anatomy, never a miniaturized portrait. No clipping. All empty space fully transparent alpha0; no background, ground paint, shadow, aura, text, labels, grid, particles, clouds, gore or blood.\n\nCOLUMNS left to right, compass heading fixed down every column: E true RIGHT-facing SIDE PROFILE with narrow maw at right front edge; SE FRONT-RIGHT toward lower-right; S full FRONT toward viewer/down with central mouth centered; SW FRONT-LEFT toward lower-left; W true LEFT-facing SIDE PROFILE with narrow maw at left front edge; NW BACK-LEFT away/upper-left; N full BACK away/up; NE BACK-RIGHT away/upper-right. Actual body depth and side maw profile in E/W. Rear views show the real wrinkled rear body with front mouth and teeth completely hidden behind the core. Never paste the front mouth on the back or substitute mirrored front views. Corpse maintains the correct column front/back identity.\n\nROW1 HIT RECOIL: upper core and mouth jerk backward away from heading, upper tentacles curl defensively and lower tentacles brace hard on floor with distinct bent roots. A strong real body/tentacle recoil.\nROW2 HIT RECOVERY: body leans back toward center, mouth and upper coils relax differently, lower support tentacles reform new planted curves. A distinct pose, not the first recoil repeated.\nROW3 DEATH BUCKLING: upper central body droops and sinks, mouth starts closing on front/side, upper tentacles sag, lower coils fold beneath the core while staying grounded and connected. Clearly losing height.\nROW4 DEATH COLLAPSE: core folds down heavily and upper crown falls sideways toward floor, all upper tendrils droop against lower ones in a complete coherent heap. No standing upright monster. Preserve core mass and connected appendages.\nROW5 FINAL DEAD CORPSE: the ENTIRE body lies as a LOW FLATTENED green organic mound on the floor, about ONE QUARTER living height; all upper and lower tentacles limp and draped sideways ON ground, fully attached to the solid collapsed core. Front maw closed or nearly closed when visible. Rear corpse shows rear hide, no front maw. Nothing floats and no tentacles remain upright. The creature stays complete and recognizable with same body volume and detail; never fragments, empty cell or resized living still.\n\nAll40 genuinely newly drawn articulated frames. Clear recoil→recover and sinking→folding→flat corpse. Lower tentacle contact shares a consistent cell ground baseline throughout all rows, especially final flat death. No detached limbs, repeated/scaled/translated stills, or mirror-only pseudo-frames. Exactly40 safe complete connected silhouettes.\n",
+  "instruction_record_kind": "exact prompts saved before each generation; failed alternatives retained separately",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Independent static re-review of all104 alpha-composited poses against the exact existing green tentacle project creature. Preserve rough olive/darkgreen tapered rooted core, vertical black frontal maw with gold teeth, tiny red slits and curling continuous attached appendages. All8 headings distinguish E/W leading-edge profiles, S frontal maw and N/NW/NE rear surfaces hiding front maw; corrected SW attack phases are front-left, and N/NE base remains physically connected. Idle/tentacle flex, three alternating crawl-support bends, gathered→extended-facing→recovered attack gestures, two recoil poses and three-stage folded low coherent dead rooted heap are distinct articulation rather than translated or mirrored stills. No human limbs, floating accessories, detached pieces or empty frames. All104 mandatory role frames used exactly once, raw and visible hashes104unique, strict analyze/complete-region PASS. Actual alpha outside each geometry is at most9 and no pixels alpha>10, so hidden RGB fog is not a painted background or visible fragments. Six canvases512/672/872/608/816/528 independently compared using living core crown to planted base excluding upper/extended tentacles; normalized core heights approximately72/73.9/71.0/71.2/70.6/69.3 pixels with manual±5source uncertainty. No collapsed-death-height normalization. All104 authored fixed body-root X anchors and actual support-bottom Y were reviewed in normalized grounded contact composite; do not anchor the actor at a newly extended striking tentacle tip. Original floatingfalse, magic attack/style, height86 and attack_hit_ratio0.52 remain requirements. This approval is for actual Main validation only; projectile direction/contact/timing, all8five-role playback, exact world support and death/drop/pickup still pending. No runtime or map changes and no completion claim."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        19,
+        20,
+        174,
+        178
+      ],
+      "margin": [
+        170,
+        146,
+        338,
+        334
+      ],
+      "source_anchor": [
+        105,
+        194
+      ],
+      "rgba_sha256": "2d2273479994745f44684aef756b2c1a6cae972ec3fb1345d5e96265e3d53e1f",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        214,
+        26,
+        178,
+        171
+      ],
+      "margin": [
+        168,
+        153,
+        334,
+        341
+      ],
+      "source_anchor": [
+        302,
+        193
+      ],
+      "rgba_sha256": "792736dce86cbed7217da60148a80c88dfaeaf25b06523e4b7819abcb2a58949",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        410,
+        22,
+        174,
+        176
+      ],
+      "margin": [
+        168,
+        148,
+        338,
+        336
+      ],
+      "source_anchor": [
+        498,
+        194
+      ],
+      "rgba_sha256": "1ee25979b255989ed6c35ec50f1e109fc7735393a81acae84215372ee806d238",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        606,
+        25,
+        178,
+        172
+      ],
+      "margin": [
+        168,
+        152,
+        334,
+        340
+      ],
+      "source_anchor": [
+        694,
+        193
+      ],
+      "rgba_sha256": "886a95c823ea763bffd414bc19acf628ba79283af866a8f90cd88b1433f88df8",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        806,
+        20,
+        171,
+        178
+      ],
+      "margin": [
+        170,
+        146,
+        341,
+        334
+      ],
+      "source_anchor": [
+        892,
+        194
+      ],
+      "rgba_sha256": "ae3cdc2eb8a95a4014d97416de5f537dbfe40f36cec8803448717dfd98b549be",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        1003,
+        22,
+        168,
+        174
+      ],
+      "margin": [
+        172,
+        150,
+        344,
+        338
+      ],
+      "source_anchor": [
+        1087,
+        192
+      ],
+      "rgba_sha256": "8506fd37641543f81da0cd782d562ec4830d89c0b95a58d71a2837e4c9bb9960",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1200,
+        23,
+        172,
+        174
+      ],
+      "margin": [
+        170,
+        150,
+        340,
+        338
+      ],
+      "source_anchor": [
+        1286,
+        193
+      ],
+      "rgba_sha256": "6d84309163f9324951c18345e2352a7b89951697dc4533f9783ffaa685b48ec2",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1396,
+        21,
+        171,
+        176
+      ],
+      "margin": [
+        169,
+        148,
+        341,
+        336
+      ],
+      "source_anchor": [
+        1483,
+        193
+      ],
+      "rgba_sha256": "5268643bef17a65ec8886050745da879d4f7ed3e6ee6305cbc8b29b35193c654",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        18,
+        220,
+        173,
+        176
+      ],
+      "margin": [
+        169,
+        148,
+        339,
+        336
+      ],
+      "source_anchor": [
+        105,
+        392
+      ],
+      "rgba_sha256": "99238d9fa53b901baf103feed73ffae341c1736de34baaa4749ddd3b7d0d841c",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        214,
+        220,
+        175,
+        176
+      ],
+      "margin": [
+        168,
+        148,
+        337,
+        336
+      ],
+      "source_anchor": [
+        302,
+        392
+      ],
+      "rgba_sha256": "71debcebf707c401bb26d9112810a03dacb89b43c580843c1251c219cdaa57ac",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        413,
+        225,
+        172,
+        171
+      ],
+      "margin": [
+        171,
+        153,
+        340,
+        341
+      ],
+      "source_anchor": [
+        498,
+        392
+      ],
+      "rgba_sha256": "d2a1f2e0fd8870c09481a3e9c55065b5cf0876f9a3db6c46858928f87aced408",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        607,
+        224,
+        174,
+        172
+      ],
+      "margin": [
+        169,
+        152,
+        338,
+        340
+      ],
+      "source_anchor": [
+        694,
+        392
+      ],
+      "rgba_sha256": "f1e605f2bfd0c40c59b06259db94fe392bb8f506e39bf9aecf3d7fdbf4d10ed1",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        805,
+        222,
+        173,
+        174
+      ],
+      "margin": [
+        169,
+        150,
+        339,
+        338
+      ],
+      "source_anchor": [
+        892,
+        392
+      ],
+      "rgba_sha256": "c92386dec79bfecab05a3e39ed2900449fece86432c7f7d4716fa667a7cf0731",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        1004,
+        224,
+        167,
+        171
+      ],
+      "margin": [
+        173,
+        153,
+        345,
+        341
+      ],
+      "source_anchor": [
+        1087,
+        391
+      ],
+      "rgba_sha256": "fdc21f51f0104ad267d8039343e78d0c92de2c7e893db3a752e6366df6cec6e6",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1200,
+        224,
+        172,
+        172
+      ],
+      "margin": [
+        170,
+        152,
+        340,
+        340
+      ],
+      "source_anchor": [
+        1286,
+        392
+      ],
+      "rgba_sha256": "bbacf0fa9d5b29e891361bac08faa1c50e4eeb042e4e735816f805a053b5b20f",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1399,
+        222,
+        170,
+        172
+      ],
+      "margin": [
+        172,
+        152,
+        342,
+        340
+      ],
+      "source_anchor": [
+        1483,
+        390
+      ],
+      "rgba_sha256": "e61702a9aeffe373a16902af6167a0f6042ddfb7716704822e53aa61b5d345c3",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        14,
+        424,
+        186,
+        166
+      ],
+      "margin": [
+        165,
+        158,
+        326,
+        346
+      ],
+      "source_anchor": [
+        105,
+        586
+      ],
+      "rgba_sha256": "2ff72af6a3a15238356a017c5a5f3e9931f0f4333412369a931f5c96edf0fcc0",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        211,
+        425,
+        187,
+        165
+      ],
+      "margin": [
+        165,
+        159,
+        325,
+        347
+      ],
+      "source_anchor": [
+        302,
+        586
+      ],
+      "rgba_sha256": "148533e08f8592b200c56543dc7c835518bf72242237d97e51eccf28d5dafc49",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        410,
+        432,
+        177,
+        158
+      ],
+      "margin": [
+        168,
+        166,
+        335,
+        354
+      ],
+      "source_anchor": [
+        498,
+        586
+      ],
+      "rgba_sha256": "8fb6b56ede4388c51e09d3f46bf779a6b8ce874c9256eb94936ae44aa7211ad7",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        598,
+        426,
+        188,
+        164
+      ],
+      "margin": [
+        160,
+        160,
+        324,
+        348
+      ],
+      "source_anchor": [
+        694,
+        586
+      ],
+      "rgba_sha256": "a301b59ac11e5a584528587e3c17d143b2a38adb7c2ea88a16cf3947da45cf32",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        796,
+        424,
+        185,
+        166
+      ],
+      "margin": [
+        160,
+        158,
+        327,
+        346
+      ],
+      "source_anchor": [
+        892,
+        586
+      ],
+      "rgba_sha256": "5f09993dbf68c5115b6e050c2a45360ddfee16be0b87c9da4409a11dde058d94",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        998,
+        425,
+        172,
+        164
+      ],
+      "margin": [
+        167,
+        160,
+        340,
+        348
+      ],
+      "source_anchor": [
+        1087,
+        585
+      ],
+      "rgba_sha256": "59c312c81d30c46fe29eff2fecc05eb2c94c1956876a1cb896f468b462ba36aa",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1199,
+        432,
+        173,
+        158
+      ],
+      "margin": [
+        169,
+        166,
+        339,
+        354
+      ],
+      "source_anchor": [
+        1286,
+        586
+      ],
+      "rgba_sha256": "13666eff59fed52bdff648b77fcaf72db70250bc6426df1307fcb6239d67c6c7",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1394,
+        425,
+        174,
+        166
+      ],
+      "margin": [
+        167,
+        158,
+        338,
+        346
+      ],
+      "source_anchor": [
+        1483,
+        587
+      ],
+      "rgba_sha256": "2d9137fbdc3caf7e7933fc9c4bd610a707b9cf11408804c713863f92f9158b41",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        23,
+        616,
+        168,
+        169
+      ],
+      "margin": [
+        174,
+        155,
+        344,
+        343
+      ],
+      "source_anchor": [
+        105,
+        781
+      ],
+      "rgba_sha256": "bfd7c370fa1a582454ba1ac9536647c73fa66350d7f6f0f4b49ba75ec1572f45",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        215,
+        624,
+        179,
+        161
+      ],
+      "margin": [
+        169,
+        163,
+        333,
+        351
+      ],
+      "source_anchor": [
+        302,
+        781
+      ],
+      "rgba_sha256": "e0e83b900c0b17ddd48fc09915484154f5fe003e96b11d2e0b8d9c4b8253eee2",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        416,
+        624,
+        169,
+        162
+      ],
+      "margin": [
+        174,
+        162,
+        343,
+        350
+      ],
+      "source_anchor": [
+        498,
+        782
+      ],
+      "rgba_sha256": "c5bb59a4dcdcb5e64897b983d157105beb334cea802742997aa7be613e45a041",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        605,
+        624,
+        176,
+        162
+      ],
+      "margin": [
+        167,
+        162,
+        336,
+        350
+      ],
+      "source_anchor": [
+        694,
+        782
+      ],
+      "rgba_sha256": "e95209b62d15bd250c3af06b133fe59f0e5a33037320ab831474231d6c866484",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        806,
+        616,
+        166,
+        169
+      ],
+      "margin": [
+        170,
+        155,
+        346,
+        343
+      ],
+      "source_anchor": [
+        892,
+        781
+      ],
+      "rgba_sha256": "551f85b0a4d7c54b3eac091110864527ac36d624e36a3c7b3eacbe4bb7afa7a5",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        1004,
+        622,
+        165,
+        158
+      ],
+      "margin": [
+        173,
+        166,
+        347,
+        354
+      ],
+      "source_anchor": [
+        1087,
+        776
+      ],
+      "rgba_sha256": "f55249aca47dd43913ab835f9345b28ffdcf7f2a7fc49bf4e127d452a685d6d8",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1198,
+        628,
+        178,
+        157
+      ],
+      "margin": [
+        168,
+        167,
+        334,
+        355
+      ],
+      "source_anchor": [
+        1286,
+        781
+      ],
+      "rgba_sha256": "433ce3bb909d5c473d281c26c4fc868574b31305922794bd70f44fcb9fad2c59",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1403,
+        621,
+        164,
+        164
+      ],
+      "margin": [
+        176,
+        160,
+        348,
+        348
+      ],
+      "source_anchor": [
+        1483,
+        781
+      ],
+      "rgba_sha256": "3bdf9a4851b5012b1cc083498c94126e1cf302cdb48a9bf0adb5d23aaa643ff6",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        17,
+        808,
+        182,
+        165
+      ],
+      "margin": [
+        168,
+        159,
+        330,
+        347
+      ],
+      "source_anchor": [
+        105,
+        969
+      ],
+      "rgba_sha256": "56723ed31d18e27918f9b03d67fab4bfc836aaf71c7b276dc81eec274d42961e",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        219,
+        814,
+        182,
+        158
+      ],
+      "margin": [
+        173,
+        166,
+        330,
+        354
+      ],
+      "source_anchor": [
+        302,
+        968
+      ],
+      "rgba_sha256": "dc358e707dca55aca188b46512bdcc32ba50af298de7288f7260056e2c2dbe65",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        418,
+        816,
+        160,
+        156
+      ],
+      "margin": [
+        176,
+        168,
+        352,
+        356
+      ],
+      "source_anchor": [
+        498,
+        968
+      ],
+      "rgba_sha256": "cd0a5cd0421997e469020ab1c657c5d1c54c7025272bbb68c915be548d824ace",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        595,
+        814,
+        183,
+        158
+      ],
+      "margin": [
+        157,
+        166,
+        329,
+        354
+      ],
+      "source_anchor": [
+        694,
+        968
+      ],
+      "rgba_sha256": "36553795621e32d70690dfbf427f4072039493a648c0d293f5bfa648f2459899",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        794,
+        809,
+        184,
+        164
+      ],
+      "margin": [
+        158,
+        160,
+        328,
+        348
+      ],
+      "source_anchor": [
+        892,
+        969
+      ],
+      "rgba_sha256": "078426c1f7d92445760ca64908165632e432e53b752849df61e9593858cf8123",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        997,
+        813,
+        175,
+        157
+      ],
+      "margin": [
+        166,
+        167,
+        337,
+        355
+      ],
+      "source_anchor": [
+        1087,
+        966
+      ],
+      "rgba_sha256": "8cdd131c4b2f0f7e3635a86e5195eda95704b8c2c9e9e10b8b46f77777b845f5",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        1199,
+        814,
+        169,
+        159
+      ],
+      "margin": [
+        169,
+        165,
+        343,
+        353
+      ],
+      "source_anchor": [
+        1286,
+        969
+      ],
+      "rgba_sha256": "7487d0e456982c9c20aaa01072811c08666c3aa8b37a24f9dae3a7d95d7dbbac",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1396,
+        809,
+        169,
+        163
+      ],
+      "margin": [
+        169,
+        161,
+        343,
+        349
+      ],
+      "source_anchor": [
+        1483,
+        968
+      ],
+      "rgba_sha256": "8f41ff31ed8de6ff348077acec3f389720451e734406e6ef25d781d5b865cf2e",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        157,
+        174,
+        214,
+        235
+      ],
+      "margin": [
+        237,
+        189,
+        458,
+        437
+      ],
+      "source_anchor": [
+        256,
+        405
+      ],
+      "rgba_sha256": "549b31d3ccae4dcd04cc123c8eb0ad15b89f2819bdceabbe6c9270c026bb7b17",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        140,
+        630,
+        240,
+        249
+      ],
+      "margin": [
+        220,
+        175,
+        432,
+        423
+      ],
+      "source_anchor": [
+        256,
+        875
+      ],
+      "rgba_sha256": "c05188348136885250bf4bf59e600f87812587e35ac9bf4ba3f0517f081a2040",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        639,
+        200,
+        351,
+        211
+      ],
+      "margin": [
+        207,
+        213,
+        321,
+        461
+      ],
+      "source_anchor": [
+        768,
+        407
+      ],
+      "rgba_sha256": "e2ca40eeaebdee57f79953af502d4818a8f7dfe3f0c99841ee2135a5ecdcd502",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        642,
+        650,
+        342,
+        236
+      ],
+      "margin": [
+        210,
+        188,
+        330,
+        436
+      ],
+      "source_anchor": [
+        768,
+        882
+      ],
+      "rgba_sha256": "6a5016d570cb32b10c7a451d1b8645ae8e9d8de3566689fe32cce424cf822958",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        1178,
+        175,
+        213,
+        236
+      ],
+      "margin": [
+        234,
+        188,
+        459,
+        436
+      ],
+      "source_anchor": [
+        1280,
+        407
+      ],
+      "rgba_sha256": "952eac54b70390050d73ba51c4ad7523343123bbb3f5a6d049567b0bf7957c02",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        1178,
+        652,
+        249,
+        220
+      ],
+      "margin": [
+        234,
+        204,
+        423,
+        452
+      ],
+      "source_anchor": [
+        1280,
+        868
+      ],
+      "rgba_sha256": "98d12743ec2b2b6849669ee9ec6b73ba9fe76c82ec868f6ecaf323ebe73f07b3",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        121,
+        157,
+        324,
+        291
+      ],
+      "margin": [
+        301,
+        258,
+        548,
+        581
+      ],
+      "source_anchor": [
+        256,
+        444
+      ],
+      "rgba_sha256": "6ee38d4c474963eb5aab19cd7b299b562e36055eb7ceb207a063c4897a23d224",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        99,
+        610,
+        348,
+        313
+      ],
+      "margin": [
+        279,
+        236,
+        524,
+        559
+      ],
+      "source_anchor": [
+        256,
+        919
+      ],
+      "rgba_sha256": "7586e0d738d99fb4ed7c95a64269a8643764fac52e2737013b8e20a65dfb0027",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        602,
+        146,
+        345,
+        329
+      ],
+      "margin": [
+        270,
+        220,
+        527,
+        543
+      ],
+      "source_anchor": [
+        768,
+        471
+      ],
+      "rgba_sha256": "6816983bd069336ca969cb0163c5f0f345e1adeb644a1a2e6509f3fbe4c105c2",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        567,
+        626,
+        403,
+        287
+      ],
+      "margin": [
+        235,
+        262,
+        469,
+        585
+      ],
+      "source_anchor": [
+        768,
+        909
+      ],
+      "rgba_sha256": "029df2ddda04b27613160b5a7b7de612ada8f89b7f2ac768085c59e217e4019b",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        1123,
+        151,
+        331,
+        298
+      ],
+      "margin": [
+        279,
+        251,
+        541,
+        574
+      ],
+      "source_anchor": [
+        1280,
+        445
+      ],
+      "rgba_sha256": "a4ef002f5f1c664e37eafdda2b6befa315c551231ef814268cbbca16f7759569",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        1110,
+        627,
+        338,
+        288
+      ],
+      "margin": [
+        266,
+        261,
+        534,
+        584
+      ],
+      "source_anchor": [
+        1280,
+        911
+      ],
+      "rgba_sha256": "731e260cd863e39256aef0dfdbf03e3fdca7b95008a3993e552a120935e67c2f",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        193,
+        233,
+        227,
+        217
+      ],
+      "margin": [
+        241,
+        167,
+        381,
+        391
+      ],
+      "source_anchor": [
+        256,
+        446
+      ],
+      "rgba_sha256": "c364ff7c36d696c2f3f45f0acb609ca1e596bcd2bb099050f3afcc0791b91336",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        179,
+        663,
+        235,
+        215
+      ],
+      "margin": [
+        227,
+        169,
+        373,
+        393
+      ],
+      "source_anchor": [
+        256,
+        874
+      ],
+      "rgba_sha256": "a5923e59efe3e69a1ffae6c6d2b0bf4e01087dce63158ac4da987fd67230e763",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        586,
+        268,
+        352,
+        183
+      ],
+      "margin": [
+        122,
+        201,
+        256,
+        425
+      ],
+      "source_anchor": [
+        768,
+        447
+      ],
+      "rgba_sha256": "c99c561b7f377f93bec61687e735425786bec28b079250c76e564d15080c299a",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        591,
+        680,
+        351,
+        200
+      ],
+      "margin": [
+        127,
+        184,
+        257,
+        408
+      ],
+      "source_anchor": [
+        768,
+        876
+      ],
+      "rgba_sha256": "1cc9692ae973ddaacd96c78a6e0bc0311ab6df53b78772b1ed7960257a447760",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        1147,
+        248,
+        225,
+        203
+      ],
+      "margin": [
+        171,
+        181,
+        383,
+        405
+      ],
+      "source_anchor": [
+        1280,
+        447
+      ],
+      "rgba_sha256": "01ba4f55b4dfe63e7640e2dbe16ea22d5b721b38aab0665028db885953c36c93",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        1128,
+        677,
+        260,
+        201
+      ],
+      "margin": [
+        152,
+        183,
+        348,
+        407
+      ],
+      "source_anchor": [
+        1280,
+        874
+      ],
+      "rgba_sha256": "e82903a49871bf75c72c86af3c6b13338ba77913bfc3162ab6e39300906dfdda",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        135,
+        197,
+        298,
+        274
+      ],
+      "margin": [
+        287,
+        240,
+        518,
+        542
+      ],
+      "source_anchor": [
+        256,
+        467
+      ],
+      "rgba_sha256": "cdc1356489f480545f18f15f48c03e4ea7a9698eefbefc18bf60d7465d720b91",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        134,
+        638,
+        288,
+        278
+      ],
+      "margin": [
+        286,
+        236,
+        528,
+        538
+      ],
+      "source_anchor": [
+        256,
+        912
+      ],
+      "rgba_sha256": "21c0cd28021c9b19421fbd550cd339a09127b7212012ef720b0b763320c8611b",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        603,
+        157,
+        306,
+        313
+      ],
+      "margin": [
+        243,
+        201,
+        510,
+        503
+      ],
+      "source_anchor": [
+        768,
+        466
+      ],
+      "rgba_sha256": "ac9530c7e19defe95eac853b7749d48277441a04fec139ba057503740a42f7f8",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        621,
+        606,
+        349,
+        307
+      ],
+      "margin": [
+        261,
+        207,
+        467,
+        509
+      ],
+      "source_anchor": [
+        768,
+        909
+      ],
+      "rgba_sha256": "df2eccc928bacadad3331abcf09077fff4afcce69c0eed0faa5a7b3bfab72c67",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1118,
+        204,
+        271,
+        267
+      ],
+      "margin": [
+        246,
+        247,
+        545,
+        549
+      ],
+      "source_anchor": [
+        1280,
+        467
+      ],
+      "rgba_sha256": "1376ea9c6c7f3848ccb431805be5fc50501d15e1b8e990b72b82ef0e83797393",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1114,
+        647,
+        294,
+        268
+      ],
+      "margin": [
+        242,
+        246,
+        522,
+        548
+      ],
+      "source_anchor": [
+        1280,
+        911
+      ],
+      "rgba_sha256": "f0f85c88e2a6fc41ff9116cd0302ae6470ae7f8b6535133610446d025210f396",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        20,
+        22,
+        172,
+        182
+      ],
+      "margin": [
+        180,
+        152,
+        356,
+        346
+      ],
+      "source_anchor": [
+        104,
+        200
+      ],
+      "rgba_sha256": "ee7dc3126a0a6bb400580fb1869b9bccd5efd146da0cfaf58b9b4a1d8c5e378e",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        212,
+        34,
+        179,
+        170
+      ],
+      "margin": [
+        176,
+        164,
+        349,
+        358
+      ],
+      "source_anchor": [
+        300,
+        200
+      ],
+      "rgba_sha256": "96e6c562d39072be431f5a7f4130cf338e8e2088e67f5d956f6922622659d253",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        411,
+        33,
+        174,
+        170
+      ],
+      "margin": [
+        177,
+        164,
+        354,
+        358
+      ],
+      "source_anchor": [
+        498,
+        199
+      ],
+      "rgba_sha256": "229ec63c4719abcd1edad4b61fbecb050180acd6550881a15461fada94bed1cf",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        608,
+        34,
+        174,
+        170
+      ],
+      "margin": [
+        176,
+        164,
+        354,
+        358
+      ],
+      "source_anchor": [
+        696,
+        200
+      ],
+      "rgba_sha256": "1ffffe88451a37c009c23cea7d9064adf25ea240a841e611e874f40757e10471",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        806,
+        18,
+        162,
+        186
+      ],
+      "margin": [
+        183,
+        148,
+        366,
+        342
+      ],
+      "source_anchor": [
+        887,
+        200
+      ],
+      "rgba_sha256": "04e74f742a9cc6e493a7669c55df8bf3339bd979762cee6f0d54c94ff7d26f1d",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        999,
+        30,
+        177,
+        174
+      ],
+      "margin": [
+        176,
+        160,
+        351,
+        354
+      ],
+      "source_anchor": [
+        1087,
+        200
+      ],
+      "rgba_sha256": "fb399869f9bdc510d59918c5515a5b28a239b9e18cca29af5d3d3da85bd81af2",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        1202,
+        30,
+        170,
+        174
+      ],
+      "margin": [
+        178,
+        160,
+        358,
+        354
+      ],
+      "source_anchor": [
+        1288,
+        200
+      ],
+      "rgba_sha256": "e54c20bb8df04c6319496343c1a3bdf1cb9a623483f360ccd17a2579c31ec4d8",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        1398,
+        24,
+        168,
+        180
+      ],
+      "margin": [
+        179,
+        154,
+        360,
+        348
+      ],
+      "source_anchor": [
+        1483,
+        200
+      ],
+      "rgba_sha256": "0b8c3734bdfc07d01c26344deb279b44bd33db105007d5fa6f1305aa7e6422b0",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        14,
+        234,
+        176,
+        166
+      ],
+      "margin": [
+        174,
+        168,
+        352,
+        362
+      ],
+      "source_anchor": [
+        104,
+        396
+      ],
+      "rgba_sha256": "67cdace44a29bec10874d870a840eec70b99bd68882570a56381ec699a906b3b",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        208,
+        233,
+        182,
+        168
+      ],
+      "margin": [
+        172,
+        166,
+        346,
+        360
+      ],
+      "source_anchor": [
+        300,
+        397
+      ],
+      "rgba_sha256": "69b0ace5d2de7cf066836b6671d03b72e97dccfb2622192390bd5db0fe2f06c3",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        408,
+        235,
+        179,
+        166
+      ],
+      "margin": [
+        174,
+        168,
+        349,
+        362
+      ],
+      "source_anchor": [
+        498,
+        397
+      ],
+      "rgba_sha256": "cd23c74229e9e57db34ba7fbccaff602b88c8b91c7fdfc5ce143b4a28492adca",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        606,
+        233,
+        180,
+        168
+      ],
+      "margin": [
+        174,
+        166,
+        348,
+        360
+      ],
+      "source_anchor": [
+        696,
+        397
+      ],
+      "rgba_sha256": "1dcfac0cf1c3208178cd7ccd374c758d48f147552d10d11d69af08e573bcaf2c",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        800,
+        234,
+        174,
+        168
+      ],
+      "margin": [
+        177,
+        166,
+        354,
+        360
+      ],
+      "source_anchor": [
+        887,
+        398
+      ],
+      "rgba_sha256": "5aab03ac4d2efe1dd4943eab07aee312ecb593f998e93758dc726a8ea663de9a",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        995,
+        236,
+        184,
+        166
+      ],
+      "margin": [
+        172,
+        168,
+        344,
+        362
+      ],
+      "source_anchor": [
+        1087,
+        398
+      ],
+      "rgba_sha256": "0d19ce90747ac86bb72b5abe4de0123f902b9307807ca9af152239f0c4ea48ac",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        1198,
+        236,
+        180,
+        165
+      ],
+      "margin": [
+        174,
+        169,
+        348,
+        363
+      ],
+      "source_anchor": [
+        1288,
+        397
+      ],
+      "rgba_sha256": "124da5d391bc086c6d70660c193e93ded51bc93443719284cd17e6fcd01968f4",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        1396,
+        233,
+        176,
+        168
+      ],
+      "margin": [
+        177,
+        166,
+        352,
+        360
+      ],
+      "source_anchor": [
+        1483,
+        397
+      ],
+      "rgba_sha256": "419c94e2c4750efe00cd494590f2a28e15baac2a91a984d03d8f82f7fe419030",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        12,
+        437,
+        183,
+        166
+      ],
+      "margin": [
+        172,
+        168,
+        345,
+        362
+      ],
+      "source_anchor": [
+        104,
+        599
+      ],
+      "rgba_sha256": "fc439cc7b4f4c408aa266afea1a40c409053b703ef8e855b99f7c94c27ef7078",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        208,
+        442,
+        189,
+        159
+      ],
+      "margin": [
+        172,
+        175,
+        339,
+        369
+      ],
+      "source_anchor": [
+        300,
+        597
+      ],
+      "rgba_sha256": "9a69b6022c15850818f42a0b043f0625a366809f7044500de478871d1ec0978f",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        408,
+        450,
+        184,
+        153
+      ],
+      "margin": [
+        174,
+        181,
+        344,
+        375
+      ],
+      "source_anchor": [
+        498,
+        599
+      ],
+      "rgba_sha256": "0dfa0661788e2511f9f5254cd9e09384ec72e49b163c27e16e19eda01d985ed4",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        607,
+        449,
+        183,
+        153
+      ],
+      "margin": [
+        175,
+        181,
+        345,
+        375
+      ],
+      "source_anchor": [
+        696,
+        598
+      ],
+      "rgba_sha256": "6cdfeb16afb063f8c60ea2805ea62befb76e11302ac8d409937987f4f08f9ddd",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        796,
+        431,
+        181,
+        171
+      ],
+      "margin": [
+        173,
+        163,
+        347,
+        357
+      ],
+      "source_anchor": [
+        887,
+        598
+      ],
+      "rgba_sha256": "add599533dc27cb9af695addec4c2ed5443c8cd6cfea56848dc03c309f0e13e2",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        991,
+        441,
+        188,
+        161
+      ],
+      "margin": [
+        168,
+        173,
+        340,
+        367
+      ],
+      "source_anchor": [
+        1087,
+        598
+      ],
+      "rgba_sha256": "429d8a461abf8c809e111465f82254729e62125550d4c8a8def4b944513d47af",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        1197,
+        450,
+        186,
+        152
+      ],
+      "margin": [
+        173,
+        182,
+        342,
+        376
+      ],
+      "source_anchor": [
+        1288,
+        598
+      ],
+      "rgba_sha256": "275a1f57f64012825a0da9f8b6a01b65ceedbe076605efd3110d4e9a930428ab",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        1400,
+        441,
+        170,
+        162
+      ],
+      "margin": [
+        181,
+        172,
+        358,
+        366
+      ],
+      "source_anchor": [
+        1483,
+        599
+      ],
+      "rgba_sha256": "39fc5f48058d37a150a5daedebb3642e332ded0bf9954f66701b24c7dcf74cae",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        10,
+        646,
+        185,
+        155
+      ],
+      "margin": [
+        170,
+        179,
+        343,
+        373
+      ],
+      "source_anchor": [
+        104,
+        797
+      ],
+      "rgba_sha256": "32e4275e051034eb67a8e10cfbdd065fd7a214fa29de5f24cc30e9ba5a39f495",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        206,
+        652,
+        189,
+        149
+      ],
+      "margin": [
+        170,
+        185,
+        339,
+        379
+      ],
+      "source_anchor": [
+        300,
+        797
+      ],
+      "rgba_sha256": "fb413fe85e475e7e26be2d29fc2f85ea5a0a9090b487624c9d7618c3b8cbd0bb",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        403,
+        657,
+        192,
+        147
+      ],
+      "margin": [
+        169,
+        187,
+        336,
+        381
+      ],
+      "source_anchor": [
+        498,
+        800
+      ],
+      "rgba_sha256": "49a2fa5c053ea7a5ce64b7b244f205731f2836b343a80d338fcb646145d87bc9",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        603,
+        653,
+        188,
+        150
+      ],
+      "margin": [
+        171,
+        184,
+        340,
+        378
+      ],
+      "source_anchor": [
+        696,
+        799
+      ],
+      "rgba_sha256": "345b82add5c036c47dfa5ebca9c0b0831da1b81825813846cde0cee8c78a4ddc",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        797,
+        648,
+        187,
+        157
+      ],
+      "margin": [
+        174,
+        177,
+        341,
+        371
+      ],
+      "source_anchor": [
+        887,
+        801
+      ],
+      "rgba_sha256": "c4b6f9c0b9740fc84b4e3ceec960e597f3a21f409f4eeb7a655cdda55957423f",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        991,
+        662,
+        194,
+        143
+      ],
+      "margin": [
+        168,
+        191,
+        334,
+        385
+      ],
+      "source_anchor": [
+        1087,
+        801
+      ],
+      "rgba_sha256": "de5d41bc5e252fa5eeefaef582ccff10a151c02adb36e7b26cf221841e67abeb",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        1191,
+        657,
+        193,
+        148
+      ],
+      "margin": [
+        167,
+        186,
+        335,
+        380
+      ],
+      "source_anchor": [
+        1288,
+        801
+      ],
+      "rgba_sha256": "34e120074ee0eaf609cd1b4fb642663991a9c90f2641880971c702f28da9f01a",
+      "sheet": 5
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        1389,
+        656,
+        188,
+        149
+      ],
+      "margin": [
+        170,
+        185,
+        340,
+        379
+      ],
+      "source_anchor": [
+        1483,
+        801
+      ],
+      "rgba_sha256": "5babea23c0532597c3e7e16144c2995d57010dcf6e1dd7b3d144f22e5c12c48a",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        11,
+        861,
+        188,
+        100
+      ],
+      "margin": [
+        171,
+        234,
+        340,
+        428
+      ],
+      "source_anchor": [
+        104,
+        957
+      ],
+      "rgba_sha256": "1e28f37df11d671f3a80d0516f79f8e67822169fac4e7a16fc9fc207d9aecb9d",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        207,
+        860,
+        191,
+        100
+      ],
+      "margin": [
+        171,
+        234,
+        337,
+        428
+      ],
+      "source_anchor": [
+        300,
+        956
+      ],
+      "rgba_sha256": "c3d9294abe975b7d70e2bdcfaa9e585396b6fffd0423b59133d5f4649bf5798c",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        406,
+        862,
+        187,
+        93
+      ],
+      "margin": [
+        172,
+        241,
+        341,
+        435
+      ],
+      "source_anchor": [
+        498,
+        951
+      ],
+      "rgba_sha256": "692303abc1eb6d116c92aaacbd36b798d097682e0839b0de44d9401eba876d08",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        601,
+        863,
+        190,
+        96
+      ],
+      "margin": [
+        169,
+        238,
+        338,
+        432
+      ],
+      "source_anchor": [
+        696,
+        955
+      ],
+      "rgba_sha256": "ea61790bc752c058e9dc2c42b7920328b9c3ac05489deee8b39115f04b29f33f",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        800,
+        861,
+        185,
+        97
+      ],
+      "margin": [
+        177,
+        237,
+        343,
+        431
+      ],
+      "source_anchor": [
+        887,
+        954
+      ],
+      "rgba_sha256": "9c9aeefaa9f9912d6e4a6a2f7e85cd239929750051b9fdcfdb9d3cadf521ff34",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        993,
+        861,
+        192,
+        98
+      ],
+      "margin": [
+        170,
+        236,
+        336,
+        430
+      ],
+      "source_anchor": [
+        1087,
+        955
+      ],
+      "rgba_sha256": "0242008b385ebc0a37c54862a476eba7822fa7b6f504a6d9ec2fc901895aed9d",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        1189,
+        860,
+        194,
+        99
+      ],
+      "margin": [
+        165,
+        235,
+        334,
+        429
+      ],
+      "source_anchor": [
+        1288,
+        955
+      ],
+      "rgba_sha256": "0d13429611e3d43fd9612bc41858746f2559c43db53b13af8fd86f0bba454803",
+      "sheet": 5
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        1387,
+        862,
+        190,
+        96
+      ],
+      "margin": [
+        168,
+        238,
+        338,
+        432
+      ],
+      "source_anchor": [
+        1483,
+        954
+      ],
+      "rgba_sha256": "961b9557f52d78abe294e154d67b2281243124d253a761f18b3d53b2eb979cb6",
+      "sheet": 5
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-0.png",
+          "sha256": "e0261a2c10a8c519f11b200d4d37b04f8d462e7efa9d7f15a88e9aec67345b05",
+          "size": [
+            1586,
+            992
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1
+      ],
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-0.png",
+          "sha256": "e0261a2c10a8c519f11b200d4d37b04f8d462e7efa9d7f15a88e9aec67345b05",
+          "size": [
+            1586,
+            992
+          ],
+          "canvas_size": [
+            512,
+            512
+          ],
+          "foot": [
+            256,
+            320
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        2,
+        3,
+        4
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-1.png",
+          "sha256": "fd4e7964beadfacdf8284806621c094d8d2498674172c73261be87c15c9e2b8c",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            672,
+            672
+          ],
+          "foot": [
+            336,
+            420
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "Independent static re-review of SE core crown-to-planted support landmarks, excluding raised/extended attack appendages: approximately 194 source pixels (+/-5), normalized core height73.905 at canvas672. Compared to primary72 normalized pixels; all six within4percent with manual uncertainty. This uses living core anatomy, not collapsed death height. Original fixed body-root X anchors and actual low support-contour Y reviewed in all104 normalized source images; do not recenter extended attack tentacle tips as body roots. No PNG edits; Main final scale/contact/combat remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-2.png",
+          "sha256": "56447ef5190082ce32892194e42964852008787ef5496c16cd25ded2b160624a",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            872,
+            872
+          ],
+          "foot": [
+            436,
+            545
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independent static re-review of S core crown-to-planted support landmarks, excluding raised/extended attack appendages: approximately 242 source pixels (+/-5), normalized core height71.046 at canvas872. Compared to primary72 normalized pixels; all six within4percent with manual uncertainty. This uses living core anatomy, not collapsed death height. Original fixed body-root X anchors and actual low support-contour Y reviewed in all104 normalized source images; do not recenter extended attack tentacle tips as body roots. No PNG edits; Main final scale/contact/combat remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-3.png",
+          "sha256": "163e3fc9106c5eb7759bfa8a12d8f857b4e883f4b09f42d04713dd587fb74b79",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "Independent static re-review of W core crown-to-planted support landmarks, excluding raised/extended attack appendages: approximately 169 source pixels (+/-5), normalized core height71.158 at canvas608. Compared to primary72 normalized pixels; all six within4percent with manual uncertainty. This uses living core anatomy, not collapsed death height. Original fixed body-root X anchors and actual low support-contour Y reviewed in all104 normalized source images; do not recenter extended attack tentacle tips as body roots. No PNG edits; Main final scale/contact/combat remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-4.png",
+          "sha256": "ec4c484a3719c8791f1c792919b3ff8fe897b380c41f1e0b132d04164725f3bf",
+          "size": [
+            1536,
+            1024
+          ],
+          "canvas_size": [
+            816,
+            816
+          ],
+          "foot": [
+            408,
+            510
+          ],
+          "directions_axis": "rows",
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Independent static re-review of N core crown-to-planted support landmarks, excluding raised/extended attack appendages: approximately 225 source pixels (+/-5), normalized core height70.588 at canvas816. Compared to primary72 normalized pixels; all six within4percent with manual uncertainty. This uses living core anatomy, not collapsed death height. Original fixed body-root X anchors and actual low support-contour Y reviewed in all104 normalized source images; do not recenter extended attack tentacle tips as body roots. No PNG edits; Main final scale/contact/combat remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-1.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-1.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-2.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-3.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-5.png",
+          "sha256": "db2a0d80e3055b360fb906b4b04aa19fee310c1d6979b2eea29ceff38654cc49",
+          "size": [
+            1585,
+            992
+          ],
+          "canvas_size": [
+            528,
+            528
+          ],
+          "foot": [
+            264,
+            330
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        0,
+        1
+      ],
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/greed_tentacle/poses-5.png",
+          "sha256": "db2a0d80e3055b360fb906b4b04aa19fee310c1d6979b2eea29ceff38654cc49",
+          "size": [
+            1585,
+            992
+          ],
+          "canvas_size": [
+            528,
+            528
+          ],
+          "foot": [
+            264,
+            330
+          ],
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows": [
+        2,
+        3,
+        4
+      ],
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "max_living_frame",
+  "display_reference_height": 98.19607843137256
+}

@@ -1,3 +1,9 @@
+## 최신 진행 · 2026-10-15 · batch25 신규2종 추가
+
+**380 → 382/498(76.7%) · 잔여116 · 이번재개누적신규8 · 개별Main8방향111종.** 텐타클·플라워 각104자세, 실제Main headless2,183/OpenGL2,411검사 실패0와별도독립시각검토 승인. 실제AI8방향·원래HP/무기 피격·사망·드랍·수동습득 PASS. 기존231보고서SHA보존+4(canonical235). [batch25증거·정확한판정범위](evidence/pr100-direction-fix/original-based/batch25/README.md). 기존자산/완료프로필/맵/게임코드교체0. 224실제캡처중12대표+전수표Git, 전체본문로컬만/전체SHA전달.
+
+직전 **`f2fc2046998d647db332babf674f605008f1749c` push확인**: 통합Godot·리소스·Android빌드/정적검사 SUCCESS, 전체애니메이션 진행중([관측JSON](evidence/pr100-direction-fix/original-based/batch25/checkpoint24-ci-runs.json)). Android실기기미검증. 이CI는380종SHA이며382종최신검증성공으로쓰지않는다. 다음소드/크랩/레버넌트독립검토·Main과보스/328/대지/쿠거제작을계속한다. main충돌미해결/미병합.
+
 ## 최신 진행 · 2026-10-15 · batch24 신규3종 추가
 
 **377 → 380/498(76.3%) · 잔여118 · 이번재개신규6 · 개별Main8방향109종.** 파도수호자·시커·화염전사 각104자세, 실제Main headless4,806/OpenGL5,146검사 실패0 및 별도독립시각판정 승인. 실제AI/마법투사체8방향·원래HP/무기 사망/드랍/수동습득 PASS. 기존225보고서SHA보존+신규6(canonical231). [batch24증거/판정범위/실패보존](evidence/pr100-direction-fix/original-based/batch24/README.md). 기존자산/완료프로필/맵/게임코드교체0. 336실제캡처 중18원본대표+전수검토표Git, 전체본문로컬만/전체SHA전달. 원본추출이아닌새2D작화다.

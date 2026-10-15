@@ -1,0 +1,3355 @@
+{
+  "schema": 1,
+  "source": "Newly authored from the existing target image; not recovered original animation",
+  "reference": {
+    "path": "res://assets/monsters/original/atlas_4.png",
+    "region": [
+      318,
+      308,
+      319,
+      309
+    ],
+    "kind": "existing_project_atlas",
+    "atlas": 4,
+    "cell": 5,
+    "identity_limit": "Existing project artwork, not verified external original game art",
+    "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+    "image_size": [
+      1274,
+      1234
+    ],
+    "region_rgba_sha256": "7851f235ee86d376e3e635b14a04efdcb80cbdd584290901126e254c586c02dc"
+  },
+  "target_keys": [
+    "monster:알비노 플라워"
+  ],
+  "presentation_to_preserve": {
+    "visual": {
+      "atlas": 4,
+      "cell": 5,
+      "body": "flower",
+      "variant": 3,
+      "width": 0.998,
+      "weapon": "sword",
+      "crest": 4,
+      "accent": "8daa7b"
+    },
+    "animation_profile": {
+      "motion_style": "slash",
+      "attack_hit_ratio": 0.44,
+      "floating": false
+    },
+    "attack_type": "melee",
+    "visual_height": 86
+  },
+  "target_references": {
+    "monster:알비노 플라워": {
+      "path": "res://assets/monsters/original/atlas_4.png",
+      "region": [
+        318,
+        308,
+        319,
+        309
+      ],
+      "kind": "existing_project_atlas",
+      "atlas": 4,
+      "cell": 5,
+      "identity_limit": "Existing project artwork, not verified external original game art",
+      "sha256": "a61ece92aeaa0dabd485fb724aa968cebb1dca4d6559cef50e26d62bf993f127",
+      "image_size": [
+        1274,
+        1234
+      ],
+      "region_rgba_sha256": "7851f235ee86d376e3e635b14a04efdcb80cbdd584290901126e254c586c02dc"
+    }
+  },
+  "target_presentations": {
+    "monster:알비노 플라워": {
+      "visual": {
+        "atlas": 4,
+        "cell": 5,
+        "body": "flower",
+        "variant": 3,
+        "width": 0.998,
+        "weapon": "sword",
+        "crest": 4,
+        "accent": "8daa7b"
+      },
+      "animation_profile": {
+        "motion_style": "slash",
+        "attack_hit_ratio": 0.44,
+        "floating": false
+      },
+      "attack_type": "melee",
+      "visual_height": 86
+    }
+  },
+  "sharing_rule": "Exact original bytes/dimensions and rendered presentation. Each external portrait path is independently hash-checked; only unused fallback ornaments and byte-identical file/binding names may differ. Project atlas references remain strict.",
+  "authoring_instructions": "{\n  \"attack-E-SE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 E=trueRIGHT profile, mouth/tonguepointsRIGHT. COLUMN2 SE=frontRIGHT, mouthdiagonallydown-right. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-E-SE-spaced-exact-prompt.txt\": \"EDIT THE ATTACHED EXISTING SIX-POSE FLOWER SPRITE SHEET. Keep exactly these six already-articulated complete creature poses, characterdesign, colors, rootshapes, tongue, camera and2columns×3rows ordering. This is a SPACING CORRECTION. Repack allsix at much SMALLER SAMEUNIFORM SCALE inside MUCH LARGER CLEAN EMPTY TRANSPARENT GUTTERS. Wholebody INCLUDING extendedtongue andallroots MUST occupy atmost35%cellwidth and40%cellheight. Think tiny stickers incenter ofhugeblankcells. Atleast120fullytransparentpixels HORIZONTALLY betweencompletebody BOUNDINGBOXES and80pixels VERTICALLY, pluslargeoutermargin. No root/tongue boundingrectangle may include evenonepixel from anotherpose. No pose overlaps orcellintrusion. OutputactualRGBAtransparency, everybackgroundpixelalpha0; opaque bodyinteriors and narrowantialiasededgesonly, no brown/pinkhaze/matte/floor/shadow. Keep every body part, nevertrim/shortenrootortongue. Preserveoriginal2columns×3rows, no extraoromittedpose. No labels/grid. Eachphase differentanatomicalpose stays unchanged.\\nColumnsare E-SE. Row1windup,row2contactlungesouttowardfacing,row3recovery. Preserve fixedcompassorientationineachcolumn.\\n\",\n  \"attack-N-NE-backfix-exact-prompt.txt\": \"EDIT THIS EXISTING 2COLUMN×3ROW SIX-POSE ATLAS. Exactsamecarnivorousalbino-flowerdesign, articulatedroots, ivoryredveinedpetals, greenrearsepals, bodyshape andsourcecolors. Correct ONLY the WRONGFRONTALFACING in MIDDLECONTACTROW: bothmiddlefigures wronglyturnmouth/teeth/tonguetowardviewer. ALLSIXfigures MUST stayBACKFACING, asalreadycorrectintopandbottomrows. LEFTCOLUMN N fullBACK facingAWAY/up: onlygreenrearsepals andbackofpalepetalsvisible, NOfrontmouth/teeth/tongue. RIGHTCOLUMN NE BACK-RIGHT: mostlyrear/greenssepals, NO frontal mouth. Middlecontactphase must clearlyLUNGEHEADAWAY/UP fromgroundedrootbase, stalkbendingforwardAWAY ratherthanrotatingtorso tofacecamera. Rearhead canforeshorten/squashintoawaybite; far-sidemouthisoccludedbyrearpetals. Topwindup stalkcoilstowardcamera, middlecontactreachesaway, bottomrecoveryretracts. Everyrootlimb/tongueremainsattached, nothingremovedfrombodyexceptfrontmouthiscorrectlyhiddenbyrearview. Exactlysixcompletebodies2cols3rows, no extra. ALSO repacksmallerwithhugeemptytransparentgutters: fullbodymax35%cellwidth40%cellheight,100pxgapsinbothaxes. TrueRGBAbackgroundalpha0, no floor/shadow/haze/matte/grid/text. Finaloutputsame2Dpaintedcreature, no redesign.\\n\",\n  \"attack-N-NE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 N=fullBACK,NO frontmouth/teeth/tongue,greenrearsepalsandpale rearpetals. COLUMN2 NE=rearRIGHT, showgreenbackandrearpetals,NO frontface. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-S-SW-facingfix-exact-prompt.txt\": \"EDIT THIS EXACT2COLUMN×3ROW SIX-POSE FLOWERATTACKATLAS. Preservecreaturedesign,rootanatomy,petals,teeth,tongue,allmotionposes. LEFTCOLUMNisSfullFRONT inEVERYrow;RIGHTCOLUMNisSW FRONT-LEFT inEVERYrow, head/mouthalwayspointsdownLEFT withtonguereachLEFT. TOPRIGHTWINDUPcurrentlyfacesRIGHTandmustbecorrectedtoFRONTLEFT. Keep itcoiledbackforwindup butfaceandjawstillpointLEFT, neverrotateheadtowardright. Middlecontact headlungesouttowarditsfacingdirectionleft/downleft;bottomrecoveryretractswithsamedirection. Keep rootedbaseattachedandgroundedallphases. Exactlysixcompletebodies2cols3rows. Also repackatsmallersameuniformscale withHUGEtransparentgutters: fullbodyincludingallrootsandtonguemax35%cellwidth40%cellheight,atleast120horizontal80verticaltransparentpixelsbetweenwholebodyBOUNDINGBOXES,wideouterborder. Allbackgroundalpha0,no haze/matte/floor/shadow/particles/labels/grid. No removedbodypartsorcroppedtips.\\n\",\n  \"attack-S-SW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 S=fullFRONT mouth/teeth/tonguefacingviewer. COLUMN2 SW=frontLEFT, mouthdiagonallydown-left. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-W-NW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 3 ROWS = EXACTLY6wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 W=trueLEFTprofile, mouth/tonguepointsLEFT. COLUMN2 NW=rearLEFT, showgreenrearsepalsandpale rearpetals,NO frontmouth. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 bitewindup stalkcoilsBACK, jawtenses tonguecoilsin. ROW2 CONTACT flowerheadlunges OUTINEXACTFACINGDIRECTION, jawswide teethandtongue reachoutahead, stalkbendsbutstaysattachedtobracedgroundedroots. ROW3 RECOVERY headretracts jawpartlycloses tonguefoldsback rootsrelax. Threeclearlydifferentbody/stalk/rootposes, no detached projectile/effect.\\n\",\n  \"attack-W-NW-spaced-exact-prompt.txt\": \"EDIT THE ATTACHED EXISTING SIX-POSE FLOWER SPRITE SHEET. Keep exactly these six already-articulated complete creature poses, characterdesign, colors, rootshapes, tongue, camera and2columns×3rows ordering. This is a SPACING CORRECTION. Repack allsix at much SMALLER SAMEUNIFORM SCALE inside MUCH LARGER CLEAN EMPTY TRANSPARENT GUTTERS. Wholebody INCLUDING extendedtongue andallroots MUST occupy atmost35%cellwidth and40%cellheight. Think tiny stickers incenter ofhugeblankcells. Atleast120fullytransparentpixels HORIZONTALLY betweencompletebody BOUNDINGBOXES and80pixels VERTICALLY, pluslargeoutermargin. No root/tongue boundingrectangle may include evenonepixel from anotherpose. No pose overlaps orcellintrusion. OutputactualRGBAtransparency, everybackgroundpixelalpha0; opaque bodyinteriors and narrowantialiasededgesonly, no brown/pinkhaze/matte/floor/shadow. Keep every body part, nevertrim/shortenrootortongue. Preserveoriginal2columns×3rows, no extraoromittedpose. No labels/grid. Eachphase differentanatomicalpose stays unchanged.\\nColumnsare W-NW. Row1windup,row2contactlungesouttowardfacing,row3recovery. Preserve fixedcompassorientationineachcolumn.\\n\",\n  \"attack-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by THREE rows = TWENTY-FOUR complete separated plant bodies. ROW1 melee bite windup: stalk coils BACK away from its facing direction, jaws tense and tongue curls toward mouth; rooted base remains supported. ROW2 real attack CONTACT: whole flowerhead lunges outward IN THE EXACT FACING DIRECTION, mouth opens wide and teeth/tongue reach the target area ahead of its own roots, stalk bends forward but stays physically connected to grounded roots. Side directions must visibly reach right/left, north reaches AWAY/up showing rear petals rather than facing viewer. ROW3 actual recovery: stalk retracts, jaws partly close, tongue curls back, roots brace below. Three different clearly articulated attack phases in every compass direction. No external bite effect, no detached projectile, no new weapon or rootless floating head.\\n\",\n  \"attack-v2-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most30percent of cell width and35percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by THREE rows = TWENTY-FOUR complete separated plant bodies. ROW1 melee bite windup: stalk coils BACK away from its facing direction, jaws tense and tongue curls toward mouth; rooted base remains supported. ROW2 real attack CONTACT: whole flowerhead lunges outward IN THE EXACT FACING DIRECTION, mouth opens wide and teeth/tongue reach the target area ahead of its own roots, stalk bends forward but stays physically connected to grounded roots. Side directions must visibly reach right/left, north reaches AWAY/up showing rear petals rather than facing viewer. ROW3 actual recovery: stalk retracts, jaws partly close, tongue curls back, roots brace below. Three different clearly articulated attack phases in every compass direction. No external bite effect, no detached projectile, no new weapon or rootless floating head.\\n\\nUse large square2048×2048 canvas for24SMALLBODIES. Every complete root/flower lunge stays withinCENTER30%ofcellwidth35%cellheight. Keep at least80fullytransparentpixels between allbodies, especially longcontacttongues. Background is EXACTZEROALPHA, no translucentpink/brownmatte orfog. Opaque painted bodies with narrowantialias edges only.\\n\",\n  \"hit-death-E-SE-S-SW-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: E PURE RIGHT profile, flower mouth pointsRIGHT, SE front-right, mouth diagonaldown-right, S FULL FRONT, open toothed mouth towardviewer, SW front-left, mouth diagonaldown-left. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 hit recoil: head/stalk bendBACK opposite facing, petalscrumple, rootsbrace. ROW2 hitrecovery: head/stalk straightenpartway andpetalsreopen, genuinelydifferent root/flowerpose. ROW3 deathstage1: rootsbuckle, stalkbends sharplydown andhead droops. ROW4 deathstage2: WHOLE attachedplant falls sideways towardground, rootsfold andcompress beneath droopingstalk andhead. ROW5 FINALDEATH: LOW FLAT GROUNDED WILTED COMPLETE CORPSE. Flowerhead lies sideways flat andlimptongue staysattached; stalk andall rootlimbs crumple together onground. No standing corpse/crouch, no detachedparts, no emptytiles. All5phases inall4directions; preserve rearviews onfallenbodies, no frontal mouth everywhere.\\n\",\n  \"hit-death-E-SE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 E=trueRIGHT profile, mouth/tonguepointsRIGHT. COLUMN2 SE=frontRIGHT, mouthdiagonallydown-right. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-N-NE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 N=fullBACK,NO frontmouth/teeth/tongue,greenrearsepalsandpale rearpetals. COLUMN2 NE=rearRIGHT, showgreenbackandrearpetals,NO frontface. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-S-SW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 S=fullFRONT mouth/teeth/tonguefacingviewer. COLUMN2 SW=frontLEFT, mouthdiagonallydown-left. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-W-NW-N-NE-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: W PURE LEFT profile, flower mouth pointsLEFT, NW back-left, rear green sepals, NO frontmouth, N FULL BACK, rear green sepals andpale rearpetals, NO teeth/tonguefront, NE back-right, rear green sepals, NO frontmouth. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 hit recoil: head/stalk bendBACK opposite facing, petalscrumple, rootsbrace. ROW2 hitrecovery: head/stalk straightenpartway andpetalsreopen, genuinelydifferent root/flowerpose. ROW3 deathstage1: rootsbuckle, stalkbends sharplydown andhead droops. ROW4 deathstage2: WHOLE attachedplant falls sideways towardground, rootsfold andcompress beneath droopingstalk andhead. ROW5 FINALDEATH: LOW FLAT GROUNDED WILTED COMPLETE CORPSE. Flowerhead lies sideways flat andlimptongue staysattached; stalk andall rootlimbs crumple together onground. No standing corpse/crouch, no detachedparts, no emptytiles. All5phases inall4directions; preserve rearviews onfallenbodies, no frontal mouth everywhere.\\n\",\n  \"hit-death-W-NW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 W=trueLEFTprofile, mouth/tonguepointsLEFT. COLUMN2 NW=rearLEFT, showgreenrearsepalsandpale rearpetals,NO frontmouth. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 hitRECOIL: head/stalkbendsBACK andpetalscrumple rootsbrace. ROW2 hitRECOVERY: partlystraighteningstalk anddifferentpetal/rootpose. ROW3 death1 ROOTSBUCKLE stalkdroops headbendsdown. ROW4 death2 entireattachedplantFALLSSIDEWAYS towardground rootsfoldbeneathstalk/head. ROW5 FINALDEATH LOWFLATGROUNDED COMPLETEWILTEDCORPSE: flowerheadliesflat sideways; limpattachedtongue/stalk/rootlimbscrumpledcompleteonground. NOTSTANDING,notcrouching,noremovedparts,noemptytile. Preservecompass: rearcorpse showsrearsepals/backpetals, notfrontmouth.\\n\",\n  \"hit-death-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by FIVE rows = FORTY complete separated plant bodies. ROW1 hit recoil: flowerhead and stalk bend BACK opposite facing direction, petals crumple inward, supporting roots brace on ground. ROW2 hit recovery: head returns partway upright and petals reopen with a genuinely different stalk/root posture. ROW3 death stage1: woody rootlimbs buckle, stalk bends sharply down and flowerhead droops, tongue limp but attached. ROW4 death stage2: entire attached plant falls sideways toward ground, roots fold and compress under drooping stalk and flowerhead. ROW5 FINAL DEATH: LOW FLAT GROUNDED wilted complete corpse, cream flowerhead lying on side with teeth and limp tongue still attached, stalk and all woody roots crumpled together on ground. Final corpse must NOT stand upright, NOT be a living crouch, NOT be an empty tile or isolated detached petals. Keep every original body part attached and visible in a safe generously spaced cell. Each death progression visibly changes the complete body pose. Preserve all8compass orientations across fallen bodies; rear deaths show rear sepals and petals, not frontmouth copied everywhere.\\n\",\n  \"idle-walk-E-SE-S-SW-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: E PURE RIGHT profile, flower mouth pointsRIGHT, SE front-right, mouth diagonaldown-right, S FULL FRONT, open toothed mouth towardviewer, SW front-left, mouth diagonaldown-left. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 idle neutral, jaws slightly open and supporting rootclusters planted. ROW2 genuinely different breathing: stalk curves andpetals/tongue flex with rootsanchored. ROW3 rootcrawlA: one rootbundle reaches forward while opposite roots pushback, stalk leans forward. ROW4 passing: reaching rootjoints fold under stalk, rear roots pullthrough visibly bent. ROW5 rootcrawlB: OPPOSITE rootbundle reachesforward and former reaching roots pushback, withdifferent rootjoint shapes andoverlaps. Actual articulated rootmotion, not bodytranslation/rotation or petalonlysway. Roots are attached and some roottoes supportground in everyphase.\\n\",\n  \"idle-walk-E-SE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and FIVE ROWS, exactly TEN whole plant figures on a PORTRAIT1024×1536canvas. This is NOT a full8direction sheet. Make each wholeplant includingALLroots fit the CENTER40%ofits512pixelwide cell andCENTER60%ofits307pixelhighcell. Thus fullbody max200pixelswide and180pixelshigh. Atleast100transparentpixels HORIZONTALLY between allfigures and60pixels VERTICALLY. Place figures on exactequal2×5gridcenters. Keep wideblankouterborder. Do not makefiguresfillcells. ONLY ALPHA-TRANSPARENT emptybackground: removeALLpink/brownbackgroundhaze,fog,matte,groundandsoftshadow. Everypixeloutsidebodycontourisalpha0; bodyisopaque paintedcutout, antialiasnarrowedgesonly. Eachbody isONE visiblyconnectedcreature; thickconnectedroots, no separatedrootfragments orparticles.\\nCOLUMN1 E=trueRIGHTsideprofile, mouth/toestalktowardRIGHT. COLUMN2 SE=front-right, mouthpointingdiagonallydown-right. These twodirectionsstayexactlyfixedintheircolumn throughall5rows.\\nROW1 neutralidle. ROW2 visiblydifferentstalkbend/petal/tonguebreathing withrootsplanted. ROW3 rootcrawlA: onegroupofrootsreachesforwardwhileoppositerootspushback. ROW4 passing: rootjointsfoldunderstalkandpullthrough, visiblydifferentkneelikebends. ROW5 rootcrawlB: oppositegrouprootsreachesforwardwhileformerreachingrootspushback. Everyphasechangesactualrootjointpositions/overlaps; nobodyslidingortranslatedstill. Rootcontactsupportsthebodyoneverystep; noprintedfloorline. Preserve completeblossom,pinktongue,stalkandallrootlimbs; deepmouthonlyonfront/sideviews, neverback.\\n\",\n  \"idle-walk-N-NE-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and FIVE ROWS, exactly TEN whole plant figures on a PORTRAIT1024×1536canvas. This is NOT a full8direction sheet. Make each wholeplant includingALLroots fit the CENTER40%ofits512pixelwide cell andCENTER60%ofits307pixelhighcell. Thus fullbody max200pixelswide and180pixelshigh. Atleast100transparentpixels HORIZONTALLY between allfigures and60pixels VERTICALLY. Place figures on exactequal2×5gridcenters. Keep wideblankouterborder. Do not makefiguresfillcells. ONLY ALPHA-TRANSPARENT emptybackground: removeALLpink/brownbackgroundhaze,fog,matte,groundandsoftshadow. Everypixeloutsidebodycontourisalpha0; bodyisopaque paintedcutout, antialiasnarrowedgesonly. Eachbody isONE visiblyconnectedcreature; thickconnectedroots, no separatedrootfragments orparticles.\\nCOLUMN1 N=fullBACK, NO frontmouth/teeth/tongue, showgreenrear sepalsandpale rearpetals. COLUMN2 NE=rear-right, chieflygreenbackandrearpetals, neverfrontface. These twodirectionsstayexactlyfixedintheircolumn throughall5rows.\\nROW1 neutralidle. ROW2 visiblydifferentstalkbend/petal/tonguebreathing withrootsplanted. ROW3 rootcrawlA: onegroupofrootsreachesforwardwhileoppositerootspushback. ROW4 passing: rootjointsfoldunderstalkandpullthrough, visiblydifferentkneelikebends. ROW5 rootcrawlB: oppositegrouprootsreachesforwardwhileformerreachingrootspushback. Everyphasechangesactualrootjointpositions/overlaps; nobodyslidingortranslatedstill. Rootcontactsupportsthebodyoneverystep; noprintedfloorline. Preserve completeblossom,pinktongue,stalkandallrootlimbs; deepmouthonlyonfront/sideviews, neverback.\\n\",\n  \"idle-walk-S-SW-facingfix-exact-prompt.txt\": \"EDIT THIS EXISTING2COLUMN×5ROW TEN-POSE FLOWERATLAS. Keep alltencompleteattachedflower/rootposes,exactcharacterdesign,ivoryredveinedpetals,deepmouth,teeth,tongue,greenstalkandrootlimbs. Fix directioncontinuity: LEFTCOLUMNisS FULLFRONT inALL5rows, mouthcenterfacingviewer. RIGHTCOLUMNisSW FRONT-LEFT inALL5rows: mouth/headalwayspointsdiagonallyLOWERLEFT, tongueprojectsleft/downleft, neverright. Inparticular TOPRIGHTFIGURE currentlyfacesRIGHT whichisWRONG; repaintthatfigureasfrontLEFT breathingidleneutral withoutmirroringpixels, sameanatomyandscale. Do notturnrecovery/stepbacktowardright. Rowsneutralidle,breathingidle,rootcrawlA,rootpassing,OPPOSITErootcrawlB withgenuine rootjointchanges. Preserveallrootsattachedandgroundcontact. Keep exactly2columns5rows10poses andallmotionphases. Repacksmallerwithlargeemptyalphagutters,completefiguresmax40%cellwidth55%cellheight,100pxhorizontal60pxverticalgaps,largeoutermargin. EVERYBACKGROUNDPIXELalpha0, nobrown/pinkmatte,haze,ground,shadow,labelsorgrid. Do not remove/change sourcefeaturesorbodyparts.\\n\",\n  \"idle-walk-S-SW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 S=fullFRONT mouth/teeth/tonguefacingviewer. COLUMN2 SW=frontLEFT, mouthdiagonallydown-left. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 neutralidle. ROW2 differentstalk/petal/tonguebreathing rootsplanted. ROW3 rootcrawlA one rootbundle reachesforward opposite roots pushback. ROW4 passing rootsfold under stalk andpullthroughwithdifferentbends. ROW5 rootcrawlB OPPOSITEbundle reachesforward formerroots pushback. Differentrootjointposes/overlaps, nottranslatedstill.\\n\",\n  \"idle-walk-W-NW-N-NE-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nCRITICAL ALPHA: outside each body outline every pixel must be fully transparentalpha0, NOT translucent brown/red fog or a soft matte. Body interiors are solid opaquealpha255 with only a narrow antialiased silhouette edge. No tinted screen, no gradient, no diffuse shadow around roots. Keep the character deliberately TINY: each whole body including all roots and tongue fits the CENTER35%cellwidth and40%cellheight, leaving huge empty gutters. Do not fill the cells. Use a PORTRAIT1024×1536canvas with FOUR columns andFIVE rows. Each row has exactly4complete bodies. Total exactly20bodies, never add a fifth column or sixth row.\\nCOLUMN DIRECTIONS LEFT TO RIGHT, unchanged in EVERYrow: W PURE LEFT profile, flower mouth pointsLEFT, NW back-left, rear green sepals, NO frontmouth, N FULL BACK, rear green sepals andpale rearpetals, NO teeth/tonguefront, NE back-right, rear green sepals, NO frontmouth. Trueopposite views, not horizontalflips. Fixed elevatedisometriccamera andsameanatomy/proportions in everypose.\\nROW1 idle neutral, jaws slightly open and supporting rootclusters planted. ROW2 genuinely different breathing: stalk curves andpetals/tongue flex with rootsanchored. ROW3 rootcrawlA: one rootbundle reaches forward while opposite roots pushback, stalk leans forward. ROW4 passing: reaching rootjoints fold under stalk, rear roots pullthrough visibly bent. ROW5 rootcrawlB: OPPOSITE rootbundle reachesforward and former reaching roots pushback, withdifferent rootjoint shapes andoverlaps. Actual articulated rootmotion, not bodytranslation/rotation or petalonlysway. Roots are attached and some roottoes supportground in everyphase.\\n\",\n  \"idle-walk-W-NW-narrow-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nABSOLUTE LAYOUT: ONLY TWO COLUMNS and 5 ROWS = EXACTLY10wholebodies. PORTRAIT1024×1536canvas. Equalgridcells; eachWHOLEflower+allroots+fullextendedtongue fitsCENTER45%cellwidth and60%cellheight. Sparsecutouts withHUGEemptyalphagutters: at least100pixels horizontal and50pixels vertical betweencompletebodies. Largeoutermargin. DONTFILLTHECELLS. Entirebody includingeveryroot/tooth/tongue/leaf stayssafelyinsideitscell.\\nCRITICAL ALPHA: COMPLETELYTRANSPARENT emptybackground, no brown/pinkhaze/matte, nofloor/shadow, nofilterglow. Opaquebodypaintedpixels withonlynarrowantialiasededges. EverybodyONECONNECTEDPLANT: thickattachedrootbranches, no detachedfragments/particles. Samebodysize/headstalkrootproportions inallcells. Rootsupportcontactstable; minimalwholebodybob.\\nCOLUMN1 W=trueLEFTprofile, mouth/tonguepointsLEFT. COLUMN2 NW=rearLEFT, showgreenrearsepalsandpale rearpetals,NO frontmouth. Theseexactdirectionsstayintheircolumn inEVERYrow. Independentlypaintoppositesides; nohorizontalclones.\\nROW1 neutralidle. ROW2 differentstalk/petal/tonguebreathing rootsplanted. ROW3 rootcrawlA one rootbundle reachesforward opposite roots pushback. ROW4 passing rootsfold under stalk andpullthroughwithdifferentbends. ROW5 rootcrawlB OPPOSITEbundle reachesforward formerroots pushback. Differentrootjointposes/overlaps, nottranslatedstill.\\n\",\n  \"idle-walk-exact-prompt.txt\": \"Create new independently articulated production2D isometric RPG animation sprites of the EXACT attached carnivorous ALBINO FLOWER. The attachment is a literal fullbody-context crop from the existing project atlas; use its actual appearance, not a generic flower. Preserve the huge ivory/cream blossom with pink-red branching veins and curling pointed layered petals, deep dark tooth-lined central mouth, two arcs of long pale yellow teeth and long attached pink tongue, short tangled green-brown vine stalk beneath, and the same several broad BRANCHED WOODY ROOT LIMBS with fine connected root toes. No human body, legs, boots, hands, weapons, stem pot, new eyes, new face, new colors or added detached particles. All petals, tongue, root toes and main rootlimbs stay attached as ONE complete articulated creature. Grounded plant: the lower supporting root tips stay on the same consistent groundplane. Do not levitate or add a shadow.\\n\\nTransparent RGBA SPRITE ATLAS ONLY, no background, no floor, no shadows, no halo, no labels, no lettering, no grid. Full character and all tongue/root extensions must be very SMALL within equal grid cells: at most40percent of cell width and45percent of cell height. At least60clear transparent pixels between neighboring complete bodies, large outer transparent margin. No clipped petal/root/tongue tip; never overlap another figure. Fixed slightly elevated isometric camera, identical character anatomy and scale in every cell. Detailed painted2D style from the attached source. Actual new joint/root/stalk/petal articulation for EVERY pose, not translated, rotated, mirrored or recolored copies of a still.\\n\\nEXACT EIGHT COLUMNS with canonical compass directions from LEFT to RIGHT: E=PURE RIGHT profile, SE=front-right, S=full FRONT facing viewer/screen down, SW=front-left, W=PURE LEFT profile, NW=BACK-left, N=full BACK facing away/screen up, NE=BACK-right. Columns keep exactly the same direction in every row. Front views show the open toothed mouth and pink tongue toward the viewer; BACK views show the green sepal back and rear pale petals, with NO front mouth/teeth/face pasted on the back. Side profiles point the flower mouth and tongue to their facing side. Opposite profiles are independently painted true opposite views, not pixel-flipped stills. Every row contains all8different views exactly once, no omitted or extra direction.\\n\\nEXACTLY EIGHT columns by FIVE rows = FORTY complete separated plant bodies. Landscape or square atlas with large transparent gutters. ROW1 idle neutral, jaws slightly open and supporting root clusters planted. ROW2 genuinely different gentle breathing: stalk softly bends, petals and attached tongue flex, root toes grip ground; no rootbase translation. ROW3 root-crawl phaseA: one group of woody roots reaches ahead in facing direction while opposite roots push behind; stalk leans forward slightly. ROW4 root-crawl passing: reaching root joints fold under the stalk, rear roots pull through with altered bends and ground support. ROW5 root-crawl phaseB: the opposite root group now reaches forward, former reaching roots push back, with clearly DIFFERENT ROOT JOINT SHAPES and root overlap below the stalk. These are three distinct organic root locomotion phases, not three body translations or petal sways. Keep complete attached roots and flowerhead in every cell.\\n\"\n}\n\nINDEPENDENT CORRECTION EXACT ISSUED PROMPTS:\n{\n  \"prompt-idle-correction.txt\": \"Create a focused DIRECTION CORRECTION of the attached existing albino carnivorous flower animation sheet. Preserve the exact source creature and existing quality: huge IVORY/cream layered curling flower petals with pink/red branching veins, dark toothed central mouth with two arcs of pale yellow pointed teeth, long attached pink tongue, tangled green/brown short stalk, and the same broad branching woody ROOT LIMBS and connected fine roottoes. Source image is authoritative for design. No added eyes, human body, new legs, feet, weapons, props, pot, beams or magic. This is a GROUNDED MELEE BITE flower: all root support tips remain on a common implied groundplane, stalk/root/body continuously attached, no levitation, no detached body parts.\\nPreserve detailed handpainted 2D game style, compact head/root proportions, fixed slightly elevated isometric camera and original cream/pink/green/brown palette. Actual root, stalk, petal and tongue articulation in each phase; never the same shifted/scaled/mirrored still. All attached body parts and roottoes fully visible in each cell.\\nOutput a sparse true TRANSPARENT RGBA atlas, NO background, floor, shadow, haze, aura, particles, text or grid. Make figures safely SMALL within equal cells with enormous transparent gutters and safe outermargin. Complete silhouettes including extendedtongue/roots must not enter another cell or intersect any other figure boundingrectangle. No cropped tip, erased body part, missing frame or added pose.\\nEXACTLY TWO COLUMNS x FIVE ROWS =10 complete poses on PORTRAIT1024x1536 canvas. Leftcolumn is S direct FRONT toward viewer/screenDOWN in ALL5rows. Rightcolumn is SW FRONT-LEFT toward screenDOWN-LEFT in ALL5rows.\\nCRITICAL FIX: Existing rightcolumn row1 androw5 wrongly faceRIGHT, unlike rightcolumn middleposes. Make EVERY SW figure's mouth opening, two tootharcs and tongue project unmistakably toward screenLEFT/downLEFT; the visible green rear stalk lies on the head's screenRIGHT/rear side. NO SW head may faceRIGHT even while breathing or coiling. SW is neither E/SE nor fullWprofile: show real FRONT-LEFT3/4 mouth depth, with far right petalback occluding the far side of the mouth. Do not horizontally flip S or duplicate a pose.\\nRows topbottom:1 neutralidle rootclusters planted,mouth slightlyopen,tonguesoftlyleft inSW;2 distinctbreathingidle withactualstalk/petal/tonguebend,stillSWleft;3 rootcrawlA withone woodyrootcluster reachingforward andopposite roots pushingbehind;4 rootcrawlpassing withjointsbentunderstalk andotherrootclusterpullingthrough;5 rootcrawlB withOPPOSITErootclusterreachingforward andformerrootclusterpushingbehind. All10 wholebodyarticulatedposes, with threevisiblydifferentrootcrawlphases. Keep S directfront,SW downLEFT consistently in EVERY row. Same scale, same planted supportbaseline, allrootlimbs connected.\\n\",\n  \"prompt-swattack-correction.txt\": \"Create a focused DIRECTION CORRECTION of the attached existing albino carnivorous flower animation sheet. Preserve the exact source creature and existing quality: huge IVORY/cream layered curling flower petals with pink/red branching veins, dark toothed central mouth with two arcs of pale yellow pointed teeth, long attached pink tongue, tangled green/brown short stalk, and the same broad branching woody ROOT LIMBS and connected fine roottoes. Source image is authoritative for design. No added eyes, human body, new legs, feet, weapons, props, pot, beams or magic. This is a GROUNDED MELEE BITE flower: all root support tips remain on a common implied groundplane, stalk/root/body continuously attached, no levitation, no detached body parts.\\nPreserve detailed handpainted 2D game style, compact head/root proportions, fixed slightly elevated isometric camera and original cream/pink/green/brown palette. Actual root, stalk, petal and tongue articulation in each phase; never the same shifted/scaled/mirrored still. All attached body parts and roottoes fully visible in each cell.\\nOutput a sparse true TRANSPARENT RGBA atlas, NO background, floor, shadow, haze, aura, particles, text or grid. Make figures safely SMALL within equal cells with enormous transparent gutters and safe outermargin. Complete silhouettes including extendedtongue/roots must not enter another cell or intersect any other figure boundingrectangle. No cropped tip, erased body part, missing frame or added pose.\\nEXACTLY TWO COLUMNS x THREE ROWS =6 complete poses on PORTRAIT1024x1536 canvas. Leftcolumn S directFRONT toward screenDOWN/viewer inALL3rows. Rightcolumn SW FRONT-LEFT aiming screenDOWN-LEFT inALL3rows.\\nCRITICAL FIX: Existing SW windup and recovery faceRIGHT while contactfacesLEFT. Keep SW mouth/tongue/teeth always facing LEFT/downLEFT, even during windup/recovery. Bodycoiling changes stalkcurvature, not compassheading. SW visible green rearsepalback stays screenRIGHT of mouth. Show genuine frontLEFT3/4 mouth depth, no RIGHTfacing eye ormouth. S mouth and teethdirectlyfront, not shiftedsideways.\\nRows topbottom:1 MELEE WINDUP: jaws tense halfclosed,tonguefoldsIN LEFT inSW, stalkcoilsbackoverbracedgroundedroots WITHOUT turningheadright;2 CONTACTBITE: completehead/jawlunges DOWN-leftinSW or DOWNtowardviewer inS, teethopen,tonguereachesLEFT/downLEFTinSW, stalkextendsbutrootsfirmlyplanted;3 RECOVERY: jawretracts still LEFT/downLEFTinSW, mouthpartlycloses,tonguefoldsbackLEFT notRIGHT, stalk/rootjointsrelax into differentbends. Sixdistinctwholebodyposes,no detachedprojectile,effect,missingroot orclippedtongue.\\n\",\n  \"prompt-backattack-correction.txt\": \"Create a focused DIRECTION CORRECTION of the attached existing albino carnivorous flower animation sheet. Preserve the exact source creature and existing quality: huge IVORY/cream layered curling flower petals with pink/red branching veins, dark toothed central mouth with two arcs of pale yellow pointed teeth, long attached pink tongue, tangled green/brown short stalk, and the same broad branching woody ROOT LIMBS and connected fine roottoes. Source image is authoritative for design. No added eyes, human body, new legs, feet, weapons, props, pot, beams or magic. This is a GROUNDED MELEE BITE flower: all root support tips remain on a common implied groundplane, stalk/root/body continuously attached, no levitation, no detached body parts.\\nPreserve detailed handpainted 2D game style, compact head/root proportions, fixed slightly elevated isometric camera and original cream/pink/green/brown palette. Actual root, stalk, petal and tongue articulation in each phase; never the same shifted/scaled/mirrored still. All attached body parts and roottoes fully visible in each cell.\\nOutput a sparse true TRANSPARENT RGBA atlas, NO background, floor, shadow, haze, aura, particles, text or grid. Make figures safely SMALL within equal cells with enormous transparent gutters and safe outermargin. Complete silhouettes including extendedtongue/roots must not enter another cell or intersect any other figure boundingrectangle. No cropped tip, erased body part, missing frame or added pose.\\nEXACTLY TWO COLUMNS x THREE ROWS =6 complete poses on PORTRAIT1024x1536 canvas. Leftcolumn N fullBACK facing AWAY/screenUP inALL3rows. Rightcolumn NE BACK-RIGHT facing AWAY/screenUP-RIGHT inALL3rows.\\nCRITICAL FIX: Existing CONTACTrow wrongly turns blossom into a RIGHT-facing sideprofile and shows a tongue reachingRIGHT. This is not a rearward melee attack. Keep ALLSIXfigures REARFACING, including contact. Show broad GREEN REARSEPALS attached to back of ivoryflower and back surfacesof pale petals. In N NO frontal mouth, NO teeth, NO pinktongue visible. In NE mostlygreenback/rearpetals; NO frontal teethor tongue, no right-facing openmouth. The frontmouth still exists on the hidden far side, occluded by the complete rear blossom; do not remove petals or replacehead by a greenorb.\\nMeleepose direction is conveyed through rootedstalk articulation and headposition: row1 WINDUP rearflowerheaddraws slightlyback/TOWARDCAMERA towardrootbase,stalkcoils; row2 CONTACT entireblossom reaches strongly AWAY/UP fromplantedroots inN and AWAY/UP-RIGHTinNE, stalkbowsintoawaybite, rearheadforeshortens and backs ofpetalsmoveforwardintoawaydirection, rootsbracefirmlyonthesamegroundplane; row3 RECOVERY rearflowerheadretracts slightlybacktowardrootbase, stalkrecoils. Actual threephasebite withchanged stalk/root/petalbends, notthreebackstills shiftedup. In contact, never rotatefrontmouth towardcameraorright; backpetalsmustcontinueoccludingfrontface. Same compactsourcebodysize, no longthinnewstem.\\n\",\n  \"prompt-idle-spacing-correction.txt\": \"Edit the attached ten-pose transparent flower atlas for a STRICT SPACING CORRECTION plus one remaining SW tongue/heading correction. Keep exactly2columns x5rows,10completearticulatedflowerbodies, sourcecreaturedesign, root/crawlposes, ivoryredveinedpetals, mouth/teeth, attachedtongue, greenbrownrootstalk, and rootedgroundsupport. OutputPORTRAIT1024x1536.\\nCURRENTROOTBOUNDINGRECTANGLES OVERLAPNEIGHBORS. Make EVERY complete flower+allrootlimbs+wholeattachedtongue uniformly MUCHSMALLER withinthesamecells: eachfullsilhouetteMAX180pixelswide x150pixelshigh, centeredinsideits512x307cell. Tiny complete detailed sprites in immense blankalpha. At least180pixels transparentHORIZONTALgap betweenwholebodyBOUNDINGBOXES; at least100pixels VERTICALgap betweenwholebodies. No sourcefigurepixels in anotherfigureboundingrectangle, no croportrim, no disconnectedtoes, do NOTfixspacingbydeletingbodyparts.\\nLEFTcolumn S stays directFRONT inall5rows. RIGHTcolumn SW stays FRONT-LEFT/downLEFT inall5rows. ExistinglastrowRIGHT tonguecurlsRIGHT: change it to projectLEFT/downLEFT and make mouth/tootharcs unmistakablyfrontLEFT. Greenrearstalk/sepal remainsRIGHTbehindmouth. Do notpointaSWmouthRIGHTinanyphase, includingidleorrootcrawlB. EverySWposeatleastslightly3/4frontLEFT,neverE/SEorfrontRIGHT. Preservehead/root proportionsandtrueattachedroots. No mirrors/copies.\\nFive rows remainidleA,idleB,rootcrawlA,passing,oppositerootcrawlB. Eachrootclusterreach/return visiblydifferentanatomy,notmovedstills. Keep all10genuineposes. Alpha0backgroundwithopaque bodyinteriors+narrowantialiasingonly, nofloor/shadow/haze/matte/detachedparticles/labels/grid.\\n\"\n}",
+  "instruction_record_kind": "exact_prompts_for_initial_failed_sheets_narrow_subsets_and_focused_corrections; four exact independent correction prompts including retained geometry-failed firstidle correction",
+  "visual_review": {
+    "identity_preserved": true,
+    "eight_views": true,
+    "motion_roles": true,
+    "no_clipping": true,
+    "notes": "Independent reviewer inspected source fullbody context and all104 normalized root-groundline composites, plus black/white alpha composites. Source ivory/red-veined toothed flower, attached pink tongue and branching woody supporting roots are preserved; slash/melee, attack_hit_ratio0.44, floatingfalse and visual_height86 must remain source flags. Corrected S/SW idlewalk10, S/SWattack6 and N/NEattack6 replace direction failures; original candidate and every originalPNG remain unchanged. SW now maintains frontLEFT mouth/back-sepal orientation across idle/rootcrawl/windup/contact/recovery; tongue may curl locally during recovery without rotating the blossom to frontRIGHT. N/NE attack remains rearfacing through contact: green rear-sepals occlude front mouth/teeth/tongue, with actual stalk bend away/up or away/upRIGHT and firmly braced root base. All8 static compass views and all5 motions pass independent review: different rootjoint reach/passing/opposite reach, threephase directional rooted bite, recoil, and attached wilt/collapse ending low on ground. Allselected104 source poses pass original strict geometry/complete-region checks and raw+visibleunique104. Alpha outside all complete regions stays <=5, no alpha>25outside; preview matte is hiddenRGB/tinyalpha, not an opaque rectangle. Virtualcanvas neutralheight113.26..114.45 is consistent; source pixels are unchanged. Projected support anchors align with lowest attached root/contact parts on a common perframe groundline; actual Main AI/attack target contact/8directionplayback/death/drop/pickup, motion smoothness and final scale regression remain required before completion."
+  },
+  "directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_directions": [
+    "E",
+    "SE",
+    "S",
+    "SW",
+    "W",
+    "NW",
+    "N",
+    "NE"
+  ],
+  "source_direction_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "foot": [
+    128,
+    160
+  ],
+  "packing": "Original generated sheet bytes, alpha-bounded AtlasTexture regions and canvas margins",
+  "distinct_pixel_frames": 104,
+  "frames": [
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        111,
+        20,
+        354,
+        285
+      ],
+      "margin": [
+        141,
+        119,
+        286,
+        355
+      ],
+      "source_anchor": [
+        290,
+        301
+      ],
+      "rgba_sha256": "fbd79d72bfd5f1a42add0f3f8854309e1960c6e6d36126c39eadc0e45d7bfced",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        587,
+        20,
+        320,
+        286
+      ],
+      "margin": [
+        160,
+        118,
+        320,
+        354
+      ],
+      "source_anchor": [
+        747,
+        302
+      ],
+      "rgba_sha256": "9fdd39bc4430fef5a98b30b6f2182407b9beed331008c7346cddff4baf682d66",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        112,
+        315,
+        361,
+        296
+      ],
+      "margin": [
+        142,
+        108,
+        279,
+        344
+      ],
+      "source_anchor": [
+        290,
+        607
+      ],
+      "rgba_sha256": "f4408d187dea23ed6111a7063644c889fe76cb7827266d689b6d7501c81230dd",
+      "sheet": 0
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        572,
+        317,
+        350,
+        299
+      ],
+      "margin": [
+        145,
+        105,
+        290,
+        341
+      ],
+      "source_anchor": [
+        747,
+        612
+      ],
+      "rgba_sha256": "0d0f8bd3b45a95c4a1702ee0b879399197c1451c79c4ead27f20fe352ec8978d",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        78,
+        628,
+        446,
+        273
+      ],
+      "margin": [
+        108,
+        131,
+        194,
+        367
+      ],
+      "source_anchor": [
+        290,
+        897
+      ],
+      "rgba_sha256": "85ffe9b53473e79080e2c8074bee82ab235ea0e6b282af424e3367643f8ab860",
+      "sheet": 0
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        557,
+        625,
+        396,
+        292
+      ],
+      "margin": [
+        130,
+        112,
+        244,
+        348
+      ],
+      "source_anchor": [
+        747,
+        913
+      ],
+      "rgba_sha256": "78566636889f0759bef5e6f45f9d2f2ee2eabd56bdb56e831d1642bb05fab2c4",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        116,
+        910,
+        351,
+        283
+      ],
+      "margin": [
+        146,
+        121,
+        289,
+        357
+      ],
+      "source_anchor": [
+        290,
+        1189
+      ],
+      "rgba_sha256": "c21c5df6fb1217179ef8f2e10e588200c9aa0c39fa6eb5edbcb267d171b22abb",
+      "sheet": 0
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        598,
+        922,
+        306,
+        283
+      ],
+      "margin": [
+        171,
+        121,
+        334,
+        357
+      ],
+      "source_anchor": [
+        747,
+        1201
+      ],
+      "rgba_sha256": "ca9b6d2848e5cfe6fbcd619c41464ae8cba391a482bd6458e0d1ac89b8df51fc",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        76,
+        1210,
+        423,
+        267
+      ],
+      "margin": [
+        106,
+        137,
+        217,
+        373
+      ],
+      "source_anchor": [
+        290,
+        1473
+      ],
+      "rgba_sha256": "ed4eff9bd8272f6634af2ead0cff1ce480e7e815557712afb45fcd52de0e891e",
+      "sheet": 0
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        566,
+        1208,
+        378,
+        286
+      ],
+      "margin": [
+        139,
+        118,
+        262,
+        354
+      ],
+      "source_anchor": [
+        747,
+        1490
+      ],
+      "rgba_sha256": "8c76d63b9a395958ba05cee2dd26fe0bc85ca42cd4e51f4c110ba84967714a46",
+      "sheet": 0
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        132,
+        95,
+        327,
+        230
+      ],
+      "margin": [
+        100,
+        104,
+        201,
+        298
+      ],
+      "source_anchor": [
+        296,
+        321
+      ],
+      "rgba_sha256": "5f94b21cbfa7aad967864de17eb49217f31f8f4defd418b9bf7a77dde341c19e",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        612,
+        99,
+        317,
+        246
+      ],
+      "margin": [
+        107,
+        88,
+        211,
+        282
+      ],
+      "source_anchor": [
+        769,
+        341
+      ],
+      "rgba_sha256": "7ef1ce0dcedd9d9b3091546eb098d7b25d49cb7005c01a2115973579092b43ce",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        126,
+        384,
+        340,
+        234
+      ],
+      "margin": [
+        94,
+        100,
+        188,
+        294
+      ],
+      "source_anchor": [
+        296,
+        614
+      ],
+      "rgba_sha256": "b40f10609f761b8163b60d9cf737f5e55ef82e2583a85c5ffca6e689c37ff582",
+      "sheet": 1
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        606,
+        387,
+        324,
+        246
+      ],
+      "margin": [
+        101,
+        88,
+        204,
+        282
+      ],
+      "source_anchor": [
+        769,
+        629
+      ],
+      "rgba_sha256": "bd946826890e35b72c63ca4bbc4b6c3502468ac599a931c6fb40e57414761cf7",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        120,
+        676,
+        352,
+        238
+      ],
+      "margin": [
+        88,
+        96,
+        176,
+        290
+      ],
+      "source_anchor": [
+        296,
+        910
+      ],
+      "rgba_sha256": "34c21494c8eeafa22c552a8ffd494fd9159455fd8db16df17fe635959dd5eb07",
+      "sheet": 1
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        593,
+        679,
+        342,
+        238
+      ],
+      "margin": [
+        88,
+        96,
+        186,
+        290
+      ],
+      "source_anchor": [
+        769,
+        913
+      ],
+      "rgba_sha256": "ade2d3b8ac26ba5fc502d5f31f1fa2d4b147e2306feb418c6531a2483ffb9c4b",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        124,
+        953,
+        351,
+        233
+      ],
+      "margin": [
+        92,
+        101,
+        177,
+        295
+      ],
+      "source_anchor": [
+        296,
+        1182
+      ],
+      "rgba_sha256": "99e489dca199b1976c082c341e5d4acb821cb5e5d66caadcf1c8417e8cc087a0",
+      "sheet": 1
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        596,
+        962,
+        340,
+        232
+      ],
+      "margin": [
+        91,
+        102,
+        188,
+        296
+      ],
+      "source_anchor": [
+        769,
+        1190
+      ],
+      "rgba_sha256": "b11f85e2ae9f7df12f7a80a1b75f1dff77afb6e1109fd11bde623c458fe3117a",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        125,
+        1239,
+        344,
+        236
+      ],
+      "margin": [
+        93,
+        98,
+        184,
+        292
+      ],
+      "source_anchor": [
+        296,
+        1471
+      ],
+      "rgba_sha256": "8714fc781b7e217d539d190cc8d48c10d1d7b5ee83a93310423d1f2d232aa5de",
+      "sheet": 1
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        603,
+        1241,
+        332,
+        241
+      ],
+      "margin": [
+        98,
+        93,
+        196,
+        287
+      ],
+      "source_anchor": [
+        769,
+        1478
+      ],
+      "rgba_sha256": "05c4778258e8b22196671ec66d4f31bd82cbad0cd4401d451842c17d2dd45474",
+      "sheet": 1
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        172,
+        29,
+        268,
+        263
+      ],
+      "margin": [
+        183,
+        126,
+        348,
+        353
+      ],
+      "source_anchor": [
+        297,
+        288
+      ],
+      "rgba_sha256": "349d4a9412b820ac08ab906183d45dd6059eaf09f193d3f893b07c28b6acc4f1",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        637,
+        25,
+        234,
+        271
+      ],
+      "margin": [
+        190,
+        118,
+        382,
+        345
+      ],
+      "source_anchor": [
+        755,
+        292
+      ],
+      "rgba_sha256": "425780ee83029ecedb40fa09cde41b69435f70a1dad7cab8e77a60e10a58f684",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        126,
+        309,
+        325,
+        296
+      ],
+      "margin": [
+        137,
+        93,
+        291,
+        320
+      ],
+      "source_anchor": [
+        297,
+        601
+      ],
+      "rgba_sha256": "aaf567862cd4da710e65e64bbc9e02038ebeb3775604e88a4301f0aeda8b5925",
+      "sheet": 2
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        620,
+        311,
+        272,
+        291
+      ],
+      "margin": [
+        173,
+        98,
+        344,
+        325
+      ],
+      "source_anchor": [
+        755,
+        598
+      ],
+      "rgba_sha256": "c24f234b32c8b3133267765eba2fc9612b499f1bced4a8791560928defe2869e",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        105,
+        628,
+        383,
+        261
+      ],
+      "margin": [
+        116,
+        128,
+        233,
+        355
+      ],
+      "source_anchor": [
+        297,
+        885
+      ],
+      "rgba_sha256": "55b82d1f88d68ecd9582d3a454e5bf6073fadd9479abebdba4e0b6ab6a5179dd",
+      "sheet": 2
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        578,
+        622,
+        327,
+        268
+      ],
+      "margin": [
+        131,
+        121,
+        289,
+        348
+      ],
+      "source_anchor": [
+        755,
+        886
+      ],
+      "rgba_sha256": "3a0842f4265da83a89b1ae304e3ae21f3b86c21cca34a70dd884350e2d3aa237",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        143,
+        924,
+        304,
+        262
+      ],
+      "margin": [
+        154,
+        127,
+        312,
+        354
+      ],
+      "source_anchor": [
+        297,
+        1182
+      ],
+      "rgba_sha256": "814b2656b2cf028d55fad5dcd17515071b2ac601591162438df75b66de6fe444",
+      "sheet": 2
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        614,
+        918,
+        270,
+        268
+      ],
+      "margin": [
+        167,
+        121,
+        346,
+        348
+      ],
+      "source_anchor": [
+        755,
+        1182
+      ],
+      "rgba_sha256": "a091251fb62f575aaf32226167e7219061f3a45cf12ce15dd63d5262e4ea7b2f",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        92,
+        1216,
+        405,
+        269
+      ],
+      "margin": [
+        103,
+        120,
+        211,
+        347
+      ],
+      "source_anchor": [
+        297,
+        1481
+      ],
+      "rgba_sha256": "277eb8b4c4cb45219ddb6b1bf7b0a768eda5bf812f3e2ac75910f3f68191d327",
+      "sheet": 2
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        573,
+        1210,
+        354,
+        275
+      ],
+      "margin": [
+        126,
+        114,
+        262,
+        341
+      ],
+      "source_anchor": [
+        755,
+        1481
+      ],
+      "rgba_sha256": "6f749aee02378a2155e17c680db9973908c7f0aaf3d103ca3404210500585c35",
+      "sheet": 2
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        157,
+        35,
+        308,
+        274
+      ],
+      "margin": [
+        154,
+        110,
+        300,
+        334
+      ],
+      "source_anchor": [
+        307,
+        305
+      ],
+      "rgba_sha256": "14abd6eb16a0a007cd46d0c09a46c6766df51ffc8b17ff7a5b3363f1ec36e8af",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        603,
+        39,
+        287,
+        270
+      ],
+      "margin": [
+        152,
+        114,
+        321,
+        338
+      ],
+      "source_anchor": [
+        755,
+        305
+      ],
+      "rgba_sha256": "ff12eca9f39827725688ea1c99818ff79569322940b66659ab2bd68be9a7c686",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        151,
+        324,
+        304,
+        286
+      ],
+      "margin": [
+        148,
+        98,
+        304,
+        322
+      ],
+      "source_anchor": [
+        307,
+        606
+      ],
+      "rgba_sha256": "fcc8987c820891b37991f0cbb01ec1299f96a1b8a5cdefac98e4da48500a6306",
+      "sheet": 3
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        605,
+        336,
+        318,
+        276
+      ],
+      "margin": [
+        154,
+        108,
+        290,
+        332
+      ],
+      "source_anchor": [
+        755,
+        608
+      ],
+      "rgba_sha256": "cc135910a1d80d18ca9568413c77fbd4f395e0f3718cab5bdb4d9958d4b00538",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        113,
+        623,
+        372,
+        293
+      ],
+      "margin": [
+        110,
+        91,
+        236,
+        315
+      ],
+      "source_anchor": [
+        307,
+        912
+      ],
+      "rgba_sha256": "01fbdc386032f6246308860b484bcfb3d4234a0bf1c04bb218e8d2ec23a7be08",
+      "sheet": 3
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        589,
+        631,
+        310,
+        285
+      ],
+      "margin": [
+        138,
+        99,
+        298,
+        323
+      ],
+      "source_anchor": [
+        755,
+        912
+      ],
+      "rgba_sha256": "6f43fc3c049f66a11365fd9aeb4d2afb858c390a1d98e754ab2627e252b3e862",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        170,
+        928,
+        277,
+        280
+      ],
+      "margin": [
+        167,
+        104,
+        331,
+        328
+      ],
+      "source_anchor": [
+        307,
+        1204
+      ],
+      "rgba_sha256": "ff214b521e1abc1f2ec638fd8156aaca713777dbf3809c255e8755cd8113db6e",
+      "sheet": 3
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        640,
+        927,
+        264,
+        284
+      ],
+      "margin": [
+        189,
+        100,
+        344,
+        324
+      ],
+      "source_anchor": [
+        755,
+        1207
+      ],
+      "rgba_sha256": "c2e952705dd2bcd805cd25cd7edacb48158d855c46e37d3bd6b80135d56240c1",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        119,
+        1225,
+        364,
+        283
+      ],
+      "margin": [
+        116,
+        101,
+        244,
+        325
+      ],
+      "source_anchor": [
+        307,
+        1504
+      ],
+      "rgba_sha256": "5e7281a33f0f5be82185322de5ad0e2e681b0ce9486b91761f373a9ff728999b",
+      "sheet": 3
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        589,
+        1224,
+        369,
+        278
+      ],
+      "margin": [
+        138,
+        106,
+        239,
+        330
+      ],
+      "source_anchor": [
+        755,
+        1498
+      ],
+      "rgba_sha256": "6724da389d4f56219749a5ba54e1a197dd63ab273ca5439b1b4a15e63c671eba",
+      "sheet": 3
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        98,
+        171,
+        303,
+        304
+      ],
+      "margin": [
+        180,
+        115,
+        361,
+        360
+      ],
+      "source_anchor": [
+        250,
+        471
+      ],
+      "rgba_sha256": "47137e1d7fb690406b026ef1d20882178ed3b46157ea378951a3ec31091193fb",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        594,
+        172,
+        311,
+        316
+      ],
+      "margin": [
+        176,
+        103,
+        353,
+        348
+      ],
+      "source_anchor": [
+        750,
+        484
+      ],
+      "rgba_sha256": "7a51a330a8b44921c72da6dc8fa6225f01934c01f75c502a5857016919e2d7cf",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        75,
+        625,
+        436,
+        287
+      ],
+      "margin": [
+        157,
+        132,
+        228,
+        377
+      ],
+      "source_anchor": [
+        250,
+        908
+      ],
+      "rgba_sha256": "f3b5bbfc07e204e320dca80fb6a7c6aaae740abb5d23fbfc0c8cb4e49425dea6",
+      "sheet": 4
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        565,
+        627,
+        346,
+        294
+      ],
+      "margin": [
+        147,
+        125,
+        318,
+        370
+      ],
+      "source_anchor": [
+        750,
+        917
+      ],
+      "rgba_sha256": "b9d9735500538810285dd65df2ff25ab9fffbff2e616e61859ca56e86093ce75",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        96,
+        1053,
+        307,
+        300
+      ],
+      "margin": [
+        178,
+        119,
+        357,
+        364
+      ],
+      "source_anchor": [
+        250,
+        1349
+      ],
+      "rgba_sha256": "ff78a3b623e6f4b08163e4bd3b0f2b7ef769d8810c8c0394915211e22e5c2dc3",
+      "sheet": 4
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        593,
+        1057,
+        313,
+        305
+      ],
+      "margin": [
+        175,
+        114,
+        351,
+        359
+      ],
+      "source_anchor": [
+        750,
+        1358
+      ],
+      "rgba_sha256": "b605da39463f18386e5735779470bbb6b7c78e06001ca51c0a29f4597964e391",
+      "sheet": 4
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        36,
+        58,
+        464,
+        449
+      ],
+      "margin": [
+        252,
+        165,
+        512,
+        527
+      ],
+      "source_anchor": [
+        272,
+        503
+      ],
+      "rgba_sha256": "585980ffe13573d49186a1c5f7820515bc03c8c308597b2a28d44eb7d994083d",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        571,
+        72,
+        426,
+        441
+      ],
+      "margin": [
+        279,
+        173,
+        550,
+        535
+      ],
+      "source_anchor": [
+        780,
+        509
+      ],
+      "rgba_sha256": "f832139cf5739603521a34f46f2c326ef3c09ea0d297e4a5c5be15ed56d1e296",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        18,
+        557,
+        488,
+        448
+      ],
+      "margin": [
+        234,
+        166,
+        488,
+        528
+      ],
+      "source_anchor": [
+        272,
+        1001
+      ],
+      "rgba_sha256": "289485ab56277f8e3ab68b29c75840af5199872d714b8487928b2c0f1adeef39",
+      "sheet": 5
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        523,
+        573,
+        483,
+        429
+      ],
+      "margin": [
+        231,
+        185,
+        493,
+        547
+      ],
+      "source_anchor": [
+        780,
+        998
+      ],
+      "rgba_sha256": "3a3ddc842edadb9c22c8e84b6a61a8408318b1823e74324601235d7ec9d96223",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        39,
+        1045,
+        465,
+        441
+      ],
+      "margin": [
+        255,
+        173,
+        511,
+        535
+      ],
+      "source_anchor": [
+        272,
+        1482
+      ],
+      "rgba_sha256": "0e8f238e0d5ecadf3c406fe8231de600e9e4ec53edf28347f36c012a21b062e6",
+      "sheet": 5
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        566,
+        1051,
+        428,
+        442
+      ],
+      "margin": [
+        274,
+        172,
+        548,
+        534
+      ],
+      "source_anchor": [
+        780,
+        1489
+      ],
+      "rgba_sha256": "3019849b70dae3151e8719c77c5f8b5cea42402a5f761b2b10b20b7871a32e18",
+      "sheet": 5
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        199,
+        173,
+        241,
+        254
+      ],
+      "margin": [
+        173,
+        110,
+        335,
+        322
+      ],
+      "source_anchor": [
+        314,
+        423
+      ],
+      "rgba_sha256": "d700a9f4d2db22f0fcf9e1797cde5fea7dfd0eb4ed0c2e9f6d97bf706ea8c96c",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        653,
+        170,
+        243,
+        261
+      ],
+      "margin": [
+        168,
+        103,
+        333,
+        315
+      ],
+      "source_anchor": [
+        773,
+        427
+      ],
+      "rgba_sha256": "62a8388f280b22e408e4bf18542c76b95a3841ad450fc2784376de5e466ffc22",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        126,
+        637,
+        367,
+        275
+      ],
+      "margin": [
+        100,
+        89,
+        209,
+        301
+      ],
+      "source_anchor": [
+        314,
+        908
+      ],
+      "rgba_sha256": "0ed8072a17970c8f8ae3edcc25530dfe308fe1a491202a667cb5df9e4eca28f6",
+      "sheet": 6
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        667,
+        634,
+        258,
+        282
+      ],
+      "margin": [
+        182,
+        82,
+        318,
+        294
+      ],
+      "source_anchor": [
+        773,
+        912
+      ],
+      "rgba_sha256": "0bd6863859b3ae4908901b3fd8a8c42e6cf1432429175b4c45b1d4f728ab63cc",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        188,
+        1096,
+        253,
+        264
+      ],
+      "margin": [
+        162,
+        100,
+        323,
+        312
+      ],
+      "source_anchor": [
+        314,
+        1356
+      ],
+      "rgba_sha256": "a241d24a44991de3c3454c7bc8155e43cb2b82a410b05f43af71c2c8f55450a4",
+      "sheet": 6
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        651,
+        1102,
+        244,
+        260
+      ],
+      "margin": [
+        166,
+        104,
+        332,
+        316
+      ],
+      "source_anchor": [
+        773,
+        1358
+      ],
+      "rgba_sha256": "516ab34ad62b481d065fcdc10bc2a222815e65b809d93d5c6d74fc733d0c03e0",
+      "sheet": 6
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        69,
+        65,
+        417,
+        425
+      ],
+      "margin": [
+        279,
+        184,
+        551,
+        543
+      ],
+      "source_anchor": [
+        274,
+        486
+      ],
+      "rgba_sha256": "02adab006cd10e912c1c94e89eacbb47b275e95cbff5327218bef14348a548e6",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        587,
+        74,
+        385,
+        426
+      ],
+      "margin": [
+        299,
+        183,
+        583,
+        542
+      ],
+      "source_anchor": [
+        772,
+        496
+      ],
+      "rgba_sha256": "a17d62ed00becde9c7313f115231c50d92dce43c6107a9697f46704e011a8a28",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        52,
+        510,
+        434,
+        500
+      ],
+      "margin": [
+        262,
+        109,
+        534,
+        468
+      ],
+      "source_anchor": [
+        274,
+        1006
+      ],
+      "rgba_sha256": "0691946b2e3e5ed82c646646037a76424d57ffa3e41d41cc67c108c004dbbfcc",
+      "sheet": 7
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        570,
+        533,
+        407,
+        476
+      ],
+      "margin": [
+        282,
+        133,
+        561,
+        492
+      ],
+      "source_anchor": [
+        772,
+        1005
+      ],
+      "rgba_sha256": "728f56f7f1e59190a6b36e5896389bdc712d413939f1184d297f692be5f8ccf6",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        61,
+        1038,
+        425,
+        447
+      ],
+      "margin": [
+        271,
+        162,
+        543,
+        521
+      ],
+      "source_anchor": [
+        274,
+        1481
+      ],
+      "rgba_sha256": "ba33027c82dd81c519fcd4c4db84a4c25dd83fbb28279a599e50868a539fc419",
+      "sheet": 7
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        572,
+        1058,
+        400,
+        428
+      ],
+      "margin": [
+        284,
+        181,
+        568,
+        540
+      ],
+      "source_anchor": [
+        772,
+        1482
+      ],
+      "rgba_sha256": "785f652cc8eeea1a066bc5d474d23932a08036cae22f728329ef396e7a14a3c7",
+      "sheet": 7
+    },
+    {
+      "row": 0,
+      "direction": "E",
+      "region": [
+        89,
+        37,
+        379,
+        300
+      ],
+      "margin": [
+        135,
+        134,
+        309,
+        388
+      ],
+      "source_anchor": [
+        298,
+        333
+      ],
+      "rgba_sha256": "8dd40598c8b2fefda6d1be266f3da66e808d4ebe794d05056a6a97012cc0ace0",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "SE",
+      "region": [
+        631,
+        32,
+        293,
+        303
+      ],
+      "margin": [
+        205,
+        131,
+        395,
+        385
+      ],
+      "source_anchor": [
+        770,
+        331
+      ],
+      "rgba_sha256": "492551b123b9ac9b84444ea9f8a861cb65fda3dc2185ce72e652813e3d68168d",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "E",
+      "region": [
+        93,
+        366,
+        410,
+        306
+      ],
+      "margin": [
+        139,
+        128,
+        278,
+        382
+      ],
+      "source_anchor": [
+        298,
+        668
+      ],
+      "rgba_sha256": "9e7ef991b21ea8dc13720ada90f73325b05162cd3a626df8411a605c172c31bc",
+      "sheet": 8
+    },
+    {
+      "row": 1,
+      "direction": "SE",
+      "region": [
+        610,
+        358,
+        321,
+        320
+      ],
+      "margin": [
+        184,
+        114,
+        367,
+        368
+      ],
+      "source_anchor": [
+        770,
+        674
+      ],
+      "rgba_sha256": "e8bc353b38b8fd41c3df957d47f28ca76f581b00b36bc7fdc0ee2c30845e0fce",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "E",
+      "region": [
+        84,
+        724,
+        423,
+        275
+      ],
+      "margin": [
+        130,
+        159,
+        265,
+        413
+      ],
+      "source_anchor": [
+        298,
+        995
+      ],
+      "rgba_sha256": "6f980663e343140fa2722a5330ec8a5fb8c7e6b83a80990ccac223e829c1b0ac",
+      "sheet": 8
+    },
+    {
+      "row": 2,
+      "direction": "SE",
+      "region": [
+        612,
+        719,
+        358,
+        283
+      ],
+      "margin": [
+        186,
+        151,
+        330,
+        405
+      ],
+      "source_anchor": [
+        770,
+        998
+      ],
+      "rgba_sha256": "440af9cc01c0aa496b74a067e3a8f82bb7e622a2cfdd1c276d93e524b29f3671",
+      "sheet": 8
+    },
+    {
+      "row": 3,
+      "direction": "E",
+      "region": [
+        69,
+        1068,
+        461,
+        199
+      ],
+      "margin": [
+        115,
+        235,
+        227,
+        489
+      ],
+      "source_anchor": [
+        298,
+        1263
+      ],
+      "rgba_sha256": "f47469593c454c3f5db77d97ce1be66a1a3eb2e2920f2f2e55e1cf4212990e2f",
+      "sheet": 8
+    },
+    {
+      "row": 3,
+      "direction": "SE",
+      "region": [
+        594,
+        1071,
+        395,
+        184
+      ],
+      "margin": [
+        168,
+        250,
+        293,
+        504
+      ],
+      "source_anchor": [
+        770,
+        1251
+      ],
+      "rgba_sha256": "0bd1d8198d8d9251b216e7c222cb2926fc740de61ac975f447ef0b8d4904cee9",
+      "sheet": 8
+    },
+    {
+      "row": 4,
+      "direction": "E",
+      "region": [
+        50,
+        1329,
+        480,
+        165
+      ],
+      "margin": [
+        96,
+        269,
+        208,
+        523
+      ],
+      "source_anchor": [
+        298,
+        1490
+      ],
+      "rgba_sha256": "fbce0a580e4f675ca54f730a10b7212254ce52dc844b9c9712d849f88291affa",
+      "sheet": 8
+    },
+    {
+      "row": 4,
+      "direction": "SE",
+      "region": [
+        596,
+        1321,
+        399,
+        176
+      ],
+      "margin": [
+        170,
+        258,
+        289,
+        512
+      ],
+      "source_anchor": [
+        770,
+        1493
+      ],
+      "rgba_sha256": "66f325e44e070bb68159c69ede4bfe19bb6894b3b39a7540cdef5901d9224127",
+      "sheet": 8
+    },
+    {
+      "row": 0,
+      "direction": "S",
+      "region": [
+        110,
+        10,
+        330,
+        303
+      ],
+      "margin": [
+        162,
+        106,
+        318,
+        345
+      ],
+      "source_anchor": [
+        272,
+        309
+      ],
+      "rgba_sha256": "96c7def813788397a9f7a00878aafd8b6a955883c8c83d562dfaa712603d7a75",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "SW",
+      "region": [
+        615,
+        24,
+        311,
+        295
+      ],
+      "margin": [
+        169,
+        114,
+        337,
+        353
+      ],
+      "source_anchor": [
+        770,
+        315
+      ],
+      "rgba_sha256": "434edbca42b99ab058bd3297069f7b7a6a0707a5e5549be0364d7734d98297a4",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "S",
+      "region": [
+        104,
+        335,
+        337,
+        301
+      ],
+      "margin": [
+        156,
+        108,
+        311,
+        347
+      ],
+      "source_anchor": [
+        272,
+        632
+      ],
+      "rgba_sha256": "6fad59dc54ec376179a08a3cf6c7fb774bba8f58ca71c1dd788ac2db699e7799",
+      "sheet": 9
+    },
+    {
+      "row": 1,
+      "direction": "SW",
+      "region": [
+        605,
+        347,
+        330,
+        288
+      ],
+      "margin": [
+        159,
+        121,
+        318,
+        360
+      ],
+      "source_anchor": [
+        770,
+        631
+      ],
+      "rgba_sha256": "e532aeb0b84f39f7e3da6eff2fa6493cb47de3f479c07019a02def5f8e64f473",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "S",
+      "region": [
+        72,
+        663,
+        388,
+        280
+      ],
+      "margin": [
+        124,
+        129,
+        260,
+        368
+      ],
+      "source_anchor": [
+        272,
+        939
+      ],
+      "rgba_sha256": "111cc08be02c0197a711935fc641177ac4493598bc2e0b3ec1272e83b80ba475",
+      "sheet": 9
+    },
+    {
+      "row": 2,
+      "direction": "SW",
+      "region": [
+        615,
+        674,
+        347,
+        264
+      ],
+      "margin": [
+        169,
+        145,
+        301,
+        384
+      ],
+      "source_anchor": [
+        770,
+        934
+      ],
+      "rgba_sha256": "8d705d72c3a5da8c7b245e65c4a3dae026cdf77390486f7e907afeefe4eb4637",
+      "sheet": 9
+    },
+    {
+      "row": 3,
+      "direction": "S",
+      "region": [
+        51,
+        976,
+        436,
+        230
+      ],
+      "margin": [
+        103,
+        179,
+        212,
+        418
+      ],
+      "source_anchor": [
+        272,
+        1202
+      ],
+      "rgba_sha256": "03115d5da40a487d2018748099d617045b3e0dce4b7a934b1d5ca54766555b7b",
+      "sheet": 9
+    },
+    {
+      "row": 3,
+      "direction": "SW",
+      "region": [
+        586,
+        999,
+        404,
+        204
+      ],
+      "margin": [
+        140,
+        205,
+        244,
+        444
+      ],
+      "source_anchor": [
+        770,
+        1199
+      ],
+      "rgba_sha256": "a83c7a87cd0621246019eae033d5d945a277b4caccd3012781daf62b86d6e736",
+      "sheet": 9
+    },
+    {
+      "row": 4,
+      "direction": "S",
+      "region": [
+        60,
+        1287,
+        418,
+        184
+      ],
+      "margin": [
+        112,
+        225,
+        230,
+        464
+      ],
+      "source_anchor": [
+        272,
+        1467
+      ],
+      "rgba_sha256": "5c9bfed377a61bf85b6d4924f63959dcf08dadcb869573bb9858226d020bbd65",
+      "sheet": 9
+    },
+    {
+      "row": 4,
+      "direction": "SW",
+      "region": [
+        580,
+        1283,
+        400,
+        193
+      ],
+      "margin": [
+        134,
+        216,
+        248,
+        455
+      ],
+      "source_anchor": [
+        770,
+        1472
+      ],
+      "rgba_sha256": "3e2e2b27060bf6a2d923ec6f0118ab888a92f532c152576e80888314b9ab2673",
+      "sheet": 9
+    },
+    {
+      "row": 0,
+      "direction": "W",
+      "region": [
+        98,
+        9,
+        359,
+        337
+      ],
+      "margin": [
+        180,
+        112,
+        353,
+        375
+      ],
+      "source_anchor": [
+        274,
+        342
+      ],
+      "rgba_sha256": "1be4f4bcc923f438a12f115235afd85414262528ec6d0b2e749436519a7a2c7f",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "NW",
+      "region": [
+        621,
+        7,
+        322,
+        331
+      ],
+      "margin": [
+        199,
+        118,
+        390,
+        381
+      ],
+      "source_anchor": [
+        778,
+        334
+      ],
+      "rgba_sha256": "80928e88769aa9b164127f4081dff8308c50a457803a240a3e2a2f5c49dd3fd4",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "W",
+      "region": [
+        91,
+        356,
+        367,
+        324
+      ],
+      "margin": [
+        173,
+        125,
+        345,
+        388
+      ],
+      "source_anchor": [
+        274,
+        676
+      ],
+      "rgba_sha256": "18a4e75d725df66784012ccf7cb09b89b0ba1ab578e19820e5a04744013b34b2",
+      "sheet": 10
+    },
+    {
+      "row": 1,
+      "direction": "NW",
+      "region": [
+        616,
+        356,
+        325,
+        324
+      ],
+      "margin": [
+        194,
+        125,
+        387,
+        388
+      ],
+      "source_anchor": [
+        778,
+        676
+      ],
+      "rgba_sha256": "a925973da5ab81bb4e54867da93dfebaa2dea6cb748bd2d488d709f71ba3fe84",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "W",
+      "region": [
+        61,
+        736,
+        430,
+        244
+      ],
+      "margin": [
+        143,
+        205,
+        282,
+        468
+      ],
+      "source_anchor": [
+        274,
+        976
+      ],
+      "rgba_sha256": "42ca75dc583c500ef79511c067a6f88d2a4f8d039461c51ba6972594d05ff1a5",
+      "sheet": 10
+    },
+    {
+      "row": 2,
+      "direction": "NW",
+      "region": [
+        606,
+        720,
+        358,
+        273
+      ],
+      "margin": [
+        184,
+        176,
+        354,
+        439
+      ],
+      "source_anchor": [
+        778,
+        989
+      ],
+      "rgba_sha256": "98f544ec3950ea5c009484fe63780f8a14fa7849f07afcc5cb434738c7ead44a",
+      "sheet": 10
+    },
+    {
+      "row": 3,
+      "direction": "W",
+      "region": [
+        42,
+        1050,
+        451,
+        211
+      ],
+      "margin": [
+        124,
+        238,
+        261,
+        501
+      ],
+      "source_anchor": [
+        274,
+        1257
+      ],
+      "rgba_sha256": "fc64737c00d4b5b1604b95358fe30434bda590845566f2e3bf90d398e2fdf5db",
+      "sheet": 10
+    },
+    {
+      "row": 3,
+      "direction": "NW",
+      "region": [
+        550,
+        1061,
+        432,
+        206
+      ],
+      "margin": [
+        128,
+        243,
+        280,
+        506
+      ],
+      "source_anchor": [
+        778,
+        1263
+      ],
+      "rgba_sha256": "e12e7b5d79ce4e5a4d94f7141be66fedd9740f871d9e5f519b3cd4ba590331d1",
+      "sheet": 10
+    },
+    {
+      "row": 4,
+      "direction": "W",
+      "region": [
+        29,
+        1358,
+        460,
+        140
+      ],
+      "margin": [
+        111,
+        309,
+        252,
+        572
+      ],
+      "source_anchor": [
+        274,
+        1494
+      ],
+      "rgba_sha256": "ab401aba89c90b62b792827a29bc7c335c4db80d39b7d7590cf0c302d6a2d906",
+      "sheet": 10
+    },
+    {
+      "row": 4,
+      "direction": "NW",
+      "region": [
+        546,
+        1355,
+        442,
+        155
+      ],
+      "margin": [
+        124,
+        294,
+        270,
+        557
+      ],
+      "source_anchor": [
+        778,
+        1506
+      ],
+      "rgba_sha256": "fe85bc25c463996886bbd25427e9910f4a1cffa8480c8927d7f93070e66bf174",
+      "sheet": 10
+    },
+    {
+      "row": 0,
+      "direction": "N",
+      "region": [
+        102,
+        40,
+        311,
+        279
+      ],
+      "margin": [
+        184,
+        150,
+        369,
+        401
+      ],
+      "source_anchor": [
+        258,
+        315
+      ],
+      "rgba_sha256": "bd1961a409c76395e71c2d9a5c04b13b105743e9287e7ec93e05c441840e5362",
+      "sheet": 11
+    },
+    {
+      "row": 0,
+      "direction": "NE",
+      "region": [
+        613,
+        39,
+        285,
+        284
+      ],
+      "margin": [
+        190,
+        145,
+        395,
+        396
+      ],
+      "source_anchor": [
+        763,
+        319
+      ],
+      "rgba_sha256": "893c4dbbdc1e9e30e19846749ba449d60c977dfc24ad99e67aef25c0fee95807",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "N",
+      "region": [
+        98,
+        336,
+        321,
+        308
+      ],
+      "margin": [
+        180,
+        121,
+        359,
+        372
+      ],
+      "source_anchor": [
+        258,
+        640
+      ],
+      "rgba_sha256": "496e353bbd348ff64e575efad2b8f55f9f401b423c49698a90550dba1b7c6ca3",
+      "sheet": 11
+    },
+    {
+      "row": 1,
+      "direction": "NE",
+      "region": [
+        609,
+        337,
+        308,
+        312
+      ],
+      "margin": [
+        186,
+        117,
+        372,
+        368
+      ],
+      "source_anchor": [
+        763,
+        645
+      ],
+      "rgba_sha256": "b0d8d28d7b8bbbb78f59caeb42d5f7357eb516d009ec364a941e703bed831128",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "N",
+      "region": [
+        93,
+        687,
+        322,
+        289
+      ],
+      "margin": [
+        175,
+        140,
+        358,
+        391
+      ],
+      "source_anchor": [
+        258,
+        972
+      ],
+      "rgba_sha256": "a1eabc8ad7e32cdcb3613e02d2b06ff3746ace27154b156b689e7f99df1d397b",
+      "sheet": 11
+    },
+    {
+      "row": 2,
+      "direction": "NE",
+      "region": [
+        602,
+        683,
+        319,
+        294
+      ],
+      "margin": [
+        179,
+        135,
+        361,
+        386
+      ],
+      "source_anchor": [
+        763,
+        973
+      ],
+      "rgba_sha256": "6d127d1202077ee2c6eb69d14cf8698dd006c86aa245b66267070f871b4e8bee",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "N",
+      "region": [
+        78,
+        1053,
+        396,
+        203
+      ],
+      "margin": [
+        160,
+        226,
+        284,
+        477
+      ],
+      "source_anchor": [
+        258,
+        1252
+      ],
+      "rgba_sha256": "359217ab2ac1b4dfbb7d96febc7904b862e3ef0191b2d3f30f3e854e263d33f7",
+      "sheet": 11
+    },
+    {
+      "row": 3,
+      "direction": "NE",
+      "region": [
+        583,
+        1064,
+        387,
+        189
+      ],
+      "margin": [
+        160,
+        240,
+        293,
+        491
+      ],
+      "source_anchor": [
+        763,
+        1249
+      ],
+      "rgba_sha256": "2735ef9a2789936f76afb33633228edb6d3518607357430c094625242aed996b",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "N",
+      "region": [
+        66,
+        1354,
+        406,
+        142
+      ],
+      "margin": [
+        148,
+        287,
+        274,
+        538
+      ],
+      "source_anchor": [
+        258,
+        1492
+      ],
+      "rgba_sha256": "8a8a939af3bc212e21f6696310b50692e6d45a9e2b3ceb460e29c3c4941f02c6",
+      "sheet": 11
+    },
+    {
+      "row": 4,
+      "direction": "NE",
+      "region": [
+        577,
+        1370,
+        394,
+        126
+      ],
+      "margin": [
+        154,
+        303,
+        286,
+        554
+      ],
+      "source_anchor": [
+        763,
+        1492
+      ],
+      "rgba_sha256": "f2e955b2c8a57a3cba5c5c4bc1efcce4c0da5fab2848e2e940a49a46198de597",
+      "sheet": 11
+    }
+  ],
+  "tracks": {
+    "idle": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-0.png",
+          "sha256": "e0c69ef30370109d61d210677d36af90a6ee7a1b823a8836bb92c00f02e159b5",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated640, safe-foot-fit640. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-1.png",
+          "sha256": "7aa4b163d4ef75e82b972895538e45514dc7c8264ed4665b2939bf39457a2454",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            528,
+            528
+          ],
+          "foot": [
+            264,
+            330
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independent static correction: normalized neutral/recovery height 113.455 on explicit528 virtualcanvas versus114firstsheet; pixels unchanged. Anchors are projected complete-root support baseline from strict geometry, checked for connected roots against common groundline in normalized composites. Final Main contact/landmark scale comparison remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-2.png",
+          "sha256": "5ada2bb067efc865290248b3cd3c3392f67e7d0ee8e7344b32fe5face0413a80",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            616,
+            616
+          ],
+          "foot": [
+            308,
+            385
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated616, safe-foot-fit616. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-3.png",
+          "sha256": "aa112bfb80c2fd643181bd523c4c278177ede854a1c155f00a3ad8e8ff908a06",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated608, safe-foot-fit608. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-0.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-1.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-2.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-3.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 1.2,
+      "loop_type": "loop"
+    },
+    "walk": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-0.png",
+          "sha256": "e0c69ef30370109d61d210677d36af90a6ee7a1b823a8836bb92c00f02e159b5",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            640,
+            640
+          ],
+          "foot": [
+            320,
+            400
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated640, safe-foot-fit640. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-1.png",
+          "sha256": "7aa4b163d4ef75e82b972895538e45514dc7c8264ed4665b2939bf39457a2454",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            528,
+            528
+          ],
+          "foot": [
+            264,
+            330
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independent static correction: normalized neutral/recovery height 113.455 on explicit528 virtualcanvas versus114firstsheet; pixels unchanged. Anchors are projected complete-root support baseline from strict geometry, checked for connected roots against common groundline in normalized composites. Final Main contact/landmark scale comparison remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-2.png",
+          "sha256": "5ada2bb067efc865290248b3cd3c3392f67e7d0ee8e7344b32fe5face0413a80",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            616,
+            616
+          ],
+          "foot": [
+            308,
+            385
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated616, safe-foot-fit616. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-3.png",
+          "sha256": "aa112bfb80c2fd643181bd523c4c278177ede854a1c155f00a3ad8e8ff908a06",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            608,
+            608
+          ],
+          "foot": [
+            304,
+            380
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated608, safe-foot-fit608. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-0.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-1.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-2.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-3.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.48,
+      "loop_type": "loop"
+    },
+    "attack": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-4.png",
+          "sha256": "61607e3a2a81ac45cc232ee2e5344867a48bf2d1599fe438d30e4c17118eb721",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            664,
+            664
+          ],
+          "foot": [
+            332,
+            415
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated664, safe-foot-fit664. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-5.png",
+          "sha256": "64bdf4e47746279ab2c2b952a593a5383a6205fa2dffe79b81d0c727ff06ba13",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            976,
+            976
+          ],
+          "foot": [
+            488,
+            610
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "Independent static correction: normalized neutral/recovery height 114.230 on explicit976 virtualcanvas versus114firstsheet; pixels unchanged. Anchors are projected complete-root support baseline from strict geometry, checked for connected roots against common groundline in normalized composites. Final Main contact/landmark scale comparison remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-6.png",
+          "sha256": "5ae8f107ca84c478d44ee74f0ee29dc39dd8d1aa2c279f8fcf4d8068990cb285",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            576,
+            576
+          ],
+          "foot": [
+            288,
+            360
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated576, safe-foot-fit576. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-7.png",
+          "sha256": "6210e10c5e9a2ab573f23c48299acb69a621ca4e23e0d33781f7b6fd079a7f99",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            968,
+            968
+          ],
+          "foot": [
+            484,
+            605
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "Independent static correction: normalized neutral/recovery height 114.116 on explicit968 virtualcanvas versus114firstsheet; pixels unchanged. Anchors are projected complete-root support baseline from strict geometry, checked for connected roots against common groundline in normalized composites. Final Main contact/landmark scale comparison remains required.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-4.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-5.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-6.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-7.png",
+          "source_rows": [
+            0,
+            1,
+            2
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.42,
+      "loop_type": "play_once"
+    },
+    "hit": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-8.png",
+          "sha256": "129043cfd83b91d22c8c5ac10282d0b82e463fe93aa95bd222864f195838a477",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            688,
+            688
+          ],
+          "foot": [
+            344,
+            430
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated688, safe-foot-fit688. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-9.png",
+          "sha256": "dbb509e75a6c7b2698697b0a719902fec05980faf86bcc4509b15d9a90b76b5a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated648, safe-foot-fit648. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-10.png",
+          "sha256": "c3053fa93d9b9b30cd3703b271474dd93766852b9c0906b4eea8fc717331fac7",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            712,
+            712
+          ],
+          "foot": [
+            356,
+            445
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated712, safe-foot-fit712. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-11.png",
+          "sha256": "ec87744d59ac7ae6aa323fdd735b87c52ab5398fec64ef5de88c606e667f0fba",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            680,
+            680
+          ],
+          "foot": [
+            340,
+            425
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated680, safe-foot-fit680. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-8.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-9.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-10.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-11.png",
+          "source_rows": [
+            0,
+            1
+          ]
+        }
+      },
+      "source_frames_per_direction": 2,
+      "unique_frames_per_direction": 2,
+      "direction_unique_frames": {
+        "E": 2,
+        "SE": 2,
+        "S": 2,
+        "SW": 2,
+        "W": 2,
+        "NW": 2,
+        "N": 2,
+        "NE": 2
+      },
+      "source_duration_seconds": 0.22,
+      "loop_type": "play_once"
+    },
+    "death": {
+      "atlas_files": [
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-8.png",
+          "sha256": "129043cfd83b91d22c8c5ac10282d0b82e463fe93aa95bd222864f195838a477",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            688,
+            688
+          ],
+          "foot": [
+            344,
+            430
+          ],
+          "directions": [
+            "E",
+            "SE"
+          ],
+          "source_direction_indices": [
+            0,
+            1
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated688, safe-foot-fit688. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-9.png",
+          "sha256": "dbb509e75a6c7b2698697b0a719902fec05980faf86bcc4509b15d9a90b76b5a",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            648,
+            648
+          ],
+          "foot": [
+            324,
+            405
+          ],
+          "directions": [
+            "S",
+            "SW"
+          ],
+          "source_direction_indices": [
+            2,
+            3
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated648, safe-foot-fit648. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-10.png",
+          "sha256": "c3053fa93d9b9b30cd3703b271474dd93766852b9c0906b4eea8fc717331fac7",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            712,
+            712
+          ],
+          "foot": [
+            356,
+            445
+          ],
+          "directions": [
+            "W",
+            "NW"
+          ],
+          "source_direction_indices": [
+            4,
+            5
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated712, safe-foot-fit712. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        },
+        {
+          "path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-11.png",
+          "sha256": "ec87744d59ac7ae6aa323fdd735b87c52ab5398fec64ef5de88c606e667f0fba",
+          "size": [
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            680,
+            680
+          ],
+          "foot": [
+            340,
+            425
+          ],
+          "directions": [
+            "N",
+            "NE"
+          ],
+          "source_direction_indices": [
+            6,
+            7
+          ],
+          "scale_review_note": "PROVISIONAL geometry-only canvas: neutral/recovery body-height normalization versus E/SE idle canvas640; calculated680, safe-foot-fit680. Source pixels unchanged. Per-pose anchors are original default column/lowest-opaque contact candidates, not final anatomical support approval. Head/petal/stalk proportion matching and ground contact require independent rendered review and actual Main before approval.",
+          "source_anchor_kind": "reviewed per-pose foot anchors recorded in frames"
+        }
+      ],
+      "source_rows_by_direction": {
+        "E": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-8.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-8.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "S": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-9.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "SW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-9.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "W": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-10.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NW": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-10.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "N": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-11.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        },
+        "NE": {
+          "atlas_path": "res://assets/actors/eight_direction/original_based/albino_flower/poses-11.png",
+          "source_rows": [
+            2,
+            3,
+            4
+          ]
+        }
+      },
+      "source_frames_per_direction": 3,
+      "unique_frames_per_direction": 3,
+      "direction_unique_frames": {
+        "E": 3,
+        "SE": 3,
+        "S": 3,
+        "SW": 3,
+        "W": 3,
+        "NW": 3,
+        "N": 3,
+        "NE": 3
+      },
+      "source_duration_seconds": 0.65,
+      "loop_type": "play_once"
+    }
+  },
+  "display_height_basis": "median_idle",
+  "display_reference_height": 114.0
+}
