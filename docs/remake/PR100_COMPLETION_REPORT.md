@@ -1,3 +1,7 @@
+## 2026-10-15 · 단장357회전표 WIP 보존
+
+완료374/498·잔여124·개별Main103유지. 단장357의8view회전표만1차통과,독립검토/E한방향보행3phase시험중이다. 짧은puffed바지/빨간두다리/부츠/손의짧은완드와전·옆·후방구분을확인했다. mask세부표정은새작화추론으로원작애니메이션사실로주장하지않는다. [원본/PNG/정확prompt/geometry/SHA](evidence/pr100-direction-fix/original-based/batch22-preflight/ringmaster-wip/checkpoint.json). **5역할미완성/미연결/Main미실행/신규0**. 카드최종HOLD보존 `e55d6b4ba1252db9f560aa7f5cb91fa88c80a5a0` push·원격일치확인. subset임포터미커밋WIP테스트중이며최종전체8direction만허용하는보호는통과전사용하지않는다.
+
 ## 2026-10-15 · 수정통합재요청 / 다음357작은시험
 
 CIguard수정 **`031d747d34ab0df2e28361b0236e7c4ac79e2f0e` push·원격일치확인**. 새 [통합38731518098](https://github.com/zoog136-hash/-/actions/runs/38731518098) 는해당SHA로queued,성공아님. 기존ce199실패는그대로보존한다. 신규subset임포터WIP는이통합SHA에포함되지않는다.
