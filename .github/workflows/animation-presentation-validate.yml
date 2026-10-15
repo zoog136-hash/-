@@ -18,6 +18,7 @@ on:
       - 'data/animation_authoring_sources.json'
       - 'tests/original_based*'
       - 'tests/run_original_based_batch.gd'
+      - 'tests/run_original_based_transform_batch.gd'
       - 'tests/pr100_direction_gameplay_test.gd'
       - 'tests/fixtures/pr100_batch*.json'
       - 'tests/*animation*'
@@ -281,12 +282,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        batch: [15, 16, 17, 18, 19, 20]
+        batch: [15, 16, 17, 18, 19, 20, 21]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
       TWILIGHT_PR100_BATCH_ISOLATED: '1'
       TWILIGHT_PR100_BATCH_CONFIG: res://tests/fixtures/pr100_batch${{ matrix.batch }}.json
+      TWILIGHT_PR100_BATCH_SCRIPT: ${{ matrix.batch == 21 && 'res://tests/run_original_based_transform_batch.gd' || 'res://tests/run_original_based_batch.gd' }}
       LIBGL_ALWAYS_SOFTWARE: '1'
     steps:
       - uses: actions/checkout@v4
@@ -320,7 +322,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch${{ matrix.batch }}/headless.txt
+          timeout 600 /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --audio-driver Dummy --path . --script "$TWILIGHT_PR100_BATCH_SCRIPT" 2>&1 | tee test-results/batch${{ matrix.batch }}/headless.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/headless.txt; then exit 1; fi
           grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch${{ matrix.batch }}/headless.txt
       - name: Configured production Main cases in one OpenGL engine
@@ -334,7 +336,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME"
-          timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script res://tests/run_original_based_batch.gd 2>&1 | tee test-results/batch${{ matrix.batch }}/render.txt
+          timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' /tmp/Godot_v4.7.2-stable_linux.x86_64 --rendering-driver opengl3 --audio-driver Dummy --path . --script "$TWILIGHT_PR100_BATCH_SCRIPT" 2>&1 | tee test-results/batch${{ matrix.batch }}/render.txt
           if grep -E 'SCRIPT ERROR:|ERROR:|PR100_GAMEPLAY_FAIL' test-results/batch${{ matrix.batch }}/render.txt; then exit 1; fi
           grep -q 'PR100_ORIGINAL_BATCH_OK' test-results/batch${{ matrix.batch }}/render.txt
       - name: Preserve batch summaries, case reports, captures and generated saves

@@ -1,3 +1,9 @@
+## Batch21 WIP checkpoint — 2026-10-15
+
+User-requested checkpoint: five transformations provisionally connected (Fire Ent, Albino Horn Frog, Albino Snapping Turtle, Nightmare Jack, Doguri), 520 newly authored poses. **Validated total remains 371/498; individual Main headless/OpenGL validation remains 100/498.** Four initial headless cases passed; Jack passed a targeted retry after adding an explicitly reviewed cast track sharing its authored spell gesture. No additional poses are counted for this alias.
+
+OpenGL evidence is incomplete: the new conservative foreground-clear position search rejected all five cases. Correct the QA position selection and rerun actual Main before counting these actors. Baphomet remains held, unlinked and uncounted. New-commit CI/Android are not run; Android device execution is untested. Evidence and rejected authoring drafts are preserved in `evidence/pr100-direction-fix/original-based/batch21/`.
+
 ## 2026-10-15 · Batch20 실제 Main 검증 완료
 
 - 추가 5종: 공포의 나이트메어, 오만한 레비아탄, 알비노 악어, 왜곡의 키메라, 질투의 스켈레톤 윙.
