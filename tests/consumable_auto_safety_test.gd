@@ -3,6 +3,7 @@ extends SceneTree
 const POLICY = preload("res://scripts/consumable_auto_policy.gd")
 const RULES = preload("res://scripts/consumable_rules.gd")
 const CONTROLS = preload("res://scripts/ui/consumable_auto_settings.gd")
+const HP_COOLDOWN_KEY: String = "__hp_potion_shared__"
 var failures: Array[String] = []
 var checks: int = 0
 
@@ -62,9 +63,34 @@ func _run() -> void:
 	_tick(world)
 	_check(int(inv.get("HP 물약", 0)) == 9, "Low HP consumes exactly one")
 	_check(int(world.hp) > before_hp, "Real HP is restored")
+	_check(is_equal_approx(float(world.item_use_cooldowns.get(HP_COOLDOWN_KEY, 0.0)), 1.0), "HP potion starts one-second shared cooldown")
+	world.hp = maxi(1, int(max_hp * 0.25))
+	_tick(world)
+	_check(int(inv.get("HP 물약", 0)) == 9, "Same HP potion cannot auto-repeat during cooldown")
+	inv["강력 HP 물약"] = 2
+	world.quickslots = [{"kind":"item", "id":"강력 HP 물약", "auto":true}]
+	_tick(world)
+	_check(int(inv.get("강력 HP 물약", 0)) == 2, "Different HP potion shares auto cooldown")
+	world._use_quickslot_item("강력 HP 물약")
+	_check(int(inv.get("강력 HP 물약", 0)) == 2, "Manual HP potion shares cooldown with auto")
+	world._tick_item_buffs(1.0)
+	_tick(world)
+	_check(int(inv.get("강력 HP 물약", 0)) == 1, "Different HP potion works after one second")
+	world._use_quickslot_item("HP 물약")
+	_check(int(inv.get("HP 물약", 0)) == 9, "Auto HP potion blocks immediate manual HP use")
 	world.ui_preferences.consumable_auto.hp_enabled = false
 	_tick(world)
-	_check(int(inv.get("HP 물약", 0)) == 9, "HP toggle blocks automatic use")
+	_check(int(inv.get("강력 HP 물약", 0)) == 1, "HP toggle blocks automatic use")
+	world._tick_item_buffs(1.0)
+	world.ui_preferences.consumable_auto.hp_enabled = true
+	world.ui_preferences.consumable_auto.hp_percent = 50
+	world.hp = maxi(1, int(max_hp * 0.6))
+	_tick(world)
+	_check(int(inv.get("강력 HP 물약", 0)) == 1, "User HP threshold skips higher HP")
+	world.hp = maxi(1, int(max_hp * 0.4))
+	_tick(world)
+	_check(int(inv.get("강력 HP 물약", 0)) == 0, "User HP threshold triggers lower HP")
+	world.ui_preferences["consumable_auto"] = defaults.duplicate(true)
 
 	var max_mp: int = int(world._effective_max_mp())
 	inv["마녀의 마력 회복제"] = 4
