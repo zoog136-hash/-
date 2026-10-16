@@ -114,7 +114,7 @@ func _run() -> void:
 		check(field.walkable(spawn) and field.point_clear(spawn),id+" player spawn has clearance")
 		check(field.is_safe(spawn),id+" entry is safe")
 		check(world.player.collision_mask==4,id+" player physics mask")
-		check(world.field_physics.get_child_count()==field.blockers.size(),id+" physics uses every authored blocker")
+		check(preload("res://tests/streamed_field_physics.gd").intact(world),id+" exact authored collision footprints and all required streamed buckets")
 		check(world.player.camera.zoom==Vector2.ONE*.78,id+" gameplay camera scale")
 		check(world.field_minimap.field==field and world.field_minimap.bounds==field.bounds,id+" minimap updates")
 		check(world.field_renderer.chunks.size()<25 and world.field_renderer.visible_props<650,id+" scenery streaming bound")
@@ -149,10 +149,27 @@ func _run() -> void:
 		query.position = spawn
 		query.collision_mask = 4
 		check(world.get_world_2d().direct_space_state.intersect_point(query).is_empty(),id+" physics spawn unblocked")
+		# Visit the same physical probe points through the real stream. Far
+		# buckets are intentionally absent until an actor is near them.
+		var collision_probe_origin: Vector2 = world.player.global_position
+		var collision_probe_physics: bool = world.player.is_physics_processing()
+		world.player.set_physics_process(false)
 		for shape: Dictionary in field.blockers.slice(0,5):
 			query.position = (shape["box"] as Rect2).get_center()
 			if str(shape["shape"]) != "polygon":
+				if field is AuthoredRemakeField:
+					world.player.global_position = query.position
+					field.collision_stream.refresh()
+					await physics_frame
+					await process_frame
+					check(preload("res://tests/streamed_field_physics.gd").intact(world),id+" probe retains exact physical shapes and complete active coverage")
 				check(not world.get_world_2d().direct_space_state.intersect_point(query).is_empty(),id+" visible blocker exists in physics")
+		world.player.global_position = collision_probe_origin
+		if field is AuthoredRemakeField:
+			field.collision_stream.refresh()
+			await physics_frame
+			await process_frame
+		world.player.set_physics_process(collision_probe_physics)
 		for zoom: float in [.65,1.1]:
 			world.player.camera.zoom = Vector2.ONE*zoom
 			world.player.camera.reset_smoothing()
