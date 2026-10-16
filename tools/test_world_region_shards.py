@@ -33,6 +33,25 @@ class RegionShardingTests(unittest.TestCase):
             self.assertFalse(validate_output("oman_", ids, 0, invalid)[0])
         self.assertFalse(validate_output("oman_", ids, 1, output)[0])
 
+    def test_counted_variant_summary_matches_current_godot_producer(self):
+        ids = ["oman_01", "oman_02"]
+        output = "REGION CHECKED oman_01\nREGION CHECKED oman_02\nREGION maps=2 checks=89 families=1 authored_variant_probes=1\nWORLD_REGIONS_OK\n"
+        self.assertEqual(validate_output("oman_", ids, 0, output), (True, "passed", 89))
+        for invalid in [
+            output.replace("authored_variant_probes=1", "authored_variant_probes=3"),
+            output.replace("authored_variant_probes=1", "authored_variant_probes=-1"),
+            output.replace("authored_variant_probes=1", "authored_variant_probes=oops"),
+            output.replace("authored_variant_probes=1", "authored_variant_probes=1 ignored=true"),
+            output + "REGION maps=2 checks=89 families=1 authored_variant_probes=1\n",
+            output.replace("REGION CHECKED oman_02\n", ""),
+            output + "REGION FAIL: invalid physical footprint\n",
+            output.replace("checks=89", "checks=0"),
+            output.replace("WORLD_REGIONS_OK", ""),
+        ]:
+            with self.subTest(output=invalid):
+                self.assertFalse(validate_output("oman_", ids, 0, invalid)[0])
+        self.assertFalse(validate_output("oman_", ids, 1, output)[0])
+
     def test_controlled_shards_use_five_processes(self):
         with tempfile.TemporaryDirectory() as tmp:
             home = Path(tmp)

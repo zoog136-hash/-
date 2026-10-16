@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>아덴 실제 화면 비교</title>
+<style>
+body{margin:0;background:#111916;color:#e9e6db;font:16px/1.6 system-ui,sans-serif}main{max-width:1800px;margin:auto;padding:28px}h1{font-size:26px}select{font:inherit;padding:10px;background:#23352c;color:inherit;border:1px solid #6b7b6c}section{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}figure{margin:0;background:#070c0a;padding:12px}img{width:100%;aspect-ratio:16/9;object-fit:contain}figcaption{margin:8px 0;color:#c1d6bf}p{max-width:1000px}a{color:#bcd7c5}@media(max-width:800px){section{grid-template-columns:1fr}}
+</style>
+<main><h1>원작 · 승인 기란 · 신규 아덴</h1><p>게임 화면은 실제 Godot PNG다. 원작 카메라의 정확한 교정은 NOT_RUN이며, 출력 패널의 크기만 맞췄다. 기란 이전/이후 두 TWILIGHT 화면만 같은 셀·줌·카메라로 비교한다.</p>
+<select id="choice" aria-label="비교 대상"><option value="boundary">승인 기란 경계 전후</option><option value="giran">리니지M 기란과 신규 기란</option><option value="heine">리니지M 하이네 필드와 늪지 해석</option><option value="world">리니지M 지도와 Godot 전역</option></select>
+<section><figure><figcaption id="left-title"></figcaption><img id="left" alt="참고 또는 이전 화면"></figure><figure><figcaption id="right-title"></figcaption><img id="right" alt="신규 실제 Godot 화면"></figure></section><p id="note"></p><p><a href="SCREENSHOTS.md">모든 실제 화면</a> · <a href="VALIDATION.json">FAIL / NOT_RUN 포함 검사 결과</a></p></main>
+<script>
+const rows={
+boundary:['승인된 이전 기란','../aden-giran-review-20261015/evidence/giran-south-field-play.png','경계 보완 후 기란','evidence/giran-south-field-play.png','두 TWILIGHT 화면: 셀 (983,828), 1280×720, zoom .85, offset (0,-32).'],
+giran:['실제 M 기란 (2017)','https://upload2.inven.co.kr/upload/2017/06/25/bbs/i13810693394.png','Godot 기란','evidence/giran-plaza-play.png','건물 크기, 기념주, 화단과 카메라 차이. 원작과 정확히 같은 시점이라고 판정하지 않는다.'],
+heine:['실제 M 하이네 동쪽 (2017)','https://static.inven.co.kr/column/2017/06/30/news/i14016150189.jpg','Godot 하이네 늪지 해석','evidence/heine-marsh-play.png','질감과 수목 참고 비교다. 동일 위치/카메라/개별 오브젝트 정합은 NOT_RUN.'],
+world:['실제 M 본토 지도 (2017)','https://static.inven.co.kr/column/2017/08/30/news/i14384460672.jpg','Godot 전역 실제 렌더','evidence/aden-entire-world.png','지도 투영과 게임 투영이 다르다. 오른쪽은 QA 전청크 렌더이며 평상시 성능 결과가 아니다.']};
+function show(){const r=rows[document.querySelector('#choice').value];document.querySelector('#left-title').textContent=r[0];document.querySelector('#left').src=r[1];document.querySelector('#right-title').textContent=r[2];document.querySelector('#right').src=r[3];document.querySelector('#note').textContent=r[4]}document.querySelector('#choice').addEventListener('change',show);show();
+</script></html>

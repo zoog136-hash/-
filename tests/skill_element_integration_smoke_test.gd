@@ -64,10 +64,17 @@ func _run() -> void:
 	for mob: Node in monsters.get_children():
 		monsters.remove_child(mob)
 		mob.queue_free()
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0),Vector2(48,0),Vector2(0,48)])
+	_check(arena.is_finite(),"AoE and chain targets stand on real active-map ground")
+	if not arena.is_finite(): _finish(); return
+	player.global_position = arena
 	var monster_scene: PackedScene = load("res://scenes/Monster.tscn") as PackedScene
 	var primary: TwilightMonster = _dummy(monster_scene, monsters, player, world, "번개 대상 1", {"element_resistance":{"fire":40,"ice":-25,"lightning":0}})
 	var neighbor: TwilightMonster = _dummy(monster_scene, monsters, player, world, "번개 대상 2", {})
 	var third: TwilightMonster = _dummy(monster_scene, monsters, player, world, "번개 대상 3", {})
+	primary.global_position = arena + Vector2(30,0)
+	neighbor.global_position = arena + Vector2(48,0)
+	third.global_position = arena + Vector2(0,48)
 	_check(int(world.call("_elemental_damage_to_monster", 100, "fire", primary)) == 60, "fire resist ignored by world damage")
 	_check(int(world.call("_elemental_damage_to_monster", 100, "ice", primary)) == 125, "ice weakness ignored by world damage")
 	world.call("_on_job_class_selected", "마법사")

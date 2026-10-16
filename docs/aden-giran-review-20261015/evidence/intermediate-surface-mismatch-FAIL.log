@@ -1,0 +1,25 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+ERROR: GIRAN_REVIEW visual surface hash mismatch
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] applies (res://scripts/maps/aden_giran_review/chunk.gd:29)
+       [1] refresh_visible (res://scripts/maps/remake_renderer.gd:76)
+       [2] use_field_portal (res://scripts/world.gd:6483)
+       [3] run (res://tests/aden_giran_review_test.gd:84)
+GIRAN_FAIL production renderer uses separate Giran visual chunks
+WARNING: TWILIGHT_DROP_UNMAPPED_GRADE: 드레이크:전설 — skipped; no arbitrary substitution
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _missing (res://scripts/loot_drop.gd:182)
+         [1] _pick_equipment_entry (res://scripts/loot_drop.gd:267)
+         [2] roll_detailed (res://scripts/loot_drop.gd:318)
+         [3] _roll_drop (res://scripts/world.gd:2318)
+         [4] _on_monster_died (res://scripts/world.gd:2230)
+         [5] take_damage (res://scripts/monster.gd:750)
+         [6] run (res://tests/aden_giran_review_test.gd:215)
+         [7] frames (res://tests/aden_giran_review_test.gd:24)
+GIRAN_RESULT {"android_device":"NOT_RUN","android_gpu_performance":"NOT_RUN","checks":45,"exact_original_camera_calibration":"NOT_RUN","failures":["production renderer uses separate Giran visual chunks"],"manual_long_boss_fight":"NOT_RUN","movement":{"plaza_distance":77.0395278930664,"wall_push":{"blocked_cell":[981,748],"from":[41496.0,21768.0],"physics_ticks":32,"to":[41564.97265625,21741.021484375]}},"original_s32_art":"NOT_RUN","scope":"actual Main, existing source field, physics, services, portals, save and simulated respawn deadlines","screenshots":[{"actual_position":[41328.0,21684.0],"camera_offset":[0.0,-32.0],"display":"X11","engine":"4.7.2-stable (official)","file":"giran-plaza-play.png","source_cell":[981,740],"viewport":[1280,720],"zoom":1.0},{"actual_position":[41112.0,21624.0],"camera_offset":[0.0,-32.0],"display":"X11","engine":"4.7.2-stable (official)","file":"giran-buildings-play.png","source_cell":[979,733],"viewport":[1280,720],"zoom":0.85},{"actual_position":[41712.0,21060.0],"camera_offset":[0.0,-32.0],"display":"X11","engine":"4.7.2-stable (official)","file":"giran-north-gate-play.png","source_cell":[1015,722],"viewport":[1280,720],"zoom":0.85},{"actual_position":[43488.0,22716.0],"camera_offset":[0.0,-32.0],"display":"X11","engine":"4.7.2-stable (official)","file":"giran-south-field-play.png","source_cell":[983,828],"viewport":[1280,720],"zoom":0.85},{"actual_position":[41328.0,21684.0],"camera_offset":[0.0,-32.0],"display":"X11","engine":"4.7.2-stable (official)","file":"giran-collision.png","source_cell":[981,740],"viewport":[1280,720],"zoom":1.0},{"actual_position":[41328.0,21684.0],"camera_offset":[0.0,-32.0],"display":"X11","engine":"4.7.2-stable (official)","file":"giran-source-collision.png","source_cell":[981,740],"viewport":[1280,720],"zoom":1.0},{"actual_position":[41328.0,21684.0],"camera_offset":[0.0,-32.0],"display":"X11","engine":"4.7.2-stable (official)","file":"giran-final-play.png","source_cell":[981,740],"viewport":[1280,720],"zoom":1.0}],"status":"FAIL","visual_fidelity":"REQUIRES_USER_REVIEW"}

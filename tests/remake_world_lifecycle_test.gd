@@ -21,7 +21,10 @@ func _run() -> void:
 	world.player.set_physics_process(false)
 	world.field_population.set_process(false)
 	world._clear_monsters()
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3300, 4370)))
+	# Keep the real source map\u2019s validated entry position. The pre-remake
+	# coordinate (3300,4370) may not contain any A3 walkable cell, in which
+	# case nearest_cell returns (-1,-1) and every legitimate impact is dropped.
+	check(world.field_map != null and world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position), "combat fixture begins at a real walkable position")
 	var target: TwilightMonster = load("res://scenes/Monster.tscn").instantiate()
 	world.monsters_root.add_child(target)
 	var record: Dictionary = world.monster_db[0].duplicate(true)

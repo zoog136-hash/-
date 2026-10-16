@@ -1,0 +1,58 @@
+PASS boot
+PASS actor_motion_test
+FAIL aden_building_test
+FAIL aden_courtyard_test
+PASS aden_ground_continuity_test
+FAIL aden_shoreline_test
+FAIL aden_terrain_polish_test
+PASS ain_exp_progression_test
+PASS ainhasad_smoke_test
+PASS animation_catalog_test
+PASS animation_presentation_test
+FAIL animation_restore_test
+PASS authored_frames_test
+PASS authored_state_motion_test
+PASS boss_presentation_test
+PASS card_special_policy_test
+PASS catalog_effects_smoke_test
+PASS catalog_full_browser_smoke_test
+PASS combat_hud_test
+PASS combat_resolution_equivalence_test
+PASS combat_timeline_lifecycle_test
+PASS combat_timing_test
+PASS combat_vfx_test
+PASS consumable_auto_safety_test
+PASS consumable_smoke_test
+PASS crafting_atomic_test
+PASS crafting_material_drop_test
+PASS crafting_scroll_grade_test
+PASS critical_damage_bonus_test
+PASS eight_interactions_test
+PASS equipment_blessing_smoke_test
+PASS equipment_slot_smoke_test
+PASS external_a2_bridge_smoke_test
+PASS external_spx_actor_runtime_test
+FAIL field_world_test
+PASS flight_lifecycle_test
+PASS follower_motion_test
+PASS full_inven_catalog_smoke_test
+PASS full_visual_manifest_test
+PASS ground_alpha_test
+PASS ground_drop_smoke_test
+Traceback (most recent call last):
+  File "/workspace/twilight/tools/test_project.py", line 96, in <module>
+    p=run_isolated(command,env=env,timeout=budget,cwd=str(root))
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/twilight/tools/test_project_support.py", line 122, in run_isolated
+    stdout, stderr = process.communicate(timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1209, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 2115, in _communicate
+    ready = selector.select(timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

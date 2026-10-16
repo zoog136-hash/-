@@ -74,6 +74,21 @@ jobs:
           # Capture script imports the class-confirmation QA helper. Include it in
           # the baseline checkout so both candidates run identical test code.
           cp tests/benchmark_actor_motion.gd tests/capture_combat_crowd.gd tests/qa_class_selection.gd baseline/tests/
+          # The source-A3 helper in the candidate requires RemakePlayableField,
+          # which did not exist in the frozen original baseline. Retain the
+          # identical CPU/crowd gameplay harness while supplying baseline's
+          # own validated native-geometry locations, not A3-only APIs.
+          cp tests/qa_baseline_combat_positions.gd baseline/tests/
+          python3 - <<'PY'
+          from pathlib import Path
+          script = Path('baseline/tests/capture_combat_crowd.gd')
+          source = script.read_text()
+          assert 'res://tests/qa_aden_source_combat_positions.gd' in source
+          assert 'world.field_map as RemakePlayableField' in source
+          source = source.replace('res://tests/qa_aden_source_combat_positions.gd', 'res://tests/qa_baseline_combat_positions.gd')
+          source = source.replace('world.field_map as RemakePlayableField', 'world.field_map as PlayableField')
+          script.write_text(source)
+          PY
           export LIBGL_ALWAYS_SOFTWARE=1
           TWILIGHT_MOTION_BENCHMARK="$PWD/test-results/motion-baseline.json" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path baseline --script res://tests/benchmark_actor_motion.gd 2>&1 | tee test-results/motion-baseline.log
           TWILIGHT_MOTION_BENCHMARK="$PWD/test-results/motion-followup.json" /tmp/Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/benchmark_actor_motion.gd 2>&1 | tee test-results/motion-followup.log

@@ -1,0 +1,105 @@
+{
+	"android": "NOT_RUN",
+	"bosses": [
+		{
+			"damage_death_cooldown_respawn": "PASS",
+			"id": "boss",
+			"manual_long_fight": "NOT_RUN",
+			"timer": "SIMULATED_DEADLINE"
+		},
+		{
+			"damage_death_cooldown_respawn": "PASS",
+			"id": "desert_boss",
+			"manual_long_fight": "NOT_RUN",
+			"timer": "SIMULATED_DEADLINE"
+		},
+		{
+			"damage_death_cooldown_respawn": "PASS",
+			"id": "fire_boss",
+			"manual_long_fight": "NOT_RUN",
+			"timer": "SIMULATED_DEADLINE"
+		},
+		{
+			"damage_death_cooldown_respawn": "PASS",
+			"id": "dark_elder_encounter",
+			"manual_long_fight": "NOT_RUN",
+			"timer": "SIMULATED_DEADLINE"
+		},
+		{
+			"damage_death_cooldown_respawn": "PASS",
+			"id": "death_knight_encounter",
+			"manual_long_fight": "NOT_RUN",
+			"timer": "SIMULATED_DEADLINE"
+		}
+	],
+	"checks": 123,
+	"failures": [],
+	"manual_long_fights": "NOT_RUN",
+	"npcs": [
+		{
+			"active_section": "dialogue",
+			"id": "warden",
+			"role": "guide"
+		},
+		{
+			"active_section": "npc_shop",
+			"id": "merchant",
+			"role": "shop"
+		},
+		{
+			"active_section": "warehouse",
+			"id": "warehouse_keeper",
+			"role": "warehouse"
+		},
+		{
+			"active_section": "teleport",
+			"id": "teleport_guide",
+			"role": "teleport"
+		},
+		{
+			"active_section": "crafting",
+			"id": "craft_artisan",
+			"role": "craft"
+		},
+		{
+			"active_section": "sell",
+			"id": "buyback_trader",
+			"role": "buyback"
+		},
+		{
+			"active_section": "npc_shop",
+			"id": "giran_shop",
+			"role": "shop"
+		},
+		{
+			"active_section": "warehouse",
+			"id": "giran_warehouse",
+			"role": "warehouse"
+		},
+		{
+			"active_section": "teleport",
+			"id": "giran_teleport",
+			"role": "teleport"
+		}
+	],
+	"original_m_npc_spawn_identity": "NOT_RUN",
+	"portals": [
+		{
+			"id": "town_waystone",
+			"landing_clear": true,
+			"map": "aden_world"
+		},
+		{
+			"id": "ruin_waystone",
+			"landing_clear": true,
+			"map": "aden_world"
+		},
+		{
+			"id": "oman_gate",
+			"landing_clear": true,
+			"map": "oman_01"
+		}
+	],
+	"scope": "all preserved NPC UI services, all18 source spawn zones, all5 boss callbacks/deadlines, dense source-cell cap, all3 exits and existing Oman return",
+	"status": "PASS"
+}

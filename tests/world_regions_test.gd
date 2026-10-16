@@ -27,10 +27,61 @@ func combat_start(field: PlayableField, random: RandomNumberGenerator) -> Vector
 			return start
 	return Vector2.INF
 
+func check_population_levels(id: String, field: PlayableField, catalog: Dictionary) -> void:
+	for monster: TwilightMonster in world.monsters_root.get_children():
+		var slot: Dictionary = world.field_population.slots[int(monster.get_meta("field_slot"))]
+		var region: Dictionary = slot.region
+		var variants: Dictionary = region.get("variants", {})
+		var source_name: String = monster.monster_name
+		for name: String in region.monster_types:
+			if str(variants.get(name, {}).get("name", name)) == monster.monster_name:
+				source_name = name
+				break
+		check(region.monster_types.has(source_name) and catalog.has(source_name), id+" actor belongs to its current regional roster: "+source_name)
+		if not catalog.has(source_name): continue
+		var record: Dictionary = catalog[source_name]
+		var variant: Dictionary = variants.get(source_name, {})
+		var expected: int = maxi(1, int(variant.get("level", record.get("lv", record.get("level", 1)))))
+		check(monster.monster_level == expected, id+" actor uses its authored variant or catalog level: "+source_name)
+		# The renewed layout changes rosters without changing creature stats. Its
+		# old broad level range describes the historical roster, not new members.
+		# Explicit authored variants still have to satisfy their regional range.
+		if variant.has("level") or not field.data.has("spawn_layout_revision"):
+			var levels: Array = region["level"]
+			check(monster.monster_level>=int(levels[0]) and monster.monster_level<=int(levels[1]), id+" authored regional levels applied without DB mutation")
+
+func check_authored_variant(entry: Dictionary, catalog: Dictionary) -> bool:
+	# Keep exercising the original per-region override through real population
+	# spawning, even when current production rosters no longer use variants.
+	var definition: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(entry.path)))
+	for region: Dictionary in definition.monster_spawn:
+		var variants: Dictionary = region.get("variants", {})
+		for name: String in region.monster_types:
+			var variant: Dictionary = variants.get(name, {})
+			if not variant.has("level") or not catalog.has(name): continue
+			var probe_region: Dictionary = region.duplicate(true)
+			probe_region["monster_types"] = [name]
+			probe_region.erase("weights")
+			var probe: Dictionary = {"region":probe_region, "index":0, "slot_id":world.field_population.slots.size(), "monster":null, "remaining":0.0}
+			world.field_population._spawn_slot(probe)
+			check(is_instance_valid(probe.monster), str(entry.map_id)+" original authored variant spawns through real population")
+			if is_instance_valid(probe.monster):
+				var monster: TwilightMonster = probe.monster
+				monster.set_physics_process(false)
+				var levels: Array = region.level
+				check(monster.monster_level == int(variant.level) and monster.monster_level>=int(levels[0]) and monster.monster_level<=int(levels[1]), str(entry.map_id)+" original authored variant level and regional range remain exact")
+				monster.queue_free()
+				await process_frame
+			return true
+	return false
+
 func _run() -> void:
 	world = (load("res://Main.tscn") as PackedScene).instantiate()
 	root.add_child(world)
 	world.save_timer = -10000
+	var database_before: Array = world.monster_db.duplicate(true)
+	var catalog_before: Dictionary = {}
+	for record: Dictionary in database_before: catalog_before[str(record.name)] = record
 	var index: Array = JSON.parse_string(FileAccess.get_file_as_string(world.FIELD_INDEX_PATH))
 	var prefix: String = ""
 	for argument: String in OS.get_cmdline_user_args():
@@ -38,6 +89,7 @@ func _run() -> void:
 			prefix = argument.trim_prefix("--prefix=")
 	check(world.maps.filter(func(m: Dictionary) -> bool: return not str(m.get("id",m.get("map_id",""))).begins_with("l1_")).size()==25,"all 25 TWILIGHT map IDs are preserved alongside optional source regions")
 	var tested: int = 0
+	var authored_variant_probes: int = 0
 	var families: Dictionary = {}
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 20261007
@@ -62,7 +114,7 @@ func _run() -> void:
 		check(field.walkable(spawn) and field.point_clear(spawn),id+" player spawn has clearance")
 		check(field.is_safe(spawn),id+" entry is safe")
 		check(world.player.collision_mask==4,id+" player physics mask")
-		check(world.field_physics.get_child_count()==field.blockers.size(),id+" physics uses every authored blocker")
+		check(preload("res://tests/streamed_field_physics.gd").intact(world),id+" exact authored collision footprints and all required streamed buckets")
 		check(world.player.camera.zoom==Vector2.ONE*.78,id+" gameplay camera scale")
 		check(world.field_minimap.field==field and world.field_minimap.bounds==field.bounds,id+" minimap updates")
 		check(world.field_renderer.chunks.size()<25 and world.field_renderer.visible_props<650,id+" scenery streaming bound")
@@ -78,10 +130,8 @@ func _run() -> void:
 				var p: Vector2 = field.sample_spawn(str(region["id"]),rng)
 				check(p.is_finite() and field.walkable(p) and field.point_clear(p) and not field.is_safe(p),id+" valid monster spawn")
 		check(world.monsters_root.get_child_count()==eager_count and world.field_population.slots.size()==count,id+" ordinary population fills caps; distant dense slots stay dormant")
-		for monster: TwilightMonster in world.monsters_root.get_children():
-			var slot: Dictionary = world.field_population.slots[int(monster.get_meta("field_slot"))]
-			var levels: Array = slot["region"]["level"]
-			check(monster.monster_level>=int(levels[0]) and monster.monster_level<=int(levels[1]),id+" authored regional levels applied without DB mutation")
+		check_population_levels(id,field,catalog_before)
+		check(world.monster_db == database_before,id+" spawning preserves the entire monster database")
 		print("REGION TIMING ",id," before_routes_ms=",Time.get_ticks_msec()-started_ms)
 		for raw: Array in field.data["route_checks"]:
 			var goal: Vector2 = COORD.array_vector(raw)
@@ -99,10 +149,27 @@ func _run() -> void:
 		query.position = spawn
 		query.collision_mask = 4
 		check(world.get_world_2d().direct_space_state.intersect_point(query).is_empty(),id+" physics spawn unblocked")
+		# Visit the same physical probe points through the real stream. Far
+		# buckets are intentionally absent until an actor is near them.
+		var collision_probe_origin: Vector2 = world.player.global_position
+		var collision_probe_physics: bool = world.player.is_physics_processing()
+		world.player.set_physics_process(false)
 		for shape: Dictionary in field.blockers.slice(0,5):
 			query.position = (shape["box"] as Rect2).get_center()
 			if str(shape["shape"]) != "polygon":
+				if field is AuthoredRemakeField:
+					world.player.global_position = query.position
+					field.collision_stream.refresh()
+					await physics_frame
+					await process_frame
+					check(preload("res://tests/streamed_field_physics.gd").intact(world),id+" probe retains exact physical shapes and complete active coverage")
 				check(not world.get_world_2d().direct_space_state.intersect_point(query).is_empty(),id+" visible blocker exists in physics")
+		world.player.global_position = collision_probe_origin
+		if field is AuthoredRemakeField:
+			field.collision_stream.refresh()
+			await physics_frame
+			await process_frame
+		world.player.set_physics_process(collision_probe_physics)
 		for zoom: float in [.65,1.1]:
 			world.player.camera.zoom = Vector2.ONE*zoom
 			world.player.camera.reset_smoothing()
@@ -185,6 +252,9 @@ func _run() -> void:
 		file.close()
 		world._load_game(true)
 		check(world.active_map_id==id and world.player.global_position.distance_to(world._spawn_position())<1,id+" obsolete map position migrates to safe entry")
+		world.field_population.set_process(false)
+		if await check_authored_variant(entry,catalog_before): authored_variant_probes += 1
+		check(world.monster_db == database_before,id+" combat, reload and authored overrides preserve the entire monster database")
 		var old_cache: WeakRef = weakref(world.field_renderer.landmark_cache)
 		check(world.use_field_portal("aden_return") and world.active_map_id=="aden_world",id+" real intermap return portal")
 		await process_frame
@@ -194,7 +264,8 @@ func _run() -> void:
 		print("REGION CHECKED ",id)
 	if prefix.is_empty():
 		check(tested==24 and families.size()==5,"all 24 new maps and all five families tested")
-	print("REGION maps=",tested," checks=",checks," families=",families.size())
+		check(authored_variant_probes==23,"all 23 maps with original authored level variants exercise real population overrides")
+	print("REGION maps=",tested," checks=",checks," families=",families.size()," authored_variant_probes=",authored_variant_probes)
 	world.queue_free()
 	await process_frame
 	if failures.is_empty():

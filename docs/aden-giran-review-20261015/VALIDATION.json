@@ -1,0 +1,51 @@
+{
+  "overall": "FAIL",
+  "first_region_approved": false,
+  "scope_expansion_allowed": false,
+  "merge_ready": false,
+  "main_merged": false,
+  "pr": 120,
+  "branch": "feature/aden-source-topology-20261015",
+  "base_commit": "f707eccb215cfa580875ad1df806da13ba39b79f",
+  "main_observed": "e2119c37293a783e93b421ee0055d1318271b071",
+  "original_grid_preservation": "PASS",
+  "original_aden_pack_hashes": "PASS",
+  "s32_selected_roundtrip": "PASS",
+  "new_art_runtime": "PASS",
+  "dedicated_main_runtime": {
+    "status": "PASS",
+    "checks": 45,
+    "failures": 0,
+    "report": "evidence/runtime.json"
+  },
+  "existing_regressions": {
+    "status": "FAIL",
+    "completed_cases": 49,
+    "passed_cases": 41,
+    "failed_cases": 8,
+    "not_run_cases": 110,
+    "report": "REGRESSIONS.json"
+  },
+  "visual_fidelity": "FAIL",
+  "original_current_M_layout_equivalence": "NOT_RUN",
+  "exact_same_original_camera": "NOT_RUN",
+  "original_S32_tile_graphic_recovery": "NOT_RUN",
+  "Android_device_functionality": "NOT_RUN",
+  "Android_GPU_performance": "NOT_RUN",
+  "Android_reason": "No attached Android device, adb, emulator, SDK or /dev/kvm in this execution environment. Linux touch injection is separately tested.",
+  "full_manual_boss_fight": "NOT_RUN",
+  "runtime_original_gate_open_close": "NOT_RUN",
+  "first_pack_load_attempt": "FAIL",
+  "first_review_attempt": "FAIL",
+  "intermediate_surface_hash_attempt": "FAIL",
+  "first_visual_builder_attempt": "FAIL: NumPy int64 JSON serialization; corrected to Python int; original topology files never rewritten",
+  "all_six_original_archives_preflight": "FAIL: a1.zip absent; A3 individually SHA/CRC verified",
+  "unresolved": [
+    "Original M appearance and source-ID image identity",
+    "Giran current M field spawn/monster/boss correspondence",
+    "Exact original camera calibration",
+    "Historical geometry/save-foot/attack-lifecycle regression failures",
+    "Source long route to dense spawn and radius-zero interpretation mismatch",
+    "Android device functionality and GPU performance"
+  ]
+}

@@ -218,27 +218,67 @@ func _run() -> void:
 			print("REGION_CAPTURE ",id," ",review," calls=",Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)," props=",world.field_renderer.visible_props)
 		if DETAIL_ANCHORS.has(id):
 			var anchor: Variant = world.field_map.data.get("review_points", {}).get(str(DETAIL_ANCHORS[id]))
-			var geography: Node = world.field_renderer.terrain_root.get_node_or_null("Ground/ReferenceGeography")
-			if not anchor is Array or anchor.size() != 2 or geography == null:
-				push_error("Missing authored landmark anchor or geometry: " + id + "/" + str(DETAIL_ANCHORS[id]))
+			if not anchor is Array or anchor.size() != 2:
+				push_error("Missing authored landmark anchor: " + id + "/" + str(DETAIL_ANCHORS[id]))
 				failed = true
 			else:
 				_aim(world,COORD.array_vector(anchor))
 				for i: int in range(25): await process_frame
-				await _save_view(directory,id+"-landmark")
+				# The installed authored renderer replaced ReferenceGeography with
+				# streamed polygon meshes. Require actual loaded floor triangles
+				# at the real boss review point; never claim an empty flat capture.
+				var has_ground: bool = false
+				if world.field_map is AuthoredRemakeField:
+					var floor: Node = world.field_renderer.terrain_root.get_node_or_null("Ground/AuthoredFloorStream")
+					if floor != null and floor.get("surfaces") is Array and floor.get("chunks") is Dictionary:
+						if not (floor.get("surfaces") as Array).is_empty():
+							for chunk: Node in (floor.get("chunks") as Dictionary).values():
+								for part: Node in chunk.get_children():
+									if part is MeshInstance2D and (part as MeshInstance2D).mesh != null:
+										has_ground = true
+										break
+								if has_ground: break
+				else:
+					has_ground = world.field_renderer.terrain_root.get_node_or_null("Ground/ReferenceGeography") != null
+				if not has_ground:
+					push_error("Missing current rendered boss landmark floor: " + id + "/" + str(DETAIL_ANCHORS[id]))
+					failed = true
+				else:
+					await _save_view(directory,id+"-landmark")
 		elif DETAIL_KINDS.has(id):
-			var found: bool = false
+			var original_kind: String = str(DETAIL_KINDS[id])
+			var expected_kind: String = original_kind
+			var replaced: bool = false
+			if world.field_map is AuthoredRemakeField:
+				var changes: Dictionary = (world.field_map as AuthoredRemakeField).remake_profile.get("prop_replacements", {})
+				if changes.has(original_kind):
+					expected_kind = str(changes[original_kind])
+					replaced = true
+			var landmark_found: bool = false
 			for record: Dictionary in world.field_map.data["props"]:
-				if str(record["kind"]) != str(DETAIL_KINDS[id]):
+				if str(record["kind"]) != expected_kind:
 					continue
-				_aim(world,COORD.array_vector(record["position"])+Vector2(0,35))
-				for i: int in range(25):
-					await process_frame
+				if replaced and str(record.get("legacy_visual_kind", "")) != original_kind:
+					continue
+				var original_anchor: Vector2 = COORD.array_vector(record["position"])
+				_aim(world,original_anchor+Vector2(0,35))
+				for i: int in range(25): await process_frame
+				# The actual streamed Sprite2D must be present and visible at the
+				# same authored coordinates; a name-only match is insufficient.
+				var rendered: bool = false
+				for chunk: Node2D in world.field_renderer.chunks.values():
+					for prop: Node in chunk.get_children():
+						if prop is Sprite2D and str(prop.get_meta("prop_kind", "")) == expected_kind:
+							if (prop as Sprite2D).position.distance_to(original_anchor) < 1.0 and prop.is_visible_in_tree():
+								rendered = true
+								break
+					if rendered: break
+				if not rendered: continue
+				landmark_found = true
 				await _save_view(directory,id+"-landmark")
-				found = true
 				break
-			if not found:
-				push_error("Missing gameplay landmark prop: " + id + "/" + str(DETAIL_KINDS[id]))
+			if not landmark_found:
+				push_error("Missing actual streamed gameplay landmark in "+id+": "+original_kind+" / current "+expected_kind)
 				failed = true
 	timing.sort()
 	print("REGION_RENDER median_ms=",timing[timing.size()/2]," p95_ms=",timing[int(timing.size()*.95)])

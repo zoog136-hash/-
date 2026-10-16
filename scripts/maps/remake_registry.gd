@@ -5,6 +5,7 @@ const ROOT: String = "res://data/map_remake/private/"
 const FIELD = preload("res://scripts/maps/remake_field.gd")
 const READ = preload("res://scripts/maps/source_travel.gd")
 const ARCHIVE_SHA: String = "2d25c6d5408aaf29443167c4c82c30b32d1a83b16039d988471ba0c832eb7d20"
+const ADEN = preload("res://scripts/maps/aden_remake_registry.gd")
 const AUTHORED = preload("res://scripts/maps/authored_remake_field.gd")
 
 static func display_names() -> Dictionary:
@@ -26,10 +27,12 @@ static func authored_field(definition: Dictionary) -> PlayableField:
 
 static func installed(map_id: String) -> bool:
 	if "--legacy-map-layouts" in OS.get_cmdline_user_args(): return false
+	if map_id == "aden_world": return ADEN.installed()
 	# A corrupt or partial installed index must not silently load an old layout.
 	return map_id in ["oman_01","oman_02","oman_03","oman_04","oman_05","oman_06","oman_07","oman_08","oman_09","oman_10"] and FileAccess.file_exists(ROOT+"index.json")
 
 static func load_field(map_id: String) -> RemakePlayableField:
+	if map_id == "aden_world": return ADEN.load_field()
 	var index: Dictionary = READ.read_object(ROOT+"index.json")
 	if int(index.get("schema",0))!=1 or index.get("source_archive_sha256")!=ARCHIVE_SHA or not index.get("maps") is Dictionary: return null
 	if not index.maps.get(map_id) is Dictionary: return null

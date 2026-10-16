@@ -43,7 +43,10 @@ func _run() -> void:
 	world.player.set_physics_process(false)
 	for other: TwilightMonster in world.monsters_root.get_children(): other.set_physics_process(false)
 	world.hp = 999999
-	world.player.global_position = Vector2(3550,4300)
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(-230,0),Vector2(-100,0),Vector2(-40,0),Vector2(200,0),Vector2(80,80)])
+	check(arena.is_finite(),"source-grid multi-range combat arena is clear")
+	if not arena.is_finite(): quit(1); return
+	world.player.global_position = arena
 	var melee: TwilightMonster = make_actor("해골 근위병",40.)
 	melee._tick_ai(.01)
 	check(melee.motion.active,"melee begins windup")
@@ -60,7 +63,7 @@ func _run() -> void:
 	check(not melee.motion.active,"out-of-range melee windup cancels and pursues")
 	remove_actor(melee)
 	await process_frame
-	world.player.global_position = Vector2(3550,4300)
+	world.player.global_position = arena
 	var archer: TwilightMonster = make_actor("해골 궁수",230.)
 	archer._tick_ai(.01)
 	archer.motion.advance(.45,Vector2.ZERO)
@@ -76,21 +79,28 @@ func _run() -> void:
 	world.player.global_position += Vector2(80,80)
 	for i: int in range(5): world.combat_flights._physics_process(.1)
 	check(hits[0]==0,"fixed aimed arrow misses a dodging player")
-	var water: Dictionary = world.field_map.blockers.filter(func(shape: Dictionary)->bool:return str(shape.kind)=="water")[0]
-	var bank: PackedVector2Array = water.polygon
-	var center := Vector2.ZERO
-	for p: Vector2 in bank: center+=p/float(bank.size())
-	var tangent: Vector2 = (bank[1]-bank[0]).normalized()
-	var normal := Vector2(-tangent.y,tangent.x)
-	world.player.global_position = center+normal*600
-	archer.global_position = center-normal*600
-	check(not world.field_map.line_clear(archer.global_position,world.player.global_position),"current mapped river blocks sight")
+	if world.field_map is RemakePlayableField:
+		var pair: Array[Vector2] = preload("res://tests/active_source_test_positions.gd").blocked_edge(world)
+		check(pair.size()==2,"real A3 blocked edge has walkable endpoints")
+		if pair.size()!=2: quit(1); return
+		archer.global_position = pair[0]
+		world.player.global_position = pair[1]
+	else:
+		var water: Dictionary = world.field_map.blockers.filter(func(shape: Dictionary)->bool:return str(shape.kind)=="water")[0]
+		var bank: PackedVector2Array = water.polygon
+		var center := Vector2.ZERO
+		for p: Vector2 in bank: center+=p/float(bank.size())
+		var tangent: Vector2 = (bank[1]-bank[0]).normalized()
+		var normal := Vector2(-tangent.y,tangent.x)
+		world.player.global_position = center+normal*600
+		archer.global_position = center-normal*600
+	check(not world.field_map.line_clear(archer.global_position,world.player.global_position),"real current-map obstruction blocks projectile sight")
 	archer._launch_projectile(archer.motion.sequence,"ranged")
 	for i: int in range(20): world.combat_flights._physics_process(.1)
 	check(hits[0]==0 and world.combat_flights.flights.is_empty(),"river blocks actual projectile")
 	remove_actor(archer)
 	await process_frame
-	world.player.global_position = Vector2(3550,4300)
+	world.player.global_position = arena
 	var caster: TwilightMonster = make_actor("서큐버스",230.)
 	caster._tick_ai(.01); caster.motion.advance(.45,Vector2.ZERO)
 	check(caster.motion.attack_style=="magic" and world.combat_flights.flights.size()==1,"cast motion releases elemental projectile")
@@ -120,7 +130,7 @@ func _run() -> void:
 		var kind: String = str(entry.ai.special.kind)
 		if patterns.has(kind): continue
 		patterns[kind] = true
-		world.player.global_position = Vector2(3550,4300)
+		world.player.global_position = arena
 		var boss: TwilightMonster = make_actor(str(entry.name),100.)
 		boss._begin_special()
 		check(boss.species_visual.warning_active,"boss warning "+kind)
