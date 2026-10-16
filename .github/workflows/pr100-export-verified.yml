@@ -1,0 +1,138 @@
+name: PR100 Export Verified Merge
+on:
+  push:
+    branches: ['diagnostics/pr100-validation-20261016']
+    paths: ['.github/workflows/pr100-export-verified.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 36ad2cf0efabb39f92e7d0521f6519f376fc860f
+          fetch-depth: 0
+          filter: blob:none
+      - name: Reproduce only the previously verified merge tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pr100-verified-export"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config core.quotepath false
+          git fetch --filter=blob:none origin main feature/twilight-animation-20261013
+          test "$(git rev-parse origin/main)" = e2119c37293a783e93b421ee0055d1318271b071
+          test "$(git rev-parse origin/feature/twilight-animation-20261013)" = 36ad2cf0efabb39f92e7d0521f6519f376fc860f
+          GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.https://github.com/.extraheader GIT_CONFIG_VALUE_0="$(git config --get http.https://github.com/.extraheader)" git clone --bare --depth=1 --single-branch --branch=main --no-tags https://github.com/zoog136-hash/- "$RUNNER_TEMP/pr100-main-tip.git"
+          test "$(git --git-dir="$RUNNER_TEMP/pr100-main-tip.git" rev-parse HEAD)" = e2119c37293a783e93b421ee0055d1318271b071
+          mkdir -p .git/objects/info
+          printf '%s\n' "$RUNNER_TEMP/pr100-main-tip.git/objects" >> .git/objects/info/alternates
+          set +e
+          git merge --no-commit --no-ff origin/main > "$RUNNER_TEMP/pr100-verified-export/merge.txt" 2>&1
+          result=$?
+          set -e
+          test "$result" = 1
+          python3 tools/resolve_pr100_merge_20261016.py
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('tools/test_project_runner_test.py')
+          text=path.read_text()
+          old="        self.assertEqual(summary['passed'], 3)\n        self.assertIn('--headless', self.case_engine_args())"
+          new="        self.assertEqual(summary['passed'], 4)\n        self.assertIn('--headless', self.case_engine_args())"
+          assert text.count(old)==1
+          path.write_text(text.replace(old,new,1))
+          PY
+          git add -- tools/test_project_runner_test.py
+          git rm -- .github/workflows/pr100-merge-audit.yml .github/workflows/pr100-merge-prepare.yml
+          git diff --cached --check origin/main
+          test "$(git write-tree)" = bed41a5cc04e4dd52fd11b2d52d85f2e5b6867a3
+          python3 tools/check_resource_integrity.py --root .
+          echo VERIFIED_MERGE_TREE_EXACT_MATCH_bed41a5
+      - name: Export exact object plan without repository writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess
+          out=pathlib.Path(os.environ['RUNNER_TEMP'])/'pr100-verified-export'
+          def git(*args):return subprocess.check_output(['git',*args])
+          pr='36ad2cf0efabb39f92e7d0521f6519f376fc860f'
+          main='e2119c37293a783e93b421ee0055d1318271b071'
+          verified='bed41a5cc04e4dd52fd11b2d52d85f2e5b6867a3'
+          assert git('write-tree').decode().strip()==verified
+          review=pathlib.Path('docs/remake/PR100_MERGE_REVIEW_20261016.md')
+          review.write_text('# PR100 중간 완성본 통합 검토\n\n'+f'- PR 부모: `{pr}`\n- main 부모: `{main}`\n- 검증된 병합 tree: `{verified}`\n'+
+            '- 충돌39개 해결: main 길찾기26파일 유지, 검사/설정13파일 양쪽 요구 통합.\n'+
+            '- main 독립 변경1673개, 맵96개, PR 승인 애니메이션/증거3736개 Git 객체 보존 검사 PASS.\n'+
+            '- 392/498 연결, 잔여106. Main 개별 증거121종이며 전체392종의 새 개별 실행 검증을 뜻하지 않음.\n'+
+            '- 쿠거 batch29 CI 추가. 기존 검사/임계값 축소 없음. 실행기 길찾기 준비 단계 포함 기대값4로 수정.\n'+
+            '- 준비 실행38826721544: Python8묶음, Godot4.7.2 import/boot, 실행 후 자산/소스 무변경, 원본723시트/41442프레임 SHA 검증 PASS.\n'+
+            '- 해당 준비 실행 전체 결론은 FAILURE: 검사 뒤 Git 객체 저장 API에서403. 검사 성공과 저장 실패를 구분함.\n'+
+            '- 이 export는 검증 tree와 바이트 동일함을 확인했으며 런타임을 다시 작성하지 않음. 추가 변경은 이 보고서뿐.\n'+
+            '- 최종 전체 PR CI와 main 병합은 아직 대기. Android 실기기 실행/외부 원본 전체 전달도 미검증/미완료.\n'+
+            '- 백업: backup/pr100-before-merge-20261016-f99fab0, backup/main-before-pr100-20261016-e2119c3.\n'+
+            '- 검사 근거: https://github.com/zoog136-hash/-/actions/runs/38826721544\n'+
+            '- 압축 진단: https://github.com/zoog136-hash/-/actions/runs/38827903316\n'+
+            f'- 바이트 동일 export: https://github.com/zoog136-hash/-/actions/runs/{os.environ["GITHUB_RUN_ID"]}\n',encoding='utf-8')
+          subprocess.run(['git','add','--',str(review)],check=True)
+          target=git('write-tree').decode().strip()
+          def nodes(ref,recursive=False):
+              args=['ls-tree','-z']
+              if recursive:args+=['-r','-t']
+              args.append(ref)
+              result={}
+              for row in git(*args).split(b'\0'):
+                  if not row:continue
+                  info,path=row.split(b'\t',1)
+                  mode,kind,sha=info.decode().split()
+                  result[path.decode()]=(mode,kind,sha)
+              return result
+          prtree=git('rev-parse',pr+'^{tree}').decode().strip()
+          maintree=git('rev-parse',main+'^{tree}').decode().strip()
+          known={prtree,maintree}|{v[2] for r in [pr,main] for v in nodes(r,True).values()}
+          entries=[]; new_blobs={}
+          def delta(old,new,prefix=''):
+              a=nodes(old) if old else {};b=nodes(new) if new else {}
+              for name in sorted(set(a)|set(b)):
+                  if a.get(name)==b.get(name):continue
+                  path=prefix+name
+                  if name not in b:
+                      if a[name][1]=='tree':delta(a[name][2],None,path+'/')
+                      else:entries.append(dict(path=path,mode=a[name][0],type=a[name][1],sha=None))
+                      continue
+                  mode,kind,sha=b[name]
+                  if kind=='tree' and sha not in known:
+                      oldsha=a[name][2] if name in a and a[name][1]=='tree' else None
+                      delta(oldsha,sha,path+'/');continue
+                  entry=dict(path=path,mode=mode,type=kind)
+                  if sha not in known:
+                      assert kind=='blob'
+                      data=git('cat-file','blob',sha)
+                      text=data.decode('utf-8')
+                      assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==sha
+                      entry['content']=text
+                      new_blobs[path]=dict(sha=sha,bytes=len(data),sha256=hashlib.sha256(data).hexdigest())
+                      dest=out/'new_files'/path;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
+                  else:entry['sha']=sha
+                  entries.append(entry)
+          delta(prtree,target)
+          plan=dict(repository='zoog136-hash/-',pr=100,parents=[pr,main],base_tree_sha=prtree,verified_runtime_tree=verified,expected_tree_sha=target,tree_elements=entries,new_blobs=new_blobs,reference_updated=False)
+          (out/'publish-plan.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2)+'\n')
+          (out/'resolved.patch').write_bytes(git('diff','--cached','--binary',pr))
+          (out/'target-tree.txt').write_bytes(git('ls-tree','-r',target))
+          print('EXPORT_SUMMARY '+json.dumps({k:v for k,v in plan.items() if k not in ['tree_elements','new_blobs']}))
+          print('TREE_DELTA_ENTRIES',len(entries),'NEW_TEXT_BLOBS',len(new_blobs))
+          print('NO_GITHUB_API_WRITES; NO_BRANCH_UPDATES; MAIN_UNCHANGED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr100-verified-export-${{ github.sha }}
+          path: ${{ runner.temp }}/pr100-verified-export/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
