@@ -16,44 +16,49 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
-          import io,json,os,re,urllib.request,zipfile
+          import io,json,os,urllib.request,zipfile
           root='https://api.github.com/repos/zoog136-hash/-'
           def get(path,limit=12000000):
               req=urllib.request.Request(root+path,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
-              with urllib.request.urlopen(req,timeout=60) as response:
-                  data=response.read(limit+1)
+              with urllib.request.urlopen(req,timeout=60) as response:data=response.read(limit+1)
               assert len(data)<=limit,'Diagnostic input unexpectedly large'
               return data
-          run=json.loads(get('/actions/runs/38826721544'))
+          run_id=38826721544
+          run=json.loads(get(f'/actions/runs/{run_id}'))
           assert run['head_sha']=='36ad2cf0efabb39f92e7d0521f6519f376fc860f'
           assert run['status']=='completed'
           print('RUN_RESULT',json.dumps({k:run.get(k) for k in ['id','head_sha','status','conclusion','html_url']}))
-          archive=zipfile.ZipFile(io.BytesIO(get('/actions/artifacts/12017789580/zip')))
-          names=archive.namelist()
-          print('ARTIFACT_ENTRIES',json.dumps(names))
-          for suffix in ['generated-cache-review.json','preservation.json','candidate.json']:
-              matches=[n for n in names if n.endswith(suffix)]
-              for name in matches:
-                  obj=json.loads(archive.read(name))
-                  if isinstance(obj.get('changed_paths'),list):
-                      obj['changed_path_count']=len(obj['changed_paths'])
-                      obj['changed_paths']=obj['changed_paths'][:35]
-                  print('EVIDENCE',name,json.dumps(obj,ensure_ascii=False))
-          for suffix in ['godot-import.txt','godot-boot.txt']:
-              for name in [n for n in names if n.endswith(suffix)]:
-                  lines=archive.read(name).decode(errors='replace').splitlines()
-                  errors=[line for line in lines if 'SCRIPT ERROR:' in line or 'ERROR:' in line]
-                  print('ENGINE_LOG',name,'lines',len(lines),'errors',json.dumps(errors[:20]),'last_lines',json.dumps(lines[-8:]))
-          lines=get('/actions/jobs/116735780554/logs').decode(errors='replace').splitlines()
-          targets=[]
-          for i,line in enumerate(lines):
-              if any(key in line for key in ['GENERATED_CACHE_AUDIT {','GENERATED_CACHE_RESTORED ','Unexpected tracked mutations','CalledProcessError:','Traceback (most recent call last)','##[error]','PREPARED_COMMIT_NO_REF_UPDATE {']):
-                  if 'print(' not in line and 'if unexpected:' not in line:
-                      targets.extend(range(max(0,i-2),min(len(lines),i+8)))
-          print('FAILURE_CONTEXT_BEGIN')
-          for i in sorted(set(targets))[:100]:
-              print(str(i+1)+': '+lines[i][:1600])
-          diffs=[line for line in lines if 'diff --git a/' in line]
-          print('CHANGED_DIFF_HEADERS',json.dumps(diffs[:40]))
-          print('FAILURE_CONTEXT_END; READ_ONLY_NO_REPOSITORY_MUTATIONS')
+          inventory=json.loads(get(f'/actions/runs/{run_id}/artifacts'))['artifacts']
+          print('ARTIFACT_INVENTORY',json.dumps([{k:a.get(k) for k in ['id','name','expired','size_in_bytes']} for a in inventory]))
+          for item in inventory:
+              if item['expired'] or not item['name'].startswith('pr100-prepared-'):continue
+              try:
+                  archive=zipfile.ZipFile(io.BytesIO(get(f'/actions/artifacts/{item["id"]}/zip')))
+                  names=archive.namelist()
+                  print('ARTIFACT_ENTRIES',json.dumps(names))
+                  for suffix in ['generated-cache-review.json','preservation.json','candidate.json']:
+                      for name in [n for n in names if n.endswith(suffix)]:
+                          obj=json.loads(archive.read(name))
+                          if isinstance(obj.get('changed_paths'),list):
+                              obj['changed_path_count']=len(obj['changed_paths'])
+                              obj['changed_paths']=obj['changed_paths'][:35]
+                          print('EVIDENCE',name,json.dumps(obj,ensure_ascii=False))
+                  for suffix in ['godot-import.txt','godot-boot.txt']:
+                      for name in [n for n in names if n.endswith(suffix)]:
+                          lines=archive.read(name).decode(errors='replace').splitlines()
+                          errors=[line for line in lines if 'SCRIPT ERROR:' in line or 'ERROR:' in line]
+                          print('ENGINE_LOG',name,'lines',len(lines),'errors',json.dumps(errors[:20]),'last_lines',json.dumps(lines[-6:]))
+              except Exception as exc:print('ARTIFACT_READ_ERROR',type(exc).__name__,str(exc))
+          jobs=json.loads(get(f'/actions/runs/{run_id}/jobs'))['jobs']
+          for job in jobs:
+              if job['name']!='prepare':continue
+              lines=get(f'/actions/jobs/{job["id"]}/logs').decode(errors='replace').splitlines()
+              targets=[]
+              for i,line in enumerate(lines):
+                  if any(key in line for key in ['GENERATED_CACHE_AUDIT {','GENERATED_CACHE_RESTORED ','Unexpected tracked mutations','CalledProcessError:','Traceback (most recent call last)','##[error]','PREPARED_COMMIT_NO_REF_UPDATE {']):
+                      if 'print(' not in line and 'if unexpected:' not in line:targets.extend(range(max(0,i-2),min(len(lines),i+8)))
+              print('FAILURE_CONTEXT_BEGIN',job['id'])
+              for i in sorted(set(targets))[:100]:print(str(i+1)+': '+lines[i][:1600])
+              print('CHANGED_DIFF_HEADERS',json.dumps([line for line in lines if 'diff --git a/' in line][:40]))
+              print('FAILURE_CONTEXT_END; READ_ONLY_NO_REPOSITORY_MUTATIONS')
           PY
