@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-16T03:37:45.009065+00:00",
+  "observed_utc": "2026-10-16T03:41:49.438662+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -22,22 +22,23 @@
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
   "validation": {
     "runner_unit": "31 PASS; controlled subprocess behavior only",
-    "full10_latest_replay": "in_progress; previous actual engine run 606718 checks/1032 native phases/10 cases no failures, wrapper failed due missing failures array; producer now repaired, parser remains strict",
-    "exact_head_CI": "pending_push",
+    "full10_latest_replay": "PASS: complete10, 606800 actual Main checks, 1032 native phases, zero failures; headless temporal evidence, not OpenGL; strict wrapper PASS",
+    "exact_head_CI": "3679580 GitHub snapshot: 1 queued check, no all-required-success claim; checkpoint-only next push requires its own status",
     "Android_APK": "not_rebuilt",
     "Android_real_device": "unverified",
     "importer_legacy_and_safety": "54 PASS including four new read-only success/failure/profile/output/CLI tests",
     "optional_pose_and_direction_inputs": "42 PASS",
-    "two_subject_latest_Main": "isolated copied production project being prepared with only two preserved WIP profile overlays; no production import/apply"
+    "two_subject_latest_Main": "Isolated actual Main headless PASS: 2499 checks, 8 AI directions each, 112/104 pose samples, actual weapon damage/hit/death/drop/manual pickup; final GL and independent visual still pending; HOLD",
+    "targeted_Godot": "5/5 PASS, 0 skipped/not-run: full10, path13, source-frame336, boss-contract154, icon27"
   },
   "priority": {
-    "iguana": "112-pose read-only preflight PASS; separate static/ordered-phase review recorded; actual Main lifecycle viewport review and latest-code replay still pending; HOLD",
-    "agni": "104-pose legacy read-only preflight PASS with existing checks; 16 restored source PNG SHA matches; production candidate folder absent; final actual Main/visual review pending; HOLD",
+    "iguana": "112-pose read-only preflight PASS; latest isolated actual Main headless PASS848; final latest OpenGL/lifecycle visual evidence pending; HOLD",
+    "agni": "104-pose legacy read-only preflight PASS;16 preserved PNG SHA matched; latest isolated actual Main headless PASS1649 including real magic in all8 directions; occluded archived combat capture cannot approve final visual; HOLD",
     "unicorn": "8 of 9 standalone poses fail existing alpha>100 single-body rule; 2 selected walk source PNGs missing from preserved archives; HOLD",
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Run actual Main in the isolated review copy, preserving all AI/contact/HP/drop/manual-pickup tests. Inspect legible GL captures independently; any occlusion or missing evidence keeps actor HOLD.",
+  "resume": "In isolated review project, use a new empty user directory for OpenGL batch32 and preserve real AI/contact/lifecycle captures. Address obscured magic-caster QA views without changing maps/stats/checks; separately review full poses/time progression/source/baseline style and real lifecycle screens. Keep both HOLD until every gate passes.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
@@ -45,5 +46,8 @@
     "state": "draft",
     "base": "feature/twilight-animation-20261013",
     "pushed_checkpoint": "5018aac"
-  }
+  },
+  "last_successful_pushed_code_commit": "36795804a75c893db9680d8553d0929d90427c79",
+  "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
+  "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json"
 }
