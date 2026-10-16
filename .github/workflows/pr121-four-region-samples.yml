@@ -1,0 +1,111 @@
+name: PR121 four-region playable 2D samples
+
+on:
+  push:
+    branches:
+      - feature/lineagem-four-regions-newmaps-20261015
+    paths:
+      - .github/workflows/pr121-four-region-samples.yml
+      - content/newmaps/lineagem_reference/samples/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr121-four-samples
+  cancel-in-progress: false
+
+jobs:
+  model-selfcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Compile generator and validate unique four-region route connectivity
+        run: |
+          python3 -m py_compile content/newmaps/lineagem_reference/samples/build_four.py
+          python3 content/newmaps/lineagem_reference/samples/build_four.py --self-test
+  godot-playable:
+    needs: model-selfcheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DEMO_ROOT: /tmp/twilight-pr121-four-2d
+      GODOT: /tmp/pr121-godot/Godot_v4.7.2-stable_linux.x86_64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install Godot 4.7.2 and software GL display
+        run: |
+          mkdir -p /tmp/pr121-godot
+          curl -fsSL --retry 3 \
+            https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip \
+            -o /tmp/pr121-godot/godot.zip
+          unzip -q /tmp/pr121-godot/godot.zip -d /tmp/pr121-godot
+          chmod +x "$GODOT"
+          "$GODOT" --version
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+      - name: Build sibling Godot project without editing checkout
+        run: |
+          python3 content/newmaps/lineagem_reference/samples/build_four.py \
+            --root "$GITHUB_WORKSPACE" --output "$DEMO_ROOT"
+          test -f "$DEMO_ROOT/content/newmaps/lineagem_reference/samples/evidence/build_provenance.json"
+          git diff --exit-code -- .
+      - name: Import actual Godot project
+        shell: bash
+        run: |
+          export XDG_DATA_HOME=/tmp/pr121-data-import
+          export XDG_CONFIG_HOME=/tmp/pr121-config-import
+          "$GODOT" --headless --editor --path "$DEMO_ROOT" --quit \
+             2>&1 | tee /tmp/pr121-import.log
+          ! grep -E "SCRIPT ERROR:|Parse Error:|Failed to load script" /tmp/pr121-import.log
+      - name: Run actual Main.tscn four-map collision/path tests
+        shell: bash
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME=/tmp/pr121-data-test
+          export XDG_CONFIG_HOME=/tmp/pr121-config-test
+          "$GODOT" --headless --path "$DEMO_ROOT" \
+             --script res://content/newmaps/lineagem_reference/samples/run_four.gd \
+             2>&1 | tee /tmp/pr121-runtime.log
+          grep -q PR121_FOUR_RESULTS /tmp/pr121-runtime.log
+          ! grep -E "PR121_FOUR_FAIL|SCRIPT ERROR:|Parse Error:" /tmp/pr121-runtime.log
+      - name: Render eight real 2D screenshots in X11
+        shell: bash
+        run: |
+          set -o pipefail
+          export LIBGL_ALWAYS_SOFTWARE=1
+          export XDG_DATA_HOME=/tmp/pr121-data-render
+          export XDG_CONFIG_HOME=/tmp/pr121-config-render
+          xvfb-run -a -s '-screen 0 1280x720x24' \
+            "$GODOT" --audio-driver Dummy --rendering-driver opengl3 \
+             --path "$DEMO_ROOT" \
+             --script res://content/newmaps/lineagem_reference/samples/run_four.gd \
+             -- --capture 2>&1 | tee /tmp/pr121-render.log
+          grep -q PR121_FOUR_RESULTS /tmp/pr121-render.log
+          ! grep -E "PR121_FOUR_FAIL|SCRIPT ERROR:|Parse Error:" /tmp/pr121-render.log
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          p=Path(os.environ['DEMO_ROOT'])/'content/newmaps/lineagem_reference/samples/evidence'
+          shots=list(p.glob('*.png'))
+          assert len(shots)==8,(len(shots),shots)
+          for s in shots: assert s.read_bytes()[:8]==bytes([137,80,78,71,13,10,26,10]) and s.stat().st_size>1000,s
+          print('PR121_FOUR_REAL_GODOT_SCREENSHOTS',len(shots))
+          PY
+      - name: Upload real engine evidence and runtime report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr121-four-region-real-godot-2d
+          path: |
+            /tmp/twilight-pr121-four-2d/content/newmaps/lineagem_reference/samples/evidence/*.png
+            /tmp/twilight-pr121-four-2d/content/newmaps/lineagem_reference/samples/evidence/*.json
+            /tmp/pr121-*.log
+          if-no-files-found: warn
+          retention-days: 7
