@@ -19,7 +19,8 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    # PR #100: full regressions take ~70m; retain all tests and allow the later render stages.
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot 4.7.2 and software OpenGL
