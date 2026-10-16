@@ -105,7 +105,9 @@ func transform_temporal_provenance_index(proof: Dictionary) -> Dictionary:
 	# index once per Main case rather than scanning all frames at 120Hz.
 	var lookup: Dictionary = {}
 	for frame: Dictionary in proof.get("frames", []):
-		var key := "%s|%s|%s" % [str(frame.get("sheet", -1)), str(frame.get("row", -1)), str(frame.get("direction", ""))]
+		# JSON.parse_string decodes source row/sheet numbers as floats (0.0).
+		# Normalize to int so the index and runtime %d lookup use identical keys.
+		var key := "%d|%d|%s" % [int(frame.get("sheet", -1)), int(frame.get("row", -1)), str(frame.get("direction", ""))]
 		check(not lookup.has(key), "unique source atlas cell " + key)
 		if not lookup.has(key): lookup[key] = frame
 	check(lookup.size() == int(proof.get("distinct_pixel_frames", -1)), "complete unique authored source frame index")
@@ -244,7 +246,18 @@ func transform_temporal_role(direction: int, role: String, sprite: AnimatedSprit
 	check(frames.has_animation(key), "actual equipped transform native temporal track " + key)
 	if not frames.has_animation(key): motion.strike.disconnect(marker_listener); return {}
 	var count := frames.get_frame_count(key)
-	var minima := {"idle": 2, "walk": 3, "attack": 3, "hit": 2, "death": 3}
+	# The provenance records the exact number of independently authored
+	# native frames for this role. Reaper male has two genuine walk frames,
+	# unlike the three-frame walk tracks in the other cases.
+	var source_tracks: Dictionary = proof.get("tracks", {})
+	var source_track: Dictionary = source_tracks.get(role, {})
+	var authored_frames := int(source_track.get("unique_frames_per_direction", -1))
+	var authored_rows: Array = source_track.get("source_rows", [])
+	check(authored_frames == authored_rows.size() and authored_frames >= 2,
+		"original provenance contains independently authored native phases " + key)
+	check(count == authored_frames,
+		"actual equipped transform preserves the exact original native phase count " + key)
+	var minima := {"idle": 2, "walk": 2, "attack": 3, "hit": 2, "death": 3}
 	check(count >= int(minima[role]), "transform native temporal role minima " + key)
 	var weight := 0.0
 	for index: int in range(count): weight += frames.get_frame_duration(key, index)
@@ -447,7 +460,13 @@ func inspect_poses() -> void:
 		native_total += int(entry.get("native_frames", 0))
 		for evidence: Dictionary in entry.get("captures", []):
 			if evidence.has("path"): rendered_total += 1
-	check(native_total == int(proof.get("distinct_pixel_frames", -1)) and native_total in [104, 112], "every actual original native transform phase receives continuous controller coverage")
+	var original_native_total := 0
+	var native_tracks: Dictionary = proof.get("tracks", {})
+	for source_role: String in TRANSFORM_TEMPORAL_ROLES:
+		var authored_track: Dictionary = native_tracks.get(source_role, {})
+		original_native_total += int(authored_track.get("unique_frames_per_direction", -1)) * 8
+	check(native_total == int(proof.get("distinct_pixel_frames", -1)) and native_total == original_native_total and native_total >= 96 and native_total <= 112,
+		"every source-authored original native transform phase receives continuous controller coverage")
 	check(report.pose_samples.size() == native_total, "native transform poses counted once without idle/alias inflation")
 	if transform_temporal_render: check(rendered_total == native_total, "every native transform phase drawn/captured in actual Main")
 	report.transform_temporal.native_phases = native_total
