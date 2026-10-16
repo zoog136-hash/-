@@ -232,7 +232,10 @@ func _run() -> void:
 			if not bool(world.call("_has_line_of_sight_world", start_position, candidate)):
 				continue
 			var path_check: PackedVector2Array = world.call("find_world_path", start_position, candidate) as PackedVector2Array
-			if path_check.size() < 2:
+			# Source-grid pathfinding returns one destination waypoint for a clear,
+			# walkable direct route. Reject only an unreachable/empty route;
+			# LOS, walkability and the real charge movement remain asserted.
+			if path_check.is_empty():
 				continue
 			charge_position = candidate
 			break
