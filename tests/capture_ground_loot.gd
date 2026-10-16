@@ -54,6 +54,10 @@ func _run() -> void:
 		var item_name: String = str(world.loot_catalog["equipment_by_grade"][grade][0])
 		var where: Vector2 = world.player.global_position + Vector2(float(index - 3) * 30, 0)
 		var view: Button = world._spawn_ground_drop(item_name, where)
+		if view == null:
+			push_error("GROUND_LOOT_RENDER_FAILED: grade spawn returned null")
+			quit(1)
+			return
 		samples.append(view)
 	for i: int in range(20): await process_frame
 	for view: Button in samples:
