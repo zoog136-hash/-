@@ -117,36 +117,41 @@ func transform_temporal_provenance_record(role: String, direction: int, phase: i
 	if not texture is AtlasTexture: return {}
 	var atlas := texture as AtlasTexture
 	if atlas.atlas == null: return {}
-	var tracks: Dictionary = proof.get("tracks", {})
-	var track: Dictionary = tracks.get(role, {})
-	var rows: Array = track.get("source_rows", [])
-	if phase < 0 or phase >= rows.size(): return {}
-	var sheet := -1
-	for source_file: Dictionary in track.get("atlas_files", []):
-		var path := str(source_file.get("path", ""))
-		if path != atlas.atlas.resource_path: continue
-		var stem := path.get_file().get_basename()
-		if stem.begins_with("poses-") and stem.trim_prefix("poses-").is_valid_int():
-			sheet = int(stem.trim_prefix("poses-"))
-		break
-	if sheet < 0: return {}
-	var key := "%d|%d|%s" % [sheet, int(rows[phase]), COMPASS[direction]]
-	var lookup: Dictionary = proof.get("_temporal_source_index", {})
-	var record: Dictionary = lookup.get(key, {})
+	var track: Dictionary = proof.get("tracks", {}).get(role, {})
+	var record: Dictionary = {}
+	if str(proof.get("input_representation", "")) == "mixed_sources_v1":
+		var ids: Array = (track.get("source_poses_by_direction", {}) as Dictionary).get(COMPASS[direction], [])
+		if phase < 0 or phase >= ids.size(): return {}
+		var id: String = str(ids[phase])
+		var pose: Dictionary = proof.get("_temporal_pose_index", {}).get(id, {})
+		record = proof.get("_temporal_frame_index", {}).get(id, {})
+		if pose.is_empty() or record.is_empty(): return {}
+		if str(pose.get("file", "")) != atlas.atlas.resource_path or str(record.get("pose_id", "")) != id: return {}
+		if str(pose.get("role", "")) != role or str(record.get("role", "")) != role: return {}
+		if str(pose.get("direction", "")) != COMPASS[direction] or str(record.get("direction", "")) != COMPASS[direction]: return {}
+		if int(pose.get("phase", -1)) != phase or int(record.get("phase", -1)) != phase: return {}
+		if pose.get("source_anchor", []) != record.get("source_anchor", []): return {}
+	else:
+		var rows: Array = track.get("source_rows", [])
+		if phase < 0 or phase >= rows.size(): return {}
+		var sheet := -1
+		for source_file: Dictionary in track.get("atlas_files", []):
+			var path := str(source_file.get("path", ""))
+			if path != atlas.atlas.resource_path: continue
+			var stem := path.get_file().get_basename()
+			if stem.begins_with("poses-") and stem.trim_prefix("poses-").is_valid_int():
+				sheet = int(stem.trim_prefix("poses-"))
+		if sheet < 0: return {}
+		var key := "%d|%d|%s" % [sheet, int(rows[phase]), COMPASS[direction]]
+		record = proof.get("_temporal_source_index", {}).get(key, {})
 	if record.is_empty(): return {}
-	# Matching row/direction is insufficient: the selected production texture
-	# must also use precisely the crop and margins in the original provenance.
 	var region: Array = record.get("region", [])
 	var margin: Array = record.get("margin", [])
 	var anchor: Array = record.get("source_anchor", [])
 	if region.size() != 4 or margin.size() != 4 or anchor.size() != 2: return {}
-	# JSON provenance coordinates are floating-point Values, as are Rect2 components.
-	# Array equality compares contained Variant types; casting Rect2 values
-	# to int would reject even an otherwise exact source atlas cell.
 	if region != [atlas.region.position.x, atlas.region.position.y, atlas.region.size.x, atlas.region.size.y]: return {}
 	if margin != [atlas.margin.position.x, atlas.margin.position.y, atlas.margin.size.x, atlas.margin.size.y]: return {}
 	return record
-
 func transform_temporal_snapshot(sprite: AnimatedSprite2D, motion: TwilightActorMotion, seconds: float, proof: Dictionary) -> Dictionary:
 	var texture := transform_temporal_texture(sprite)
 	var size := texture.get_size() if texture != null else Vector2.ZERO
@@ -256,6 +261,8 @@ func transform_temporal_role(direction: int, role: String, sprite: AnimatedSprit
 	var source_track: Dictionary = source_tracks.get(role, {})
 	var authored_frames := int(source_track.get("unique_frames_per_direction", -1))
 	var authored_rows: Array = source_track.get("source_rows", [])
+	if str(proof.get("input_representation", "")) == "mixed_sources_v1":
+		authored_rows = (source_track.get("source_poses_by_direction", {}) as Dictionary).get(COMPASS[direction], [])
 	check(authored_frames == authored_rows.size() and authored_frames >= 2,
 		"original provenance contains independently authored native phases " + key)
 	check(count == authored_frames,
@@ -403,6 +410,31 @@ func inspect_poses() -> void:
 	var frames := sprite.sprite_frames
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(subject_path().get_base_dir().path_join("provenance.json")))
 	proof["_temporal_source_index"] = transform_temporal_provenance_index(proof)
+	if str(proof.get("input_representation", "")) == "mixed_sources_v1":
+		var pose_lookup: Dictionary = {}
+		var frame_lookup: Dictionary = {}
+		var verified: Dictionary = {}
+		for pose: Dictionary in proof.get("source_poses", []):
+			var id: String = str(pose.get("id", ""))
+			check(not id.is_empty() and not pose_lookup.has(id), "unique independent original pose ID " + id)
+			var path: String = str(pose.get("file", ""))
+			var sha: String = str(pose.get("source_sha256", ""))
+			check(not path.is_empty() and not sha.is_empty(), "each original pose records exact PNG and SHA " + id)
+			if verified.has(path):
+				check(str(verified[path]) == sha, "same original source PNG has same SHA " + id)
+			else:
+				check(FileAccess.file_exists(path) and FileAccess.get_sha256(path) == sha,
+					"unchanged original source PNG SHA " + path)
+				verified[path] = sha
+			if not id.is_empty() and not pose_lookup.has(id): pose_lookup[id] = pose
+		for frame: Dictionary in proof.get("frames", []):
+			var id: String = str(frame.get("pose_id", ""))
+			check(not id.is_empty() and not frame_lookup.has(id), "unique actual atlas frame bound to source " + id)
+			if not id.is_empty() and not frame_lookup.has(id): frame_lookup[id] = frame
+		check(pose_lookup.size() == int(proof.get("distinct_pixel_frames", -1)) and frame_lookup.size() == pose_lookup.size(),
+			"every original mixed-source pose has one real atlas frame")
+		proof["_temporal_pose_index"] = pose_lookup
+		proof["_temporal_frame_index"] = frame_lookup
 	check((proof.get("target_keys", []) as Array).has(original_profile_id), "temporal source provenance binds exact production transform")
 	var reference: Dictionary = proof.get("reference", {})
 	check(FileAccess.get_sha256(str(reference.get("path", ""))) == str(reference.get("sha256", "missing")), "original transform reference bytes unchanged during Main temporal stage")

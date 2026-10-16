@@ -436,13 +436,32 @@ func lifecycle_case() -> void:
 		var name_value := str(drop.item_name)
 		var before: int = int(world.inventory.get(name_value,0))
 		check(before == int(inventory_before.get(name_value,0)),"drop is not immediately awarded")
+		# A genuine kill may leave production stun/fear/hold or weapon motion
+		# active. The manual pickup controller rightly rejects these states.
+		# Wait for the original live timers instead of bypassing their logic.
+		var recovery_ticks: int = 0
+		while recovery_ticks < 480 and (world.player.is_stunned() or world.player.is_feared()
+				or world.player.is_held() or world.player.movement_locked):
+			await tick()
+			recovery_ticks += 1
+		report.setup.pickup_recovery_ticks = recovery_ticks
+		check(not world.player.is_stunned() and not world.player.is_feared()
+			and not world.player.is_held() and not world.player.movement_locked,
+			"real combat control and movement lock recover before manual pickup")
 		(world.ground_loot.views[str(drop.id)] as Button).pressed.emit()
 		world.loot_pickup.pickup_button.pressed.emit()
 		for _wait: int in range(180):
 			await tick()
 			if not world.ground_loot.records.has(str(drop.id)): break
 		picked = int(world.inventory.get(name_value,0)) == before+int(drop.quantity)
-		check(picked and not world.ground_loot.records.has(str(drop.id)),"actual UI manual pickup awards once")
+		check(picked and not world.ground_loot.records.has(str(drop.id)),
+			"actual UI manual pickup awards once; mode=" + str(world.loot_pickup.mode)
+			+ " target=" + str(world.loot_pickup.target_id)
+			+ " stunned=" + str(world.player.is_stunned()) + " held=" + str(world.player.is_held())
+			+ " feared=" + str(world.player.is_feared()) + " locked=" + str(world.player.movement_locked)
+			+ " pending=" + str(world.ground_loot.records.has(str(drop.id)))
+			+ " owned=" + str(world.inventory.get(name_value, 0))
+			+ " expected=" + str(before + int(drop.quantity)))
 	await tick(90)
 	check(not is_instance_valid(normal) or not normal.is_physics_processing(),"corpse lifecycle terminates or enters dormant pool")
 	report.lifecycle = {"hp_start":hp_start,"hp_end":normal.hp if is_instance_valid(normal) else 0,"weapon_attempts":attempts,"attempt_limit":attempt_limit,"hit_pose":hit_seen,"death_callbacks":deaths.size(),
