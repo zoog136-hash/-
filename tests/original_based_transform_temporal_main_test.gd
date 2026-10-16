@@ -100,6 +100,48 @@ func transform_temporal_unoccluded(bounds: Rect2) -> bool:
 			if (prop.global_transform * (prop as Sprite2D).get_rect()).intersects(bounds): return false
 	return true
 
+func transform_temporal_provenance_index(proof: Dictionary) -> Dictionary:
+	# Fail closed on duplicate or incomplete source records. Build this
+	# index once per Main case rather than scanning all frames at 120Hz.
+	var lookup: Dictionary = {}
+	for frame: Dictionary in proof.get("frames", []):
+		var key := "%s|%s|%s" % [str(frame.get("sheet", -1)), str(frame.get("row", -1)), str(frame.get("direction", ""))]
+		check(not lookup.has(key), "unique source atlas cell " + key)
+		if not lookup.has(key): lookup[key] = frame
+	check(lookup.size() == int(proof.get("distinct_pixel_frames", -1)), "complete unique authored source frame index")
+	return lookup
+
+func transform_temporal_provenance_record(role: String, direction: int, phase: int, texture: Texture2D, proof: Dictionary) -> Dictionary:
+	if not texture is AtlasTexture: return {}
+	var atlas := texture as AtlasTexture
+	if atlas.atlas == null: return {}
+	var tracks: Dictionary = proof.get("tracks", {})
+	var track: Dictionary = tracks.get(role, {})
+	var rows: Array = track.get("source_rows", [])
+	if phase < 0 or phase >= rows.size(): return {}
+	var sheet := -1
+	for source_file: Dictionary in track.get("atlas_files", []):
+		var path := str(source_file.get("path", ""))
+		if path != atlas.atlas.resource_path: continue
+		var stem := path.get_file().get_basename()
+		if stem.begins_with("poses-") and stem.trim_prefix("poses-").is_valid_int():
+			sheet = int(stem.trim_prefix("poses-"))
+		break
+	if sheet < 0: return {}
+	var key := "%d|%d|%s" % [sheet, int(rows[phase]), COMPASS[direction]]
+	var lookup: Dictionary = proof.get("_temporal_source_index", {})
+	var record: Dictionary = lookup.get(key, {})
+	if record.is_empty(): return {}
+	# Matching row/direction is insufficient: the selected production texture
+	# must also use precisely the crop and margins in the original provenance.
+	var region: Array = record.get("region", [])
+	var margin: Array = record.get("margin", [])
+	var anchor: Array = record.get("source_anchor", [])
+	if region.size() != 4 or margin.size() != 4 or anchor.size() != 2: return {}
+	if region != [int(atlas.region.position.x), int(atlas.region.position.y), int(atlas.region.size.x), int(atlas.region.size.y)]: return {}
+	if margin != [int(atlas.margin.position.x), int(atlas.margin.position.y), int(atlas.margin.size.x), int(atlas.margin.size.y)]: return {}
+	return record
+
 func transform_temporal_snapshot(sprite: AnimatedSprite2D, motion: TwilightActorMotion, seconds: float, proof: Dictionary) -> Dictionary:
 	var texture := transform_temporal_texture(sprite)
 	var size := texture.get_size() if texture != null else Vector2.ZERO
@@ -108,15 +150,16 @@ func transform_temporal_snapshot(sprite: AnimatedSprite2D, motion: TwilightActor
 	var source_foot := canonical_foot
 	var role := str(sprite.animation).trim_suffix("_" + str(motion.facing8))
 	if role in ["cast", "ranged_attack"]: role = "attack"
-	var source_record_found := false
-	for frame: Dictionary in proof.get("frames", []):
-		if str(frame.get("role", "")) == role and str(frame.get("direction", "")) == COMPASS[motion.facing8] and int(frame.get("phase", -1)) == sprite.frame and texture is AtlasTexture:
-			var atlas := texture as AtlasTexture
-			var anchor: Array = frame.get("source_anchor", [])
-			if anchor.size() == 2:
-				source_foot = local_origin + atlas.margin.position + Vector2(float(anchor[0]), float(anchor[1])) - atlas.region.position
-				source_record_found = true
-			break
+	# Provenance records physical atlas cells (sheet/row/direction), not
+	# role/phase. The role's source_rows identifies the authored row for
+	# each controller phase; atlas_files identifies the actual source sheet.
+	var source_record: Dictionary = transform_temporal_provenance_record(
+		role, motion.facing8, sprite.frame, texture, proof)
+	var source_record_found := not source_record.is_empty()
+	if source_record_found:
+		var atlas := texture as AtlasTexture
+		var anchor: Array = source_record["source_anchor"]
+		source_foot = local_origin + atlas.margin.position + Vector2(float(anchor[0]), float(anchor[1])) - atlas.region.position
 	var bounds := transform_temporal_local_bounds(sprite, texture) if texture != null else Rect2()
 	var world_bounds: Rect2 = sprite.global_transform * bounds
 	var canonical_world := sprite.to_global(canonical_foot)
@@ -343,6 +386,7 @@ func inspect_poses() -> void:
 	check(world.player.transform_active and profile.profile_id == original_profile_id and profile.frames_path == subject_path(), "temporal stage uses exact actually equipped production transformation")
 	var frames := sprite.sprite_frames
 	var proof: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(subject_path().get_base_dir().path_join("provenance.json")))
+	proof["_temporal_source_index"] = transform_temporal_provenance_index(proof)
 	check((proof.get("target_keys", []) as Array).has(original_profile_id), "temporal source provenance binds exact production transform")
 	var reference: Dictionary = proof.get("reference", {})
 	check(FileAccess.get_sha256(str(reference.get("path", ""))) == str(reference.get("sha256", "missing")), "original transform reference bytes unchanged during Main temporal stage")
