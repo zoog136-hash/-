@@ -22,6 +22,8 @@ static func prepare_real_boss_finisher(qa: SceneTree) -> void:
 	var original_max_hp: int = boss.max_hp
 	var prior_battle_damage: int = starting_hp - 300
 	boss.take_damage(prior_battle_damage, false, "prior_battle_qa")
+	# Do not count the preparatory damage animation as an equipped hit pose.
+	boss.motion.hit_clock = 0.0
 	qa.check(not boss.dead and boss.hp == 300 and boss.max_hp == original_max_hp, "nonlethal previous battle uses production damage without changing original max HP")
 	qa.report.setup.lifecycle_battle_scope = {"phase":"original-HP boss finisher, not entire fight",
 		"original_max_hp":original_max_hp, "prior_battle_damage":prior_battle_damage,
