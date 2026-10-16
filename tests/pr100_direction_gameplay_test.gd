@@ -366,7 +366,7 @@ func boss_case() -> void:
 				check(rig.warning_center.is_equal_approx(center),"boss warning uses real world ground anchor " + COMPASS[direction])
 				special_sequence = boss.special_sequence
 				check(boss.motion.facing8 == direction and warning_aim.dot(screen_direction(direction)) > .995,"boss warns toward player " + COMPASS[direction])
-				check(attack_track(boss.motion._resolved_key,direction),"boss skill uses directional attack art " + COMPASS[direction])
+				check(attack_track(boss.motion._resolved_key,direction),"boss skill uses directional attack art " + COMPASS[direction] + " actual=" + boss.motion._resolved_key + " state=" + boss.motion.state)
 				check(boss.motion.active,"boss does not return idle during windup " + COMPASS[direction])
 			if rig.effect_age >= 0.:
 				effect = true

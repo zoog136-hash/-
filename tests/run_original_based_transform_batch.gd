@@ -236,8 +236,10 @@ func finish_batch() -> void:
 	else:
 		file.store_string(JSON.stringify(summary, "\t"))
 		file.close()
+	# Expose the real failure array for the full-suite fail-closed *_RESULT parser.
+	# Keep the count, all ten case files and the independent batch report.
 	print("PR100_TRANSFORM_BATCH_RESULT " + JSON.stringify({"cases": batch_results.size(), "checks": batch_checks,
-		"failure_count": batch_failures.size(), "report": batch_report_path}))
+		"failures": batch_failures.duplicate(), "failure_count": batch_failures.size(), "report": batch_report_path}))
 	if batch_failures.is_empty(): print("PR100_TRANSFORM_BATCH_OK")
 	quit(0 if batch_failures.is_empty() else 1)
 

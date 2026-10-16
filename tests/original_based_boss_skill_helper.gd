@@ -7,6 +7,26 @@ extends RefCounted
 ## weapon, HP and armor; allow a bounded boss fight instead of forcing death.
 const LIFECYCLE_ATTEMPT_LIMIT: int = 768
 
+## The original boss has hundreds of thousands of HP. A short real combat
+## regression must not claim that 768 equipped-weapon swings defeat it.
+## Set up a previously injured boss with the production damage handler, then
+## require genuine equipped-weapon finishing blows, native death/corpse art,
+## a real died callback and DB drop. The full boss HP/stat block is preserved.
+static func prepare_real_boss_finisher(qa: SceneTree) -> void:
+	var boss: TwilightMonster = qa.normal
+	var original: Dictionary = qa.record_for(boss.monster_name)
+	qa.check(not original.is_empty() and boss.is_boss, "real catalog boss for finishing encounter")
+	qa.check(boss.hp == boss.max_hp and boss.max_hp == int(original.get("hp", 0)), "full original boss HP and stats before bounded ending")
+	if boss.dead or boss.hp < 300: return
+	var starting_hp: int = boss.hp
+	var original_max_hp: int = boss.max_hp
+	var prior_battle_damage: int = starting_hp - 300
+	boss.take_damage(prior_battle_damage, false, "prior_battle_qa")
+	qa.check(not boss.dead and boss.hp == 300 and boss.max_hp == original_max_hp, "nonlethal previous battle uses production damage without changing original max HP")
+	qa.report.setup.lifecycle_battle_scope = {"phase":"original-HP boss finisher, not entire fight",
+		"original_max_hp":original_max_hp, "prior_battle_damage":prior_battle_damage,
+		"prior_damage_pipeline":"TwilightMonster.take_damage", "finishing_hits":"actual equipped weapon and native physics/death/drop"}
+
 static func exercise(qa: SceneTree, expected_kind: String) -> void:
 	var world: TwilightWorld = qa.world
 	var boss: TwilightMonster = qa.normal
