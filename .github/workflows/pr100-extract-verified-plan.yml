@@ -1,0 +1,45 @@
+name: PR100 Compact Verified Plan
+on:
+  push:
+    branches: ['diagnostics/pr100-validation-20261016']
+    paths: ['.github/workflows/pr100-extract-verified-plan.yml']
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 38828160599
+          name: pr100-verified-export-6d92b992d3903fc9e3d10e6292cf86bd54943f2a
+          path: ${{ runner.temp }}/pr100-full-export
+      - name: Validate exact parents and print transfer inventory
+        run: |
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'pr100-full-export'
+          plan=json.loads((root/'publish-plan.json').read_text())
+          assert plan['parents']==['36ad2cf0efabb39f92e7d0521f6519f376fc860f','e2119c37293a783e93b421ee0055d1318271b071']
+          assert plan['verified_runtime_tree']=='bed41a5cc04e4dd52fd11b2d52d85f2e5b6867a3'
+          for name,info in plan['new_blobs'].items():
+              data=(root/'new_files'/name).read_bytes()
+              assert hashlib.sha256(data).hexdigest()==info['sha256']
+              assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==info['sha']
+          print('COMPACT_PLAN',json.dumps({k:v for k,v in plan.items() if k not in ['tree_elements','new_blobs']}))
+          print('ENTRY_COUNT',len(plan['tree_elements']),'NEW_BLOBS',len(plan['new_blobs']),'PLAN_BYTES',(root/'publish-plan.json').stat().st_size)
+          print('No source modified; only the redundant full binary diff is omitted from this additional transfer package.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pr100-verified-publish-plan
+          path: |
+            ${{ runner.temp }}/pr100-full-export/publish-plan.json
+            ${{ runner.temp }}/pr100-full-export/new_files/
+            ${{ runner.temp }}/pr100-full-export/target-tree.txt
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
