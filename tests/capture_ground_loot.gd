@@ -76,6 +76,10 @@ func _run() -> void:
 	world._clear_drops()
 	var where: Vector2 = world.player.global_position + Vector2(260,0)
 	var view: Button = world._spawn_ground_drop(str(world.loot_catalog["equipment_by_grade"]["희귀"][0]), where)
+	if view == null:
+		push_error("GROUND_LOOT_RENDER_FAILED: AUTO source drop could not spawn")
+		quit(1)
+		return
 	world.player.set_auto_enabled(true)
 	for i: int in range(12):
 		world._process(1.0 / 60.0)
