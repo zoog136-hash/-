@@ -258,6 +258,23 @@ def generate(original, map_id):
                       "scale":round(0.42+(i%4)*0.13,2),"flip":bool(i%2)})
     data["props"]=props
     data["collision"]=collisions
+    if map_id == "faith_04":
+        # No recycled placeholder props. All visible scenery uses a bespoke
+        # Godot 2D sprite hierarchy with collision-aligned world coordinates.
+        architecture=json.loads((Path(__file__).resolve().parent/"faith4_layout.json").read_text(encoding="utf-8"))
+        assert architecture["id"]=="faith_04"
+        fresh=[]
+        for row in architecture["walls"]+architecture["rails"]:
+            fresh.append({"shape":"rect","rect":row["collision"],"kind":"dungeon_wall"})
+        for x,y,scale in architecture["pillars"]:
+            fresh.append({"shape":"circle","center":[x,y],"radius":43*scale,"kind":"pillar"})
+        for x,y,scale in architecture["statues"]:
+            fresh.append({"shape":"circle","center":[x,y],"radius":42*scale,"kind":"statue"})
+        for x,y,scale in architecture["altars"]:
+            fresh.append({"shape":"circle","center":[x,y],"radius":44*scale,"kind":"altar"})
+        data["props"]=[]
+        data["collision"]=fresh
+        data["sample_art_status"]="FAITH4_DEDICATED_ARCHITECTURE_V3"
     data["regions"]=[
         region("sample_entry",entry,420,"safe",cfg["safety_color"]),
         region("sample_mid",center,700,"combat",cfg["palette"]["accent"]),
@@ -344,6 +361,23 @@ def build(root, output):
             shutil.copytree(path,output/name,
                             ignore=shutil.ignore_patterns(".godot","__pycache__","evidence","*.log"))
         else: shutil.copy2(path,output/name)
+    # Only rewrite the isolated copy. Original scripts/world.gd remains byte-identical.
+    world_src=output/"scripts/world.gd"
+    world_text=world_src.read_text(encoding="utf-8")
+    old='\t\telif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()'
+    new='\t\telif field_map is AuthoredRemakeField: field_renderer = preload("res://content/newmaps/lineagem_reference/samples/faith4_renderer.gd").new() if map_id == "faith_04" else preload("res://scripts/maps/authored_remake_renderer.gd").new()'
+    if world_text.count(old) != 1: raise ValueError("TWILIGHT world renderer call changed: do not patch blind")
+    world_src.write_text(world_text.replace(old,new,1),encoding="utf-8")
+    # Recreate all original authored 2D sprites from source. This allows PR121
+    # to hold only small text files; unlicensed original game images are not used.
+    import subprocess
+    import sys
+    assets_dir=output/"content/newmaps/lineagem_reference/samples/assets/faith04"
+    subprocess.run([sys.executable,str(output/"content/newmaps/lineagem_reference/samples/make_faith_art.py"),str(assets_dir)],check=True)
+    # Stop rather than render a placeholder if a visual source is absent.
+    for required in ("floor_tile.png","carpet_tile.png","teal_pillar.png","gothic_wall.png","balustrade.png","ritual_ring.png","teal_glow.png"):
+        if not (output/"content/newmaps/lineagem_reference/samples/assets/faith04"/required).is_file():
+            raise ValueError("Missing authored sprite atlas: " + required)
     config=output/"project.godot"
     text=config.read_text(encoding="utf-8")
     text=text.replace("[application]","[application]\nconfig/use_custom_user_dir=true\nconfig/custom_user_dir_name=\"TWILIGHT_PR121_4REGION_SAMPLE\"",1)

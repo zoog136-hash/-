@@ -28,6 +28,8 @@ jobs:
         run: |
           python3 -m py_compile content/newmaps/lineagem_reference/samples/build_four.py
           python3 content/newmaps/lineagem_reference/samples/build_four.py --self-test
+          python3 content/newmaps/lineagem_reference/samples/validate_faith4_layout.py
+          python3 -m py_compile content/newmaps/lineagem_reference/samples/make_faith_art.py
   godot-playable:
     needs: model-selfcheck
     runs-on: ubuntu-latest
@@ -50,6 +52,8 @@ jobs:
           "$GODOT" --version
           sudo apt-get update -qq
           sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+      - name: Install Pillow for original 2D architectural assets
+        run: python3 -m pip install --user --break-system-packages Pillow
       - name: Build sibling Godot project without editing checkout
         run: |
           python3 content/newmaps/lineagem_reference/samples/build_four.py \

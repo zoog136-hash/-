@@ -46,3 +46,10 @@ Linux CI는 xvfb-run을 사용합니다. headless로 PNG가 생성되지 않으�
 - 기존 몬스터/보스의 정확한 원작 출현, 전투 밸런스, Android GPU, 실 기기 24맵 전환 및 2026 원작 지도 동일성은 **NOT_VERIFIED / NOT_RUN**.
 
 자료 출처 ID/URL은 상위 SOURCE_CATALOG_20261016.json와 RESEARCH_ADDENDUM_20261016.md에 기록돼 있습니다. 원작 화면과 디자인의 비교는 **참조 목적으로만** 수행합니다.
+
+## 수작업 신념 4층 맵 리빌드 v3
+- 기존 4개 샘플 가운데 신념의 탑 4층에만 **독자적인 Godot 2D 석판·카펫·건축 구조물·충돌 위치**를 연결한다.
+- 바닥/복도 14개, 카펫 5개, 석재벽 5, 난간 4, 기둥 14, 제단/석상/촛대와 의식진. 생성기는 원작 리니지M 타일 그래픽을 복제하지 않는다.
+- 빌더는 Pillow를 이용해 자체 PNG 11장을 격리 복사본 내부에서 생성하고, 그 복사본의 `scripts/world.gd`에서 **faith_04 전용 Renderer**만 선택한다. 저장소 원본 `Main.tscn`과 `scripts/world.gd`는 그대로 둔다.
+- 신념4층 외 지도/보스·스폰 데이터 변경 없음. 원작의 정확한 좌표·지형 복원이나 GPU 합격은 검증 전까지 주장하지 않는다.
+- 검사: `validate_faith4_layout.py`, `build_four.py --self-test`, 실제 Godot 렌더 8 PNG 및 검사 로그.

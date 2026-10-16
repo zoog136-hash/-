@@ -101,6 +101,13 @@ func _run() -> void:
 			field.collision_stream.refresh()
 			check(field.collision_stream.active_shape_count > 0,
 				"nearby collision bodies streamed "+id)
+		if id == "faith_04":
+			var art: Node = world.field_renderer.get_node_or_null("Faith4ArchitecturalEnvironment")
+			check(art != null,"Faith4 bespoke 2D architecture attached to Main")
+			if art != null:
+				check(int(art.get("sprites_spawned")) >= 45,"Faith4 rendered architectural objects")
+				check(int(art.get("floor_surfaces")) >= 19,"Faith4 stone/carpet layers")
+			check(field.blockers.size() >= 24,"Faith4 navigation collision matches art")
 		world.portal_cooldown = 9999.0
 		if capture:
 			world.player.global_position = entrance
