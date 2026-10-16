@@ -54,3 +54,10 @@
 3. 알비노 3지역 및 에스카로스 단일/분할 맵의 실제 **경계·연결·이동 가능 통로** 확인 후 TWILIGHT의 각각 3·5맵 분할 방식을 검증.
 4. 오만의 탑·아덴·PR #100/#120·기존 25맵 파일 및 저장 코드 수정 금지. 본 PR은 조사용 독립 경로만 유지.
 5. 자료가 없어 확인 못한 좌표/지형을 추측으로 채우지 않는다. 원작 비주얼 캡처를 제품 리소스로 복제하지 않는다.
+
+## 추가 한국 NC 원문 보완 (최종 교차확인)
+- [NC 한국 게임 가이드북 — 오만과 신념의 탑](https://lineagem.plaync.com/guidebook/view?ref=blog.woojinkim.org&title=%EC%98%A4%EB%A7%8C%EA%B3%BC+%EC%8B%A0%EB%85%90%EC%9D%98+%ED%83%91): 한국 공식 계열의 층별 보스·입장 안내. 검색 본문 색인은 확인, 동적 페이지 내부 상세 이미지는 열람 불가.
+- [NC 한국 공식 신념 2층 소개 (2021.11.30)](https://lineagem.plaync.com/board/cm_story/view?articleId=61a61b2edcf2ee08dc5dbfd4&size=18&viewMode=compact): 탐욕·독충 테마.
+- [NC 한국 공식 신념 3층 소개 (2022.12.13)](https://lineagem.plaync.com/board/cm_story/view?articleId=63985b305fb4e917ffa1e5e5): 질투의 이자벨/언데드 테마.
+- [NC 한국 공식 신념 4층 소개 (2024.04.02)](https://lineagem.plaync.com/board/cm_story/view?articleId=660c021e4817f763b70e210b): 4층 분노의 콘셉트와 존재 확인. `faith_04` 유지.
+- **판정**: 층별 원작 테마·명칭 증거는 늘었으나 2026 KR판 신념 2·3·4층 전체 평면도 자체는 계속 미확보.
