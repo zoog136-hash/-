@@ -1,0 +1,69 @@
+name: TWILIGHT verification-archive bootstrap (maintenance only)
+
+on:
+  push:
+    branches:
+      - maintenance/drive-evidence-20261016
+    paths:
+      - .github/workflows/twilight-drive-evidence-snapshot-once.yml
+
+permissions:
+  contents: read
+
+jobs:
+  archive-phase1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Archive tracked verification evidence without touching game files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p archive
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, os, subprocess, zipfile
+          roots = ('docs/screenshots/', 'docs/monster-world-evidence/', 'docs/verification/')
+          tracked = subprocess.check_output(['git', 'ls-files', '-z', '--', *roots]).split(b'\0')
+          items = []
+          zip_name = Path('archive/TWILIGHT_evidence_phase1_20261016.zip')
+          with zipfile.ZipFile(zip_name, mode='w', compression=zipfile.ZIP_STORED, allowZip64=True) as output:
+              for raw in sorted(filter(None, tracked)):
+                  path = raw.decode('utf-8')
+                  f = Path(path)
+                  if not f.is_file() or f.is_symlink():
+                      raise RuntimeError('Missing or non-regular source: '+path)
+                  payload = f.read_bytes()
+                  items.append({'path': path, 'size': len(payload), 'sha256': hashlib.sha256(payload).hexdigest()})
+                  output.writestr(path, payload)
+              if not items:
+                  raise RuntimeError('No tracked evidence found')
+              manifest = {
+                  'repository': 'zoog136-hash/-',
+                  'source_commit': os.environ['GITHUB_SHA'],
+                  'base_main_commit': 'e2119c37293a783e93b421ee0055d1318271b071',
+                  'roots': roots,
+                  'count': len(items),
+                  'total_source_bytes': sum(item['size'] for item in items),
+                  'files': items,
+              }
+              output.writestr('ARCHIVE_MANIFEST.json', json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
+          with zipfile.ZipFile(zip_name) as check:
+              for item in items:
+                  assert hashlib.sha256(check.read(item['path'])).hexdigest() == item['sha256']
+          digest = hashlib.sha256(zip_name.read_bytes()).hexdigest()
+          Path('archive/ARCHIVE_SHA256.txt').write_text(digest + '  ' + zip_name.name + '\n')
+          print('ARCHIVE_OK', json.dumps({'files': len(items), 'source_bytes': manifest['total_source_bytes'], 'sha256': digest}))
+          PY
+      - name: Upload baseline archive for verified Drive transfer
+        uses: actions/upload-artifact@v4
+        with:
+          name: twilight-evidence-phase1-20261016
+          path: archive/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
