@@ -39,6 +39,12 @@ func run() -> void:
 	world.original_skills.catalog.seed_starters()
 	world.gold = 10000000
 	world._clear_monsters()
+	# The installed A3 source grid has closed directional edges. A target
+	# offset from the old spawn is not necessarily a valid missile lane.
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(10,0)])
+	check(arena.is_finite(),"original skill test has real walkable and clear A3 combat lane")
+	if not arena.is_finite(): world.queue_free(); quit(1); return
+	world.player.global_position = arena
 	dummy = (load("res://scenes/Monster.tscn") as PackedScene).instantiate()
 	world.monsters_root.add_child(dummy)
 	dummy.setup({"name":"원작 검사 대상","hp":10000000,"lv":1,"ac":0,"mr":0,"atk":1}, world.player, world, null)
