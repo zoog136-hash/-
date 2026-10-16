@@ -47,4 +47,14 @@ whole-sheet 후보도 기존의 동일한 분석·중복/alpha/영역/앵커·�
 
 원본 로그·보고서·격리 복사 SHA 증거는 `remaining106-resume-20261016/latest-Main-validation.zip`에 CRC 및 SHA-256 확인 후 저장했다. 파일별 목록과 정확한 검증 범위는 `latest-Main-validation-manifest.json`에 있다. 다음 작업은 별도 복사본에서 **새 빈 사용자 폴더**로 OpenGL batch32를 실행하고 가림 없는 실제 AI/접촉/피격/사망/드랍/습득 화면을 독립 검토하는 것이다. 검사나 맵을 바꾸어 통과시키지 않는다.
 
+## PR #122 실제 제작 재개 — batch01
+
+사용자의 긴급 재개 지시에 따라 중간 체크포인트에서 종료하지 않고 실제 OpenGL 검증을 실행했다. 이구아나112/아그니104 전체 native 자세의 실제 Main 시간 진행80,793검사, 원래 게임 OpenGL2,749검사, 추가 가림 없는 실제 AI·접촉·피격·사망3단계·드랍·수동습득3,395검사를 모두 통과했다. 같은 Main에서 기존 완료 지옥의 쿠거와의 비교295검사와 별도 독립 사후 시각 판정도 PASS다. UI가 근접했던 초기 비교 화면을 승인에 쓰지 않고 카메라만 조정하여 미니맵 가림 검사를 추가했다. 기존 검사·맵·전투 코드는 유지했다.
+
+최종 독립 시각 PASS를 기록한 뒤 읽기 전용 검사를 거쳐 production에 두 개체를 연결했다. 원본 PNG47개와 두 SpriteFrames 모두 검토한 WIP의 SHA와 일치하며 재생성/리사이즈하지 않았다. 다른1,447개 기존 프로필 값은 모두 그대로이고 두 실제 연결 프로필도 검토한 격리 Main과 같다. production import 후 부팅·8방향·native 확장·original-based canvas4종의 실제 프로세스 종료코드0과4/4 PASS를 확인했다. 첫 import의 sandbox 로컬 editor socket 차단 로그도 보존하고, 네트워크 사용이 허용된 환경에서 오류 없는 import를 확인했다. 실패 판정은 삭제/필터링하지 않았다.
+
+`docs/remake/evidence/pr122-remaining106/batch01/`에 개체별 독립 판정, canonical을 덮어쓰지 않은 새 Main4개 보고서, 보존 SHA, 실제 framebuffer378개·QA보드15개 등을 분할 ZIP15개(469,316,628바이트)로 저장했다. 모든 ZIP CRC/멤버 SHA를 확인했다. 새 배치 CI workflow는 실제 Main headless·OpenGL·216자세시간진행·기존완료개체비교를 그대로 실행하며 기존 필수 workflow를 대체하지 않는다.
+
+**runtime 연결394 / 최종 완료392 / 로컬PASS이나 CI·APK대기2 / HOLD16 / 미제작·미연결88**로 구분한다. 필수 CI와 APK가 충족되기 전까지 이2종을 최종 완료로 올리지 않는다. Android 실기기는 계속 미검증이다. CI 대기 중 데스 서번트의 보존104자세 독립 원본 검토를 진행하고 있으며, 다음으로 격리 Main에서 모델·앵커·실제 근접 접촉을 검증한다. 유니콘의 누락 원본2개와 실패자세8개, 무덤 가디언의72개 미검토 nonwalk 앵커 때문에 다른 제작을 멈추지 않는다. PR #100 병합과 새 PR 생성은 하지 않는다.
+
 자동·정적·시간 진행·실제 Main headless/OpenGL·독립 시각 검토를 분리한다. 전 항목 통과 전에는 연결 완료 수량을 올리지 않는다. 최신 HEAD CI와 Android APK는 별도 확인 대상이며 실제 Android 기기 검사는 미검증이다. PR #100 병합 작업은 재개하지 않는다.
