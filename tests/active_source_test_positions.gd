@@ -46,3 +46,18 @@ static func blocked_edge(world: Node) -> Array[Vector2]:
 					var result: Array[Vector2] = [a,b]
 					return result
 	return empty
+
+## The 2026 A3 4.map sha256 c22aa61e... has 8-neighbour-disconnected
+## original source components. Both coordinates are passable, non-safe and
+## 259.6 pixels apart; no invented blockers or map changes are permitted.
+static func disconnected_pair(world: Node) -> Array[Vector2]:
+	var f: PlayableField = world.get("field_map") as PlayableField
+	var empty: Array[Vector2] = []
+	if not f is RemakePlayableField: return empty
+	if str((f as RemakePlayableField).definition.get("source_sha256","")) != "c22aa61ed083a3680230c659202503d7afaef30cb41b86d4655e9f843c81a7c4": return empty
+	var p: Vector2 = f.cell_to_world(Vector2i(725,658))
+	var q: Vector2 = f.cell_to_world(Vector2i(719,670))
+	if not f.point_clear(p) or not f.point_clear(q) or f.is_safe(p) or f.is_safe(q): return empty
+	if p.distance_to(q) < 80.0 or p.distance_to(q) > 460.0: return empty
+	if not f.path(p,q).is_empty(): return empty
+	return [p,q]
