@@ -19,7 +19,7 @@ from test_project_support import classify_result, run_isolated
 
 FAMILIES = ("oman_", "domination_", "escaros_", "albino_", "faith_")
 CHECKED = re.compile(r"^REGION CHECKED (\S+)\s*$", re.MULTILINE)
-SUMMARY = re.compile(r"^REGION maps=(\d+) checks=(\d+) families=(\d+)\s*$", re.MULTILINE)
+SUMMARY = re.compile(r"^REGION maps=(\d+) checks=(\d+) families=(\d+)(?: authored_variant_probes=(\d+))?[ \t]*$", re.MULTILINE)
 
 
 def expected_shards(index_path: Path) -> dict[str, list[str]]:
@@ -45,7 +45,10 @@ def validate_output(prefix: str, expected_ids: list[str], returncode: int, outpu
     reports = SUMMARY.findall(output)
     if len(reports) != 1:
         return False, "Missing or duplicated REGION summary", 0
-    maps, checks, families = map(int, reports[0])
+    maps, checks, families = map(int, reports[0][:3])
+    probes = reports[0][3]
+    if probes and not 0 <= int(probes) <= maps:
+        return False, "Invalid authored variant probe count", checks
     if maps != len(expected_ids) or checks <= 0 or families != 1:
         return False, f"Invalid counts: maps={maps} checks={checks} families={families}", checks
     if output.splitlines().count("WORLD_REGIONS_OK") != 1:
