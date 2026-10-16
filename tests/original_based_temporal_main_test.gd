@@ -465,3 +465,33 @@ func run() -> void:
 		var local := OS.get_environment("LOCALAPPDATA").replace("\\", "/").simplify_path().trim_suffix("/").to_lower()
 		isolated_home = isolated_home and roaming == root_path and local == root_path
 	check(isolated_home, "temporal user directory belongs to the explicitly isolated platform-specific root")
+	check(temporal_save_files().is_empty(), "existing user saves refuse temporal test")
+	check(not FileAccess.file_exists(temporal_report_path), "temporal report does not overwrite")
+	if FileAccess.file_exists(temporal_report_path):
+		Engine.max_fps = temporal_original_max_fps
+		quit(1)
+		return
+	if temporal_render:
+		if temporal_capture_root.is_empty(): temporal_capture_root = temporal_report_path.get_basename() + "-captures"
+		check(DirAccess.make_dir_recursive_absolute(temporal_capture_root) == OK, "temporal capture root writable")
+	else: check(temporal_capture_root.is_empty(), "headless smoke does not claim rendered evidence")
+	var cases := temporal_cases()
+	if failures.is_empty():
+		for spec: Dictionary in cases:
+			await temporal_run_case(spec)
+			if not failures.is_empty(): break
+	var summary := {"scope": "Additive QA-clocked continuous native playback in actual Main; separate unchanged AI/combat/lifecycle tests required",
+		"clock": "all120Hz production advance/apply steps checked/logged; rich samples at20Hz plusnativechanges; actualdraw onnativechanges/start/end held across frame_post_draw and PNG I/O",
+		"simulation_step_seconds": TEMPORAL_STEP, "wall_microseconds": Time.get_ticks_usec() - temporal_wall_start,
+		"rendered": temporal_render, "wall_time_performance_claim": false, "cases": temporal_results,
+		"checks": checks, "failures": failures, "user_directory": OS.get_user_data_dir(),
+		"capture_root": temporal_capture_root, "direct_texture_assignment": false,
+		"production_game_or_guard_changes": false, "completed_added": 0}
+	DirAccess.make_dir_recursive_absolute(temporal_report_path.get_base_dir())
+	var file := FileAccess.open(temporal_report_path, FileAccess.WRITE)
+	if file != null: file.store_string(JSON.stringify(summary, "\t")); file.close()
+	else: failures.append("Cannot write temporal summary")
+	Engine.max_fps = temporal_original_max_fps
+	print("PR100_TEMPORAL_MAIN_RESULT " + JSON.stringify({"cases": temporal_results.size(), "checks": checks, "failures": failures, "report": temporal_report_path, "rendered": temporal_render}))
+	if failures.is_empty(): print("PR100_TEMPORAL_MAIN_OK")
+	quit(0 if failures.is_empty() else 1)

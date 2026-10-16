@@ -181,6 +181,17 @@ elif "--script" in sys.argv:
     def test_missing_failure_field_overrides_ok(self):
         self.assert_failed_case(output='CASE_OK\nCASE_RESULT {"checks":3}\n')
 
+    def test_transform_batch_result_keeps_strict_failure_array(self):
+        process, summary = self.run_case(output='PR100_TRANSFORM_BATCH_RESULT {"cases":10,"checks":606718,"failure_count":0,"failures":[]}\nPR100_TRANSFORM_BATCH_OK\n')
+        self.assertEqual(process.returncode, 0)
+        self.assertEqual(summary['passed'], 4)
+
+    def test_transform_batch_count_alone_cannot_pass(self):
+        self.assert_failed_case(output='PR100_TRANSFORM_BATCH_RESULT {"cases":10,"failure_count":0}\nPR100_TRANSFORM_BATCH_OK\n')
+
+    def test_transform_batch_failure_overrides_ok(self):
+        self.assert_failed_case(output='PR100_TRANSFORM_BATCH_RESULT {"cases":10,"failure_count":1,"failures":["missing phase"]}\nPR100_TRANSFORM_BATCH_OK\n')
+
     def test_digit_result_marker(self):
         process, summary = self.run_case(output='PR93_RESULT {"failures":[]}\n')
         self.assertEqual(process.returncode, 0)

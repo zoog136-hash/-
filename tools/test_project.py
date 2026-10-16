@@ -91,3 +91,50 @@ for name,extra in tests:
             # complete fixture and preserve its report outside that directory.
             env['TWILIGHT_PR100_BATCH_ISOLATED']='1'
             env['TWILIGHT_PR100_BATCH_CONFIG']='res://tests/fixtures/pr100_transform_regression.json'
+            env['TWILIGHT_PR100_BATCH_REPORT']=str(logs/(name+'.batch.json'))
+        if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
+        try:
+            budget=timeout_budget(name,args.timeout,args.import_timeout)
+            command=[args.godot,*display_args,'--path',str(root),*extra]
+            if legacy_geometry:
+                command.extend(['--','--legacy-map-layouts'])
+            if name=='world_regions_test':
+                command=[sys.executable,str(root/'tools/world_region_shards.py'),'--godot',args.godot,
+                         '--path',str(root),'--logs',str(logs/'world-region-shards'),
+                         '--timeout',str(args.region_shard_timeout),'--legacy-map-layouts']
+            if visual and sys.platform.startswith('linux') and not env.get('DISPLAY'):
+                if not shutil.which('xvfb-run'):
+                    raise RuntimeError('Visual test requires xvfb-run (or DISPLAY); never wait for frame_post_draw in headless mode')
+                command=['xvfb-run','-a','-s','-screen 0 1280x720x24',*command]
+            p=run_isolated(command,env=env,timeout=budget,cwd=str(root))
+            output='VALIDATION_SCOPE '+scopes[name]+'\n'+p.stdout+p.stderr
+            ok,is_skipped=classify_result(name,p.returncode,output)
+            if is_skipped:
+                skipped.append(name)
+            if ok and name=='bake_navigation':
+                # Preserve the exact rebuilt files with the CI evidence.
+                shutil.copytree(root/'data/maps/navigation',logs/'navigation',dirs_exist_ok=True)
+        except OSError as exc:
+            output='PROCESS_START_FAILED '+str(exc);ok=False
+        except RuntimeError as exc:
+            output='VISUAL_SETUP_FAILED '+str(exc);ok=False
+        except subprocess.TimeoutExpired as exc:
+            output='TIMEOUT '+str(exc)+'\n'+(exc.stdout.decode(errors='replace') if isinstance(exc.stdout,bytes) else (exc.stdout or ''))+'\n'+(exc.stderr.decode(errors='replace') if isinstance(exc.stderr,bytes) else (exc.stderr or ''));ok=False
+        (logs/(name+'.log')).write_text(output,encoding='utf-8')
+        print(('SKIP ' if name in skipped else ('PASS ' if ok else 'FAIL '))+name,flush=True)
+        if not ok:
+            failed.append(name)
+            # Artifact delivery may fail independently of the test. Retain the
+            # bounded failure detail in ordinary job logs as well as the file.
+            print('FAILED_OUTPUT_BEGIN '+name+'\n'+output[-16000:]+'\nFAILED_OUTPUT_END '+name,flush=True)
+            if name in ('import','bake_navigation'):
+                # Do not manufacture unrelated failures after broken preparation.
+                not_run=[remaining for remaining,_ in tests[len(executed):]]
+                print('BLOCKED_BY_'+name.upper()+' '+str(len(not_run))+' checks',flush=True)
+                break
+passed=len(executed)-len(failed)-len(skipped)
+print(f'{passed}/{len(tests)} checks passed; {len(skipped)} skipped; {len(not_run)} not run',flush=True)
+(logs/'summary.json').write_text(json.dumps({'total':len(tests),'passed':passed,
+    'failed':failed,'skipped':skipped,'not_run':not_run,'checks':[name for name,_ in tests],
+    'validation_scopes':scopes,'selection':args.only or 'FULL_SUITE'},indent=2)+'\n',encoding='utf-8')
+raise SystemExit(bool(failed or not_run))

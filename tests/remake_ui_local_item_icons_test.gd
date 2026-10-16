@@ -59,3 +59,22 @@ func _run() -> void:
 	check(ruby.path == POTION_PATH and ruby.route == "legacy_exact_name_index","explicit legacy ruby index remains recoverable")
 	check(ruby.status == "bundled_ui_art" and ruby.source_id == "","explicit ruby placeholder never claims verified original art")
 	check(RESOLVER.texture(ruby_record,ruby_record.name,explicit_legacy) == load(POTION_PATH),"explicit ruby link resolves its actual preserved bundled texture")
+	var unindexed: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name)
+	check(unindexed.path == "" and unindexed.family == "gem","ruby without an explicit image link receives its appropriate family symbol")
+	check(RESOLVER.describe({"name":ruby_record.name,"sourceId":"unknown-publisher-id"},ruby_record.name,explicit_legacy).path == "","an explicit unknown ruby ID cannot borrow the name-only index")
+	check(JSON.stringify(ruby_record) == ruby_before,"ruby visual lookup preserves the existing item record")
+	var borrowed: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전","sourceId":"local-unverified","image_path":POTION_PATH},"드래곤의 루비")
+	check(borrowed.path == POTION_PATH and borrowed.source_id == "local-unverified" and borrowed.status == "original_review_pending","explicit record art keeps unknown-source provenance instead of claiming original art")
+	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))
+	var wrong: Dictionary = catalog["아이템"][0].duplicate(true)
+	wrong.name = "HP 물약"
+	check(RESOLVER.describe(wrong,wrong.name).path == "","known source ID with a local item name remains rejected")
+	var capture_path: String = OS.get_environment("TWILIGHT_UI_CAPTURE_PATH")
+	if not capture_path.is_empty() and DisplayServer.get_name() != "headless":
+		await RenderingServer.frame_post_draw
+		check(root.get_texture().get_image().save_png(capture_path) == OK,"focused production HUD capture")
+	world.queue_free()
+	await process_frame
+	print("LOCAL_ITEM_ICON_RESULT ",JSON.stringify({"checks":checks,"failures":failures}))
+	if failures.is_empty(): print("LOCAL_ITEM_ICON_OK")
+	quit(0 if failures.is_empty() else 1)

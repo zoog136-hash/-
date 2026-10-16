@@ -1,0 +1,39 @@
+{
+  "observed_utc": "2026-10-16T03:31:39.251613+00:00",
+  "repository": "zoog136-hash/-",
+  "branch": "feature/twilight-remaining106-20261016",
+  "base_branch": "feature/twilight-animation-20261013",
+  "base_sha": "f43c22daa6e9967185465a98abd1b8840d7593a0",
+  "original_saved_commit": "a0ad979eb6325d72f7a36e9a24eaa1b7c439aaed",
+  "carried_work_commit": "fe22e0b445980253c140ca654fe10a4e003ffb6c",
+  "user_directive": "Stop merging PR #100. Commit current work and continue remaining106 in a separate PR first.",
+  "pr100_merge": "not_performed; stopped_by_user",
+  "counts": {
+    "target": 498,
+    "completed": 392,
+    "remaining": 106,
+    "HOLD": 18,
+    "not_authored_or_not_connected": 88,
+    "canonical_Main_reports": 255,
+    "individual_Main_eight_direction": 121,
+    "completed_added": 0
+  },
+  "protected_production_changed": false,
+  "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
+  "validation": {
+    "runner_unit": "31 PASS; controlled subprocess behavior only",
+    "full10_latest_replay": "in_progress; previous actual engine run 606718 checks/1032 native phases/10 cases no failures, wrapper failed due missing failures array; producer now repaired, parser remains strict",
+    "exact_head_CI": "pending_push",
+    "Android_APK": "not_rebuilt",
+    "Android_real_device": "unverified"
+  },
+  "priority": {
+    "iguana": "112-pose read-only preflight PASS; separate static/ordered-phase review recorded; actual Main lifecycle viewport review and latest-code replay still pending; HOLD",
+    "agni": "104 approved candidate poses preserved; static/ordered-phase review recorded; whole-sheet read-only candidate support missing; actual Main lifecycle review and replay pending; HOLD",
+    "unicorn": "8 of 9 standalone poses fail existing alpha>100 single-body rule; 2 selected walk source PNGs missing from preserved archives; HOLD",
+    "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
+    "death_servant": "restored; independent source/Main review pending; HOLD"
+  },
+  "resume": "Implement safe legacy-sheet --validate-candidate using existing strict checks; then isolated latest Main replay and separate final visual review for iguana/agni; never --apply unverified candidate.",
+  "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md"
+}
