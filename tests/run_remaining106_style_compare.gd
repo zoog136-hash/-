@@ -1,5 +1,18 @@
 extends "res://tests/run_remaining106_visual_review.gd"
 
+func comparison_subjects() -> Array[String]:
+	var configured := OS.get_environment("TWILIGHT_REMAINING106_STYLE_SUBJECTS")
+	if configured.is_empty(): return ["알비노 이구아나", "공포의 아그니"]
+	var parser := JSON.new()
+	check(parser.parse(configured) == OK and parser.data is Array, "comparison subjects must be a JSON array")
+	var subjects: Array[String] = []
+	if not parser.data is Array: return subjects
+	check(parser.data.size() > 0 and parser.data.size() <= 20, "comparison has 1 to 20 subjects")
+	for value: Variant in parser.data:
+		check(value is String and not str(value).strip_edges().is_empty() and not subjects.has(str(value)), "comparison subjects are nonempty unique names")
+		if value is String: subjects.append(value)
+	return subjects
+
 # Visual comparison only. Actual AI/combat/lifecycle are separately retained.
 func comparison_capture(stem: String, baseline: TwilightMonster) -> void:
 	var minimap := world.hud.find_child("FieldMinimap",true,false) as Control
@@ -23,6 +36,7 @@ func run() -> void:
 	check(preload("res://tests/qa_isolated_user_path.gd").contains_user_directory(OS.get_user_data_dir(),OS.get_environment("XDG_DATA_HOME"),OS.has_feature("windows")), "fresh platform user root")
 	check(active_save_files().is_empty(), "no existing player saves")
 	check(not out.is_empty() and not captures.is_empty() and not FileAccess.file_exists(out), "new evidence paths required")
+	var subjects := comparison_subjects()
 	if not failures.is_empty(): quit(1); return
 	DirAccess.make_dir_recursive_absolute(captures)
 	report = {"comparisons":[],"screenshots":[],"scope":"Actual Main side-by-side production MotionController inputs; visual comparison, not AI proof","production_changes":false}
@@ -37,7 +51,7 @@ func run() -> void:
 	world.player.set_auto_enabled(false)
 	center = find_clearing()
 	check(center.is_finite(), "real map comparison clearing")
-	for subject: String in ["알비노 이구아나","공포의 아그니"]:
+	for subject: String in subjects:
 		normal = db_actor(subject)
 		var baseline: TwilightMonster = db_actor("지옥의 쿠거")
 		check(normal != null and baseline != null,"real subject and completed Hell Cougar v3")

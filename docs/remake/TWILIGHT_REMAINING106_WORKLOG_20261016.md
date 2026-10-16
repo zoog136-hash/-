@@ -58,3 +58,12 @@ whole-sheet 후보도 기존의 동일한 분석·중복/alpha/영역/앵커·�
 **runtime 연결394 / 최종 완료392 / 로컬PASS이나 CI·APK대기2 / HOLD16 / 미제작·미연결88**로 구분한다. 필수 CI와 APK가 충족되기 전까지 이2종을 최종 완료로 올리지 않는다. Android 실기기는 계속 미검증이다. CI 대기 중 데스 서번트의 보존104자세 독립 원본 검토를 진행하고 있으며, 다음으로 격리 Main에서 모델·앵커·실제 근접 접촉을 검증한다. 유니콘의 누락 원본2개와 실패자세8개, 무덤 가디언의72개 미검토 nonwalk 앵커 때문에 다른 제작을 멈추지 않는다. PR #100 병합과 새 PR 생성은 하지 않는다.
 
 자동·정적·시간 진행·실제 Main headless/OpenGL·독립 시각 검토를 분리한다. 전 항목 통과 전에는 연결 완료 수량을 올리지 않는다. 최신 HEAD CI와 Android APK는 별도 확인 대상이며 실제 Android 기기 검사는 미검증이다. PR #100 병합 작업은 재개하지 않는다.
+
+## Batch02 — continued actual Main and local WIP repair (UTC 2026-10-16 05:59)
+
+- Last pushed production checkpoint: f244b7155fa0d6334ec06e654232b52926db3a54 on existing PR122; PR100 merge stays stopped.
+- Death Servant104 isolated trial: actual AI/lifecycle1412 automatic checks, continuous native OpenGL40364 automatic checks/all104 phases, same-Main Hell Cougar baseline comparison. Separate visual HOLD at S impact: claw visibly above player on actual damage contact. No production connection. Repaired only that single source pose; foreground hand perspective still unapproved, other103 original poses unchanged. Preserve automatic PASS separately from final visual HOLD.
+- Tomb269: generated three previously unstarted NE walk palette repairs; strict one-body/whole-region PASS, silhouette overlap98.7–99.1% with prior poses. Updated51-source112-slot SOURCE-ONLY candidate (local E weapon/NE heel/NE palette fixes) passes unchanged geometry/full-source/uniqueness guards. All final visual flags FALSE; remaining72 nonwalk roots, model scale and actual Main not approved.
+- Unicorn local alpha correction failed (9→35 components,450171 main foreground pixels changed). Raw output/request preserved, no threshold or original edits. Two missing approved source PNGs remain HOLD.
+- Delivered all314 servant evidence members in nine lossless tar.zst parts, every member SHA verified. Additional production diagnostics ZIP delivers ignored logs including failed sandbox import and successful confirmation. No protected game/runtime changes in batch02. QA baseline comparison now accepts an optional bounded unique JSON subject list; existing two-subject defaults remain.
+- Fully qualified392; connected394; local PASS pending CI/APK2; HOLD16; not-authored/not-connected88. f244 resource CI SUCCESS, actual-Main running, other required workflows/APK queued; Android physical device UNVERIFIED. CI waiting and actor HOLD are not stop conditions: continue single-pose correction and next WIP.
