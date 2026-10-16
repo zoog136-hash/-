@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-16T05:52:34.736950+00:00",
+  "observed_utc": "2026-10-16T07:05:44.597968+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -18,22 +18,28 @@
     "individual_Main_eight_direction": 121,
     "completed_added": 0,
     "runtime_connected": 394,
-    "locally_passed_pending_CI_APK": 2
+    "locally_passed_pending_CI_APK": 2,
+    "canonical_Main_reports_preserved_PR100": 255,
+    "new_local_PASS_Main_reports": 4,
+    "connected_coverage_Main_report_paths": 259
   },
   "protected_production_changed": false,
   "source_preservation": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/remaining-source-preservation.json",
   "validation": {
     "runner_unit": "31 PASS; controlled subprocess behavior only",
     "full10_latest_replay": "PASS: complete10, 606800 actual Main checks, 1032 native phases, zero failures; headless temporal evidence, not OpenGL; strict wrapper PASS",
-    "exact_head_CI": "f244b7155fa0d6334ec06e654232b52926db3a54: resource runs38853820564/38853946335 SUCCESS; actual-Main38853820625 in_progress; presentation38853937811/integration38853939792/combat38853942019/APK38853944165 queued. No latest all-required-success claim.",
-    "Android_APK": "Exact f244b71 run38853944165 QUEUED, not built yet",
+    "exact_head_CI": "8c0e6ff resource integrity SUCCESS, actual-Main38858266028 IN_PROGRESS. f244b71 resource/Main/APK SUCCESS, combat/integration IN_PROGRESS, presentation QUEUED; never treated as latest HEAD full success.",
+    "Android_APK": "f244b71 official ARM64 signed debug APK build/static workflow38853944165 SUCCESS, artifact12029098252; current later HEAD not rebuilt yet. Device UNVERIFIED.",
     "Android_real_device": "unverified",
     "importer_legacy_and_safety": "54 PASS including four new read-only success/failure/profile/output/CLI tests",
     "optional_pose_and_direction_inputs": "42 PASS",
     "two_subject_latest_Main": "headless2499, baselineGL2749, additiveactual3395, temporalGL80793/all216native, baselinecomparison295 PASS; source/resolved profiles exact production match; global CI/APK pending",
     "targeted_Godot": "5/5 PASS, 0 skipped/not-run: full10, path13, source-frame336, boss-contract154, icon27",
     "servant_trial01": "Actual isolated Main automatic1412 PASS; chronologicalGL40364 PASS/all104 native; same-Main baseline comparison completed. Independent contact S impact HOLD; production not changed.",
-    "tomb269_local_source": "3 new NE walk palette repairs: unchanged single connected body/strict complete-region PASS. Resumed51source/112slot whole-source uniqueness/coverage geometry PASS. All final review flags false; source-only HOLD."
+    "tomb269_local_source": "3 new NE walk palette repairs: unchanged single connected body/strict complete-region PASS. Resumed51source/112slot whole-source uniqueness/coverage geometry PASS. All final review flags false; source-only HOLD.",
+    "servant_trial03": "Actual isolatedMain1397 automatic + continuousGL40364/all104 native PASS; original103 geometry/RGBA and16PNG SHA preserved; contact reaches helmet with provisional root. Source cloth/flare/palette remains HOLD; production not changed.",
+    "tomb269_source_trial01": "Actual isolatedMain62089 full112; additive real-player event run62195 incl8attack_frame1 contacts and40eventPNGs, zero automatic failures; model/root80nonwalk audit and independent final visual review still HOLD.",
+    "new_pose_patch": "New optional1to1failed-slot input:8testsPASS incl16failure subcases, rollback, original103 preservation, complete unchanged baseline revalidation, CLI read-only and pinned final4evidence roles. Legacy54/pose29/direction13/runner31PASS; old6parser/guard/transaction function bodies byte-exact."
   },
   "priority": {
     "iguana": "112 local static/temporal/actual Main OpenGL+AI+lifecycle+independent/baseline visual gates PASS; connected immutable source; CI/APK pending",
@@ -42,17 +48,17 @@
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Continue single defective Death Servant S-impact pose/source-scale review; other103 poses preserved. Tomb269 revised112 source candidate has all visual flags FALSE: calibrate72 nonwalk anchors and source helmet/core before Main. Unicorn single-pixel edit01 rejected (35components);2missing approved PNGs still HOLD. Never stop solely for queued CI or some actor HOLD.",
+  "resume": "Tomb269 remaining80nonwalk-slot source audit/model/ground measurements, plus separate smaller unchanged native opponent SW contact probe. Guardian W one-pose model/camera/palette review before expanding. Servant cloth/flare HOLD; wolf near-fore repeat persisted after two strategies, do not repeat those requests. Continue source work while CI runs.",
   "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
   "pr": {
     "number": 122,
     "url": "https://github.com/zoog136-hash/-/pull/122",
     "state": "draft",
     "base": "feature/twilight-animation-20261013",
-    "pushed_checkpoint": "f244b7155fa0d6334ec06e654232b52926db3a54; batch02 local source/evidence continuation pending push"
+    "pushed_checkpoint": "8c0e6ff; this batch03 commit resolves via git log for active_batch_checkpoint, push confirmation pending"
   },
-  "last_successful_pushed_code_commit": "f244b7155fa0d6334ec06e654232b52926db3a54",
+  "last_successful_pushed_code_commit": "8c0e6ff1f4d3bcd6a85d7a211b075efadf0b3583",
   "checkpoint_commit_resolution": "git log -1 --format=%H -- docs/remake/TWILIGHT_REMAINING106_CHECKPOINT.json",
   "evidence_manifest": "docs/remake/evidence/pr100-direction-fix/remaining106-resume-20261016/latest-Main-validation-manifest.json",
-  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch02/checkpoint.json"
+  "active_batch_checkpoint": "docs/remake/evidence/pr122-remaining106/batch03/checkpoint.json"
 }

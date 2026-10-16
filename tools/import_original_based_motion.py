@@ -323,6 +323,9 @@ def reviewed_action_aliases(candidate):
 def import_sheet(root, candidate, actor, keys, apply):
     # Optional representation only. Keep the established sheet parser,
     # per-sheet temporal guard and serialized legacy outputs unchanged.
+    if candidate.get("input_mode") == "pose_patch_v1":
+        import original_based_pose_patch
+        return original_based_pose_patch.install(root, candidate, actor, keys, apply)
     if candidate.get("input_mode") == "pose_files_v1":
         return import_pose_files(root, candidate, actor, keys, apply)
     if candidate.get("input_mode") == "mixed_sources_v1":
@@ -1243,6 +1246,9 @@ def import_mixed_sources(root, candidate, actor, keys, apply=False):
 def validate_candidate(root, candidate, actor, keys):
     """Preflight every supported representation, including profiles; never write."""
     mode = candidate.get("input_mode")
+    if mode == "pose_patch_v1":
+        import original_based_pose_patch
+        return original_based_pose_patch.validate(root, candidate, actor, keys)
     if mode == "pose_files_v1":
         return validate_pose_files(root, candidate, actor, keys)
     if mode == "mixed_sources_v1":

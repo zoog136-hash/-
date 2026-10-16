@@ -5,3 +5,5 @@ docs/remake/evidence/pr100-direction-fix/**/*.log -whitespace
 # Archived verification output is data; retain the original log bytes.
 docs/map-remake-20261015/expansion25/**/*.log -whitespace
 docs/map-remake-20261015/expansion25/**/validation-logs/*.txt -whitespace
+# Lossless evidence parts are compressed binary data, including metadata-first streams.
+docs/remake/evidence/pr122-remaining106/**/*.tar.zst.part* binary
