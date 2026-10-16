@@ -38,8 +38,9 @@ class RunnerTests(unittest.TestCase):
         engine = self.root / 'controlled_engine'
         if not missing:
             content = f'''#!{sys.executable}
-import os, pathlib, subprocess, sys, time
+import json, os, pathlib, subprocess, sys, time
 print("DATA_DIRS=" + repr([os.environ.get(k) for k in ["XDG_DATA_HOME", "APPDATA", "LOCALAPPDATA"]]), flush=True)
+print("RUNNER_CONTEXT=" + json.dumps({{k: os.environ.get(k) for k in ["XDG_DATA_HOME", "XDG_CONFIG_HOME", "XDG_CACHE_HOME", "TWILIGHT_PR100_BATCH_ISOLATED", "TWILIGHT_PR100_BATCH_CONFIG", "TWILIGHT_PR100_BATCH_REPORT"]}}), flush=True)
 print("ENGINE_ARGS=" + repr(sys.argv[1:]), flush=True)
 if "--import" in sys.argv:
     print({import_output!r}, flush=True)
@@ -90,6 +91,27 @@ elif "--script" in sys.argv:
         process, summary = self.run_case()
         self.assertEqual(process.returncode, 0)
         self.assertEqual(summary['passed'], 4)
+
+    def test_transform_temporal_child_gets_isolation_and_durable_report(self):
+        name = 'original_based_transform_temporal_main_test'
+        (self.root / 'tests/case_test.gd').rename(self.root / 'tests' / (name + '.gd'))
+        process, summary = self.run_case(extra_env={
+            'TWILIGHT_PR100_BATCH_ISOLATED': '0',
+            'TWILIGHT_PR100_BATCH_CONFIG': 'unrelated-caller-fixture',
+        })
+        self.assertEqual(process.returncode, 0)
+        self.assertEqual(summary['checks'], ['import', 'bake_navigation', 'boot', name])
+        lines = (self.logs / (name + '.log')).read_text().splitlines()
+        context = json.loads(next(line.removeprefix('RUNNER_CONTEXT=')
+                                  for line in lines if line.startswith('RUNNER_CONTEXT=')))
+        self.assertEqual(context['TWILIGHT_PR100_BATCH_ISOLATED'], '1')
+        self.assertEqual(context['TWILIGHT_PR100_BATCH_CONFIG'],
+                         'res://tests/fixtures/pr100_transform_regression.json')
+        self.assertEqual(Path(context['TWILIGHT_PR100_BATCH_REPORT']),
+                         self.logs / (name + '.batch.json'))
+        data = Path(context['XDG_DATA_HOME'])
+        self.assertEqual(Path(context['XDG_CONFIG_HOME']), data / 'config')
+        self.assertEqual(Path(context['XDG_CACHE_HOME']), data / 'cache')
 
     def assert_bake_blocked(self, **kwargs):
         process, summary = self.run_case(**kwargs)
