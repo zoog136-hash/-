@@ -16,7 +16,10 @@ func _run() -> void:
 	world.save_timer = -10000
 	world._set_map("aden_world", false)
 	world.field_population.set_process(false)
-	world.player.position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
+	# The old (3550,4300) layout coordinate may have no A3 source-grid
+	# landing. Preserve the real map spawn selected by _set_map and assert
+	# its physical validity before testing exact transform/save restoration.
+	check(world.field_map != null and world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position), "active map has a valid save/load spawn")
 	var saved_position: Vector2 = world.player.position
 	var chosen: Dictionary = {}
 	for category: String in ["변신", "마법인형", "성물"]:
