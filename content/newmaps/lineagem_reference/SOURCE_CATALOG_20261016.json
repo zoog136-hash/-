@@ -168,6 +168,30 @@
       "date": "2022",
       "url": "https://m.inven.co.kr/webzine/wznews.php?idx=279782",
       "verified_claim": "2022 신념 3층 이자벨 및 언데드 테마 참고. 현재 층 지형도 아님."
+    },
+    "nc_kr_faith_guidebook": {
+      "type": "official_kr_guidebook",
+      "url": "https://lineagem.plaync.com/guidebook/view?ref=blog.woojinkim.org&title=%EC%98%A4%EB%A7%8C%EA%B3%BC+%EC%8B%A0%EB%85%90%EC%9D%98+%ED%83%91",
+      "verified_claim": "한국 NC 게임 가이드북에서 신념 2·3층 등 층별 보스 및 입장/세계 던전 구조 확인. 리니지M 원작 정보; 직접 전체 평면도/좌표 제공 아님.",
+      "access_status": "search_text_indexed; dynamic page body not fully rendered"
+    },
+    "nc_kr_2021_faith_02": {
+      "type": "official_kr_cm_announcement",
+      "date": "2021-11-30",
+      "url": "https://lineagem.plaync.com/board/cm_story/view?articleId=61a61b2edcf2ee08dc5dbfd4&size=18&viewMode=compact",
+      "verified_claim": "한국 NC 신념 탑 2층 오픈 및 독충/탐욕 테마 보도. 당시 공지이고 현재 층 전체 전도 아님."
+    },
+    "nc_kr_2022_faith_03": {
+      "type": "official_kr_cm_announcement",
+      "date": "2022-12-13",
+      "url": "https://lineagem.plaync.com/board/cm_story/view?articleId=63985b305fb4e917ffa1e5e5",
+      "verified_claim": "한국 NC 신념 탑 3층과 이자벨/언데드 테마 공식 발표. 당시 공지이고 현행 전도 아님."
+    },
+    "nc_kr_2024_faith_04": {
+      "type": "official_kr_cm_announcement",
+      "date": "2024-04-02",
+      "url": "https://lineagem.plaync.com/board/cm_story/view?articleId=660c021e4817f763b70e210b",
+      "verified_claim": "한국 NC 신념 탑 4층(분노), 원작 4층 존재 확인. 지형도/2026 상세 좌표는 없음."
     }
   },
   "map_evidence": [
@@ -200,7 +224,8 @@
         "nc_2025_faith_floors",
         "nc_jp_faith_4floors_guide",
         "nc_kr_2026_faith_4floors_current",
-        "nc_jp_faith_01_scene_unverified"
+        "nc_jp_faith_01_scene_unverified",
+        "nc_kr_faith_guidebook"
       ],
       "geometry_current_edition_verified": false,
       "collision_verified": false,
@@ -222,7 +247,9 @@
         "nc_jp_faith_4floors_guide",
         "nc_kr_2026_faith_4floors_current",
         "nc_jp_faith_02_scene_unverified",
-        "inven_2021_faith02_intro"
+        "inven_2021_faith02_intro",
+        "nc_kr_faith_guidebook",
+        "nc_kr_2021_faith_02"
       ],
       "geometry_current_edition_verified": false,
       "collision_verified": false,
@@ -244,7 +271,9 @@
         "nc_jp_faith_4floors_guide",
         "nc_kr_2026_faith_4floors_current",
         "nc_jp_faith_03_scene",
-        "inven_2022_faith03_intro"
+        "inven_2022_faith03_intro",
+        "nc_kr_faith_guidebook",
+        "nc_kr_2022_faith_03"
       ],
       "geometry_current_edition_verified": false,
       "collision_verified": false,
@@ -265,7 +294,9 @@
         "nc_2025_faith_floors",
         "nc_jp_faith_4floors_guide",
         "nc_kr_2026_faith_4floors_current",
-        "nc_jp_faith_04_scene"
+        "nc_jp_faith_04_scene",
+        "nc_kr_faith_guidebook",
+        "nc_kr_2024_faith_04"
       ],
       "geometry_current_edition_verified": false,
       "collision_verified": false,
@@ -437,7 +468,7 @@
   ],
   "next_gate": "Acquire 2026 KR actual full map UI for Faith 2/3/4, expanded Domination summit, and current continuous Albino/Escaros; calibrate entrances, collision geometry, sprite palette and camera from approved first-hand visuals before implementation.",
   "main_transition": "main currently carries albino_04 in map index, navigation, spawns, portals/tests; remove/disable via separate reviewed PR with save migration and tests, do not delete source bytes indiscriminately.",
-  "last_research_update": "2026-10-16",
+  "last_research_update": "2026-10-16 second-pass KR official source verification",
   "supplement_file": "res://content/newmaps/lineagem_reference/RESEARCH_ADDENDUM_20261016.md",
   "map_definitions_remain_unverified": 13,
   "reference_information_only": true
