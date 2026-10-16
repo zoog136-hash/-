@@ -1,0 +1,58 @@
+name: PR122 wolf and wild dog source review
+
+on:
+  push:
+    branches: [feature/twilight-remaining106-20261016]
+    paths:
+      - 'tools/pr122_pinned_gait_source_review.py'
+      - '.github/workflows/pr122-gait-source-review.yml'
+  pull_request:
+    paths:
+      - 'tools/pr122_pinned_gait_source_review.py'
+      - '.github/workflows/pr122-gait-source-review.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  pin-originals-and-generate-review-boards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source review dependency
+        run: python3 -m pip install --disable-pip-version-check 'Pillow==11.3.0'
+      - name: Verify real source archives and create wolf/dog QA boards
+        run: |
+          set -euo pipefail
+          python3 tools/pr122_pinned_gait_source_review.py \
+            --root . \
+            --out "${RUNNER_TEMP}/pr122-gait-source-only"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from PIL import Image
+          p = Path(os.environ['RUNNER_TEMP']) / 'pr122-gait-source-only'
+          j = json.loads((p / 'source_review_manifest.json').read_text())
+          assert j['status'] == 'SOURCE_REVIEW_ONLY_HOLD'
+          assert len(j['groups']) == 2
+          assert sum(len(g['members']) for g in j['groups']) == 7
+          for g in j['groups']:
+              assert g['production_applied'] is False
+              assert g['independent_art_approved'] is False
+              with Image.open(p / g['review_board']) as im: im.verify()
+          print('Source SHA/ZIP CRC and QA board checks PASS; actor art still HOLD')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr122-wolf-wilddog-UNAPPROVED-source-boards
+          path: ${{ runner.temp }}/pr122-gait-source-only/
+          if-no-files-found: warn
+          retention-days: 30
