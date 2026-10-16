@@ -1,0 +1,306 @@
+{
+  "schema": 1,
+  "as_of": "2026-10-16",
+  "project": "TWILIGHT",
+  "target_gameplay_map_count": 24,
+  "active_main_map_count_at_audit": 25,
+  "excluded_map_ids": [
+    "albino_04"
+  ],
+  "research_rebuild_scope_count": 13,
+  "legal_notes": "External publisher/community copyrighted screenshots are linked for reference only; do not mirror or integrate image bytes without permission. Do not assign unspecified A3 numeric mapcache IDs.",
+  "edition_target": "Lineage M KR 2026-10-16; historical references do not prove that edition's exact terrain",
+  "sources": {
+    "nc_2025_reboot": {
+      "type": "official",
+      "date": "2025-06-11",
+      "url": "https://about.ncsoft.com/news/article/lineagem_update_250611",
+      "evidence": "지배의 탑·오만과 신념의 탑 리부트 안내; 해당 지형 이미지 아님."
+    },
+    "nc_2025_faith_floors": {
+      "type": "official",
+      "date": "2025-06-18",
+      "url": "https://lounge.plaync.com/feed/35343?country=KR&locale=ko-KR",
+      "evidence": "신념 1~4층/지배 정상 퀘스트 안내. 지도 형상 정보 아님."
+    },
+    "domination_2021_map": {
+      "type": "community_official_notice_mirror",
+      "date": "2021-05-04",
+      "url": "https://www.inven.co.kr/board/lineagem/5019/322632",
+      "evidence": "본문 '지배의 탑 정상 전체 지도' 이미지, 2021년 시즌3. 최신 판본 고증용으로 단독 사용 불가."
+    },
+    "faith_2021_floor1_map": {
+      "type": "community_kr_client_news",
+      "date": "2021-04-15",
+      "url": "https://www.lineagem.com.tw/news/krinfo/kr-0414-updates-2",
+      "evidence": "2021년 신념의 탑 1층 맵과 보스/몬스터 위치 주석 이미지. 최신 층 동일성 검증 필요."
+    },
+    "albino_2023_map": {
+      "type": "community",
+      "date": "2023-04-04",
+      "url": "https://www.inven.co.kr/board/lineagem/5056/21244",
+      "evidence": "알비노 분지 저렙/고렙, 폭포 진입 포털에 관한 이미지와 경로 설명. 현재 1~3구역 각각의 지도를 뜻하지 않음."
+    },
+    "albino_2025_1_to_3": {
+      "type": "community",
+      "date": "2025-06-03",
+      "url": "https://www.inven.co.kr/board/lineagem/5056/25480",
+      "evidence": "알비노 1~3구역 개별 존재/사냥 효율 게시글. 지도 기하 없음."
+    },
+    "escaros_2021_official_rules": {
+      "type": "community_official_notice_mirror",
+      "date": "2021-07-07",
+      "url": "https://www.inven.co.kr/board/lineagem/5019/340194",
+      "evidence": "에스카로스 전역/성문 순서/랜드마크/출현 지역 설명. 이벤트 시기 규칙은 2026 상시 규칙 아님."
+    },
+    "escaros_2022_zone_1": {
+      "type": "community_map_screenshot",
+      "date": "2022-04-21",
+      "url": "https://www.inven.co.kr/board/lineagem/5056/19989",
+      "anchor_description": "에스카로스 1구 사냥터 및 터치다운 맵가이드"
+    },
+    "escaros_2022_zone_2": {
+      "type": "community_map_screenshot",
+      "date": "2022-04-21",
+      "url": "https://www.inven.co.kr/board/lineagem/5056/19989",
+      "anchor_description": "에스카로스 2구 사냥터 및 터치다운 맵가이드"
+    },
+    "escaros_2022_zone_3": {
+      "type": "community_map_screenshot",
+      "date": "2022-04-21",
+      "url": "https://www.inven.co.kr/board/lineagem/5056/19989",
+      "anchor_description": "에스카로스 3구 사냥터 및 터치다운 맵가이드"
+    },
+    "escaros_2022_zone_4": {
+      "type": "community_map_screenshot",
+      "date": "2022-04-21",
+      "url": "https://www.inven.co.kr/board/lineagem/5056/19989",
+      "anchor_description": "에스카로스 4구 사냥터 및 터치다운 맵가이드"
+    },
+    "escaros_2022_zone_5": {
+      "type": "community_map_screenshot",
+      "date": "2022-04-21",
+      "url": "https://www.inven.co.kr/board/lineagem/5056/19989",
+      "anchor_description": "에스카로스 5구 사냥터 및 터치다운 맵가이드"
+    },
+    "nc_2026_albino4_excluded": {
+      "type": "official",
+      "date": "2026-09-09",
+      "url": "https://lineagem.plaync.com/conts/260826_update",
+      "evidence": "알비노 4구역 공식 추가 공지. TWILIGHT 24맵 범위에서는 사용자 지시에 따라 제외."
+    }
+  },
+  "map_evidence": [
+    {
+      "map_id": "domination_summit",
+      "region": "지배의 탑 정상",
+      "ordinal": 1,
+      "reference_status": "HISTORICAL_FULL_MAP_LINK",
+      "reference_source_ids": [
+        "domination_2021_map",
+        "nc_2025_reboot"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2021년 보도 재게시 자료에 '지배의 탑 정상 전체 지도' 이미지 있음. 2025 리부트 이후 지형 동일성 미검증."
+    },
+    {
+      "map_id": "faith_01",
+      "region": "신념의 탑",
+      "ordinal": 1,
+      "reference_status": "HISTORICAL_FULL_MAP_IMAGE",
+      "reference_source_ids": [
+        "faith_2021_floor1_map",
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2021년 1층 전체 지형도, 사냥 집중 구획 및 데우스 등장 위치 표기. 최신 판본 재확인 필요."
+    },
+    {
+      "map_id": "faith_02",
+      "region": "신념의 탑",
+      "ordinal": 2,
+      "reference_status": "NO_PER_FLOOR_GEOMETRY_IMAGE",
+      "reference_source_ids": [
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "층별 존재는 공식 자료 확인, 해당 층 전체 지형 이미지 및 2026년 기준 통행/출입구/보스 좌표 미확보."
+    },
+    {
+      "map_id": "faith_03",
+      "region": "신념의 탑",
+      "ordinal": 3,
+      "reference_status": "NO_PER_FLOOR_GEOMETRY_IMAGE",
+      "reference_source_ids": [
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "층별 존재는 공식 자료 확인, 해당 층 전체 지형 이미지 및 2026년 기준 통행/출입구/보스 좌표 미확보."
+    },
+    {
+      "map_id": "faith_04",
+      "region": "신념의 탑",
+      "ordinal": 4,
+      "reference_status": "NO_PER_FLOOR_GEOMETRY_IMAGE",
+      "reference_source_ids": [
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "층별 존재는 공식 자료 확인, 해당 층 전체 지형 이미지 및 2026년 기준 통행/출입구/보스 좌표 미확보."
+    },
+    {
+      "map_id": "albino_01",
+      "region": "알비노 분지",
+      "ordinal": 1,
+      "reference_status": "HISTORICAL_SHARED_AREA_MAP_ONLY",
+      "reference_source_ids": [
+        "albino_2023_map",
+        "albino_2025_1_to_3"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2023년 알비노 분지·폭포 지역/포털 참고 지도 및 2025년 1~3구역 언급 확보. 각각의 2026년 독립 맵 경계/전경 미확보. 2023년 저렙/고렙 2분할을 현재 1~3구역과 자동 동일시 금지."
+    },
+    {
+      "map_id": "albino_02",
+      "region": "알비노 분지",
+      "ordinal": 2,
+      "reference_status": "HISTORICAL_SHARED_AREA_MAP_ONLY",
+      "reference_source_ids": [
+        "albino_2023_map",
+        "albino_2025_1_to_3"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2023년 알비노 분지·폭포 지역/포털 참고 지도 및 2025년 1~3구역 언급 확보. 각각의 2026년 독립 맵 경계/전경 미확보. 2023년 저렙/고렙 2분할을 현재 1~3구역과 자동 동일시 금지."
+    },
+    {
+      "map_id": "albino_03",
+      "region": "알비노 분지",
+      "ordinal": 3,
+      "reference_status": "HISTORICAL_SHARED_AREA_MAP_ONLY",
+      "reference_source_ids": [
+        "albino_2023_map",
+        "albino_2025_1_to_3"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2023년 알비노 분지·폭포 지역/포털 참고 지도 및 2025년 1~3구역 언급 확보. 각각의 2026년 독립 맵 경계/전경 미확보. 2023년 저렙/고렙 2분할을 현재 1~3구역과 자동 동일시 금지."
+    },
+    {
+      "map_id": "escaros_01",
+      "region": "에스카로스",
+      "ordinal": 1,
+      "reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "reference_source_ids": [
+        "escaros_2022_zone_1",
+        "escaros_2021_official_rules"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2022년 인벤 싱검여지도 본문에 1구역의 별도 주석 지도 이미지와 터치다운 경로 존재. 2026년 지형·성문/포털/보스 위치 변경 여부 검증 필요."
+    },
+    {
+      "map_id": "escaros_02",
+      "region": "에스카로스",
+      "ordinal": 2,
+      "reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "reference_source_ids": [
+        "escaros_2022_zone_2",
+        "escaros_2021_official_rules"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2022년 인벤 싱검여지도 본문에 2구역의 별도 주석 지도 이미지와 터치다운 경로 존재. 2026년 지형·성문/포털/보스 위치 변경 여부 검증 필요."
+    },
+    {
+      "map_id": "escaros_03",
+      "region": "에스카로스",
+      "ordinal": 3,
+      "reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "reference_source_ids": [
+        "escaros_2022_zone_3",
+        "escaros_2021_official_rules"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2022년 인벤 싱검여지도 본문에 3구역의 별도 주석 지도 이미지와 터치다운 경로 존재. 2026년 지형·성문/포털/보스 위치 변경 여부 검증 필요."
+    },
+    {
+      "map_id": "escaros_04",
+      "region": "에스카로스",
+      "ordinal": 4,
+      "reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "reference_source_ids": [
+        "escaros_2022_zone_4",
+        "escaros_2021_official_rules"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2022년 인벤 싱검여지도 본문에 4구역의 별도 주석 지도 이미지와 터치다운 경로 존재. 2026년 지형·성문/포털/보스 위치 변경 여부 검증 필요."
+    },
+    {
+      "map_id": "escaros_05",
+      "region": "에스카로스",
+      "ordinal": 5,
+      "reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "reference_source_ids": [
+        "escaros_2022_zone_5",
+        "escaros_2021_official_rules"
+      ],
+      "geometry_current_edition_verified": false,
+      "collision_verified": false,
+      "entrance_exit_verified": false,
+      "boss_coordinates_verified": false,
+      "source_assets_ingested": false,
+      "notes": "2022년 인벤 싱검여지도 본문에 5구역의 별도 주석 지도 이미지와 터치다운 경로 존재. 2026년 지형·성문/포털/보스 위치 변경 여부 검증 필요."
+    }
+  ],
+  "next_gate": "2026 한국판 지도 UI/플레이 화면을 층·구역별로 확보해 판본·좌표·진입점·지형경계/통행을 검증한 후 독립 제작. 역사 자료를 현재 원본으로 확정하지 않는다.",
+  "main_transition": "main currently carries albino_04 in map index, navigation, spawns, portals/tests; remove/disable via separate reviewed PR with save migration and tests, do not delete source bytes indiscriminately."
+}
