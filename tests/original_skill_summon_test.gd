@@ -72,6 +72,8 @@ func run() -> void:
 	check(world._cast_job_skill(str(guardian.name)),"manual summon")
 	check(world.mp == 999-int(guardian.mp),"exact MP cost")
 	check(summons.active(str(guardian.id)),"independent creature")
+	check(summons.actor.global_position.is_finite() and world.field_map.point_clear(summons.actor.global_position,4.0),
+		"guardian spawns on genuinely walkable A3 ground")
 	check(not world._cast_job_skill(str(guardian.name)),"duplicate denied")
 	check(world.mp == 999-int(guardian.mp),"denied duplicate costs nothing")
 	check(not service.auto_wants(guardian),"automatic summon respects creature")
@@ -103,7 +105,11 @@ func run() -> void:
 	for _step: int in range(10): summons.tick(.1)
 	check(summons.actor.global_position == location and dummy.damage_hit_count == hits+1,"stay prevents chase/attack")
 	check(summons.command("follow"),"follow command")
-	summons.actor.global_position = world._random_walkable_position(world.player.global_position,180,240)
+	var far_point: Vector2 = summons.safe_landing(world.player.global_position,180,240)
+	check(far_point.is_finite() and world.field_map.point_clear(far_point,4.0) and far_point.distance_to(world.player.global_position)>=180,
+		"follow starts from genuinely reachable A3 source location")
+	if not far_point.is_finite(): world.queue_free(); quit(1); return
+	summons.actor.global_position = far_point
 	location = summons.actor.global_position
 	for _step: int in range(20): summons.tick(.1)
 	check(summons.actor.global_position != location,"follows via map pathfinder")
