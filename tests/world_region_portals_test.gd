@@ -26,6 +26,8 @@ func _run() -> void:
 		world.player.set_auto_enabled(true)
 		world.player.set_click_path(field.path(world.player.global_position,COORD.array_vector(field.data["route_checks"][0])),Vector2.ZERO)
 		var expected: String = str(index[i+1]["map_id"]) if i+1<index.size() else "aden_world"
+		var previous_collision: StaticBody2D = world.field_physics
+		check(is_instance_valid(previous_collision),id+" previous collision body exists")
 		check(world.use_field_portal("next"),id+" next portal accepted")
 		check(world.active_map_id==expected,id+" next destination")
 		check(world.player.auto_enabled and world.player.click_path.is_empty(),id+" stale path cleared without disabling AUTO preference")
@@ -34,11 +36,23 @@ func _run() -> void:
 		check(world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position),expected+" landing clearance")
 		check(world.field_minimap.field==world.field_map and world.field_renderer.field==world.field_map,expected+" renderer/minimap use new map")
 		check(world.player.camera.limit_right==int(world.world_size.x) and world.player.camera.limit_bottom==int(world.world_size.y),expected+" new camera bounds")
+		# A normal legacy field owns FieldCollision. The installed authored-map
+		# adapter legitimately owns AuthoredCollisionStream instead. Count
+		# the actual mounted physics body, not a retired node-name convention.
+		var active_collision: StaticBody2D = world.field_physics
+		check(is_instance_valid(active_collision) and active_collision.get_parent() == world and active_collision.is_inside_tree(),expected+" current collision body mounted")
+		check(active_collision != previous_collision,expected+" collision body replaced on portal travel")
+		check(not is_instance_valid(previous_collision) or not previous_collision.is_inside_tree(),expected+" old collision body removed")
 		var body_count: int = 0
 		for node: Node in world.get_children():
-			if node is StaticBody2D and node.name=="FieldCollision":
+			# MapCollision is the persistent tile/debug root; it is not the
+			# per-map PlayableField physics body.
+			if node is StaticBody2D and node != world.map_collision:
 				body_count += 1
-		check(body_count==1,expected+" no leaked previous collision world")
+				check(node == active_collision,expected+" no unrelated or stale map collision body")
+		check(body_count==1,expected+" exactly one active map collision body")
+		if world.field_map is AuthoredRemakeField:
+			check((world.field_map as AuthoredRemakeField).collision_stream == active_collision,expected+" authored collision stream matches gameplay field")
 		# Camera edges may clip walls but never expose outside world bounds.
 		for point: Vector2 in [Vector2(180,180),world.world_size-Vector2(180,180)]:
 			var old: Vector2 = world.player.global_position
