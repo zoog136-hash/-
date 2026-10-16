@@ -13,9 +13,9 @@ Status: **staging only**. Nothing has been deleted from `main` or merged. Do not
 
 ## Confirmed external archival destination
 
-Private Google Drive folder: https://drive.google.com/drive/folders/1OyIBr85ZoHZMyY3oPVTcyJ2zGWDfjbSb
+Private Google Drive destination (folder name): `TWILIGHT_GitHub_검증자료_백업_20261016`. Keep the owner-only link outside the public GitHub repository.
 
-Small GitHub Actions artifact transfer smoke test: https://drive.google.com/file/d/1sho6JnXHlKFs8Vyi3PwGwTlcMiJfzevB/view?usp=drivesdk
+Small GitHub Actions artifact transfer smoke test: completed and verified in the private Drive destination.
 - Source artifact ID: `12025895607`.
 - Verified Drive file size: `92674` bytes, equal to source artifact size.
 - **This is a transfer test, not a backup of the entire GitHub `docs/` folder.**
