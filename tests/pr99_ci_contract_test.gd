@@ -26,12 +26,31 @@ func run() -> void:
 		var record: Dictionary = CATALOG.records_by_name.get(name, {})
 		check(not record.is_empty() and bool(record.get("is_boss", false)), "dedicated boss identity " + name)
 		var special: Dictionary = record.get("ai", {}).get("special", {})
-		check(str(special.get("kind", "")) == str(expected_specials[name]), "exact supported real attack kind " + name)
+		var explicit: Dictionary = CATALOG.catalog.overlays.get(name, {}).get("ai", {}).get("special", {})
+		var expected_kind: String = str(expected_specials[name]) if not explicit.is_empty() else str(CATALOG.DEDICATED_BOSS_SPECIALS[name].kind)
+		check(str(special.get("kind", "")) == expected_kind, "exact existing authored or dedicated attack kind " + name)
+		if not explicit.is_empty():
+			check(special == explicit, "dedicated fallback never replaces any explicit boss skill parameter " + name)
 		check(float(special.get("cooldown", 0)) > 0 and float(special.get("windup", 0)) > 0, "bounded readable special " + name)
 		check(str(special.get("evidence", "")) == "local_adaptation_not_verified_original_skill", "no invented original-skill claim " + name)
 		for raw: Dictionary in original:
 			if str(raw.name) == name:
 				check(record.get("hp") == raw.get("hp") and record.get("drop") == raw.get("drop"), "base HP and drops retained " + name)
+		# Exercise main's original fallback on a temporary in-memory fixture,
+		# then restore the exact explicit catalog before all real map checks.
+		var saved_overlay: Dictionary = CATALOG.catalog.overlays[name].duplicate(true)
+		var without_special: Dictionary = saved_overlay.duplicate(true)
+		(without_special.get("ai", {}) as Dictionary).erase("special")
+		CATALOG.catalog.overlays[name] = without_special
+		CATALOG.expand(original)
+		var fallback_record: Dictionary = CATALOG.records_by_name[name]
+		var expected_fallback: Dictionary = CATALOG.DEDICATED_BOSS_SPECIALS[name].duplicate(true)
+		expected_fallback.element = str(fallback_record.get("attack_element", "physical"))
+		check(fallback_record.ai.special == expected_fallback, "complete original dedicated fallback installs when explicit skill is absent " + name)
+		CATALOG.catalog.overlays[name] = saved_overlay
+		CATALOG.expand(original)
+		check(CATALOG.records_by_name[name].ai.special == special, "explicit real boss skill restored after isolated fallback probe " + name)
+	check(JSON.stringify(original) == before, "fallback probes retain source DB bytes")
 	var profiles_before: String = JSON.stringify(CATALOG.spawn_profiles)
 	var paths: Array[String] = ["res://data/maps/aden_field.json"]
 	for entry: Dictionary in JSON.parse_string(FileAccess.get_file_as_string("res://data/maps/field_index.json")):

@@ -75,6 +75,8 @@ for name,extra in tests:
     with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
         env=os.environ.copy()
         env['XDG_DATA_HOME']=user_data
+        env['XDG_CONFIG_HOME']=str(Path(user_data)/'config')
+        env['XDG_CACHE_HOME']=str(Path(user_data)/'cache')
         # Godot Windows uses APPDATA, not XDG_DATA_HOME. Every process, including
         # the PCK probe child, must inherit its own empty save/config directory.
         env['APPDATA']=user_data
@@ -84,10 +86,11 @@ for name,extra in tests:
             # are cleaned up, including diagnostics from a failed CI case.
             env['TWILIGHT_PR100_REPORT']=str(logs/(name+'.gameplay.json'))
         if name == 'original_based_transform_temporal_main_test':
-            # The runner already owns a fresh temporary Godot user directory.
-            # Explicitly authorize this inherited full 10-case batch and keep
-            # its separate case/report evidence outside the temporary home.
+            # The inherited batch refuses a non-isolated caller. This runner
+            # has just allocated its fresh save directory; keep the unchanged
+            # complete fixture and preserve its report outside that directory.
             env['TWILIGHT_PR100_BATCH_ISOLATED']='1'
+            env['TWILIGHT_PR100_BATCH_CONFIG']='res://tests/fixtures/pr100_transform_regression.json'
             env['TWILIGHT_PR100_BATCH_REPORT']=str(logs/(name+'.batch.json'))
         if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
         try:

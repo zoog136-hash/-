@@ -4,6 +4,7 @@ import copy
 import hashlib
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -48,6 +49,79 @@ class OriginalBasedImportTest(unittest.TestCase):
     def import_snapshot(self, root):
         return {str(path.relative_to(root)): importer.sha(path) if path.is_file() else None
                 for path in root.rglob("*")}
+
+    def readonly_snapshot(self, root):
+        return {str(path.relative_to(root)): (path.stat().st_mtime_ns, importer.sha(path))
+                if path.is_file() else (path.stat().st_mtime_ns, None)
+                for path in root.rglob("*")}
+
+    def test_legacy_readonly_complete_candidate_checks_profiles_without_writes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            before = self.readonly_snapshot(root)
+            result = importer.validate_candidate(root, candidate, "fixture", keys)
+            self.assertEqual(result["poses"], 104)
+            self.assertTrue(result["read_only"] and result["profiles_checked"])
+            self.assertFalse(result["applied"])
+            self.assertEqual(result["completed_added"], 0)
+            self.assertEqual(result["actual_Main"], "not_run")
+            self.assertEqual(len(result["output_files"]), 4)
+            self.assertFalse(output.exists())
+            self.assertEqual(self.readonly_snapshot(root), before)
+
+    def test_legacy_readonly_keeps_all_original_and_pose_failure_guards(self):
+        for failure in ("original", "review", "missing_role", "duplicate_pose", "unknown_mode"):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, _output = self.prepare_synthetic_import(root)
+                if failure == "original":
+                    (root / "assets/reference.png").write_bytes(b"changed-source")
+                elif failure == "review":
+                    candidate["review"]["eight_views"] = False
+                elif failure == "missing_role":
+                    del candidate["sheets"][1]["roles"]["death"]
+                elif failure == "duplicate_pose":
+                    self.duplicate_synthetic_visible_pose_with_hidden_rgb(candidate)
+                else:
+                    candidate["input_mode"] = "unsupported"
+                before = self.readonly_snapshot(root)
+                with self.assertRaises(ValueError):
+                    importer.validate_candidate(root, candidate, "fixture", keys)
+                self.assertEqual(self.readonly_snapshot(root), before)
+
+    def test_legacy_readonly_rejects_protected_profile_and_output_conflicts(self):
+        for conflict in ("native_profile", "existing_output"):
+            with self.subTest(conflict=conflict), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                candidate, keys, output = self.prepare_synthetic_import(root)
+                if conflict == "native_profile":
+                    (root / "data/combat_animation_profiles.json").write_text(json.dumps({"profiles": {
+                        keys[0]: {"layout": "directional8", "frames_path":
+                                  "res://assets/actors/eight_direction/prior/SpriteFrames.tres"}}}))
+                else:
+                    output.mkdir(parents=True)
+                    (output / "provenance.json").write_bytes(b"preserved-prior-proof")
+                before = self.readonly_snapshot(root)
+                with self.assertRaisesRegex(ValueError, "Existing authored"):
+                    importer.validate_candidate(root, candidate, "fixture", keys)
+                self.assertEqual(self.readonly_snapshot(root), before)
+
+    def test_legacy_readonly_cli_writes_nothing_even_with_apply_flag(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate, keys, output = self.prepare_synthetic_import(root)
+            path = root / "candidate.json"
+            path.write_text(json.dumps(candidate))
+            before = self.readonly_snapshot(root)
+            child = subprocess.run([sys.executable, str(ROOT / "tools/import_original_based_motion.py"),
+                                    "--root", str(root), "--validate-candidate", str(path),
+                                    "--actor", "fixture", "--key", keys[0], "--apply"],
+                                   capture_output=True, text=True, timeout=30)
+            self.assertEqual(child.returncode, 0, child.stderr)
+            self.assertTrue(json.loads(child.stdout)["read_only"])
+            self.assertFalse(output.exists())
+            self.assertEqual(self.readonly_snapshot(root), before)
 
     def duplicate_synthetic_visible_pose_with_hidden_rgb(self, candidate, target_sheet=0, target_row=1):
         """Copy a test rectangle with a transparent hole, never game art."""

@@ -42,8 +42,8 @@ func _run() -> void:
 		check(provenance.get("status","") == "inven_visual_alias" and provenance.get("source_id","") == "","visual alias does not claim publisher item identity: "+item_name)
 		check(RESOLVER.describe({"name":item_name,"sourceId":"unknown-publisher-id"},item_name).path == "","explicit unknown source cannot borrow local art: "+item_name)
 	check(observed.size() == LOCAL_POTIONS.size(),"all three real starter potion slots were inspected")
-	# world._load_data retains this explicit pre-rework UI index link. It is
-	# bundled placeholder art, never evidence of publisher-original ruby art.
+	# Current main deliberately removes the misleading ruby -> potion link.
+	# Inspect that real production state separately from explicit legacy input.
 	var ruby_record: Dictionary = {"name":"드래곤의 루비","type":"축복충전"}
 	var ruby_before: String = JSON.stringify(ruby_record)
 	var legacy_images: Dictionary = hud.item_image_index.get("아이템",{})
@@ -61,7 +61,7 @@ func _run() -> void:
 	check(RESOLVER.texture(ruby_record,ruby_record.name,explicit_legacy) == load(POTION_PATH),"explicit ruby link resolves its actual preserved bundled texture")
 	var unindexed: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name)
 	check(unindexed.path == "" and unindexed.family == "gem","ruby without an explicit image link receives its appropriate family symbol")
-	check(RESOLVER.describe({"name":ruby_record.name,"sourceId":"unknown-publisher-id"},ruby_record.name,legacy_images).path == "","an explicit unknown ruby ID cannot borrow the name-only index")
+	check(RESOLVER.describe({"name":ruby_record.name,"sourceId":"unknown-publisher-id"},ruby_record.name,explicit_legacy).path == "","an explicit unknown ruby ID cannot borrow the name-only index")
 	check(JSON.stringify(ruby_record) == ruby_before,"ruby visual lookup preserves the existing item record")
 	var borrowed: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전","sourceId":"local-unverified","image_path":POTION_PATH},"드래곤의 루비")
 	check(borrowed.path == POTION_PATH and borrowed.source_id == "local-unverified" and borrowed.status == "original_review_pending","explicit record art keeps unknown-source provenance instead of claiming original art")

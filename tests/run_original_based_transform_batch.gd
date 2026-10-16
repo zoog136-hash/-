@@ -237,7 +237,7 @@ func finish_batch() -> void:
 		file.store_string(JSON.stringify(summary, "\t"))
 		file.close()
 	print("PR100_TRANSFORM_BATCH_RESULT " + JSON.stringify({"cases": batch_results.size(), "checks": batch_checks,
-		"failure_count": batch_failures.size(), "report": batch_report_path}))
+		"failure_count": batch_failures.size(), "failures": batch_failures, "report": batch_report_path}))
 	if batch_failures.is_empty(): print("PR100_TRANSFORM_BATCH_OK")
 	quit(0 if batch_failures.is_empty() else 1)
 

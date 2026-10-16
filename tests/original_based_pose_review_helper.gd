@@ -13,7 +13,10 @@ func capture(name_value: String) -> void:
 func _position_visible_pose_review() -> bool:
 	var original_player: Vector2 = world.player.position
 	var original_monster: Vector2 = normal.position
-	for radius: float in [0.0, 80.0, 160.0, 240.0, 320.0, 400.0, 560.0, 720.0, 960.0, 1280.0, 1600.0, 2000.0, 2400.0, 3200.0]:
+	# Renewed-map magic approaches can exhaust every nearby candidate. Search
+	# more unchanged terrain while retaining the same walkability, full-body
+	# prop bounds and 192px other-actor exclusion at every candidate.
+	for radius: float in [0.0, 80.0, 160.0, 240.0, 320.0, 400.0, 480.0, 560.0, 640.0, 720.0, 800.0, 960.0, 1120.0, 1280.0, 1600.0, 2000.0, 2400.0, 3200.0]:
 		for direction: int in [4, 3, 5, 2, 6, 0, 1, 7]:
 			var offset: Vector2 = screen_direction(direction) * radius
 			var actor_point: Vector2 = original_monster + offset

@@ -1,0 +1,108 @@
+name: Remaining106 actual Main visual gates
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'assets/actors/eight_direction/original_based/albino_iguana_monster_authored/**'
+      - 'assets/actors/eight_direction/original_based/fear_agni_monster_authored_v2/**'
+      - 'data/combat_animation_profiles.json'
+      - 'tests/run_remaining106*'
+      - 'tests/fixtures/remaining106_review_pair.json'
+      - 'tools/import_original_based_motion.py'
+      - '.github/workflows/remaining106-animation-validate.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: remaining106-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  actual-main-pair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned engine and software OpenGL
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          printf '%s  %s\n' cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4 /tmp/godot.zip | sha256sum -c -
+          unzip -q /tmp/godot.zip -d /tmp
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq xvfb xauth libgl1-mesa-dri
+          python3 -m pip install 'Pillow==11.3.0' 'numpy==2.2.6' 'scipy==1.15.3'
+      - name: Preserve resource and importer guards
+        run: |
+          set -euo pipefail
+          python3 tools/check_resource_integrity.py --root .
+          python3 tests/original_based_motion_import_test.py
+          python3 tests/test_original_based_pose_files.py
+          python3 tests/test_original_based_direction_canvases.py
+          python3 tools/test_project_runner_test.py
+      - name: Actual Main headless, OpenGL, continuous native frames and baseline
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        shell: bash
+        run: |
+          set -euo pipefail
+          ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
+          export TWILIGHT_PR100_BATCH_ISOLATED=1
+          export TWILIGHT_PR100_BATCH_CONFIG=res://tests/fixtures/remaining106_review_pair.json
+          mkdir -p test-results/remaining106
+          for mode in import headless actual temporal comparison; do
+            export XDG_DATA_HOME="${RUNNER_TEMP}/remaining106-${mode}"
+            export XDG_CONFIG_HOME="${XDG_DATA_HOME}/config"
+            export XDG_CACHE_HOME="${XDG_DATA_HOME}/cache"
+            export APPDATA="$XDG_DATA_HOME" LOCALAPPDATA="$XDG_DATA_HOME"
+            case "$mode" in
+              import) "$ENGINE" --headless --path . --import > test-results/remaining106/import.log 2>&1 ;;
+              headless)
+                export TWILIGHT_PR100_BATCH_REPORT="$PWD/test-results/remaining106/headless.json"
+                timeout 1200 "$ENGINE" --headless --path . --script res://tests/run_original_based_batch.gd > test-results/remaining106/headless.log 2>&1 ;;
+              actual)
+                export TWILIGHT_PR100_BATCH_REPORT="$PWD/test-results/remaining106/actual.json"
+                export TWILIGHT_PR100_BATCH_CAPTURE_DIR="$PWD/test-results/remaining106/actual-captures"
+                timeout 1500 xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/run_remaining106_visual_review.gd > test-results/remaining106/actual.log 2>&1 ;;
+              temporal)
+                export TWILIGHT_PR100_TEMPORAL_ISOLATED=1
+                export TWILIGHT_PR100_TEMPORAL_CONFIG="$TWILIGHT_PR100_BATCH_CONFIG"
+                export TWILIGHT_PR100_TEMPORAL_REPORT="$PWD/test-results/remaining106/temporal.json"
+                export TWILIGHT_PR100_TEMPORAL_CAPTURE_DIR="$PWD/test-results/remaining106/temporal-captures"
+                timeout 1200 xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/original_based_temporal_main_test.gd > test-results/remaining106/temporal.log 2>&1 ;;
+              comparison)
+                export TWILIGHT_PR100_REPORT="$PWD/test-results/remaining106/comparison.json"
+                export TWILIGHT_PR100_CAPTURE_DIR="$PWD/test-results/remaining106/comparison-captures"
+                timeout 600 xvfb-run -a -s '-screen 0 1280x720x24' "$ENGINE" --path . --rendering-driver opengl3 --audio-driver Dummy --script res://tests/run_remaining106_style_compare.gd > test-results/remaining106/comparison.log 2>&1 ;;
+            esac
+            python3 - "$mode" <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0,'tools')
+          from test_project_support import classify_result
+          mode=sys.argv[1]
+          assert classify_result('import' if mode=='import' else mode,0,Path(f'test-results/remaining106/{mode}.log').read_text()) == (True,False), mode
+          PY
+          done
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('test-results/remaining106')
+          for name in ['headless','actual','temporal']:
+              d=json.loads((root/(name+'.json')).read_text())
+              assert d['failures']==[] and len(d['cases'])==2 and d['checks']>0
+          d=json.loads((root/'temporal.json').read_text())
+          assert [c['native_phases'] for c in d['cases']]==[112,104]
+          assert [c['rendered_native_phases'] for c in d['cases']]==[112,104]
+          d=json.loads((root/'comparison.json').read_text())
+          assert d['failures']==[] and len(d['comparisons'])==2
+          PY
+      - name: Preserve actual frames and failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining106-actual-Main-${{ github.sha }}
+          path: test-results/remaining106/
+          if-no-files-found: error
