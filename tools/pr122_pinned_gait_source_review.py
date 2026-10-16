@@ -21,14 +21,14 @@ PACKS = {
         "members": [
             ("N pilot", "blackforest-wolf-authoring/recovery-by-unicorn/walk-N-compact-rear-threephase-pilot2.png", "1b625962b23518f72c6940c54f686d80b9d8c43d8cb89861dfdf92778e2aeea6"),
             ("NW rejected", "blackforest-wolf-authoring/recovery-by-unicorn/walk-NW-threephase-pilot1.png", "13f907145d4bb12b2ad7885f18d505215d35527ffd725f9053cefcaed5d2e259"),
-            ("NE rejected", "blackforest-wolf-authoring/recovery-by-unicorn/walk-NE-threephase-pilot1.png", "5315d0bbe0599760d91ca12e7db89be3c8535372b5c1555a735968"),
+            ("NE rejected", "blackforest-wolf-authoring/recovery-by-unicorn/walk-NE-threephase-pilot1.png", "5315d0bbe0599760d91ca12e7de1cf10cea7b89be3c8535372b5c1555a735968"),
         ],
     },
     "wild_dog": {
         "archive": ROOT / "iguana-and-wilddog/iguana-wilddog-source-only-WIP06-part06-STOPPED-delta.zip",
         "sha256": "4182a566ce058217893c0173da0d2f92f6257aaead7d42746b62a5b15c5a19eb",
         "members": [
-            ("E walk A", "talking-island-wild-dog-authoring/E-walk0-individual-attempt2-groundplane.png", "4ce07fa076dd07db906b87079abf99c8147c2b313deabfd34d706"),
+            ("E walk A", "talking-island-wild-dog-authoring/E-walk0-individual-attempt2-groundplane.png", "4ce07fa076dd07db906b87079abf99f811a8553f3f715a7fdd59cfadfd34d706"),
             ("E walk intermediate", "talking-island-wild-dog-authoring/E-walk1-individual-attempt1.png", "1c6008e40db13ebe203b337c862030332795535f234addc663031efdbf878e40"),
             ("E walk B pilot", "talking-island-wild-dog-authoring/E-walk4-physical-pilot3-B-single-primary.png", "2a73243d78d3aa0299cfb29f1c2935a6b6c7552092faafac055a5d8f699c0488"),
             ("Idle front8 rejected", "talking-island-wild-dog-authoring/idle-front8-attempt3-portrait-padding-UNVALIDATED.png", "fa7ff9297b47c1caa4254bce8a8c599a6988130287911637ab3fbc0cfd85691e"),
