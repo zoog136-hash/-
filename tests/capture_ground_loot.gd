@@ -1,6 +1,7 @@
 extends SceneTree
 
 const CLASS_QA = preload("res://tests/qa_class_selection.gd")
+const SOURCE_QA = preload("res://tests/active_source_test_positions.gd")
 
 const OUTPUT: String = "user://ground-loot-review"
 var world: TwilightWorld
@@ -32,7 +33,13 @@ func _run() -> void:
 	world.field_population.set_process(false)
 	world._clear_monsters()
 	world._clear_drops()
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550,4300)))
+	# Position this review in a genuinely walkable original-source combat arena.
+	var arena: Vector2 = SOURCE_QA.combat(world,[Vector2(-90,0),Vector2(90,0),Vector2(260,0)])
+	if not arena.is_finite():
+		push_error("GROUND_LOOT_RENDER_FAILED: no walkable A3 source arena")
+		quit(1)
+		return
+	world.player.global_position = arena
 	world.player.camera.zoom = Vector2.ONE
 	world.player.camera.position = Vector2(0,-110)
 	world.player.camera.position_smoothing_enabled = false
