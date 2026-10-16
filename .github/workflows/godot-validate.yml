@@ -238,7 +238,7 @@ jobs:
         run: |
           set -o pipefail
           export XDG_DATA_HOME="${RUNNER_TEMP}/twilight-field-tests"
-          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/field_world_test.gd 2>&1 | tee godot-field-world.log
+          ./Godot_v4.7.2-stable_linux.x86_64 --headless --path . --script res://tests/field_world_test.gd -- --legacy-map-layouts 2>&1 | tee godot-field-world.log
           if grep -E "SCRIPT ERROR:|ERROR:|FIELD FAIL:|FIELD_WORLD_FAILED" godot-field-world.log; then
             exit 1
           fi
