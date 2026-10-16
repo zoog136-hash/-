@@ -8,6 +8,9 @@ on:
       - scripts/maps/aden_world_visuals/**
       - scripts/maps/remake_field.gd
       - scripts/maps/remake_renderer.gd
+      - scripts/maps/field_population.gd
+      - tools/test_project_support.py
+      - tools/test_pr120_legacy_scope.py
       - tests/aden_*test.gd
       - .github/workflows/aden-world-visuals.yml
   workflow_dispatch:
@@ -27,6 +30,7 @@ jobs:
           unzip -q /tmp/godot.zip -d /tmp
           chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
       - name: Import and original resource integrity
+        id: prepare
         run: |
           mkdir -p aden-evidence
           python3 tools/check_resource_integrity.py --root . > aden-evidence/resource-integrity.log
@@ -64,6 +68,21 @@ jobs:
               if not ok: failed.append(kind)
           # Unreachable source entries stay FAIL. Never rewrite that audit to PASS.
           assert not failed, failed
+          PY
+      - name: Preserve all four legacy visual fixture suites
+        if: ${{ always() && steps.prepare.outcome == 'success' }}
+        shell: bash
+        run: |
+          python3 -m unittest discover -s tools -p 'test_pr120_legacy_scope.py' -v
+          python3 tools/test_project.py --godot /tmp/Godot_v4.7.2-stable_linux.x86_64 --logs aden-evidence/legacy-regressions --only aden_building_test,aden_courtyard_test,aden_shoreline_test,aden_terrain_polish_test
+          python3 - <<'PY'
+          import json,pathlib
+          report=json.loads(pathlib.Path('aden-evidence/legacy-regressions/summary.json').read_text())
+          expected={'aden_building_test','aden_courtyard_test','aden_shoreline_test','aden_terrain_polish_test'}
+          assert set(report['checks']) == expected, report
+          assert report['total'] == report['passed'] == 4, report
+          assert report['failed'] == report['skipped'] == report['not_run'] == [], report
+          assert set(report['validation_scopes'].values()) == {'EXISTING_TWILIGHT_GEOMETRY'}, report
           PY
       - uses: actions/upload-artifact@v4
         if: always()

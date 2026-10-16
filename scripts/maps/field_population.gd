@@ -113,7 +113,10 @@ func _spawn_slot(slot: Dictionary) -> void:
 	# The authored regional level range is for this spawn instance only. Never
 	# mutate a species' shared DB record or silently rescale its base HP/drops.
 	var level_range: Array = region.get("level", [])
-	if level_range.size() == 2:
+	# Renewed rosters retain catalog levels; their historical broad range
+	# is not an implicit species override. Explicit variants and legacy
+	# layouts still enforce the authored regional range on a copy.
+	if level_range.size() == 2 and (variant.has("level") or not field.data.has("spawn_layout_revision")):
 		var local_level: int = clampi(int(record.get("lv", 1)), int(level_range[0]), int(level_range[1]))
 		if local_level != int(record.get("lv", 1)):
 			record = record.duplicate(true)
