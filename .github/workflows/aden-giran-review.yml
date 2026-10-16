@@ -50,7 +50,7 @@ jobs:
           for shot in result['screenshots']: assert (root/shot['file']).stat().st_size>10000
           assert result['android_device']=='NOT_RUN'
           assert result['exact_original_camera_calibration']=='NOT_RUN'
-          print('GIRAN_ENGINE_CHECKS_PASS__VISUAL_APPROVAL_PENDING')
+          print('GIRAN_ENGINE_CHECKS_PASS__BASELINE_USER_APPROVED_20261016')
           PY
       - uses: actions/upload-artifact@v4
         if: always()

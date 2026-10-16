@@ -4,6 +4,8 @@ class_name RemakePlayableField
 var region_cells: Dictionary = {}
 var collision_stream: StaticBody2D
 var reservations: Array[Dictionary] = []
+var aden_routes: RefCounted
+var aden_routes_attempted: bool = false
 
 func uses_original_gameplay_rules() -> bool:
 	# Only the terrain comes from A3. Current TWILIGHT travel/NPC services
@@ -63,6 +65,25 @@ func navigation_search_limit() -> int:
 	# budget. Search the finite floor graph, preserving every blocked edge.
 	return mini(width*height,65536)
 
+func path(from: Vector2, to: Vector2) -> PackedVector2Array:
+	# Mainland journeys can exceed the shared 65,536-node budget. A separate
+	# derived source-edge index splits only these long Aden journeys into exact
+	# 32-cell components. Oman and all other map paths retain the common code.
+	if str(data.map_id)!="aden_world" or not from.is_finite() or not to.is_finite() or from.distance_to(to)<1024.0:
+		return super.path(from,to)
+	if not aden_routes_attempted:
+		aden_routes_attempted=true
+		var candidate: RefCounted = preload("res://scripts/maps/aden_world_visuals/routes.gd").new()
+		if candidate.configure(self):aden_routes=candidate
+	if aden_routes==null:return super.path(from,to)
+	var cells: Array[Vector2i] = aden_routes.cells(self,nearest_cell(from),nearest_cell(to))
+	if cells.is_empty():return super.path(from,to)
+	var result := PackedVector2Array()
+	for cell: Vector2i in cells:result.append(cell_to_world(cell))
+	if result.size()>1 and line_clear(from,result[1]):result.remove_at(0)
+	if not result.is_empty() and walkable(to) and line_clear(result[-1],to):result.append(to)
+	return result
+
 func is_safe(p: Vector2) -> bool:
 	if super.is_safe(p): return true
 	for reservation: Dictionary in reservations:
@@ -96,4 +117,6 @@ func build_physics(parent: Node2D) -> StaticBody2D:
 
 func close() -> void:
 	region_cells.clear()
+	aden_routes=null
+	aden_routes_attempted=false
 	super.close()

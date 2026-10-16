@@ -89,6 +89,6 @@ func finish() -> void:
 		"not_covered":["NPC service transactions","boss fight and respawn timers","portal transitions","save reload","Android GPU","long distance walking","original S32 art"]}
 	var file := FileAccess.open(output+"/runtime.json",FileAccess.WRITE)
 	if file != null: file.store_string(JSON.stringify(report,"\t")); file.close()
-	print("ADEN_RUNTIME ",JSON.stringify(report))
+	print("ADEN_RUNTIME_RESULT ",JSON.stringify(report))
 	if is_instance_valid(world): world.queue_free()
 	quit(0 if failures.is_empty() else 1)
