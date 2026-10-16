@@ -21,12 +21,15 @@ SKIP = re.compile(r'\b[A-Z][A-Z0-9_]*_SKIP:')
 # Fixed, existing TWILIGHT geometry contracts; not source-grid acceptance.
 # Do not add generic gameplay tests here to hide source regressions.
 LEGACY_GEOMETRY_TESTS = frozenset({
-    # These four suites explicitly install legacy_aden_fixture and assert
+    # These suites explicitly install legacy_aden_fixture and assert
     # layout-1 cottage/courtyard/river coordinates. Without the existing
     # CLI flag, the installed A3 pack overrides that fixture at map load.
     # Active Aden acceptance remains in the separate source-runtime suites.
     'aden_building_test', 'aden_courtyard_test',
     'aden_shoreline_test', 'aden_terrain_polish_test',
+    # field_world installs explicit pr84 layout-1 river/bridge gameplay
+    # fixture; source A3 acceptance stays in unflagged live runtime suites.
+    'field_world_test',
     'reference_object_placement_test', 'road_surface_render_test',
     'terrain_surface_render_test', 'world_region_portals_test',
     'world_regions_test', 'world_structure_test', 'world_terrain_coverage_test',

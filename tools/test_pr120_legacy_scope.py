@@ -9,7 +9,7 @@ from test_project_support import LEGACY_GEOMETRY_TESTS, classify_result
 
 
 class AdenLegacyScopeTests(unittest.TestCase):
-    def test_only_four_reviewed_aden_visual_fixtures_are_added(self):
+    def test_only_reviewed_aden_layout1_fixtures_are_legacy(self):
         previous = {
             'reference_object_placement_test', 'road_surface_render_test',
             'terrain_surface_render_test', 'world_region_portals_test',
@@ -18,6 +18,7 @@ class AdenLegacyScopeTests(unittest.TestCase):
         expected = {
             'aden_building_test', 'aden_courtyard_test',
             'aden_shoreline_test', 'aden_terrain_polish_test',
+            'field_world_test',
         }
         self.assertEqual(LEGACY_GEOMETRY_TESTS - previous, expected)
         self.assertTrue(previous <= LEGACY_GEOMETRY_TESTS)
@@ -32,10 +33,21 @@ class AdenLegacyScopeTests(unittest.TestCase):
 
     def test_generic_gameplay_is_not_reclassified_to_hide_failures(self):
         gameplay = {
-            'field_world_test', 'monster_world_test', 'animation_restore_test',
+            'monster_world_test', 'animation_restore_test',
             'remake_world_lifecycle_test', 'eight_interactions_test',
         }
         self.assertFalse(gameplay & LEGACY_GEOMETRY_TESTS)
+
+    def test_layout1_field_fixture_and_unflagged_active_source_coexist(self):
+        from pathlib import Path
+        root = Path(__file__).resolve().parents[1]
+        self.assertIn('legacy_aden_fixture.gd',
+                      (root / 'tests/field_world_test.gd').read_text(encoding='utf-8'))
+        for name in ('aden_remake_runtime_test', 'aden_world_systems_test',
+                     'aden_source_routes_test', 'aden_world_visuals_test',
+                     'remake_world_lifecycle_test', 'monster_world_test'):
+            self.assertNotIn(name, LEGACY_GEOMETRY_TESTS)
+            self.assertTrue((root / 'tests' / (name + '.gd')).is_file())
 
     def test_success_marker_cannot_hide_nonzero_process_exit(self):
         self.assertEqual(classify_result('aden_building_test', 1, 'ADEN_BUILDING_OK'),

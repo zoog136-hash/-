@@ -122,7 +122,10 @@ func _run() -> void:
 	mouse(motion.position,false)
 	check(not stick.mouse_active and world.player.touch_vector == Vector2.ZERO,"mouse release stops movement")
 	# Check the actual actor over physics ticks after a real GUI drag.
-	world.player.global_position = Vector2(3580,3640)
+	var arena: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(200,0)])
+	check(arena.is_finite(),"physical joystick corridor on active A3")
+	if not arena.is_finite(): quit(1); return
+	world.player.global_position = arena
 	world.player.clear_click_path()
 	var before_move: Vector2 = world.player.global_position
 	touch(9,start,true)

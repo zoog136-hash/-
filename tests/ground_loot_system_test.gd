@@ -27,7 +27,8 @@ func point_at(radius: float) -> Vector2:
 		var point: Vector2 = world.player.global_position + Vector2.from_angle(float(i) * TAU / 32) * radius
 		if not world._is_walkable_world(point): continue
 		var path: PackedVector2Array = world.find_world_path(world.player.global_position, point)
-		if path.size() > 1 and path[path.size() - 1].distance_to(point) < 50: return point
+		# Direct source-grid routes legitimately contain one endpoint.
+		if not path.is_empty() and path[-1].distance_to(point) < 50: return point
 	return world.player.global_position
 
 func walk_until_empty(limit: int = 360) -> int:
@@ -71,8 +72,10 @@ func _run() -> void:
 	world.set_process(false)
 	world.save_timer = -10000
 	isolate_population()
-	world.player.global_position = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550,4300)))
-	var origin: Vector2 = world.player.global_position
+	var origin: Vector2 = preload("res://tests/active_source_test_positions.gd").combat(world,[Vector2(30,0),Vector2(90,0),Vector2(-90,0),Vector2(260,0)])
+	check(origin.is_finite(),"loot arena has real walkable source paths")
+	if not origin.is_finite(): quit(1); return
+	world.player.global_position = origin
 	var before: int = int(world.inventory.get("HP 물약", 0))
 	var view: Button = world._spawn_ground_drop("HP 물약", origin)
 	check(view != null and world.ground_loot.records.size() == 1, "spawn creates an authoritative world record")
