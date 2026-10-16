@@ -94,7 +94,12 @@ func _run() -> void:
 				if is_instance_valid(slot.monster): members.append(slot.monster)
 			check(members.size()==int(region.max_count),"dense zone fills independent cap "+id)
 			for mob: TwilightMonster in members:
-				if region.has("polygon"):
+				# Imported A3 regions spawn from verified source cells, not the
+				# legacy compact-circle radius (which is absent/zero). Verify the
+				# exact original cell membership instead of accepting an empty bound.
+				if field is RemakePlayableField and region.has("source_cells"):
+					check((field as RemakePlayableField).remake_region_contains(str(region.id),mob.global_position),"dense actor stays in source spawn cells "+id)
+				elif region.has("polygon"):
 					check(Geometry2D.is_point_in_polygon(mob.global_position,preload("res://scripts/maps/map_region_geometry.gd").polygon(region)),"dense actors stay in mapped polygon "+id)
 				else:
 					check(mob.global_position.distance_to(center)<=float(region.spawn_radius)+.1,"compact dense radius "+id)
