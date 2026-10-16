@@ -195,7 +195,7 @@ func _player_busy_for_travel() -> bool:
 	return bool(world.player.is_stunned() or world.player.is_feared())
 
 func _teleport_player(destination: Vector2) -> void:
-	world.player.set_auto_enabled(false)
+	if is_instance_valid(world.world_interactions): world.world_interactions.clear_selection()
 	world.player.clear_click_path()
 	world.player.set_touch_vector(Vector2.ZERO)
 	world.player.velocity = Vector2.ZERO
@@ -230,7 +230,7 @@ func _use_return(item_name: String) -> void:
 	if _player_busy_for_travel():
 		_message("현재 상태에서는 귀환할 수 없습니다")
 		return
-	if world.get("field_map") is OriginalPlayableField:
+	if world.get("field_map") is OriginalPlayableField and world.field_map.uses_original_gameplay_rules():
 		if world.call("return_from_original_map"): _consume(item_name)
 		return
 	if not (world.get("maps_by_id") as Dictionary).has("aden_world"):
@@ -251,7 +251,7 @@ func _random_destination() -> Vector2:
 	var start: Vector2 = world.player.global_position
 	var rng: RandomNumberGenerator = world.get("rng") as RandomNumberGenerator
 	if field is OriginalPlayableField:
-		if not bool(field.definition.rules.get("teleportable",0)): return Vector2.INF
+		if field.uses_original_gameplay_rules() and not bool(field.definition.rules.get("teleportable",0)): return Vector2.INF
 		return field.random_landing(rng,start)
 	if field != null:
 		for attempt: int in range(1500):

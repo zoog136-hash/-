@@ -362,27 +362,30 @@ func _build_ground() -> void:
 				cap.modulate = Color(1.15,1.12,.98,1)
 	_select_layer("Wall")
 	for shape: Dictionary in field.data["collision"]:
-		if str(shape.kind) in ["dungeon_boundary","dungeon_pit","terrain_boundary"]:
-			_build_boundary_wall(shape)
-			continue
-		if str(shape["kind"]) not in ["dungeon_wall","fortress_wall"]:
-			continue
-		var a: Array = shape["rect"]
-		var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
-		var stone_color := Color(str(field.data.get("render_style",{}).get("wall_tint","55505e")))
-		var wall: Polygon2D = _polygon(_box_points(box),2)
-		wall.modulate = stone_color
-		var rim := Line2D.new()
-		rim.points = _box_points(box)
-		rim.closed = true
-		rim.width = 8
-		rim.default_color = stone_color.lightened(.14)
-		ground.add_child(rim)
-		var shade := Line2D.new()
-		shade.points = PackedVector2Array([Vector2(box.position.x,box.end.y-5),Vector2(box.end.x,box.end.y-5)])
-		shade.width = 14
-		shade.default_color = Color(0,0,0,.38)
-		ground.add_child(shade)
+		_build_wall(shape)
+
+func _build_wall(shape: Dictionary) -> void:
+	if str(shape.kind) in ["dungeon_boundary","dungeon_pit","terrain_boundary"]:
+		_build_boundary_wall(shape)
+		return
+	if str(shape["kind"]) not in ["dungeon_wall","fortress_wall"]:
+		return
+	var a: Array = shape["rect"]
+	var box := Rect2(float(a[0]),float(a[1]),float(a[2]),float(a[3]))
+	var stone_color := Color(str(field.data.get("render_style",{}).get("wall_tint","55505e")))
+	var wall: Polygon2D = _polygon(_box_points(box),2)
+	wall.modulate = stone_color
+	var rim := Line2D.new()
+	rim.points = _box_points(box)
+	rim.closed = true
+	rim.width = 8
+	rim.default_color = stone_color.lightened(.14)
+	ground.add_child(rim)
+	var shade := Line2D.new()
+	shade.points = PackedVector2Array([Vector2(box.position.x,box.end.y-5),Vector2(box.end.x,box.end.y-5)])
+	shade.width = 14
+	shade.default_color = Color(0,0,0,.38)
+	ground.add_child(shade)
 
 func _build_reference_ground() -> void:
 	var structure: Dictionary = field.data.world_geometry

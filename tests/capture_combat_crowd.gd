@@ -16,6 +16,10 @@ func _clear(world: TwilightWorld) -> void:
 	world.player.clear_click_path()
 	world._clear_combat_actions()
 	world.selected_monster = null
+	world.auto_target = null
+	world.auto_stuck_time = 0.0
+	world.auto_repath_timer = 0.0
+	world.auto_attack_timer = 0.0
 	for mob: TwilightMonster in world.monsters_root.get_children():
 		world.field_population.release(mob)
 		world.monsters_root.remove_child(mob)
@@ -23,34 +27,50 @@ func _clear(world: TwilightWorld) -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(OUTPUT)
-	var world: TwilightWorld = load("res://Main.tscn").instantiate()
-	# Old comparison checkouts do not have the test-only metering script.
-	var metered: bool = ResourceLoader.exists("res://tests/qa_combat_hud_world.gd")
-	if metered: world.set_script(load("res://tests/qa_combat_hud_world.gd"))
-	root.add_child(world)
-	if not CLASS_QA.enter_game(world):
-		push_error("Rendered gameplay class confirmation failed")
-		quit(1)
-		return
-	world.save_timer = -10000
-	world.rng.seed = 20261009
-	world._set_map("aden_world", false)
-	world.field_population.set_process(false)
-	var point: Vector2 = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
+	# Independent playable world per crowd: prevent earlier long AI loads
+	# from changing ammo, AUTO, buffs or combat state for later populations.
 	var report: Dictionary = {"adapter":RenderingServer.get_video_adapter_name(), "samples":[],
 		"note":"32/96/192 controlled-HP monsters, real combat; software GL runner, not a PC GPU FPS guarantee"}
 	var capture_enabled: bool = DisplayServer.get_name() != "headless"
 	report["rendered"] = capture_enabled
 	for population: int in [32, 96, 192]:
+		var world: TwilightWorld = load("res://Main.tscn").instantiate()
+		var metered: bool = ResourceLoader.exists("res://tests/qa_combat_hud_world.gd")
+		if metered: world.set_script(load("res://tests/qa_combat_hud_world.gd"))
+		root.add_child(world)
+		if not CLASS_QA.enter_game(world):
+			push_error("Rendered gameplay class confirmation failed")
+			quit(1)
+			return
+		world.save_timer = -10000
+		world.rng.seed = 20261009
+		world._set_map("aden_world", false)
+		world.field_population.set_process(false)
+		var point: Vector2 = world.field_map.cell_to_world(world.field_map.nearest_cell(Vector2(3550, 4300)))
 		_clear(world)
 		await process_frame
 		world.player.global_position = point
+		# Each measured population starts with a fresh player combat state.
+		# Stun/fear carried from the previous crowd would suppress real AUTO.
+		world.player.clear_status_effects()
+		world.player.set_touch_vector(Vector2.ZERO)
+		world.player.velocity = Vector2.ZERO
+		world.player.cancel_attack()
 		world.player.camera.reset_smoothing()
 		world.player.camera.force_update_scroll()
 		world.field_renderer.refresh_visible()
 		world.hp = 999999
 		world.mp = 999999
+		# These long, multi-population stress samples test sustained combat.
+		# Supply finite, test-only ammunition per independent scenario; the
+		# production ammo-consumption / AUTO-off behavior remains unchanged.
+		world.inventory["화살"] = 10000
+		world.inventory["총알"] = 10000
+		var tested_ammo: String = world._current_ammo_name()
+		var ammo_before: int = int(world.inventory.get(tested_ammo, 0)) if not tested_ammo.is_empty() else 0
 		var hits: Array[int] = [0]
+		var anchor: TwilightMonster = null
+		var anchor_index: int = 1 if false else 0
 		for index: int in range(population):
 			# Same first 38 original DB species exist in the baseline checkout.
 			# Controlled HP/stats keep the population fixed; appearance and attack
@@ -71,13 +91,25 @@ func _run() -> void:
 				rig.visual = rig.visual.duplicate(true)
 				rig.visual.weapon = ["sword","bow","staff"][index%3]
 			var angle: float = TAU * float(index) / float(population)
-			mob.global_position = point + Vector2.from_angle(angle) * (45.0 + float(index % 6) * 38.0)
+			# Retain a visible, reachable real combat target near the player
+			# while the remaining 31/95/191 actual AI actors load the scene.
+			# Separating their initial positions avoids a collision pile-up
+			# that previously starved player strikes at the 192-actor sample.
+			if index == anchor_index:
+				mob.global_position = point + Vector2(45.0, 0.0)
+				anchor = mob
+			else:
+				mob.global_position = point + Vector2.from_angle(angle) * (185.0 + float(index % 6) * 38.0)
 			mob.home_position = mob.global_position
 			mob.died.connect(world._on_monster_died)
 			mob.player_hit.connect(world._on_player_hit)
 			mob.player_hit.connect(func(_mob: TwilightMonster, _damage: int, _kind: String) -> void: hits[0] += 1)
 			mob.selected.connect(world._select_monster)
 		world.player.set_auto_enabled(true)
+		world.auto_target = anchor
+		world.selected_monster = anchor
+		# This is the real AUTO attack path, not synthetic damage or fake hits.
+		# Report any remaining failure with enough state to diagnose it.
 		var times: Array[float] = []
 		var process_times: Array[float] = []
 		var physics_times: Array[float] = []
@@ -99,18 +131,22 @@ func _run() -> void:
 			if image == null or image.is_empty() or image.save_png(OUTPUT + "/crowd-" + str(population) + ".png") != OK:
 				failed = true
 				push_error("Crowd capture failed " + str(population))
+		var ammo_after: int = int(world.inventory.get(tested_ammo, 0)) if not tested_ammo.is_empty() else 0
+		if not tested_ammo.is_empty() and (ammo_after < 0 or ammo_after > ammo_before):
+			failed = true
+			push_error("Crowd ammo accounting invalid: " + tested_ammo + " before=" + str(ammo_before) + " after=" + str(ammo_after))
 		var damage_hits: int = 0
 		for mob: TwilightMonster in world.monsters_root.get_children(): damage_hits += mob.damage_hit_count
 		if hits[0] == 0 or damage_hits == 0:
 			failed = true
-			push_error("Crowd had no real combat " + str(population))
+			push_error("Crowd had no real combat " + str(population) + " auto=" + str(world.player.auto_enabled) + " stunned=" + str(world.player.is_stunned()) + " feared=" + str(world.player.is_feared()) + " anchor_valid=" + str(is_instance_valid(anchor)) + " hits=" + str(hits[0]) + "/" + str(damage_hits))
 		times.sort()
 		process_times.sort()
 		physics_times.sort()
 		var sample: Dictionary = {"population":population, "frames":times.size(), "median_ms":times[times.size() / 2],
 			"p95_ms":times[int(times.size() * 0.95)], "process_p95_ms":process_times[int(process_times.size() * 0.95)],
 			"physics_p95_ms":physics_times[int(physics_times.size() * 0.95)], "peak_nodes":peak_nodes,
-			"monster_released_hits":hits[0], "player_landed_hits":damage_hits, "peak_flights":peak_flights,
+			"monster_released_hits":hits[0], "player_landed_hits":damage_hits, "ammo_name":tested_ammo, "ammo_before":ammo_before, "ammo_after":ammo_after, "ammo_spent":ammo_before-ammo_after, "peak_flights":peak_flights,
 			"vfx_high_water":world.combat_vfx.high_water, "orphans":int(Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT))}
 		if metered: sample["hud_work"] = world.call("hud_counts")
 		_clear(world)
@@ -120,10 +156,10 @@ func _run() -> void:
 		if not sample.vfx_returned or not sample.flights_returned: failed = true
 		report.samples.append(sample)
 		print("CROWD_SAMPLE ", JSON.stringify(sample))
+		world.queue_free()
+		await process_frame
 	var file: FileAccess = FileAccess.open(OUTPUT + "/performance.json", FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t"))
 	file.close()
-	world.queue_free()
-	await process_frame
 	print(("COMBAT_CROWD_RENDER_OK" if capture_enabled else "COMBAT_CROWD_SIMULATION_OK") if not failed else "COMBAT_CROWD_FAILED")
 	quit(1 if failed else 0)

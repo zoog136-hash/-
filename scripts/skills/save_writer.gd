@@ -6,7 +6,8 @@ static func write(path: String, data: Dictionary) -> Error:
 	var temporary := path + ".tmp"
 	var file := FileAccess.open(temporary, FileAccess.WRITE)
 	if file == null: return FileAccess.get_open_error()
-	file.store_string(JSON.stringify(data))
+	# Source coordinates and Unix boss deadlines must survive JSON unchanged.
+	file.store_string(JSON.stringify(data, "", true, true))
 	file.flush()
 	var result := file.get_error()
 	file.close()

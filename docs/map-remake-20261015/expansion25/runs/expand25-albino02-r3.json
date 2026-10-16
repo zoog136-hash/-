@@ -1,0 +1,44 @@
+{
+  "android": "NOT_RUN",
+  "boss_combat": [
+    {
+      "arena_arrival": "QA_TELEPORT_AFTER_PATH_CHECK",
+      "boss": "알비노 피닉스",
+      "boss_hp_after": 26054,
+      "boss_hp_before": 26100,
+      "damage": "ORDINARY_PLAYER_ATTACK_AND_REAL_BOSS_AI",
+      "map": "albino_02",
+      "observation": "STATIONARY_PLAYER_BEFORE_AUTO_ATTACK",
+      "player_hp_after": 999940,
+      "player_hp_before": 1000000,
+      "player_test_hp": 1000000,
+      "real_attack_markers": 1,
+      "region": "boss"
+    }
+  ],
+  "checks": 530,
+  "display": "X11",
+  "failures": [],
+  "maps": [
+    {
+      "boss_zones": 1,
+      "collision": {
+        "active_shapes": 269,
+        "collision_unloaded_buckets": 50,
+        "floor_unloaded_chunks": 32,
+        "full_reference_shapes": 826,
+        "queries": 256,
+        "sample_locations": 2
+      },
+      "current_M_coordinates": "UNVERIFIED",
+      "live_monsters": 43,
+      "load_ms": 211.116,
+      "map": "albino_02",
+      "memory_static_bytes": 299210576,
+      "original_fidelity_complete": false,
+      "source_kind": "TWILIGHT_AUTHORED_POLYGONS",
+      "technical_complete": false
+    }
+  ],
+  "renderer": "llvmpipe (LLVM 19.1.7, 256 bits)"
+}

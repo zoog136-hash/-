@@ -46,6 +46,7 @@ var touch_vector: Vector2 = Vector2.ZERO
 var click_path: PackedVector2Array = PackedVector2Array()
 var path_index: int = 0
 var auto_enabled: bool = false
+var manual_navigation: bool = false
 var movement_locked: bool = false
 var class_index: int = 0
 var facing: int = 0 # 0 down, 1 up, 2 left, 3 right
@@ -162,8 +163,6 @@ func _physics_process(delta: float) -> void:
 
 	if manual.length_squared() > 0.01:
 		cancel_attack()
-		if auto_enabled:
-			set_auto_enabled(false)
 		clear_click_path()
 		velocity = manual.normalized() * move_speed * equipment_move_speed_multiplier * skill_speed_multiplier
 	else:
@@ -362,12 +361,14 @@ func set_touch_vector(value: Vector2) -> void:
 	touch_vector = value.limit_length(1.0)
 
 func set_click_path(points: PackedVector2Array, target: Vector2) -> void:
+	manual_navigation = false
 	if not points.is_empty(): cancel_attack()
 	click_path = points
 	path_index = 0
 	navigation_agent.target_position = target
 
 func clear_click_path() -> void:
+	manual_navigation = false
 	click_path = PackedVector2Array()
 	path_index = 0
 
@@ -564,3 +565,12 @@ func _move_on_map() -> void:
 	if is_instance_valid(controller) and controller.has_method("constrain_original_motion"):
 		controller.constrain_original_motion(self)
 	move_and_slide()
+
+func set_manual_click_path(points: PackedVector2Array, target: Vector2) -> void:
+	set_click_path(points, target)
+	manual_navigation = not points.is_empty()
+
+func has_manual_movement() -> bool:
+	if manual_navigation and path_index < click_path.size(): return true
+	var ui_blocks: bool = get_parent().get("hud") != null and get_parent().hud.has_method("blocks_keyboard_input") and get_parent().hud.blocks_keyboard_input()
+	return not ui_blocks and (touch_vector.length_squared() > 0.01 or Input.get_vector("move_left", "move_right", "move_up", "move_down").length_squared() > 0.01)

@@ -1,0 +1,14 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.0.7-2+deb13u1 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 19.1.7, 256 bits)
+
+ALL_MAP_BEGIN aden_world
+ERROR: Invalid polygon data, triangulation failed.
+   at: canvas_item_add_polygon (servers/rendering/renderer_canvas_cull.cpp:1770)
+   GDScript backtrace (most recent call first):
+       [0] crescent (res://scripts/animation/impact_visuals.gd:80)
+       [1] draw_impact (res://scripts/animation/impact_visuals.gd:107)
+       [2] _draw (res://scripts/animation/combat_vfx.gd:123)
+ALL_MAP_CHECKED aden_world checks=2241
+ALL_MAP_RESULT {"checks":2241,"failures":[],"maps":1}

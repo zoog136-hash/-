@@ -16,7 +16,7 @@ func configure(controller: Node) -> void:
 	var heading := Label.new()
 	heading.text = "아덴 텔레포트 · 현재 월드 25개 지역"
 	add_child(heading)
-	listing = ItemList.new()
+	listing = preload("res://scripts/ui/native_touch_list.gd").new()
 	listing.name = "NpcTeleportDestinations"
 	listing.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	listing.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -25,9 +25,10 @@ func configure(controller: Node) -> void:
 	detail = Label.new()
 	detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(detail)
-	travel = Button.new()
+	travel = preload("res://scripts/ui/native_touch_button.gd").new()
 	travel.name = "NpcTeleportConfirm"
 	travel.text = "지역 선택"
+	travel.custom_minimum_size.y = 44
 	travel.pressed.connect(_travel)
 	add_child(travel)
 	_refresh()

@@ -9,7 +9,10 @@ const VISUAL_SIZES: Dictionary = {
 	"spore":Vector2(94,106), "arch":Vector2(232,195),
 	"stairs":Vector2(108,90), "tomb":Vector2(88,71),
 	"banner":Vector2(116,149), "rune":Vector2(84,44),
-	"rubble":Vector2(85,48)
+	"rubble":Vector2(85,48),
+	"deus_pillar":Vector2(96,196),"beliel_pillar":Vector2(112,190),
+	"izabel_pillar":Vector2(100,196),"razel_pillar":Vector2(110,208),
+	"marsh_root":Vector2(86,154),"sulfur_chimney":Vector2(86,158)
 }
 var kind: String = "crystal"
 var accent := Color("8bbfda")
@@ -198,6 +201,44 @@ func _rubble() -> void:
 		_edge([p+Vector2(-7,-11),p+Vector2(9,-8),p+Vector2(2,1)],stone.lightened(.35),1.0)
 		_poly([p+Vector2(2,1),p+Vector2(14,2),p+Vector2(2,8)],Color(0,0,0,.22))
 
+func _remake_pillar() -> void:
+	var tint: Color=Color("41434d")
+	if kind=="beliel_pillar": tint=Color("4c5845")
+	if kind=="izabel_pillar": tint=Color("7e7486")
+	if kind=="razel_pillar": tint=Color("666055")
+	_block(Vector2.ZERO,42,17,15,tint)
+	_block(Vector2(0,-15),32,13,12,tint.lightened(.1))
+	_block(Vector2(0,-27),24,10,128,tint)
+	for x: float in [-15,0,15]:
+		draw_line(Vector2(x,-36),Vector2(x,-149),tint.lightened(.2),2,true)
+	_block(Vector2(0,-155),34,14,12,tint.lightened(.1))
+	if kind=="deus_pillar":
+		for y: int in range(-145,-40,9):
+			_ring(Vector2(18+sin(y*.12)*5,y),Vector2(4,6),Color("22252b"),2)
+	elif kind=="beliel_pillar":
+		for y: int in range(-148,-24,22):
+			_edge([Vector2(-36,y-10),Vector2(0,y+14),Vector2(38,y-19)],Color("a9b49a88"),1.2)
+	elif kind=="izabel_pillar":
+		_block(Vector2(0,-167),27,11,13,tint)
+		_sigil(Vector2(0,-99),14,Color("b5a2c5"))
+	elif kind=="razel_pillar":
+		for y: int in [-151,-63]: _ring(Vector2(0,y),Vector2(26,11),Color("b69a60"),3)
+		_ellipse(Vector2(0,-184),Vector2(20,20),Color("448d88"))
+		_ellipse(Vector2(-5,-189),Vector2(7,7),Color("a0e0cf"))
+
+func _remake_natural() -> void:
+	var tint:=Color("495242") if kind=="marsh_root" else Color("8e8150")
+	_ellipse(Vector2.ZERO,Vector2(28,13),tint.darkened(.35))
+	for side: float in [-1,1]:
+		_stone_face([Vector2(side*27,2),Vector2(side*23,-48),Vector2(side*12,-103),Vector2(side*8,-72),Vector2(side*11,-15)],tint.darkened(.12))
+	_stone_face([Vector2(-18,0),Vector2(-21,-82),Vector2(-9,-139),Vector2(10,-124),Vector2(20,-60),Vector2(25,2)],tint)
+	_edge([Vector2(-9,-132),Vector2(-10,-66),Vector2(3,-17)],tint.lightened(.28),3)
+	if kind=="sulfur_chimney":
+		_ellipse(Vector2(0,-128),Vector2(11,5),Color("292c24"))
+		for y: int in [-104,-80,-39]: _ring(Vector2(0,y),Vector2(18,6),Color("b5a24f"),3)
+	else:
+		_edge([Vector2(8,-78),Vector2(28,-103),Vector2(32,-128)],tint.darkened(.18),8)
+
 func _draw() -> void:
 	if kind != "rune":
 		_ellipse(Vector2(6,5),Vector2(44,16),Color(0,0,0,.08))
@@ -214,3 +255,5 @@ func _draw() -> void:
 		"banner": _banner()
 		"rune": _rune()
 		"rubble": _rubble()
+		"deus_pillar","beliel_pillar","izabel_pillar","razel_pillar": _remake_pillar()
+		"marsh_root","sulfur_chimney": _remake_natural()

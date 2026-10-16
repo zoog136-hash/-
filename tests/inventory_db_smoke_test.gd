@@ -72,15 +72,29 @@ func _run() -> void:
 	if int(world.get("hp")) != 155:
 		_fail("consumable double-click did not apply DB heal value 55")
 
-	# Quickslot consumable use must use the same DB value.
+	# Manual inventory and quickslot HP potions share a one-second cooldown.
+	# Switching potion types must not bypass it; after it expires the DB heal still applies.
 	world.set("hp", 100)
 	var quick_before: int = int(inv.get("강력 HP 물약", 0))
 	world.call("_use_quick_item", "강력 HP 물약")
 	inv = world.get("inventory") as Dictionary
+	if int(inv.get("강력 HP 물약", 0)) != quick_before:
+		_fail("quickslot bypassed shared HP potion cooldown")
+	if int(world.get("hp")) != 100:
+		_fail("quickslot healed HP during shared cooldown")
+	var cooldowns: Dictionary = world.get("item_use_cooldowns") as Dictionary
+	if float(cooldowns.get("__hp_potion_shared__", 0.0)) <= 0.0:
+		_fail("inventory HP potion did not start shared cooldown")
+	world.call("_tick_item_buffs", 1.0)
+	cooldowns = world.get("item_use_cooldowns") as Dictionary
+	if float(cooldowns.get("__hp_potion_shared__", 0.0)) > 0.0:
+		_fail("shared HP potion cooldown did not expire after one second")
+	world.call("_use_quick_item", "강력 HP 물약")
+	inv = world.get("inventory") as Dictionary
 	if int(inv.get("강력 HP 물약", 0)) != quick_before - 1:
-		_fail("quickslot consumable did not consume exactly one item")
+		_fail("quickslot consumable did not consume exactly one item after cooldown")
 	if int(world.get("hp")) != 220:
-		_fail("quickslot consumable did not apply DB heal value 120")
+		_fail("quickslot consumable did not apply DB heal value 120 after cooldown")
 
 	world.queue_free()
 	await process_frame

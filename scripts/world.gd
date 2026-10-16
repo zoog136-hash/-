@@ -17,6 +17,8 @@ const FIELD_SCRIPT = preload("res://scripts/maps/playable_field.gd")
 const FIELD_RENDERER = preload("res://scripts/maps/field_renderer.gd")
 const SOURCE_FIELD = preload("res://scripts/maps/source_field.gd")
 const SOURCE_RENDERER = preload("res://scripts/maps/source_renderer.gd")
+const REMAKE_REGISTRY = preload("res://scripts/maps/remake_registry.gd")
+const REMAKE_RENDERER = preload("res://scripts/maps/remake_renderer.gd")
 const SOURCE_POPULATION = preload("res://scripts/maps/source_population.gd")
 const SOURCE_TRAVEL = preload("res://scripts/maps/source_travel.gd")
 const FIELD_POPULATION = preload("res://scripts/maps/field_population.gd")
@@ -58,10 +60,15 @@ var presentation_settings: Dictionary = {"impact_intensity":0.85, "reduced_motio
 
 const ANIMATION_CATALOG = preload("res://scripts/animation/animation_catalog.gd")
 const ELEMENT_RULES = preload("res://scripts/elemental_rules.gd")
+const CONSUMABLE_AUTO = preload("res://scripts/consumable_auto_policy.gd")
+const HP_POTION_COOLDOWN_SECONDS: float = 1.0
+const HP_POTION_COOLDOWN_KEY: String = "__hp_potion_shared__"
 const CONSUMABLE_RULES = preload("res://scripts/consumable_rules.gd")
 const EQUIPMENT_BLESSING = preload("res://scripts/equipment_blessing.gd")
 const CONSUMABLE_SERVICE = preload("res://scripts/consumable_service.gd")
 const AIN_SERVICE = preload("res://scripts/ainhasad_service.gd")
+const AIN_OPTION_RULES = preload("res://scripts/ainhasad_option_rules.gd")
+const EXP_PROGRESSION = preload("res://scripts/experience_progression.gd")
 const SHOP_CATALOG = preload("res://scripts/shop/shop_catalog.gd")
 const LOCAL_WAREHOUSE = preload("res://scripts/warehouse/local_warehouse.gd")
 const NPC_TELEPORT_POLICY = preload("res://scripts/npc/teleport_policy.gd")
@@ -153,6 +160,10 @@ var active_map_id: String = "aden_world"
 var astar: AStarGrid2D = null
 var world_size: Vector2 = Vector2(8192, 4224)
 var tile_size: int = 32
+const WORLD_INTERACTIONS = preload("res://scripts/input/world_interactions.gd")
+const INVENTORY_GROUND_TRANSFER = preload("res://scripts/loot/inventory_ground_transfer.gd")
+var world_interactions: Node
+var ammo_notice_at: int = -10000
 var selected_monster: TwilightMonster = null
 var auto_target: TwilightMonster = null
 var auto_attack_timer: float = 0.0
@@ -295,6 +306,8 @@ func _ready() -> void:
 	ground_loot.configure(self)
 	loot_pickup.configure(self, ground_loot)
 	_connect_signals()
+	if hud.has_signal("consumable_auto_settings_changed"):
+		hud.connect("consumable_auto_settings_changed", set_consumable_auto_settings)
 	_setup_collision_tileset()
 	_setup_field_services()
 	hud.refresh_maps(maps)
@@ -312,6 +325,10 @@ func _ready() -> void:
 	# replacing character creation. Show it only on a fresh playable launch.
 	# Headless automated suites explicitly open the picker to test it; the
 	# existing movement/input regressions must not inherit an opaque modal.
+	world_interactions = WORLD_INTERACTIONS.new()
+	world_interactions.name = "WorldInteractions"
+	add_child(world_interactions)
+	world_interactions.configure(self)
 	if creating_character and DisplayServer.get_name() != "headless":
 		hud.call("open_class_selection",true)
 
@@ -378,21 +395,8 @@ func _process(delta: float) -> void:
 	_update_target_hud()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if bool(hud.get("class_picker_initial")):
-		return
-	if event is InputEventMouseButton:
-		var mouse_event: InputEventMouseButton = event
-		if mouse_event.pressed and mouse_event.button_index == MOUSE_BUTTON_LEFT:
-			if hud.blocks_world_input(mouse_event.position): return
-			_set_click_destination(COORD.screen_to_world(get_viewport(), mouse_event.position))
-	elif event is InputEventScreenTouch:
-		var touch_event: InputEventScreenTouch = event
-		if touch_event.pressed and not touch_event.canceled and touch_event.device != InputEvent.DEVICE_ID_EMULATION:
-			if hud.blocks_world_input(touch_event.position): return
-			# Android touch events carry real viewport coordinates. Mouse emulation is
-			# disabled in project.godot, so get_global_mouse_position() may be stale.
-			var world_touch_position: Vector2 = COORD.screen_to_world(get_viewport(), touch_event.position)
-			_set_click_destination(world_touch_position)
+	if bool(hud.get("class_picker_initial")): return
+	if is_instance_valid(world_interactions): world_interactions.begin(event)
 
 func _load_data() -> void:
 	var maps_text: String = FileAccess.get_file_as_string(MAPS_PATH)
@@ -417,9 +421,11 @@ func _load_data() -> void:
 					if str(maps[index].get("id", "")) == str(entry["map_id"]):
 						maps[index] = {"id":entry["map_id"],"name":entry["map_name"],"field_path":entry["path"],
 							"width":int(entry["bounds"][2])/32,"height":int(entry["bounds"][3])/32,"tile_size_world":32}
+	var remake_names: Dictionary = REMAKE_REGISTRY.display_names()
 	for map_value: Variant in maps:
 		if map_value is Dictionary:
 			var map_data: Dictionary = map_value as Dictionary
+			if remake_names.has(str(map_data.get("id", ""))): map_data["name"] = remake_names[str(map_data.id)]
 			maps_by_id[str(map_data.get("id", ""))] = map_data
 	for record: Dictionary in SOURCE_TRAVEL.catalog_entries():
 		original_maps.append(record)
@@ -467,8 +473,14 @@ func _load_data() -> void:
 	# Use owned Twilight art as fallbacks instead of blank inventory icons.
 	var image_records: Dictionary = catalog_image_index.get("아이템", {}) as Dictionary
 	for name: String in ["드래곤의 루비", "드래곤의 사파이어", "드래곤의 다이아몬드", "드래곤의 고급 다이아몬드", "드래곤의 성수", "드래곤의 용옥"]:
+		if name == "드래곤의 루비":
+			# Previous placeholder made a ruby look like the local red HP potion.
+			# Let the identity-aware resolver choose reviewed art or its gem symbol.
+			if str(image_records.get(name, "")) == "res://assets/ui/potionRed.png":
+				image_records.erase(name)
+			continue
 		if not image_records.has(name):
-			image_records[name] = "res://assets/ui/potionRed.png" if name == "드래곤의 루비" else "res://assets/ui/rune.png"
+			image_records[name] = "res://assets/ui/rune.png"
 	catalog_image_index["아이템"] = image_records
 	_build_job_classes()
 
@@ -1137,13 +1149,21 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 			return
 		requested_field = loaded_field as Dictionary
 	var requested_original: OriginalPlayableField = null
-	if requested_map.has("source_definition"):
+	if REMAKE_REGISTRY.installed(map_id):
+		requested_original = REMAKE_REGISTRY.load_field(map_id)
+		if requested_original == null:
+			hud.show_message("리메이크 지도 데이터가 손상되어 현재 맵을 유지합니다")
+			return
+	elif requested_map.has("source_definition"):
 		requested_original = SOURCE_TRAVEL.load_field(requested_map)
 		if requested_original == null:
 			hud.show_message("원본 지도의 좌표·통행 데이터를 검증할 수 없습니다")
 			return
+	if is_instance_valid(world_interactions):
+		world_interactions.cancel_gesture()
+		world_interactions.clear_selection()
 	field_population.configure(self, null)
-	field_population = original_population if requested_original != null else legacy_population
+	field_population = original_population if requested_original != null and not requested_original is RemakePlayableField else legacy_population
 	if field_map is OriginalPlayableField: (field_map as OriginalPlayableField).close()
 	if is_instance_valid(return_gate):
 		remove_child(return_gate)
@@ -1176,11 +1196,12 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 		if requested_original != null:
 			field_map = requested_original
 			world_size = field_map.bounds.size
-			player.camera.limit_right = int(world_size.x)
-			player.camera.limit_bottom = int(world_size.y)
+			player.camera.limit_left = floori(field_map.bounds.position.x)
+			player.camera.limit_top = floori(field_map.bounds.position.y)
+			player.camera.limit_right = ceili(field_map.bounds.end.x)
+			player.camera.limit_bottom = ceili(field_map.bounds.end.y)
 		else:
-			field_map = FIELD_SCRIPT.new()
-			field_map.configure(MONSTER_CATALOG.apply_map(requested_field))
+			field_map = REMAKE_REGISTRY.authored_field(MONSTER_CATALOG.apply_map(requested_field))
 		astar = field_map.astar
 		field_physics = field_map.build_physics(self)
 		map_background.texture = null
@@ -1207,6 +1228,7 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	if not keep_position or not _is_walkable_world(player.global_position):
 		player.global_position = _spawn_position()
 	player.velocity = Vector2.ZERO
+	preload("res://scripts/maps/source_body_profile.gd").apply(player,field_map is RemakePlayableField)
 	player.set_touch_vector(Vector2.ZERO)
 	player.camera.reset_smoothing()
 	player.camera.force_update_scroll()
@@ -1216,7 +1238,9 @@ func _set_map(map_id: String, keep_position: bool) -> void:
 	hud.set_map_name(str(active_map.get("name", active_map_id)))
 	hud.clear_target()
 	if field_map != null:
-		field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
+		if field_map is RemakePlayableField: field_renderer = REMAKE_RENDERER.new()
+		elif field_map is AuthoredRemakeField: field_renderer = preload("res://scripts/maps/authored_remake_renderer.gd").new()
+		else: field_renderer = SOURCE_RENDERER.new() if field_map is OriginalPlayableField else FIELD_RENDERER.new()
 		field_renderer.name = "FieldRenderer"
 		add_child(field_renderer)
 		field_renderer.configure(field_map, player)
@@ -1432,7 +1456,7 @@ func _set_click_destination(target: Vector2) -> void:
 					hud.call("open_crafting")
 				elif str(npc["role"]) == "buyback":
 					hud.call("open_item_sell")
-				elif field_map is OriginalPlayableField:
+				elif field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules():
 					hud.show_message(str(npc.name)+" · 원본 대화 기능 미매핑")
 				elif str(npc["role"]) == "guide":
 					hud.call("open_npc_dialogue",str(npc.get("id","")))
@@ -1441,8 +1465,7 @@ func _set_click_destination(target: Vector2) -> void:
 				return
 	var path: PackedVector2Array = find_world_path(player.global_position, target)
 	if path.size() > 0:
-		player.set_auto_enabled(false)
-		player.set_click_path(path, target)
+		player.set_manual_click_path(path, target)
 
 func _spawn_monsters(count: int) -> void:
 	if monster_db.is_empty():
@@ -1579,7 +1602,7 @@ func _cast_bleed_skill(target: TwilightMonster, mp_cost: int = 6, power: int = 2
 	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, "melee")
 	_deal_successful_player_hit(target, damage, critical)
 	if target.dead:
 		_update_hud()
@@ -1849,7 +1872,7 @@ func _cast_stun_skill(target: TwilightMonster, power: int = 55, mp_cost: int = 1
 	var critical_chance: float = _critical_chance(_player_critical_rate("melee"), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, "melee")
 	_deal_successful_player_hit(target, damage, critical)
 	if target.dead:
 		_update_hud()
@@ -1912,7 +1935,7 @@ func _cast_magic_attack(target: TwilightMonster, power: int, mp_cost: int, skill
 	var critical_chance: float = _critical_chance(_player_critical_rate("magic"), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, "magic")
 	_deal_successful_player_hit(target, damage, critical)
 	hud.append_log("%s 적중%s · %s에게 %d 마법 피해 · 명중 %.1f%% · 치명타 %.1f%%" % [
 		skill_name, " CRITICAL" if critical else "", target.monster_name, damage,
@@ -1964,6 +1987,7 @@ func _cast_combat_skill_from_hud(skill_id: String) -> void:
 			hud.show_message("알 수 없는 스킬입니다")
 
 func _attack() -> void:
+	if is_instance_valid(world_interactions) and world_interactions.primary_is_npc(): return
 	if player.is_stunned() or player.is_feared() or not charge_skill.is_empty():
 		return
 	if auto_attack_timer > 0.0 or not pending_attack.is_empty():
@@ -1976,6 +2000,7 @@ func _attack() -> void:
 	if target_usable:
 		target_usable = _has_line_of_sight_world(player.global_position, target.global_position)
 	if not target_usable:
+		if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
 		target = _nearest_visible_monster_in_weapon_range()
 	if target == null:
 		hud.show_message("무기 사거리 안에 보이는 대상이 없습니다")
@@ -2006,7 +2031,7 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	var critical_chance: float = _critical_chance(_player_critical_rate(attack_kind), target.critical_resistance)
 	var critical: bool = rng.randf() < critical_chance
 	if critical:
-		damage = _critical_damage(damage)
+		damage = _player_critical_damage(damage, attack_kind)
 	damage = _elemental_damage_to_monster(damage, _normal_attack_element(), target)
 	damage += int(consumable_service.call("weapon_element_bonus", _equipped_weapon_record(), target))
 	_deal_successful_player_hit(target, damage, critical)
@@ -2022,6 +2047,16 @@ func _resolve_normal_attack(target: TwilightMonster, attack_kind: String) -> voi
 	_update_target_hud()
 
 func _run_auto_hunt() -> void:
+	if player.has_manual_movement():
+		auto_stuck_time = 0.0
+		return
+	if is_instance_valid(world_interactions):
+		if world_interactions.pointer != -2: return
+		if world_interactions.primary_is_npc(): return
+		var priority: TwilightMonster = world_interactions.primary_monster()
+		if priority != null:
+			auto_target = priority
+			selected_monster = priority
 	if not pending_attack.is_empty(): return
 	if player.is_stunned() or player.is_feared():
 		player.clear_click_path()
@@ -2066,6 +2101,7 @@ func _run_auto_hunt() -> void:
 		# Keep A* for obstructed targets; do not bypass collision or map bounds.
 		var path: PackedVector2Array = _auto_pursuit_path(auto_target, can_see)
 		if path.is_empty():
+			if is_instance_valid(world_interactions) and not world_interactions.selections.is_empty(): return
 			auto_target = _nearest_reachable_monster(99999.0)
 			if auto_target == null:
 				selected_monster = null
@@ -2157,15 +2193,13 @@ func _nearest_reachable_monster(max_distance: float) -> TwilightMonster:
 	return best
 
 func _select_monster(monster: TwilightMonster) -> void:
-	selected_monster = monster
-	_update_target_hud()
+	if is_instance_valid(world_interactions): world_interactions.select_monster(monster)
+	else: selected_monster = monster
 
 func _update_target_hud() -> void:
-	if is_instance_valid(selected_monster) and not selected_monster.dead:
-		hud.show_target("Lv.%d %s · AC %d" % [selected_monster.monster_level, selected_monster.monster_name, selected_monster.armor_class], selected_monster.hp, selected_monster.max_hp)
-	else:
-		selected_monster = null
-		hud.clear_target()
+	# Combat selection is independent of the removed top-center readout.
+	if is_instance_valid(world_interactions): world_interactions.prune()
+	if not is_instance_valid(selected_monster) or selected_monster.dead: selected_monster = null
 
 func _on_monster_died(monster: TwilightMonster) -> void:
 	# Pooled actors can signal the same death more than once, but each life owns
@@ -2194,7 +2228,7 @@ func _on_monster_died(monster: TwilightMonster) -> void:
 	gold += gained_adena
 	hud.append_log("%s 처치 · EXP %d · 아데나 %d" % [monster.monster_name, gained_experience, gained_adena])
 	_roll_drop(monster, can_drop_equipment)
-	ain_service.consume_for_kill(int(monster.exp_reward))
+	ain_service.consume_for_kill(int(monster.exp_reward), _blessing_consumption_reduction_percent())
 	_check_level_up()
 	if player.auto_enabled:
 		_auto_recharge_ain()
@@ -2243,16 +2277,23 @@ func _spawn_ground_drop(item_name: String, world_position: Vector2, quantity: in
 
 func _collect_ground_drop(drop: Button) -> bool:
 	if player.is_stunned() or player.is_feared() or player.is_held(): return false
+	if not ground_loot.valid_view(drop): return false
+	var pending: Dictionary = ground_loot.records[str(drop.get_meta("id"))]
+	if not INVENTORY_GROUND_TRANSFER.can_collect(self,pending):
+		hud.show_message("장비 고유 ID 충돌: 바닥 아이템을 보존했습니다")
+		return false
 	var record: Dictionary = ground_loot.take(drop, player.global_position, GROUND_PICKUP_RADIUS)
 	if record.is_empty(): return false
 	var item_name: String = str(record["item_name"])
 	var quantity: int = int(record["quantity"])
+	INVENTORY_GROUND_TRANSFER.restore_physical(self,record)
 	inventory[item_name] = int(inventory.get(item_name, 0)) + quantity
 	if pending_ground_pickup == drop: pending_ground_pickup = null
 	hud.refresh_inventory(inventory)
 	hud.append_log("%s ×%d 습득" % [item_name, quantity])
 	hud.show_message("%s 획득" % item_name)
 	_update_hud()
+	if bool(record.get("player_dropped",false)): _save_game(true)
 	return true
 
 func _on_ground_drop_clicked(drop: Button) -> void:
@@ -2592,7 +2633,7 @@ func _check_level_up() -> void:
 	while experience >= exp_need:
 		experience -= exp_need
 		level += 1
-		exp_need = int(round(exp_need * 1.14 + 120.0))
+		exp_need = EXP_PROGRESSION.required_for_level(level, exp_need)
 		max_hp += 45
 		max_mp += 9
 		hp = _effective_max_hp()
@@ -3336,7 +3377,9 @@ func _on_ain_auto_changed(enabled: bool) -> void:
 
 func _update_ain_hud() -> void:
 	if hud.has_method("set_ain_state"):
-		hud.call("set_ain_state", ain_service.snapshot(), inventory)
+		var state: Dictionary = ain_service.snapshot()
+		state["blessing_reduction_pct"] = _blessing_consumption_reduction_percent()
+		hud.call("set_ain_state", state, inventory)
 
 func _apply_ain_consumable(item_name: String, spec: Dictionary) -> bool:
 	var kind: String = str(spec.get("kind", ""))
@@ -3604,7 +3647,12 @@ func _use_healing_item(item_name: String, heal_amount: int) -> void:
 	if hp >= effective_max_hp:
 		hud.show_message("HP가 가득 찼습니다")
 		return
+	var cooldown_left: float = float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0))
+	if cooldown_left > 0.0:
+		hud.show_message("HP 물약 재사용 대기 %s" % _format_seconds_short(cooldown_left))
+		return
 	inventory[item_name] = int(inventory.get(item_name, 0)) - 1
+	item_use_cooldowns[HP_POTION_COOLDOWN_KEY] = HP_POTION_COOLDOWN_SECONDS
 	var enhanced_heal: int = maxi(1, heal_amount + _catalog_stat_sum("potionHealFlat") + _equipment_potion_heal_stat("물약 회복량") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_flat") + int(original_skills.stat("potionFlat") if original_skills != null else 0))
 	enhanced_heal += int(round(float(heal_amount) * float(_catalog_stat_sum("potionHealPct") + _equipment_potion_heal_stat("물약 회복률") + _enhancement_stat_for_slots(ACCESSORY_EQUIPMENT_SLOTS, "potion_heal_pct")) / 100.0))
 	hp = mini(effective_max_hp, hp + maxi(1, enhanced_heal))
@@ -3616,8 +3664,8 @@ func _return_to_spawn() -> void:
 	if player.is_stunned() or player.is_feared():
 		hud.show_message("현재 상태에서는 귀환할 수 없습니다")
 		return
-	player.set_auto_enabled(false)
 	player.clear_click_path()
+	if is_instance_valid(world_interactions): world_interactions.clear_selection()
 	player.global_position = _spawn_position()
 	player.camera.reset_smoothing()
 	selected_monster = null
@@ -3697,6 +3745,7 @@ func _save_game(quiet: bool) -> void:
 		"level": level,
 		"experience": experience,
 		"exp_need": exp_need,
+		"experience_progression_version": EXP_PROGRESSION.CURVE_VERSION,
 		"hp": hp,
 		"max_hp": max_hp,
 		"mp": mp,
@@ -3771,8 +3820,8 @@ func _load_game(quiet: bool) -> void:
 		return
 	var data: Dictionary = value as Dictionary
 	var saved_map_id: String = str(data.get("map_id", ""))
-	if saved_map_id.begins_with("l1_"):
-		var saved_field: OriginalPlayableField = SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
+	if saved_map_id.begins_with("l1_") or not data.get("original_position",{}).is_empty():
+		var saved_field: OriginalPlayableField = REMAKE_REGISTRY.load_field(saved_map_id) if not saved_map_id.begins_with("l1_") else SOURCE_TRAVEL.load_field(maps_by_id.get(saved_map_id,{}))
 		if saved_field == null:
 			source_save_blocked = true
 			hud.show_message("원본 맵 팩 누락·손상: 기존 저장 보존 중")
@@ -3799,6 +3848,11 @@ func _load_game(quiet: bool) -> void:
 	level = maxi(1, int(data.get("level", level)))
 	experience = maxi(0, int(data.get("experience", data.get("exp", experience))))
 	exp_need = maxi(1, int(data.get("exp_need", exp_need)))
+	var migrated_exp: Dictionary = EXP_PROGRESSION.migrate_progress(
+		level, experience, exp_need, int(data.get("experience_progression_version", 0))
+	)
+	experience = int(migrated_exp["experience"])
+	exp_need = int(migrated_exp["exp_need"])
 	hp = int(data.get("hp", hp))
 	max_hp = maxi(1, int(data.get("max_hp", max_hp)))
 	mp = int(data.get("mp", mp))
@@ -3826,6 +3880,7 @@ func _load_game(quiet: bool) -> void:
 		job_class = "기사"
 	var saved_ui: Variant = data.get("ui_preferences", {})
 	ui_preferences = saved_ui.duplicate(true) if saved_ui is Dictionary else {}
+	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
 	for key: String in ["quickslot_pages","edited_quickslots","item_locks"]:
 		if not ui_preferences.get(key) is Dictionary: ui_preferences[key] = {}
 	var quickslots_value: Variant = data.get("quickslots", quickslots)
@@ -3898,6 +3953,7 @@ func _load_game(quiet: bool) -> void:
 	_update_job_skillbar()
 	if original_skills != null: original_skills.import_state(data.get("original_combat_state", {}))
 	_update_hud()
+	_emit_consumable_auto_settings()
 	if not quiet:
 		hud.show_message("불러오기 완료")
 
@@ -4377,25 +4433,57 @@ func _on_quickslot_edit_requested(action: String, source_index: int, target: int
 	_update_hud()
 	_save_game(true)
 
+func get_consumable_auto_settings() -> Dictionary:
+	return CONSUMABLE_AUTO.normalize(ui_preferences.get("consumable_auto", {}))
+
+func set_consumable_auto_settings(settings: Dictionary) -> void:
+	ui_preferences["consumable_auto"] = CONSUMABLE_AUTO.normalize(settings)
+	auto_item_clock = 0.0
+	_emit_consumable_auto_settings()
+	_save_game(true)
+
+func _emit_consumable_auto_settings() -> void:
+	if is_instance_valid(hud) and hud.has_signal("consumable_auto_settings_updated"):
+		hud.emit_signal("consumable_auto_settings_updated", get_consumable_auto_settings())
+
 func _run_auto_item_quickslots(delta: float) -> void:
 	auto_item_clock -= delta
-	if auto_item_clock > 0 or hp <= 0 or player.is_stunned() or player.is_feared(): return
+	if auto_item_clock > 0 or hp <= 0 or player.is_stunned() or player.is_feared():
+		return
 	auto_item_clock = 0.2
-	for entry: Dictionary in quickslots:
-		if entry.get("kind","") != "item" or not bool(entry.get("auto",false)): continue
-		var item: String = str(entry.get("id",""))
-		if int(inventory.get(item,0)) <= 0 or float(item_use_cooldowns.get(item,0)) > 0: continue
+	var settings: Dictionary = get_consumable_auto_settings()
+	var candidates: Array[Dictionary] = []
+	var seen: Dictionary = {}
+	for value: Variant in quickslots:
+		if not value is Dictionary:
+			continue
+		var entry: Dictionary = value as Dictionary
+		if entry.get("kind", "") != "item" or not bool(entry.get("auto", false)):
+			continue
+		var item: String = str(entry.get("id", ""))
+		if seen.has(item) or int(inventory.get(item, 0)) <= 0 or float(item_use_cooldowns.get(item, 0)) > 0:
+			continue
+		seen[item] = true
 		var record: Dictionary = _find_catalog_item_record(item)
+		if int(record.get("heal", 0)) > 0 and float(item_use_cooldowns.get(HP_POTION_COOLDOWN_KEY, 0.0)) > 0.0:
+			continue
 		var spec: Dictionary = CONSUMABLE_RULES.definition(item)
-		var wanted: bool = int(record.get("heal",0)) > 0 and hp < _effective_max_hp()
-		if spec.get("kind","") == "instant_mp": wanted = mp < _effective_max_mp()
-		if spec.get("kind","") in ["regen","food","buff"]:
-			wanted = not active_item_buffs.has(item)
-			for buff: Dictionary in active_item_buffs.values():
-				if not str(spec.get("group","")).is_empty() and buff.get("group","") == spec.group: wanted = false
-		if wanted and _quickslot_auto_allowed(entry):
+		if not CONSUMABLE_AUTO.wanted(item, record, spec, settings, hp, _effective_max_hp(), mp, _effective_max_mp(), job_class, active_item_buffs):
+			continue
+		if not _quickslot_auto_allowed(entry):
+			continue
+		candidates.append({"item":item, "priority":CONSUMABLE_AUTO.priority(record, spec)})
+	# One successful consumption per interval. HP first; slot order within
+	# each class is preserved. A refused item cannot starve later slots.
+	for priority: int in range(3):
+		for candidate: Dictionary in candidates:
+			if int(candidate.priority) != priority:
+				continue
+			var item: String = str(candidate.item)
+			var before: int = int(inventory.get(item, 0))
 			_use_quickslot_item(item)
-			return
+			if int(inventory.get(item, 0)) < before:
+				return
 
 func _on_self_mode_changed(enabled: bool) -> void:
 	self_mode_enabled = enabled
@@ -5062,7 +5150,7 @@ func _apply_job_skill_damage(skill: Dictionary, target: TwilightMonster) -> void
 			var damage: int = maxi(1, int(ceil(float(total_damage) / float(hits) * chain_factor * execute_factor)))
 			var critical: bool = rng.randf() < _critical_chance(crit_rate, victim.critical_resistance)
 			if critical:
-				damage = _critical_damage(damage)
+				damage = _player_critical_damage(damage, style)
 			damage = _elemental_damage_to_monster(damage, element_name, victim)
 			_deal_successful_player_hit(victim, damage, critical)
 			_try_trigger_passives("on_hit", victim)
@@ -5142,7 +5230,7 @@ func _teleport_landing_clear(candidate: Vector2) -> bool:
 	return true
 
 func _cast_job_teleport_skill(skill: Dictionary) -> bool:
-	if field_map is OriginalPlayableField and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
+	if field_map is OriginalPlayableField and field_map.uses_original_gameplay_rules() and not bool((field_map as OriginalPlayableField).definition.rules.get("teleportable",0)):
 		hud.show_message("원본 규칙상 순간이동 제한 지역입니다")
 		return false
 	for _attempt: int in range(100):
@@ -5721,17 +5809,15 @@ func _ensure_inventory_ammo_defaults() -> void:
 
 func _consume_weapon_ammo() -> bool:
 	var ammo_name: String = _current_ammo_name()
-	if ammo_name == "":
-		return true
-	var count: int = int(inventory.get(ammo_name, 0))
+	if ammo_name == "": return true
+	var count: int = int(inventory.get(ammo_name,0))
 	if count <= 0:
-		hud.show_message("%s이(가) 없습니다 · AUTO OFF" % ammo_name)
-		hud.append_log("탄약 부족 · %s" % ammo_name)
-		if player.auto_enabled:
-			player.set_auto_enabled(false)
-		_update_hud()
+		var now: int = Time.get_ticks_msec()
+		if now-ammo_notice_at >= 3000:
+			ammo_notice_at = now
+			hud.show_message("%s 부족 · 공격 대기 (AUTO 유지)" % ammo_name)
 		return false
-	inventory[ammo_name] = count - 1
+	inventory[ammo_name] = count-1
 	_update_hud()
 	return true
 
@@ -6115,6 +6201,20 @@ func _critical_chance(attacker_critical_rate: int, defender_critical_resistance:
 func _critical_damage(raw_damage: int) -> int:
 	return maxi(1, int(round(float(raw_damage) * 1.5)))
 
+# Crit damage bonuses are flat values added AFTER the base 1.5x critical hit.
+# Keep monster critical hits on _critical_damage so player gear never buffs enemies.
+func _player_critical_damage(raw_damage: int, attack_type: String) -> int:
+	var final_damage: int = _critical_damage(raw_damage)
+	var option_key: String = ""
+	match attack_type:
+		"ranged":
+			option_key = "ranged_critical_damage"
+		"magic":
+			return final_damage
+		_:
+			option_key = "melee_critical_damage"
+	return maxi(1, final_damage + int(round(_equipped_numeric_sum(option_key))))
+
 func _effective_ac() -> int:
 	var dex_ac_bonus: int = _stat_step_bonus(_effective_attribute("DEX"), 10, 3.0)
 	return -(_effective_defense() + dex_ac_bonus)
@@ -6284,6 +6384,12 @@ func _effective_max_hp() -> int:
 	flat_bonus += float(_equipped_bless_bonus("hp"))
 	return maxi(1, int(round((max_hp + flat_bonus) * (1.0 + percent_bonus))))
 
+func _blessing_consumption_reduction_percent() -> float:
+	var reduction: float = 0.0
+	for record: Dictionary in _all_equipped_records():
+		reduction += AIN_OPTION_RULES.reduction_percent(record)
+	return clampf(reduction, 0.0, 100.0)
+
 func _experience_multiplier() -> float:
 	var bonus: float = 0.0
 	for record: Dictionary in _all_equipped_records():
@@ -6350,7 +6456,6 @@ func use_field_portal(portal_id: String) -> bool:
 		var target_map: String = str(portal["target_map"])
 		if not maps_by_id.has(target_map):
 			return false
-		player.set_auto_enabled(false)
 		player.clear_click_path()
 		player.velocity = Vector2.ZERO
 		player.set_touch_vector(Vector2.ZERO)
@@ -6358,9 +6463,12 @@ func use_field_portal(portal_id: String) -> bool:
 		auto_target = null
 		if target_map != active_map_id:
 			_set_map(target_map,false)
+			if active_map_id != target_map: return false
 			if field_map == null:
 				_place_return_gate()
-			elif portal.has("target_position"):
+			elif portal.has("target_position") and (not field_map is RemakePlayableField or int(portal.get("target_layout_revision",-1))==int(field_map.data.layout_revision)):
+				# Old pixel destinations belong to the old layout. A source remake
+				# uses its validated entry unless a calibrated target revision matches.
 				var landing: Vector2i = field_map.nearest_cell(COORD.array_vector(portal["target_position"]))
 				if landing.x >= 0:
 					player.global_position = field_map.cell_to_world(landing)
@@ -6565,3 +6673,6 @@ func constrain_original_motion(actor: CharacterBody2D) -> void:
 
 func return_from_original_map() -> bool:
 	return SOURCE_TRAVEL.return_home(self)
+
+func _drop_inventory_reference(reference: String, target: Vector2) -> bool:
+	return INVENTORY_GROUND_TRANSFER.drop(self,reference,target)

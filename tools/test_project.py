@@ -12,14 +12,16 @@ import tempfile
 import re
 import json
 import sys
-from test_project_support import classify_result, requires_renderer, run_isolated
+from test_project_support import classify_result, requires_renderer, run_isolated, timeout_budget, LEGACY_GEOMETRY_TESTS
 
 parser=argparse.ArgumentParser()
 parser.add_argument('--godot',default='godot')
 parser.add_argument('--logs',default='test-results')
 parser.add_argument('--render-visual-tests',action='store_true',help='Compatibility flag: frame-dependent tests always use a real renderer')
-parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; repeated scene/learning transactions have a 540-second minimum and real boss lifecycle probes have a 450-second minimum')
+parser.add_argument('--timeout',type=int,default=150,help='Per-test seconds; regional map audits run in five independently timed shards')
 parser.add_argument('--import-timeout',type=int,default=900,help='One-time complete Godot asset import deadline in seconds')
+parser.add_argument('--region-shard-timeout',type=int,default=360,help='Seconds per world family; all five families mandatory')
+parser.add_argument('--only',default='',help='Comma-separated exact test names for targeted rechecks; omitted runs the full suite')
 args=parser.parse_args()
 root=Path(__file__).resolve().parents[1]
 # CI checkouts intentionally omit third-party visuals; install tiny, original
@@ -39,12 +41,23 @@ if os.environ.get('GITHUB_ACTIONS','').lower() == 'true':
         print('CI_SYNTHETIC_L1J_FIXTURES_OK',flush=True)
 
 logs=Path(args.logs).resolve();logs.mkdir(parents=True,exist_ok=True)
-tests=[('import',['--import']),('boot',['--quit-after','60'])]
+# Navigation files are derived from the *effective* runtime spawn layout.
+# Rebuild them after import, before boot/cache equivalence tests, without
+# changing the integrity checks or accepting a stale navigation signature.
+tests=[('import',['--import']),
+       ('bake_navigation',['--script','res://tools/bake_hunting_navigation.gd']),
+       ('boot',['--quit-after','60'])]
 tests.extend((p.stem,['--script','res://tests/'+p.name]) for p in sorted((root/'tests').glob('*test.gd')))
+if args.only:
+    selected=set(args.only.split(','))
+    unknown=selected-{name for name,_ in tests}
+    if unknown: parser.error('Unknown tests: '+', '.join(sorted(unknown)))
+    tests=[test for test in tests if test[0] in selected]
 failed=[]
 skipped=[]
 executed=[]
 not_run=[]
+scopes={}
 for name,extra in tests:
     executed.append(name)
     source=root/'tests'/(name+'.gd')
@@ -52,6 +65,12 @@ for name,extra in tests:
     # A headless RenderingServer never emits frame_post_draw. Historically
     # these tests silently ran for 150 seconds each before timing out.
     visual=needs_draw # Never block awaiting draw events under the headless renderer.
+    # These historical tests assert literal pre-remake polygons, room IDs,
+    # renderer node paths and authored blocker counts. Keep every assertion on
+    # its actual fixture. A3 is independently exercised by the registered real
+    # Main runtime, hunting/physics and population tests, never counted here.
+    legacy_geometry=name in LEGACY_GEOMETRY_TESTS
+    scopes[name]='EXISTING_TWILIGHT_GEOMETRY' if legacy_geometry else 'ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE'
     display_args=['--rendering-driver','opengl3','--audio-driver','Dummy'] if visual else ['--headless']
     with tempfile.TemporaryDirectory(prefix='twilight-test-') as user_data:
         env=os.environ.copy()
@@ -66,37 +85,26 @@ for name,extra in tests:
             env['TWILIGHT_PR100_REPORT']=str(logs/(name+'.gameplay.json'))
         if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
         try:
-            # This integration case visits 24 fields, saves/loads each one and
-            # returns to the enlarged Aden continent after every visit.
-            # Preserve every assertion while giving these repeated scene loads
-            # their own bounded budget; other tests keep the selected limit.
-            if name == 'import':
-                budget = max(args.timeout, args.import_timeout)
-            elif name == 'world_regions_test':
-                budget = max(args.timeout, 540)
-            elif name == 'original_skill_learning_conditions_test':
-                # 125 real purchases/learning/save transactions completed all
-                # 1,689 assertions in 195s; preserve them with a bounded budget.
-                budget = max(args.timeout, 540)
-            elif name in {'original_based_mummy_lord_gameplay_test',
-                          'original_based_seer_boss_gameplay_test',
-                          'original_based_salah_gameplay_test'}:
-                # Keep original boss HP, armor, weapon damage and every real
-                # skill/death/drop assertion. Salah headless took 166.9s,
-                # beyond the ordinary 150s limit; rendered probes took 290.6s.
-                budget = max(args.timeout, 450)
-            else:
-                budget = args.timeout
+            budget=timeout_budget(name,args.timeout,args.import_timeout)
             command=[args.godot,*display_args,'--path',str(root),*extra]
+            if legacy_geometry:
+                command.extend(['--','--legacy-map-layouts'])
+            if name=='world_regions_test':
+                command=[sys.executable,str(root/'tools/world_region_shards.py'),'--godot',args.godot,
+                         '--path',str(root),'--logs',str(logs/'world-region-shards'),
+                         '--timeout',str(args.region_shard_timeout),'--legacy-map-layouts']
             if visual and sys.platform.startswith('linux') and not env.get('DISPLAY'):
                 if not shutil.which('xvfb-run'):
                     raise RuntimeError('Visual test requires xvfb-run (or DISPLAY); never wait for frame_post_draw in headless mode')
                 command=['xvfb-run','-a','-s','-screen 0 1280x720x24',*command]
             p=run_isolated(command,env=env,timeout=budget,cwd=str(root))
-            output=p.stdout+p.stderr
+            output='VALIDATION_SCOPE '+scopes[name]+'\n'+p.stdout+p.stderr
             ok,is_skipped=classify_result(name,p.returncode,output)
             if is_skipped:
                 skipped.append(name)
+            if ok and name=='bake_navigation':
+                # Preserve the exact rebuilt files with the CI evidence.
+                shutil.copytree(root/'data/maps/navigation',logs/'navigation',dirs_exist_ok=True)
         except OSError as exc:
             output='PROCESS_START_FAILED '+str(exc);ok=False
         except RuntimeError as exc:
@@ -110,15 +118,14 @@ for name,extra in tests:
             # Artifact delivery may fail independently of the test. Retain the
             # bounded failure detail in ordinary job logs as well as the file.
             print('FAILED_OUTPUT_BEGIN '+name+'\n'+output[-16000:]+'\nFAILED_OUTPUT_END '+name,flush=True)
-            if name=='import':
-                # An incomplete import leaves PNGs without usable Godot .ctex
-                # data; running every test would manufacture unrelated failures
-                # and exhaust the runner's wall-clock budget. Never call this PASS.
+            if name in ('import','bake_navigation'):
+                # Do not manufacture unrelated failures after broken preparation.
                 not_run=[remaining for remaining,_ in tests[len(executed):]]
-                print('BLOCKED_BY_IMPORT '+str(len(not_run))+' checks',flush=True)
+                print('BLOCKED_BY_'+name.upper()+' '+str(len(not_run))+' checks',flush=True)
                 break
 passed=len(executed)-len(failed)-len(skipped)
 print(f'{passed}/{len(tests)} checks passed; {len(skipped)} skipped; {len(not_run)} not run',flush=True)
 (logs/'summary.json').write_text(json.dumps({'total':len(tests),'passed':passed,
-    'failed':failed,'skipped':skipped,'not_run':not_run,'checks':[name for name,_ in tests]},indent=2)+'\n',encoding='utf-8')
+    'failed':failed,'skipped':skipped,'not_run':not_run,'checks':[name for name,_ in tests],
+    'validation_scopes':scopes,'selection':args.only or 'FULL_SUITE'},indent=2)+'\n',encoding='utf-8')
 raise SystemExit(bool(failed or not_run))

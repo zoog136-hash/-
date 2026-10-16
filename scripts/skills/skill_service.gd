@@ -334,7 +334,7 @@ func deal_damage(skill: Dictionary, target: TwilightMonster, link_from: Vector2 
 	amount = int(amount * (1 + status.modifier(target, "taken") + (status.modifier(target,"magic_taken") if str(skill.get("attack_type", "")) == "magic" else 0)))
 	amount = world._elemental_damage_to_monster(maxi(1, amount), str(skill.get("element", "physical")), target)
 	var critical: bool = world.rng.randf() < world._critical_chance(world._player_critical_rate(str(skill.get("attack_type", "melee"))), target.critical_resistance)
-	if critical: amount = world._critical_damage(amount)
+	if critical: amount = world._player_critical_damage(amount, str(skill.get("attack_type", "melee")))
 	world._deal_successful_player_hit(target, maxi(1, amount), critical)
 	vfx.emit_skill(str(skill.id), "impact", target.combat_hit_position(), link_from)
 	event_counts[str(skill.id)] = int(event_counts.get(str(skill.id), 0)) + 1

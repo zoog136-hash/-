@@ -1,0 +1,18 @@
+{
+  "total": 3,
+  "passed": 3,
+  "failed": [],
+  "skipped": [],
+  "not_run": [],
+  "checks": [
+    "aden_building_test",
+    "aden_terrain_polish_test",
+    "hunting_paths_test"
+  ],
+  "validation_scopes": {
+    "aden_building_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "aden_terrain_polish_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE",
+    "hunting_paths_test": "ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE"
+  },
+  "selection": "aden_building_test,aden_terrain_polish_test,hunting_paths_test"
+}

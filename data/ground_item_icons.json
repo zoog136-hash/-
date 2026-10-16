@@ -1,0 +1,1216 @@
+{
+  "schema": 1,
+  "scope": "ground_only",
+  "mapping": "Representative category, not original item identity",
+  "preparation": "Border-connected background alpha; aspect-preserving fit on 64px canvas. Original files unchanged.",
+  "categories": {
+    "sword": {
+      "source_path": "res://assets/l1j/verified/ground/29.png",
+      "source_name": "은장검",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/sword.png",
+      "source_sha256": "b8dd751674680d7664e2bcb996fd8426ba9d1cd522f911ffaafb35579b8aaee5",
+      "sha256": "8dd6858e51aa2f4a57f03868fdfbcff02e3b013e178ce7112cb0fd2d7de3319f",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        24,
+        14
+      ],
+      "draw_extent": [
+        56,
+        33
+      ]
+    },
+    "dagger": {
+      "source_path": "res://assets/l1j/verified/ground/8.png",
+      "source_name": "미스릴 단검",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/dagger.png",
+      "source_sha256": "aec070d2a24dae6259a48134ea10d451a3d21be08dfec660600feda7bc9967c2",
+      "sha256": "b7c8d0a33bea66c1f5a7f2cedce0abdcf2925dcb8c267e4f103d57f246027a24",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        11,
+        11
+      ],
+      "draw_extent": [
+        52,
+        52
+      ]
+    },
+    "bow": {
+      "source_path": "res://assets/l1j/verified/ground/181.png",
+      "source_name": "장궁",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/bow.png",
+      "source_sha256": "bea430e2cd19458e7e47c42adbb7b151a72b6b2dfe6740bcefd0ca504789b115",
+      "sha256": "220578cc25aa5405500f56094c7cd80077752bf1ee2d0de973a278d39daeb8be",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        59,
+        30
+      ],
+      "draw_extent": [
+        56,
+        28
+      ]
+    },
+    "spear": {
+      "source_path": "res://assets/original_items/ground/5.png",
+      "source_name": "벡드코빈",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/spear.png",
+      "source_sha256": "f222906c02f0449a16ce02f7ef19a198a6ee3a1402f4d7f015c80bd58eef6700",
+      "sha256": "00c41dbec230784697dea47141732690ff34ae69102f23a5cf2ead1ba193e8aa",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        70,
+        37
+      ],
+      "draw_extent": [
+        56,
+        30
+      ]
+    },
+    "claw": {
+      "source_path": "res://assets/original_items/ground/3309.png",
+      "source_name": "증오의 발톱",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/claw.png",
+      "source_sha256": "33019da4edc57b6efe73bfcdc4d29394192c5e2dff6f2309bd76246b9ebd1bea",
+      "sha256": "b5fddb2a3e045b99d403f89d0c71347a57e1a417f6923c3e535e4ea37a1a1d57",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        21,
+        15
+      ],
+      "draw_extent": [
+        56,
+        40
+      ]
+    },
+    "gauntlet": {
+      "source_path": "res://assets/original_items/ground/2921.png",
+      "source_name": "건틀렛",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/gauntlet.png",
+      "source_sha256": "4bb9f5d8b31bd97c36c345cb602c1650774355de49ed497f4dd00b5a097d718b",
+      "sha256": "45ea6d0f3a1c0a3b6f09e6b66f497c4531bd06c6137e7a5f355eba0b1007ff66",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        22,
+        13
+      ],
+      "draw_extent": [
+        56,
+        33
+      ]
+    },
+    "helmet": {
+      "source_path": "res://assets/original_items/ground/7208.png",
+      "source_name": "쿠쿨칸의 마스크",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/helmet.png",
+      "source_sha256": "7e06a5b8422cf787d6fadaa46184e5fb848c6b46196b47105b8210153d409361",
+      "sha256": "5049a839b8051862eaaf5c11111db57d39ab61dcf18e867d8461ebb74ec33e57",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        15,
+        13
+      ],
+      "draw_extent": [
+        56,
+        49
+      ]
+    },
+    "armor": {
+      "source_path": "res://assets/original_items/ground/3427.png",
+      "source_name": "라스타바드 체인 메일",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/armor.png",
+      "source_sha256": "66fb22568fe2831884f437a15bc08e3d34354ea7ee26ae425d4faafbdbb4b1d9",
+      "sha256": "5cafc62dc89b8cdb8c0b4351adbb754c543765dcc93caf4453224f30f8250f5d",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        27,
+        18
+      ],
+      "draw_extent": [
+        56,
+        37
+      ]
+    },
+    "cloak": {
+      "source_path": "res://assets/original_items/ground/13.png",
+      "source_name": "군주의 위엄",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/cloak.png",
+      "source_sha256": "da68a6b235104f875d071b6f5d854953c7547b41e43969fe441e50377fcf4c04",
+      "sha256": "9503cc0bbd21ae06c78924d862a97a3bc84278f1b4763284b2e23edb3717bef3",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        28,
+        20
+      ],
+      "draw_extent": [
+        56,
+        40
+      ]
+    },
+    "shield": {
+      "source_path": "res://assets/original_items/ground/3425.png",
+      "source_name": "라스타바드 라운드 실드",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/shield.png",
+      "source_sha256": "c88363e341b7b5dfa4bb3007da71bdb10c4e6ed62d36f6de9da9c217f31d71b8",
+      "sha256": "e471028792076201e54e4765173be361710e4f199221dccfa95a3e2590ebd76c",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        16,
+        10
+      ],
+      "draw_extent": [
+        56,
+        35
+      ]
+    },
+    "necklace": {
+      "source_path": "res://assets/original_items/ground/7212.png",
+      "source_name": "제브 레퀴의 마안",
+      "source_kind": "existing_floor_sprite",
+      "path": "res://assets/ground_categories/necklace.png",
+      "source_sha256": "3bf37d5ef0203914574976a7ec9a2d10a82a2485681ac00f7aedc3276f7a43fe",
+      "sha256": "1b1d24efa1935d5a721d2fff4669bb85d4387b98a6f6c65d65dce56bda8d3a3f",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        13,
+        12
+      ],
+      "draw_extent": [
+        56,
+        52
+      ]
+    },
+    "greatsword": {
+      "source_path": "res://assets/external_l1j/items/463.png",
+      "source_name": "대검",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "250",
+      "path": "res://assets/ground_categories/greatsword.png",
+      "source_sha256": "df90990dc39c525d4da56f1b81a7694e1dbc5385326fda1b551e99aabd4eab4d",
+      "sha256": "3973df3e6a7244fdf26c78b77c3cc00c6706d5d659cf7ba2858c224f771ca5b7",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        7,
+        5,
+        126,
+        124
+      ],
+      "draw_extent": [
+        52,
+        52
+      ]
+    },
+    "axe": {
+      "source_path": "res://assets/external_l1j/items/439.png",
+      "source_name": "광전사의 도끼",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "474",
+      "path": "res://assets/ground_categories/axe.png",
+      "source_sha256": "d9fed7ec0285ee3f8d38699feebf9f86ca2e22bed5a82da75a622d56be3f6d8a",
+      "sha256": "dc0d7b23dd8dc3412a656610a218c6afdfabd2109f34f3717f0c4c2fc207b605",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        3,
+        4,
+        125,
+        126
+      ],
+      "draw_extent": [
+        52,
+        52
+      ]
+    },
+    "scythe": {
+      "source_path": "res://assets/catalog/c34f2938ca08168d11c8bc03.png",
+      "source_name": "크림슨 사이드",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "185804",
+      "path": "res://assets/ground_categories/scythe.png",
+      "source_sha256": "23e82ed23897cc020a8095100331b60d5b8c5125cec2bf6c25400ff433b2f164",
+      "sha256": "fd85e079c66b1d9f69781b62a48f4aa5b20ad1b1d1d9e5f574175d76ccbda56c",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        13,
+        14,
+        57,
+        64
+      ],
+      "draw_extent": [
+        46,
+        52
+      ]
+    },
+    "dual": {
+      "source_path": "res://assets/external_l1j/items/1069.png",
+      "source_name": "다마스커스 이도류",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "492",
+      "path": "res://assets/ground_categories/dual.png",
+      "source_sha256": "109181909e2749f338c60cb4fabc2cee488321ced9328fe45914dd50424cc251",
+      "sha256": "ad3d01f049592ac35361d41dbdd9be7c35e187f1ab50c2051d31279f8bb9d5b0",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        8,
+        12,
+        125,
+        121
+      ],
+      "draw_extent": [
+        56,
+        52
+      ]
+    },
+    "staff": {
+      "source_path": "res://assets/external_l1j/items/939.png",
+      "source_name": "수정 지팡이",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "481",
+      "path": "res://assets/ground_categories/staff.png",
+      "source_sha256": "a1bc67954dfbd11c5e3e535b158d1a167648a65909ee82aad97271e58a89ccc3",
+      "sha256": "9ee71436ac33ac6d15b5485232d3f9fa0d3b42906750944c61e1434610511285",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        12,
+        12,
+        116,
+        116
+      ],
+      "draw_extent": [
+        52,
+        52
+      ]
+    },
+    "rifle": {
+      "source_path": "res://assets/catalog/5326f389e6ef25627a641784.png",
+      "source_name": "헌팅 라이플",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "96414",
+      "path": "res://assets/ground_categories/rifle.png",
+      "source_sha256": "de69a8a02b9b4c9310c168613755c7578d5e3832f6451dbd66634242f76c5fe0",
+      "sha256": "3ef028d7b46e5b7a24b69ce376fda2feecffae5def82f5b7ca75bc00db104425",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        9,
+        5,
+        57,
+        59
+      ],
+      "draw_extent": [
+        46,
+        52
+      ]
+    },
+    "cannon": {
+      "source_path": "res://assets/catalog/1c6c8e84bd00b1013a0c3ddb.png",
+      "source_name": "붐 스틱",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "96424",
+      "path": "res://assets/ground_categories/cannon.png",
+      "source_sha256": "536544ae0b8a97e56e7ca9efff30090bd8d39fa7831e1dff9afa153d2e947be0",
+      "sha256": "14e7434cbc6bd14957efdff666b628097e3b3f5ebcd314f463a290a106ed4f20",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        8,
+        8,
+        56,
+        55
+      ],
+      "draw_extent": [
+        53,
+        52
+      ]
+    },
+    "chain": {
+      "source_path": "res://assets/catalog/8d4d519a60c91cdcc8792338.png",
+      "source_name": "투사의 체인소드",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "114102",
+      "path": "res://assets/ground_categories/chain.png",
+      "source_sha256": "4208391b96e6f739d795078b93b8451d5a79171352649f067ca33a084b5bb119",
+      "sha256": "3f0b23b7c994b064152b71101d0b5c02214d53973a1bdc5ca0b1609ef0e1f94f",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        4,
+        3,
+        59,
+        61
+      ],
+      "draw_extent": [
+        49,
+        52
+      ]
+    },
+    "runesword": {
+      "source_path": "res://assets/catalog/5065b8aba587384ced2eebcb.png",
+      "source_name": "엠버 룬소드",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "291722",
+      "path": "res://assets/ground_categories/runesword.png",
+      "source_sha256": "bad4536bd774e46fb474b9dc956d4d032aa326ab835119bf25b2974b7076af59",
+      "sha256": "ae74fc7854a040d0c1fff05fead54f6f4aba390f00cb9dcc411d524079986d41",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        6,
+        10,
+        55,
+        60
+      ],
+      "draw_extent": [
+        51,
+        52
+      ]
+    },
+    "tshirt": {
+      "source_path": "res://assets/external_l1j/items/110.png",
+      "source_name": "티셔츠",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "384",
+      "path": "res://assets/ground_categories/tshirt.png",
+      "source_sha256": "82481f6b8bdc4cac2798aba7e33c475cacda0e76406f244986f47dc9e96ab76c",
+      "sha256": "9184ea24424c04524bad9b80f22a55473736c2cff5f3fe0829a3ce0b5ccf63cd",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        19,
+        4,
+        111,
+        124
+      ],
+      "draw_extent": [
+        40,
+        52
+      ]
+    },
+    "pants": {
+      "source_path": "res://assets/external_l1j/items/6770.png",
+      "source_name": "강철 각반",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "601",
+      "path": "res://assets/ground_categories/pants.png",
+      "source_sha256": "4ebace2fbd94d14de43b353a69da63ba782716a07105e9cdeb825f45f9d10531",
+      "sha256": "d4649646763a8b2321198e4aa1f09f823f014156d898cad069c3fe59acecff0d",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        13,
+        7,
+        117,
+        126
+      ],
+      "draw_extent": [
+        45,
+        52
+      ]
+    },
+    "gloves": {
+      "source_path": "res://assets/external_l1j/items/506.png",
+      "source_name": "강철 장갑",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "231",
+      "path": "res://assets/ground_categories/gloves.png",
+      "source_sha256": "ab3d47e78299ffff10a5cfeaa0fdc57555a885b442e443befd4d7e022c07b24a",
+      "sha256": "75268d48aa704a1dd9df9bca38e463685fd8ed583a23d279e2f6375da806b472",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        17,
+        14,
+        111,
+        114
+      ],
+      "draw_extent": [
+        49,
+        52
+      ]
+    },
+    "boots": {
+      "source_path": "res://assets/external_l1j/items/509.png",
+      "source_name": "강철 부츠",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "230",
+      "path": "res://assets/ground_categories/boots.png",
+      "source_sha256": "3d326a87ed29535a483245781e0f25a9ffbd764654426f368c82e20b989ff128",
+      "sha256": "db0df3b885f590101c39837fc805e3b262061ba5f65b61fbd12484473354f394",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        29,
+        3,
+        99,
+        125
+      ],
+      "draw_extent": [
+        30,
+        52
+      ]
+    },
+    "ring": {
+      "source_path": "res://assets/external_l1j/items/905.png",
+      "source_name": "수호자의 반지",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "312",
+      "path": "res://assets/ground_categories/ring.png",
+      "source_sha256": "ea57b5ddd275929126da798bddc91b9aea60c68f519684b969caf8a8f3b9776a",
+      "sha256": "8acbdc0170cad3b7b04bba6f8a2ac49dc47218d03a79dd1f7c4db238d5e7db9b",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        18,
+        26,
+        110,
+        102
+      ],
+      "draw_extent": [
+        56,
+        46
+      ]
+    },
+    "earring": {
+      "source_path": "res://assets/external_l1j/items/2017.png",
+      "source_name": "전사의 귀걸이",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "621",
+      "path": "res://assets/ground_categories/earring.png",
+      "source_sha256": "669941aa5a74e7ebf2545fe2794ed7f94440003c8069f6a32b2f3953139b8979",
+      "sha256": "d5c70bcbcea25e8e27022d4066f037833572a44bb090ba5f80f9004a873601c3",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        41,
+        7,
+        90,
+        123
+      ],
+      "draw_extent": [
+        22,
+        52
+      ]
+    },
+    "belt": {
+      "source_path": "res://assets/external_l1j/items/697.png",
+      "source_name": "오우거의 벨트",
+      "source_kind": "existing_item_sprite",
+      "art_reference_id": "323",
+      "path": "res://assets/ground_categories/belt.png",
+      "source_sha256": "5f097457c4c390185ef4bb7c7dbebdcb33762a86ad749426861c906eab86f82d",
+      "sha256": "b43f7c1f9a3cdb5cead89061b016a8c9caef8a3ecf276eb3d6390a207d97363d",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        11,
+        35,
+        122,
+        107
+      ],
+      "draw_extent": [
+        56,
+        36
+      ]
+    },
+    "bracelet": {
+      "source_path": "res://assets/catalog/55331e47965494e93213c810.png",
+      "source_name": "1000일 기념 팔찌",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "150443",
+      "path": "res://assets/ground_categories/bracelet.png",
+      "source_sha256": "54e993d8c1b37dbeb7ae560974861c7c80e5dfeb98613fb881c3ee4e74cf15e2",
+      "sha256": "05dc6756a85b2617fabbd0a693c7cde74c9d8c823d54cc85fbf1408a1433e78c",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        9,
+        10,
+        52,
+        54
+      ],
+      "draw_extent": [
+        51,
+        52
+      ]
+    },
+    "badge": {
+      "source_path": "res://assets/catalog/7f323eee022ad03eb690bedc.png",
+      "source_name": "사냥꾼의 휘장",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "183691",
+      "path": "res://assets/ground_categories/badge.png",
+      "source_sha256": "79aeecb83602f65a509907accf53cb7aec508363eb522be7fb5e146fb90b700d",
+      "sha256": "2a7133d385b89ca9a67f2b82ff3df21d1629429705ed83874f850cf1e417a01a",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        7,
+        6,
+        58,
+        61
+      ],
+      "draw_extent": [
+        48,
+        52
+      ]
+    },
+    "seal": {
+      "source_path": "res://assets/catalog/cad98a57822669176512b7e1.png",
+      "source_name": "수호의 인장",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "30671",
+      "path": "res://assets/ground_categories/seal.png",
+      "source_sha256": "146f81f1ff66c122d01aefac29610c310e8c0fbf6c61326658c65ce63126089b",
+      "sha256": "6d918edcd12800b8506746e7561f9c5c40528611024127ef11d4a1b82900667d",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        5,
+        4,
+        58,
+        60
+      ],
+      "draw_extent": [
+        49,
+        52
+      ]
+    },
+    "crystal": {
+      "source_path": "res://assets/catalog/7644fdcae73ebb51c56db2d1.png",
+      "source_name": "지룡의 수정",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "213481",
+      "path": "res://assets/ground_categories/crystal.png",
+      "source_sha256": "5e9ef6b7d504d80020a18b634c7e92c286a8e0dd0d8a193e1099a9d2c7ed97a3",
+      "sha256": "2e464f5d4711d5aa83dfbee949a0d6f696419c6a602e6f6a4d525555cbb4fa5b",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        6,
+        6,
+        58,
+        61
+      ],
+      "draw_extent": [
+        49,
+        52
+      ]
+    },
+    "catalyst": {
+      "source_path": "res://assets/catalog/25e4bc898bf1f9d141a41a83.png",
+      "source_name": "힘의 카탈리스트",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "289062",
+      "path": "res://assets/ground_categories/catalyst.png",
+      "source_sha256": "081c2976ccecc0a3344e257a5346507df9475edc8cdc29b1c109b19af096befd",
+      "sha256": "2a02c778e3600684a64692f265f8db756a602a5d842ff529c6ce44d56bee50b5",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        6,
+        6,
+        58,
+        53
+      ],
+      "draw_extent": [
+        56,
+        51
+      ]
+    },
+    "rune": {
+      "source_path": "res://assets/catalog/29017e8296c9f0080b86d890.png",
+      "source_name": "힘의 룬 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "882",
+      "path": "res://assets/ground_categories/rune.png",
+      "source_sha256": "8aae38e5c5bfea6f5d7eea82f4cfb8d1feabf0c11447f21867413fe261071f97",
+      "sha256": "422e00387d3d704bb919d760c44bd15f32da4a941ef88976899b3765d991e43a",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        7,
+        3,
+        61,
+        62
+      ],
+      "draw_extent": [
+        48,
+        52
+      ]
+    },
+    "potion_hp": {
+      "source_path": "res://assets/inven_inventory/233_6abc322674a34eaa.png",
+      "source_name": "체력 회복제 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "233",
+      "path": "res://assets/ground_categories/potion_hp.png",
+      "source_sha256": "6abc322674a34eaa99557427324ce8d66700927091ec25e3e300bc5458f7fe42",
+      "sha256": "0cd04b85b79406f1a74a6e67a20272f33db95b49923339d47e65c5bf727bd9c9",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        16,
+        8,
+        48,
+        56
+      ],
+      "draw_extent": [
+        35,
+        52
+      ]
+    },
+    "potion_mp": {
+      "source_path": "res://assets/inven_inventory/385_2c2ebb6c0d935003.png",
+      "source_name": "마나 회복 물약 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "385",
+      "path": "res://assets/ground_categories/potion_mp.png",
+      "source_sha256": "2c2ebb6c0d9350037f274df45cda22d5a8baab2b084635884054e36971a35f70",
+      "sha256": "0d8d5aabad1e5167f7ef2c042631645c687d25ea29862f3a1b0f6a7a84c66411",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        16,
+        8,
+        48,
+        56
+      ],
+      "draw_extent": [
+        35,
+        52
+      ]
+    },
+    "potion_buff": {
+      "source_path": "res://assets/inven_inventory/117294_bb3a128ff42cb051.png",
+      "source_name": "축복의 성수(중)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "117294",
+      "path": "res://assets/ground_categories/potion_buff.png",
+      "source_sha256": "bb3a128ff42cb0517c5fbce973843d3f2f212020d61e3a820994f2d143a23aad",
+      "sha256": "98a77ad62a693a949c1419520121f8cc34bd65e11b76477a4525e8fac56ed30e",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        12,
+        8,
+        49,
+        56
+      ],
+      "draw_extent": [
+        40,
+        52
+      ]
+    },
+    "scroll": {
+      "source_path": "res://assets/inven_inventory/6401_23c27e1b57b7b4c0.png",
+      "source_name": "무기 마법 주문서 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "6401",
+      "path": "res://assets/ground_categories/scroll.png",
+      "source_sha256": "23c27e1b57b7b4c0efa72ab2f4b4bcb1770d35cf8a8cf3741d7f73c3779164f1",
+      "sha256": "563ba0cd6b4181afe59eadc77c8e38f1cbdad71c44ce48b01232f65e583524ee",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        6,
+        5,
+        58,
+        62
+      ],
+      "draw_extent": [
+        47,
+        52
+      ]
+    },
+    "food": {
+      "source_path": "res://assets/inven_inventory/855_8ed61c1af68d0b5d.png",
+      "source_name": "힘센 한우 스테이크 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "855",
+      "path": "res://assets/ground_categories/food.png",
+      "source_sha256": "8ed61c1af68d0b5d6c21383417466911c82868b09235f68fb1bd6d533cc53722",
+      "sha256": "5dc05484c01363bfa1979f2b8fb4d80c7d9e77acdf7d4b4fe82f3bfcb5808e21",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        10,
+        62,
+        62
+      ],
+      "draw_extent": [
+        56,
+        47
+      ]
+    },
+    "elixir": {
+      "source_path": "res://assets/inven_inventory/4151_af7ae6637a066dff.png",
+      "source_name": "엘릭서",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "4151",
+      "path": "res://assets/ground_categories/elixir.png",
+      "source_sha256": "af7ae6637a066dffc29fb4700bf04ef5f694ebca2dd20c426151ee0b1c4d959f",
+      "sha256": "79dd43ac1898ce75e144399f9bfd1b09ad71a14587e250e38b225cabcc6efd6d",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        10,
+        4,
+        53,
+        58
+      ],
+      "draw_extent": [
+        41,
+        52
+      ]
+    },
+    "dragon_gem": {
+      "source_path": "res://assets/inven_inventory/7651_d3af7f547d0f6587.png",
+      "source_name": "드래곤의 루비",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "7651",
+      "path": "res://assets/ground_categories/dragon_gem.png",
+      "source_sha256": "d3af7f547d0f65871d18c1df79747e0254b02219967b97a38fcdac21b674bbbb",
+      "sha256": "a8c07e08d0bbbf1fca722cb1a907c71eb65c104c249f4dfe0707780aba566782",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        3,
+        8,
+        60,
+        57
+      ],
+      "draw_extent": [
+        56,
+        48
+      ]
+    },
+    "coins": {
+      "source_path": "res://assets/inven_inventory/26_5a00f1246cb8ac22.png",
+      "source_name": "아데나",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "26",
+      "path": "res://assets/ground_categories/coins.png",
+      "source_sha256": "5a00f1246cb8ac22d717bd2be6153ed8fc70cddf45236485a6f5bf4f572f80b1",
+      "sha256": "2f36ba337e09e64a6800d9c2475be6b5eb7a988635a501e00c67d9cb5028a302",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        5,
+        13,
+        59,
+        57
+      ],
+      "draw_extent": [
+        56,
+        46
+      ]
+    },
+    "ore": {
+      "source_path": "res://assets/inven_inventory/379_fa9e70955df8aa6d.png",
+      "source_name": "철",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "379",
+      "path": "res://assets/ground_categories/ore.png",
+      "source_sha256": "fa9e70955df8aa6d3248a07b0d91acea351b7fcf2c2c0f68f0bb20701e6bdd5b",
+      "sha256": "031d63829fe15d4480ba525e03d9d2f56af1d52e15fa266062273767f38a6560",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        5,
+        11,
+        59,
+        49
+      ],
+      "draw_extent": [
+        56,
+        39
+      ]
+    },
+    "leather": {
+      "source_path": "res://assets/inven_inventory/366_4a93c489f60e1a47.png",
+      "source_name": "가죽",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "366",
+      "path": "res://assets/ground_categories/leather.png",
+      "source_sha256": "4a93c489f60e1a47b0b8525ac7ca791e2f4f9f17197796c9f5b19854214f6080",
+      "sha256": "02e463aa07ffea531e076b90ad4d3d510e30b51baa756c14e058eb1de66c809b",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        1,
+        13,
+        64,
+        50
+      ],
+      "draw_extent": [
+        56,
+        33
+      ]
+    },
+    "cloth": {
+      "source_path": "res://assets/inven_inventory/739_bcaff3f41eec82b6.png",
+      "source_name": "천",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "739",
+      "path": "res://assets/ground_categories/cloth.png",
+      "source_sha256": "bcaff3f41eec82b6fb0b3babba61f9cc859549d490b8b989e716fd40fcbb1d94",
+      "sha256": "0e0da408829f47403082972112746bf884d6d6241e7c49114e724d921c0d6789",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        5,
+        9,
+        61,
+        49
+      ],
+      "draw_extent": [
+        56,
+        40
+      ]
+    },
+    "powder": {
+      "source_path": "res://assets/catalog/fdb25a49b73b6367a4eb50be.png",
+      "source_name": "축복의 가루",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "3732",
+      "path": "res://assets/ground_categories/powder.png",
+      "source_sha256": "ffffae2f2105fe17eb0c98d66ae757028b5b43ff0c5387b64a49751699ce0a84",
+      "sha256": "8d3d1a2fdcfe63f458c3aeabee1c18ea9213920944ef112dcce060435a6bb21f",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        0,
+        0,
+        62,
+        58
+      ],
+      "draw_extent": [
+        56,
+        52
+      ]
+    },
+    "gem": {
+      "source_path": "res://assets/catalog/aea25dfe61c5acb5b413ead9.png",
+      "source_name": "마력의 돌 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "254",
+      "path": "res://assets/ground_categories/gem.png",
+      "source_sha256": "e81c208f58c1af604ee4304a79e0e82c58f904da286b8fedff5d9ed5c5c2fc9c",
+      "sha256": "623f4262f528b0f45b03baf7feb311442f285caf151139115eeb2c0764868ac1",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        9,
+        9,
+        51,
+        52
+      ],
+      "draw_extent": [
+        51,
+        52
+      ]
+    },
+    "recipe": {
+      "source_path": "res://assets/inven_inventory/754_9fef6e09c3ba2210.png",
+      "source_name": "희귀 제작 비법서",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "754",
+      "path": "res://assets/ground_categories/recipe.png",
+      "source_sha256": "9fef6e09c3ba2210ef3905373ff5d097019ad4b745b3157d9a8c8ce612e0e270",
+      "sha256": "17505bef97f2773a28b3e38dc83709608505d3e7c58030105072c6d910f9285c",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        2,
+        15,
+        62,
+        48
+      ],
+      "draw_extent": [
+        56,
+        31
+      ]
+    },
+    "arrow": {
+      "source_path": "res://assets/inven_inventory/389_2692de586c69c43a.png",
+      "source_name": "화살 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "389",
+      "path": "res://assets/ground_categories/arrow.png",
+      "source_sha256": "2692de586c69c43af66983a70b8a21e7ab48d5a634c628b295cee089e32ea899",
+      "sha256": "780b3ffcdd575a5dae72c6b651fa154d4f7fd3f658176aed2700c803b60ae43d",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        3,
+        7,
+        61,
+        62
+      ],
+      "draw_extent": [
+        55,
+        52
+      ]
+    },
+    "bullet": {
+      "source_path": "res://assets/inven_inventory/75174_590246007d6d0d02.png",
+      "source_name": "은 탄환 (각인)",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "75174",
+      "path": "res://assets/ground_categories/bullet.png",
+      "source_sha256": "590246007d6d0d025aedc7fe03b324e5047476f350eaa057e0e6d6b466b8d122",
+      "sha256": "1f41d5799a16f8172113647e5549895f661e26daea867d08e3d428b3fbf861fb",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        8,
+        10,
+        52,
+        53
+      ],
+      "draw_extent": [
+        53,
+        52
+      ]
+    },
+    "shoulder": {
+      "source_path": "res://assets/catalog/e4e340acd478fbfaa9ebd462.png",
+      "source_name": "빛나는 완력의 견갑",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "140671",
+      "path": "res://assets/ground_categories/shoulder.png",
+      "source_sha256": "092023a5fcb9aac782003194a94b4952e6efbeb735f8ea28f283e2dd06055aa0",
+      "sha256": "fd9b48d4791021628277c3e920e3e3c90ea52858298fe32f7e2e8476b3cb4239",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        8,
+        11,
+        57,
+        62
+      ],
+      "draw_extent": [
+        50,
+        52
+      ]
+    },
+    "box": {
+      "source_path": "res://assets/catalog/92664cb2ac74841d52707934.png",
+      "source_name": "룸티스의 붉은빛 귀걸이 상자",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "2351",
+      "path": "res://assets/ground_categories/box.png",
+      "source_sha256": "9509fccad353ea4e575e1623413755a1535b761bd0d54ee5c9ad82de0818d8f7",
+      "sha256": "8927c585f3baa704de7df15b6538f75ea74341c08d1a98013060cde50ee9d644",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        3,
+        5,
+        61,
+        62
+      ],
+      "draw_extent": [
+        53,
+        52
+      ]
+    },
+    "material": {
+      "source_path": "res://assets/catalog/92664cb2ac74841d52707934.png",
+      "source_name": "룸티스의 붉은빛 귀걸이 상자",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "2351",
+      "path": "res://assets/ground_categories/material.png",
+      "source_sha256": "9509fccad353ea4e575e1623413755a1535b761bd0d54ee5c9ad82de0818d8f7",
+      "sha256": "8927c585f3baa704de7df15b6538f75ea74341c08d1a98013060cde50ee9d644",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        3,
+        5,
+        61,
+        62
+      ],
+      "draw_extent": [
+        53,
+        52
+      ]
+    },
+    "misc": {
+      "source_path": "res://assets/catalog/92664cb2ac74841d52707934.png",
+      "source_name": "룸티스의 붉은빛 귀걸이 상자",
+      "source_kind": "existing_inventory_image",
+      "art_reference_id": "2351",
+      "path": "res://assets/ground_categories/misc.png",
+      "source_sha256": "9509fccad353ea4e575e1623413755a1535b761bd0d54ee5c9ad82de0818d8f7",
+      "sha256": "8927c585f3baa704de7df15b6538f75ea74341c08d1a98013060cde50ee9d644",
+      "size": [
+        64,
+        64
+      ],
+      "source_crop": [
+        3,
+        5,
+        61,
+        62
+      ],
+      "draw_extent": [
+        53,
+        52
+      ]
+    }
+  }
+}

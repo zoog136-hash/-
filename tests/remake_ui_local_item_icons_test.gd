@@ -31,10 +31,15 @@ func _run() -> void:
 		if entry.get("kind","") != "item" or item_name not in LOCAL_POTIONS: continue
 		observed.append(item_name)
 		var icon: TextureRect = hud.quickslot_icons[index]
-		check(icon.texture == load(POTION_PATH),"production quickslot retains bundled art: "+item_name)
+		# The inventory migration intentionally replaced the old stock potion.
+		# Verify the exact published icon bytes and their honest alias provenance.
+		var record: Dictionary = {"name":item_name,"type":"소모품","slot":"consumable"}
+		var mapped: Dictionary = RESOLVER.describe(record,item_name)
+		check(mapped.get("status","") == "inven_visual_alias","production potion uses reviewed Inven artwork: "+item_name)
+		check(not str(mapped.get("path","")).is_empty() and icon.texture == load(str(mapped.get("path",""))),"production quickslot uses published resource: "+item_name)
 		check(hud.quickslot_captions[index].text == str(world.inventory[item_name]),"production quantity stays connected: "+item_name)
 		var provenance: Dictionary = icon.get_meta("item_visual",{})
-		check(provenance.get("status","") == "bundled_ui_art" and provenance.get("source_id","") == "","local icon never claims original source art: "+item_name)
+		check(provenance.get("status","") == "inven_visual_alias" and provenance.get("source_id","") == "","visual alias does not claim publisher item identity: "+item_name)
 		check(RESOLVER.describe({"name":item_name,"sourceId":"unknown-publisher-id"},item_name).path == "","explicit unknown source cannot borrow local art: "+item_name)
 	check(observed.size() == LOCAL_POTIONS.size(),"all three real starter potion slots were inspected")
 	# world._load_data retains this explicit pre-rework UI index link. It is
@@ -51,6 +56,8 @@ func _run() -> void:
 	check(unindexed.path == "" and unindexed.family == "gem","ruby without an explicit image link receives its appropriate family symbol")
 	check(RESOLVER.describe({"name":ruby_record.name,"sourceId":"unknown-publisher-id"},ruby_record.name,legacy_images).path == "","an explicit unknown ruby ID cannot borrow the name-only index")
 	check(JSON.stringify(ruby_record) == ruby_before,"ruby visual lookup preserves the existing item record")
+	var borrowed: Dictionary = RESOLVER.describe({"name":"드래곤의 루비","type":"축복충전","sourceId":"local-unverified","image_path":POTION_PATH},"드래곤의 루비")
+	check(borrowed.path == POTION_PATH and borrowed.source_id == "local-unverified" and borrowed.status == "original_review_pending","explicit record art keeps unknown-source provenance instead of claiming original art")
 	var catalog: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/catalog_v19.json"))
 	var wrong: Dictionary = catalog["아이템"][0].duplicate(true)
 	wrong.name = "HP 물약"

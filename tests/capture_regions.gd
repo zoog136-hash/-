@@ -4,14 +4,22 @@ const CLASS_QA = preload("res://tests/qa_class_selection.gd")
 
 # Exact GL screenshots and frame timings of real gameplay, not concept art.
 const COORD = preload("res://scripts/maps/world_coordinates.gd")
-const DETAIL_KINDS: Dictionary = {"oman_01":"stairs", "domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
+const DETAIL_KINDS: Dictionary = {"domination_summit":"arch", "escaros_05":"obelisk", "albino_01":"crystal", "faith_04":"altar"}
+# Oman 1F now uses authored ReferenceGeography, not the removed tomb prop.
+# Photograph its current boss landmark anchor; retain all 37 required views.
+const DETAIL_ANCHORS: Dictionary = {"oman_01":"boss"}
 var capture_count: int = 0
+var captured_files: Dictionary = {}
 var failed: bool = false
 
 func _initialize() -> void:
 	call_deferred("_run")
 
 func _save_view(directory: String, filename: String, world: TwilightWorld, expected_map: String) -> void:
+	if captured_files.has(filename):
+		push_error("Duplicate gameplay capture: " + filename)
+		failed = true
+		return
 	await RenderingServer.frame_post_draw
 	if world.active_map_id != expected_map:
 		push_error("Gameplay capture left "+expected_map+": "+filename+" is in "+world.active_map_id)
@@ -28,6 +36,7 @@ func _save_view(directory: String, filename: String, world: TwilightWorld, expec
 		push_error("Cannot save gameplay capture: "+filename)
 		failed = true
 	else:
+		captured_files[filename] = true
 		capture_count += 1
 
 func _aim(world: TwilightWorld, point: Vector2) -> void:
@@ -73,13 +82,50 @@ func _aden_combat_point(world: TwilightWorld, preferred: Vector2) -> Vector2:
 				return point
 	return Vector2.INF
 
+func _active_play_anchor(world: TwilightWorld, map_id: String) -> Vector2:
+	if map_id != "aden_world":
+		return COORD.array_vector(world.field_map.data["review_points"]["central"])
+	# Aden expanded to a 48,000px world, so the old (3550, 4300) benchmark
+	# position is no longer within the 2,100px monster wake distance of a
+	# hunting region. Choose a real, spawned, non-boss actor from the map's
+	# population instead of hard-coding an obsolete combat location.
+	var picked: TwilightMonster = null
+	var region_id: String = ""
+	for slot: Dictionary in world.field_population.slots:
+		var raw: Variant = slot.get("monster")
+		var candidate: TwilightMonster = raw as TwilightMonster if is_instance_valid(raw) else null
+		if not is_instance_valid(candidate) or candidate.dead:
+			continue
+		if str(slot.region.get("mode", "normal")) != "normal":
+			continue
+		if picked == null or str(slot.region.get("id", "")) == "forest":
+			picked = candidate
+			region_id = str(slot.region.get("id", ""))
+		if region_id == "forest":
+			break
+	if picked == null:
+		push_error("No spawned normal monster for Aden active-play validation")
+		failed = true
+		return COORD.array_vector(world.field_map.data["spawn_position"])
+	var point: Vector2 = picked.home_position + Vector2(160.0, 0.0)
+	if not world.field_map.walkable(point) or not world.field_map.point_clear(point) or world.field_map.is_safe(point):
+		point = picked.home_position
+	print("REGION_ACTIVE_ANCHOR ", map_id, " region=", region_id, " position=", point, " monster=", picked.home_position)
+	return point
+
 func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) -> Dictionary:
 	world.rng.seed = 20261008
 	world._set_map(map_id,false)
 	world.hp = world._effective_max_hp()
+	# Static screenshot preparation explicitly disables monster physics and
+	# the population controller. Restore both for the real active-play phase;
+	# reloading the map alone does not reactivate pooled physics nodes.
+	world.field_population.set_process(true)
+	for monster: TwilightMonster in world.monsters_root.get_children():
+		if not monster.dead: monster.set_physics_process(true)
 	# Keep population, AI, physics, combat, HUD and chunk streaming active here.
 	# The static screenshot phase above intentionally freezes monster AI.
-	var point: Vector2 = Vector2(3550,4300) if map_id == "aden_world" else COORD.array_vector(world.field_map.data["review_points"]["central"])
+	var point: Vector2 = _active_play_anchor(world, map_id)
 	if map_id == "aden_world":
 		point = _aden_combat_point(world, point)
 		if not point.is_finite():
@@ -87,6 +133,15 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 			failed = true
 			return {"map":map_id, "setup_failed":true}
 	_aim(world,point)
+	if map_id == "aden_world":
+		var wake_distance: float = float(world.field_map.data["streaming"]["monster_sleep_distance"])
+		var nearby_spawned: int = 0
+		for monster: TwilightMonster in world.monsters_root.get_children():
+			if not monster.dead and monster.global_position.distance_to(world.player.global_position) < wake_distance:
+				nearby_spawned += 1
+		if nearby_spawned == 0:
+			push_error("No spawned Aden monster within wake distance at active-play anchor: " + str(world.player.global_position))
+			failed = true
 	world.player.set_auto_enabled(true)
 	var frames: Array[float] = []
 	var process_ms: Array[float] = []
@@ -120,7 +175,7 @@ func _benchmark_play(world: TwilightWorld, map_id: String, directory: String) ->
 		previous = world.player.global_position
 	await _save_view(directory,map_id+"-active-play",world,map_id)
 	if active_monsters == 0 or world.active_map_id != map_id:
-		push_error("Active-play probe did not remain active in "+map_id)
+		push_error("Active-play probe did not remain active in "+map_id+" current_map="+world.active_map_id+" live_physics="+str(active_monsters)+" population_processing="+str(world.field_population.is_processing()))
 		failed = true
 	world.player.set_auto_enabled(false)
 	world.player.clear_click_path()
@@ -194,7 +249,17 @@ func _run() -> void:
 					await RenderingServer.frame_post_draw
 					_validate_cache(world.field_renderer)
 			print("REGION_CAPTURE ",id," ",review," calls=",Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)," props=",world.field_renderer.visible_props)
-		if DETAIL_KINDS.has(id):
+		if DETAIL_ANCHORS.has(id):
+			var anchor: Variant = world.field_map.data.get("review_points", {}).get(str(DETAIL_ANCHORS[id]))
+			var geography: Node = world.field_renderer.terrain_root.get_node_or_null("Ground/ReferenceGeography")
+			if not anchor is Array or anchor.size() != 2 or geography == null:
+				push_error("Missing authored landmark anchor or geometry: " + id + "/" + str(DETAIL_ANCHORS[id]))
+				failed = true
+			else:
+				_aim(world,COORD.array_vector(anchor))
+				for i: int in range(25): await process_frame
+				await _save_view(directory,id+"-landmark",world,id)
+		elif DETAIL_KINDS.has(id):
 			var landmark_found: bool = false
 			for record: Dictionary in world.field_map.data["props"]:
 				if str(record["kind"]) != str(DETAIL_KINDS[id]):

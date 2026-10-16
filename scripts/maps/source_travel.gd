@@ -46,7 +46,7 @@ static func enter(world: Node, map_id: String, source_position: Vector2) -> bool
 		return false
 	if world.active_map_id != map_id: world._set_map(map_id,false)
 	if world.active_map_id != map_id: return false
-	world.player.set_auto_enabled(false)
+	if is_instance_valid(world.world_interactions): world.world_interactions.clear_selection()
 	world.player.clear_click_path()
 	world.player.velocity = Vector2.ZERO
 	world.player.set_touch_vector(Vector2.ZERO)
@@ -84,4 +84,4 @@ static func restore_position(world: Node, record: Dictionary) -> Array:
 	var source: Array = record.get("source",[])
 	if source.size() != 2: return []
 	var p: Vector2 = field.coordinates.components_to_world(source)
-	return [p.x,p.y] if p.is_finite() and field.walkable(p) else []
+	return [p.x,p.y] if p.is_finite() and field.walkable(p) and field.point_clear(p) else []

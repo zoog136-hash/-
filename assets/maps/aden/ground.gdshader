@@ -8,6 +8,8 @@ uniform bool wild_ground = true;
 uniform vec4 palette : source_color = vec4(1.0);
 uniform float saturation = 1.0;
 uniform float brightness_lift = 0.0;
+// Native remake only. These authored patterns carry no recovered tile IDs.
+uniform int remake_surface = 0;
 uniform float atlas_grid = 2.0;
 uniform vec4 material_slots = vec4(0.0,1.0,2.0,3.0);
 // Opt-in for Aden: the authored atlas cells do not have matching edge pixels.
@@ -135,6 +137,33 @@ void fragment() {
     if(edge_fade) {
         float shoulder=min(UV.y,1.0-UV.y);
         alpha*=smoothstep(.015,.19,shoulder+(noise(world/32.0)-.5)*.095);
+    }
+    if (remake_surface==1 || remake_surface==3 || remake_surface==4) {
+        vec2 slab=world/vec2(112.0,72.0);
+        slab.x+=mod(floor(slab.y),2.0)*.5;
+        vec2 edge=min(fract(slab),1.0-fract(slab));
+        float joint=1.0-smoothstep(.008,.026,min(edge.x,edge.y));
+        color*=1.0-joint*.57;
+        float chip=noise(world/31.0);
+        color*=.91+chip*.16;
+        if (remake_surface==3) {
+            float vein=1.0-smoothstep(.01,.045,abs(sin(world.x*.017+world.y*.011+noise(world/173.0)*3.0)));
+            color=mix(color,color*.53,vein*.3);
+        }
+        if (remake_surface==4 && road_surface) {
+            color=mix(color,vec3(.25,.027,.044)*(.8+chip*.36),.84);
+            float stitch=1.0-smoothstep(.01,.035,abs(sin(world.x*.032)*sin(world.y*.032)));
+            color=mix(color,vec3(.32,.24,.11),stitch*.19);
+        }
+    } else if (remake_surface==2) {
+        float web=1.0-smoothstep(.015,.04,abs(sin(world.x*.014+sin(world.y*.019)*2.0)));
+        color=mix(color*vec3(.65,.83,.62),vec3(.29,.33,.22),web*.30);
+    } else if (remake_surface==5) {
+        float puddle=smoothstep(.56,.72,noise(world/205.0));
+        color=mix(color*vec3(.66,.77,.58),vec3(.055,.115,.105),puddle*.55);
+    } else if (remake_surface==6) {
+        float crust=smoothstep(.54,.69,noise(world/89.0));
+        color=mix(color*vec3(.70,.66,.43),vec3(.49,.43,.16),crust*.56);
     }
     float luminance=dot(color,vec3(.299,.587,.114));
     color=mix(vec3(luminance),color,saturation)*palette.rgb+brightness_lift;

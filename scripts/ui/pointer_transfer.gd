@@ -18,6 +18,15 @@ var remove_target: Button
 var suppress_click: bool = false
 var handled_touch_at: int = -1000
 var handled_touch_position: Vector2
+var last_tap_id: String = ""
+var last_tap_at: int = -1000
+var last_tap_position: Vector2
+var last_tap_touch: bool = false
+const DOUBLE_TAP_MS: int = 360
+
+func reset_tap_history() -> void:
+	last_tap_id = ""
+	last_tap_at = -1000
 
 func configure(controller: Node) -> void:
 	hud = controller
@@ -60,7 +69,9 @@ func _source_at(point: Vector2) -> Dictionary:
 			return {"from":"quick","slot":slot,"visible":i,"entry":hud.get_parent().quickslots[slot].duplicate(true),"texture":hud.quickslot_icons[i].texture}
 	var bag: Control = hud.lineage_inventory_ui
 	if bag.is_visible_in_tree() and bag.inventory_panel.visible:
-		if bag.detail_active and inside(bag.detail_panel,point): return {}
+		if bag.detail_active and inside(bag.detail_panel,point):
+			if Time.get_ticks_msec()-last_tap_at > DOUBLE_TAP_MS or not bag.slot_buttons.has(last_tap_id) or not inside(bag.slot_buttons[last_tap_id],point) or point.distance_to(last_tap_position) > 24.0:
+				return {}
 		for id: String in bag.slot_buttons:
 			var button: Control = bag.slot_buttons[id]
 			if inside(button,point):
@@ -104,7 +115,9 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 			return
 		var candidate: Dictionary = _source_at(event.position)
-		if candidate.is_empty(): return
+		if candidate.is_empty():
+			reset_tap_history()
+			return
 		pointer = event.index if event is InputEventScreenTouch else -1
 		source = candidate
 		origin = event.position
@@ -136,10 +149,16 @@ func _input(event: InputEvent) -> void:
 		var distance: Vector2 = position-origin
 		if mode == "pending" and distance.length() > (L.TOUCH_SCROLL_DISTANCE if pointer >= 0 else L.MOUSE_DRAG_DISTANCE):
 			if pointer >= 0 and elapsed < L.TOUCH_HOLD_SECONDS:
-				if source.from != "quick": mode = "scroll"
+				if source.from == "inventory":
+					# Crossing the grid edge into the bag header is still a scroll.
+					mode = "scroll" if absf(distance.y) > absf(distance.x)*1.25 and inside(hud.lineage_inventory_ui.inventory_panel,position) else "drag"
+				elif source.from != "quick": mode = "scroll"
 				elif absf(distance.x) > absf(distance.y)*1.5: mode = "page"
 				else: mode = "drag"
 			else: mode = "drag"
+		# Only leaving the bag itself converts a vertical swipe into a transfer.
+		if mode == "scroll" and source.from == "inventory" and not inside(hud.lineage_inventory_ui.inventory_panel,position): mode = "drag"
+		if mode != "pending": reset_tap_history()
 		if mode == "scroll":
 			var bar: VScrollBar
 			if source.from == "inventory": bar = hud.lineage_inventory_ui.grid_scroll.get_v_scroll_bar()
@@ -163,7 +182,7 @@ func _input(event: InputEvent) -> void:
 		if event is InputEventScreenTouch:
 			handled_touch_at = Time.get_ticks_msec()
 			handled_touch_position = event.position
-		cancel()
+		_finish_gesture()
 		get_viewport().set_input_as_handled()
 
 func _process(_delta: float) -> void:
@@ -185,7 +204,22 @@ func _tap() -> void:
 			if not hud.pending_quickslot_binding.is_empty():
 				hud._emit_quickslot_assignment(int(source.slot),str(hud.pending_quickslot_binding.kind),str(hud.pending_quickslot_binding.id))
 			else: hud.quickslot_pressed.emit(int(source.slot))
-		"inventory": hud.lineage_inventory_ui._select_item(str(source.id))
+		"inventory":
+			var reference: String = str(source.id)
+			if not hud.lineage_inventory_ui.slot_buttons.has(reference):
+				reset_tap_history()
+				return
+			var now: int = Time.get_ticks_msec()
+			var activate: bool = last_tap_id == reference and now-last_tap_at <= DOUBLE_TAP_MS and position.distance_to(last_tap_position) <= 24.0 and last_tap_touch == (pointer >= 0) and hud.lineage_inventory_ui.selected_item == reference
+			hud.lineage_inventory_ui._select_item(reference)
+			if activate:
+				reset_tap_history()
+				hud.lineage_inventory_ui._activate_selected()
+			else:
+				last_tap_id = reference
+				last_tap_at = now
+				last_tap_position = position
+				last_tap_touch = pointer >= 0
 		"warehouse":
 			for i: int in range(hud.transaction_view.entries.size()):
 				var entry: Dictionary = hud.transaction_view.entries[i]
@@ -202,6 +236,7 @@ func _tap() -> void:
 					break
 
 func _show_drag() -> void:
+	reset_tap_history()
 	suppress_click = true
 	preview.texture = source.get("texture")
 	preview.position = position-Vector2(31,31)+(L.TOUCH_PREVIEW_OFFSET if pointer >= 0 else Vector2(14,-14))
@@ -221,6 +256,7 @@ func _show_drag() -> void:
 			hud.lineage_side_ui.equipment_buttons[key].modulate = Color("b3f3c0") if compatible else Color("817d75")
 	hint.text = "퀵슬롯에 놓아 등록" if source.from != "quick" else "슬롯 이동 · 아래 AUTO · 위 AUTO 해제"
 	if not valid: hint.text = "등록할 수 없는 항목"
+	if source.from == "inventory": hint.text = "장비칸: 장착 · 퀵슬롯: 등록 · 바닥: 1개 내려놓기"
 	if source.from == "warehouse":
 		hint.text = "가방에 놓아 찾기"
 		for button: Button in hud.v20_quickslot_buttons: button.modulate = Color("b6a39d")
@@ -263,9 +299,15 @@ func _drop() -> void:
 			if inside(bag.slot_buttons[id],position):
 				bag.reorder(str(source.id),id)
 				return
-	# All other releases are cancellations, including a drop onto the world.
+		if not hud.blocks_world_input(position):
+			world._drop_inventory_reference(str(source.id), preload("res://scripts/maps/world_coordinates.gd").screen_to_world(get_viewport(),position))
+	# Other UI releases cancel; they never destroy or discard inventory items.
 
 func cancel() -> void:
+	reset_tap_history()
+	_finish_gesture()
+
+func _finish_gesture() -> void:
 	set_process(false)
 	pointer = -2
 	source.clear()

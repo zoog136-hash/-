@@ -35,12 +35,15 @@ func _run() -> void:
 	_check(title != null and title.mouse_filter == Control.MOUSE_FILTER_STOP,"title drag zone preserved")
 	_check(nav == null,"content windows do not include dashboard navigation")
 	_check(crest == null,"no ornamental header occupying content area")
-	_check(compact != null and not compact.visible,"menu shortcut stays hidden without a navigation controller")
+	# The shortcut is intentionally constructed, but only shown when a real
+	# game-menu receiver is connected. Its mere existence is not a sidebar.
+	_check(compact != null and not compact.visible,"unconnected game-menu shortcut stays hidden")
 	window.open("inventory","인벤토리","선택한 장비를 확인합니다.")
 	var active: Button = window.find_child("Nav_inventory",true,false) as Button
 	_check(active == null and window.current_section == "inventory","inventory has its own window profile")
 	_check(window.size.x <= 378 and window.position.x > 800,"inventory is a right shelf")
 	_check(window.find_child("CloseWindow",true,false) != null,"close and Esc action retained")
+	_check(compact != null and not compact.visible,"opening an unconnected window does not expose dead navigation")
 	# Content windows keep the real menu shortcut; it appears only when the
 	# owning HUD connects navigation and must send the actual requested section.
 	var requested: Array[String] = []

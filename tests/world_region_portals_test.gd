@@ -28,7 +28,7 @@ func _run() -> void:
 		var expected: String = str(index[i+1]["map_id"]) if i+1<index.size() else "aden_world"
 		check(world.use_field_portal("next"),id+" next portal accepted")
 		check(world.active_map_id==expected,id+" next destination")
-		check(not world.player.auto_enabled and world.player.click_path.is_empty(),id+" stale hunt/path cleared")
+		check(world.player.auto_enabled and world.player.click_path.is_empty(),id+" stale path cleared without disabling AUTO preference")
 		await physics_frame
 		await process_frame
 		check(world.field_map.walkable(world.player.global_position) and world.field_map.point_clear(world.player.global_position),expected+" landing clearance")
@@ -55,6 +55,9 @@ func _run() -> void:
 	world._set_map("faith_01",false)
 	check(world.use_field_portal("previous") and world.active_map_id=="albino_04","reverse family boundary")
 	world._set_map("oman_02",false)
+	# AUTO deliberately suppresses proximity portal travel while hunting.
+	# Exercise a manual portal entry after switching AUTO off.
+	world.player.set_auto_enabled(false)
 	world.portal_cooldown=0
 	world.player.global_position=COORD.array_vector(world.field_map.data["portal"][0]["position"])
 	world._update_field_triggers()

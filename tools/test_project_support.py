@@ -22,6 +22,19 @@ OPTIONAL_RENDER_ENV = re.compile(
     r'^\s*#\s*TWILIGHT_OPTIONAL_RENDER_ENV:\s*([A-Z][A-Z0-9_]*)\s*$',
     re.MULTILINE,
 )
+# Fixed, existing TWILIGHT geometry contracts; not source-grid acceptance.
+# Do not add generic gameplay tests here to hide source regressions.
+LEGACY_GEOMETRY_TESTS = frozenset({
+    'reference_object_placement_test', 'road_surface_render_test',
+    'terrain_surface_render_test', 'world_region_portals_test',
+    'world_regions_test', 'world_structure_test', 'world_terrain_coverage_test',
+})
+# This existing producer writes a counted summary rather than an _OK marker.
+# Accept only its exact, positive-check, zero-failure report, for that test only.
+RENEWED_SPAWN_SUMMARY = re.compile(
+    r'^RENEWED MAP SPAWN TEST: ([1-9][0-9]*) checks, ([0-9]+) failures$',
+    re.MULTILINE,
+)
 
 
 def requires_renderer(source: str, env: Mapping[str, str]) -> bool:
@@ -33,6 +46,38 @@ def requires_renderer(source: str, env: Mapping[str, str]) -> bool:
         return bool(env.get(optional[0], '').strip())
     # Missing/ambiguous annotations retain mandatory real-render validation.
     return True
+
+
+def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
+    """Keep exhaustive real-save audits bounded without dropping assertions."""
+    if name == 'import':
+        return max(requested, import_timeout)
+    if name == 'world_regions_test':
+        # Five isolated family shards (360 seconds each by default), not one
+        # 540-second timer shared by all 24 maps. The child enforces deadlines.
+        return max(requested, 1860)
+    if name == 'remake_source_runtime_test':
+        # Ten live boss/save lifecycles plus 50 real portal transitions and
+        # rendered captures. Keep every floor and assertion in the private-pack
+        # audit; installations without that pack still explicitly SKIP it.
+        return max(requested, 480)
+    if name == 'original_skill_learning_conditions_test':
+        return max(requested, 540)
+    if name == 'eight_interactions_test':
+        # Real UI events plus repeated complete floor/inventory save-load cycles.
+        return max(requested, 300)
+    if name == 'ground_loot_system_test':
+        # The unchanged 166-check full GUI/physics/save/loot suite completed
+        # in ~112 seconds in its dedicated workflow, but exceeded the generic
+        # 150-second subprocess cap in the concurrently loaded integration job.
+        # Give only this exhaustive real-play suite bounded CI headroom.
+        return max(requested, 300)
+    if name in {'original_based_mummy_lord_gameplay_test',
+                'original_based_seer_boss_gameplay_test',
+                'original_based_salah_gameplay_test'}:
+        # Preserve PR100's original-HP boss lifecycle budget.
+        return max(requested, 450)
+    return requested
 
 
 def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool]:
@@ -50,9 +95,15 @@ def classify_result(name: str, returncode: int, output: str) -> tuple[bool, bool
             if not isinstance(report, dict) or report.get('failures') != []:
                 return False, False
             reports.append(report)
-    # Import/boot must actually run; a synthetic SKIP cannot authorize the suite.
+    spawn_summaries = RENEWED_SPAWN_SUMMARY.findall(output)
+    if name == 'renewed_map_spawn_test':
+        # Missing, contradictory, duplicate, or nonzero summaries fail closed.
+        if SKIP.search(output) or len(spawn_summaries) != 1 or spawn_summaries[0][1] != '0':
+            return False, False
+        return True, False
+    # Import/boot/cache preparation must actually run; SKIP cannot authorize them.
     if SKIP.search(output):
-        return (False, False) if name in ('import', 'boot') else (True, True)
+        return (False, False) if name in ('import', 'boot', 'bake_navigation') else (True, True)
     return name in ('import', 'boot') or bool(reports) or bool(SUCCESS.search(output)), False
 
 

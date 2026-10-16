@@ -56,7 +56,10 @@ func _spawn_point(region: Dictionary) -> Vector2:
 	var a: Array = region.rect
 	var center := Vector2(float(a[0])+float(a[2])*.5,float(a[1])+float(a[3])*.5)
 	var spacing: float = float(region.get("min_spacing",28.))
-	for attempt: int in range(64):
+	# Dense hotspots need more attempts near capacity, without reducing the
+	# authored population target or weakening collision/spacing constraints.
+	var attempts: int = 160 if str(region.get("mode", "normal")) == "dense" else 64
+	for attempt: int in range(attempts):
 		var p: Vector2 = field.sample_spawn(str(region.id),world.rng)
 		if not p.is_finite(): return Vector2.INF
 		if radius > 0. and p.distance_to(center) > radius: continue
@@ -107,6 +110,14 @@ func _spawn_slot(slot: Dictionary) -> void:
 		record["lv"] = int(variant.get("level",record.get("lv",1)))
 		record["hp"] = int(float(record.get("hp",100))*ratio)
 		record["atk"] = int(float(record.get("atk",10))*sqrt(ratio))
+	# The authored regional level range is for this spawn instance only. Never
+	# mutate a species' shared DB record or silently rescale its base HP/drops.
+	var level_range: Array = region.get("level", [])
+	if level_range.size() == 2:
+		var local_level: int = clampi(int(record.get("lv", 1)), int(level_range[0]), int(level_range[1]))
+		if local_level != int(record.get("lv", 1)):
+			record = record.duplicate(true)
+			record["lv"] = local_level
 	# A node queued by combat/map cleanup can still receive its last physics
 	# callback before deletion. Never cast a stale pool entry to a live actor.
 	var monster: TwilightMonster = null
@@ -119,6 +130,7 @@ func _spawn_slot(slot: Dictionary) -> void:
 	if monster.get_parent() != null: monster.reparent(world.monsters_root,false)
 	else: world.monsters_root.add_child(monster)
 	monster.global_position = p
+	preload("res://scripts/maps/source_body_profile.gd").apply(monster,field is RemakePlayableField)
 	monster.setup(record,world.player,world,world._monster_texture(record))
 	monster.attack_cooldown = world.rng.randf_range(0.,monster.attack_interval*.7)
 	if not monster.died.is_connected(world._on_monster_died): monster.died.connect(world._on_monster_died)
@@ -159,6 +171,8 @@ func destination_allowed(monster: TwilightMonster, point: Vector2) -> bool:
 	var id: int = int(monster.get_meta("field_slot",-1))
 	if id < 0 or id >= slots.size(): return true
 	var region: Dictionary = slots[id].region
+	if field is RemakePlayableField:
+		return (field as RemakePlayableField).remake_region_contains(str(region.id),point)
 	var patrol: Dictionary = region.get("patrol_region",{})
 	return patrol.is_empty() or field.REGION_GEOMETRY.contains(patrol,point)
 

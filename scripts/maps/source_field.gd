@@ -15,10 +15,12 @@ var overview: ImageTexture
 var nav_reads: int=0
 var failed_chunks: Dictionary={}
 
+func uses_original_gameplay_rules() -> bool: return true
+
 func configure_source(value: Dictionary) -> bool:
 	if not bool(value.get("playable",false)) or value.navigation.profile!="A3_STATIC_EDGES": return false
 	definition=value
-	coordinates.configure(value.origin,value.dimensions)
+	if not coordinates.configure(value.origin,value.dimensions,value.get("coordinate_mapping",{})): return false
 	width=coordinates.dimensions.x
 	height=coordinates.dimensions.y
 	bounds=coordinates.canvas_bounds()
@@ -28,7 +30,7 @@ func configure_source(value: Dictionary) -> bool:
 	astar.update()
 	source_doors.configure(value.get("doors",[]),coordinates.origin)
 	data={"map_id":value.map_id,"map_name":value.map_name,"short_name":"원본 통행 지도 · 이미지 미확보",
-		"layout_revision":value.layout_revision,"spawn_position":[],"bounds":[0,0,bounds.size.x,bounds.size.y],
+		"layout_revision":value.layout_revision,"spawn_position":[],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
 		"regions":[],"water":[],"roads":[],"surfaces":[],"npc_spawn":[],"monster_spawn":[],"portal":[],
 		"camera":{"zoom":1.0,"offset":[0,-32],"follow_speed":8.0},"streaming":{"monster_sleep_distance":1600}}
 	if str(value.map_id)=="l1_4": data.short_name="원본 통행 · 자체 제작 지형 v2"
@@ -70,7 +72,7 @@ func _chunk(key: Vector2i) -> PackedByteArray:
 	if not chunk_table.has(key) or failed_chunks.has(key): return PackedByteArray()
 	var row: Array=chunk_table[key]
 	var shard: int=int(row[4])
-	if not packs.has(shard): packs[shard]=FileAccess.open("res://data/original_maps/navigation-%02d.bin" % shard,FileAccess.READ)
+	if not packs.has(shard): packs[shard]=FileAccess.open(str(definition.get("pack_root","res://data/original_maps"))+"/navigation-%02d.bin" % shard,FileAccess.READ)
 	var pack: FileAccess=packs[shard]
 	if pack==null: failed_chunks[key]=true; return PackedByteArray()
 	pack.seek(int(row[5]))
@@ -122,10 +124,12 @@ func line_clear(from: Vector2, to: Vector2) -> bool:
 	if not from.is_finite() or not to.is_finite(): return false
 	# Keep DDA arithmetic in scalar doubles. Vector2 rounds local coordinates
 	# to float32, splitting simultaneous crossings into two forbidden edges.
-	var ax: float=(from.x/24.0-from.y/12.0+width)/2.0
-	var ay: float=(from.x/24.0+from.y/12.0-width)/2.0
-	var bx: float=(to.x/24.0-to.y/12.0+width)/2.0
-	var by: float=(to.x/24.0+to.y/12.0-width)/2.0
+	var a: Array = coordinates.grid_components(from)
+	var b: Array = coordinates.grid_components(to)
+	var ax: float = a[0]
+	var ay: float = a[1]
+	var bx: float = b[0]
+	var by: float = b[1]
 	var cell:=Vector2i(floori(ax),floori(ay))
 	var target:=Vector2i(floori(bx),floori(by))
 	if value_at(cell,true)==0 or value_at(target,true)==0: return false
@@ -154,10 +158,11 @@ func path(from: Vector2,to: Vector2) -> PackedVector2Array:
 	navigator.loaded=true
 	navigator.coordinates.configure(Vector2i(width,height),Vector2i.ZERO,Transform2D.IDENTITY)
 	var result:=PackedVector2Array()
-	for c: Vector2i in navigator.find_path(start,goal): result.append(cell_to_world(c))
+	for c: Vector2i in navigator.find_path(start,goal,navigation_search_limit()): result.append(cell_to_world(c))
 	if result.size()>1 and line_clear(from,result[1]): result.remove_at(0)
 	if not result.is_empty() and walkable(to) and line_clear(result[-1],to): result.append(to)
 	return result
+func navigation_search_limit() -> int: return 8192
 func region_at(p: Vector2) -> Dictionary:
 	return {"id":"source_safe" if is_safe(p) else "source_field","name":data.map_name,"type":"safe" if is_safe(p) else "combat","color":"738e81"}
 func is_safe(p: Vector2) -> bool: return (value_at(world_to_cell(p))&48)==16
@@ -199,7 +204,7 @@ func overview_texture() -> ImageTexture:
 	var image := Image.create(128,64,false,Image.FORMAT_RGBA8)
 	for y: int in range(64):
 		for x: int in range(128):
-			var c: Vector2i = world_to_cell(Vector2((x+0.5)/128,(y+0.5)/64)*bounds.size)
+			var c: Vector2i = world_to_cell(bounds.position+Vector2((x+0.5)/128,(y+0.5)/64)*bounds.size)
 			var attr: int = value_at(c)
 			if value_at(c,true) != 0:
 				image.set_pixel(x,y,Color("818864") if (attr&48)==16 else Color("576e5b"))

@@ -98,6 +98,7 @@ func _run() -> void:
 		if not id.begins_with(prefix):
 			continue
 		tested += 1
+		var started_ms: int = Time.get_ticks_msec()
 		world._set_map(id,false)
 		world.field_population.set_process(false)
 		for monster: TwilightMonster in world.monsters_root.get_children():
@@ -131,6 +132,7 @@ func _run() -> void:
 		check(world.monsters_root.get_child_count()==eager_count and world.field_population.slots.size()==count,id+" ordinary population fills caps; distant dense slots stay dormant")
 		check_population_levels(id,field,catalog_before)
 		check(world.monster_db == database_before,id+" spawning preserves the entire monster database")
+		print("REGION TIMING ",id," before_routes_ms=",Time.get_ticks_msec()-started_ms)
 		for raw: Array in field.data["route_checks"]:
 			var goal: Vector2 = COORD.array_vector(raw)
 			var route: PackedVector2Array = field.path(spawn,goal)
@@ -159,10 +161,18 @@ func _run() -> void:
 			var goal: Vector2 = spawn+Vector2(96,0)
 			var screen: Vector2 = COORD.world_to_screen(root,goal)
 			check(COORD.screen_to_world(root,screen).distance_to(goal)<.02,id+" camera/world coordinate round trip")
+			# Native gesture dispatch waits for touch release before moving.
 			var touch := InputEventScreenTouch.new()
+			touch.index = 0
 			touch.position = screen
 			touch.pressed = true
 			world._unhandled_input(touch)
+			var release := InputEventScreenTouch.new()
+			release.index = 0
+			release.position = screen
+			release.pressed = false
+			world.world_interactions._input(release)
+			check(world.world_interactions.pointer == -2,id+" touch gesture released")
 			check(not world.player.click_path.is_empty() and world.player.click_path[-1].distance_to(goal)<1,id+" zoomed Android touch destination")
 			world.player.clear_click_path()
 		world.player.camera.zoom=Vector2.ONE*.78
@@ -180,6 +190,7 @@ func _run() -> void:
 			await physics_frame
 		world.player.set_touch_vector(Vector2.ZERO)
 		check(world.player.global_position.x>spawn.x+100,id+" actual joystick movement")
+		print("REGION TIMING ",id," before_save_ms=",Time.get_ticks_msec()-started_ms)
 		world._save_game(true)
 		var saved: Vector2 = world.player.global_position
 		var saved_gold: int = world.gold
@@ -232,6 +243,7 @@ func _run() -> void:
 		await process_frame
 		check(old_cache.get_ref()==null,id+" leaving region releases its render cache")
 		check(world.field_map != null and world.field_minimap.field==world.field_map,id+" world services refresh after portal")
+		print("REGION TIMING ",id," full_ms=",Time.get_ticks_msec()-started_ms)
 		print("REGION CHECKED ",id)
 	if prefix.is_empty():
 		check(tested==24 and families.size()==5,"all 24 new maps and all five families tested")

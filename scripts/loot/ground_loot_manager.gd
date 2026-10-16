@@ -50,23 +50,30 @@ func _find_spot(origin: Vector2) -> Vector2:
 	var fallback: Vector2 = world.call("_cell_to_world", cell)
 	return fallback if bool(world.call("_is_walkable_world", fallback)) and not _occupied(fallback) else Vector2.INF
 
-func spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String = "") -> Button:
-	var item: Dictionary = item_record(item_name)
+func spawn(item_name: String, origin: Vector2, quantity: int = 1, batch: String = "", metadata: Dictionary = {}) -> Button:
+	var item: Dictionary = metadata.get("item_record",item_record(item_name))
 	if item.is_empty() or quantity < 1 or not origin.is_finite(): return null
 	var point: Vector2 = _find_spot(origin)
 	if not point.is_finite(): return null
 	var now: float = Time.get_unix_time_from_system()
 	var record: Dictionary = {"id":new_id(), "item_name":item_name, "grade":str(item.get("grade", "일반")), "quantity":quantity,
 		"map_id":current_map, "position":[point.x, point.y], "created_at":now, "expires_at":now + LIFETIME, "state":"ground", "hunt_batch":batch}
+	# Whitelist transferable payload; never allow callers to override ownership IDs.
+	for key: String in ["physical_item","item_record","player_dropped"]:
+		if metadata.has(key): record[key] = metadata[key]
 	records[record["id"]] = record
 	revision += 1
 	return _create_view(record)
 
 func _create_view(record: Dictionary) -> Button:
 	var view: TwilightGroundLoot = LOOT.new()
-	var item_data: Dictionary = item_record(str(record["item_name"]))
+	var item_data: Dictionary = record.get("item_record",item_record(str(record["item_name"])))
 	var visual_slot: String = "scroll" if bool(item_data.get("crafting_scroll",false)) else ("material" if bool(item_data.get("crafting_material",false)) else str(item_data.get("slot","")))
-	view.configure(record, _icon(str(record["item_name"])), visual_slot)
+	var icon: Texture2D = _icon(str(record["item_name"]))
+	if record.has("item_record"):
+		var images: Dictionary = world.catalog_image_index.get("아이템",{})
+		icon = preload("res://scripts/ui/item_visual_resolver.gd").texture(item_data,str(record["item_name"]),images,true)
+	view.configure(record, icon, visual_slot)
 	(world.get("drops_root") as Node).add_child(view)
 	view.pressed.connect(world._on_ground_drop_clicked.bind(view))
 	views[record["id"]] = view
@@ -151,7 +158,17 @@ func restore(saved: Variant) -> void:
 			var record: Dictionary = (entry as Dictionary).duplicate(true)
 			var item_name: String = str(record.get("item_name", ""))
 			var point: Variant = record.get("position", [])
-			if item_record(item_name).is_empty() or not point is Array or point.size() < 2: continue
+			var item: Dictionary = item_record(item_name)
+			if record.get("item_record") is Dictionary and str(record.item_record.get("name","")) == item_name: item = record.item_record
+			if item.is_empty() or not point is Array or point.size() < 2: continue
+			if not preload("res://scripts/loot/inventory_ground_transfer.gd").can_collect(world,record): continue
+			if record.has("physical_item"):
+				var physical_id: String = str(record.physical_item.id)
+				var duplicate: bool = false
+				for existing: Dictionary in records.values():
+					if str(existing.get("physical_item",{}).get("id","")) == physical_id: duplicate = true
+				if duplicate: continue
+				if physical_id.is_valid_int(): world.next_item_instance_id = maxi(world.next_item_instance_id,int(physical_id)+1)
 			if not (point[0] is float or point[0] is int) or not (point[1] is float or point[1] is int): continue
 			if not Vector2(float(point[0]), float(point[1])).is_finite(): continue
 			var map_id: String = str(record.get("map_id", current_map))
@@ -162,7 +179,7 @@ func restore(saved: Variant) -> void:
 			if id.is_empty() or records.has(id): continue
 			var quantity: int = int(record.get("quantity", 1))
 			if quantity < 1: continue
-			record.merge({"id":id, "item_name":item_name, "grade":str(item_record(item_name).get("grade", "일반")), "quantity":quantity,
+			record.merge({"id":id, "item_name":item_name, "grade":str(item.get("grade", "일반")), "quantity":quantity,
 				"map_id":map_id, "created_at":float(record.get("created_at", now)), "expires_at":expires, "state":"ground", "hunt_batch":str(record.get("hunt_batch", ""))}, true)
 			records[id] = record
 	activate(current_map)

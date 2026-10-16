@@ -1,10 +1,13 @@
 extends RefCounted
+const GROUND_ICONS = preload("res://scripts/ui/ground_item_icons.gd")
+const INVEN_INVENTORY = preload("res://scripts/ui/inven_inventory_icons.gd")
 ## One read-only image resolver for every item surface, including physical instances.
 ## New pinned art wins; legacy links are recovery paths, never identity overrides.
 const FALLBACK = preload("res://scripts/ui/item_fallback_art.gd")
 const REVIEWED = preload("res://addons/twilight_l1j/twilight_runtime_assets.gd")
 const VISUALS = preload("res://scripts/animation/visual_manifest.gd")
 const A2 = preload("res://addons/twilight_l1j/twilight_external_a2_bridge.gd")
+const OPTIONAL = preload("res://scripts/ui/optional_item_icon_pack.gd")
 const MAX_CACHE: int = 256
 const LOCAL_ITEM_ICONS: Dictionary = {
 	"HP 물약":"res://assets/ui/potionRed.png",
@@ -66,6 +69,38 @@ static func _source(record: Dictionary, name_value: String) -> Dictionary:
 	return record
 
 static func describe(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
+	if ground:
+		var original: Dictionary = _describe_original(record, fallback_name, images, true)
+		# Preserve existing dedicated floor pairs and their provenance.
+		if original.route in ["reviewed_ground", "l1j_dedicated_ground_candidate"]:
+			return original
+		var source: Dictionary = _source(record, str(original.name))
+		# A known publisher ID paired with the wrong name remains rejected.
+		if source.is_empty(): return original
+		var choice: Dictionary = GROUND_ICONS.lookup(source, str(original.name))
+		if not choice.is_empty() and _valid(str(choice.path)):
+			original.path = choice.path
+			original.route = "ground_category"
+			original.status = "ground_category_art"
+			original.family = ""
+			original["category"] = choice.category
+			original["art_source"] = choice
+		return original
+	# Ground art and all real/unknown source IDs retain the original resolver.
+	if not ground and str(record.get("sourceId", "")).is_empty():
+		_ensure()
+		var inventory_name: String = str(record.get("name", fallback_name))
+		# Catalog names (including ambiguous variants) must never borrow an alias.
+		if not _names.has(inventory_name):
+			var binding: Dictionary = INVEN_INVENTORY.lookup(record, inventory_name)
+			if not binding.is_empty():
+				return {"source_id":"", "name":inventory_name, "path":binding.path,
+					"status":"inven_exact_name" if binding.match_kind == "exact_name" else "inven_visual_alias",
+					"route":"inven_inventory", "family":"", "match_kind":binding.match_kind,
+					"art_source":binding.art_source}
+	return _describe_original(record, fallback_name, images, ground)
+
+static func _describe_original(record: Dictionary, fallback_name: String = "", images: Dictionary = {}, ground: bool = false) -> Dictionary:
 	var name_value: String = str(record.get("name", fallback_name))
 	var source: Dictionary = _source(record, name_value)
 	var id: String = str(source.get("sourceId", record.get("sourceId", "")))
@@ -127,6 +162,16 @@ static func describe(record: Dictionary, fallback_name: String = "", images: Dic
 		if bridge != null:
 			result.path = bridge.resource_path
 			result.route = "a2_candidate"
+			return result
+	# Private exact-name icon candidates are allowed only for records with no
+	# sourceId. They never override verified catalog, physical, reviewed L1J,
+	# visual manifest, or A2 art, and invalid/missing files retain fallback.
+	if id.is_empty() and not ambiguous:
+		var optional: Dictionary = OPTIONAL.lookup(source, name_value)
+		if not optional.is_empty():
+			result.path = str(optional.get("path", ""))
+			result.route = "optional_exact_name_icon"
+			result.status = "original_review_pending"
 			return result
 	# The pre-rework exact-name index also contains deliberate stock UI links.
 	# Restore those links instead of replacing them with an unrelated family

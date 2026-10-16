@@ -4,6 +4,11 @@ on:
     branches: [main]
     paths:
       - 'scripts/ui/item_visual*.gd'
+      - 'scripts/ui/optional_item_icon_pack.gd'
+      - 'data/optional_item_icons_15.json'
+      - 'tools/install_optional_item_icons.py'
+      - 'tests/item_optional_icons_test.gd'
+      - 'assets/original_items/inventory/**'
       - 'scripts/ui/item_icon_foreground.gd'
       - 'assets/catalog/**'
       - 'data/catalog_v19.json'
@@ -38,7 +43,7 @@ jobs:
           ENGINE=/tmp/Godot_v4.7.2-stable_linux.x86_64
           timeout 480 "$ENGINE" --headless --path . --editor --quit > test-results/import.txt 2>&1
           if grep -E 'SCRIPT ERROR:|ERROR:' test-results/import.txt; then exit 1; fi
-          for name in item_visual_repair_test item_visual_test item_icon_art_smoke_test; do
+          for name in item_visual_repair_test item_visual_test item_icon_art_smoke_test item_optional_icons_test; do
             export XDG_DATA_HOME="$RUNNER_TEMP/item-repair-$name"
             timeout 180 "$ENGINE" --headless --path . --script "res://tests/$name.gd" > "test-results/$name.txt" 2>&1
             if grep -E 'SCRIPT ERROR:|ERROR:|FAIL:|_FAILED' "test-results/$name.txt"; then exit 1; fi

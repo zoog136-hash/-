@@ -1,0 +1,104 @@
+name: Main Debug Follow-up
+on:
+  push:
+    branches: [validation/main-debug-20261014]
+    paths: ['.github/workflows/main-debug-followup.yml', 'tests/item_optional_icons_test.gd']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: main-debug-followup-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  follow-up:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify tracked resource integrity
+        run: |
+          set -euo pipefail
+          mkdir -p debug-followup
+          git rev-parse HEAD | tee debug-followup/commit.txt
+          python3 tools/check_resource_integrity.py --root . | tee debug-followup/resource-integrity.log
+      - name: Install repository-pinned Godot
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp
+          chmod +x /tmp/Godot_v4.7.2-stable_linux.x86_64
+      - name: Run real-icon regressions, negative cases and separately labelled adapter fixtures
+        shell: bash
+        run: |
+          python3 -u - <<'PY'
+          import hashlib, json, os, pathlib, subprocess, sys, tempfile
+          root=pathlib.Path.cwd()
+          sys.path.insert(0,str(root/'tools'))
+          from test_project_support import classify_result, run_isolated
+          engine='/tmp/Godot_v4.7.2-stable_linux.x86_64'
+          logs=root/'debug-followup'
+          results=[]
+          def run(name, extra, *, label=None, fixture=False, budget=180):
+              label=label or name
+              # Match the save-safety guard of main_debug_failed_load_test.
+              with tempfile.TemporaryDirectory(prefix='twilight-test-') as home:
+                  env=os.environ.copy()
+                  env.update({key:home for key in ('XDG_DATA_HOME','APPDATA','LOCALAPPDATA')})
+                  try:
+                      p=run_isolated([engine,'--headless','--path',str(root),*extra],env=env,timeout=budget,cwd=str(root))
+                      text=p.stdout+p.stderr
+                      ok,skip=classify_result(name,p.returncode,text)
+                  except subprocess.TimeoutExpired as exc:
+                      def decode(value):
+                          return value.decode(errors='replace') if isinstance(value,bytes) else (value or '')
+                      text='TIMEOUT\n'+decode(exc.stdout)+'\n'+decode(exc.stderr)
+                      ok=skip=False
+              (logs/(label+'.log')).write_text(text,encoding='utf-8')
+              status='SKIP' if skip else ('PASS' if ok else 'FAIL')
+              results.append({'name':label,'status':status,'synthetic_adapter_fixture':fixture})
+              (logs/'summary.json').write_text(json.dumps({'results':results},indent=2)+'\n')
+              print(status,label,flush=True)
+              if not ok: print(text[-10000:],flush=True)
+              if not ok or skip:
+                  raise RuntimeError('Required focused regression did not pass: '+label)
+          def test(name, **kwargs):
+              run(name,['--script','res://tests/'+name+'.gd'],**kwargs)
+          run('import',['--import'],budget=900)
+          for name in ['item_optional_icons_test','item_visual_repair_test','item_visual_test','item_icon_art_smoke_test','main_debug_failed_load_test']:
+              test(name)
+          manifest=json.loads((root/'data/optional_item_icons_15.json').read_text())
+          for row in manifest['items']:
+              p=root/'assets/original_items/inventory'/f"{int(row['icon_id'])}.png"
+              assert p.is_file() and hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256']
+          row=manifest['items'][0]
+          image=root/'assets/original_items/inventory'/f"{int(row['icon_id'])}.png"
+          original=image.read_bytes()
+          try:
+              image.write_bytes(original+b'\nTWILIGHT_TEST_DIGEST_MISMATCH\n')
+              test('item_optional_icons_test',label='icon_digest_mismatch_rejected')
+              image.unlink()
+              test('item_optional_icons_test',label='icon_missing_uses_fallback')
+          finally:
+              image.write_bytes(original)
+          test('item_optional_icons_test',label='restored_original_icons')
+          subprocess.run(['git','diff','--exit-code','--','assets','data'],check=True)
+          # These are API contract tests, NOT original resource delivery tests.
+          # Install the repository's tiny synthetic fixtures only in this runner,
+          # after all real-resource tests; never replace a partial/real pack.
+          targets=['data/l1j/maps/raw/4.bin','data/l1j/registry/a2_visuals_normalized.json','assets/l1j/preview/a2/items/34.png','assets/l1j/preview/a2/monsters/ms852.png','assets/l1j/candidates/spx_converted/99999-0/SpriteFrames.tres']
+          assert not any((root/p).exists() for p in targets), 'Existing external pack must not be overwritten'
+          subprocess.run([sys.executable,'tools/l1j_ci_make_fixture.py','--root',str(root)],check=True)
+          print('SYNTHETIC_ADAPTER_ONLY: original packs remain unverified',flush=True)
+          run('import',['--import'],label='synthetic_adapter_import',fixture=True,budget=900)
+          for name in ['l1j_map_grid_test','l1j_png_load_test','l1j_spx_frames_test']:
+              test(name,fixture=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: main-debug-followup-${{ github.sha }}
+          path: debug-followup/
+          retention-days: 7
+          if-no-files-found: error

@@ -1,0 +1,15 @@
+VALIDATION_SCOPE ACTIVE_INSTALLED_MAPS_OR_TEST_SPECIFIC_FIXTURE
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+MONSTER_WORLD covered species=318 maps=25 dense=4 boss_zones=28 checks=9915
+MONSTER_WORLD_OK
+WARNING: TWILIGHT_DROP_UNMAPPED_GRADE: 오만한 우그누스:전설 — skipped; no arbitrary substitution
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] _missing (res://scripts/loot_drop.gd:182)
+         [1] _pick_equipment_entry (res://scripts/loot_drop.gd:267)
+         [2] roll_detailed (res://scripts/loot_drop.gd:318)
+         [3] _roll_drop (res://scripts/world.gd:2316)
+         [4] _on_monster_died (res://scripts/world.gd:2228)
+         [5] take_damage (res://scripts/monster.gd:750)
+         [6] _run (res://tests/monster_world_test.gd:176)

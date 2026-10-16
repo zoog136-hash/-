@@ -96,8 +96,18 @@ func _run() -> void:
 		check(int(world.inventory.get(name_value,0)) == count_before, "drop does not grant inventory")
 		var visual: TwilightDropVisual = (drop as TwilightGroundLoot).visual
 		if installed == 5:
-			check(visual.texture != null and visual.texture.resource_path.begins_with("res://assets/l1j/verified/ground/"), "actual ground image")
-			check(is_instance_valid(visual.source_icon), "source ground icon uses independent display key")
+			# Source identity still points to the audited original (checked above).
+			# Floor rendering now uses its alpha-only copy, not a global white key
+			# that also erases the item's enclosed white highlights.
+			var original_floor: Texture2D = ASSETS.ground_icon(record, name_value)
+			var expected_floor: Texture2D = preload("res://scripts/ui/ground_alpha.gd").texture(original_floor)
+			check(visual.texture != null and visual.texture == expected_floor, "actual ground image uses verified alpha display")
+			if not bool(bindings.get("synthetic_fixture_only",false)):
+				check(visual.texture.resource_path.begins_with("res://assets/ground_alpha/"), "production floor uses committed transparent PNG")
+				check(visual.texture.get_size() == original_floor.get_size(), "alpha copy preserves original floor dimensions")
+				check(not is_instance_valid(visual.source_icon), "prebaked alpha does not erase highlights with a global colour key")
+			else:
+				check(is_instance_valid(visual.source_icon) or visual.texture != original_floor, "synthetic fixture retains a valid keyed or alpha display")
 		check(not world._collect_ground_drop(drop), "minimum visible lifetime remains enforced")
 		drop.set("visible_since", Time.get_ticks_msec() - 900)
 		drop.pressed.emit()

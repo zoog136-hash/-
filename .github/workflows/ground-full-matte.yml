@@ -1,0 +1,94 @@
+name: Ground full-matte audit
+on:
+  push:
+    branches: [fix/ground-full-matte-20261015]
+    paths:
+      - '.github/workflows/ground-full-matte.yml'
+      - 'tools/ground_icons/**'
+      - 'tools/ground_matte/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/ground-full-matte.yml'
+      - 'tools/ground_icons/**'
+      - 'tools/ground_matte/**'
+      - 'assets/ground_categories/**'
+      - 'data/ground_item_icons.json'
+permissions:
+  contents: read
+concurrency:
+  group: ground-matte-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  ground-matte:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+      - name: Prepare pinned tools and renderer
+        run: |
+          python3 -m pip install Pillow==12.3.0
+          sudo apt-get update -qq
+          sudo apt-get install -y xvfb xauth libgl1-mesa-dri
+          curl --fail --location --retry 2 -o /tmp/godot.zip https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -qo /tmp/godot.zip -d /tmp/godot
+          chmod +x /tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+      - name: Rebuild only floor presentation, audit 77 PNGs, keep source hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/ground-matte
+          python3 tools/ground_icons/build.py --write
+          python3 tools/ground_icons/build.py
+          python3 tools/ground_alpha/bake.py
+          python3 tools/ground_matte/audit.py
+          git diff --exit-code -- scripts data/catalog_v19.json data/game_db_v17.json data/inven_inventory_icons.json assets/catalog assets/inven_inventory assets/l1j assets/original_items
+      - name: Run real Main ground, inventory, drop and alpha regressions
+        shell: bash
+        env:
+          GODOT_SILENCE_ROOT_WARNING: '1'
+          GROUND_STAGE: after
+          GROUND_REPORT: /tmp/ground-matte/ground-results.json
+          GROUND_ALPHA_REPORT: /tmp/ground-matte/alpha-results.json
+          GROUND_CAPTURES: /tmp/ground-matte/captures
+        run: |
+          set -euo pipefail
+          engine=/tmp/godot/Godot_v4.7.2-stable_linux.x86_64
+          timeout 240 "$engine" --audio-driver Dummy --headless --path . --editor --import > /tmp/ground-matte/import.log 2>&1
+          status=0
+          for test in ground_category_probe ground_alpha_test inven_inventory_icons_test ground_loot_system_test; do
+            timeout 180 "$engine" --audio-driver Dummy --headless --path . --script "res://tests/$test.gd" > "/tmp/ground-matte/$test.log" 2>&1 || status=1
+            if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script|_FAIL:|_FAILED' "/tmp/ground-matte/$test.log"; then status=1; fi
+            tail -n 8 "/tmp/ground-matte/$test.log"
+          done
+          mkdir -p /tmp/ground-matte/captures
+          timeout 180 xvfb-run -a "$engine" --audio-driver Dummy --path . --rendering-method gl_compatibility --script res://tests/capture_ground_categories.gd > /tmp/ground-matte/capture.log 2>&1 || status=1
+          tail -n 10 /tmp/ground-matte/capture.log
+          if grep -E 'SCRIPT ERROR|Parse Error|Failed to load script|GROUND_CAPTURE_RESULT.*failures":\[[^]]' /tmp/ground-matte/capture.log; then status=1; fi
+          exit "$status"
+      - name: Commit generated PNGs only when verification has passed
+        if: github.ref == 'refs/heads/fix/ground-full-matte-20261015'
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git diff --exit-code -- scripts data/catalog_v19.json data/game_db_v17.json data/inven_inventory_icons.json assets/catalog assets/inven_inventory assets/l1j assets/original_items
+          git add -- assets/ground_categories data/ground_item_icons.json docs/verification/ground_matte_20261015/audit.json
+          git diff --cached --stat
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Remove dark and logo mattes from ground representative icons, including brutal scythe'
+            git push origin HEAD:refs/heads/fix/ground-full-matte-20261015
+          fi
+          git rev-parse HEAD > /tmp/ground-matte/verified-commit.txt
+      - name: Upload real scene screenshots and test proof
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ground-full-matte-verification
+          path: |
+            /tmp/ground-matte/
+          retention-days: 14
+          if-no-files-found: warn

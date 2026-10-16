@@ -19,20 +19,29 @@ class RenewedMapSpawnRulesTest(unittest.TestCase):
         self.assertEqual(len(self.rules['map_ids']), 25)
         self.assertNotIn('l1_4', self.rules['map_ids'])
 
-    def test_preserves_population_stats_and_regional_wall_clock_boss_policy(self):
-        for key in ['preserve_normal_total', 'preserve_monster_stats_and_drops']:
-            self.assertIs(self.rules[key], True)
+    def test_population_stats_and_current_wall_clock_policy(self):
+        self.assertIs(self.rules['preserve_normal_total'], True)
+        self.assertIs(self.rules['preserve_monster_stats_and_drops'], True)
+        # Original monster rewards stay untouched; boss respawns intentionally
+        # follow the newer wall-clock policy, not historical 600s timers.
         self.assertIs(self.rules['preserve_respawn_times'], False)
         self.assertEqual(self.rules['boss_respawn_policy'], 'device_wall_clock')
         self.assertEqual(self.rules['boss_respawn_seconds'], {'aden_world': 28800, 'other_maps': 86400})
         self.assertLess(self.rules['progression_weights'][0], self.rules['progression_weights'][1])
         self.assertGreater(self.rules['progression_weights'][0], 0)
 
-    def test_aden_normal_budget_stays_132(self):
+    def test_aden_regional_normal_budget_is_354(self):
         counts = self.rules['maps']['aden_world']['normal_counts']
-        self.assertEqual(len(counts), 11)
-        self.assertEqual(sum(counts.values()), 132)
-        self.assertTrue(all(0 < count <= 14 for count in counts.values()))
+        expected = {
+            'meadow': 27, 'forest': 30, 'riverbank': 27, 'ruins': 30,
+            'east': 27, 'desert': 33, 'bandits': 30, 'dragon_valley': 33,
+            'oren': 30, 'fire_land': 33, 'wind_land': 30,
+            'western_approach': 24,
+        }
+        self.assertEqual(counts, expected)
+        self.assertEqual(len(counts), 12)
+        self.assertEqual(sum(counts.values()), 354)
+        self.assertTrue(all(0 < count <= 33 for count in counts.values()))
 
     def test_only_existing_named_field_bosses_are_added(self):
         bosses = self.rules['maps']['aden_world']['additional_bosses']
@@ -43,6 +52,16 @@ class RenewedMapSpawnRulesTest(unittest.TestCase):
             self.assertEqual(boss['respawn_time'], self.rules['boss_respawn_seconds']['aden_world'])
             self.assertTrue(all(0 < value < 1 for value in boss['fraction']))
             self.assertTrue(all(0 < value <= 300 for value in boss['half_size']))
+
+    def test_dense_hotspots_preserve_full_capacity_and_actor_clearance(self):
+        profiles = json.loads((ROOT / 'data/monsters/world_spawn_profiles.json').read_text(encoding='utf-8'))['maps']
+        for map_id in ('oman_03', 'oman_07'):
+            with self.subTest(map=map_id):
+                dense, = [row for row in profiles[map_id]['monster_spawn'] if row['id'] == 'dense_hotspot']
+                self.assertEqual(dense['max_count'], 24)
+                self.assertGreaterEqual(dense['min_spacing'], 38)  # diameter of Monster.tscn 19px collider
+                self.assertGreaterEqual(dense['spawn_radius'], 240)
+                self.assertEqual(dense['mode'], 'dense')
 
     def test_boss_anchor_is_relative_to_new_map(self):
         boss = self.rules['maps']['oman_01']
