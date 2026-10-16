@@ -47,11 +47,18 @@ func _run() -> void:
 	var ruby_record: Dictionary = {"name":"드래곤의 루비","type":"축복충전"}
 	var ruby_before: String = JSON.stringify(ruby_record)
 	var legacy_images: Dictionary = hud.item_image_index.get("아이템",{})
-	check(legacy_images.get("드래곤의 루비","") == POTION_PATH,"production still preserves the explicit legacy ruby icon link")
-	var ruby: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name,legacy_images)
-	check(ruby.path == POTION_PATH and ruby.route == "legacy_exact_name_index","ruby uses its explicit legacy index rather than the starter-potion name rule")
-	check(ruby.status == "bundled_ui_art" and ruby.source_id == "","legacy ruby placeholder never claims verified original art")
-	check(RESOLVER.texture(ruby_record,ruby_record.name,legacy_images) == load(POTION_PATH),"legacy ruby resolves the actual preserved bundled texture")
+	# The current item loader deliberately removes the misleading ruby->HP
+	# potion stock icon. Do not restore a false visual identity in production.
+	check(not legacy_images.has("드래곤의 루비"),"production rejects the false ruby-as-HP-potion icon identity")
+	var current_ruby: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name,legacy_images)
+	check(current_ruby.path == "" and current_ruby.family == "gem" and current_ruby.status == "self_authored_substitute","ruby uses an honestly identified gem symbol without an explicit verified image")
+	# Separately retain the resolver's backward-compatible, caller-supplied
+	# exact-name link recovery without pretending it is publisher art.
+	var explicit_legacy: Dictionary = {"드래곤의 루비":POTION_PATH}
+	var ruby: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name,explicit_legacy)
+	check(ruby.path == POTION_PATH and ruby.route == "legacy_exact_name_index","explicit legacy ruby index remains recoverable")
+	check(ruby.status == "bundled_ui_art" and ruby.source_id == "","explicit ruby placeholder never claims verified original art")
+	check(RESOLVER.texture(ruby_record,ruby_record.name,explicit_legacy) == load(POTION_PATH),"explicit ruby link resolves its actual preserved bundled texture")
 	var unindexed: Dictionary = RESOLVER.describe(ruby_record,ruby_record.name)
 	check(unindexed.path == "" and unindexed.family == "gem","ruby without an explicit image link receives its appropriate family symbol")
 	check(RESOLVER.describe({"name":ruby_record.name,"sourceId":"unknown-publisher-id"},ruby_record.name,legacy_images).path == "","an explicit unknown ruby ID cannot borrow the name-only index")

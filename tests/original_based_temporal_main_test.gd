@@ -455,8 +455,16 @@ func run() -> void:
 	var isolated_marker := OS.get_environment("TWILIGHT_PR100_TEMPORAL_ISOLATED") == "1"
 	var isolated_full_suite := not OS.get_environment("TWILIGHT_PR100_REPORT").is_empty()
 	check(isolated_marker or isolated_full_suite, "explicit isolated temporal invocation or existing full-suite harness")
-	var xdg := OS.get_environment("XDG_DATA_HOME")
-	check(not xdg.is_empty() and OS.get_user_data_dir().begins_with(xdg.trim_suffix("/") + "/"), "temporal user directory belongs to explicitly supplied XDG_DATA_HOME")
+	var xdg_root := OS.get_environment("XDG_DATA_HOME").replace("\\", "/").trim_suffix("/").to_lower()
+	var actual_home := OS.get_user_data_dir().replace("\\", "/").to_lower()
+	var isolated_home: bool = not xdg_root.is_empty() and actual_home.begins_with(xdg_root + "/")
+	if OS.get_name() == "Windows":
+		# Godot Windows stores user:// below APPDATA, not XDG_DATA_HOME.
+		# Require every runner-supplied root to be the same fresh directory.
+		var roaming := OS.get_environment("APPDATA").replace("\\", "/").trim_suffix("/").to_lower()
+		var local := OS.get_environment("LOCALAPPDATA").replace("\\", "/").trim_suffix("/").to_lower()
+		isolated_home = not xdg_root.is_empty() and roaming == xdg_root and local == xdg_root and actual_home.begins_with(roaming + "/")
+	check(isolated_home, "temporal user directory belongs to the explicitly isolated platform-specific root")
 	check(temporal_save_files().is_empty(), "existing user saves refuse temporal test")
 	check(not FileAccess.file_exists(temporal_report_path), "temporal report does not overwrite")
 	if FileAccess.file_exists(temporal_report_path):

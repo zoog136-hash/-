@@ -83,6 +83,12 @@ for name,extra in tests:
             # Keep the real directional/lifecycle report after isolated saves
             # are cleaned up, including diagnostics from a failed CI case.
             env['TWILIGHT_PR100_REPORT']=str(logs/(name+'.gameplay.json'))
+        if name == 'original_based_transform_temporal_main_test':
+            # The runner already owns a fresh temporary Godot user directory.
+            # Explicitly authorize this inherited full 10-case batch and keep
+            # its separate case/report evidence outside the temporary home.
+            env['TWILIGHT_PR100_BATCH_ISOLATED']='1'
+            env['TWILIGHT_PR100_BATCH_REPORT']=str(logs/(name+'.batch.json'))
         if visual: env['LIBGL_ALWAYS_SOFTWARE']='1'
         try:
             budget=timeout_budget(name,args.timeout,args.import_timeout)

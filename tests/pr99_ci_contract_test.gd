@@ -19,11 +19,14 @@ func run() -> void:
 	var before: String = JSON.stringify(original)
 	CATALOG.expand(original)
 	check(JSON.stringify(original) == before, "expansion never mutates the source DB")
-	for name: String in ["흑장로", "데스나이트"]:
+	# These are the actual locally authored special kinds in the current
+	# production catalog. Cone is a supported real geometry, not a fallback.
+	var expected_specials: Dictionary = {"흑장로":"beam", "데스나이트":"cone"}
+	for name: String in expected_specials:
 		var record: Dictionary = CATALOG.records_by_name.get(name, {})
 		check(not record.is_empty() and bool(record.get("is_boss", false)), "dedicated boss identity " + name)
 		var special: Dictionary = record.get("ai", {}).get("special", {})
-		check(str(special.get("kind", "")) in ["beam", "charge"], "supported real attack kind " + name)
+		check(str(special.get("kind", "")) == str(expected_specials[name]), "exact supported real attack kind " + name)
 		check(float(special.get("cooldown", 0)) > 0 and float(special.get("windup", 0)) > 0, "bounded readable special " + name)
 		check(str(special.get("evidence", "")) == "local_adaptation_not_verified_original_skill", "no invented original-skill claim " + name)
 		for raw: Dictionary in original:

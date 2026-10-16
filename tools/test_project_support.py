@@ -74,9 +74,14 @@ def timeout_budget(name: str, requested: int, import_timeout: int) -> int:
         return max(requested, 300)
     if name in {'original_based_mummy_lord_gameplay_test',
                 'original_based_seer_boss_gameplay_test',
+                'original_based_raziel_watcher_gameplay_test',
                 'original_based_salah_gameplay_test'}:
         # Preserve PR100's original-HP boss lifecycle budget.
         return max(requested, 450)
+    if name == 'original_based_transform_temporal_main_test':
+        # This inherited 10-case Main/120Hz audit runs all original gameplay,
+        # save/drop checks and continuous pose playback, not a short smoke.
+        return max(requested, 2400)
     return requested
 
 
