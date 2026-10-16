@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "TWILIGHT",
-  "scope": "14 wholly new independent maps; excludes Aden",
+  "scope": "13 independent remake research targets within the planned 24-map roster; excludes Aden and albino_04",
   "source_edition": "Lineage M, exact 2026 version references pending",
   "maps": [
     {
@@ -14,7 +14,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "domination_2021_map",
+        "nc_2025_reboot"
+      ],
+      "research_reference_status": "HISTORICAL_FULL_MAP_LINK",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "faith_01",
@@ -26,7 +32,14 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "faith_2021_floor1_map",
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "research_reference_status": "HISTORICAL_FULL_MAP_IMAGE",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "faith_02",
@@ -38,7 +51,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "research_reference_status": "NO_PER_FLOOR_GEOMETRY_IMAGE",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "faith_03",
@@ -50,7 +69,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "research_reference_status": "NO_PER_FLOOR_GEOMETRY_IMAGE",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "faith_04",
@@ -62,7 +87,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "nc_2025_reboot",
+        "nc_2025_faith_floors"
+      ],
+      "research_reference_status": "NO_PER_FLOOR_GEOMETRY_IMAGE",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "albino_01",
@@ -74,7 +105,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "albino_2023_map",
+        "albino_2025_1_to_3"
+      ],
+      "research_reference_status": "HISTORICAL_SHARED_AREA_MAP_ONLY",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "albino_02",
@@ -86,7 +123,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "albino_2023_map",
+        "albino_2025_1_to_3"
+      ],
+      "research_reference_status": "HISTORICAL_SHARED_AREA_MAP_ONLY",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "albino_03",
@@ -98,19 +141,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
-    },
-    {
-      "id": "albino_04",
-      "region": "알비노 분지",
-      "ordinal": 4,
-      "production_path": "res://content/newmaps/lineagem_reference/albino_04/",
-      "status": "SOURCE_RESEARCH_REQUIRED",
-      "geometry_source": null,
-      "collision_source": null,
-      "art_source": null,
-      "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "albino_2023_map",
+        "albino_2025_1_to_3"
+      ],
+      "research_reference_status": "HISTORICAL_SHARED_AREA_MAP_ONLY",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "escaros_01",
@@ -122,7 +159,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "escaros_2022_zone_1",
+        "escaros_2021_official_rules"
+      ],
+      "research_reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "escaros_02",
@@ -134,7 +177,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "escaros_2022_zone_2",
+        "escaros_2021_official_rules"
+      ],
+      "research_reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "escaros_03",
@@ -146,7 +195,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "escaros_2022_zone_3",
+        "escaros_2021_official_rules"
+      ],
+      "research_reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "escaros_04",
@@ -158,7 +213,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "escaros_2022_zone_4",
+        "escaros_2021_official_rules"
+      ],
+      "research_reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "current_korean_geometry_verified": false
     },
     {
       "id": "escaros_05",
@@ -170,7 +231,13 @@
       "collision_source": null,
       "art_source": null,
       "visual_reference_ids": [],
-      "integration_enabled": false
+      "integration_enabled": false,
+      "research_source_ids": [
+        "escaros_2022_zone_5",
+        "escaros_2021_official_rules"
+      ],
+      "research_reference_status": "HISTORICAL_ANNOTATED_ZONE_MAP_LINK",
+      "current_korean_geometry_verified": false
     }
   ],
   "prohibitions": [
@@ -187,5 +254,12 @@
     "monster boss regions",
     "real Godot 2D screen capture with side-by-side comparison"
   ],
-  "completion_gate": "New map exists separately; geometry/collision inspected; lineaged screenshot comparison reviewed; actual Main integration only after approval"
+  "completion_gate": "New map exists separately; geometry/collision inspected; lineaged screenshot comparison reviewed; actual Main integration only after approval",
+  "project_target_maps": 24,
+  "excluded_map_ids": [
+    "albino_04"
+  ],
+  "main_runtime_current_maps": 25,
+  "edition_references": "KR 2026-10-16 target; historical public screenshots as non-verifying references",
+  "next_step": "Review historical visuals + obtain map-specific 2026 KR screenshots before drawing or integrating. main reduction from 25 to 24 is separate."
 }
