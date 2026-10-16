@@ -140,8 +140,11 @@ func transform_temporal_provenance_record(role: String, direction: int, phase: i
 	var margin: Array = record.get("margin", [])
 	var anchor: Array = record.get("source_anchor", [])
 	if region.size() != 4 or margin.size() != 4 or anchor.size() != 2: return {}
-	if region != [int(atlas.region.position.x), int(atlas.region.position.y), int(atlas.region.size.x), int(atlas.region.size.y)]: return {}
-	if margin != [int(atlas.margin.position.x), int(atlas.margin.position.y), int(atlas.margin.size.x), int(atlas.margin.size.y)]: return {}
+	# JSON provenance coordinates are floating-point Values, as are Rect2 components.
+	# Array equality compares contained Variant types; casting Rect2 values
+	# to int would reject even an otherwise exact source atlas cell.
+	if region != [atlas.region.position.x, atlas.region.position.y, atlas.region.size.x, atlas.region.size.y]: return {}
+	if margin != [atlas.margin.position.x, atlas.margin.position.y, atlas.margin.size.x, atlas.margin.size.y]: return {}
 	return record
 
 func transform_temporal_snapshot(sprite: AnimatedSprite2D, motion: TwilightActorMotion, seconds: float, proof: Dictionary) -> Dictionary:
