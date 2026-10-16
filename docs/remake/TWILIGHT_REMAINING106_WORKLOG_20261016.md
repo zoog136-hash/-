@@ -26,4 +26,14 @@ WIP 복원 및 다음 재개 위치:
 
 현재 환경의 복원 경로는 `/workspace/scratch/pr100-restored-20261016`, `/workspace/scratch/pr100-authoring-restored-20261016`, `/workspace/scratch/pr100-tomb269-restored-20261016`이다. 이 경로가 다음 환경에도 존재한다고 가정하지 않는다. 영구 원본은 기존 FINAL_HANDOFF에 명시된 저장소의 ZIP/CAS 분할 파일이며 기존 복원 스크립트와 SHA 증거를 이용해 복원한다. 현 환경 복원 증거와 실패 진단은 `merge-final-20261016`에 보존한다.
 
+## 후속 PR에서 실제 진행한 작업
+
+초안 PR [#122](https://github.com/zoog136-hash/-/pull/122)를 생성하고 `5018aac`까지 push했다. PR #100에는 push하거나 병합하지 않았다.
+
+whole-sheet 후보도 기존의 동일한 분석·중복/alpha/영역/앵커·원본·출력 충돌·프로필 보존 검사를 모두 수행한 뒤 파일 생성 직전에 반환하는 `--validate-candidate` 경로를 추가했다. 기존 설치 동작과 생성되는 바이트는 유지한다. `--candidate`만 사용하는 명령은 여전히 파일을 만들 수 있으며 dry run이 아니다. 임의 input_mode는 거부한다.
+
+기존 importer와 새 읽기 전용 성공/실패/충돌/CLI 보존 검사 54개, 기존 pose-file 및 방향 입력 검사 42개가 통과했다. 아그니 실제 보존 후보는 이 경로에서 104자세 PASS, `read_only=true`, `applied=false`, `completed_added=0`이다. 16개 원본 PNG는 기존 복원 runtime과 SHA가 모두 같다. 이구아나·아그니의 production 후보 폴더는 생성되지 않았다.
+
+보존된 아그니 실제 Main 전투 스크린샷 중 나무에 가려 개체를 명확히 검토할 수 없는 장면이 확인됐다. 정적 샘플과 자동 PASS만으로 완료 승인하지 않는다. 실제 production Main을 복사한 별도 검증 경로 `/workspace/scratch/remaining106-main-review-20261016/project`에 기존 HOLD 2종의 보존 프로필만 겹쳐 최신 재현을 준비한다. 실제 저장소의 profiles와 승인 자산은 그대로 유지하며, 모든 게임 검사와 시각 증거가 충족되기 전에는 연결 완료로 승격하지 않는다.
+
 자동·정적·시간 진행·실제 Main headless/OpenGL·독립 시각 검토를 분리한다. 전 항목 통과 전에는 연결 완료 수량을 올리지 않는다. 최신 HEAD CI와 Android APK는 별도 확인 대상이며 실제 Android 기기 검사는 미검증이다. PR #100 병합 작업은 재개하지 않는다.

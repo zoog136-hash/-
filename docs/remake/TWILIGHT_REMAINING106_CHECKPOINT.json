@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-16T03:31:39.251613+00:00",
+  "observed_utc": "2026-10-16T03:37:45.009065+00:00",
   "repository": "zoog136-hash/-",
   "branch": "feature/twilight-remaining106-20261016",
   "base_branch": "feature/twilight-animation-20261013",
@@ -25,15 +25,25 @@
     "full10_latest_replay": "in_progress; previous actual engine run 606718 checks/1032 native phases/10 cases no failures, wrapper failed due missing failures array; producer now repaired, parser remains strict",
     "exact_head_CI": "pending_push",
     "Android_APK": "not_rebuilt",
-    "Android_real_device": "unverified"
+    "Android_real_device": "unverified",
+    "importer_legacy_and_safety": "54 PASS including four new read-only success/failure/profile/output/CLI tests",
+    "optional_pose_and_direction_inputs": "42 PASS",
+    "two_subject_latest_Main": "isolated copied production project being prepared with only two preserved WIP profile overlays; no production import/apply"
   },
   "priority": {
     "iguana": "112-pose read-only preflight PASS; separate static/ordered-phase review recorded; actual Main lifecycle viewport review and latest-code replay still pending; HOLD",
-    "agni": "104 approved candidate poses preserved; static/ordered-phase review recorded; whole-sheet read-only candidate support missing; actual Main lifecycle review and replay pending; HOLD",
+    "agni": "104-pose legacy read-only preflight PASS with existing checks; 16 restored source PNG SHA matches; production candidate folder absent; final actual Main/visual review pending; HOLD",
     "unicorn": "8 of 9 standalone poses fail existing alpha>100 single-body rule; 2 selected walk source PNGs missing from preserved archives; HOLD",
     "tomb_guardian": "636 base +31 delta files restored with hashes; anchor/appearance review pending; HOLD",
     "death_servant": "restored; independent source/Main review pending; HOLD"
   },
-  "resume": "Implement safe legacy-sheet --validate-candidate using existing strict checks; then isolated latest Main replay and separate final visual review for iguana/agni; never --apply unverified candidate.",
-  "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md"
+  "resume": "Run actual Main in the isolated review copy, preserving all AI/contact/HP/drop/manual-pickup tests. Inspect legible GL captures independently; any occlusion or missing evidence keeps actor HOLD.",
+  "continuation_log": "docs/remake/TWILIGHT_REMAINING106_WORKLOG_20261016.md",
+  "pr": {
+    "number": 122,
+    "url": "https://github.com/zoog136-hash/-/pull/122",
+    "state": "draft",
+    "base": "feature/twilight-animation-20261013",
+    "pushed_checkpoint": "5018aac"
+  }
 }

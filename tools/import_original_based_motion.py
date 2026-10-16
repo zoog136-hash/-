@@ -329,6 +329,11 @@ def import_sheet(root, candidate, actor, keys, apply):
         return import_mixed_sources(root, candidate, actor, keys, apply)
     if candidate.get("input_mode") is not None:
         raise ValueError("Unknown input_mode")
+    return _legacy_sheet(root, candidate, actor, keys, apply, read_only=False)
+
+
+def _legacy_sheet(root, candidate, actor, keys, apply, *, read_only):
+    """Run the unchanged legacy preflight before any optional installation."""
     plan = expansion.read(root / "data/animation_authoring_sources.json")
     targets = {row["key"]: row for row in plan["targets"]}
     bindings = [targets[key] for key in keys]
@@ -536,6 +541,13 @@ def import_sheet(root, candidate, actor, keys, apply):
         require_preserved_output(sheet, source_sha)
     for path, content in metadata:
         require_preserved_output(path, hashlib.sha256(content.encode()).hexdigest())
+    if read_only:
+        return {"resource": str(folder), "identities": keys,
+                "poses": geometry["distinct_pixel_frames"], "original_unchanged": True,
+                "applied": False, "read_only": True, "profiles_checked": bool(apply),
+                "output_files": [str(destination) for _, destination, _ in copies]
+                                + [str(path) for path, _ in metadata],
+                "actual_Main": "not_run", "completed_added": 0}
     # All input, output and profile checks passed. Identical reruns need no
     # asset writes and preserve the reviewed SpriteFrames/provenance bytes.
     folder.mkdir(parents=True, exist_ok=True)
@@ -1228,13 +1240,25 @@ def import_mixed_sources(root, candidate, actor, keys, apply=False):
     return _install_optional_plan(_prepare_mixed_sources(root, candidate, actor, keys, apply))
 
 
+def validate_candidate(root, candidate, actor, keys):
+    """Preflight every supported representation, including profiles; never write."""
+    mode = candidate.get("input_mode")
+    if mode == "pose_files_v1":
+        return validate_pose_files(root, candidate, actor, keys)
+    if mode == "mixed_sources_v1":
+        return validate_mixed_sources(root, candidate, actor, keys)
+    if mode is not None:
+        raise ValueError("Unknown input_mode")
+    return _legacy_sheet(Path(root).resolve(), candidate, actor, keys, True, read_only=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path("."))
     parser.add_argument("--analyze", type=Path)
     parser.add_argument("--candidate", type=Path)
     parser.add_argument("--validate-candidate", type=Path,
-                        help="Read-only optional-input preflight, including prospective profile/output conflicts; writes nothing")
+                        help="Read-only sheet/pose/mixed preflight, including prospective profile/output conflicts; writes nothing")
     parser.add_argument("--actor")
     parser.add_argument("--key", action="append")
     parser.add_argument("--apply", action="store_true")
@@ -1243,8 +1267,7 @@ def main():
         if args.analyze or args.candidate or not args.actor or not args.key:
             parser.error("--validate-candidate requires --actor/--key and excludes --candidate/--analyze")
         candidate = expansion.read(args.validate_candidate)
-        validate = validate_mixed_sources if candidate.get("input_mode") == "mixed_sources_v1" else validate_pose_files
-        print(json.dumps(validate(args.root.resolve(), candidate, args.actor, args.key), ensure_ascii=False))
+        print(json.dumps(validate_candidate(args.root.resolve(), candidate, args.actor, args.key), ensure_ascii=False))
     elif args.analyze:
         result = analyze(args.analyze)
         print(json.dumps({key: result[key] for key in ("image_size", "distinct_pixel_frames")}))
