@@ -16,11 +16,21 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           python3 - <<'PY'
-          import io,json,os,urllib.request,zipfile
+          import io,json,os,urllib.request,urllib.parse,zipfile
           root='https://api.github.com/repos/zoog136-hash/-'
+          class SafeRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl):
+                  parsed=urllib.parse.urlparse(newurl)
+                  if parsed.scheme!='https':raise RuntimeError('Non-HTTPS redirect refused')
+                  redirected=super().redirect_request(req,fp,code,msg,headers,newurl)
+                  if parsed.hostname!=urllib.parse.urlparse(req.full_url).hostname:
+                      for name in list(redirected.headers):
+                          if name.lower() in {'authorization','cookie','proxy-authorization'}:redirected.remove_header(name)
+                  return redirected
+          opener=urllib.request.build_opener(SafeRedirect())
           def get(path,limit=12000000):
               req=urllib.request.Request(root+path,headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
-              with urllib.request.urlopen(req,timeout=60) as response:data=response.read(limit+1)
+              with opener.open(req,timeout=60) as response:data=response.read(limit+1)
               assert len(data)<=limit,'Diagnostic input unexpectedly large'
               return data
           run_id=38826721544
