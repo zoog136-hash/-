@@ -1,0 +1,125 @@
+name: PR100 isolated regression repair
+on:
+  push:
+    branches: [validation/pr100-pr120-repair-20261016]
+    paths: [.github/workflows/pr100-pr120-repair-probe.yml]
+permissions:
+  contents: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 83393b9887d0fd2d767ced9de67e95b1f3df8395
+          fetch-depth: 1
+      - name: Resource integrity preflight
+        run: |
+          mkdir -p "$RUNNER_TEMP/repair-logs"
+          set -o pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee "$RUNNER_TEMP/repair-logs/resource-before.log"
+      - name: Export source snapshot and apply two guarded repairs
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, json, os, subprocess, zipfile
+          out = Path(os.environ['RUNNER_TEMP']) / 'repair-logs'
+          out.mkdir(exist_ok=True)
+          tracked = subprocess.check_output(['git', 'ls-files', '-z']).decode().split('\0')
+          with zipfile.ZipFile(out / 'source-before.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+              for name in tracked:
+                  p = Path(name)
+                  if not name or not p.is_file(): continue
+                  selected = name.startswith(('scripts/', 'tests/', 'tools/', '.github/')) and p.suffix in ('.gd', '.py', '.yml', '.yaml')
+                  selected |= name.startswith('data/') and p.suffix == '.json' and p.stat().st_size < 8000000
+                  selected |= name in ('AGENTS.md', 'README.md', 'TWILIGHT_PROJECT_RULES.md', 'TWILIGHT_VERSION_HISTORY.md', 'project.godot', 'Main.tscn', 'docs/RESOURCE_INTEGRITY_POLICY.md')
+                  if selected: z.write(p, name)
+          p = Path('scripts/maps/field_population.gd')
+          s = p.read_text()
+          old = '\tif level_range.size() == 2:\n'
+          new = ('\t# Renewed rosters retain catalog levels; their historical broad range\n'
+                 '\t# is not an implicit species override. Explicit variants and legacy\n'
+                 '\t# layouts still enforce the authored regional range on a copy.\n'
+                 '\tif level_range.size() == 2 and (variant.has("level") or not field.data.has("spawn_layout_revision")):\n')
+          assert s.count(old) == 1, 'population patch context changed'
+          p.write_text(s.replace(old, new))
+          p = Path('tests/world_regions_test.gd')
+          s = p.read_text()
+          old = '\t\tcheck(world.field_physics.get_child_count()==field.blockers.size(),id+" physics uses every authored blocker")'
+          new = '\t\tcheck(preload("res://tests/streamed_field_physics.gd").intact(world),id+" exact authored collision footprints and all required streamed buckets")'
+          assert s.count(old) == 1, 'collision contract patch context changed'
+          s = s.replace(old, new)
+          old = ('\t\tfor shape: Dictionary in field.blockers.slice(0,5):\n'
+                 '\t\t\tquery.position = (shape["box"] as Rect2).get_center()\n'
+                 '\t\t\tif str(shape["shape"]) != "polygon":\n'
+                 '\t\t\t\tcheck(not world.get_world_2d().direct_space_state.intersect_point(query).is_empty(),id+" visible blocker exists in physics")\n')
+          new = ('\t\t# Visit the same physical probe points through the real stream. Far\n'
+                 '\t\t# buckets are intentionally absent until an actor is near them.\n'
+                 '\t\tvar collision_probe_origin: Vector2 = world.player.global_position\n'
+                 '\t\tvar collision_probe_physics: bool = world.player.is_physics_processing()\n'
+                 '\t\tworld.player.set_physics_process(false)\n'
+                 '\t\tfor shape: Dictionary in field.blockers.slice(0,5):\n'
+                 '\t\t\tquery.position = (shape["box"] as Rect2).get_center()\n'
+                 '\t\t\tif str(shape["shape"]) != "polygon":\n'
+                 '\t\t\t\tif field is AuthoredRemakeField:\n'
+                 '\t\t\t\t\tworld.player.global_position = query.position\n'
+                 '\t\t\t\t\tfield.collision_stream.refresh()\n'
+                 '\t\t\t\t\tawait physics_frame\n'
+                 '\t\t\t\t\tawait process_frame\n'
+                 '\t\t\t\t\tcheck(preload("res://tests/streamed_field_physics.gd").intact(world),id+" probe retains exact physical shapes and complete active coverage")\n'
+                 '\t\t\t\tcheck(not world.get_world_2d().direct_space_state.intersect_point(query).is_empty(),id+" visible blocker exists in physics")\n'
+                 '\t\tworld.player.global_position = collision_probe_origin\n'
+                 '\t\tif field is AuthoredRemakeField:\n'
+                 '\t\t\tfield.collision_stream.refresh()\n'
+                 '\t\t\tawait physics_frame\n'
+                 '\t\t\tawait process_frame\n'
+                 '\t\tworld.player.set_physics_process(collision_probe_physics)\n')
+          assert s.count(old) == 1, 'physical query patch context changed'
+          p.write_text(s.replace(old, new))
+          files = subprocess.check_output(['git', 'diff', '--name-only']).decode().splitlines()
+          assert sorted(files) == ['scripts/maps/field_population.gd', 'tests/world_regions_test.gd'], files
+          subprocess.run(['git', 'diff', '--check'], check=True)
+          (out / 'candidate.diff').write_bytes(subprocess.check_output(['git', 'diff', '--binary']))
+          (out / 'candidate-manifest.json').write_text(json.dumps({name:hashlib.sha256(Path(name).read_bytes()).hexdigest() for name in files}, indent=2))
+          with zipfile.ZipFile(out / 'modified-files.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+              for name in files: z.write(name, name)
+          PY
+      - name: Install Godot
+        run: |
+          mkdir -p "$RUNNER_TEMP/godot"
+          curl -fsSL --retry 3 https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip -o "$RUNNER_TEMP/godot.zip"
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/godot"
+          chmod +x "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+      - name: Import and boot
+        run: |
+          set -o pipefail
+          GODOT="$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64"
+          timeout 720 "$GODOT" --headless --editor --path . --quit > "$RUNNER_TEMP/repair-logs/import.log" 2>&1
+          if grep -E 'SCRIPT ERROR:|Parse Error:|Compile Error:' "$RUNNER_TEMP/repair-logs/import.log"; then exit 1; fi
+          timeout 120 "$GODOT" --headless --path . --quit-after 90 > "$RUNNER_TEMP/repair-logs/boot.log" 2>&1
+          if grep -E 'SCRIPT ERROR:|ERROR:' "$RUNNER_TEMP/repair-logs/boot.log"; then exit 1; fi
+      - name: Full regional regression without skipped maps
+        run: |
+          set -o pipefail
+          export XDG_DATA_HOME="$RUNNER_TEMP/repair-user-data"
+          python3 tools/world_region_shards.py --godot "$RUNNER_TEMP/godot/Godot_v4.7.2-stable_linux.x86_64" --path . --logs "$RUNNER_TEMP/repair-logs/world-region-shards" --timeout 360 2>&1 | tee "$RUNNER_TEMP/repair-logs/world-regions.log"
+      - name: Resource integrity after repair
+        run: |
+          set -o pipefail
+          python3 tools/check_resource_integrity.py --root . 2>&1 | tee "$RUNNER_TEMP/repair-logs/resource-after.log"
+          git diff --check
+      - name: Publish tested candidate only to isolated result branch
+        run: |
+          git add scripts/maps/field_population.gd tests/world_regions_test.gd
+          git -c user.name='TWILIGHT repair validation' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'fix: preserve renewed roster levels and verify streamed collision footprints'
+          git rev-parse HEAD | tee "$RUNNER_TEMP/repair-logs/candidate-sha.txt"
+          git push origin HEAD:refs/heads/validation/pr100-repair-result-20261016
+      - name: Upload bounded diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr100-repair-probe-${{ github.run_id }}
+          path: ${{ runner.temp }}/repair-logs/
+          retention-days: 7
+          if-no-files-found: error
