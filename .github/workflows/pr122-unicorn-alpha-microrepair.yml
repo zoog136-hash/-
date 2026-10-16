@@ -1,0 +1,49 @@
+name: PR122 unicorn microrepair (unapproved source only)
+
+on:
+  push:
+    branches: [feature/twilight-remaining106-20261016]
+    paths:
+      - tools/pr122_unicorn_alpha_microrepair.py
+      - tests/test_pr122_unicorn_alpha_microrepair.py
+      - .github/workflows/pr122-unicorn-alpha-microrepair.yml
+  pull_request:
+    paths:
+      - tools/pr122_unicorn_alpha_microrepair.py
+      - tests/test_pr122_unicorn_alpha_microrepair.py
+      - .github/workflows/pr122-unicorn-alpha-microrepair.yml
+
+permissions:
+  contents: read
+
+jobs:
+  original-pinned-alpha-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install original strict image dependencies
+        run: python3 -m pip install --disable-pip-version-check numpy scipy Pillow
+      - name: Synthetic contract unit tests (not art approvals)
+        run: python3 -m unittest discover -s tests -p test_pr122_unicorn_alpha_microrepair.py -v
+      - name: Pin and examine actual archived W contact A source
+        run: |
+          python3 tools/pr122_unicorn_alpha_microrepair.py \
+            --archive docs/remake/evidence/pr100-direction-fix/original-based/final-handoff-20261015/source-archives/unicorn/base05/unicorn-source-wip05-part01.zip \
+            --archive-sha256 28000be8821ddca1eeee864e6e8a05ef76b40ff78ecbdd7eb38d7736d6741e72 \
+            --member albino-unicorn-authoring/recovery/W-contactA-single-attempt1.png \
+            --source-sha256 b5e121880b149e46465030016c75a9a26d8106ba9df3d15839e2613307a94ae7 \
+            --out-dir "${{ runner.temp }}/pr122-unicorn-w-contact-a" \
+            --write-candidate
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pr122-unicorn-UNAPPROVED-alpha-evidence
+          path: ${{ runner.temp }}/pr122-unicorn-w-contact-a/
+          if-no-files-found: warn
+          retention-days: 30
